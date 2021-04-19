@@ -1,0 +1,47 @@
+﻿using Core.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace RanseiConsole.Dev
+{
+    static class Testing
+    {
+        public static string GetBits<T>(T obj) where T : BaseDataWindow
+        {
+            string bits = "";
+            foreach (var b in obj.Data)
+            {
+                bits = Convert.ToString(b, 2).PadLeft(8, '0') + bits;
+            }
+            return bits;
+        }
+
+        public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, string> nameSelector) where T : BaseDataWindow
+        {
+            var opk = dataItems.OrderBy(i => nameSelector(i)).ToArray();
+            var dataLength = opk[0].Data.Length;
+
+            for (int i = 0; i < dataLength; i++)
+            {
+                using var sw = new StreamWriter(File.Create(Path.Combine(folderToPutLogsInto, i.ToString().PadLeft(2, '0') + $" - 0x{i:x}.txt")));
+                var gpk = opk.GroupBy(p => p.Data[i]).OrderBy(g => g.Key);
+
+                foreach (var group in gpk)
+                {
+                    sw.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
+                    sw.WriteLine();
+
+                    foreach (var pk in group)
+                    {
+                        sw.WriteLine(nameSelector(pk));
+                    }
+
+                    sw.WriteLine();
+                }
+            }
+        }
+    }
+}

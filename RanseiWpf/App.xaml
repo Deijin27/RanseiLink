@@ -1,0 +1,34 @@
+﻿<Application x:Class="RanseiWpf.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RanseiWpf"
+             xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
+             xmlns:views="clr-namespace:RanseiWpf.Views"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/RedHoverButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/GrayHoverButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/MenuToggleButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type vm:PokemonSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WazaSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
+                <views:PokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WazaViewModel}">
+                <views:WazaView/>
+            </DataTemplate>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
