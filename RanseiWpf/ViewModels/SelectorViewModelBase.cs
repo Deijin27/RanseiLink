@@ -58,4 +58,14 @@ namespace RanseiWpf.ViewModels
             Selected = Selected;
         }
     }
+
+    public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, Pokemon, PokemonViewModel>
+    {
+        public PokemonSelectorViewModel(PokemonId initialSelected, IDataService<PokemonId, Pokemon> dataService) : base(initialSelected, dataService) { }
+    }
+
+    public class WazaSelectorViewModel : SelectorViewModelBase<MoveId, Move, WazaViewModel>
+    {
+        public WazaSelectorViewModel(MoveId initialSelected, IDataService<MoveId, Move> dataService) : base(initialSelected, dataService) { }
+    }
 }

@@ -11,14 +11,13 @@ namespace RanseiConsole.Commands
     [Command("move", Description = "Get data on a given move.")]
     public class MoveCommand : ICommand
     {
-        public IDataService<MoveId, Move> Service = new DataService();
-
         [CommandParameter(0, Description = "Move ID.", Name = "id")]
         public MoveId Id { get; set; }
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            var move = Service.Retrieve(Id);
+            IDataService<MoveId, Move> service = new DataService();
+            var move = service.Retrieve(Id);
 
             console.Render(move, Id);
 

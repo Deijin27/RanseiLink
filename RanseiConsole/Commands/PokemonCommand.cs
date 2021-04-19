@@ -11,17 +11,14 @@ namespace RanseiConsole.Commands
     [Command("pokemon", Description = "Get data on a given move.")]
     public class PokemonCommand : ICommand
     {
-        public IDataService<PokemonId, Pokemon> Service = new DataService();
-
         [CommandParameter(0, Description = "Pokemon ID.", Name = "id")]
         public PokemonId Id { get; set; }
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            var move = Service.Retrieve(Id);
-
+            IDataService<PokemonId, Pokemon> service = new DataService();
+            var move = service.Retrieve(Id);
             console.Render(move, Id);
-
             return default;
         }
     }

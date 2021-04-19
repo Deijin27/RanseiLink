@@ -13,7 +13,7 @@ namespace RanseiWpf.ViewModels
         public ICommand PokemonViewCommand { get; set; }
         public ICommand WazaViewCommand { get; set; }
 
-        public ICommand CommitChangesCommand { get; set; }
+        public ICommand SaveChangesCommand { get; set; }
 
         object _currentView;
         public object CurrentView 
@@ -21,16 +21,16 @@ namespace RanseiWpf.ViewModels
             get => _currentView;
             set => RaiseAndSetIfChanged(ref _currentView, value);
         }
-        SelectorViewModelBase<PokemonId, Pokemon, PokemonViewModel> PokemonVm;
-        SelectorViewModelBase<MoveId, Move, WazaViewModel> WazaVm;
+        PokemonSelectorViewModel PokemonVm;
+        WazaSelectorViewModel WazaVm;
         DataService DataService;
 
         public MainWindowViewModel()
         {
             DataService = new DataService();
 
-            PokemonVm = new SelectorViewModelBase<PokemonId, Pokemon, PokemonViewModel>(PokemonId.Pikachu, DataService);
-            WazaVm = new SelectorViewModelBase<MoveId, Move, WazaViewModel>(MoveId.Thunderbolt, DataService);
+            PokemonVm = new PokemonSelectorViewModel(PokemonId.Pikachu, DataService);
+            WazaVm = new WazaSelectorViewModel(MoveId.Thunderbolt, DataService);
 
             CurrentView = PokemonVm;
 
@@ -44,7 +44,7 @@ namespace RanseiWpf.ViewModels
                 CurrentView = WazaVm;
             });
 
-            CommitChangesCommand = new RelayCommand(o =>
+            SaveChangesCommand = new RelayCommand(o =>
             {
                 PokemonVm.SaveAndClearCache();
                 WazaVm.SaveAndClearCache();
