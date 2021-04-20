@@ -11,6 +11,7 @@ namespace Core.Models
     {
         public const int DataLength = 0x14;
         public Ability(byte[] data) : base(data, DataLength) { }
+        public Ability() : base(new byte[DataLength], DataLength) { }
 
         public string Name
         {

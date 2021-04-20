@@ -12,6 +12,8 @@ namespace Core.Models
         public const int DataLength = 0x30;
         public Pokemon(byte[] data) : base(data, DataLength) { }
 
+        public Pokemon() : base(new byte[DataLength], DataLength) { }
+
         public string Name
         {
             get => GetPaddedUtf8String(0, 11);

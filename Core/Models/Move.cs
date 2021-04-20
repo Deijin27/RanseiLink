@@ -11,6 +11,7 @@ namespace Core.Models
     {
         public const int DataLength = 0x24;
         public Move(byte[] data) : base(data, DataLength) { }
+        public Move() : base(new byte[DataLength], DataLength) { }
 
         public string Name
         {
