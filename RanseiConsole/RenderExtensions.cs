@@ -3,8 +3,6 @@ using Core.Enums;
 using Core.Models;
 using Core.Structs;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RanseiConsole
 {
@@ -166,6 +164,14 @@ namespace RanseiConsole
             console.WriteProperty("Range", move.Range.ToString());
             console.WriteProperty("Effects", $"{move.Effect0} {RenderQuantityForMoveEffect(move.Effect0, move.Effect0Chance)}/ {move.Effect1} {RenderQuantityForMoveEffect(move.Effect1, move.Effect1Chance)}");
             console.WriteProperty("Unused Effect Duplicates", $"{move.Effect2} {RenderQuantityForMoveEffect(move.Effect2, move.Effect2Chance)}/ {move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}");
+        }
+
+        public static void Render(this IConsole console, Ability ability, AbilityId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", ability.Name);
+            console.WriteProperty("Effect1", $"{ability.Effect1} ({ability.Effect1Amount})");
+            console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
         }
     }
 }

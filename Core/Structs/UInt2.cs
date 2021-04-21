@@ -14,6 +14,10 @@ namespace Core.Structs
         {
             return new UInt2(i);
         }
+        public static explicit operator UInt2(uint i)
+        {
+            return new UInt2((int)i);
+        }
 
         public static implicit operator byte(UInt2 i)
         {

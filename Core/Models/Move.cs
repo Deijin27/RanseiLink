@@ -26,7 +26,7 @@ namespace Core.Models
 
         public TypeId Type
         {
-            get => (TypeId)(int)(UInt5)GetByte(0x10);
+            get => (TypeId)(int)(UInt5)(GetByte(0x10) >> 0);
         }
 
         public UInt7 Power
@@ -47,11 +47,6 @@ namespace Core.Models
         public MoveRangeId Range
         {
             get => (MoveRangeId)(int)(UInt5)(GetUInt16(0x13) >> 3);
-        }
-
-        public byte Something
-        {
-            get => GetByte(0x14);
         }
 
         public MoveEffectId Effect1
@@ -89,19 +84,9 @@ namespace Core.Models
             get => (UInt7)(GetUInt16(28) >> 7);
         }
 
-        public UInt5 Something1
-        {
-            get => (UInt5)(GetUInt16(29) >> 6);
-        }
-
         public UInt7 Accuracy
         {
             get => (UInt7)(GetUInt16(30) >> 3);
-        }
-
-        public UInt6 ThingAfterAcc
-        {
-            get => (UInt6)(GetByte(31) >> 2);
         }
 
         public override string ToString()

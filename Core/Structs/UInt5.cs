@@ -15,6 +15,11 @@ namespace Core.Structs
             return new UInt5(i);
         }
 
+        public static explicit operator UInt5(uint i)
+        {
+            return new UInt5((int)i);
+        }
+
         public static implicit operator byte(UInt5 i)
         {
             return (byte)i._value;

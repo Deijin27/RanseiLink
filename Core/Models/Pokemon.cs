@@ -51,7 +51,7 @@ namespace Core.Models
 
         public TypeId Type1
         {
-            get => (TypeId)(int)(UInt5)GetByte(0x14);
+            get => (TypeId)(int)(UInt5)(GetByte(0x14) >> 0);
             set => SetByte(0x14, (byte)(GetByte(0x14) & ~(0b11111) | (int)value));
         }
 

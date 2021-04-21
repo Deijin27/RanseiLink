@@ -16,11 +16,11 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            var int_idx = 7;
-            var shift = 18;
-            var mask = 0b111111111;
+            var int_idx = 4;
+            var shift = 10;
+            var mask = 0b111111;
 
-            var gpk = IteratePokemon().OrderBy(i => i.Name)
+            var gpk = IterateAbilities().OrderBy(i => i.Name)
                 .GroupBy(p => (p.GetUInt32(int_idx * 4) >> shift) & mask)
                 .OrderBy(g => g.Key).ToArray();
 
@@ -31,11 +31,13 @@ namespace RanseiConsole.Dev
 
                 foreach (var pk in group)
                 {
-                    console.Render(pk, 0);
+                    console.Output.WriteLine(pk.Name);
                 }
 
                 console.Output.WriteLine();
             }
+
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\Abilitygroups", IterateAbilities(), i => i.Name);
 
             return default;
         }

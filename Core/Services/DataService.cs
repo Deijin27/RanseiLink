@@ -8,20 +8,22 @@ using System.Text;
 
 namespace Core.Services
 {
-    public class DataService : IDataService<PokemonId, Pokemon>, IDataService<MoveId, Move>
+    public class DataService : IDataService<PokemonId, Pokemon>, IDataService<MoveId, Move>, IDataService<AbilityId, Ability>
     {
         readonly string DataFolder;
         const string PokemonFile = "Pokemon.dat";
         const string MoveFile = "Waza.dat";
+        const string AbilityFile = "Tokusei.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
+        const string AbilityRomPath = "/data/Tokusei.dat";
 
         public DataService()
         {
             DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ransei");
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile })
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile })
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -38,6 +40,7 @@ namespace Core.Services
             {
                 Nds.CopyExtractFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
                 Nds.CopyExtractFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
+                Nds.CopyExtractFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
             }
         }
 
@@ -47,6 +50,7 @@ namespace Core.Services
             {
                 Nds.InsertFixedLengthFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
                 Nds.InsertFixedLengthFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
+                Nds.InsertFixedLengthFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
             }
         }
 
@@ -81,7 +85,25 @@ namespace Core.Services
         {
             using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, MoveFile))))
             {
-                file.BaseStream.Position = (int)id * Pokemon.DataLength;
+                file.BaseStream.Position = (int)id * Move.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public Ability Retrieve(AbilityId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, AbilityFile))))
+            {
+                file.BaseStream.Position = (int)id * Ability.DataLength;
+                return new Ability(file.ReadBytes(Ability.DataLength));
+            }
+        }
+
+        public void Save(AbilityId id, Ability model)
+        {
+            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, AbilityFile))))
+            {
+                file.BaseStream.Position = (int)id * Ability.DataLength;
                 file.Write(model.Data);
             }
         }
