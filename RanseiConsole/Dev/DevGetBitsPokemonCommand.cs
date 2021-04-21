@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RanseiConsole.Dev
 {
-    [Command("dev getbits pokemon", Description = "Get data on a given move.")]
+    [Command("dev getbits pokemon", Description = "Get data of a given pokemon as bits.")]
     public class DevGetBitsPokemonCommand : ICommand
     {
         [CommandParameter(0, Description = "Pokemon ID.", Name = "id")]

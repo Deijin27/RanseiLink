@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RanseiConsole.Commands
 {
-    [Command("pokemon", Description = "Get data on a given move.")]
+    [Command("pokemon", Description = "Get data on a given pokemon.")]
     public class PokemonCommand : ICommand
     {
         [CommandParameter(0, Description = "Pokemon ID.", Name = "id")]

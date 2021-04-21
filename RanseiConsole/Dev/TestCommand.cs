@@ -1,4 +1,6 @@
-﻿using CliFx.Infrastructure;
+﻿using CliFx;
+using CliFx.Attributes;
+using CliFx.Infrastructure;
 using Core.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace RanseiConsole.Dev
 {
-    public class TestCommand
+    [Command("dev test", Description = "Temporary, for testing purposes.")]
+    public class TestCommand : ICommand
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
