@@ -16,11 +16,24 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            var int_idx = 4;
-            var shift = 10;
-            var mask = 0b111111;
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\SaihaiGroups", IterateSaihai(), i => i.Name);
 
-            var gpk = IterateAbilities().OrderBy(i => i.Name)
+            //BuildEnum(console, IterateSaihai(), i => i.Name);
+
+            //console.Output.WriteLine(Testing.GetBits(IterateSaihai().First()));
+
+            Test1(console);
+
+            return default;
+        }
+
+        void Test1(IConsole console)
+        {
+            var int_idx = 6;
+            var shift = 10;
+            var mask = 0b111111111;
+
+            var gpk = IterateSaihai().OrderBy(i => i.Name)
                 .GroupBy(p => (p.GetUInt32(int_idx * 4) >> shift) & mask)
                 .OrderBy(g => g.Key).ToArray();
 
@@ -36,13 +49,17 @@ namespace RanseiConsole.Dev
 
                 console.Output.WriteLine();
             }
-
-            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\Abilitygroups", IterateAbilities(), i => i.Name);
-
-            return default;
         }
 
-        const string DataFolder = @"C:\Users\Mia\Desktop\PokemonRomEditing\Conquest";
+        void BuildEnum<T>(IConsole console, IEnumerable<T> dataItems, Func<T, string> nameSelector)
+        {
+            foreach (var i in dataItems)
+            {
+                console.Output.WriteLine(nameSelector(i).Replace(" ", "") + "," );
+            }
+        }
+
+        static string DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ransei");
 
         static IEnumerable<Pokemon> IteratePokemon()
         {
@@ -79,6 +96,19 @@ namespace RanseiConsole.Dev
             {
                 var pk = file.ReadBytes(Ability.DataLength);
                 yield return new Ability(pk);
+            }
+
+        }
+
+        static IEnumerable<Saihai> IterateSaihai()
+        {
+            using var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, "Saihai.dat")));
+
+            int count = (int)(file.BaseStream.Length / Saihai.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var pk = file.ReadBytes(Saihai.DataLength);
+                yield return new Saihai(pk);
             }
 
         }

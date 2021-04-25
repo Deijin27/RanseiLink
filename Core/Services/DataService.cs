@@ -8,22 +8,24 @@ using System.Text;
 
 namespace Core.Services
 {
-    public class DataService : IDataService<PokemonId, Pokemon>, IDataService<MoveId, Move>, IDataService<AbilityId, Ability>
+    public class DataService : IDataService<PokemonId, Pokemon>, IDataService<MoveId, Move>, IDataService<AbilityId, Ability>, IDataService<SaihaiId, Saihai>
     {
         readonly string DataFolder;
         const string PokemonFile = "Pokemon.dat";
         const string MoveFile = "Waza.dat";
         const string AbilityFile = "Tokusei.dat";
+        const string SaihaiFile = "Saihai.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
         const string AbilityRomPath = "/data/Tokusei.dat";
+        const string SaihaiRomPath = "/data/Saihai.dat";
 
         public DataService()
         {
             DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ransei");
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile })
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile })
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -41,6 +43,7 @@ namespace Core.Services
                 Nds.CopyExtractFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
                 Nds.CopyExtractFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
                 Nds.CopyExtractFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
+                Nds.CopyExtractFile(stream, SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
             }
         }
 
@@ -51,6 +54,7 @@ namespace Core.Services
                 Nds.InsertFixedLengthFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
                 Nds.InsertFixedLengthFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
                 Nds.InsertFixedLengthFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
+                Nds.InsertFixedLengthFile(stream, SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
             }
         }
 
@@ -104,6 +108,24 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, AbilityFile))))
             {
                 file.BaseStream.Position = (int)id * Ability.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public Saihai Retrieve(SaihaiId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
+            {
+                file.BaseStream.Position = (int)id * Saihai.DataLength;
+                return new Saihai(file.ReadBytes(Saihai.DataLength));
+            }
+        }
+
+        public void Save(SaihaiId id, Saihai model)
+        {
+            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
+            {
+                file.BaseStream.Position = (int)id * Saihai.DataLength;
                 file.Write(model.Data);
             }
         }

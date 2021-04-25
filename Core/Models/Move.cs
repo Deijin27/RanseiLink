@@ -51,7 +51,7 @@ namespace Core.Models
 
         public MoveEffectId Effect1
         {
-            get => (MoveEffectId)(int)(UInt7)GetByte(24);
+            get => (MoveEffectId)(int)(UInt7)(GetByte(24) >> 0);
         }
 
         public UInt7 Effect1Chance
@@ -76,7 +76,7 @@ namespace Core.Models
 
         public MoveEffectId Effect3
         {
-            get => (MoveEffectId)(int)(UInt7)GetByte(28);
+            get => (MoveEffectId)(int)(UInt7)(GetByte(28) >> 0);
         }
 
         public UInt7 Effect3Chance

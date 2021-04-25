@@ -173,5 +173,17 @@ namespace RanseiConsole
             console.WriteProperty("Effect1", $"{ability.Effect1} ({ability.Effect1Amount})");
             console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
         }
+
+        public static void Render(this IConsole console, Saihai saihai, SaihaiId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", saihai.Name);
+            console.WriteProperty("Effect1", $"{saihai.Effect1} ({saihai.Effect1Amount})");
+            console.WriteProperty("Effect2", $"{saihai.Effect2} ({saihai.Effect2Amount})");
+            console.WriteProperty("Effect3", $"{saihai.Effect3} ({saihai.Effect3Amount})");
+            console.WriteProperty("Target", saihai.Target.ToString());
+            console.WriteProperty("Duration", saihai.Duration.ToString());
+        }
+
     }
 }

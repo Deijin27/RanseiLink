@@ -21,6 +21,7 @@ namespace RanseiConsole.Dev
 
         public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, string> nameSelector) where T : BaseDataWindow
         {
+            Directory.CreateDirectory(folderToPutLogsInto);
             var opk = dataItems.OrderBy(i => nameSelector(i)).ToArray();
             var dataLength = opk[0].Data.Length;
 
