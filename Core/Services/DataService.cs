@@ -1,31 +1,38 @@
 ﻿using Core.Enums;
 using Core.Models;
-using Ransei.Nds;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Core.Services
 {
-    public class DataService : IDataService<PokemonId, Pokemon>, IDataService<MoveId, Move>, IDataService<AbilityId, Ability>, IDataService<SaihaiId, Saihai>
+    public class DataService : 
+        IDataService<PokemonId, Pokemon>, 
+        IDataService<MoveId, Move>, 
+        IDataService<AbilityId, Ability>, 
+        IDataService<SaihaiId, Saihai>,
+        IDataService<GimmickId, Gimmick>,
+        IDataService<BuildingId, Building>
     {
         readonly string DataFolder;
         const string PokemonFile = "Pokemon.dat";
         const string MoveFile = "Waza.dat";
         const string AbilityFile = "Tokusei.dat";
         const string SaihaiFile = "Saihai.dat";
+        const string GimmickFile = "Gimmick.dat";
+        const string BuildingFile = "Building.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
         const string AbilityRomPath = "/data/Tokusei.dat";
         const string SaihaiRomPath = "/data/Saihai.dat";
+        const string GimmickRomPath = "/data/Gimmick.dat";
+        const string BuildingRomPath = "/data/Building.dat";
 
         public DataService()
         {
             DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ransei");
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile })
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile, GimmickFile, BuildingFile })
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -38,23 +45,27 @@ namespace Core.Services
 
         public void LoadRom(string path)
         {
-            using (var stream = new BinaryReader(File.OpenRead(path)))
+            using (var nds = new Nds.Nds(path))
             {
-                Nds.CopyExtractFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
-                Nds.CopyExtractFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
-                Nds.CopyExtractFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
-                Nds.CopyExtractFile(stream, SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
+                nds.ExtractCopyOfFile(PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
+                nds.ExtractCopyOfFile(MoveRomPath, Path.Combine(DataFolder, MoveFile));
+                nds.ExtractCopyOfFile(AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
+                nds.ExtractCopyOfFile(SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
+                nds.ExtractCopyOfFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
+                nds.ExtractCopyOfFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
             }
         }
 
         public void CommitToRom(string path)
         {
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+            using (var nds = new Nds.Nds(path))
             {
-                Nds.InsertFixedLengthFile(stream, PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
-                Nds.InsertFixedLengthFile(stream, MoveRomPath, Path.Combine(DataFolder, MoveFile));
-                Nds.InsertFixedLengthFile(stream, AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
-                Nds.InsertFixedLengthFile(stream, SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
+                nds.InsertFixedLengthFile(PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
+                nds.InsertFixedLengthFile(MoveRomPath, Path.Combine(DataFolder, MoveFile));
+                nds.InsertFixedLengthFile(AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
+                nds.InsertFixedLengthFile(SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
+                nds.InsertFixedLengthFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
+                nds.InsertFixedLengthFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
             }
         }
 
@@ -126,6 +137,42 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
             {
                 file.BaseStream.Position = (int)id * Saihai.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public Gimmick Retrieve(GimmickId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, GimmickFile))))
+            {
+                file.BaseStream.Position = (int)id * Gimmick.DataLength;
+                return new Gimmick(file.ReadBytes(Gimmick.DataLength));
+            }
+        }
+
+        public void Save(GimmickId id, Gimmick model)
+        {
+            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, GimmickFile))))
+            {
+                file.BaseStream.Position = (int)id * Gimmick.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public Building Retrieve(BuildingId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, BuildingFile))))
+            {
+                file.BaseStream.Position = (int)id * Building.DataLength;
+                return new Building(file.ReadBytes(Building.DataLength));
+            }
+        }
+
+        public void Save(BuildingId id, Building model)
+        {
+            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, BuildingFile))))
+            {
+                file.BaseStream.Position = (int)id * Building.DataLength;
                 file.Write(model.Data);
             }
         }

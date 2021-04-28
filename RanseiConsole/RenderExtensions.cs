@@ -185,5 +185,20 @@ namespace RanseiConsole
             console.WriteProperty("Duration", saihai.Duration.ToString());
         }
 
+        public static void Render(this IConsole console, Gimmick gimmick, GimmickId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", gimmick.Name);
+        }
+
+        public static void Render(this IConsole console, Building building, BuildingId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", building.Name);
+            console.WriteProperty("Location", building.Location.ToString());
+        }
+
+
+
     }
 }

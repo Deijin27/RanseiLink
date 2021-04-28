@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Ransei.Nds
+namespace Core.Nds
 {
     public static class NdsNameTable
     {
@@ -200,22 +200,35 @@ namespace Ransei.Nds
             return true;
         }
 
-        public static uint GetFatEntryIndex(BinaryReader stream, long startOffset, string filePath)
+        static string RemoveLeadingSlash(string path)
         {
-            // just to allow users to use the intuitive leading slash
-            if (filePath.StartsWith("/"))
-            {
-                filePath = filePath.Substring(1);
-            }
+            path = path.Replace('/', '\\');
 
-            // Get each segment of the path, casting it to the required byte array
-            byte[][] pathSegments = filePath.Split('/')
-                                            .Select(Encoding.UTF8.GetBytes)
-                                            .ToArray();
+            // just to allow users to use the intuitive leading slash
+            if (path.StartsWith("\\"))
+            {
+                path = path.Substring(1);
+            }
+            return path;
+        }
+
+        public static FolderAllocation GetFolderAllocationFromPath(BinaryReader stream, long startOffset, string directoryPath)
+        {
+            directoryPath = RemoveLeadingSlash(directoryPath);
 
             // Initialise contents with the root folder contents
             // keep the allocation as a variable to allow the FAT offset to be calculated when the file is reached
             var alloc = GetRootFolderAllocationData(stream, startOffset);
+            if (string.IsNullOrEmpty(directoryPath)) // is root folder
+            {
+                return alloc;
+            }
+
+            // Get each segment of the path, casting it to the required byte array
+            byte[][] pathSegments = directoryPath.Split('\\')
+                                            .Select(Encoding.UTF8.GetBytes)
+                                            .ToArray();
+
             var contents = GetContents(stream, startOffset, alloc);
 
             // iterate through the segments. for loop used just so you know if it's the final item
@@ -232,12 +245,12 @@ namespace Ransei.Nds
                     // if the names are equal, then proceed
                     if (ArraysAreEqual(cont.Name, seg))
                     {
+                        alloc = GetAllocationData(stream, startOffset, cont.ContentsIndexIfFolder);
                         if (i == pathSegments.Length - 1) // is the final segment in the path, i.e the file itself
                         {
-                            return alloc.FatTopFileId + (uint)indexWithinFolder;
+                            return alloc;
                         }
                         // else
-                        alloc = GetAllocationData(stream, startOffset, cont.ContentsIndexIfFolder);
                         contents = GetContents(stream, startOffset, alloc);
                         found = true;
                         break;
@@ -245,11 +258,49 @@ namespace Ransei.Nds
                 }
                 if (!found)
                 {
-                    throw new FileNotFoundException($"{nameof(GetFatEntryIndex)}: requested file ({filePath}) not found in {nameof(NdsNameTable)}");
+                    string current = Encoding.UTF8.GetString(seg);
+                    if (i == 0)
+                    {
+                        throw new FileNotFoundException($"\"{current}\" not found in root folder.");
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException($"\"{current}\" not found in \"{Encoding.UTF8.GetString(pathSegments[i-1])}\".");
+                    }
+                }
+            }
+            throw new Exception($"Unexpected point reached in {nameof(GetFolderAllocationFromPath)}");
+        }
+
+        public static FolderAllocation GetFolderAllocationFromPath(BinaryReader stream, string directoryPath)
+        {
+            return GetFolderAllocationFromPath(stream, GetStartOffset(stream), directoryPath);
+        }
+
+
+        public static uint GetFatEntryIndex(BinaryReader stream, long startOffset, string filePath)
+        {
+            filePath = RemoveLeadingSlash(filePath);
+            string directoryName = Path.GetDirectoryName(filePath);
+            var alloc = GetFolderAllocationFromPath(stream, startOffset, directoryName);
+            var contents = GetContents(stream, startOffset, alloc);
+
+            string fileName = Path.GetFileName(filePath);
+            byte[] fileNameBytes = Encoding.UTF8.GetBytes(fileName);
+            for (int i = 0; i < contents.Count; i++)
+            {
+                if (ArraysAreEqual(contents[i].Name, fileNameBytes))
+                {
+                    return alloc.FatTopFileId + (uint)i;
                 }
             }
 
-            throw new Exception($"Arrived at unexpected point in {nameof(GetFatEntryIndex)}");
+            if (string.IsNullOrEmpty(directoryName)) // is root folder
+            {
+                throw new FileNotFoundException($"{fileName} not found in root folder");
+            }
+
+            throw new FileNotFoundException($"{fileName} not found in {directoryName}");
         }
 
         public static uint GetFatEntryIndex(BinaryReader stream, string filePath)

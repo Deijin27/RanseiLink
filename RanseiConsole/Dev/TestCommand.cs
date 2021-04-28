@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.Dev
@@ -16,13 +15,14 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\SaihaiGroups", IterateSaihai(), i => i.Name);
+            Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ScenarioPokemonGroups", IterateScenarioPokemon(), i => i.Pokemon.ToString());
 
-            //BuildEnum(console, IterateSaihai(), i => i.Name);
+            //BuildEnum(console, IterateBuilding(), i => i.Name);
 
-            //console.Output.WriteLine(Testing.GetBits(IterateSaihai().First()));
+            //console.Output.WriteLine(Testing.GetBits(IterateBuilding().First()));
 
-            Test1(console);
+            //Test1(console);
+
 
             return default;
         }
@@ -109,6 +109,45 @@ namespace RanseiConsole.Dev
             {
                 var pk = file.ReadBytes(Saihai.DataLength);
                 yield return new Saihai(pk);
+            }
+
+        }
+
+        static IEnumerable<Gimmick> IterateGimmick()
+        {
+            using var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, "Gimmick.dat")));
+
+            int count = (int)(file.BaseStream.Length / Gimmick.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var pk = file.ReadBytes(Gimmick.DataLength);
+                yield return new Gimmick(pk);
+            }
+
+        }
+
+        static IEnumerable<Building> IterateBuilding()
+        {
+            using var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, "Building.dat")));
+
+            int count = (int)(file.BaseStream.Length / Building.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var pk = file.ReadBytes(Building.DataLength);
+                yield return new Building(pk);
+            }
+
+        }
+        
+        static IEnumerable<ScenarioPokemon> IterateScenarioPokemon()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario 00\ScenarioPokemon.dat"));
+
+            int count = (int)(file.BaseStream.Length / ScenarioPokemon.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var pk = file.ReadBytes(ScenarioPokemon.DataLength);
+                yield return new ScenarioPokemon(pk);
             }
 
         }

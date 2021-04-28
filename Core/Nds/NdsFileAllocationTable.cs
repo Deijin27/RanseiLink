@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Ransei.Nds
+namespace Core.Nds
 {
     public static class NdsFileAllocationTable
     {

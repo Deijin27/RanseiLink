@@ -1,23 +1,21 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using Core.Enums;
-using Core.Models;
 using Core.Services;
 using System.Threading.Tasks;
 
-namespace RanseiConsole.Commands
+namespace RanseiConsole.ArchiveCommands
 {
-    [Command("loadrom", Description = "Load data from rom into application data.")]
-    public class LoadRomCommand : ICommand
+    [Command("commitrom", Description = "Commit application data to rom.")]
+    public class CommitRomCommand : ICommand
     {
-        [CommandParameter(0, Description = "Path to rom file.", Name = "path")]
+        [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
         public string Path { get; set; }
 
         public ValueTask ExecuteAsync(IConsole console)
         {
             var service = new DataService();
-            service.LoadRom(Path);
+            service.CommitToRom(Path);
 
             return default;
         }

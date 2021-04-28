@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Ransei.Nds
+namespace Core.Nds
 {
     public static class Fat32
     {
