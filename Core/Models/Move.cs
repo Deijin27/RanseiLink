@@ -1,5 +1,4 @@
 ﻿using Core.Enums;
-using Core.Structs;
 using System.Text;
 
 namespace Core.Models
@@ -21,72 +20,80 @@ namespace Core.Models
 
         public MoveMovementFlags MovementFlags
         {
-            get => (MoveMovementFlags)GetByte(0x0f);
+            get => (MoveMovementFlags)GetUInt32(3, 8, 24);
+            set => SetUInt32(3, 8, 24, (uint)value);
         }
 
         public TypeId Type
         {
-            get => (TypeId)(int)(UInt5)(GetByte(0x10) >> 0);
+            get => (TypeId)GetUInt32(4, 5, 0);
+            set => SetUInt32(4, 5, 0, (uint)value);
         }
 
-        public UInt7 Power
+        public uint Power
         {
-            get => (UInt7)(GetUInt16(0x10) >> 5);
+            get => GetUInt32(4, 7, 5);
+            set => SetUInt32(4, 7, 5, value);
         }
 
         public MoveEffectId Effect0
         {
-            get => (MoveEffectId)(int)(UInt7)(GetUInt16(0x11) >> 5);
+            get => (MoveEffectId)GetUInt32(4, 7, 13);
+            set => SetUInt32(4, 7, 13, (uint)value);
         }
 
-        public UInt7 Effect0Chance
+        public uint Effect0Chance
         {
-            get => (UInt7)(GetUInt16(0x12) >> 4);
+            get => GetUInt32(4, 7, 20);
+            set => SetUInt32(4, 7, 20, value);
         }
 
         public MoveRangeId Range
         {
-            get => (MoveRangeId)(int)(UInt5)(GetUInt16(0x13) >> 3);
+            get => (MoveRangeId)GetUInt32(4, 5, 27);
+            set => SetUInt32(4, 5, 27, (uint)value);
         }
 
         public MoveEffectId Effect1
         {
-            get => (MoveEffectId)(int)(UInt7)(GetByte(24) >> 0);
+            get => (MoveEffectId)GetUInt32(6, 7, 0);
+            set => SetUInt32(6, 7, 0, (uint)value);
         }
 
-        public UInt7 Effect1Chance
+        public uint Effect1Chance
         {
-            get => (UInt7)(GetUInt16(24) >> 7);
+            get => GetUInt32(6, 7, 7);
+            set => SetUInt32(6, 7, 7, value);
         }
 
         public MoveEffectId Effect2
         {
-            get => (MoveEffectId)(int)(UInt7)(GetInt16(25) >> 6);
+            get => (MoveEffectId)GetUInt32(6, 7, 14);
+            set => SetUInt32(6, 7, 14, (uint)value);
         }
 
-        /// <summary>
-        /// Percentage chance of secondary effect
-        /// Also seems to carry Fixed Damage Amount (for dragon rage, the value is also stored in power?) 
-        /// And for absorb and mega-drain it's 75 for some reason
-        /// </summary>
-        public UInt7 Effect2Chance
+        public uint Effect2Chance
         {
-            get => (UInt7)(GetUInt16(26) >> 5);
+            get => GetUInt32(6, 7, 21);
+            set => SetUInt32(6, 7, 21, value);
         }
 
         public MoveEffectId Effect3
         {
-            get => (MoveEffectId)(int)(UInt7)(GetByte(28) >> 0);
+            get => (MoveEffectId)GetUInt32(7, 7, 0);
+            set => SetUInt32(7, 7, 0, (uint)value);
         }
 
-        public UInt7 Effect3Chance
+        public uint Effect3Chance
         {
-            get => (UInt7)(GetUInt16(28) >> 7);
+            get => GetUInt32(7, 7, 7);
+            set => SetUInt32(7, 7, 7, value);
         }
 
-        public UInt7 Accuracy
+        public uint Accuracy
         {
-            get => (UInt7)(GetUInt16(30) >> 3);
+            get => GetUInt32(7, 7, 19);
+            set => SetUInt32(7, 7, 19, value);
         }
 
         public override string ToString()

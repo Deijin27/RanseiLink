@@ -1,5 +1,4 @@
-﻿using Core.Structs;
-using Core.Enums;
+﻿using Core.Enums;
 
 namespace Core.Models
 {
@@ -18,24 +17,28 @@ namespace Core.Models
             set => SetPaddedUtf8String(0, 0x0C, value);
         }
 
-        public UInt2 Effect1Amount 
+        public uint Effect1Amount 
         { 
-            get => (UInt2)(GetUInt32(3 * 4) >> 24); 
+            get => GetUInt32(3, 2, 24);
+            set => SetUInt32(3, 2, 24, value);
         }
 
         public AbilityEffectId Effect1
         {
-            get => (AbilityEffectId)(int)(UInt5)GetUInt32(4 * 4);
+            get => (AbilityEffectId)GetUInt32(4, 5, 0);
+            set => SetUInt32(4, 5, 0, (uint)value);
         }
 
         public AbilityEffectId Effect2
         {
-            get => (AbilityEffectId)(int)(UInt5)(GetUInt32(4 * 4) >> 5);
+            get => (AbilityEffectId)GetUInt32(4, 5, 5);
+            set => SetUInt32(4, 5, 5, (uint)value);
         }
 
-        public UInt2 Effect2Amount
+        public uint Effect2Amount
         {
-            get => (UInt2)(GetUInt32(4 * 4) >> 10);
+            get => GetUInt32(4, 2, 10);
+            set => SetUInt32(4, 2, 10, value);
         }
     }
 }

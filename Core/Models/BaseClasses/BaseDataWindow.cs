@@ -1,5 +1,4 @@
-﻿using Core.Structs;
-using System;
+﻿using System;
 using System.Text;
 
 namespace Core.Models
@@ -17,42 +16,32 @@ namespace Core.Models
             Data = data;
         }
 
-        public byte GetByte(int index) => Data[index];
-        public void SetByte(int index, byte value) => Data[index] = value;
-
-        public sbyte GetSByte(int index) => (sbyte)Data[index];
-        public void SetSByte(int index, sbyte value) => Data[index] = (byte)value;
-
-        public ushort GetUInt16(int index) => BitConverter.ToUInt16(Data, index);
-        public void SetUInt16(int index, ushort value) => BitConverter.GetBytes(value).CopyTo(Data, index);
-
-        public short GetInt16(int index) => BitConverter.ToInt16(Data, index);
-        public void SetInt16(int index, short value) => BitConverter.GetBytes(value).CopyTo(Data, index);
-
-        public uint GetUInt32(int index) => BitConverter.ToUInt32(Data, index);
-        public void SetUInt32(int index, uint value) => BitConverter.GetBytes(value).CopyTo(Data, index);
-
-        public ulong GetUInt64(int index) => BitConverter.ToUInt64(Data, index);
-        public void SetUInt64(int index, ulong value) => BitConverter.GetBytes(value).CopyTo(Data, index);
-
-        public UInt4 GetUInt4(int byteOffset, int startOffsetIntoByte) => new UInt4(Data[byteOffset] >> startOffsetIntoByte);
-        public void SetUInt4(int byteOffset, int startOffsetIntoByte, UInt4 fourBitValue)
+        public static uint GetMask(int bitCount)
         {
-            Data[byteOffset] = (byte)((Data[byteOffset] & ~(0b1111 << startOffsetIntoByte)) | (fourBitValue << startOffsetIntoByte));
+            uint mask = 0;
+            for (int i = 0; i < bitCount; i++)
+            {
+                mask = (mask << 1) | 1u;
+            }
+            return mask;
         }
 
-        public UInt2 GetUInt2(int byteOffset, int startOffsetIntoByte) => new UInt2(Data[byteOffset] >> startOffsetIntoByte);
-        public void SetUInt2(int byteOffset, int startOffsetIntoByte, UInt2 twoBitValue)
+        public byte GetByte(int offset) => Data[offset];
+        public void SetByte(int offset, byte value) => Data[offset] = value;
+
+        public uint GetUInt32(int index, int bitCount, int offset)
         {
-            Data[byteOffset] = (byte)((Data[byteOffset] & ~(0b11 << startOffsetIntoByte)) | (twoBitValue << startOffsetIntoByte));
+            return (BitConverter.ToUInt32(Data, index * 4) >> offset) & GetMask(bitCount);
+        }
+        public void SetUInt32(int index, int bitCount, int offset, uint value)
+        {
+            // Maybe throw exception / warning when value is too big
+            uint mask = GetMask(bitCount);
+            uint current = BitConverter.ToUInt32(Data, index * 4);
+            uint newValue = (current & ~(mask << offset)) | ((value & mask) << offset);
+            BitConverter.GetBytes(newValue).CopyTo(Data, index * 4);
         }
 
-        public bool GetBit(int byteOffset, int bitOffsetIntoByte) => ((Data[byteOffset] >> bitOffsetIntoByte) & 0b1) == 0b1;
-        public void SetBit(int byteOffset, int bitOffsetIntoByte, bool bitValue)
-        {
-            int toSet = 0b1 << bitOffsetIntoByte;
-            Data[byteOffset] = (byte)((Data[byteOffset] & ~toSet) | (bitValue ? toSet : 0b0));
-        }
 
         public string GetUtf8String(int index, int length)
         {
@@ -74,36 +63,6 @@ namespace Core.Models
             Encoding.UTF8.GetBytes(value).CopyTo(output, 0);
             output.CopyTo(Data, index);
         }
-
-
-        ///// <summary>
-        ///// Get byte that runs across two bytes in the data byte array. The lower part of the number is in the first, and the upper part in the second.
-        ///// 
-        ///// e.g. for two consecutive bytes 101110_01, 011010_10, numOfBitsInStartByte=6, we get 10_101110
-        ///// </summary>
-        ///// <param name="startByte">The offset of the first byte in the data to contain part of the number. This contains the lower
-        ///// part of the number, while the byte after this contains the upper part of the number.</param>
-        ///// <param name="numOfBitsInStartByte">The number of bits out of the 8 that make up the byte that are contained within the first byte (that is, startByte)</param>
-        ///// <returns></returns>
-        //public byte GetOverflowByte(int startByte, int numOfBitsInStartByte)
-        //{
-        //    return (byte)((Data[startByte] >> (8 - numOfBitsInStartByte)) | (Data[startByte + 1] << numOfBitsInStartByte));
-        //}
-
-        //public void SetOverflowByte(int startByte, int numOfBitsInStartByte, byte value)
-        //{
-        //    // mask out necessary bits in current values
-        //    int byte0 = Data[startByte] & (0xFF >> (8 - numOfBitsInStartByte));
-        //    int byte1 = Data[startByte + 1] & (0xFF << numOfBitsInStartByte);
-
-        //    // shift new value to positions
-        //    int val0 = value << numOfBitsInStartByte;
-        //    int val1 = value >> (8 - numOfBitsInStartByte);
-
-        //    // or together and set
-        //    Data[startByte + 1] = (byte)(byte0 | val0);
-        //    Data[startByte] = (byte)(byte1 | val1);
-        //}
     }
 
 }

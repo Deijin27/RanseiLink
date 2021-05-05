@@ -1,6 +1,4 @@
-﻿
-using Core.Enums;
-using Core.Structs;
+﻿using Core.Enums;
 
 namespace Core.Models
 {
@@ -16,44 +14,52 @@ namespace Core.Models
             set => SetPaddedUtf8String(0, 15, value);
         }
 
-        public byte Effect1Amount
+        public uint Effect1Amount
         {
-            get => (byte)(GetUInt32(4 * 4) >> 24);
+            get => GetUInt32(4, 8, 24);
+            set => SetUInt32(4, 8, 24, value);
         }
 
         public SaihaiEffectId Effect1
         {
-            get => (SaihaiEffectId)(int)(UInt7)GetUInt32(5 * 4);
+            get => (SaihaiEffectId)GetUInt32(5, 7, 0);
+            set => SetUInt32(5, 7, 0, (uint)value);
         }
 
         public SaihaiEffectId Effect2
         {
-            get => (SaihaiEffectId)(int)(UInt7)(GetUInt32(5 * 4) >> 7);
+            get => (SaihaiEffectId)GetUInt32(5, 7, 7);
+            set => SetUInt32(5, 7, 7, (uint)value);
         }
 
-        public byte Effect2Amount
+        public uint Effect2Amount
         {
-            get => (byte)(GetUInt32(5 * 4) >> 14);
+            get => GetUInt32(5, 8, 14);
+            set => SetUInt32(5, 8, 14, value);
         }
 
         public SaihaiEffectId Effect3
         {
-            get => (SaihaiEffectId)(int)(UInt7)(GetUInt32(5 * 4) >> 22);
+            get => (SaihaiEffectId)GetUInt32(5, 7, 22);
+            set => SetUInt32(5, 8, 14, (uint)value);
         }
 
-        public UInt3 Duration
+        public uint Duration
         {
-            get => (UInt3)(GetUInt32(5 * 4) >> 29);
+            get => GetUInt32(5, 3, 29);
+            set => SetUInt32(5, 3, 29, value);
         }
 
-        public byte Effect3Amount
+        public uint Effect3Amount
         {
-            get => (byte)(GetUInt32(6 * 4) >> 0);
+            get => GetUInt32(6, 8, 0);
+            set => SetUInt32(6, 8, 0, value);
         }
 
         public SaihaiTargetId Target
         {
-            get => (SaihaiTargetId)(int)(UInt2)(GetUInt32(6 * 4) >> 8);
+            get => (SaihaiTargetId)GetUInt32(6, 2, 8);
+            set => SetUInt32(6, 8, 0, (uint)value);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace Core
             sb.Append($"    {propertyName}: ");
             sb.AppendLine(propertyValue);
         }
+
     }
 }

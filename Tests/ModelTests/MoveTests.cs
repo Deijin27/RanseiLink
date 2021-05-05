@@ -19,17 +19,17 @@ namespace Tests.ModelTests
             Assert.Equal("Cross Poison", crossPoison.Name);
             Assert.Equal((MoveMovementFlags)0, crossPoison.MovementFlags);
             Assert.Equal(TypeId.Poison, crossPoison.Type);
-            Assert.Equal(38, crossPoison.Power);
-            Assert.Equal(100, crossPoison.Accuracy);
+            Assert.Equal(38u, crossPoison.Power);
+            Assert.Equal(100u, crossPoison.Accuracy);
             Assert.Equal(MoveRangeId.Cross, crossPoison.Range);
             Assert.Equal(MoveEffectId.ChanceToPoisonTarget, crossPoison.Effect0);
-            Assert.Equal(10, crossPoison.Effect0Chance);
+            Assert.Equal(10u, crossPoison.Effect0Chance);
             Assert.Equal(MoveEffectId.HighCriticalHitChance, crossPoison.Effect1);
-            Assert.Equal(0, crossPoison.Effect1Chance);
+            Assert.Equal(0u, crossPoison.Effect1Chance);
             Assert.Equal(MoveEffectId.ChanceToPoisonTarget, crossPoison.Effect2);
-            Assert.Equal(10, crossPoison.Effect2Chance);
+            Assert.Equal(10u, crossPoison.Effect2Chance);
             Assert.Equal(MoveEffectId.HighCriticalHitChance, crossPoison.Effect3);
-            Assert.Equal(0, crossPoison.Effect3Chance);
+            Assert.Equal(0u, crossPoison.Effect3Chance);
         }
     }
 }

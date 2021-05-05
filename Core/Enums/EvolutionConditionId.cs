@@ -1,6 +1,4 @@
 ﻿
-using Core.Structs;
-
 namespace Core.Enums
 {
     public enum EvolutionConditionId

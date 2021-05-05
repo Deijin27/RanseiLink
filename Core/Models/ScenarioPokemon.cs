@@ -1,5 +1,4 @@
 ﻿using Core.Enums;
-using Core.Structs;
 
 namespace Core.Models
 {

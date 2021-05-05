@@ -27,10 +27,10 @@ namespace Tests.ModelTests
             Assert.Equal(ItemId.DawnStone, (ItemId)(int)gallade.QuantityForEvolutionCondition1);
             Assert.Equal(EvolutionConditionId.WarriorGender, gallade.EvolutionCondition2);
             Assert.Equal(GenderId.Male, (GenderId)(int)gallade.QuantityForEvolutionCondition2);
-            Assert.Equal(246, gallade.Hp);
-            Assert.Equal(255, gallade.Atk);
-            Assert.Equal(185, gallade.Def);
-            Assert.Equal(165, gallade.Spe);
+            Assert.Equal(246u, gallade.Hp);
+            Assert.Equal(255u, gallade.Atk);
+            Assert.Equal(185u, gallade.Def);
+            Assert.Equal(165u, gallade.Spe);
         }
     }
 }

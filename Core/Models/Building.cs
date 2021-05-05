@@ -1,5 +1,4 @@
 ﻿using Core.Enums;
-using Core.Structs;
 
 namespace Core.Models
 {
@@ -17,7 +16,8 @@ namespace Core.Models
 
         public LocationId Location
         {
-            get => (LocationId)GetByte(27);
+            get => (LocationId)GetUInt32(6, 5, 24);
+            set => SetUInt32(6, 5, 24, (uint)value);
         }
     }
 }

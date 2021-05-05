@@ -31,10 +31,10 @@ namespace RanseiConsole.Dev
         {
             var int_idx = 6;
             var shift = 10;
-            var mask = 0b111111111;
+            var bitCount = 9;
 
             var gpk = IterateSaihai().OrderBy(i => i.Name)
-                .GroupBy(p => (p.GetUInt32(int_idx * 4) >> shift) & mask)
+                .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
             foreach (var group in gpk)

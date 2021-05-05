@@ -21,14 +21,14 @@ namespace Tests.ModelTests
             });
 
             Assert.Equal("Mayhem", mayhem.Name);
-            Assert.Equal(1, mayhem.Effect1Amount);
+            Assert.Equal(1u, mayhem.Effect1Amount);
             Assert.Equal(SaihaiEffectId.RaiseRange, mayhem.Effect1);
             Assert.Equal(SaihaiEffectId.ClimbHigher, mayhem.Effect2);
-            Assert.Equal(0, mayhem.Effect2Amount);
+            Assert.Equal(0u, mayhem.Effect2Amount);
             Assert.Equal(SaihaiEffectId.ChanceToFlinchOpponent, mayhem.Effect3);
-            Assert.Equal(40, mayhem.Effect3Amount);
+            Assert.Equal(40u, mayhem.Effect3Amount);
             Assert.Equal(SaihaiTargetId.Self, mayhem.Target);
-            Assert.Equal(3, mayhem.Duration);
+            Assert.Equal(3u, mayhem.Duration);
         }
     }
 }

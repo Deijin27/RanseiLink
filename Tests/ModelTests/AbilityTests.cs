@@ -19,10 +19,10 @@ namespace Tests.ModelTests
             });
 
             Assert.Equal("Last Bastion", lastBastion.Name);
-            Assert.Equal(2, lastBastion.Effect1Amount);
+            Assert.Equal(2u, lastBastion.Effect1Amount);
             Assert.Equal(AbilityEffectId.IncreaseUserAttack, lastBastion.Effect1);
             Assert.Equal(AbilityEffectId.IncreaseUserDefence, lastBastion.Effect2);
-            Assert.Equal(2, lastBastion.Effect2Amount);
+            Assert.Equal(2u, lastBastion.Effect2Amount);
         }
     }
 }

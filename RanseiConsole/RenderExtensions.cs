@@ -1,7 +1,6 @@
 ﻿using CliFx.Infrastructure;
 using Core.Enums;
 using Core.Models;
-using Core.Structs;
 using System;
 using System.Text;
 
@@ -27,7 +26,7 @@ namespace RanseiConsole
             console.WithForegroundColor(ConsoleColor.Gray, c => c.Output.WriteLine(propertyValue));
         }
 
-        public static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, UInt9 quantity)
+        public static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
         {
             switch (id)
             {
@@ -76,7 +75,7 @@ namespace RanseiConsole
             console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
         }
 
-        private static string RenderQuantityForMoveEffect(MoveEffectId id, UInt7 value)
+        private static string RenderQuantityForMoveEffect(MoveEffectId id, uint value)
         {
             switch (id)
             {

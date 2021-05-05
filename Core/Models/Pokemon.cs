@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 using Core.Enums;
-using Core.Structs;
 
 namespace Core.Models
 {
@@ -20,79 +17,87 @@ namespace Core.Models
             set => SetPaddedUtf8String(0, 11, value);
         }
 
-        public UInt9 Hp
+        public uint Hp
         {
-            get => (UInt9)GetUInt16(12);
+            get => GetUInt32(3, 9, 0);
+            set => SetUInt32(3, 9, 0, value);
         }
 
         public EvolutionConditionId EvolutionCondition1
         {
-            get => (EvolutionConditionId)(byte)(UInt4)(GetByte(13) >> 2);
+            get => (EvolutionConditionId)GetUInt32(3, 4, 10);
+            set => SetUInt32(3, 4, 10, (uint)value);
         }
         public EvolutionConditionId EvolutionCondition2
         {
-            get => (EvolutionConditionId)(byte)(UInt4)(GetUInt16(13) >> 6);
+            get => (EvolutionConditionId)GetUInt32(3, 4, 14);
+            set => SetUInt32(3, 4, 10, (uint)value);
         }
 
-        public UInt9 Atk
+        public uint Atk
         {
-            get => (UInt9)GetUInt16(16);
+            get => GetUInt32(4, 9, 0);
+            set => SetUInt32(4, 9, 0, value);
         }
 
-        public UInt9 Def
+        public uint Def
         {
-            get => (UInt9)(GetUInt32(16) >> 10);
+            get => GetUInt32(4, 9, 10);
+            set => SetUInt32(4, 9, 10, value);
         }
 
-        public UInt9 Spe
+        public uint Spe
         {
-            get => (UInt9)(GetUInt32(16) >> 20);
+            get => GetUInt32(4, 9, 20);
+            set => SetUInt32(4, 9, 20, value);
         }
 
         public TypeId Type1
         {
-            get => (TypeId)(int)(UInt5)(GetByte(0x14) >> 0);
-            set => SetByte(0x14, (byte)(GetByte(0x14) & ~(0b11111) | (int)value));
+            get => (TypeId)GetUInt32(5, 5, 0);
+            set => SetUInt32(5, 5, 0, (uint)value);
         }
 
         public TypeId Type2
         {
-            get => (TypeId)(int)(UInt5)(GetUInt16(0x14) >> 5);
-            set => SetUInt16(0x14, (byte)(GetByte(0x14) & ~(0b11111 << 5) | ((int)value << 5)));
+            get => (TypeId)GetUInt32(5, 5, 5);
+            set => SetUInt32(5, 5, 5, (uint)value);
         }
 
-        public MoveId Move // uint8
+        public MoveId Move
         {
-            get => (MoveId)(GetUInt16(0x15) >> 2); // masking is done automatically by the cast since the value is exactly 1 byte long
-            set => SetUInt16(0x15, (ushort)((GetUInt16(0x15) & ~(0xFF << 2)) | ((int)value << 2)));
+            get => (MoveId)GetUInt32(5, 8, 10);
+            set => SetUInt32(5, 8, 10, (uint)value);
         }
 
         public AbilityId Ability1 // uint8 but their compression treats it as uint9 for no apparent reason
         {
-            get => (AbilityId)GetByte(0x18);
-            set => SetByte(0x18, (byte)value);
+            get => (AbilityId)GetUInt32(6, 8, 0);
+            set => SetUInt32(6, 8, 0, (uint)value);
         }
 
         public AbilityId Ability2 // uint8, but their compression treats it as uint9 for no apparent reason
         {
-            get => (AbilityId)(GetUInt16(0x19) >> 1);
-            set => SetUInt16(0x19, (ushort)(GetUInt16(0x19) & ~(0b11111111 << 1) | ((int)value << 1)));
+            get => (AbilityId)GetUInt32(6, 8, 9);
+            set => SetUInt32(6, 8, 9, (uint)value);
         }
 
         public AbilityId Ability3 // uint8, but their compression treats it as uint9 for no apparent reason
         {
-            get => (AbilityId)(GetUInt16(0x1A) >> 2);
-            set => SetUInt16(0x1A, (ushort)(GetUInt16(0x1A) & ~(0b11111111 << 2) | ((int)value << 2)));
+            get => (AbilityId)GetUInt32(6, 8, 18);
+            set => SetUInt32(6, 8, 18, (uint)value);
         }
 
-        public UInt9 QuantityForEvolutionCondition1
+        public uint QuantityForEvolutionCondition1
         {
-            get => (UInt9)GetUInt32(28);
+            get => GetUInt32(7, 9, 0);
+            set => SetUInt32(7, 9, 0, value);
         }
 
-        public UInt9 QuantityForEvolutionCondition2
+        public uint QuantityForEvolutionCondition2
         {
-            get => (UInt9)(GetUInt32(28) >> 18);
+            get => GetUInt32(7, 9, 18);
+            set => SetUInt32(7, 9, 18, value);
         }
 
         #region ToString
@@ -117,7 +122,7 @@ namespace Core.Models
             return sb.ToString();
         }
 
-        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, UInt9 quantity)
+        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
         {
             switch (id)
             {
@@ -131,13 +136,13 @@ namespace Core.Models
                     return $"({quantity}%) ";
 
                 case EvolutionConditionId.Location:
-                    return $"({(LocationId)(int)quantity}) ";
+                    return $"({(LocationId)quantity}) ";
 
                 case EvolutionConditionId.WarriorGender:
-                    return $"({(GenderId)(int)quantity}) ";
+                    return $"({(GenderId)quantity}) ";
 
                 case EvolutionConditionId.Item:
-                    return $"({(ItemId)(int)quantity}) ";
+                    return $"({(ItemId)quantity}) ";
 
                 case EvolutionConditionId.JoinOffer:
                 case EvolutionConditionId.NoCondition:
