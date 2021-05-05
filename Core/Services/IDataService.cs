@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Core.Enums;
+using Core.Models;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Services
 {
-    public interface IDataService<TId, TModel>
+    public interface IDataService : 
+        IModelDataService<PokemonId, Pokemon>,
+        IModelDataService<MoveId, Move>,
+        IModelDataService<AbilityId, Ability>,
+        IModelDataService<SaihaiId, Saihai>,
+        IModelDataService<GimmickId, Gimmick>,
+        IModelDataService<BuildingId, Building>
     {
-        TModel Retrieve(TId id);
-        void Save(TId id, TModel model);
+        Dictionary<PokemonId, Pokemon> AllPokemon();
+        void CommitToRom(string path);
+        void LoadRom(string path);
     }
 }

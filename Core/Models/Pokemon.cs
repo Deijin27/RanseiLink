@@ -95,5 +95,59 @@ namespace Core.Models
             get => (UInt9)(GetUInt32(28) >> 18);
         }
 
+        #region ToString
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.WriteProperty("Name", Name);
+            sb.WriteProperty("Types", $"{Type1} / {Type2}");
+            sb.WriteProperty("Abilities", $"{Ability1} / {Ability2} / {Ability3}");
+            sb.WriteProperty("Move", Move.ToString());
+
+            sb.WriteProperty("Evolution Conditions", string.Format("{0} {1}/ {2} {3}",
+                EvolutionCondition1,
+                RenderQuantityForEvolutionCondition(EvolutionCondition1, QuantityForEvolutionCondition1),
+                EvolutionCondition2,
+                RenderQuantityForEvolutionCondition(EvolutionCondition2, QuantityForEvolutionCondition2)
+                ));
+
+            sb.WriteProperty("Stats", $"{Hp} HP / {Atk} Atk / {Def} Def / {Spe} Spe");
+
+            return sb.ToString();
+        }
+
+        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, UInt9 quantity)
+        {
+            switch (id)
+            {
+                case EvolutionConditionId.Hp:
+                case EvolutionConditionId.Attack:
+                case EvolutionConditionId.Defence:
+                case EvolutionConditionId.Speed:
+                    return $"({quantity}) ";
+
+                case EvolutionConditionId.Link:
+                    return $"({quantity}%) ";
+
+                case EvolutionConditionId.Location:
+                    return $"({(LocationId)(int)quantity}) ";
+
+                case EvolutionConditionId.WarriorGender:
+                    return $"({(GenderId)(int)quantity}) ";
+
+                case EvolutionConditionId.Item:
+                    return $"({(ItemId)(int)quantity}) ";
+
+                case EvolutionConditionId.JoinOffer:
+                case EvolutionConditionId.NoCondition:
+                    return "";
+
+                default:
+                    throw new ArgumentException("Unexpected enum value");
+            }
+        }
+
+        #endregion
     }
 }

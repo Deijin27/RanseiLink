@@ -9,13 +9,13 @@ namespace RanseiWpf.ViewModels
 {
     public class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase where TViewModel : IViewModelForModel<TModel>, new() where TModel : BaseDataWindow
     {
-        public SelectorViewModelBase(TId initialSelected, IDataService<TId, TModel> dataService)
+        public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
         {
             DataService = dataService;
             Selected = initialSelected;
         }
 
-        private readonly IDataService<TId, TModel> DataService;
+        private readonly IModelDataService<TId, TModel> DataService;
 
         TViewModel _nestedViewModel;
         public TViewModel NestedViewModel
@@ -61,11 +61,11 @@ namespace RanseiWpf.ViewModels
 
     public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, Pokemon, PokemonViewModel>
     {
-        public PokemonSelectorViewModel(PokemonId initialSelected, IDataService<PokemonId, Pokemon> dataService) : base(initialSelected, dataService) { }
+        public PokemonSelectorViewModel(PokemonId initialSelected, IModelDataService<PokemonId, Pokemon> dataService) : base(initialSelected, dataService) { }
     }
 
     public class WazaSelectorViewModel : SelectorViewModelBase<MoveId, Move, WazaViewModel>
     {
-        public WazaSelectorViewModel(MoveId initialSelected, IDataService<MoveId, Move> dataService) : base(initialSelected, dataService) { }
+        public WazaSelectorViewModel(MoveId initialSelected, IModelDataService<MoveId, Move> dataService) : base(initialSelected, dataService) { }
     }
 }

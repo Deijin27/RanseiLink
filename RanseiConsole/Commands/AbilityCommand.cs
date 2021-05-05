@@ -16,7 +16,7 @@ namespace RanseiConsole.Commands
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IDataService<AbilityId, Ability> service = new DataService();
+            IModelDataService<AbilityId, Ability> service = new DataService();
             var ability = service.Retrieve(Id);
 
             console.Render(ability, Id);

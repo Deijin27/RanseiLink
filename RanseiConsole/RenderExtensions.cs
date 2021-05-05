@@ -3,6 +3,7 @@ using Core.Enums;
 using Core.Models;
 using Core.Structs;
 using System;
+using System.Text;
 
 namespace RanseiConsole
 {
@@ -26,7 +27,7 @@ namespace RanseiConsole
             console.WithForegroundColor(ConsoleColor.Gray, c => c.Output.WriteLine(propertyValue));
         }
 
-        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, UInt9 quantity)
+        public static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, UInt9 quantity)
         {
             switch (id)
             {

@@ -1,17 +1,12 @@
 ﻿using Core.Enums;
 using Core.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Core.Services
 {
-    public class DataService : 
-        IDataService<PokemonId, Pokemon>, 
-        IDataService<MoveId, Move>, 
-        IDataService<AbilityId, Ability>, 
-        IDataService<SaihaiId, Saihai>,
-        IDataService<GimmickId, Gimmick>,
-        IDataService<BuildingId, Building>
+    public class DataService : IDataService
     {
         readonly string DataFolder;
         const string PokemonFile = "Pokemon.dat";
@@ -85,6 +80,22 @@ namespace Core.Services
                 file.BaseStream.Position = (int)id * Pokemon.DataLength;
                 file.Write(model.Data);
             }
+        }
+
+        public Dictionary<PokemonId, Pokemon> AllPokemon()
+        {
+            var dict = new Dictionary<PokemonId, Pokemon>();
+
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, PokemonFile))))
+            {
+                int count = (int)(file.BaseStream.Length / Pokemon.DataLength);
+                for (int i = 0; i < count; i++)
+                {
+                    var pk = file.ReadBytes(Pokemon.DataLength);
+                    dict[(PokemonId)i] = new Pokemon(pk);
+                }
+            }
+            return dict;
         }
 
         public Move Retrieve(MoveId id)

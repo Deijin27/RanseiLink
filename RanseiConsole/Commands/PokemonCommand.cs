@@ -16,7 +16,7 @@ namespace RanseiConsole.Commands
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IDataService<PokemonId, Pokemon> service = new DataService();
+            IModelDataService<PokemonId, Pokemon> service = new DataService();
             var move = service.Retrieve(Id);
             console.Render(move, Id);
             return default;

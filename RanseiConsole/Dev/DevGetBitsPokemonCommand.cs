@@ -19,7 +19,7 @@ namespace RanseiConsole.Dev
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IDataService<PokemonId, Pokemon> service = new DataService();
+            IModelDataService<PokemonId, Pokemon> service = new DataService();
             var pokemon = service.Retrieve(Id);
             string bits = Testing.GetBits(pokemon);
             console.Output.WriteLine(bits);
