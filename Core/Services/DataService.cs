@@ -53,12 +53,13 @@ namespace Core.Services
         {
             using (var nds = new Nds.Nds(path))
             {
-                nds.ExtractCopyOfFile(PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
-                nds.ExtractCopyOfFile(MoveRomPath, Path.Combine(DataFolder, MoveFile));
-                nds.ExtractCopyOfFile(AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
-                nds.ExtractCopyOfFile(SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
-                nds.ExtractCopyOfFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
-                nds.ExtractCopyOfFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
+                Console.WriteLine(DataFolder);
+                nds.ExtractCopyOfFile(PokemonRomPath, DataFolder);
+                nds.ExtractCopyOfFile(MoveRomPath, DataFolder);
+                nds.ExtractCopyOfFile(AbilityRomPath, DataFolder);
+                nds.ExtractCopyOfFile(SaihaiRomPath, DataFolder);
+                nds.ExtractCopyOfFile(GimmickRomPath, DataFolder);
+                nds.ExtractCopyOfFile(BuildingRomPath, DataFolder);
             }
         }
 
