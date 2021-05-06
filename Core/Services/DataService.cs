@@ -26,6 +26,11 @@ namespace Core.Services
         public DataService()
         {
             DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ransei");
+            Init();
+        }
+
+        private void Init()
+        {
             Directory.CreateDirectory(DataFolder);
             foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile, GimmickFile, BuildingFile })
             {
@@ -36,6 +41,12 @@ namespace Core.Services
                                                             // where no rom has been loaded yet.
                 }
             }
+        }
+
+        public DataService(string dataFolder)
+        {
+            DataFolder = dataFolder;
+            Init();
         }
 
         public void LoadRom(string path)
@@ -64,6 +75,7 @@ namespace Core.Services
             }
         }
 
+
         public Pokemon Retrieve(PokemonId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, PokemonFile))))
@@ -75,7 +87,7 @@ namespace Core.Services
 
         public void Save(PokemonId id, Pokemon model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, PokemonFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, PokemonFile))))
             {
                 file.BaseStream.Position = (int)id * Pokemon.DataLength;
                 file.Write(model.Data);
@@ -109,7 +121,7 @@ namespace Core.Services
 
         public void Save(MoveId id, Move model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, MoveFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, MoveFile))))
             {
                 file.BaseStream.Position = (int)id * Move.DataLength;
                 file.Write(model.Data);
@@ -127,7 +139,7 @@ namespace Core.Services
 
         public void Save(AbilityId id, Ability model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, AbilityFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, AbilityFile))))
             {
                 file.BaseStream.Position = (int)id * Ability.DataLength;
                 file.Write(model.Data);
@@ -145,7 +157,7 @@ namespace Core.Services
 
         public void Save(SaihaiId id, Saihai model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, SaihaiFile))))
             {
                 file.BaseStream.Position = (int)id * Saihai.DataLength;
                 file.Write(model.Data);
@@ -163,7 +175,7 @@ namespace Core.Services
 
         public void Save(GimmickId id, Gimmick model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, GimmickFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, GimmickFile))))
             {
                 file.BaseStream.Position = (int)id * Gimmick.DataLength;
                 file.Write(model.Data);
@@ -181,7 +193,7 @@ namespace Core.Services
 
         public void Save(BuildingId id, Building model)
         {
-            using (var file = new BinaryWriter(File.OpenRead(Path.Combine(DataFolder, BuildingFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, BuildingFile))))
             {
                 file.BaseStream.Position = (int)id * Building.DataLength;
                 file.Write(model.Data);

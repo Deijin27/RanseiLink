@@ -14,10 +14,13 @@ namespace RanseiConsole.Commands
         [CommandParameter(0, Description = "Path to entry point script", Name = "path")]
         public string FilePath { get; set; }
 
+        public IDataService Service = null;
+
         public ValueTask ExecuteAsync(IConsole console)
         {
             var lua = new Lua();
             Directory.SetCurrentDirectory(Path.GetDirectoryName(FilePath));
+            FilePath = Path.GetFileName(FilePath);
 
             lua.LoadCLRPackage();
             lua.DoString(@"
@@ -28,8 +31,8 @@ namespace RanseiConsole.Commands
             lua.DoString(@"
 		        import = function () end
 	        ");
-
-            IDataService service = new DataService();
+            IDataService service = Service ?? new DataService();
+            
             lua["service"] = service;
 
             lua.DoFile(FilePath);
