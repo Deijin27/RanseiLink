@@ -53,7 +53,6 @@ namespace Core.Services
         {
             using (var nds = new Nds.Nds(path))
             {
-                Console.WriteLine(DataFolder);
                 nds.ExtractCopyOfFile(PokemonRomPath, DataFolder);
                 nds.ExtractCopyOfFile(MoveRomPath, DataFolder);
                 nds.ExtractCopyOfFile(AbilityRomPath, DataFolder);

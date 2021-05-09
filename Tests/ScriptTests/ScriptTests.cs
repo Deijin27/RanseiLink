@@ -10,12 +10,12 @@ namespace Tests.ScriptTests
 {
     public class ScriptTests
     {
-        const string TestScriptFolder = @"ScriptTests";
-
+        readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.CodeBase).AbsolutePath), "ScriptTests");
 
         [Fact]
         public async void ScriptInteractWithRomSuccessfully()
         {
+
             // Initialize
             string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"Ransei/Tests/{nameof(ScriptInteractWithRomSuccessfully)}");
             var service = new DataService(folder);
@@ -28,9 +28,11 @@ namespace Tests.ScriptTests
 
             var console = new FakeInMemoryConsole();
 
+            string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua"); // Important to do before command initializer idk why
+
             var command = new LuaCommand()
             {
-                FilePath = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua"),
+                FilePath = file,
                 Service = service
             };
 
@@ -50,5 +52,6 @@ namespace Tests.ScriptTests
             
 
         }
+
     }
 }
