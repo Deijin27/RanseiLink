@@ -52,5 +52,29 @@ namespace RanseiWpf.ViewModels
             get => Model.Ability3;
             set => RaiseAndSetIfChanged(Model.Ability3, value, v => Model.Ability3 = v);
         }
+
+        public uint Hp
+        {
+            get => Model.Hp;
+            set => RaiseAndSetIfChanged(Model.Hp, value, v => Model.Hp = v);
+        }
+
+        public uint Atk
+        {
+            get => Model.Atk;
+            set => RaiseAndSetIfChanged(Model.Atk, value, v => Model.Atk = v);
+        }
+
+        public uint Def
+        {
+            get => Model.Def;
+            set => RaiseAndSetIfChanged(Model.Def, value, v => Model.Def = v);
+        }
+
+        public uint Spe
+        {
+            get => Model.Spe;
+            set => RaiseAndSetIfChanged(Model.Spe, value, v => Model.Spe = v);
+        }
     }
 }

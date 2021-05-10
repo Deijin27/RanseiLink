@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="RanseiWpf.Controls.NumberBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiWpf.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="100">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button">
+                <Setter Property="Width" Value="18"/>
+                <Setter Property="Foreground" Value="#606060"/>
+                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="FontSize" Value="11"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border x:Name="SurroundingBorder" BorderThickness="1" BorderBrush="#ABADB3" Background="#ABADB3" Height="20">
+        <DockPanel>
+            <Button x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0"></Button>
+            <Button x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0"></Button>
+            <TextBox x:Name="NumberTextBox" TextChanged="NumberTextBox_TextChanged" PreviewTextInput="NumberTextBox_PreviewTextInput" BorderThickness="0" Background="White"/>
+        </DockPanel>
+    </Border>
+</UserControl>

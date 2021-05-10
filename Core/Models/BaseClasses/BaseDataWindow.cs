@@ -57,7 +57,7 @@ namespace Core.Models
         {
             if (value.Length > maxLength)
             {
-                throw new ArgumentException("String is too long");
+                value = value.Substring(0, maxLength);
             }
             var output = new byte[maxLength];
             Encoding.UTF8.GetBytes(value).CopyTo(output, 0);

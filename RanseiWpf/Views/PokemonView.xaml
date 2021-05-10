@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:Background="WhiteSmoke"
              xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
+             xmlns:controls="clr-namespace:RanseiWpf.Controls"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -21,6 +22,12 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
@@ -65,6 +72,18 @@
 
         <TextBlock Text="Ability3" Grid.Row="6" />
         <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability3, Mode=TwoWay}"/>
+
+        <TextBlock Text="HP" Grid.Row="7" />
+        <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Hp, Mode=TwoWay}" Max="511"/>
+
+        <TextBlock Text="Atk" Grid.Row="8" />
+        <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Atk, Mode=TwoWay}" Max="511"/>
+
+        <TextBlock Text="Def" Grid.Row="9" />
+        <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Def, Mode=TwoWay}" Max="511"/>
+
+        <TextBlock Text="Spe" Grid.Row="10" />
+        <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="511"/>
 
     </Grid>
 </UserControl>
