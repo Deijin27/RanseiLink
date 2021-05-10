@@ -9,7 +9,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var sacredRuins = new Building(new byte[]
+            var b = new Building(new byte[]
             {
                 0x53, 0x61, 0x63, 0x72, 
                 0x65, 0x64, 0x20, 0x52, 
@@ -22,9 +22,24 @@ namespace Tests.ModelTests
                 0x14, 0x26, 0x93, 0x99
             });
 
-            Assert.Equal("Sacred Ruins", sacredRuins.Name);
-            Assert.Equal(LocationId.Aurora, sacredRuins.Location);
+            Assert.Equal("Sacred Ruins", b.Name);
+            Assert.Equal(LocationId.Aurora, b.Location);
             
+        }
+
+        [Fact]
+        public void AccessorsSetCorrectValues()
+        {
+            var b = new Building
+            {
+                Name = "Sacred Ruins",
+                Location = LocationId.Aurora
+            };
+
+            Assert.Equal("Sacred Ruins", b.Name);
+            Assert.Equal(LocationId.Aurora, b.Location);
+
+            // Add Array equal test when possible
         }
     }
 }

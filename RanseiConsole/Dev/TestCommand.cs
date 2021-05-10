@@ -15,13 +15,13 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ScenarioPokemonGroups", IterateScenarioPokemon(), i => i.Pokemon.ToString());
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ScenarioPokemonGroups", IterateScenarioPokemon(), i => i.Pokemon.ToString());
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateBuilding().First()));
 
-            //Test1(console);
+            Test1(console);
 
 
             return default;
@@ -29,11 +29,11 @@ namespace RanseiConsole.Dev
 
         void Test1(IConsole console)
         {
-            var int_idx = 6;
-            var shift = 10;
-            var bitCount = 9;
+            var int_idx = 0;
+            var shift = 16;
+            var bitCount = 16;
 
-            var gpk = IterateSaihai().OrderBy(i => i.Name)
+            var gpk = IterateScenarioPokemon().OrderBy(i => i.Pokemon.ToString())
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
@@ -44,7 +44,7 @@ namespace RanseiConsole.Dev
 
                 foreach (var pk in group)
                 {
-                    console.Output.WriteLine(pk.Name);
+                    console.Output.WriteLine(pk.Pokemon.ToString());
                 }
 
                 console.Output.WriteLine();
@@ -141,7 +141,7 @@ namespace RanseiConsole.Dev
         
         static IEnumerable<ScenarioPokemon> IterateScenarioPokemon()
         {
-            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario 00\ScenarioPokemon.dat"));
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario00\ScenarioPokemon.dat"));
 
             int count = (int)(file.BaseStream.Length / ScenarioPokemon.DataLength);
             for (int i = 0; i < count; i++)

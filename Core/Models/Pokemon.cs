@@ -31,7 +31,7 @@ namespace Core.Models
         public EvolutionConditionId EvolutionCondition2
         {
             get => (EvolutionConditionId)GetUInt32(3, 4, 14);
-            set => SetUInt32(3, 4, 10, (uint)value);
+            set => SetUInt32(3, 4, 14, (uint)value);
         }
 
         public uint Atk

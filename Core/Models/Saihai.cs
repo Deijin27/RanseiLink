@@ -41,7 +41,7 @@ namespace Core.Models
         public SaihaiEffectId Effect3
         {
             get => (SaihaiEffectId)GetUInt32(5, 7, 22);
-            set => SetUInt32(5, 8, 14, (uint)value);
+            set => SetUInt32(5, 7, 22, (uint)value);
         }
 
         public uint Duration
@@ -59,7 +59,7 @@ namespace Core.Models
         public SaihaiTargetId Target
         {
             get => (SaihaiTargetId)GetUInt32(6, 2, 8);
-            set => SetUInt32(6, 8, 0, (uint)value);
+            set => SetUInt32(6, 2, 8, (uint)value);
         }
     }
 }
