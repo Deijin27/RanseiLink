@@ -7,12 +7,15 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/RedHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/GrayHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MenuToggleButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- Register Selector View Models -->
+            
             <DataTemplate DataType="{x:Type vm:PokemonSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
@@ -21,6 +24,12 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:AbilitySelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+            
+            <!-- Register View Models -->
+
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
                 <views:PokemonView/>
             </DataTemplate>
@@ -28,7 +37,11 @@
             <DataTemplate DataType="{x:Type vm:WazaViewModel}">
                 <views:WazaView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
+                <views:AbilityView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

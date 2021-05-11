@@ -42,9 +42,8 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0">
                 <RadioButton Content="Pokemon" Height="30" Style="{StaticResource MenuToggleButtonStyle}" IsChecked="True" Command="{Binding PokemonViewCommand}"/>
-                <RadioButton Content="Waza" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding WazaViewCommand}"/>
-                <RadioButton Content="Tokusei" Height="30" Style="{StaticResource MenuToggleButtonStyle}"/>
-                <RadioButton Content="Bushou" Height="30" Style="{StaticResource MenuToggleButtonStyle}"/>
+                <RadioButton Content="Moves" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding WazaViewCommand}"/>
+                <RadioButton Content="Abilities" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding AbilityViewCommand}"/>
             </StackPanel>
             <Border BorderThickness="0" Grid.Row="1" Background="WhiteSmoke" Opacity="0.9"/>
         </Grid>

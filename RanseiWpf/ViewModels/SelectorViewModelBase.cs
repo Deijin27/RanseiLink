@@ -68,4 +68,9 @@ namespace RanseiWpf.ViewModels
     {
         public WazaSelectorViewModel(MoveId initialSelected, IModelDataService<MoveId, Move> dataService) : base(initialSelected, dataService) { }
     }
+
+    public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, Ability, AbilityViewModel>
+    {
+        public AbilitySelectorViewModel(AbilityId initialSelected, IModelDataService<AbilityId, Ability> dataService) : base(initialSelected, dataService) { }
+    }
 }
