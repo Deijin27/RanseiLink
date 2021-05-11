@@ -76,5 +76,21 @@ namespace RanseiWpf.ViewModels
             get => Model.Spe;
             set => RaiseAndSetIfChanged(Model.Spe, value, v => Model.Spe = v);
         }
+
+        public EvolutionConditionId[] EvolutionConditionItems { get; } = EnumUtil.GetValues<EvolutionConditionId>().ToArray();
+
+        public EvolutionConditionId EvolutionCondition1
+        {
+            get => Model.EvolutionCondition1;
+            set => RaiseAndSetIfChanged(Model.EvolutionCondition1, value, v => Model.EvolutionCondition1 = value);
+        }
+
+        public EvolutionConditionId EvolutionCondition2
+        {
+            get => Model.EvolutionCondition2;
+            set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
+        }
+
+
     }
 }

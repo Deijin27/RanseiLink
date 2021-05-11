@@ -8,18 +8,21 @@
              d:Background="WhiteSmoke"
              xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
              xmlns:controls="clr-namespace:RanseiWpf.Controls"
+             xmlns:valueConverters="clr-namespace:RanseiWpf.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <valueConverters:EvolutionConditionIdToQuantityNameConverter x:Key="evolutionConditionIdToQuantityNameConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1.5*"/>
             <ColumnDefinition Width="20"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1.5*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -85,5 +88,16 @@
         <TextBlock Text="Spe" Grid.Row="10" />
         <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="511"/>
 
+        <TextBlock Text="Evolution Condition 1" Grid.Row="0" Grid.Column="3" />
+        <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding EvolutionConditionItems, Mode=OneTime}" SelectedItem="{Binding EvolutionCondition1, Mode=TwoWay}"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding EvolutionCondition1, Mode=OneWay, Converter={StaticResource evolutionConditionIdToQuantityNameConverter}}" />
+        <!-- Here have all the different types of selector and bind their visibility to something -->
+        
+        <TextBlock Text="Evolution Condition 2" Grid.Row="2" Grid.Column="3" />
+        <ComboBox Grid.Row="2" Grid.Column="4" ItemsSource="{Binding EvolutionConditionItems, Mode=OneTime}" SelectedItem="{Binding EvolutionCondition2, Mode=TwoWay}"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding EvolutionCondition2, Mode=OneWay, Converter={StaticResource evolutionConditionIdToQuantityNameConverter}}" />
+        
     </Grid>
 </UserControl>

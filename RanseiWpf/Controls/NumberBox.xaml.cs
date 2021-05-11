@@ -31,13 +31,12 @@ namespace RanseiWpf.Controls
             set => SetValue(ValueProperty, value);
         }
 
-        private static void OnValuePropertyChanged(DependencyObject target, DependencyPropertyChangedEventArgs e)
+        private static void OnValuePropertyChanged(NumberBox target, DependencyPropertyChangedEventArgs<uint> e)
         {
-            NumberBox numberBox = target as NumberBox;
-            numberBox.NumberTextBox.Text = e.NewValue.ToString();
+            target.NumberTextBox.Text = e.NewValue.ToString();
         }
 
-        public static DependencyProperty MinProperty = UserControlUtil.RegisterUIDependencyProperty<NumberBox, uint>(v => v.Min, uint.MinValue);
+        public static DependencyProperty MinProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Min, uint.MinValue);
 
         public uint Min
         {
@@ -45,7 +44,7 @@ namespace RanseiWpf.Controls
             set => SetValue(MinProperty, value);
         }
 
-        public static DependencyProperty MaxProperty = UserControlUtil.RegisterUIDependencyProperty<NumberBox, uint>(v => v.Max, uint.MaxValue);
+        public static DependencyProperty MaxProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Max, uint.MaxValue);
 
         public uint Max
         {
@@ -53,7 +52,7 @@ namespace RanseiWpf.Controls
             set => SetValue(MaxProperty, value);
         }
 
-        public static DependencyProperty IncrementProperty = UserControlUtil.RegisterUIDependencyProperty<NumberBox, uint>(v => v.Increment, 1u);
+        public static DependencyProperty IncrementProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Increment, 1u);
 
         public uint Increment
         {
@@ -82,7 +81,7 @@ namespace RanseiWpf.Controls
 
         private void NumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string text = NumberTextBox.Text;
+            string text = ((TextBox)sender).Text;
             var newVal = uint.TryParse(text, out uint i) ? i : Min;
             if (Value != newVal)
             {
