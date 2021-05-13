@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Core.Archive
 {
@@ -46,22 +47,32 @@ namespace Core.Archive
                     int fileLength = br.ReadInt32(); // i have to read as this since br.ReadBytes doesnt accept uint
 
                     // Detect file type if possible
-                    string ext = string.Empty;
+                    string ext = "";
                     if (fileLength >= 4)
                     {
                         br.BaseStream.Position = fileOffset;
-                        ext = "." + br.ReadMagicNumber();
-                        // maybe validate somehow
+                        var mag = br.ReadMagicNumber();
+                        if (IsExistentAndAlphaNumeric(mag))
+                        {
+                            ext += "." + mag;
+                        }
                     }
 
                     string fileDest = Path.Combine(destinationFolder, fileIndex.ToString().PadLeft(4, '0') + ext);
 
                     br.BaseStream.Position = fileOffset;
                     byte[] fileBytes = br.ReadBytes(fileLength);
+                    Console.WriteLine(fileDest);
                     File.WriteAllBytes(fileDest, fileBytes);
                 }
-
             }
+        }
+
+
+        static bool IsExistentAndAlphaNumeric(string strToCheck)
+        {
+            Regex rg = new Regex(@"^[a-zA-Z0-9]+$");
+            return rg.IsMatch(strToCheck);
         }
     }
 }

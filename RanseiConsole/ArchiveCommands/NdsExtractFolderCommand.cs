@@ -13,7 +13,7 @@ namespace RanseiConsole.ArchiveCommands
         [CommandParameter(0, Description = "Path of nds file.", Name = "NdsPath")]
         public string NdsPath { get; set; }
 
-        [CommandParameter(1, Description = "Path of file within nds file system")]
+        [CommandParameter(1, Description = "Path of folder within nds file system")]
         public string FilePath { get; set; }
 
         [CommandOption("destinationFolder", 'd', Description = "Optional destination folder to extract to; default is a in the same location as the nds file.")]
