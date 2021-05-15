@@ -1,6 +1,7 @@
 ﻿using CliFx.Infrastructure;
 using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using System;
 using System.Text;
 
@@ -57,7 +58,7 @@ namespace RanseiConsole
             }
         }
 
-        public static void Render(this IConsole console, Pokemon pokemon, PokemonId id)
+        public static void Render(this IConsole console, IPokemon pokemon, PokemonId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", pokemon.Name);

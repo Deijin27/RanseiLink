@@ -1,15 +1,16 @@
 ﻿using Core;
 using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace RanseiWpf.ViewModels
 {
-    public class PokemonViewModel : ViewModelBase, IViewModelForModel<Pokemon>
+    public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
     {
-        public Pokemon Model { get; set; }
+        public IPokemon Model { get; set; }
 
         public string Name
         {
@@ -77,6 +78,12 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(Model.Spe, value, v => Model.Spe = v);
         }
 
+        public bool IsLegendary
+        {
+            get => Model.IsLegendary;
+            set => RaiseAndSetIfChanged(Model.IsLegendary, value, v => Model.IsLegendary = v);
+        }
+
         public EvolutionConditionId[] EvolutionConditionItems { get; } = EnumUtil.GetValues<EvolutionConditionId>().ToArray();
 
         public EvolutionConditionId EvolutionCondition1
@@ -89,6 +96,36 @@ namespace RanseiWpf.ViewModels
         {
             get => Model.EvolutionCondition2;
             set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
+        }
+
+        public LocationId[] LocationItems { get; } = EnumUtil.GetValues<LocationId>().ToArray();
+        LocationId _selectedEncounterLocation;
+        public LocationId SelectedEncounterLocation
+        {
+            get => _selectedEncounterLocation;
+            set
+            {
+                if (value != _selectedEncounterLocation)
+                {
+                    _selectedEncounterLocation = value;
+                    RaisePropertyChanged();
+                    RaisePropertyChanged(nameof(EncounterableAtDefaultArea));
+                    RaisePropertyChanged(nameof(EncounterableWithLevel2Area));
+                }
+                
+            }
+        }
+
+        public bool EncounterableAtDefaultArea
+        {
+            get => Model.GetEncounterable(SelectedEncounterLocation, false);
+            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterLocation, false, v));
+        }
+
+        public bool EncounterableWithLevel2Area
+        {
+            get => Model.GetEncounterable(SelectedEncounterLocation, true);
+            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterLocation, true, v));
         }
 
 

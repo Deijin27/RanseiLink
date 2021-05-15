@@ -3,6 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Core.Services;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace RanseiConsole.Commands
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IModelDataService<PokemonId, Pokemon> service = new DataService();
+            IModelDataService<PokemonId, IPokemon> service = new DataService();
             var move = service.Retrieve(Id);
             console.Render(move, Id);
             return default;

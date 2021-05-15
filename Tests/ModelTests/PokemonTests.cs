@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using Core.Enums;
 using Xunit;
+using Core;
 
 namespace Tests.ModelTests
 {
@@ -31,6 +32,12 @@ namespace Tests.ModelTests
             Assert.Equal(255u, p.Atk);
             Assert.Equal(185u, p.Def);
             Assert.Equal(165u, p.Spe);
+            Assert.False(p.IsLegendary);
+            Assert.Equal(0x40u, p.NameOrderIndex);
+            foreach (LocationId location in EnumUtil.GetValues<LocationId>())
+            {
+                Assert.False(p.GetEncounterable(location, false));
+            }
         }
 
         [Fact]
@@ -53,7 +60,13 @@ namespace Tests.ModelTests
                 Atk = 255u,
                 Def = 185u,
                 Spe = 165u,
+                IsLegendary = true,
+                NameOrderIndex = 0x40
             };
+            p.SetEncounterable(LocationId.Aurora, true, true);
+            p.SetEncounterable(LocationId.Cragspur, false, true);
+            p.SetEncounterable(LocationId.Chrysalia, true, false);
+            p.SetEncounterable(LocationId.Illusio, false, false);
 
             Assert.Equal("Gallade", p.Name);
             Assert.Equal(TypeId.Psychic, p.Type1);
@@ -70,6 +83,13 @@ namespace Tests.ModelTests
             Assert.Equal(255u, p.Atk);
             Assert.Equal(185u, p.Def);
             Assert.Equal(165u, p.Spe);
+            Assert.True(p.IsLegendary);
+            Assert.Equal(0x40u, p.NameOrderIndex);
+
+            Assert.True(p.GetEncounterable(LocationId.Aurora, true));
+            Assert.True(p.GetEncounterable(LocationId.Cragspur, false));
+            Assert.False(p.GetEncounterable(LocationId.Chrysalia, true));
+            Assert.False(p.GetEncounterable(LocationId.Illusio, false));
 
             // Add Array equal test when possible
         }

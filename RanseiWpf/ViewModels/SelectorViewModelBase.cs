@@ -1,13 +1,14 @@
 ﻿using Core;
 using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Core.Services;
 using System;
 using System.Collections.Generic;
 
 namespace RanseiWpf.ViewModels
 {
-    public class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase where TViewModel : IViewModelForModel<TModel>, new() where TModel : BaseDataWindow
+    public class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase where TViewModel : IViewModelForModel<TModel>, new() where TModel : IDataWrapper
     {
         public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
         {
@@ -59,9 +60,9 @@ namespace RanseiWpf.ViewModels
         }
     }
 
-    public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, Pokemon, PokemonViewModel>
+    public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, IPokemon, PokemonViewModel>
     {
-        public PokemonSelectorViewModel(PokemonId initialSelected, IModelDataService<PokemonId, Pokemon> dataService) : base(initialSelected, dataService) { }
+        public PokemonSelectorViewModel(PokemonId initialSelected, IModelDataService<PokemonId, IPokemon> dataService) : base(initialSelected, dataService) { }
     }
 
     public class WazaSelectorViewModel : SelectorViewModelBase<MoveId, Move, WazaViewModel>

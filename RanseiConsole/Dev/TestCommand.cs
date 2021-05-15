@@ -15,25 +15,27 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ScenarioPokemonGroups", IterateScenarioPokemon(), i => i.Pokemon.ToString());
+            Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ItemGroups", IterateItems(), i => i.Name);
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateBuilding().First()));
 
-            Test1(console);
+            //Test2(console);
 
+            //BuildEnum(console, IterateItems(), i => i.Name);
 
             return default;
         }
 
         void Test1(IConsole console)
         {
-            var int_idx = 0;
-            var shift = 16;
-            var bitCount = 16;
+            // log byte groups
+            var int_idx = 10;
+            var shift = 2;
+            var bitCount = 1;
 
-            var gpk = IterateScenarioPokemon().OrderBy(i => i.Pokemon.ToString())
+            var gpk = IteratePokemon().OrderBy(i => i.ToString())
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
@@ -44,18 +46,41 @@ namespace RanseiConsole.Dev
 
                 foreach (var pk in group)
                 {
-                    console.Output.WriteLine(pk.Pokemon.ToString());
+                    console.Output.WriteLine(pk.Name);
                 }
 
                 console.Output.WriteLine();
             }
         }
 
+        void Test2(IConsole console)
+        {
+            //log bit groups
+            var int_idx = 9;
+            var minShift = 0;
+            var maxShift = 31;
+
+            var pokes = IteratePokemon().ToArray();
+
+            for (int shift = minShift; shift <= maxShift; shift++)
+            {
+                console.Output.Write($"\n{shift}: ");
+                foreach (var p in pokes)
+                {
+                    if (p.GetUInt32(int_idx, 1, shift) == 1)
+                    {
+                        console.Output.Write(p.Name + ", ");
+                    }
+                }
+            }
+            console.Output.WriteLine();
+        }
+
         void BuildEnum<T>(IConsole console, IEnumerable<T> dataItems, Func<T, string> nameSelector)
         {
             foreach (var i in dataItems)
             {
-                console.Output.WriteLine(nameSelector(i).Replace(" ", "") + "," );
+                console.Output.WriteLine(nameSelector(i).Replace(" ", "").Replace("'", "") + "," );
             }
         }
 
@@ -150,6 +175,18 @@ namespace RanseiConsole.Dev
                 yield return new ScenarioPokemon(pk);
             }
 
+        }
+
+        static IEnumerable<Item> IterateItems()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Item.dat"));
+
+            int count = (int)(file.BaseStream.Length / Item.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(Item.DataLength);
+                yield return new Item(item);
+            }
         }
     }
 }

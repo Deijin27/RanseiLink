@@ -62,17 +62,15 @@ namespace Core.Archive
 
                     br.BaseStream.Position = fileOffset;
                     byte[] fileBytes = br.ReadBytes(fileLength);
-                    Console.WriteLine(fileDest);
                     File.WriteAllBytes(fileDest, fileBytes);
                 }
             }
         }
 
-
+        static readonly Regex ExistentAlphanumericRegex = new Regex(@"^[a-zA-Z0-9]+$");
         static bool IsExistentAndAlphaNumeric(string strToCheck)
         {
-            Regex rg = new Regex(@"^[a-zA-Z0-9]+$");
-            return rg.IsMatch(strToCheck);
+            return ExistentAlphanumericRegex.IsMatch(strToCheck);
         }
     }
 }

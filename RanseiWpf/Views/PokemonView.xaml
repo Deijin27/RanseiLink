@@ -98,6 +98,20 @@
         <ComboBox Grid.Row="2" Grid.Column="4" ItemsSource="{Binding EvolutionConditionItems, Mode=OneTime}" SelectedItem="{Binding EvolutionCondition2, Mode=TwoWay}"/>
 
         <TextBlock Grid.Row="3" Grid.Column="3" Text="{Binding EvolutionCondition2, Mode=OneWay, Converter={StaticResource evolutionConditionIdToQuantityNameConverter}}" />
+
+        <GroupBox Header="Encounterable At Location" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="11">
+            <StackPanel>
+                <ComboBox Margin="0,0,0,11" ItemsSource="{Binding LocationItems, Mode=OneTime}" SelectedValue="{Binding SelectedEncounterLocation, Mode=TwoWay}"/>
+                <CheckBox Content="Encounterable in basic area" Margin="0,0,0,11" IsChecked="{Binding EncounterableAtDefaultArea, Mode=TwoWay}"/>
+                <CheckBox Content="Encounterable after unlocking new area at level 2" IsChecked="{Binding EncounterableWithLevel2Area, Mode=TwoWay}"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="Flags" Grid.Row="8" Grid.Column="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Padding="11">
+            <StackPanel>
+                <CheckBox Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+            </StackPanel>
+        </GroupBox>
         
+
     </Grid>
 </UserControl>

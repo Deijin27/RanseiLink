@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Text;
 using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Pokemon : BaseDataWindow
+    public class Pokemon : BaseDataWindow, IPokemon
     {
         public const int DataLength = 0x30;
         public Pokemon(byte[] data) : base(data, DataLength) { }
@@ -50,6 +51,12 @@ namespace Core.Models
         {
             get => GetUInt32(4, 9, 20);
             set => SetUInt32(4, 9, 20, value);
+        }
+
+        public bool IsLegendary
+        {
+            get => GetUInt32(4, 1, 30) == 1u;
+            set => SetUInt32(4, 1, 30, value ? 1u : 0u);
         }
 
         public TypeId Type1
@@ -98,6 +105,29 @@ namespace Core.Models
         {
             get => GetUInt32(7, 9, 18);
             set => SetUInt32(7, 9, 18, value);
+        }
+
+        public uint NameOrderIndex
+        {
+            get => GetUInt32(11, 8, 0);
+            set => SetUInt32(11, 8, 0, value);
+        }
+
+        public bool GetEncounterable(LocationId location, bool requiresLevel2)
+        {
+            var shift = (byte)location * 3 + (requiresLevel2 ? 1 : 0);
+            return (BitConverter.ToUInt64(Data, 9 * 4) >> shift & 1) == 1;
+        }
+
+        public void SetEncounterable(LocationId location, bool requiresLevel2, bool value)
+        {
+            var shift = (byte)location * 3 + (requiresLevel2 ? 1 : 0);
+            var num = BitConverter.ToUInt64(Data, 9 * 4) & ~(1uL << shift);
+            if (value)
+            {
+                num |= 1UL << shift;
+            }
+            BitConverter.GetBytes(num).CopyTo(Data, 9 * 4);
         }
 
         #region ToString

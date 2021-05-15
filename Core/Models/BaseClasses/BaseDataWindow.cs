@@ -3,9 +3,9 @@ using System.Text;
 
 namespace Core.Models
 {
-    public class BaseDataWindow : IDataWindow
+    public class BaseDataWindow : IDataWindow, IDataWrapper
     {
-        public readonly byte[] Data;
+        public byte[] Data { get; }
 
         public BaseDataWindow(byte[] data, int length)
         {

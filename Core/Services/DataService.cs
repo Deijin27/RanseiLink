@@ -1,5 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -76,7 +77,7 @@ namespace Core.Services
         }
 
 
-        public Pokemon Retrieve(PokemonId id)
+        public IPokemon Retrieve(PokemonId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, PokemonFile))))
             {
@@ -85,7 +86,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(PokemonId id, Pokemon model)
+        public void Save(PokemonId id, IPokemon model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, PokemonFile))))
             {
@@ -94,9 +95,9 @@ namespace Core.Services
             }
         }
 
-        public Dictionary<PokemonId, Pokemon> AllPokemon()
+        public Dictionary<PokemonId, IPokemon> AllPokemon()
         {
-            var dict = new Dictionary<PokemonId, Pokemon>();
+            var dict = new Dictionary<PokemonId, IPokemon>();
 
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, PokemonFile))))
             {
