@@ -11,7 +11,8 @@ namespace Core.Services
         IModelDataService<AbilityId, IAbility>,
         IModelDataService<SaihaiId, ISaihai>,
         IModelDataService<GimmickId, IGimmick>,
-        IModelDataService<BuildingId, IBuilding>
+        IModelDataService<BuildingId, IBuilding>,
+        IModelDataService<ItemId, IItem>
     {
         Dictionary<PokemonId, IPokemon> AllPokemon();
         void CommitToRom(string path);

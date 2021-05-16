@@ -199,7 +199,11 @@ namespace RanseiConsole
             console.WriteProperty("Location", building.Location.ToString());
         }
 
-
+        public static void Render(this IConsole console, IItem item, ItemId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", item.Name);
+        }
 
     }
 }

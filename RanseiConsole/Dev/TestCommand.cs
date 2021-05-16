@@ -15,7 +15,7 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ItemGroups", IterateItems(), i => i.Name);
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ItemGroups", IterateItems(), i => i.Name);
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
@@ -23,7 +23,7 @@ namespace RanseiConsole.Dev
 
             //Test2(console);
 
-            //BuildEnum(console, IterateItems(), i => i.Name);
+            BuildEnum(console, IterateItems(), i => i.Name);
 
             return default;
         }

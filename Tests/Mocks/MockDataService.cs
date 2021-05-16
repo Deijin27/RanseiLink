@@ -14,6 +14,7 @@ namespace Tests.Mocks
         public Dictionary<SaihaiId, ISaihai> SaihaiDict = new Dictionary<SaihaiId, ISaihai>();
         public Dictionary<GimmickId, IGimmick> GimmickDict = new Dictionary<GimmickId, IGimmick>();
         public Dictionary<BuildingId, IBuilding> BuildingDict = new Dictionary<BuildingId, IBuilding>();
+        public Dictionary<ItemId, IItem> ItemDict = new Dictionary<ItemId, IItem>();
 
 
         public Dictionary<PokemonId, IPokemon> AllPokemon()
@@ -66,6 +67,11 @@ namespace Tests.Mocks
             return BuildingDict[id].Clone();
         }
 
+        public IItem Retrieve(ItemId id)
+        {
+            return ItemDict[id].Clone();
+        }
+
         public void Save(PokemonId id, IPokemon model)
         {
             PokemonDict[id] = model.Clone();
@@ -94,6 +100,11 @@ namespace Tests.Mocks
         public void Save(BuildingId id, IBuilding model)
         {
             BuildingDict[id] = model.Clone();
+        }
+
+        public void Save(ItemId id, IItem model)
+        {
+            ItemDict[id] = model.Clone();
         }
     }
 }

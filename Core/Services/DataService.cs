@@ -16,6 +16,7 @@ namespace Core.Services
         const string SaihaiFile = "Saihai.dat";
         const string GimmickFile = "Gimmick.dat";
         const string BuildingFile = "Building.dat";
+        const string ItemFile = "Item.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
@@ -23,6 +24,7 @@ namespace Core.Services
         const string SaihaiRomPath = "/data/Saihai.dat";
         const string GimmickRomPath = "/data/Gimmick.dat";
         const string BuildingRomPath = "/data/Building.dat";
+        const string ItemRomPath = "/data/Item.dat";
 
         public DataService()
         {
@@ -33,7 +35,7 @@ namespace Core.Services
         private void Init()
         {
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile, GimmickFile, BuildingFile })
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile, GimmickFile, BuildingFile, ItemFile})
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -60,6 +62,7 @@ namespace Core.Services
                 nds.ExtractCopyOfFile(SaihaiRomPath, DataFolder);
                 nds.ExtractCopyOfFile(GimmickRomPath, DataFolder);
                 nds.ExtractCopyOfFile(BuildingRomPath, DataFolder);
+                nds.ExtractCopyOfFile(ItemRomPath, DataFolder);
             }
         }
 
@@ -73,6 +76,7 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
                 nds.InsertFixedLengthFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
                 nds.InsertFixedLengthFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
+                nds.InsertFixedLengthFile(ItemRomPath, Path.Combine(DataFolder, ItemFile));
             }
         }
 
@@ -197,6 +201,24 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, BuildingFile))))
             {
                 file.BaseStream.Position = (int)id * Building.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public IItem Retrieve(ItemId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, ItemFile))))
+            {
+                file.BaseStream.Position = (int)id * Item.DataLength;
+                return new Item(file.ReadBytes(Item.DataLength));
+            }
+        }
+
+        public void Save(ItemId id, IItem model)
+        {
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, ItemFile))))
+            {
+                file.BaseStream.Position = (int)id * Item.DataLength;
                 file.Write(model.Data);
             }
         }
