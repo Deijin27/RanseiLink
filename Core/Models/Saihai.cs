@@ -1,8 +1,9 @@
 ﻿using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Saihai : BaseDataWindow
+    public class Saihai : BaseDataWindow, ISaihai
     {
         public const int DataLength = 0x1C;
         public Saihai(byte[] data) : base(data, DataLength) { }

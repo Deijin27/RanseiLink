@@ -1,5 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Xunit;
 
 namespace Tests.ModelTests
@@ -9,7 +10,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var b = new Building(new byte[]
+            IBuilding b = new Building(new byte[]
             {
                 0x53, 0x61, 0x63, 0x72, 
                 0x65, 0x64, 0x20, 0x52, 
@@ -30,7 +31,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsSetCorrectValues()
         {
-            var b = new Building
+            IBuilding b = new Building
             {
                 Name = "Sacred Ruins",
                 Location = LocationId.Aurora

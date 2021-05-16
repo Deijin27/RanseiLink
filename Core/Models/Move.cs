@@ -1,12 +1,13 @@
 ﻿using Core.Enums;
 using System.Text;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
     /// <summary>
     /// Waza
     /// </summary>
-    public class Move : BaseDataWindow
+    public class Move : BaseDataWindow, IMove
     {
         public const int DataLength = 0x24;
         public Move(byte[] data) : base(data, DataLength) { }

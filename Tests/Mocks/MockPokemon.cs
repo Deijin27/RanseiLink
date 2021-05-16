@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Enums;
+using Core.Models;
 using Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace Tests.Mocks
                 DefaultDict[val] = false;
             }
 
-            Data = new byte[]
+            Data = new byte[Pokemon.DataLength]
             {
                 0x47, 0x61, 0x6C, 0x6C, 0x61, 0x64, 0x65, 0x00, 0x00, 0x00, 0x00, 0x2D, 0xF6, 0x9C, 0x01, 0x49,
                 0xFF, 0xE4, 0x52, 0x0A, 0xCA, 0x4C, 0xF9, 0x0F, 0x1B, 0xC4, 0xAC, 0x50, 0x69, 0xFE, 0x03, 0x18,
@@ -45,7 +46,11 @@ namespace Tests.Mocks
         public TypeId Type1 { get; set; }
         public TypeId Type2 { get; set; }
 
-        public byte[] Data { get; set; }
+        public byte[] Data 
+        { 
+            get;
+            set;
+        }
 
         Dictionary<LocationId, bool> RequiresLv2Dict;
         Dictionary<LocationId, bool> DefaultDict;

@@ -7,11 +7,11 @@ namespace Core.Services
 {
     public interface IDataService : 
         IModelDataService<PokemonId, IPokemon>,
-        IModelDataService<MoveId, Move>,
-        IModelDataService<AbilityId, Ability>,
-        IModelDataService<SaihaiId, Saihai>,
-        IModelDataService<GimmickId, Gimmick>,
-        IModelDataService<BuildingId, Building>
+        IModelDataService<MoveId, IMove>,
+        IModelDataService<AbilityId, IAbility>,
+        IModelDataService<SaihaiId, ISaihai>,
+        IModelDataService<GimmickId, IGimmick>,
+        IModelDataService<BuildingId, IBuilding>
     {
         Dictionary<PokemonId, IPokemon> AllPokemon();
         void CommitToRom(string path);

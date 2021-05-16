@@ -111,7 +111,7 @@ namespace Core.Services
             return dict;
         }
 
-        public Move Retrieve(MoveId id)
+        public IMove Retrieve(MoveId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, MoveFile))))
             {
@@ -120,7 +120,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(MoveId id, Move model)
+        public void Save(MoveId id, IMove model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, MoveFile))))
             {
@@ -129,7 +129,7 @@ namespace Core.Services
             }
         }
 
-        public Ability Retrieve(AbilityId id)
+        public IAbility Retrieve(AbilityId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, AbilityFile))))
             {
@@ -138,7 +138,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(AbilityId id, Ability model)
+        public void Save(AbilityId id, IAbility model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, AbilityFile))))
             {
@@ -147,7 +147,7 @@ namespace Core.Services
             }
         }
 
-        public Saihai Retrieve(SaihaiId id)
+        public ISaihai Retrieve(SaihaiId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
             {
@@ -156,7 +156,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(SaihaiId id, Saihai model)
+        public void Save(SaihaiId id, ISaihai model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, SaihaiFile))))
             {
@@ -165,7 +165,7 @@ namespace Core.Services
             }
         }
 
-        public Gimmick Retrieve(GimmickId id)
+        public IGimmick Retrieve(GimmickId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, GimmickFile))))
             {
@@ -174,7 +174,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(GimmickId id, Gimmick model)
+        public void Save(GimmickId id, IGimmick model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, GimmickFile))))
             {
@@ -183,7 +183,7 @@ namespace Core.Services
             }
         }
 
-        public Building Retrieve(BuildingId id)
+        public IBuilding Retrieve(BuildingId id)
         {
             using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, BuildingFile))))
             {
@@ -192,7 +192,7 @@ namespace Core.Services
             }
         }
 
-        public void Save(BuildingId id, Building model)
+        public void Save(BuildingId id, IBuilding model)
         {
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, BuildingFile))))
             {

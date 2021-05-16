@@ -1,5 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Xunit;
 
 namespace Tests.ModelTests
@@ -9,7 +10,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var s = new Saihai(new byte[]
+            ISaihai s = new Saihai(new byte[]
             {
                 0x4D, 0x61, 0x79, 0x68,
                 0x65, 0x6D, 0x00, 0x00,
@@ -34,7 +35,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsSetCorrectValues()
         {
-            var s = new Saihai()
+            ISaihai s = new Saihai()
             {
                 Name = "Mayhem",
                 Effect1Amount = 1u,

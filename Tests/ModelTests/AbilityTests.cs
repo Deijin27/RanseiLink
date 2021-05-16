@@ -1,5 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Xunit;
 
 namespace Tests.ModelTests
@@ -9,7 +10,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var a = new Ability(new byte[]
+            IAbility a = new Ability(new byte[]
             {
                 0x4C, 0x61, 0x73, 0x74, 
                 0x20, 0x42, 0x61, 0x73, 
@@ -37,7 +38,7 @@ namespace Tests.ModelTests
                 0x41, 0x08, 0x00, 0x00
             };
 
-            var a = new Ability
+            IAbility a = new Ability
             {
                 Name = "Last Bastion",
                 Effect1Amount = 2u,

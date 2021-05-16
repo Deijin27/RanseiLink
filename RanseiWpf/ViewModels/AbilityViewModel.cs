@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Text;
 using Core;
 using System.Linq;
+using Core.Models.Interfaces;
 
 namespace RanseiWpf.ViewModels
 {
-    public class AbilityViewModel : ViewModelBase, IViewModelForModel<Ability>
+    public class AbilityViewModel : ViewModelBase, IViewModelForModel<IAbility>
     {
-        public Ability Model { get; set; }
+        public IAbility Model { get; set; }
 
         public string Name
         {

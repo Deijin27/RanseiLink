@@ -65,13 +65,13 @@ namespace RanseiWpf.ViewModels
         public PokemonSelectorViewModel(PokemonId initialSelected, IModelDataService<PokemonId, IPokemon> dataService) : base(initialSelected, dataService) { }
     }
 
-    public class WazaSelectorViewModel : SelectorViewModelBase<MoveId, Move, WazaViewModel>
+    public class WazaSelectorViewModel : SelectorViewModelBase<MoveId, IMove, WazaViewModel>
     {
-        public WazaSelectorViewModel(MoveId initialSelected, IModelDataService<MoveId, Move> dataService) : base(initialSelected, dataService) { }
+        public WazaSelectorViewModel(MoveId initialSelected, IModelDataService<MoveId, IMove> dataService) : base(initialSelected, dataService) { }
     }
 
-    public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, Ability, AbilityViewModel>
+    public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, IAbility, AbilityViewModel>
     {
-        public AbilitySelectorViewModel(AbilityId initialSelected, IModelDataService<AbilityId, Ability> dataService) : base(initialSelected, dataService) { }
+        public AbilitySelectorViewModel(AbilityId initialSelected, IModelDataService<AbilityId, IAbility> dataService) : base(initialSelected, dataService) { }
     }
 }

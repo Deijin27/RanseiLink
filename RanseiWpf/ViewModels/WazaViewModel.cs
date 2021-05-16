@@ -5,12 +5,13 @@ using Core.Models;
 using Core.Enums;
 using Core;
 using System.Linq;
+using Core.Models.Interfaces;
 
 namespace RanseiWpf.ViewModels
 {
-    public class WazaViewModel : ViewModelBase, IViewModelForModel<Move>
+    public class WazaViewModel : ViewModelBase, IViewModelForModel<IMove>
     {
-        public Move Model { get; set; }
+        public IMove Model { get; set; }
 
         public string Name
         {

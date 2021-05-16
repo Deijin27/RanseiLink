@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Item : BaseDataWindow
+    public class Item : BaseDataWindow, IItem
     {
         public const int DataLength = 0x24;
         public Item(byte[] data) : base(data, DataLength)

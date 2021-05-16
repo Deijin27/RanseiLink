@@ -125,7 +125,7 @@ namespace RanseiWpf.ViewModels
         public bool EncounterableWithLevel2Area
         {
             get => Model.GetEncounterable(SelectedEncounterLocation, true);
-            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterLocation, true, v));
+            set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => Model.SetEncounterable(SelectedEncounterLocation, true, v));
         }
 
 

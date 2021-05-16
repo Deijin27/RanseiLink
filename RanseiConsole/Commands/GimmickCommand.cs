@@ -3,6 +3,7 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core.Enums;
 using Core.Models;
+using Core.Models.Interfaces;
 using Core.Services;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace RanseiConsole.Commands
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IModelDataService<GimmickId, Gimmick> service = new DataService();
+            IModelDataService<GimmickId, IGimmick> service = new DataService();
             var gimmick = service.Retrieve(Id);
 
             console.Render(gimmick, Id);

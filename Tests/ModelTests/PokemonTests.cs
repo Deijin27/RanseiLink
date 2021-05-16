@@ -2,6 +2,7 @@
 using Core.Enums;
 using Xunit;
 using Core;
+using Core.Models.Interfaces;
 
 namespace Tests.ModelTests
 {
@@ -10,7 +11,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var p = new Pokemon(new byte[]
+            IPokemon p = new Pokemon(new byte[]
             {
                 0x47, 0x61, 0x6C, 0x6C, 0x61, 0x64, 0x65, 0x00, 0x00, 0x00, 0x00, 0x2D, 0xF6, 0x9C, 0x01, 0x49,
                 0xFF, 0xE4, 0x52, 0x0A, 0xCA, 0x4C, 0xF9, 0x0F, 0x1B, 0xC4, 0xAC, 0x50, 0x69, 0xFE, 0x03, 0x18,
@@ -43,7 +44,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsSetCorrectValues()
         {
-            var p = new Pokemon
+            IPokemon p = new Pokemon
             {
                 Name = "Gallade",
                 Type1 = TypeId.Psychic,

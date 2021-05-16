@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using Core.Models;
 using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Tests.ModelTests
 {
@@ -9,7 +10,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            var m = new Move(new byte[] 
+            IMove m = new Move(new byte[] 
             { 
                 0x43, 0x72, 0x6F, 0x73, 0x73, 0x20, 0x50, 0x6F, 0x69, 0x73, 0x6F, 0x6E, 0x00, 0x00, 0x00, 0x00, 
                 0xC7, 0xE4, 0xA4, 0x50, 0xFF, 0xFE, 0x5D, 0x01, 0x09, 0xC0, 0x49, 0x81, 0x09, 0x00, 0x24, 0xF3, 
@@ -35,7 +36,7 @@ namespace Tests.ModelTests
         [Fact]
         public void AccessorsSetCorrectValues()
         {
-            var m = new Move()
+            IMove m = new Move()
             {
                 Name = "Cross Poison",
                 MovementFlags = (MoveMovementFlags)0,

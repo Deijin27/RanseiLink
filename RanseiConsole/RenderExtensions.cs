@@ -154,7 +154,7 @@ namespace RanseiConsole
             }
         }
 
-        public static void Render(this IConsole console, Move move, MoveId id)
+        public static void Render(this IConsole console, IMove move, MoveId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", move.Name);
@@ -167,7 +167,7 @@ namespace RanseiConsole
             console.WriteProperty("Unused Effect Duplicates", $"{move.Effect2} {RenderQuantityForMoveEffect(move.Effect2, move.Effect2Chance)}/ {move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}");
         }
 
-        public static void Render(this IConsole console, Ability ability, AbilityId id)
+        public static void Render(this IConsole console, IAbility ability, AbilityId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", ability.Name);
@@ -175,7 +175,7 @@ namespace RanseiConsole
             console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
         }
 
-        public static void Render(this IConsole console, Saihai saihai, SaihaiId id)
+        public static void Render(this IConsole console, ISaihai saihai, SaihaiId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", saihai.Name);
@@ -186,13 +186,13 @@ namespace RanseiConsole
             console.WriteProperty("Duration", saihai.Duration.ToString());
         }
 
-        public static void Render(this IConsole console, Gimmick gimmick, GimmickId id)
+        public static void Render(this IConsole console, IGimmick gimmick, GimmickId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", gimmick.Name);
         }
 
-        public static void Render(this IConsole console, Building building, BuildingId id)
+        public static void Render(this IConsole console, IBuilding building, BuildingId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", building.Name);

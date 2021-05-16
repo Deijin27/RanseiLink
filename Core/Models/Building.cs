@@ -1,8 +1,9 @@
 ﻿using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Building : BaseDataWindow
+    public class Building : BaseDataWindow, IBuilding
     {
         public const int DataLength = 0x24;
         public Building(byte[] data) : base(data, DataLength) { }

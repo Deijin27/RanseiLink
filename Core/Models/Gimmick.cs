@@ -1,8 +1,9 @@
 ﻿using Core.Enums;
+using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Gimmick : BaseDataWindow
+    public class Gimmick : BaseDataWindow, IGimmick
     {
         public const int DataLength = 0x28;
         public Gimmick(byte[] data) : base(data, DataLength) { }
