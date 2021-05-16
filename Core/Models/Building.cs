@@ -20,5 +20,10 @@ namespace Core.Models
             get => (LocationId)GetUInt32(6, 5, 24);
             set => SetUInt32(6, 5, 24, (uint)value);
         }
+
+        public IBuilding Clone()
+        {
+            return new Building((byte[])Data.Clone());
+        }
     }
 }

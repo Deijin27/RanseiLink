@@ -5,19 +5,25 @@ using System;
 using System.IO;
 using Tests.Mocks;
 using Core.Models;
+using Core.Models.Interfaces;
 
 namespace Tests.ServiceTests
 {
     public class ServiceTests
     {
+        IDataService Service;
+
+        public ServiceTests()
+        {
+            Service = new DataService(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"Ransei/Tests/{nameof(ServiceRetrieveAndSavePokemonTest)}"));
+        }
+
         [Fact]
         void ServiceRetrieveAndSavePokemonTest()
         {
-            IDataService service = new DataService(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"Ransei/Tests/{nameof(ServiceRetrieveAndSavePokemonTest)}"));
+            // Initialize
 
-            var raichu = service.Retrieve(PokemonId.Raichu);
-
-            var mockRaichu = new MockPokemon()
+            IPokemon mockRaichu1 = new MockPokemon()
             {
                 Data = new byte[Pokemon.DataLength]
                 {
@@ -27,13 +33,33 @@ namespace Tests.ServiceTests
                 }
             };
 
-            service.Save(PokemonId.Raichu, mockRaichu);
+            IPokemon mockRaichu2 = new MockPokemon()
+            {
+                Data = new byte[Pokemon.DataLength]
+                {
+                    0x53, 0x44, 0x5C, 0x56, 0x67, 0x63, 0x65, 0x10, 0x02, 0x35, 0x00, 0x24, 0xF6, 0x4C, 0x01, 0x59,
+                    0xF1, 0xE2, 0x54, 0x55, 0x35, 0x4C, 0xF9, 0x0F, 0x1B, 0xC8, 0x4C, 0x23, 0x67, 0xFF, 0x03, 0x38,
+                    0x78, 0xC5, 0xE6, 0x76, 0x33, 0x60, 0x45, 0x30, 0x94, 0x00, 0x00, 0x67, 0x47, 0x71, 0x37, 0x8F
+                }
+            };
 
-            var savedAndRetrievedRaichu = service.Retrieve(PokemonId.Raichu);
+            Assert.NotEqual(mockRaichu1, mockRaichu2);
 
-            Assert.Equal(mockRaichu.Data, savedAndRetrievedRaichu.Data);
+            // One time
 
-            service.Save(PokemonId.Raichu, raichu);
+            Service.Save(PokemonId.Raichu, mockRaichu1);
+
+            var savedAndRetrievedRaichu1 = Service.Retrieve(PokemonId.Raichu);
+
+            Assert.Equal(mockRaichu1.Data, savedAndRetrievedRaichu1.Data);
+
+            // Second time
+
+            Service.Save(PokemonId.Raichu, mockRaichu2);
+
+            var savedAndRetrievedRaichu2 = Service.Retrieve(PokemonId.Raichu);
+
+            Assert.Equal(mockRaichu2.Data, savedAndRetrievedRaichu2.Data);
 
         }
     }

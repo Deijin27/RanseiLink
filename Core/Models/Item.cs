@@ -20,5 +20,10 @@ namespace Core.Models
             get => GetPaddedUtf8String(0, 21);
             set => SetPaddedUtf8String(0, 21, value);
         }
+
+        public IItem Clone()
+        {
+            return new Item((byte[])Data.Clone());
+        }
     }
 }

@@ -13,5 +13,10 @@ namespace Core.Models
         {
             get => (PokemonId)GetByte(0);
         }
+
+        public IScenarioPokemon Clone()
+        {
+            return new ScenarioPokemon((byte[])Data.Clone());
+        }
     }
 }

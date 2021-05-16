@@ -2,7 +2,7 @@
 
 namespace Core.Models.Interfaces
 {
-    public interface IMove : IDataWrapper
+    public interface IMove : IDataWrapper, ICloneable<IMove>
     {
         uint Accuracy { get; set; }
         MoveEffectId Effect0 { get; set; }

@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Models.Interfaces
 {
-    public interface IGimmick : IDataWrapper
+    public interface IGimmick : IDataWrapper, ICloneable<IGimmick>
     {
         string Name { get; set; }
     }

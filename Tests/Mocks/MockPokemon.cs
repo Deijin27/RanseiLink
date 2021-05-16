@@ -46,11 +46,7 @@ namespace Tests.Mocks
         public TypeId Type1 { get; set; }
         public TypeId Type2 { get; set; }
 
-        public byte[] Data 
-        { 
-            get;
-            set;
-        }
+        public byte[] Data { get; set; }
 
         Dictionary<LocationId, bool> RequiresLv2Dict;
         Dictionary<LocationId, bool> DefaultDict;
@@ -74,6 +70,44 @@ namespace Tests.Mocks
             {
                 DefaultDict[location] = value;
             }
+        }
+
+        public IPokemon Clone()
+        {
+            var cloneRequiresDict = new Dictionary<LocationId, bool>();
+            var cloneDefaultDict = new Dictionary<LocationId, bool>();
+            foreach (var i in RequiresLv2Dict)
+            {
+                cloneRequiresDict[i.Key] = i.Value;
+            }
+            foreach (var i in DefaultDict)
+            {
+                cloneDefaultDict[i.Key] = i.Value;
+            }
+
+            return new MockPokemon()
+            {
+                Ability1 = Ability1,
+                Ability2 = Ability2,
+                Ability3 = Ability3,
+                Atk = Atk,
+                Def = Def,
+                EvolutionCondition1 = EvolutionCondition1,
+                EvolutionCondition2 = EvolutionCondition2,
+                Hp = Hp,
+                IsLegendary = IsLegendary,
+                Move = Move,
+                Name = Name,
+                NameOrderIndex = NameOrderIndex,
+                QuantityForEvolutionCondition1 = QuantityForEvolutionCondition1,
+                QuantityForEvolutionCondition2 = QuantityForEvolutionCondition2,
+                Spe = Spe,
+                Type1 = Type1,
+                Type2 = Type2,
+                Data = Data,
+                RequiresLv2Dict = cloneRequiresDict,
+                DefaultDict = cloneDefaultDict
+            };
         }
     }
 }

@@ -62,5 +62,10 @@ namespace Core.Models
             get => (SaihaiTargetId)GetUInt32(6, 2, 8);
             set => SetUInt32(6, 2, 8, (uint)value);
         }
+
+        public ISaihai Clone()
+        {
+            return new Saihai((byte[])Data.Clone());
+        }
     }
 }

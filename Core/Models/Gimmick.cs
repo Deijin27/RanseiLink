@@ -14,5 +14,10 @@ namespace Core.Models
             get => GetPaddedUtf8String(0, 0x0F);
             set => SetPaddedUtf8String(0, 0x0F, value);
         }
+
+        public IGimmick Clone()
+        {
+            return new Gimmick((byte[])Data.Clone());
+        }
     }
 }

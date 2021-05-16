@@ -2,7 +2,7 @@
 
 namespace Core.Models.Interfaces
 {
-    public interface IScenarioPokemon : IDataWrapper
+    public interface IScenarioPokemon : IDataWrapper, ICloneable<IScenarioPokemon>
     {
         PokemonId Pokemon { get; }
     }

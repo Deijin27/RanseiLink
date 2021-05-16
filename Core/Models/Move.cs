@@ -128,5 +128,10 @@ namespace Core.Models
 
             return sb.ToString();
         }
+
+        public IMove Clone()
+        {
+            return new Move((byte[])Data.Clone());
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Core.Models.Interfaces
 {
-    public interface IAbility : IDataWrapper
+    public interface IAbility : IDataWrapper, ICloneable<IAbility>
     {
         AbilityEffectId Effect1 { get; set; }
         uint Effect1Amount { get; set; }

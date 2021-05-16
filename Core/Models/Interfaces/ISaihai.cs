@@ -2,7 +2,7 @@
 
 namespace Core.Models.Interfaces
 {
-    public interface ISaihai : IDataWrapper
+    public interface ISaihai : IDataWrapper, ICloneable<ISaihai>
     {
         uint Duration { get; set; }
         SaihaiEffectId Effect1 { get; set; }

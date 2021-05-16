@@ -183,6 +183,11 @@ namespace Core.Models
             }
         }
 
+        public IPokemon Clone()
+        {
+            return new Pokemon((byte[])Data.Clone());
+        }
+
         #endregion
     }
 }

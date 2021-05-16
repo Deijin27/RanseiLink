@@ -41,5 +41,10 @@ namespace Core.Models
             get => GetUInt32(4, 2, 10);
             set => SetUInt32(4, 2, 10, value);
         }
+
+        public IAbility Clone()
+        {
+            return new Ability((byte[])Data.Clone());
+        }
     }
 }

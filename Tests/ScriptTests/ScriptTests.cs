@@ -5,6 +5,7 @@ using System.IO;
 using Core.Services;
 using Core.Enums;
 using System;
+using Tests.Mocks;
 
 namespace Tests.ScriptTests
 {
@@ -17,18 +18,14 @@ namespace Tests.ScriptTests
         {
 
             // Initialize
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"Ransei/Tests/{nameof(ScriptInteractWithRomSuccessfully)}");
-            var service = new DataService(folder);
-            var pika = service.Retrieve(PokemonId.Pikachu);
-            TypeId startType = pika.Type1;
-            pika.Type1 = TypeId.Grass;
-            service.Save(PokemonId.Pikachu, pika);
+            IDataService service = new MockDataService();
+            service.Save(PokemonId.Pikachu, new MockPokemon() { Type1 = TypeId.Grass });
 
             // Create 
 
             var console = new FakeInMemoryConsole();
 
-            string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua"); // Important to do before command initializer idk why
+            string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
 
             var command = new LuaCommand()
             {
@@ -44,13 +41,6 @@ namespace Tests.ScriptTests
 
             var elePika = service.Retrieve(PokemonId.Pikachu);
             Assert.Equal(TypeId.Electric, elePika.Type1);
-
-            // Reset
-
-            pika.Type1 = startType;
-            service.Save(PokemonId.Pikachu, pika);
-            
-
         }
 
     }

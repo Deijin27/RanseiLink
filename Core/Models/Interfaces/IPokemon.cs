@@ -2,7 +2,7 @@
 
 namespace Core.Models.Interfaces
 {
-    public interface IPokemon : IDataWrapper
+    public interface IPokemon : IDataWrapper, ICloneable<IPokemon>
     {
         AbilityId Ability1 { get; set; }
         AbilityId Ability2 { get; set; }
