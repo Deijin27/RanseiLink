@@ -47,6 +47,7 @@ namespace Tests.Mocks
         public TypeId Type2 { get; set; }
 
         public byte[] Data { get; set; }
+        public uint NationalPokedexNumber { get; set; }
 
         Dictionary<LocationId, bool> RequiresLv2Dict;
         Dictionary<LocationId, bool> DefaultDict;

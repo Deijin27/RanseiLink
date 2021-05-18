@@ -35,6 +35,7 @@ namespace Tests.ModelTests
             Assert.Equal(165u, p.Spe);
             Assert.False(p.IsLegendary);
             Assert.Equal(0x40u, p.NameOrderIndex);
+            Assert.Equal(475u, p.NationalPokedexNumber);
             foreach (LocationId location in EnumUtil.GetValues<LocationId>())
             {
                 Assert.False(p.GetEncounterable(location, false));
@@ -62,7 +63,8 @@ namespace Tests.ModelTests
                 Def = 185u,
                 Spe = 165u,
                 IsLegendary = true,
-                NameOrderIndex = 0x40
+                NameOrderIndex = 0x40,
+                NationalPokedexNumber = 475,
             };
             p.SetEncounterable(LocationId.Aurora, true, true);
             p.SetEncounterable(LocationId.Cragspur, false, true);
@@ -86,6 +88,7 @@ namespace Tests.ModelTests
             Assert.Equal(165u, p.Spe);
             Assert.True(p.IsLegendary);
             Assert.Equal(0x40u, p.NameOrderIndex);
+            Assert.Equal(475u, p.NationalPokedexNumber);
 
             Assert.True(p.GetEncounterable(LocationId.Aurora, true));
             Assert.True(p.GetEncounterable(LocationId.Cragspur, false));

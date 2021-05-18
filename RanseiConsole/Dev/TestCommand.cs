@@ -26,20 +26,20 @@ namespace RanseiConsole.Dev
 
             //BuildEnum(console, IterateItems(), i => i.Name);
 
-            var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
-            console.Output.WriteLine(Testing.GetBits(potion));
-            //Test1(console);
+            //var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
+            //console.Output.WriteLine(Testing.GetBits(potion));
+            Test1(console);
             return default;
         }
 
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 8;
-            var shift = 22;
-            var bitCount = 10;
+            var int_idx = 6;
+            var shift = 10;
+            var bitCount = 6;
 
-            var gpk = IteratePokemon().OrderBy(i => i.ToString())
+            var gpk = IterateSaihai().OrderBy(i => i.Name)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 

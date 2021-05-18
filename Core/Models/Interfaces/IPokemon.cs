@@ -21,6 +21,7 @@ namespace Core.Models.Interfaces
         uint Spe { get; set; }
         TypeId Type1 { get; set; }
         TypeId Type2 { get; set; }
+        uint NationalPokedexNumber { get; set; }
 
         bool GetEncounterable(LocationId location, bool requiresLevel2);
         void SetEncounterable(LocationId location, bool requiresLevel2, bool value);

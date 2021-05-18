@@ -107,6 +107,12 @@ namespace Core.Models
             set => SetUInt32(7, 9, 18, value);
         }
 
+        public uint NationalPokedexNumber
+        {
+            get => GetUInt32(8, 10, 22);
+            set => SetUInt32(8, 10, 22, value);
+        }
+
         public uint NameOrderIndex
         {
             get => GetUInt32(11, 8, 0);

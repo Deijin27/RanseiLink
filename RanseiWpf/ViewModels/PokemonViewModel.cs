@@ -84,6 +84,18 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(Model.IsLegendary, value, v => Model.IsLegendary = v);
         }
 
+        public uint NameOrderIndex
+        {
+            get => Model.NameOrderIndex;
+            set => RaiseAndSetIfChanged(Model.NameOrderIndex, value, v => Model.NameOrderIndex = v);
+        }
+
+        public uint NationalPokedexNumber
+        {
+            get => Model.NationalPokedexNumber;
+            set => RaiseAndSetIfChanged(Model.NationalPokedexNumber, value, v => Model.NationalPokedexNumber = v);
+        }
+
         public EvolutionConditionId[] EvolutionConditionItems { get; } = EnumUtil.GetValues<EvolutionConditionId>().ToArray();
 
         public EvolutionConditionId EvolutionCondition1

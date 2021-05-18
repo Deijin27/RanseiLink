@@ -1,4 +1,5 @@
 ﻿using CliFx.Infrastructure;
+using Core;
 using Core.Enums;
 using Core.Models;
 using Core.Models.Interfaces;
@@ -74,6 +75,21 @@ namespace RanseiConsole
                 ));
 
             console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
+            console.WriteProperty("Is Legendary", pokemon.IsLegendary.ToString());
+            console.WriteProperty("NatDex Number", pokemon.NationalPokedexNumber.ToString());
+            console.WriteProperty("Name Alphabetical Sort Index", pokemon.NameOrderIndex.ToString());
+
+            var sb1 = new StringBuilder();
+            var sb2 = new StringBuilder();
+            foreach (var location in EnumUtil.GetValues<LocationId>())
+            {
+                sb1.Append(pokemon.GetEncounterable(location, false));
+                sb1.Append(", ");
+                sb2.Append(pokemon.GetEncounterable(location, true));
+                sb2.Append(", ");
+            }
+            console.WriteProperty("Default Encounterable:", sb1.ToString());
+            console.WriteProperty("Lv2 Encounterable:", sb2.ToString());
         }
 
         private static string RenderQuantityForMoveEffect(MoveEffectId id, uint value)
