@@ -56,7 +56,7 @@
         </Grid.Resources>
 
         <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="15"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
         <GroupBox Header="Movement Flags" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="13">
             <StackPanel>

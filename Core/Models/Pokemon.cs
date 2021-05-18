@@ -14,8 +14,8 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 11);
-            set => SetPaddedUtf8String(0, 11, value);
+            get => GetPaddedUtf8String(0, 10);
+            set => SetPaddedUtf8String(0, 10, value);
         }
 
         public uint Hp

@@ -56,7 +56,7 @@
         </Grid.Resources>
         
         <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="11"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
 
         <TextBlock Text="Type1" Grid.Row="1"/>
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Type1, Mode=TwoWay}"/>

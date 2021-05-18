@@ -14,8 +14,8 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 0x0C);
-            set => SetPaddedUtf8String(0, 0x0C, value);
+            get => GetPaddedUtf8String(0, 14);
+            set => SetPaddedUtf8String(0, 14, value);
         }
 
         public uint Effect1Amount

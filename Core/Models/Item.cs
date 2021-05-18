@@ -17,8 +17,8 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 21);
-            set => SetPaddedUtf8String(0, 21, value);
+            get => GetPaddedUtf8String(0, 20);
+            set => SetPaddedUtf8String(0, 20, value);
         }
 
         public IItem Clone()

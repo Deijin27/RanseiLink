@@ -15,8 +15,8 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 15);
-            set => SetPaddedUtf8String(0, 15, value);
+            get => GetPaddedUtf8String(0, 14);
+            set => SetPaddedUtf8String(0, 14, value);
         }
 
         public MoveMovementFlags MovementFlags
