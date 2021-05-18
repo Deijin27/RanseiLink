@@ -59,32 +59,35 @@
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
                         FontSize="13"
-                        ToolTip="Save changes to script"
+                        ToolTip="Save changes to script (Not Yet Implemented)"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
                 <Button Content="&#xE297;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
                         FontSize="13"
-                        ToolTip="Load changes from script"
+                        ToolTip="Load changes from script (Not Yet Implemented)"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
                 <Button Content="&#xE105;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Save changes to application data"
-                        Style="{StaticResource GrayHoverButtonStyle}"/>
+                        Style="{StaticResource GrayHoverButtonStyle}"
+                        Command="{Binding SaveChangesCommand}"/>
                 <Button Content="&#xE159;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Load rom"
-                        Style="{StaticResource GrayHoverButtonStyle}"/>
+                        Style="{StaticResource GrayHoverButtonStyle}"
+                        Command="{Binding LoadRomCommand}"/>
                 <Button Content="&#xE18C;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Commit to rom"
-                        Style="{StaticResource GrayHoverButtonStyle}"/>
+                        Style="{StaticResource GrayHoverButtonStyle}"
+                        Command="{Binding CommitRomCommand}"/>
                 <Button Click="MinimizeWindowButton_Click" Content="&#xE108;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"

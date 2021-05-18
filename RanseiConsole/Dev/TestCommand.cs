@@ -1,6 +1,7 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using Core.Enums;
 using Core.Models;
 using System;
 using System.Collections.Generic;
@@ -23,17 +24,20 @@ namespace RanseiConsole.Dev
 
             //Test2(console);
 
-            BuildEnum(console, IterateItems(), i => i.Name);
+            //BuildEnum(console, IterateItems(), i => i.Name);
 
+            var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
+            console.Output.WriteLine(Testing.GetBits(potion));
+            //Test1(console);
             return default;
         }
 
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 10;
-            var shift = 2;
-            var bitCount = 1;
+            var int_idx = 8;
+            var shift = 22;
+            var bitCount = 10;
 
             var gpk = IteratePokemon().OrderBy(i => i.ToString())
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
@@ -53,10 +57,10 @@ namespace RanseiConsole.Dev
             }
         }
 
-        void Test2(IConsole console)
+        void Test2(IConsole console, bool both1and0 = false)
         {
             //log bit groups
-            var int_idx = 9;
+            var int_idx = 8;
             var minShift = 0;
             var maxShift = 31;
 
@@ -72,7 +76,21 @@ namespace RanseiConsole.Dev
                         console.Output.Write(p.Name + ", ");
                     }
                 }
+                if (both1and0)
+                {
+                    console.Output.Write($"\n  (0): ");
+                    foreach (var p in pokes)
+                    {
+                        if (p.GetUInt32(int_idx, 1, shift) != 1)
+                        {
+                            console.Output.Write(p.Name + ", ");
+                        }
+                    }
+                }
             }
+
+
+
             console.Output.WriteLine();
         }
 

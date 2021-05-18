@@ -27,14 +27,15 @@ namespace Tests.Mocks
             return dict;
         }
 
+        public Queue<string> CommitRomCallLog = new Queue<string>();
         public void CommitToRom(string path)
         {
-            throw new NotImplementedException();
+            CommitRomCallLog.Enqueue(path);
         }
-
+        public Queue<string> LoadRomCallLog = new Queue<string>();
         public void LoadRom(string path)
         {
-            throw new NotImplementedException();
+            LoadRomCallLog.Enqueue(path);
         }
 
         public IPokemon Retrieve(PokemonId id)
