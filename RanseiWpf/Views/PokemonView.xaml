@@ -88,7 +88,7 @@
         <TextBlock Text="Spe" Grid.Row="10" />
         <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="511"/>
 
-        <TextBlock Text="National Pokedex Number" Grid.Row="11" />
+        <TextBlock Text="National Dex Number" Grid.Row="11" />
         <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="511"/>
 
         <!-- Have some option to auto generate name order index, changing it for all pokemon -->

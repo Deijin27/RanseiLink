@@ -13,6 +13,7 @@ namespace RanseiWpf.ViewModels
         public ICommand PokemonViewCommand { get; set; }
         public ICommand WazaViewCommand { get; set; }
         public ICommand AbilityViewCommand { get; set; }
+        public ICommand SaihaiViewCommand { get; set; }
 
         public ICommand LoadRomCommand { get; set; }
         public ICommand CommitRomCommand { get; set; }
@@ -28,6 +29,7 @@ namespace RanseiWpf.ViewModels
         public PokemonSelectorViewModel PokemonVm;
         public WazaSelectorViewModel WazaVm;
         public AbilitySelectorViewModel AbilityVm;
+        public SaihaiSelectorViewModel SaihaiVm;
 
         readonly IDialogService DialogService;
         readonly IDataService DataService;
@@ -51,6 +53,7 @@ namespace RanseiWpf.ViewModels
             PokemonVm = new PokemonSelectorViewModel(PokemonId.Pikachu, DataService);
             WazaVm = new WazaSelectorViewModel(MoveId.Thunderbolt, DataService);
             AbilityVm = new AbilitySelectorViewModel(AbilityId.Static, DataService);
+            SaihaiVm = new SaihaiSelectorViewModel(SaihaiId.Ambition, DataService);
 
             CurrentView = PokemonVm;
 
@@ -66,6 +69,10 @@ namespace RanseiWpf.ViewModels
             AbilityViewCommand = new RelayCommand(o =>
             {
                 CurrentView = AbilityVm;
+            });
+            SaihaiViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = SaihaiVm;
             });
 
             SaveChangesCommand = new RelayCommand(o =>
@@ -123,6 +130,7 @@ namespace RanseiWpf.ViewModels
             PokemonVm.SaveAndClearCache();
             WazaVm.SaveAndClearCache();
             AbilityVm.SaveAndClearCache();
+            SaihaiVm.SaveAndClearCache();
         }
     }
 }

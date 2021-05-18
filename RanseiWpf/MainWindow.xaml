@@ -44,6 +44,7 @@
                 <RadioButton Content="Pokemon" Height="30" Style="{StaticResource MenuToggleButtonStyle}" IsChecked="True" Command="{Binding PokemonViewCommand}"/>
                 <RadioButton Content="Moves" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding WazaViewCommand}"/>
                 <RadioButton Content="Abilities" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding AbilityViewCommand}"/>
+                <RadioButton Content="Warrior Skills" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding SaihaiViewCommand}"/>
             </StackPanel>
             <Border BorderThickness="0" Grid.Row="1" Background="WhiteSmoke" Opacity="0.9"/>
         </Grid>

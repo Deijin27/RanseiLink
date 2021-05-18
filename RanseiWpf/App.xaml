@@ -27,6 +27,10 @@
             <DataTemplate DataType="{x:Type vm:AbilitySelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SaihaiSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
             
             <!-- Register View Models -->
 
@@ -40,6 +44,10 @@
 
             <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
                 <views:AbilityView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SaihaiViewModel}">
+                <views:SaihaiView/>
             </DataTemplate>
 
         </ResourceDictionary>
