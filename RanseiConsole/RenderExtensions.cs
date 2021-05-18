@@ -227,10 +227,10 @@ namespace RanseiConsole
             console.WriteProperty("Name", item.Name);
         }
 
-        public static void Render(this IConsole console, IKingdom item, KingdomId id)
+        public static void Render(this IConsole console, IKingdom kingdom, KingdomId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
-            console.WriteProperty("Name", item.Name);
+            console.WriteProperty("Name", kingdom.Name);
         }
 
     }

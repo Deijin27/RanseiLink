@@ -1,0 +1,53 @@
+﻿using Core.Enums;
+using Core.Models;
+using Core.Models.Interfaces;
+using Xunit;
+
+namespace Tests.ModelTests
+{
+    public class ItemTests
+    {
+        [Fact]
+        public void AccessorsReturnCorrectValues()
+        {
+            IItem a = new Item(new byte[]
+            {
+                0x50, 0x6F, 0x74, 0x69, 
+                0x6F, 0x6E, 0x00, 0x00, 
+                0x00, 0x00, 0x00, 0x00, 
+                0x00, 0x00, 0x00, 0x00, 
+                0x00, 0x00, 0x00, 0x00, 
+                0x00, 0x26, 0x40, 0x81,
+                0x86, 0x00, 0x86, 0x00,
+                0x86, 0x06, 0x50, 0xE0, 
+                0xEF, 0xDB, 0x00, 0x00,
+            });
+
+            Assert.Equal("Potion", a.Name);
+        }
+
+        [Fact]
+        public void AccessorsSetCorrectValues()
+        {
+            var potion = new byte[]
+            {
+                0x50, 0x6F, 0x74, 0x69,
+                0x6F, 0x6E, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x00, 0x26, 0x40, 0x81,
+                0x86, 0x00, 0x86, 0x00,
+                0x86, 0x06, 0x50, 0xE0,
+                0xEF, 0xDB, 0x00, 0x00,
+            };
+
+            IItem a = new Item
+            {
+                Name = "Potion",
+            };
+
+            Assert.Equal("Potion", a.Name);
+        }
+    }
+}
