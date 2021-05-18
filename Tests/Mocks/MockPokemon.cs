@@ -12,9 +12,9 @@ namespace Tests.Mocks
     {
         public MockPokemon()
         {
-            RequiresLv2Dict = new Dictionary<LocationId, bool>();
-            DefaultDict = new Dictionary<LocationId, bool>();
-            foreach (var val in EnumUtil.GetValues<LocationId>())
+            RequiresLv2Dict = new Dictionary<KingdomId, bool>();
+            DefaultDict = new Dictionary<KingdomId, bool>();
+            foreach (var val in EnumUtil.GetValues<KingdomId>())
             {
                 RequiresLv2Dict[val] = false;
                 DefaultDict[val] = false;
@@ -49,34 +49,34 @@ namespace Tests.Mocks
         public byte[] Data { get; set; }
         public uint NationalPokedexNumber { get; set; }
 
-        Dictionary<LocationId, bool> RequiresLv2Dict;
-        Dictionary<LocationId, bool> DefaultDict;
+        Dictionary<KingdomId, bool> RequiresLv2Dict;
+        Dictionary<KingdomId, bool> DefaultDict;
 
-        public bool GetEncounterable(LocationId location, bool requiresLevel2)
+        public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
             if (requiresLevel2)
             {
-                return RequiresLv2Dict[location];
+                return RequiresLv2Dict[kingdom];
             }
-            return DefaultDict[location];
+            return DefaultDict[kingdom];
         }
 
-        public void SetEncounterable(LocationId location, bool requiresLevel2, bool value)
+        public void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value)
         {
             if (requiresLevel2)
             {
-                RequiresLv2Dict[location] = value;
+                RequiresLv2Dict[kingdom] = value;
             }
             else
             {
-                DefaultDict[location] = value;
+                DefaultDict[kingdom] = value;
             }
         }
 
         public IPokemon Clone()
         {
-            var cloneRequiresDict = new Dictionary<LocationId, bool>();
-            var cloneDefaultDict = new Dictionary<LocationId, bool>();
+            var cloneRequiresDict = new Dictionary<KingdomId, bool>();
+            var cloneDefaultDict = new Dictionary<KingdomId, bool>();
             foreach (var i in RequiresLv2Dict)
             {
                 cloneRequiresDict[i.Key] = i.Value;

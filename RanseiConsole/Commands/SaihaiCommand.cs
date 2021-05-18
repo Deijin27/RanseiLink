@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 namespace RanseiConsole.Commands
 {
     [Command("saihai", Description = "Get data on a given warrior skill.")]
-    public class SaihaiCommand : ICommand
+    public class WarriorSkillCommand : ICommand
     {
-        [CommandParameter(0, Description = "Saihai ID.", Name = "id")]
-        public SaihaiId Id { get; set; }
+        [CommandParameter(0, Description = "WarriorSkill ID.", Name = "id")]
+        public WarriorSkillId Id { get; set; }
 
         public ValueTask ExecuteAsync(IConsole console)
         {
-            IModelDataService<SaihaiId, ISaihai> service = new DataService();
+            IModelDataService<WarriorSkillId, IWarriorSkill> service = new DataService();
             var saihai = service.Retrieve(Id);
 
             console.Render(saihai, Id);

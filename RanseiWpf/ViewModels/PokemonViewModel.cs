@@ -110,16 +110,16 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
         }
 
-        public LocationId[] LocationItems { get; } = EnumUtil.GetValues<LocationId>().ToArray();
-        LocationId _selectedEncounterLocation;
-        public LocationId SelectedEncounterLocation
+        public KingdomId[] KindgomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
+        KingdomId _selectedEncounterKingdom;
+        public KingdomId SelectedEncounterKingdom
         {
-            get => _selectedEncounterLocation;
+            get => _selectedEncounterKingdom;
             set
             {
-                if (value != _selectedEncounterLocation)
+                if (value != _selectedEncounterKingdom)
                 {
-                    _selectedEncounterLocation = value;
+                    _selectedEncounterKingdom = value;
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(EncounterableAtDefaultArea));
                     RaisePropertyChanged(nameof(EncounterableWithLevel2Area));
@@ -130,14 +130,14 @@ namespace RanseiWpf.ViewModels
 
         public bool EncounterableAtDefaultArea
         {
-            get => Model.GetEncounterable(SelectedEncounterLocation, false);
-            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterLocation, false, v));
+            get => Model.GetEncounterable(SelectedEncounterKingdom, false);
+            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterKingdom, false, v));
         }
 
         public bool EncounterableWithLevel2Area
         {
-            get => Model.GetEncounterable(SelectedEncounterLocation, true);
-            set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => Model.SetEncounterable(SelectedEncounterLocation, true, v));
+            get => Model.GetEncounterable(SelectedEncounterKingdom, true);
+            set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => Model.SetEncounterable(SelectedEncounterKingdom, true, v));
         }
 
 

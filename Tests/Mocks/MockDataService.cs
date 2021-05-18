@@ -11,7 +11,7 @@ namespace Tests.Mocks
         public Dictionary<PokemonId, IPokemon> PokemonDict = new Dictionary<PokemonId, IPokemon>();
         public Dictionary<MoveId, IMove> MoveDict = new Dictionary<MoveId, IMove>();
         public Dictionary<AbilityId, IAbility> AbilityDict = new Dictionary<AbilityId, IAbility>();
-        public Dictionary<SaihaiId, ISaihai> SaihaiDict = new Dictionary<SaihaiId, ISaihai>();
+        public Dictionary<WarriorSkillId, IWarriorSkill> WarriorSkillDict = new Dictionary<WarriorSkillId, IWarriorSkill>();
         public Dictionary<GimmickId, IGimmick> GimmickDict = new Dictionary<GimmickId, IGimmick>();
         public Dictionary<BuildingId, IBuilding> BuildingDict = new Dictionary<BuildingId, IBuilding>();
         public Dictionary<ItemId, IItem> ItemDict = new Dictionary<ItemId, IItem>();
@@ -53,9 +53,9 @@ namespace Tests.Mocks
             return AbilityDict[id].Clone();
         }
 
-        public ISaihai Retrieve(SaihaiId id)
+        public IWarriorSkill Retrieve(WarriorSkillId id)
         {
-            return SaihaiDict[id].Clone();
+            return WarriorSkillDict[id].Clone();
         }
 
         public IGimmick Retrieve(GimmickId id)
@@ -88,9 +88,9 @@ namespace Tests.Mocks
             AbilityDict[id] = model.Clone();
         }
 
-        public void Save(SaihaiId id, ISaihai model)
+        public void Save(WarriorSkillId id, IWarriorSkill model)
         {
-            SaihaiDict[id] = model.Clone();
+            WarriorSkillDict[id] = model.Clone();
         }
 
         public void Save(GimmickId id, IGimmick model)

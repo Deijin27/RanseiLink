@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum SaihaiEffectId
+    public enum WarriorSkillEffectId
     {
         RaiseAttack,
         RaiseDefence,
@@ -19,7 +19,7 @@ namespace Core.Enums
         CureBurn, // Maybe swap with freeze
         CureFreeze, // Maybe swap with burn
         CureConfusion, // Maybe swap with sleep
-        CancelOpponentSaihai,
+        CancelOpponentWarriorSkill,
         RestoreHpOverTime,
         CantMove,
         ClimbHigher,

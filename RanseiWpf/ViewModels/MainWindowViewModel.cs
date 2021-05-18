@@ -11,9 +11,9 @@ namespace RanseiWpf.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         public ICommand PokemonViewCommand { get; set; }
-        public ICommand WazaViewCommand { get; set; }
+        public ICommand MoveViewCommand { get; set; }
         public ICommand AbilityViewCommand { get; set; }
-        public ICommand SaihaiViewCommand { get; set; }
+        public ICommand WarriorSkillViewCommand { get; set; }
 
         public ICommand LoadRomCommand { get; set; }
         public ICommand CommitRomCommand { get; set; }
@@ -27,9 +27,9 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(ref _currentView, value);
         }
         public PokemonSelectorViewModel PokemonVm;
-        public WazaSelectorViewModel WazaVm;
+        public MoveSelectorViewModel MoveVm;
         public AbilitySelectorViewModel AbilityVm;
-        public SaihaiSelectorViewModel SaihaiVm;
+        public WarriorSkillSelectorViewModel WarriorSkillVm;
 
         readonly IDialogService DialogService;
         readonly IDataService DataService;
@@ -51,9 +51,9 @@ namespace RanseiWpf.ViewModels
         void Init()
         {
             PokemonVm = new PokemonSelectorViewModel(PokemonId.Pikachu, DataService);
-            WazaVm = new WazaSelectorViewModel(MoveId.Thunderbolt, DataService);
+            MoveVm = new MoveSelectorViewModel(MoveId.Thunderbolt, DataService);
             AbilityVm = new AbilitySelectorViewModel(AbilityId.Static, DataService);
-            SaihaiVm = new SaihaiSelectorViewModel(SaihaiId.Ambition, DataService);
+            WarriorSkillVm = new WarriorSkillSelectorViewModel(WarriorSkillId.Ambition, DataService);
 
             CurrentView = PokemonVm;
 
@@ -62,17 +62,17 @@ namespace RanseiWpf.ViewModels
                 CurrentView = PokemonVm;
 
             });
-            WazaViewCommand = new RelayCommand(o =>
+            MoveViewCommand = new RelayCommand(o =>
             {
-                CurrentView = WazaVm;
+                CurrentView = MoveVm;
             });
             AbilityViewCommand = new RelayCommand(o =>
             {
                 CurrentView = AbilityVm;
             });
-            SaihaiViewCommand = new RelayCommand(o =>
+            WarriorSkillViewCommand = new RelayCommand(o =>
             {
-                CurrentView = SaihaiVm;
+                CurrentView = WarriorSkillVm;
             });
 
             SaveChangesCommand = new RelayCommand(o =>
@@ -96,7 +96,7 @@ namespace RanseiWpf.ViewModels
                         DataService.LoadRom(chosenFilePath);
 
                         PokemonVm.ClearUnsavedChanges();
-                        WazaVm.ClearUnsavedChanges();
+                        MoveVm.ClearUnsavedChanges();
                         AbilityVm.ClearUnsavedChanges();
                     }
                 }
@@ -128,9 +128,9 @@ namespace RanseiWpf.ViewModels
         public void SaveChanges()
         {
             PokemonVm.SaveAndClearCache();
-            WazaVm.SaveAndClearCache();
+            MoveVm.SaveAndClearCache();
             AbilityVm.SaveAndClearCache();
-            SaihaiVm.SaveAndClearCache();
+            WarriorSkillVm.SaveAndClearCache();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Core.Models.Interfaces
 {
     public interface IBuilding : IDataWrapper, ICloneable<IBuilding> 
     { 
-        LocationId Location { get; set; }
+        KingdomId Kingdom { get; set; }
         string Name { get; set; }
     }
 }

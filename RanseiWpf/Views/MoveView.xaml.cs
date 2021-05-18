@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace RanseiWpf.Views
 {
     /// <summary>
-    /// Interaction logic for SaihaiView.xaml
+    /// Interaction logic for MoveView.xaml
     /// </summary>
-    public partial class SaihaiView : UserControl
+    public partial class MoveView : UserControl
     {
-        public SaihaiView()
+        public MoveView()
         {
             InitializeComponent();
         }

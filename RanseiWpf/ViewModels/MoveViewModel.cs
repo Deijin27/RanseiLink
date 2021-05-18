@@ -9,7 +9,7 @@ using Core.Models.Interfaces;
 
 namespace RanseiWpf.ViewModels
 {
-    public class WazaViewModel : ViewModelBase, IViewModelForModel<IMove>
+    public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
     {
         public IMove Model { get; set; }
 

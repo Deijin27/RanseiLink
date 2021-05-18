@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum LocationId
+    public enum KingdomId
     {
         Aurora,
         Ignis,

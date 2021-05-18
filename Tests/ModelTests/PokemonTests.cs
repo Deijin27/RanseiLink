@@ -36,7 +36,7 @@ namespace Tests.ModelTests
             Assert.False(p.IsLegendary);
             Assert.Equal(0x40u, p.NameOrderIndex);
             Assert.Equal(475u, p.NationalPokedexNumber);
-            foreach (LocationId location in EnumUtil.GetValues<LocationId>())
+            foreach (KingdomId location in EnumUtil.GetValues<KingdomId>())
             {
                 Assert.False(p.GetEncounterable(location, false));
             }
@@ -66,10 +66,10 @@ namespace Tests.ModelTests
                 NameOrderIndex = 0x40,
                 NationalPokedexNumber = 475,
             };
-            p.SetEncounterable(LocationId.Aurora, true, true);
-            p.SetEncounterable(LocationId.Cragspur, false, true);
-            p.SetEncounterable(LocationId.Chrysalia, true, false);
-            p.SetEncounterable(LocationId.Illusio, false, false);
+            p.SetEncounterable(KingdomId.Aurora, true, true);
+            p.SetEncounterable(KingdomId.Cragspur, false, true);
+            p.SetEncounterable(KingdomId.Chrysalia, true, false);
+            p.SetEncounterable(KingdomId.Illusio, false, false);
 
             Assert.Equal("Gallade", p.Name);
             Assert.Equal(TypeId.Psychic, p.Type1);
@@ -90,10 +90,10 @@ namespace Tests.ModelTests
             Assert.Equal(0x40u, p.NameOrderIndex);
             Assert.Equal(475u, p.NationalPokedexNumber);
 
-            Assert.True(p.GetEncounterable(LocationId.Aurora, true));
-            Assert.True(p.GetEncounterable(LocationId.Cragspur, false));
-            Assert.False(p.GetEncounterable(LocationId.Chrysalia, true));
-            Assert.False(p.GetEncounterable(LocationId.Illusio, false));
+            Assert.True(p.GetEncounterable(KingdomId.Aurora, true));
+            Assert.True(p.GetEncounterable(KingdomId.Cragspur, false));
+            Assert.False(p.GetEncounterable(KingdomId.Chrysalia, true));
+            Assert.False(p.GetEncounterable(KingdomId.Illusio, false));
 
             // Add Array equal test when possible
         }

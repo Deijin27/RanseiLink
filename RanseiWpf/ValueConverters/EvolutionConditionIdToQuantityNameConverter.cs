@@ -14,7 +14,7 @@ namespace RanseiWpf.ValueConverters
                 EvolutionConditionId.Defence => "Required Def",
                 EvolutionConditionId.Speed => "Required Spe",
                 EvolutionConditionId.Link => "Required Link",
-                EvolutionConditionId.Location => "Required Location",
+                EvolutionConditionId.Kingdom => "Required Kingdom",
                 EvolutionConditionId.WarriorGender => "Required Gender",
                 EvolutionConditionId.Item => "Required Item",
                 EvolutionConditionId.JoinOffer => "N/A",

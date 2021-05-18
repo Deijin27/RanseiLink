@@ -5,7 +5,7 @@ using Core.Models.Interfaces;
 namespace Core.Models
 {
     /// <summary>
-    /// Waza
+    /// Move
     /// </summary>
     public class Move : BaseDataWindow, IMove
     {

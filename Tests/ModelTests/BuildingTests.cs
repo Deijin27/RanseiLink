@@ -24,7 +24,7 @@ namespace Tests.ModelTests
             });
 
             Assert.Equal("Sacred Ruins", b.Name);
-            Assert.Equal(LocationId.Aurora, b.Location);
+            Assert.Equal(KingdomId.Aurora, b.Kingdom);
             
         }
 
@@ -34,11 +34,11 @@ namespace Tests.ModelTests
             IBuilding b = new Building
             {
                 Name = "Sacred Ruins",
-                Location = LocationId.Aurora
+                Kingdom = KingdomId.Aurora
             };
 
             Assert.Equal("Sacred Ruins", b.Name);
-            Assert.Equal(LocationId.Aurora, b.Location);
+            Assert.Equal(KingdomId.Aurora, b.Kingdom);
 
             // Add Array equal test when possible
         }

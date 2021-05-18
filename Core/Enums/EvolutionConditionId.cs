@@ -29,9 +29,9 @@ namespace Core.Enums
         Link,
 
         /// <summary>
-        /// Perform any action at specific location
+        /// Perform any action at specific kingdom
         /// </summary>
-        Location,
+        Kingdom,
 
         /// <summary>
         /// Win a battle with a warrior of a specific gender

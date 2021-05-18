@@ -20,7 +20,7 @@
                 <views:SelectorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WazaSelectorViewModel}">
+            <DataTemplate DataType="{x:Type vm:MoveSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
 
@@ -28,7 +28,7 @@
                 <views:SelectorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:SaihaiSelectorViewModel}">
+            <DataTemplate DataType="{x:Type vm:WarriorSkillSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
             
@@ -38,16 +38,16 @@
                 <views:PokemonView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WazaViewModel}">
-                <views:WazaView/>
+            <DataTemplate DataType="{x:Type vm:MoveViewModel}">
+                <views:MoveView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
                 <views:AbilityView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:SaihaiViewModel}">
-                <views:SaihaiView/>
+            <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">
+                <views:WarriorSkillView/>
             </DataTemplate>
 
         </ResourceDictionary>

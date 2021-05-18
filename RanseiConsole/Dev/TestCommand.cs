@@ -36,10 +36,10 @@ namespace RanseiConsole.Dev
         {
             // log byte groups
             var int_idx = 6;
-            var shift = 10;
-            var bitCount = 6;
+            var shift = 11;
+            var bitCount = 3;
 
-            var gpk = IterateSaihai().OrderBy(i => i.Name)
+            var gpk = IterateWarriorSkill().OrderBy(i => i.Name)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
@@ -143,15 +143,15 @@ namespace RanseiConsole.Dev
 
         }
 
-        static IEnumerable<Saihai> IterateSaihai()
+        static IEnumerable<WarriorSkill> IterateWarriorSkill()
         {
             using var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, "Saihai.dat")));
 
-            int count = (int)(file.BaseStream.Length / Saihai.DataLength);
+            int count = (int)(file.BaseStream.Length / WarriorSkill.DataLength);
             for (int i = 0; i < count; i++)
             {
-                var pk = file.ReadBytes(Saihai.DataLength);
-                yield return new Saihai(pk);
+                var pk = file.ReadBytes(WarriorSkill.DataLength);
+                yield return new WarriorSkill(pk);
             }
 
         }

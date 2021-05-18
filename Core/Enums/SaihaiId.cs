@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum SaihaiId
+    public enum WarriorSkillId
     {
         Adrenaline,
         Fortify,

@@ -41,8 +41,8 @@ namespace RanseiConsole
                 case EvolutionConditionId.Link:
                     return $"({quantity}%) ";
 
-                case EvolutionConditionId.Location:
-                    return $"({(LocationId)(int)quantity}) ";
+                case EvolutionConditionId.Kingdom:
+                    return $"({(KingdomId)(int)quantity}) ";
 
                 case EvolutionConditionId.WarriorGender:
                     return $"({(GenderId)(int)quantity}) ";
@@ -81,7 +81,7 @@ namespace RanseiConsole
 
             var sb1 = new StringBuilder();
             var sb2 = new StringBuilder();
-            foreach (var location in EnumUtil.GetValues<LocationId>())
+            foreach (var location in EnumUtil.GetValues<KingdomId>())
             {
                 sb1.Append(pokemon.GetEncounterable(location, false));
                 sb1.Append(", ");
@@ -191,7 +191,7 @@ namespace RanseiConsole
             console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
         }
 
-        public static void Render(this IConsole console, ISaihai saihai, SaihaiId id)
+        public static void Render(this IConsole console, IWarriorSkill saihai, WarriorSkillId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", saihai.Name);
@@ -212,7 +212,7 @@ namespace RanseiConsole
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", building.Name);
-            console.WriteProperty("Location", building.Location.ToString());
+            console.WriteProperty("Kingdom", building.Kingdom.ToString());
         }
 
         public static void Render(this IConsole console, IItem item, ItemId id)

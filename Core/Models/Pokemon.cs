@@ -119,15 +119,15 @@ namespace Core.Models
             set => SetUInt32(11, 8, 0, value);
         }
 
-        public bool GetEncounterable(LocationId location, bool requiresLevel2)
+        public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
-            var shift = (byte)location * 3 + (requiresLevel2 ? 1 : 0);
+            var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);
             return (BitConverter.ToUInt64(Data, 9 * 4) >> shift & 1) == 1;
         }
 
-        public void SetEncounterable(LocationId location, bool requiresLevel2, bool value)
+        public void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value)
         {
-            var shift = (byte)location * 3 + (requiresLevel2 ? 1 : 0);
+            var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);
             var num = BitConverter.ToUInt64(Data, 9 * 4) & ~(1uL << shift);
             if (value)
             {
@@ -171,8 +171,8 @@ namespace Core.Models
                 case EvolutionConditionId.Link:
                     return $"({quantity}%) ";
 
-                case EvolutionConditionId.Location:
-                    return $"({(LocationId)quantity}) ";
+                case EvolutionConditionId.Kingdom:
+                    return $"({(KingdomId)quantity}) ";
 
                 case EvolutionConditionId.WarriorGender:
                     return $"({(GenderId)quantity}) ";

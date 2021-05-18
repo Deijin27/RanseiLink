@@ -9,7 +9,7 @@ namespace Core.Services
         IModelDataService<PokemonId, IPokemon>,
         IModelDataService<MoveId, IMove>,
         IModelDataService<AbilityId, IAbility>,
-        IModelDataService<SaihaiId, ISaihai>,
+        IModelDataService<WarriorSkillId, IWarriorSkill>,
         IModelDataService<GimmickId, IGimmick>,
         IModelDataService<BuildingId, IBuilding>,
         IModelDataService<ItemId, IItem>

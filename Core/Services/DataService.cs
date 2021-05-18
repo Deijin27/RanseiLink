@@ -13,7 +13,7 @@ namespace Core.Services
         const string PokemonFile = "Pokemon.dat";
         const string MoveFile = "Waza.dat";
         const string AbilityFile = "Tokusei.dat";
-        const string SaihaiFile = "Saihai.dat";
+        const string WarriorSkillFile = "Saihai.dat";
         const string GimmickFile = "Gimmick.dat";
         const string BuildingFile = "Building.dat";
         const string ItemFile = "Item.dat";
@@ -21,7 +21,7 @@ namespace Core.Services
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
         const string AbilityRomPath = "/data/Tokusei.dat";
-        const string SaihaiRomPath = "/data/Saihai.dat";
+        const string WarriorSkillRomPath = "/data/Saihai.dat";
         const string GimmickRomPath = "/data/Gimmick.dat";
         const string BuildingRomPath = "/data/Building.dat";
         const string ItemRomPath = "/data/Item.dat";
@@ -35,7 +35,7 @@ namespace Core.Services
         private void Init()
         {
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, SaihaiFile, GimmickFile, BuildingFile, ItemFile})
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile})
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -59,7 +59,7 @@ namespace Core.Services
                 nds.ExtractCopyOfFile(PokemonRomPath, DataFolder);
                 nds.ExtractCopyOfFile(MoveRomPath, DataFolder);
                 nds.ExtractCopyOfFile(AbilityRomPath, DataFolder);
-                nds.ExtractCopyOfFile(SaihaiRomPath, DataFolder);
+                nds.ExtractCopyOfFile(WarriorSkillRomPath, DataFolder);
                 nds.ExtractCopyOfFile(GimmickRomPath, DataFolder);
                 nds.ExtractCopyOfFile(BuildingRomPath, DataFolder);
                 nds.ExtractCopyOfFile(ItemRomPath, DataFolder);
@@ -73,7 +73,7 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(PokemonRomPath, Path.Combine(DataFolder, PokemonFile));
                 nds.InsertFixedLengthFile(MoveRomPath, Path.Combine(DataFolder, MoveFile));
                 nds.InsertFixedLengthFile(AbilityRomPath, Path.Combine(DataFolder, AbilityFile));
-                nds.InsertFixedLengthFile(SaihaiRomPath, Path.Combine(DataFolder, SaihaiFile));
+                nds.InsertFixedLengthFile(WarriorSkillRomPath, Path.Combine(DataFolder, WarriorSkillFile));
                 nds.InsertFixedLengthFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
                 nds.InsertFixedLengthFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
                 nds.InsertFixedLengthFile(ItemRomPath, Path.Combine(DataFolder, ItemFile));
@@ -151,20 +151,20 @@ namespace Core.Services
             }
         }
 
-        public ISaihai Retrieve(SaihaiId id)
+        public IWarriorSkill Retrieve(WarriorSkillId id)
         {
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, SaihaiFile))))
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, WarriorSkillFile))))
             {
-                file.BaseStream.Position = (int)id * Saihai.DataLength;
-                return new Saihai(file.ReadBytes(Saihai.DataLength));
+                file.BaseStream.Position = (int)id * WarriorSkill.DataLength;
+                return new WarriorSkill(file.ReadBytes(WarriorSkill.DataLength));
             }
         }
 
-        public void Save(SaihaiId id, ISaihai model)
+        public void Save(WarriorSkillId id, IWarriorSkill model)
         {
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, SaihaiFile))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, WarriorSkillFile))))
             {
-                file.BaseStream.Position = (int)id * Saihai.DataLength;
+                file.BaseStream.Position = (int)id * WarriorSkill.DataLength;
                 file.Write(model.Data);
             }
         }

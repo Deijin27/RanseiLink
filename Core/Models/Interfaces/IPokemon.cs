@@ -23,7 +23,7 @@ namespace Core.Models.Interfaces
         TypeId Type2 { get; set; }
         uint NationalPokedexNumber { get; set; }
 
-        bool GetEncounterable(LocationId location, bool requiresLevel2);
-        void SetEncounterable(LocationId location, bool requiresLevel2, bool value);
+        bool GetEncounterable(KingdomId kingdom, bool requiresLevel2);
+        void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value);
     }
 }

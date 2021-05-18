@@ -3,11 +3,11 @@ using Core.Models.Interfaces;
 
 namespace Core.Models
 {
-    public class Saihai : BaseDataWindow, ISaihai
+    public class WarriorSkill : BaseDataWindow, IWarriorSkill
     {
         public const int DataLength = 0x1C;
-        public Saihai(byte[] data) : base(data, DataLength) { }
-        public Saihai() : base(new byte[DataLength], DataLength) { }
+        public WarriorSkill(byte[] data) : base(data, DataLength) { }
+        public WarriorSkill() : base(new byte[DataLength], DataLength) { }
 
         public string Name
         {
@@ -21,15 +21,15 @@ namespace Core.Models
             set => SetUInt32(4, 8, 24, value);
         }
 
-        public SaihaiEffectId Effect1
+        public WarriorSkillEffectId Effect1
         {
-            get => (SaihaiEffectId)GetUInt32(5, 7, 0);
+            get => (WarriorSkillEffectId)GetUInt32(5, 7, 0);
             set => SetUInt32(5, 7, 0, (uint)value);
         }
 
-        public SaihaiEffectId Effect2
+        public WarriorSkillEffectId Effect2
         {
-            get => (SaihaiEffectId)GetUInt32(5, 7, 7);
+            get => (WarriorSkillEffectId)GetUInt32(5, 7, 7);
             set => SetUInt32(5, 7, 7, (uint)value);
         }
 
@@ -39,9 +39,9 @@ namespace Core.Models
             set => SetUInt32(5, 8, 14, value);
         }
 
-        public SaihaiEffectId Effect3
+        public WarriorSkillEffectId Effect3
         {
-            get => (SaihaiEffectId)GetUInt32(5, 7, 22);
+            get => (WarriorSkillEffectId)GetUInt32(5, 7, 22);
             set => SetUInt32(5, 7, 22, (uint)value);
         }
 
@@ -57,15 +57,15 @@ namespace Core.Models
             set => SetUInt32(6, 8, 0, value);
         }
 
-        public SaihaiTargetId Target
+        public WarriorSkillTargetId Target
         {
-            get => (SaihaiTargetId)GetUInt32(6, 2, 8);
+            get => (WarriorSkillTargetId)GetUInt32(6, 2, 8);
             set => SetUInt32(6, 2, 8, (uint)value);
         }
 
-        public ISaihai Clone()
+        public IWarriorSkill Clone()
         {
-            return new Saihai((byte[])Data.Clone());
+            return new WarriorSkill((byte[])Data.Clone());
         }
     }
 }

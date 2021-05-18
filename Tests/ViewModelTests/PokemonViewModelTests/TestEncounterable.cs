@@ -15,10 +15,10 @@ namespace Tests.ViewModelTests.PokemonViewModelTests
         public TestEncounterable()
         {
             var mock = new MockPokemon();
-            mock.SetEncounterable(LocationId.Avia, true, true);
-            mock.SetEncounterable(LocationId.Dragnor, false, true);
-            mock.SetEncounterable(LocationId.Fontaine, true, false);
-            mock.SetEncounterable(LocationId.Ignis, false, false);
+            mock.SetEncounterable(KingdomId.Avia, true, true);
+            mock.SetEncounterable(KingdomId.Dragnor, false, true);
+            mock.SetEncounterable(KingdomId.Fontaine, true, false);
+            mock.SetEncounterable(KingdomId.Ignis, false, false);
 
             ViewModel = new PokemonViewModel()
             {
@@ -29,23 +29,23 @@ namespace Tests.ViewModelTests.PokemonViewModelTests
         [Fact]
         public void ChangeLocation()
         {
-            ViewModel.SelectedEncounterLocation = LocationId.Avia;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Avia;
             Assert.True(ViewModel.EncounterableWithLevel2Area, "Assertion1");
 
-            ViewModel.SelectedEncounterLocation = LocationId.Dragnor;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Dragnor;
             Assert.True(ViewModel.EncounterableAtDefaultArea, "Assertion2");
 
-            ViewModel.SelectedEncounterLocation = LocationId.Fontaine;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Fontaine;
             Assert.False(ViewModel.EncounterableWithLevel2Area, "Assertion3");
 
-            ViewModel.SelectedEncounterLocation = LocationId.Ignis;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Ignis;
             Assert.False(ViewModel.EncounterableAtDefaultArea, "Assertion4");
         }
 
         [Fact]
         public void ChangeEncounterable()
         {
-            ViewModel.SelectedEncounterLocation = LocationId.Avia;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Avia;
 
             ViewModel.EncounterableWithLevel2Area = false;
             Assert.False(ViewModel.EncounterableWithLevel2Area, "Assertion1");
@@ -53,7 +53,7 @@ namespace Tests.ViewModelTests.PokemonViewModelTests
             ViewModel.EncounterableWithLevel2Area = true;
             Assert.True(ViewModel.EncounterableWithLevel2Area, "Assertion2");
 
-            ViewModel.SelectedEncounterLocation = LocationId.Fontaine;
+            ViewModel.SelectedEncounterKingdom = KingdomId.Fontaine;
 
             ViewModel.EncounterableAtDefaultArea = true;
             Assert.True(ViewModel.EncounterableAtDefaultArea, "Assertion3");

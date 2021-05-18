@@ -18,6 +18,7 @@ namespace Tests.ViewModelTests.MainWindowViewModelTests
             DataService.Save(PokemonId.Pikachu, new MockPokemon());
             DataService.Save(MoveId.Thunderbolt, new Move());
             DataService.Save(AbilityId.Static, new Ability());
+            DataService.Save(WarriorSkillId.Ambition, new WarriorSkill());
             DialogService = new MockDialogService()
             {
                 RequestRomFileReturnBool = true,

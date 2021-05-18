@@ -15,9 +15,9 @@ namespace Core.Models
             set => SetPaddedUtf8String(0, 0x13, value);
         }
 
-        public LocationId Location
+        public KingdomId Kingdom
         {
-            get => (LocationId)GetUInt32(6, 5, 24);
+            get => (KingdomId)GetUInt32(6, 5, 24);
             set => SetUInt32(6, 5, 24, (uint)value);
         }
 

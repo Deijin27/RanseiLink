@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace RanseiWpf.Views
 {
     /// <summary>
-    /// Interaction logic for WazaView.xaml
+    /// Interaction logic for WarriorSkillView.xaml
     /// </summary>
-    public partial class WazaView : UserControl
+    public partial class WarriorSkillView : UserControl
     {
-        public WazaView()
+        public WarriorSkillView()
         {
             InitializeComponent();
         }
