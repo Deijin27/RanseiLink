@@ -1,7 +1,6 @@
 ﻿using CliFx.Infrastructure;
 using Core;
 using Core.Enums;
-using Core.Models;
 using Core.Models.Interfaces;
 using System;
 using System.Text;
@@ -83,13 +82,20 @@ namespace RanseiConsole
             var sb2 = new StringBuilder();
             foreach (var location in EnumUtil.GetValues<KingdomId>())
             {
-                sb1.Append(pokemon.GetEncounterable(location, false));
-                sb1.Append(", ");
-                sb2.Append(pokemon.GetEncounterable(location, true));
-                sb2.Append(", ");
+                if (pokemon.GetEncounterable(location, false))
+                {
+                    sb1.Append(location);
+                    sb1.Append(", ");
+                }
+                if (pokemon.GetEncounterable(location, true))
+                {
+                    sb2.Append(location);
+                    sb2.Append(", ");
+                }
             }
-            console.WriteProperty("Default Encounterable:", sb1.ToString());
-            console.WriteProperty("Lv2 Encounterable:", sb2.ToString());
+
+            console.WriteProperty("Default Encounterable", sb1.ToString().TrimEnd(',', ' '));
+            console.WriteProperty("Lv2 Encounterable", sb2.ToString().TrimEnd(',', ' '));
         }
 
         private static string RenderQuantityForMoveEffect(MoveEffectId id, uint value)
@@ -216,6 +222,12 @@ namespace RanseiConsole
         }
 
         public static void Render(this IConsole console, IItem item, ItemId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", item.Name);
+        }
+
+        public static void Render(this IConsole console, IKingdom item, KingdomId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
             console.WriteProperty("Name", item.Name);

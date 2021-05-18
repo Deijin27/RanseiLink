@@ -17,6 +17,7 @@ namespace Core.Services
         const string GimmickFile = "Gimmick.dat";
         const string BuildingFile = "Building.dat";
         const string ItemFile = "Item.dat";
+        const string KingdomFile = "Kuni.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
@@ -25,6 +26,7 @@ namespace Core.Services
         const string GimmickRomPath = "/data/Gimmick.dat";
         const string BuildingRomPath = "/data/Building.dat";
         const string ItemRomPath = "/data/Item.dat";
+        const string KingdomRomPath = "/data/Kuni.dat";
 
         public DataService()
         {
@@ -35,7 +37,7 @@ namespace Core.Services
         private void Init()
         {
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile})
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile, KingdomFile})
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -63,6 +65,7 @@ namespace Core.Services
                 nds.ExtractCopyOfFile(GimmickRomPath, DataFolder);
                 nds.ExtractCopyOfFile(BuildingRomPath, DataFolder);
                 nds.ExtractCopyOfFile(ItemRomPath, DataFolder);
+                nds.ExtractCopyOfFile(KingdomRomPath, DataFolder);
             }
         }
 
@@ -77,6 +80,7 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(GimmickRomPath, Path.Combine(DataFolder, GimmickFile));
                 nds.InsertFixedLengthFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
                 nds.InsertFixedLengthFile(ItemRomPath, Path.Combine(DataFolder, ItemFile));
+                nds.InsertFixedLengthFile(KingdomRomPath, Path.Combine(DataFolder, KingdomFile));
             }
         }
 
@@ -219,6 +223,24 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, ItemFile))))
             {
                 file.BaseStream.Position = (int)id * Item.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public IKingdom Retrieve(KingdomId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, KingdomFile))))
+            {
+                file.BaseStream.Position = (int)id * Kingdom.DataLength;
+                return new Kingdom(file.ReadBytes(Kingdom.DataLength));
+            }
+        }
+
+        public void Save(KingdomId id, IKingdom model)
+        {
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, KingdomFile))))
+            {
+                file.BaseStream.Position = (int)id * Kingdom.DataLength;
                 file.Write(model.Data);
             }
         }

@@ -1,5 +1,4 @@
 ﻿using Core.Enums;
-using Core.Models;
 using Core.Models.Interfaces;
 using System.Collections.Generic;
 
@@ -12,7 +11,8 @@ namespace Core.Services
         IModelDataService<WarriorSkillId, IWarriorSkill>,
         IModelDataService<GimmickId, IGimmick>,
         IModelDataService<BuildingId, IBuilding>,
-        IModelDataService<ItemId, IItem>
+        IModelDataService<ItemId, IItem>,
+        IModelDataService<KingdomId, IKingdom>
     {
         Dictionary<PokemonId, IPokemon> AllPokemon();
         void CommitToRom(string path);
