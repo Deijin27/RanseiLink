@@ -1,14 +1,22 @@
 # RanseiLink
 
-Pokemon Conquest Rom Editor. A WPF app, as well as a netcore console app.
+WIP Pokemon Conquest Rom Editor. A WPF app, as well as a netcore console app.
+
+![](https://i.imgur.com/0WpMBxe.png)
 
 See the Wiki for explanations of file formats and data structures used within the game.
 
-## Preview of WPF app
+## WPF App
 
 ![](https://i.imgur.com/m78JNff.png)
 
-## Usage of console app
+Walkthrough:
+
+1. Open the app, on the top bar choose the load rom option (tooltips will appear when you hover over the icons) and choose a rom to be loaded into application data
+2. Apply your desired edits. Save the changes with the save button and they will stick around if you close the application and come back later.
+3. From the top bar, choose the commit to rom option, and commit the changes to a copy of your original rom
+
+## Console App
 
 Within the console, navigate to the folder containing `RanseiConsole.dll`.
 
