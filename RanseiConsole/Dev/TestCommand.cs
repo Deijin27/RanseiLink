@@ -16,30 +16,30 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\ItemGroups", IterateItems(), i => i.Name);
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\KingdomGroups", IterateKingdoms(), i => i.Name);
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
-            //console.Output.WriteLine(Testing.GetBits(IterateBuilding().First()));
-
+            //console.Output.WriteLine(Testing.GetBits(IterateScenarioPokemon().First()));
+            Test1(console);
             //Test2(console);
 
             //BuildEnum(console, IterateItems(), i => i.Name);
 
             //var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
             //console.Output.WriteLine(Testing.GetBits(potion));
-            Test1(console);
+            //Test2(console, true);
             return default;
         }
 
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 6;
-            var shift = 11;
-            var bitCount = 3;
+            var int_idx = 7;
+            var shift = 14;
+            var bitCount = 5;
 
-            var gpk = IterateWarriorSkill().OrderBy(i => i.Name)
+            var gpk = IterateMoves().OrderBy(i => i.Name)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
@@ -60,8 +60,8 @@ namespace RanseiConsole.Dev
         void Test2(IConsole console, bool both1and0 = false)
         {
             //log bit groups
-            var int_idx = 8;
-            var minShift = 0;
+            var int_idx = 7;
+            var minShift = 27;
             var maxShift = 31;
 
             var pokes = IteratePokemon().ToArray();
@@ -204,6 +204,18 @@ namespace RanseiConsole.Dev
             {
                 var item = file.ReadBytes(Item.DataLength);
                 yield return new Item(item);
+            }
+        }
+
+        static IEnumerable<Kingdom> IterateKingdoms()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Kuni.dat"));
+
+            int count = (int)(file.BaseStream.Length / Kingdom.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(Kingdom.DataLength);
+                yield return new Kingdom(item);
             }
         }
     }

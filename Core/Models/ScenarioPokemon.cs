@@ -12,6 +12,13 @@ namespace Core.Models
         public PokemonId Pokemon
         {
             get => (PokemonId)GetByte(0);
+            set => SetByte(0, (byte)value);
+        }
+
+        public AbilityId Ability
+        {
+            get => (AbilityId)GetUInt32(1, 8, 20);
+            set => SetUInt32(1, 8, 20, (uint)value);
         }
 
         public IScenarioPokemon Clone()

@@ -58,13 +58,13 @@
         <TextBlock Text="Name" Grid.Row="0" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
-        <GroupBox Header="Movement Flags" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="13">
+        <!--<GroupBox Header="Movement Flags" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="13">
             <StackPanel>
                 <CheckBox Content="Movement or Knockback" IsChecked="{Binding MovementFlag_MovementOrKnockback, Mode=TwoWay}" Margin="0,0,0,13"/>
                 <CheckBox Content="Invert Movement Direction" IsChecked="{Binding MovementFlag_InvertMovementDirection, Mode=TwoWay}" Margin="0,0,0,13"/>
                 <CheckBox Content="Double Movement Distance" IsChecked="{Binding MovementFlag_DoubleMovementDistance, Mode=TwoWay}" />
             </StackPanel>
-        </GroupBox>
+        </GroupBox>-->
 
         <TextBlock Text="Type" Grid.Row="5"/>
         <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Type, Mode=TwoWay}"/>
