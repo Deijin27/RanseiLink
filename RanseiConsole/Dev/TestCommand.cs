@@ -21,10 +21,10 @@ namespace RanseiConsole.Dev
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateScenarioPokemon().First()));
-            Test1(console);
+            //Test1(console);
             //Test2(console);
 
-            //BuildEnum(console, IterateItems(), i => i.Name);
+            BuildEnum(console, IterateEventSpeakers(), i => i.Name);
 
             //var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
             //console.Output.WriteLine(Testing.GetBits(potion));
@@ -216,6 +216,18 @@ namespace RanseiConsole.Dev
             {
                 var item = file.ReadBytes(Kingdom.DataLength);
                 yield return new Kingdom(item);
+            }
+        }
+
+        static IEnumerable<EventSpeaker> IterateEventSpeakers()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\EventSpeaker.dat"));
+
+            int count = (int)(file.BaseStream.Length / EventSpeaker.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(EventSpeaker.DataLength);
+                yield return new EventSpeaker(item);
             }
         }
     }

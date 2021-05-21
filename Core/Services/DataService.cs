@@ -19,6 +19,7 @@ namespace Core.Services
         const string ItemFile = "Item.dat";
         const string KingdomFile = "Kuni.dat";
         const string MoveRangeFile = "WazaRange.dat";
+        const string EventSpeakerFile = "EventSpeaker.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
@@ -29,6 +30,7 @@ namespace Core.Services
         const string ItemRomPath = "/data/Item.dat";
         const string KingdomRomPath = "/data/Kuni.dat";
         const string MoveRangeRomPath = "/data/WazaRange.dat";
+        const string EventSpeakerRomPath = "/data/EventSpeaker.dat";
 
         public DataService()
         {
@@ -39,7 +41,9 @@ namespace Core.Services
         private void Init()
         {
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile, KingdomFile, MoveRangeFile })
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, 
+                WarriorSkillFile, GimmickFile, BuildingFile, ItemFile, KingdomFile, 
+                MoveRangeFile, EventSpeakerFile })
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -69,6 +73,7 @@ namespace Core.Services
                 nds.ExtractCopyOfFile(ItemRomPath, DataFolder);
                 nds.ExtractCopyOfFile(KingdomRomPath, DataFolder);
                 nds.ExtractCopyOfFile(MoveRangeRomPath, DataFolder);
+                nds.ExtractCopyOfFile(EventSpeakerRomPath, DataFolder);
             }
         }
 
@@ -85,6 +90,7 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(ItemRomPath, Path.Combine(DataFolder, ItemFile));
                 nds.InsertFixedLengthFile(KingdomRomPath, Path.Combine(DataFolder, KingdomFile));
                 nds.InsertFixedLengthFile(MoveRangeRomPath, Path.Combine(DataFolder, MoveRangeFile));
+                nds.InsertFixedLengthFile(EventSpeakerRomPath, Path.Combine(DataFolder, EventSpeakerFile));
             }
         }
 
@@ -263,6 +269,24 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, MoveRangeFile))))
             {
                 file.BaseStream.Position = (int)id * MoveRange.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public IEventSpeaker Retrieve(EventSpeakerId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, EventSpeakerFile))))
+            {
+                file.BaseStream.Position = (int)id * EventSpeaker.DataLength;
+                return new EventSpeaker(file.ReadBytes(EventSpeaker.DataLength));
+            }
+        }
+
+        public void Save(EventSpeakerId id, IEventSpeaker model)
+        {
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, EventSpeakerFile))))
+            {
+                file.BaseStream.Position = (int)id * EventSpeaker.DataLength;
                 file.Write(model.Data);
             }
         }

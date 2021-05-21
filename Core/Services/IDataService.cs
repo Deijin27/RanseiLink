@@ -13,7 +13,8 @@ namespace Core.Services
         IModelDataService<BuildingId, IBuilding>,
         IModelDataService<ItemId, IItem>,
         IModelDataService<KingdomId, IKingdom>,
-        IModelDataService<MoveRangeId, IMoveRange>
+        IModelDataService<MoveRangeId, IMoveRange>,
+        IModelDataService<EventSpeakerId, IEventSpeaker>
     {
         Dictionary<PokemonId, IPokemon> AllPokemon();
         void CommitToRom(string path);

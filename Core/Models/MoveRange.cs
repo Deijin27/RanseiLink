@@ -18,5 +18,10 @@ namespace Core.Models
         {
             SetUInt32(0, 1, position, isInRange ? 1u : 0u);
         }
+
+        public IMoveRange Clone()
+        {
+            return new MoveRange((byte[])Data.Clone());
+        }
     }
 }

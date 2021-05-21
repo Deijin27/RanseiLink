@@ -16,6 +16,8 @@ namespace Tests.Mocks
         public Dictionary<BuildingId, IBuilding> BuildingDict = new Dictionary<BuildingId, IBuilding>();
         public Dictionary<ItemId, IItem> ItemDict = new Dictionary<ItemId, IItem>();
         public Dictionary<KingdomId, IKingdom> KingdomDict = new Dictionary<KingdomId, IKingdom>();
+        public Dictionary<MoveRangeId, IMoveRange> MoveRangeDict = new Dictionary<MoveRangeId, IMoveRange>();
+        public Dictionary<EventSpeakerId, IEventSpeaker> EventSpeakerDict = new Dictionary<EventSpeakerId, IEventSpeaker>();
 
 
         public Dictionary<PokemonId, IPokemon> AllPokemon()
@@ -79,6 +81,16 @@ namespace Tests.Mocks
             return KingdomDict[id].Clone();
         }
 
+        public IMoveRange Retrieve(MoveRangeId id)
+        {
+            return MoveRangeDict[id].Clone();
+        }
+
+        public IEventSpeaker Retrieve(EventSpeakerId id)
+        {
+            return EventSpeakerDict[id].Clone();
+        }
+
         public void Save(PokemonId id, IPokemon model)
         {
             PokemonDict[id] = model.Clone();
@@ -117,6 +129,16 @@ namespace Tests.Mocks
         public void Save(KingdomId id, IKingdom model)
         {
             KingdomDict[id] = model.Clone();
+        }
+
+        public void Save(MoveRangeId id, IMoveRange model)
+        {
+            MoveRangeDict[id] = model.Clone();
+        }
+
+        public void Save(EventSpeakerId id, IEventSpeaker model)
+        {
+            EventSpeakerDict[id] = model.Clone();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Core.Models.Interfaces
 {
-    public interface IMoveRange : IDataWrapper
+    public interface IMoveRange : IDataWrapper, ICloneable<IMoveRange>
     {
         bool GetInRange(int position);
 
