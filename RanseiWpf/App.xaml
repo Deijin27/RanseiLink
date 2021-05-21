@@ -31,7 +31,11 @@
             <DataTemplate DataType="{x:Type vm:WarriorSkillSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vm:MoveRangeSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
@@ -48,6 +52,10 @@
 
             <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">
                 <views:WarriorSkillView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
+                <views:MoveRangeView/>
             </DataTemplate>
 
         </ResourceDictionary>

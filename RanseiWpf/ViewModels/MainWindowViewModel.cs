@@ -14,6 +14,7 @@ namespace RanseiWpf.ViewModels
         public ICommand MoveViewCommand { get; set; }
         public ICommand AbilityViewCommand { get; set; }
         public ICommand WarriorSkillViewCommand { get; set; }
+        public ICommand MoveRangeViewCommand { get; set; }
 
         public ICommand LoadRomCommand { get; set; }
         public ICommand CommitRomCommand { get; set; }
@@ -30,6 +31,7 @@ namespace RanseiWpf.ViewModels
         public MoveSelectorViewModel MoveVm;
         public AbilitySelectorViewModel AbilityVm;
         public WarriorSkillSelectorViewModel WarriorSkillVm;
+        public MoveRangeSelectorViewModel MoveRangeVm;
 
         readonly IDialogService DialogService;
         readonly IDataService DataService;
@@ -54,13 +56,13 @@ namespace RanseiWpf.ViewModels
             MoveVm = new MoveSelectorViewModel(MoveId.Thunderbolt, DataService);
             AbilityVm = new AbilitySelectorViewModel(AbilityId.Static, DataService);
             WarriorSkillVm = new WarriorSkillSelectorViewModel(WarriorSkillId.Ambition, DataService);
+            MoveRangeVm = new MoveRangeSelectorViewModel(MoveRangeId.Ahead1Tile, DataService);
 
             CurrentView = PokemonVm;
 
             PokemonViewCommand = new RelayCommand(o =>
             {
                 CurrentView = PokemonVm;
-
             });
             MoveViewCommand = new RelayCommand(o =>
             {
@@ -73,6 +75,10 @@ namespace RanseiWpf.ViewModels
             WarriorSkillViewCommand = new RelayCommand(o =>
             {
                 CurrentView = WarriorSkillVm;
+            });
+            MoveRangeViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = MoveRangeVm;
             });
 
             SaveChangesCommand = new RelayCommand(o =>
@@ -98,6 +104,8 @@ namespace RanseiWpf.ViewModels
                         PokemonVm.ClearUnsavedChanges();
                         MoveVm.ClearUnsavedChanges();
                         AbilityVm.ClearUnsavedChanges();
+                        WarriorSkillVm.ClearUnsavedChanges();
+                        MoveRangeVm.ClearUnsavedChanges();
                     }
                 }
             });
@@ -131,6 +139,7 @@ namespace RanseiWpf.ViewModels
             MoveVm.SaveAndClearCache();
             AbilityVm.SaveAndClearCache();
             WarriorSkillVm.SaveAndClearCache();
+            MoveRangeVm.SaveAndClearCache();
         }
     }
 }

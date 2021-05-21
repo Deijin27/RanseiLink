@@ -45,6 +45,7 @@
                 <RadioButton Content="Moves" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding MoveViewCommand}"/>
                 <RadioButton Content="Abilities" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding AbilityViewCommand}"/>
                 <RadioButton Content="Warrior Skills" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding WarriorSkillViewCommand}"/>
+                <RadioButton Content="Move Ranges" Height="30" Style="{StaticResource MenuToggleButtonStyle}" Command="{Binding MoveRangeViewCommand}"/>
             </StackPanel>
             <Border BorderThickness="0" Grid.Row="1" Background="WhiteSmoke" Opacity="0.9"/>
         </Grid>

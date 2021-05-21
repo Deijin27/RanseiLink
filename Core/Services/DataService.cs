@@ -18,6 +18,7 @@ namespace Core.Services
         const string BuildingFile = "Building.dat";
         const string ItemFile = "Item.dat";
         const string KingdomFile = "Kuni.dat";
+        const string MoveRangeFile = "WazaRange.dat";
 
         const string PokemonRomPath = "/data/Pokemon.dat";
         const string MoveRomPath = "/data/Waza.dat";
@@ -27,6 +28,7 @@ namespace Core.Services
         const string BuildingRomPath = "/data/Building.dat";
         const string ItemRomPath = "/data/Item.dat";
         const string KingdomRomPath = "/data/Kuni.dat";
+        const string MoveRangeRomPath = "/data/WazaRange.dat";
 
         public DataService()
         {
@@ -37,7 +39,7 @@ namespace Core.Services
         private void Init()
         {
             Directory.CreateDirectory(DataFolder);
-            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile, KingdomFile})
+            foreach (string file in new string[] { PokemonFile, MoveFile, AbilityFile, WarriorSkillFile, GimmickFile, BuildingFile, ItemFile, KingdomFile, MoveRangeFile })
             {
                 string p = Path.Combine(DataFolder, file);
                 if (!File.Exists(p))
@@ -66,6 +68,7 @@ namespace Core.Services
                 nds.ExtractCopyOfFile(BuildingRomPath, DataFolder);
                 nds.ExtractCopyOfFile(ItemRomPath, DataFolder);
                 nds.ExtractCopyOfFile(KingdomRomPath, DataFolder);
+                nds.ExtractCopyOfFile(MoveRangeRomPath, DataFolder);
             }
         }
 
@@ -81,6 +84,7 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(BuildingRomPath, Path.Combine(DataFolder, BuildingFile));
                 nds.InsertFixedLengthFile(ItemRomPath, Path.Combine(DataFolder, ItemFile));
                 nds.InsertFixedLengthFile(KingdomRomPath, Path.Combine(DataFolder, KingdomFile));
+                nds.InsertFixedLengthFile(MoveRangeRomPath, Path.Combine(DataFolder, MoveRangeFile));
             }
         }
 
@@ -241,6 +245,24 @@ namespace Core.Services
             using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, KingdomFile))))
             {
                 file.BaseStream.Position = (int)id * Kingdom.DataLength;
+                file.Write(model.Data);
+            }
+        }
+
+        public IMoveRange Retrieve(MoveRangeId id)
+        {
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(DataFolder, MoveRangeFile))))
+            {
+                file.BaseStream.Position = (int)id * MoveRange.DataLength;
+                return new MoveRange(file.ReadBytes(MoveRange.DataLength));
+            }
+        }
+
+        public void Save(MoveRangeId id, IMoveRange model)
+        {
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(DataFolder, MoveRangeFile))))
+            {
+                file.BaseStream.Position = (int)id * MoveRange.DataLength;
                 file.Write(model.Data);
             }
         }

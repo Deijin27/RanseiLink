@@ -31,5 +31,13 @@ namespace Core.Enums
         Dai,
         TShape,
         TwoRows,
+        Unused_1,
+        Unused_2,
+        Unused_3,
+        Unused_4,
+        Unused_5,
+        Unused_6,
+        Unused_7,
+        Unused_8,
     }
 }
