@@ -76,20 +76,21 @@
                         ToolTip="Save changes to application data"
                         Style="{StaticResource GrayHoverButtonStyle}"
                         Command="{Binding SaveChangesCommand}"/>
-                <Button Content="&#xE159;"
-                        FontFamily="Segoe MDL2 Assets"
-                        Width="45" Height="30"
+                <Button Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Load rom"
                         Style="{StaticResource GrayHoverButtonStyle}"
-                        Command="{Binding LoadRomCommand}"/>
-                <Button Content="&#xE18C;"
-                        FontFamily="Segoe MDL2 Assets"
+                        Command="{Binding LoadRomCommand}">
+                    <Image Source="Resources/RanseiLinkIcons-03.png" Height="15"/>
+                </Button>
+                <Button 
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Commit to rom"
                         Style="{StaticResource GrayHoverButtonStyle}"
-                        Command="{Binding CommitRomCommand}"/>
+                        Command="{Binding CommitRomCommand}">
+                    <Image Source="Resources/RanseiLinkIcons-02.png" Height="15"/>
+                </Button>
                 <Button Click="MinimizeWindowButton_Click" Content="&#xE108;"
                         FontFamily="Segoe MDL2 Assets"
                         Width="45" Height="30"
