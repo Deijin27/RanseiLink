@@ -110,7 +110,7 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
         }
 
-        public KingdomId[] KindgomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
+        public KingdomId[] KingdomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
         KingdomId _selectedEncounterKingdom;
         public KingdomId SelectedEncounterKingdom
         {
