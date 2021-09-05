@@ -16,7 +16,9 @@ How to get it running on your computer:
 2. Find the latest release
 3. On the page of the latest release, you will see a section called "Assets", open that and download `RanseiLink.Editor.<version>.zip`
 4. Extract from the zip using an application like 7zip
-5. In the extracted folder, double click `RanseiWpf.exe` to run the app
+5. In the extracted folder, double click `RanseiWpf.exe` to run the app (may not have the `.exe` extension, the one that says it's an application)
+6. You may be prompted do download the .NET Core 3.1 Runtime at this [page](https://dotnet.microsoft.com/download/dotnet/3.1/runtime?utm_source=getdotnetcore&utm_medium=referral). If so, download and install the "Run Destktop Apps x64".
+7. Once that's done you should be able to double click `RanseiWpf.exe` an run the application.
 
 How to use:
 
