@@ -20,11 +20,11 @@ namespace RanseiConsole.Dev
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
-            //console.Output.WriteLine(Testing.GetBits(IterateScenarioPokemon().First()));
-            //Test1(console);
+            //console.Output.WriteLine(Testing.GetBits(IterateItems().ElementAt((int)ItemId.dummy_4)));
+            Test1(console);
             //Test2(console);
 
-            BuildEnum(console, IterateEventSpeakers(), i => i.Name);
+            //BuildEnum(console, IterateEventSpeakers(), i => i.Name);
 
             //var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
             //console.Output.WriteLine(Testing.GetBits(potion));
@@ -35,9 +35,9 @@ namespace RanseiConsole.Dev
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 7;
-            var shift = 14;
-            var bitCount = 5;
+            var int_idx = 5;
+            var shift = 0;
+            var bitCount = 8;
 
             var gpk = IterateMoves().OrderBy(i => i.Name)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))

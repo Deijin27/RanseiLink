@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         WindowStyle="None"
         AllowsTransparency="True"
-        Title="Ransei" Height="500" Width="900" Background="Transparent">
+        Height="500" Width="900" Background="Transparent">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -50,7 +50,7 @@
             <Border BorderThickness="0" Grid.Row="1" Background="WhiteSmoke" Opacity="0.9"/>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="0" Style="{StaticResource TransparentBackground}" MouseDown="TopBar_MouseDown">
-            <TextBlock Text="Ransei Editor" FontSize="12" 
+            <TextBlock Text="RanseiLink Editor - Version 0.1.0" FontSize="12" 
                        HorizontalAlignment="Left" VerticalAlignment="Center" 
                        Padding="10,0,0,0"/>
         </Grid>

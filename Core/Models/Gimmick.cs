@@ -11,8 +11,8 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 0x0F);
-            set => SetPaddedUtf8String(0, 0x0F, value);
+            get => GetPaddedUtf8String(0, 16);
+            set => SetPaddedUtf8String(0, 16, value);
         }
 
         public IGimmick Clone()
