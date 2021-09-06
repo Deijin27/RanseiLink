@@ -88,12 +88,15 @@
         <TextBlock Text="Spe" Grid.Row="10" />
         <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="511"/>
 
-        <TextBlock Text="National Dex Number" Grid.Row="11" />
-        <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="511"/>
+        <TextBlock Text="Movement Range" Grid.Row="11"/>
+        <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding MovementRange, Mode=TwoWay}" Min="1" Max="6"/>
+
+        <TextBlock Text="National Dex Number" Grid.Row="12" />
+        <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="511"/>
 
         <!-- Have some option to auto generate name order index, changing it for all pokemon -->
-        <TextBlock Text="Name Order Index" Grid.Row="12" />
-        <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="511"/>
+        <TextBlock Text="Name Order Index" Grid.Row="13" />
+        <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="511"/>
 
         <TextBlock Text="Evolution Condition 1" Grid.Row="0" Grid.Column="3" />
         <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding EvolutionConditionItems, Mode=OneTime}" SelectedItem="{Binding EvolutionCondition1, Mode=TwoWay}"/>

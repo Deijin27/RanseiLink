@@ -107,6 +107,12 @@ namespace Core.Models
             set => SetUInt32(7, 9, 18, value);
         }
 
+        public uint MovementRange
+        {
+            get => GetUInt32(7, 3, 27);
+            set => SetUInt32(7, 3, 27, value);
+        }
+
         public uint NationalPokedexNumber
         {
             get => GetUInt32(8, 10, 22);

@@ -74,6 +74,7 @@ namespace RanseiConsole
                 ));
 
             console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
+            console.WriteProperty("Movement Range", pokemon.MovementRange.ToString());
             console.WriteProperty("Is Legendary", pokemon.IsLegendary.ToString());
             console.WriteProperty("NatDex Number", pokemon.NationalPokedexNumber.ToString());
             console.WriteProperty("Name Alphabetical Sort Index", pokemon.NameOrderIndex.ToString());

@@ -29,6 +29,7 @@ namespace Tests.ModelTests
             Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
             Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
             Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
+            Assert.Equal(3u, p.MovementRange);
             Assert.Equal(246u, p.Hp);
             Assert.Equal(255u, p.Atk);
             Assert.Equal(185u, p.Def);
@@ -58,6 +59,7 @@ namespace Tests.ModelTests
                 QuantityForEvolutionCondition1 = (uint)ItemId.DawnStone,
                 EvolutionCondition2 = EvolutionConditionId.WarriorGender,
                 QuantityForEvolutionCondition2 = (uint)GenderId.Male,
+                MovementRange = 3u,
                 Hp = 246u,
                 Atk = 255u,
                 Def = 185u,
@@ -82,6 +84,7 @@ namespace Tests.ModelTests
             Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
             Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
             Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
+            Assert.Equal(3u, p.MovementRange);
             Assert.Equal(246u, p.Hp);
             Assert.Equal(255u, p.Atk);
             Assert.Equal(185u, p.Def);

@@ -22,6 +22,7 @@ namespace Core.Models.Interfaces
         TypeId Type1 { get; set; }
         TypeId Type2 { get; set; }
         uint NationalPokedexNumber { get; set; }
+        uint MovementRange { get; set; }
 
         bool GetEncounterable(KingdomId kingdom, bool requiresLevel2);
         void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value);

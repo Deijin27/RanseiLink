@@ -48,6 +48,7 @@ namespace Tests.Mocks
 
         public byte[] Data { get; set; }
         public uint NationalPokedexNumber { get; set; }
+        public uint MovementRange { get; set; }
 
         Dictionary<KingdomId, bool> RequiresLv2Dict;
         Dictionary<KingdomId, bool> DefaultDict;
@@ -100,6 +101,7 @@ namespace Tests.Mocks
                 Move = Move,
                 Name = Name,
                 NameOrderIndex = NameOrderIndex,
+                MovementRange = MovementRange,
                 QuantityForEvolutionCondition1 = QuantityForEvolutionCondition1,
                 QuantityForEvolutionCondition2 = QuantityForEvolutionCondition2,
                 Spe = Spe,

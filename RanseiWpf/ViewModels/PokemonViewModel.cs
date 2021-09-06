@@ -110,6 +110,12 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
         }
 
+        public uint MovementRange
+        {
+            get => Model.MovementRange;
+            set => RaiseAndSetIfChanged(Model.MovementRange, value, v => Model.MovementRange = value);
+        }
+
         public KingdomId[] KingdomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
         KingdomId _selectedEncounterKingdom;
         public KingdomId SelectedEncounterKingdom

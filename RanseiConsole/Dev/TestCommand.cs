@@ -35,11 +35,11 @@ namespace RanseiConsole.Dev
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 5;
-            var shift = 0;
-            var bitCount = 8;
+            var int_idx = 7;
+            var bitCount = 1;
+            var shift = 30;
 
-            var gpk = IterateMoves().OrderBy(i => i.Name)
+            var gpk = IteratePokemon().OrderBy(i => i.Name)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
