@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum GimmickId
+    public enum GimmickId : uint
     {
         dummy_0,
         Banner,

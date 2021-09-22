@@ -82,7 +82,12 @@ namespace Core.Nds
             var entry = GetEntryFromPath(path);
             UnderlyingStream.BaseStream.Position = entry.Start;
             byte[] sourceData = File.ReadAllBytes(source);
-            UnderlyingStream.BaseStream.Write(sourceData, 0, entry.GetLength());
+            var entryLength = entry.GetLength();
+            if (entryLength != sourceData.Length)
+            {
+                throw new DataMisalignedException($"Data length {sourceData.Length} does not match {entryLength} (when writing '{path}' to '{source}')");
+            }
+            UnderlyingStream.BaseStream.Write(sourceData, 0, entryLength);
         }
 
         #region Implmentation of IDisposable

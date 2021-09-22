@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum EvolutionConditionId
+    public enum EvolutionConditionId : uint
     {
         /// <summary>
         /// Perform any action, with at least ___ HP afterwards

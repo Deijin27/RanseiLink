@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum ItemId
+    public enum ItemId : uint
     {
         Potion,
         SuperPotion,

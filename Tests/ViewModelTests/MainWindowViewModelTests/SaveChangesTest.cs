@@ -8,7 +8,7 @@ namespace Tests.ViewModelTests.MainWindowViewModelTests
 {
     public class SaveChangesTest
     {
-        MainWindowViewModel ViewModel;
+        MainEditorViewModel ViewModel;
         MockDataService DataService;
         MockDialogService DialogService;
 

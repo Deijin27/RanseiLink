@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum AbilityEffectId
+    public enum AbilityEffectId : uint
     {
         Unused_1,
         IncreaseUserAttack,

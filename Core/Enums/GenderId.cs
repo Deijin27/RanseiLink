@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum GenderId
+    public enum GenderId : uint
     {
         Male,
         Female

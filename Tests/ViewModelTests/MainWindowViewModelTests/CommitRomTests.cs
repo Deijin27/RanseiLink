@@ -8,7 +8,7 @@ namespace Tests.ViewModelTests.MainWindowViewModelTests
 {
     public class CommitRomTests
     {
-        MainWindowViewModel ViewModel;
+        MainEditorViewModel ViewModel;
         MockDataService DataService;
         MockDialogService DialogService;
 

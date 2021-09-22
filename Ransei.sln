@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiConsole", "RanseiCons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiWpf", "RanseiWpf\RanseiWpf.csproj", "{A2E613A5-5D71-4E70-B516-55577BC2703F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{371EB778-CD47-47E1-BB33-786679FBF944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{371EB778-CD47-47E1-BB33-786679FBF944}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

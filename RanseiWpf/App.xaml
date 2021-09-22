@@ -7,12 +7,26 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/RedHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/GrayHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MenuToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle1.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Fonts -->
+            <FontFamily x:Key="SegoeMDL2Assets">pack://application:,,,/Fonts/#Segoe MDL2 Assets</FontFamily>
+            
+            <!-- Register Main View Models -->
+
+            <DataTemplate DataType="{x:Type vm:ModSelectionViewModel}">
+                <views:ModSelectionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MainEditorViewModel}">
+                <views:MainEditorView/>
+            </DataTemplate>
 
             <!-- Register Selector View Models -->
             
@@ -36,6 +50,14 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
+                <views:ScenarioSelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
@@ -56,6 +78,18 @@
 
             <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
                 <views:MoveRangeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EvolutionTableViewModel}">
+                <views:EvolutionTableView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioPokemonViewModel}">
+                <views:ScenarioPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncViewModel}">
+                <views:WarriorMaxSyncView/>
             </DataTemplate>
 
         </ResourceDictionary>

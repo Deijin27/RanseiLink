@@ -4,7 +4,7 @@ namespace Core.Enums
     /// <summary>
     /// UInt5
     /// </summary>
-    public enum TypeId : byte
+    public enum TypeId : uint
     {
         Normal,
         Fire,

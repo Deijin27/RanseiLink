@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum WarriorSkillEffectId
+    public enum WarriorSkillEffectId : uint
     {
         RaiseAttack,
         RaiseDefence,

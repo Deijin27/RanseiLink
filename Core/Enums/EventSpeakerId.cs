@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum EventSpeakerId
+    public enum EventSpeakerId : uint
     {
         Shopkeeper_0,
         Shopkeeper_1,

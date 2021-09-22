@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum BuildingId
+    public enum BuildingId : uint
     {
         Shop_0,
         PonigiriShop_0,

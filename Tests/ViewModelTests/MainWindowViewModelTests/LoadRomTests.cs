@@ -10,7 +10,7 @@ namespace Tests.ViewModelTests.MainWindowViewModelTests
 {
     public class LoadRomTests
     {
-        MainWindowViewModel ViewModel;
+        MainEditorViewModel ViewModel;
         MockDataService DataService;
         MockDialogService DialogService;
 

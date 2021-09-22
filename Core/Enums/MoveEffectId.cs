@@ -4,7 +4,7 @@ namespace Core.Enums
     /// <summary>
     /// 
     /// </summary>
-    public enum MoveEffectId : byte
+    public enum MoveEffectId : uint
     {
         /// <summary>
         /// Has no secondary effect
@@ -61,6 +61,9 @@ namespace Core.Enums
         /// </summary>
         HighCriticalHitChance,
 
+        /// <summary>
+        /// Unknown
+        /// </summary>
         Unused_1,
 
         /// <summary>
@@ -144,7 +147,10 @@ namespace Core.Enums
         /// </summary>
         DamagesUserIfMisses,
 
-        Unused_7,
+        /// <summary>
+        /// Has a chance to lower target's Attack
+        /// </summary>
+        ChanceToLowerTargetAttack,
 
         /// <summary>
         /// Has a chance to raise the user's Attack.
@@ -161,16 +167,30 @@ namespace Core.Enums
         /// </summary>
         ChanceToLowerTargetDefence,
 
-        Unused_9,
-        Unused_10,
+        /// <summary>
+        /// User defence up
+        /// </summary>
+        ChanceToRaiseUserDefence,
+
+        /// <summary>
+        /// User defence down
+        /// </summary>
+        ChanceToLowerUserDefence,
 
         /// <summary>
         /// Has a chance to lower target's Speed.
         /// </summary>
         ChanceToLowerTargetSpeed,
 
-        Unused_11,
-        Unused_12,
+        /// <summary>
+        /// User speed up
+        /// </summary>
+        ChanceToRaiseUserSpeed,
+
+        /// <summary>
+        /// User speed down
+        /// </summary>
+        ChanceToLowerUserSpeed,
 
         /// <summary>
         /// Has a chance to lower target's accuracy.
@@ -257,7 +277,11 @@ namespace Core.Enums
         /// </summary>
         NeverMisses,
 
-        Unused_15,
+        /// <summary>
+        /// Makes target invincible for one turn "Blank is no longer invincible"
+        /// </summary>
+        TargetInvincibleForOneTurn,
+
         Unused_16,
         Unused_17,
         Unused_18,

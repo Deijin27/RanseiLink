@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -200,12 +199,13 @@ namespace Core.Nds
             return true;
         }
 
-        static string RemoveLeadingSlash(string path)
+        static string NormalizePath(string path)
         {
-            path = path.Replace('/', '\\');
+            path = path.Replace('/', Path.DirectorySeparatorChar)
+                       .Replace('\\', Path.DirectorySeparatorChar);
 
             // just to allow users to use the intuitive leading slash
-            if (path.StartsWith("\\"))
+            if (path.StartsWith($"{Path.DirectorySeparatorChar}"))
             {
                 path = path.Substring(1);
             }
@@ -214,7 +214,7 @@ namespace Core.Nds
 
         public static FolderAllocation GetFolderAllocationFromPath(BinaryReader stream, long startOffset, string directoryPath)
         {
-            directoryPath = RemoveLeadingSlash(directoryPath);
+            directoryPath = NormalizePath(directoryPath);
 
             // Initialise contents with the root folder contents
             // keep the allocation as a variable to allow the FAT offset to be calculated when the file is reached
@@ -225,7 +225,7 @@ namespace Core.Nds
             }
 
             // Get each segment of the path, casting it to the required byte array
-            byte[][] pathSegments = directoryPath.Split('\\')
+            byte[][] pathSegments = directoryPath.Split(Path.DirectorySeparatorChar)
                                             .Select(Encoding.UTF8.GetBytes)
                                             .ToArray();
 
@@ -261,11 +261,11 @@ namespace Core.Nds
                     string current = Encoding.UTF8.GetString(seg);
                     if (i == 0)
                     {
-                        throw new FileNotFoundException($"\"{current}\" not found in root folder.");
+                        throw new FileNotFoundException($"In {nameof(GetFolderAllocationFromPath)} \"{current}\" not found in root folder.");
                     }
                     else
                     {
-                        throw new FileNotFoundException($"\"{current}\" not found in \"{Encoding.UTF8.GetString(pathSegments[i-1])}\".");
+                        throw new FileNotFoundException($"In {nameof(GetFolderAllocationFromPath)} \"{current}\" not found in \"{Encoding.UTF8.GetString(pathSegments[i - 1])}\".");
                     }
                 }
             }
@@ -280,7 +280,7 @@ namespace Core.Nds
 
         public static uint GetFatEntryIndex(BinaryReader stream, long startOffset, string filePath)
         {
-            filePath = RemoveLeadingSlash(filePath);
+            filePath = NormalizePath(filePath);
             string directoryName = Path.GetDirectoryName(filePath);
             var alloc = GetFolderAllocationFromPath(stream, startOffset, directoryName);
             var contents = GetContents(stream, startOffset, alloc);
@@ -297,10 +297,10 @@ namespace Core.Nds
 
             if (string.IsNullOrEmpty(directoryName)) // is root folder
             {
-                throw new FileNotFoundException($"{fileName} not found in root folder");
+                throw new FileNotFoundException($"In {nameof(GetFatEntryIndex)} '{fileName}' not found in root folder");
             }
 
-            throw new FileNotFoundException($"{fileName} not found in {directoryName}");
+            throw new FileNotFoundException($"In {nameof(GetFatEntryIndex)} '{fileName}' not found in '{directoryName}'");
         }
 
         public static uint GetFatEntryIndex(BinaryReader stream, string filePath)

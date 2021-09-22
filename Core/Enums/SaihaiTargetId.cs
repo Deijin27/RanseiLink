@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum WarriorSkillTargetId
+    public enum WarriorSkillTargetId : uint
     {
         Self,
         SelfAndAdjacentAllies,

@@ -9,10 +9,10 @@ namespace RanseiConsole.Dev
 {
     static class Testing
     {
-        public static string GetBits<T>(T obj) where T : BaseDataWindow
+        public static string GetBits(byte[] data)
         {
             string bits = "";
-            foreach (var b in obj.Data)
+            foreach (var b in data)
             {
                 bits = Convert.ToString(b, 2).PadLeft(8, '0') + bits;
             }

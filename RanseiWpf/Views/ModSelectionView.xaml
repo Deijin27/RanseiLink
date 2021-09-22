@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="RanseiWpf.Views.ModSelectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiWpf.Views"
+             xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
+             xmlns:controls="clr-namespace:RanseiWpf.Controls"
+             d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             d:DesignHeight="350" d:DesignWidth="500" Background="Transparent">
+    <DockPanel>
+        <Border Width="200" BorderThickness="0">
+            <Grid d:Background="LightGray">
+                <StackPanel Margin="10">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button">
+                            <Setter Property="Height" Value="23"/>
+                            <Setter Property="Margin" Value="0,0,0,10"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
+                    <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
+                </StackPanel>
+            </Grid>
+            
+        </Border>
+
+        <ScrollViewer d:Background="WhiteSmoke">
+            <ItemsControl ItemsSource="{Binding ModItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:ModListItem}">
+                        <Button HorizontalContentAlignment="Left" Style="{StaticResource GrayHoverButtonStyle}" 
+                                ToolTip="Right click for more options"
+                                CommandParameter="{Binding Info}" 
+                                Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}"/>
+                                    <MenuItem Header="Export mod" Command="{Binding ExportModCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Randomize" Command="{Binding RandomizeCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Delete" Command="{Binding DeleteModCommand}"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                            <controls:ModInfoControl ModInfo="{Binding Info, Mode=OneWay}"/>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

@@ -1,145 +1,62 @@
-﻿using Core.Enums;
-using Core.Services;
-using RanseiWpf.Services;
+﻿using RanseiWpf.Services;
 using System;
 using System.Collections.Generic;
-using System.Windows;
+using System.Text;
 using System.Windows.Input;
 
 namespace RanseiWpf.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public ICommand PokemonViewCommand { get; set; }
-        public ICommand MoveViewCommand { get; set; }
-        public ICommand AbilityViewCommand { get; set; }
-        public ICommand WarriorSkillViewCommand { get; set; }
-        public ICommand MoveRangeViewCommand { get; set; }
-
-        public ICommand LoadRomCommand { get; set; }
-        public ICommand CommitRomCommand { get; set; }
-        public ICommand SaveChangesCommand { get; set; }
-
-
-        object _currentView;
-        public object CurrentView 
+        private readonly IWpfAppServices Services;
+        public MainWindowViewModel(IWpfAppServices services)
         {
-            get => _currentView;
-            set => RaiseAndSetIfChanged(ref _currentView, value);
-        }
-        public PokemonSelectorViewModel PokemonVm;
-        public MoveSelectorViewModel MoveVm;
-        public AbilitySelectorViewModel AbilityVm;
-        public WarriorSkillSelectorViewModel WarriorSkillVm;
-        public MoveRangeSelectorViewModel MoveRangeVm;
+            Services = services;
+            ModSelectionVm = new ModSelectionViewModel(services);
+            CurrentVm = ModSelectionVm;
 
-        readonly IDialogService DialogService;
-        readonly IDataService DataService;
+            ModSelectionVm.ModSelected += mi =>
+            {
+                var mevm = new MainEditorViewModel(services, mi);
+                CurrentVm = mevm;
+                BackButtonVisible = true;
+            };
 
-        public MainWindowViewModel()
-        {
-            DataService = new DataService();
-            DialogService = new DialogService();
-            Init();
+            BackButtonCommand = new RelayCommand(() =>
+            {
+                CurrentVm = ModSelectionVm;
+                BackButtonVisible = false;
+            });
         }
 
-        public MainWindowViewModel(IDataService dataService, IDialogService dialogService)
+
+        private readonly ModSelectionViewModel ModSelectionVm;
+
+        private object currentVm;
+        public object CurrentVm
         {
-            DataService = dataService;
-            DialogService = dialogService;
-            Init();
-        }
-
-        void Init()
-        {
-            PokemonVm = new PokemonSelectorViewModel(PokemonId.Pikachu, DataService);
-            MoveVm = new MoveSelectorViewModel(MoveId.Thunderbolt, DataService);
-            AbilityVm = new AbilitySelectorViewModel(AbilityId.Static, DataService);
-            WarriorSkillVm = new WarriorSkillSelectorViewModel(WarriorSkillId.Ambition, DataService);
-            MoveRangeVm = new MoveRangeSelectorViewModel(MoveRangeId.Ahead1Tile, DataService);
-
-            CurrentView = PokemonVm;
-
-            PokemonViewCommand = new RelayCommand(o =>
+            get => currentVm;
+            set
             {
-                CurrentView = PokemonVm;
-            });
-            MoveViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = MoveVm;
-            });
-            AbilityViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = AbilityVm;
-            });
-            WarriorSkillViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = WarriorSkillVm;
-            });
-            MoveRangeViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = MoveRangeVm;
-            });
-
-            SaveChangesCommand = new RelayCommand(o =>
-            {
-                SaveChanges();
-            });
-
-            LoadRomCommand = new RelayCommand(o => 
-            {
-                var proceed = DialogService.ShowMessageBox(new MessageBoxArgs() 
-                { 
-                    Title = "Load Rom",
-                    Message = "Loading a new rom will overwrite any changes you have made. Proceed?",
-                    Button = MessageBoxButton.OKCancel,
-                    Icon = MessageBoxImage.Warning
-                });
-                if (proceed == MessageBoxResult.OK)
+                if (currentVm != value)
                 {
-                    if (DialogService.RequestRomFile("Chose a rom file to load", out string chosenFilePath))
+                    if (currentVm is ISaveable saveable)
                     {
-                        DataService.LoadRom(chosenFilePath);
-
-                        PokemonVm.ClearUnsavedChanges();
-                        MoveVm.ClearUnsavedChanges();
-                        AbilityVm.ClearUnsavedChanges();
-                        WarriorSkillVm.ClearUnsavedChanges();
-                        MoveRangeVm.ClearUnsavedChanges();
+                        saveable.Save();
                     }
+                    currentVm = value;
+                    RaisePropertyChanged();
                 }
-            });
-
-            CommitRomCommand = new RelayCommand(o => 
-            {
-                var proceed = DialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Commit To Rom",
-                    Message = "Unsaved changes will be saved to app data, then changes will be wrote to the rom file.\n" + 
-                              "Writing to a rom file will overwrite data in the rom.\n" +
-                              "Be sure to make an unchanged copy of your rom first.\n" + 
-                              "Proceed?",
-                    Button = MessageBoxButton.OKCancel,
-                    Icon = MessageBoxImage.Warning
-                });
-                if (proceed == MessageBoxResult.OK)
-                {
-                    if (DialogService.RequestRomFile("Choose a rom file to commit to", out string chosenFilePath))
-                    {
-                        SaveChanges();
-                        DataService.CommitToRom(chosenFilePath);
-                    }
-                }
-            });
+            }
         }
 
-        public void SaveChanges()
+        private bool _backButtonVisible;
+        public bool BackButtonVisible
         {
-            PokemonVm.SaveAndClearCache();
-            MoveVm.SaveAndClearCache();
-            AbilityVm.SaveAndClearCache();
-            WarriorSkillVm.SaveAndClearCache();
-            MoveRangeVm.SaveAndClearCache();
+            get => _backButtonVisible;
+            set => RaiseAndSetIfChanged(ref _backButtonVisible, value);
         }
+
+        public ICommand BackButtonCommand { get; }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Enums
 {
-    public enum MoveId : byte
+    public enum MoveId : uint
     {
         Splash,
         Pound,

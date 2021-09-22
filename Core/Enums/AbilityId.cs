@@ -2,7 +2,7 @@
 
 namespace Core.Enums
 {
-    public enum AbilityId : byte
+    public enum AbilityId : uint
     {
         NoAbility = 0b_1000_0000,
 

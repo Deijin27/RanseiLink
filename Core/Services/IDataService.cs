@@ -1,23 +1,23 @@
 ﻿using Core.Enums;
 using Core.Models.Interfaces;
-using System.Collections.Generic;
+using Core.Services.ModelServices;
 
 namespace Core.Services
 {
-    public interface IDataService : 
-        IModelDataService<PokemonId, IPokemon>,
-        IModelDataService<MoveId, IMove>,
-        IModelDataService<AbilityId, IAbility>,
-        IModelDataService<WarriorSkillId, IWarriorSkill>,
-        IModelDataService<GimmickId, IGimmick>,
-        IModelDataService<BuildingId, IBuilding>,
-        IModelDataService<ItemId, IItem>,
-        IModelDataService<KingdomId, IKingdom>,
-        IModelDataService<MoveRangeId, IMoveRange>,
-        IModelDataService<EventSpeakerId, IEventSpeaker>
+    public interface IDataService
     {
-        Dictionary<PokemonId, IPokemon> AllPokemon();
-        void CommitToRom(string path);
-        void LoadRom(string path);
+        IPokemonService Pokemon { get; }
+        IModelDataService<MoveId, IMove> Move { get; }
+        IModelDataService<AbilityId, IAbility> Ability { get; }
+        IModelDataService<WarriorSkillId, IWarriorSkill> WarriorSkill { get; }
+        IModelDataService<GimmickId, IGimmick> Gimmick { get; }
+        IModelDataService<BuildingId, IBuilding> Building { get; }
+        IModelDataService<ItemId, IItem> Item { get; }
+        IModelDataService<KingdomId, IKingdom> Kingdom { get; }
+        IModelDataService<MoveRangeId, IMoveRange> MoveRange { get; }
+        IModelDataService<EventSpeakerId, IEventSpeaker> EventSpeaker { get; }
+        IModelDataService<IEvolutionTable> EvolutionTable { get; }
+        IScenarioPokemonService ScenarioPokemon { get; }
+        IWarriorMaxSyncService MaxLink { get; }
     }
 }

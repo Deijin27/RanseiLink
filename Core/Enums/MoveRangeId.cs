@@ -7,7 +7,7 @@ namespace Core.Enums
     /// This determines where the attack affects.
     /// The movement of user or target happens *afterwards*.
     /// </summary>
-    public enum MoveRangeId : byte
+    public enum MoveRangeId : uint
     {
         NoRange,
         Ahead1Tile,
@@ -16,7 +16,7 @@ namespace Core.Enums
         DiamondAdjacent,
         RingAdjacent,
         Row,
-        Unused_0,
+        TwoLittleUnusedDots,
         Chevron,
         Plus,
         Cross,

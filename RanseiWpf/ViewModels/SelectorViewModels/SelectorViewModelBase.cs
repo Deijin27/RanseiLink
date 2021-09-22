@@ -1,0 +1,52 @@
+﻿using Core;
+using Core.Services;
+using System.Collections.Generic;
+
+namespace RanseiWpf.ViewModels
+{
+    public interface ISaveable
+    {
+        void Save();
+    }
+
+    public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveable where TViewModel : IViewModelForModel<TModel>, new()
+    {
+        public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
+        {
+            DataService = dataService;
+            Selected = initialSelected;
+        }
+
+        private readonly IModelDataService<TId, TModel> DataService;
+
+        private TViewModel _nestedViewModel;
+        public TViewModel NestedViewModel
+        {
+            get => _nestedViewModel;
+            set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
+        }
+
+        public IEnumerable<TId> Items { get; } = EnumUtil.GetValues<TId>();
+
+        private TId _selected;
+        public TId Selected
+        {
+            get => _selected;
+            set
+            {
+                Save();
+                TModel model = DataService.Retrieve(value);
+                NestedViewModel = new TViewModel() { Model = model };
+                _selected = value;
+            }
+        }
+
+        public virtual void Save()
+        {
+            if (NestedViewModel != null && _selected != null)
+            {
+                DataService.Save(_selected, NestedViewModel.Model);
+            }
+        }
+    }
+}

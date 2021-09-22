@@ -21,6 +21,7 @@ namespace RanseiWpf.Controls
         public NumberBox()
         {
             InitializeComponent();
+            NumberTextBox.Text = "0";
         }
 
         public static DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Value, default, OnValuePropertyChanged);
@@ -60,13 +61,13 @@ namespace RanseiWpf.Controls
             set => SetValue(IncrementProperty, value);
         }
 
-
         private void IncrementButton_Click(object sender, RoutedEventArgs e)
         {
             uint newVal = Value + Increment;
             if (newVal <= Max && newVal > Value)
             {
                 Value = newVal;
+                RaiseValueChanged();
             }
         }
 
@@ -76,6 +77,7 @@ namespace RanseiWpf.Controls
             if (newVal >= Min && newVal < Value)
             {
                 Value = newVal;
+                RaiseValueChanged();
             }
         }
 
@@ -86,6 +88,7 @@ namespace RanseiWpf.Controls
             if (Value != newVal)
             {
                 Value = newVal;
+                RaiseValueChanged();
             }
         }
 
@@ -95,5 +98,11 @@ namespace RanseiWpf.Controls
             string newText = ((TextBox)sender).Text + e.Text;
             e.Handled = !(uint.TryParse(newText, out uint i) && i >= Min && i <= Max);
         }
+
+        private void RaiseValueChanged()
+        {
+            ValueChanged?.Invoke(this, new EventArgs());
+        }
+        public event EventHandler ValueChanged;
     }
 }

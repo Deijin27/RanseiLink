@@ -1,7 +1,5 @@
 ﻿using Core.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RanseiWpf.ValueConverters
 {
@@ -11,18 +9,12 @@ namespace RanseiWpf.ValueConverters
         {
             switch (value)
             {
-                case MoveEffectId.Unused_15:
                 case MoveEffectId.Unused_16:
                 case MoveEffectId.Unused_17:
                 case MoveEffectId.Unused_18:
-                case MoveEffectId.Unused_19:
-                case MoveEffectId.Unused_11:
-                case MoveEffectId.Unused_12:
-                case MoveEffectId.Unused_9:
-                case MoveEffectId.Unused_10:
-                case MoveEffectId.Unused_7:
                 case MoveEffectId.Multihit_Unused:
                 case MoveEffectId.Unused_1:
+                case MoveEffectId.Unused_19:
                     return $"Unused Quantity";
 
                 case MoveEffectId.ThawsUserIfFrozen:
@@ -57,6 +49,7 @@ namespace RanseiWpf.ValueConverters
                 case MoveEffectId.DoublePowerIfTargetStatused:
                 case MoveEffectId.DoublePowerWithConsecutiveUses:
                 case MoveEffectId.NoEffect:
+                case MoveEffectId.TargetInvincibleForOneTurn:
                     return "N/A";
 
                 case MoveEffectId.InflictsFixedHpDamage:
@@ -77,12 +70,15 @@ namespace RanseiWpf.ValueConverters
                 case MoveEffectId.ChanceToRaiseUserAttack:
                 case MoveEffectId.ChanceToLowerUserAttack:
                 case MoveEffectId.ChanceToLowerTargetDefence:
+                case MoveEffectId.ChanceToLowerTargetAttack:
+                case MoveEffectId.ChanceToRaiseUserDefence:
+                case MoveEffectId.ChanceToLowerUserDefence:
+                case MoveEffectId.ChanceToRaiseUserSpeed:
+                case MoveEffectId.ChanceToLowerUserSpeed:
                     return "Percentage Chance";
 
                 case MoveEffectId.HealsUserByPercentageOfDamageDealt:
                     return "Percentage Healed";
-
-
                 default:
                     throw new ArgumentException($"Unexpected {nameof(MoveEffectId)} value of {value}");
             }

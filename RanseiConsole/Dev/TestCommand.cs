@@ -1,12 +1,14 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using Core;
 using Core.Enums;
 using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.Dev
@@ -21,7 +23,7 @@ namespace RanseiConsole.Dev
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateItems().ElementAt((int)ItemId.dummy_4)));
-            Test1(console);
+            //Test1(console);
             //Test2(console);
 
             //BuildEnum(console, IterateEventSpeakers(), i => i.Name);
@@ -29,6 +31,42 @@ namespace RanseiConsole.Dev
             //var potion = IteratePokemon().ElementAt((int)PokemonId.Eevee);
             //console.Output.WriteLine(Testing.GetBits(potion));
             //Test2(console, true);
+
+            for (int scenarioNumber = 0; scenarioNumber < 11; scenarioNumber++)
+            {
+                console.Output.WriteLine($"Scenario {scenarioNumber} ------------------------------------------------");
+                int count = 0;
+                foreach (var sp in IterateScenarioPokemon(scenarioNumber))
+                {
+                    console.Output.WriteLine($"{count.ToString().PadLeft(3, '0')} {sp.Pokemon,-12} {sp.Ability,-12} IVs: HP {sp.GetUInt32(1, 5, 0)} / Atk {sp.GetUInt32(1, 5, 5)} / Def {sp.GetUInt32(1, 5, 10)} / Spe {sp.GetUInt32(1, 5, 15)}");
+                }
+            }
+
+            //int count = 0;
+            //var pokemonIds = EnumUtil.GetValues<PokemonId>().ToArray();
+            //foreach (var sp in IterateMaxSync())
+            //{
+            //    string wid = ((WarriorId)count).ToString();
+            //    console.Output.Write($"{wid}: ".PadLeft(14, ' '));
+            //    List<string> items = new List<string>();
+            //    foreach (var pid in pokemonIds)
+            //    {
+            //        if (sp.GetMaxSync(pid) == 100)
+            //        {
+            //            console.Output.Write($"{pid}, ");
+            //        }
+            //    }
+            //    console.Output.WriteLine();
+            //    count++;
+            //}
+
+            //var count = 0;
+            //foreach (var ba in IterateBaseBushouPart2())
+            //{
+            //    var bdw = new BaseDataWindow(ba, 0xC);
+            //    console.Output.WriteLine("0x" + $"{count++:x}".PadLeft(2, '0').ToUpperInvariant() + $": {bdw.GetPaddedUtf8String(0, 0xb)}");
+            //}
+            
             return default;
         }
 
@@ -182,9 +220,9 @@ namespace RanseiConsole.Dev
 
         }
         
-        static IEnumerable<ScenarioPokemon> IterateScenarioPokemon()
+        static IEnumerable<ScenarioPokemon> IterateScenarioPokemon(int scenario)
         {
-            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario00\ScenarioPokemon.dat"));
+            using var file = new BinaryReader(File.OpenRead(@$"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario{scenario.ToString().PadLeft(2, '0')}\ScenarioPokemon.dat"));
 
             int count = (int)(file.BaseStream.Length / ScenarioPokemon.DataLength);
             for (int i = 0; i < count; i++)
@@ -228,6 +266,34 @@ namespace RanseiConsole.Dev
             {
                 var item = file.ReadBytes(EventSpeaker.DataLength);
                 yield return new EventSpeaker(item);
+            }
+        }
+
+        static IEnumerable<WarriorMaxLink> IterateMaxSync()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\BaseBushouMaxSyncTable.dat"));
+
+            int count = (int)(file.BaseStream.Length / WarriorMaxLink.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(WarriorMaxLink.DataLength);
+                yield return new WarriorMaxLink(item);
+            }
+        }
+
+        static IEnumerable<byte[]> IterateBaseBushouPart1()
+        {
+            throw new NotImplementedException();
+        }
+
+        static IEnumerable<byte[]> IterateBaseBushouPart2()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\BaseBushou.dat"));
+
+            file.BaseStream.Position = 0x13B0;
+            for (int i = 0; i < 0xD2; i++)
+            {
+                yield return file.ReadBytes(0xC);
             }
         }
     }

@@ -3,7 +3,7 @@
 namespace Core.Enums
 {
     [Flags]
-    public enum MoveMovementFlags : byte
+    public enum MoveMovementFlags : uint
     {
         MovementOrKnockback     = 0b_0000_0001,
         InvertMovementDirection = 0b_0000_0100,

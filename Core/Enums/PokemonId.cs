@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum PokemonId : byte
+    public enum PokemonId : uint
     {
         Eevee,
         Vaporeon,

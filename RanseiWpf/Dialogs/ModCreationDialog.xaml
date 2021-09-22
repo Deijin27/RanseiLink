@@ -1,0 +1,93 @@
+﻿<Window x:Class="RanseiWpf.Dialogs.ModCreationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        xmlns:local="clr-namespace:RanseiWpf.Dialogs"
+        mc:Ignorable="d"
+        xmlns:views="clr-namespace:RanseiWpf.Views"
+        xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        d:DataContext="{d:DesignInstance vm:ModCreationViewModel, IsDesignTimeCreatable=False}"
+        Title="ModCreationDialog" Height="200" Width="550" Background="Transparent">
+    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
+        <DockPanel>
+            <Grid Width="200" DockPanel.Dock="Left" Background="LightGray" Opacity="0.9"
+              dd:DragDrop.IsDropTarget="True"
+              dd:DragDrop.DropHandler="{Binding RomDropHandler}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
+                    <TextBlock Text="Drop an unchanged copy&#x0a; of the rom here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <Viewbox Stretch="Uniform" Height="60">
+                        <Canvas Name="svg85" Canvas.Left="0" Canvas.Top="0" Width="132.5" Height="132.5">
+                            <Canvas.RenderTransform>
+                                <TranslateTransform X="0" Y="0"/>
+                            </Canvas.RenderTransform>
+                            <Canvas.Resources/>
+                            <Canvas Name="Layer_3">
+                                <Canvas.RenderTransform>
+                                    <TranslateTransform X="-189.78623" Y="-7.8262364"/>
+                                </Canvas.RenderTransform>
+                                <Canvas>
+                                    <Polygon Points="248.4,98.1 248.4,120.9 239.1,111.5 233.3,117.3 252.5,136.5 271.7,117.3 265.9,111.5 256.6,120.9 256.6,98.1 " Name="polygon63" FillRule="NonZero" Fill="#000000"/>
+                                    <Path Name="path65" Fill="#000000">
+                                        <Path.Data>
+                                            <PathGeometry Figures="m 296.7 13.5 c -0.4 -1 -1 -1.8 -1.8 -2.6 -0.8 -0.8 -1.6 -1.3 -2.6 -1.8 -1 -0.4 -2 -0.6 -3.2 -0.6 H 224 c -1.1 0 -2.2 0.2 -3.2 0.6 -1 0.4 -1.8 1 -2.6 1.8 -0.8 0.8 -1.3 1.6 -1.8 2.6 -0.5 1 -0.6 2 -0.6 3.2 V 90 h 71 L 297.3 79.5 V 16.6 c 0 -1.1 -0.2 -2.2 -0.6 -3.1 z m -23.8 68.3 h -5.6 -2.5 -8.1 -1.1 -15.2 V 65.5 H 273 v 16.3 z m 16.3 -5.8 -5.8 5.8 H 281 V 57.4 H 232.1 V 81.8 H 224 V 16.6 h 5.6 2.5 8.1 32.6 8.1 0.9 7.3 V 76 Z" FillRule="NonZero"/>
+                                        </Path.Data>
+                                    </Path>
+                                    <Rectangle Canvas.Left="245.5" Canvas.Top="63" Width="8.1000004" Height="20.4" Name="rect67" Fill="#000000"/>
+                                    <Rectangle Canvas.Left="259.29999" Canvas.Top="63.5" Width="8.1000004" Height="20.4" Name="rect69" Fill="#000000"/>
+                                </Canvas>
+                            </Canvas>
+                        </Canvas>
+                    </Viewbox>
+                    <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Create" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+                    <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Column="1" Background="WhiteSmoke">
+                <Grid Grid.Column="1" Margin="20,20,20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="2.5*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <ResourceDictionary>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Height" Value="20"/>
+                            </Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Height" Value="20"/>
+                            </Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Height" Value="20"/>
+                            </Style>
+                        </ResourceDictionary>
+                    </Grid.Resources>
+
+                    <TextBlock  Grid.Row="0" Grid.Column="0" Text="Name"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Version"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Version, Mode=TwoWay}"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Author"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Author, Mode=TwoWay}"/>
+
+                </Grid>
+            </Border>
+        </DockPanel>
+    </Border>
+</Window>

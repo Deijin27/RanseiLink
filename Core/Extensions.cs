@@ -1,5 +1,6 @@
-﻿using System.IO;
-using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Core
 {
@@ -10,11 +11,13 @@ namespace Core
             return new string(br.ReadChars(4));
         }
 
-        internal static void WriteProperty(this StringBuilder sb, string propertyName, string propertyValue)
+        public static T Choice<T>(this Random random, T[] collection)
         {
-            sb.Append($"    {propertyName}: ");
-            sb.AppendLine(propertyValue);
+            return collection[random.Next(0, collection.Length)];
         }
-
+        public static T Choice<T>(this Random random, IList<T> collection)
+        {
+            return collection[random.Next(0, collection.Count)];
+        }
     }
 }

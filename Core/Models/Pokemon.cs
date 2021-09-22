@@ -5,6 +5,13 @@ using Core.Models.Interfaces;
 
 namespace Core.Models
 {
+    public class PokemonEvolutionRange
+    {
+        public uint MinEntry { get; set; }
+        public uint MaxEntry { get; set; }
+        public bool CanEvolve { get; set; }
+    }
+
     public class Pokemon : BaseDataWindow, IPokemon
     {
         public const int DataLength = 0x30;
@@ -113,6 +120,53 @@ namespace Core.Models
             set => SetUInt32(7, 3, 27, value);
         }
 
+        private static uint CoerceEvolutionEntry(uint entry)
+        {
+            if (entry > 115)
+            {
+                return 115;
+            }
+            if (entry < 0)
+            {
+                return 0;
+            }
+            return entry;
+        }
+
+        public PokemonEvolutionRange EvolutionRange
+        {
+            get
+            {
+                return new PokemonEvolutionRange()
+                {
+                    MinEntry = GetUInt32(8, 7, 0),
+                    MaxEntry = GetUInt32(8, 7, 11),
+                    CanEvolve = GetUInt32(8, 4, 7) == 0 || GetUInt32(8, 4, 18) == 0
+                };
+            }
+            set
+            {
+                if (value.CanEvolve)
+                {
+                    uint min = CoerceEvolutionEntry(value.MinEntry);
+                    uint max = CoerceEvolutionEntry(value.MaxEntry);
+                    max = Math.Max(min, max);
+                    min = Math.Min(min, max);
+                    SetUInt32(8, 7, 0, min);
+                    SetUInt32(8, 4, 7, 0);
+                    SetUInt32(8, 7, 11, max);
+                    SetUInt32(8, 4, 18, 0);
+                }
+                else
+                {
+                    SetUInt32(8, 7, 0, 120u);
+                    SetUInt32(8, 4, 7, 10u);
+                    SetUInt32(8, 7, 11, 120u);
+                    SetUInt32(8, 4, 18, 10u);
+                }
+            }
+        }
+
         public uint NationalPokedexNumber
         {
             get => GetUInt32(8, 10, 22);
@@ -142,64 +196,10 @@ namespace Core.Models
             BitConverter.GetBytes(num).CopyTo(Data, 9 * 4);
         }
 
-        #region ToString
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.WriteProperty("Name", Name);
-            sb.WriteProperty("Types", $"{Type1} / {Type2}");
-            sb.WriteProperty("Abilities", $"{Ability1} / {Ability2} / {Ability3}");
-            sb.WriteProperty("Move", Move.ToString());
-
-            sb.WriteProperty("Evolution Conditions", string.Format("{0} {1}/ {2} {3}",
-                EvolutionCondition1,
-                RenderQuantityForEvolutionCondition(EvolutionCondition1, QuantityForEvolutionCondition1),
-                EvolutionCondition2,
-                RenderQuantityForEvolutionCondition(EvolutionCondition2, QuantityForEvolutionCondition2)
-                ));
-
-            sb.WriteProperty("Stats", $"{Hp} HP / {Atk} Atk / {Def} Def / {Spe} Spe");
-
-            return sb.ToString();
-        }
-
-        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
-        {
-            switch (id)
-            {
-                case EvolutionConditionId.Hp:
-                case EvolutionConditionId.Attack:
-                case EvolutionConditionId.Defence:
-                case EvolutionConditionId.Speed:
-                    return $"({quantity}) ";
-
-                case EvolutionConditionId.Link:
-                    return $"({quantity}%) ";
-
-                case EvolutionConditionId.Kingdom:
-                    return $"({(KingdomId)quantity}) ";
-
-                case EvolutionConditionId.WarriorGender:
-                    return $"({(GenderId)quantity}) ";
-
-                case EvolutionConditionId.Item:
-                    return $"({(ItemId)quantity}) ";
-
-                case EvolutionConditionId.JoinOffer:
-                case EvolutionConditionId.NoCondition:
-                    return "";
-
-                default:
-                    throw new ArgumentException("Unexpected enum value");
-            }
-        }
-
         public IPokemon Clone()
         {
             return new Pokemon((byte[])Data.Clone());
         }
 
-        #endregion
     }
 }

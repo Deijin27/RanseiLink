@@ -6,5 +6,9 @@ namespace Core.Models.Interfaces
     {
         PokemonId Pokemon { get; set; }
         AbilityId Ability { get; set; }
+        uint HpIv { get; set; }
+        uint AtkIv { get; set; }
+        uint DefIv { get; set; }
+        uint SpeIv { get; set; }
     }
 }
