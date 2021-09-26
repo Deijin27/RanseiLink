@@ -5,7 +5,7 @@ namespace RanseiConsole
 {
     internal static partial class RenderExtensions
     {
-        private static void WriteTitle(this IConsole console, string title)
+        private static void WriteTitle(this IConsole console, object title)
         {
             using (console.WithForegroundColor(ConsoleColor.Cyan))
             {
@@ -13,7 +13,7 @@ namespace RanseiConsole
             }
         }
 
-        private static void WriteProperty(this IConsole console, string propertyName, string propertyValue)
+        private static void WriteProperty(this IConsole console, object propertyName, object propertyValue)
         {
             using (console.WithForegroundColor(ConsoleColor.White))
             {

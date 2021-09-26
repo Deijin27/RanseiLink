@@ -226,10 +226,17 @@ namespace RanseiConsole
 
         public static void Render(this IConsole console, IScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
         {
-            console.WriteTitle($"Scenario: {scenarioId}, ScenarioPokemon: {scenarioPokemonId}");
+            console.WriteTitle($"Scenario: {scenarioId}, Entry: {scenarioPokemonId}");
             console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());
             console.WriteProperty("Ability", scenarioPokemon.Ability.ToString());
             console.WriteProperty("IVs", $"Hp {scenarioPokemon.HpIv} / Atk {scenarioPokemon.AtkIv} / Def {scenarioPokemon.DefIv} / Spe {scenarioPokemon.SpeIv}");
+        }
+
+        public static void Render(this IConsole console, IScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)
+        {
+            console.WriteTitle($"Scenario: {scenarioId}, Entry: {scenarioWarriorId}");
+            console.WriteProperty("Warrior", scenarioWarrior.Warrior);
+            console.WriteProperty("Scenario Pokemon Entry", scenarioWarrior.ScenarioPokemonIsDefault ? "<default>" : scenarioWarrior.ScenarioPokemon.ToString());
         }
     }
 }

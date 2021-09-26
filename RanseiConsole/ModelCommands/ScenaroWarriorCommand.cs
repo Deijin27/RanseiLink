@@ -25,7 +25,7 @@ namespace RanseiConsole.ModelCommands
                 return default;
             }
             var dataService = services.CoreServices.DataService(services.CurrentMod);
-            var model = dataService.ScenarioPokemon.Retrieve(ScenarioId, ScenarioWarriorId);
+            var model = dataService.ScenarioWarrior.Retrieve(ScenarioId, ScenarioWarriorId);
 
             console.Render(model, ScenarioId, ScenarioWarriorId);
 
