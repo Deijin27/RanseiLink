@@ -4,20 +4,20 @@ using Core.Models;
 
 namespace Core.Services.ModelServices
 {
-    public interface IWarriorMaxSyncService : IModelDataService<WarriorId, IWarriorMaxLink>
+    public interface IWarriorMaxLinkService : IModelDataService<WarriorId, IWarriorMaxLink>
     {
-        IDisposableWarriorMaxSyncService Disposable();
+        IDisposableWarriorMaxLinkService Disposable();
     }
 
-    public interface IDisposableWarriorMaxSyncService : IDisposableModelDataService<WarriorId, IWarriorMaxLink>
+    public interface IDisposableWarriorMaxLinkService : IDisposableModelDataService<WarriorId, IWarriorMaxLink>
     {
     }
 
-    public class WarriorMaxSyncService : BaseModelService, IWarriorMaxSyncService
+    public class WarriorMaxSyncService : BaseModelService, IWarriorMaxLinkService
     {
         public WarriorMaxSyncService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength) { }
 
-        public IDisposableWarriorMaxSyncService Disposable()
+        public IDisposableWarriorMaxLinkService Disposable()
         {
             return new DisposableWarriorMaxSyncService(Mod);
         }
@@ -33,7 +33,7 @@ namespace Core.Services.ModelServices
         }
     }
 
-    public class DisposableWarriorMaxSyncService : BaseDisposableModelService, IDisposableWarriorMaxSyncService
+    public class DisposableWarriorMaxSyncService : BaseDisposableModelService, IDisposableWarriorMaxLinkService
     {
         public DisposableWarriorMaxSyncService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength)
         {

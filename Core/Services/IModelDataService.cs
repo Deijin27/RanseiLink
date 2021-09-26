@@ -21,15 +21,15 @@ namespace Core.Services
         void Save(TId1 id1, TId2 id2, TModel model);
     }
 
-    public interface IDisposableModelDataService<TId, TModel> : IDisposable
+    public interface IDisposableModelDataService<TModel> : IModelDataService<TModel>, IDisposable
     {
-        TModel Retrieve(TId id);
-        void Save(TId id, TModel model);
     }
 
-    public interface IDisposableModelDataService<TId1, TId2, TModel> : IDisposable
+    public interface IDisposableModelDataService<TId, TModel> : IModelDataService<TId, TModel>, IDisposable
     {
-        TModel Retrieve(TId1 id1, TId2 id2);
-        void Save(TId1 id1, TId2 id2, TModel model);
+    }
+
+    public interface IDisposableModelDataService<TId1, TId2, TModel> : IModelDataService<TId1, TId2, TModel>, IDisposable
+    {
     }
 }

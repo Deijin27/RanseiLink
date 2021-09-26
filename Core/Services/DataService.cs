@@ -1,6 +1,4 @@
-﻿using Core.Enums;
-using Core.Models.Interfaces;
-using Core.Services.ModelServices;
+﻿using Core.Services.ModelServices;
 
 namespace Core.Services
 {
@@ -26,18 +24,18 @@ namespace Core.Services
         }
 
         public IPokemonService Pokemon { get; }
-        public IModelDataService<MoveId, IMove> Move { get; }
-        public IModelDataService<AbilityId, IAbility> Ability { get; }
-        public IModelDataService<WarriorSkillId, IWarriorSkill> WarriorSkill { get; }
-        public IModelDataService<GimmickId, IGimmick> Gimmick { get; }
-        public IModelDataService<BuildingId, IBuilding> Building { get; }
-        public IModelDataService<ItemId, IItem> Item { get; }
-        public IModelDataService<KingdomId, IKingdom> Kingdom { get; }
-        public IModelDataService<MoveRangeId, IMoveRange> MoveRange { get; }
-        public IModelDataService<EventSpeakerId, IEventSpeaker> EventSpeaker { get; }
-        public IModelDataService<IEvolutionTable> EvolutionTable { get; }
+        public IMoveService Move { get; }
+        public IAbilityService Ability { get; }
+        public IWarriorSkillService WarriorSkill { get; }
+        public IGimmickService Gimmick { get; }
+        public IBuildingService Building { get; }
+        public IItemService Item { get; }
+        public IKingdomService Kingdom { get; }
+        public IMoveRangeService MoveRange { get; }
+        public IEventSpeakerService EventSpeaker { get; }
+        public IEvolutionTableService EvolutionTable { get; }
         public IScenarioPokemonService ScenarioPokemon { get; }
         public IScenarioWarriorService ScenarioWarrior { get; }
-        public IWarriorMaxSyncService MaxLink { get; }
+        public IWarriorMaxLinkService MaxLink { get; }
     }
 }
