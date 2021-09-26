@@ -35,7 +35,7 @@
             </ListView.ItemTemplate>
         </ListView>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="2" d:Background="Gray">
-            <Button Command="{Binding RandomizeCommand}"
+            <Button Command="{Binding CommitRomCommand}"
                     FontFamily="{StaticResource SegoeMDL2Assets}"
                     Width="45" Height="30"
                     ToolTip="Write to rom"
