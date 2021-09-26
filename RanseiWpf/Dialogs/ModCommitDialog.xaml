@@ -13,7 +13,7 @@
         xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModCommitViewModel, IsDesignTimeCreatable=False}"
-        Title="Patch rom" Height="200" Width="550" Background="Transparent">
+        Title="Patch rom" Height="225" Width="550" Background="Transparent">
     <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
         <DockPanel>
             <Grid Width="200" DockPanel.Dock="Left" Background="LightGray" Opacity="0.9"
@@ -45,6 +45,7 @@
                         </Canvas>
                     </Viewbox>
                     <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
+                    <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">

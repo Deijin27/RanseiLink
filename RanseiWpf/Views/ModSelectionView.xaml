@@ -21,6 +21,7 @@
                     </StackPanel.Resources>
                     <Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
                     <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <TextBlock FontSize="9" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
                 </StackPanel>
             </Grid>
             
@@ -30,8 +31,7 @@
             <ItemsControl ItemsSource="{Binding ModItems}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:ModListItem}">
-                        <Button HorizontalContentAlignment="Left" Style="{StaticResource GrayHoverButtonStyle}" 
-                                ToolTip="Right click for more options"
+                        <Button HorizontalContentAlignment="Left" Style="{StaticResource GrayHoverButtonStyle}"
                                 CommandParameter="{Binding Info}" 
                                 Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
                             <Button.ContextMenu>

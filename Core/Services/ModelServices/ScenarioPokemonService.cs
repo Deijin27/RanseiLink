@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Core.Enums;
+using Core.Models;
 using Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,12 @@ using System.IO;
 
 namespace Core.Services.ModelServices
 {
-    public interface IScenarioPokemonService : IModelDataService<int, int, IScenarioPokemon>
+    public interface IScenarioPokemonService : IModelDataService<ScenarioId, int, IScenarioPokemon>
     {
         IDisposableScenarioPokemonService Disposable();
     }
 
-    public interface IDisposableScenarioPokemonService : IDisposableModelDataService<int, int, IScenarioPokemon>
+    public interface IDisposableScenarioPokemonService : IDisposableModelDataService<ScenarioId, int, IScenarioPokemon>
     {
     }
 
@@ -31,12 +32,8 @@ namespace Core.Services.ModelServices
             return new DisposableScenarioPokemonService(Mod);
         }
 
-        public IScenarioPokemon Retrieve(int scenario, int id)
+        public IScenarioPokemon Retrieve(ScenarioId scenario, int id)
         {
-            if (scenario < 0 || scenario >= Constants.ScenarioCount)
-            {
-                throw new Exception("Invalid scenario number");
-            }
             if (id < 0 || id >= Constants.ScenarioPokemonCount)
             {
                 throw new Exception("Invalid scenario pokemon ID");
@@ -48,12 +45,8 @@ namespace Core.Services.ModelServices
             }
         }
 
-        public void Save(int scenario, int id, IScenarioPokemon model)
+        public void Save(ScenarioId scenario, int id, IScenarioPokemon model)
         {
-            if (scenario < 0 || scenario >= Constants.ScenarioCount)
-            {
-                throw new Exception("Invalid scenario number");
-            }
             if (id < 0 || id >= Constants.ScenarioPokemonCount)
             {
                 throw new Exception("Invalid scenario pokemon ID");
@@ -74,7 +67,7 @@ namespace Core.Services.ModelServices
         public DisposableScenarioPokemonService(ModInfo mod)
         {
             ItemLength = ScenarioPokemon.DataLength;
-            for (int i = 0; i < Constants.ScenarioCount; i++)
+            foreach (ScenarioId i in EnumUtil.GetValues<ScenarioId>())
             {
                 streams.Add(File.Open(Path.Combine(mod.FolderPath, Constants.ScenarioPokemonPathFromId(i)), FileMode.Open, FileAccess.ReadWrite));
             }
@@ -88,34 +81,26 @@ namespace Core.Services.ModelServices
             }
         }
 
-        public IScenarioPokemon Retrieve(int scenario, int id)
+        public IScenarioPokemon Retrieve(ScenarioId scenario, int id)
         {
-            if (scenario < 0 || scenario >= Constants.ScenarioCount)
-            {
-                throw new Exception("Invalid scenario number");
-            }
             if (id < 0 || id >= Constants.ScenarioPokemonCount)
             {
                 throw new Exception("Invalid scenario pokemon ID");
             }
-            Stream stream = streams[scenario];
+            Stream stream = streams[(int)scenario];
             stream.Position = id * ItemLength;
             byte[] buffer = new byte[ItemLength];
             stream.Read(buffer, 0, ItemLength);
             return new ScenarioPokemon(buffer);
         }
 
-        public void Save(int scenario, int id, IScenarioPokemon model)
+        public void Save(ScenarioId scenario, int id, IScenarioPokemon model)
         {
-            if (scenario < 0 || scenario >= Constants.ScenarioCount)
-            {
-                throw new Exception("Invalid scenario number");
-            }
             if (id < 0 || id >= Constants.ScenarioPokemonCount)
             {
                 throw new Exception("Invalid scenario pokemon ID");
             }
-            Stream stream = streams[scenario];
+            Stream stream = streams[(int)scenario];
             stream.Position = id * ItemLength;
             stream.Write(model.Data, 0, ItemLength);
         }

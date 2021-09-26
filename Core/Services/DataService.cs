@@ -21,6 +21,7 @@ namespace Core.Services
             EvolutionTable = new EvolutionTableService(mod);
             EvolutionTable = new EvolutionTableService(mod);
             ScenarioPokemon = new ScenarioPokemonService(mod);
+            ScenarioWarrior = new ScenarioWarriorService(mod);
             MaxLink = new WarriorMaxSyncService(mod);
         }
 
@@ -36,6 +37,7 @@ namespace Core.Services
         public IModelDataService<EventSpeakerId, IEventSpeaker> EventSpeaker { get; }
         public IModelDataService<IEvolutionTable> EvolutionTable { get; }
         public IScenarioPokemonService ScenarioPokemon { get; }
+        public IScenarioWarriorService ScenarioWarrior { get; }
         public IWarriorMaxSyncService MaxLink { get; }
     }
 }

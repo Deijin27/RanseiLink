@@ -13,7 +13,7 @@
         xmlns:controls="clr-namespace:RanseiWpf.Controls"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModImportViewModel, IsDesignTimeCreatable=False}"
-        Title="ModCreationDialog" Height="200" Width="550" Background="Transparent">
+        Title="ModCreationDialog" Height="225" Width="550" Background="Transparent">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
     </Window.Resources>
@@ -26,6 +26,7 @@
                     <TextBlock Text="Drop the mod to&#x0a; import here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     <TextBlock Text="&#xe1a5;" FontFamily="{StaticResource SegoeMDL2Assets}" HorizontalAlignment="Center" FontSize="40" Height="60"/>
                     <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
+                    <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">

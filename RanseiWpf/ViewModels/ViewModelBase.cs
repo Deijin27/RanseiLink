@@ -14,23 +14,26 @@ namespace RanseiWpf.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
-        protected void RaiseAndSetIfChanged<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string name = null)
+        protected bool RaiseAndSetIfChanged<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string name = null)
         {
             if (!EqualityComparer<T>.Default.Equals(currentValue, newValue))
             {
                 setter(newValue);
                 RaisePropertyChanged(name);
+                return true;
             }
-            
+            return false;
         }
 
-        protected void RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
+        protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
         {
             if (!EqualityComparer<T>.Default.Equals(property, newValue))
             {
                 property = newValue;
                 RaisePropertyChanged(name);
+                return true;
             }
+            return false;
         }
     }
 }

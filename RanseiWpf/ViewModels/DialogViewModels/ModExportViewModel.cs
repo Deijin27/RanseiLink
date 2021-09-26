@@ -1,5 +1,6 @@
 ﻿using Core.Services;
 using RanseiWpf.DragDrop;
+using System.Windows.Input;
 using System;
 
 namespace RanseiWpf.ViewModels
@@ -20,7 +21,19 @@ namespace RanseiWpf.ViewModels
                 Folder = initFile;
                 OkEnabled = true;
             }
+
+            DesktopCommand = new RelayCommand(() =>
+            {
+                var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                if (System.IO.Directory.Exists(desktop))
+                {
+                    Folder = desktop;
+                    OkEnabled = true;
+                }
+            });
         }
+
+        public ICommand DesktopCommand { get; }
 
         public FolderDropHandler RomDropHandler { get; }
 

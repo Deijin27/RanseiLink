@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiWpf.Views"
+             xmlns:controls="clr-namespace:RanseiWpf.Controls"
              xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
              d:DataContext="{d:DesignInstance vm:MainEditorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -13,11 +14,17 @@
             <ColumnDefinition Width="200"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" d:Background="WhiteSmoke">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="1" d:Background="WhiteSmoke" Grid.RowSpan="3">
             <ContentControl Content="{Binding CurrentVm}" Margin="10,0,10,0"/>
         </Grid>
-        <ListView Style="{DynamicResource ListViewStyle1}" Grid.Column="0" Background="Transparent" BorderThickness="0"
-                  ItemsSource="{Binding ListItems}"
+        <controls:ModInfoControl ModInfo="{Binding Mod}"/>
+        <ListView Grid.Row="1" Style="{DynamicResource ListViewStyle1}" Grid.Column="0" Background="Transparent" BorderThickness="0"
+                  ItemsSource="{Binding ListItems}" SelectedItem="{Binding CurrentListItem, Mode=OneWayToSource}"
                   SelectedValue="{Binding CurrentVm}" SelectedValuePath="ItemValue">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -27,5 +34,43 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="2" d:Background="Gray">
+            <Button Command="{Binding RandomizeCommand}"
+                    FontFamily="{StaticResource SegoeMDL2Assets}"
+                    Width="45" Height="30"
+                    ToolTip="Write to rom"
+                    Style="{StaticResource GrayHoverButtonStyle}">
+                <Viewbox Stretch="Uniform" Height="15">
+                    <Canvas Name="svg85" Canvas.Left="0" Canvas.Top="0" Width="132.5" Height="132.5">
+                        <Canvas.RenderTransform>
+                            <TranslateTransform X="0" Y="0"/>
+                        </Canvas.RenderTransform>
+                        <Canvas.Resources/>
+                        <Canvas Name="Layer_3">
+                            <Canvas.RenderTransform>
+                                <TranslateTransform X="-189.78623" Y="-7.8262364"/>
+                            </Canvas.RenderTransform>
+                            <Canvas>
+                                <Polygon Points="248.4,98.1 248.4,120.9 239.1,111.5 233.3,117.3 252.5,136.5 271.7,117.3 265.9,111.5 256.6,120.9 256.6,98.1 " Name="polygon63" FillRule="NonZero" Fill="#000000"/>
+                                <Path Name="path65" Fill="#000000">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m 296.7 13.5 c -0.4 -1 -1 -1.8 -1.8 -2.6 -0.8 -0.8 -1.6 -1.3 -2.6 -1.8 -1 -0.4 -2 -0.6 -3.2 -0.6 H 224 c -1.1 0 -2.2 0.2 -3.2 0.6 -1 0.4 -1.8 1 -2.6 1.8 -0.8 0.8 -1.3 1.6 -1.8 2.6 -0.5 1 -0.6 2 -0.6 3.2 V 90 h 71 L 297.3 79.5 V 16.6 c 0 -1.1 -0.2 -2.2 -0.6 -3.1 z m -23.8 68.3 h -5.6 -2.5 -8.1 -1.1 -15.2 V 65.5 H 273 v 16.3 z m 16.3 -5.8 -5.8 5.8 H 281 V 57.4 H 232.1 V 81.8 H 224 V 16.6 h 5.6 2.5 8.1 32.6 8.1 0.9 7.3 V 76 Z" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                                <Rectangle Canvas.Left="245.5" Canvas.Top="63" Width="8.1000004" Height="20.4" Name="rect67" Fill="#000000"/>
+                                <Rectangle Canvas.Left="259.29999" Canvas.Top="63.5" Width="8.1000004" Height="20.4" Name="rect69" Fill="#000000"/>
+                            </Canvas>
+                        </Canvas>
+                    </Canvas>
+                </Viewbox>
+            </Button>
+            <Button Command="{Binding RandomizeCommand}" 
+                    Content="&#xE117;"
+                    FontFamily="{StaticResource SegoeMDL2Assets}"
+                    Width="45" Height="30"
+                    FontSize="13"
+                    ToolTip="Randomize"
+                    Style="{StaticResource GrayHoverButtonStyle}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

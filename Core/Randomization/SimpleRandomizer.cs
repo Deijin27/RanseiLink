@@ -15,15 +15,18 @@ namespace Core.Randomization
             public const string Moves = "PokemonMoves";
             public const string AllMaxLink98 = "AllMaxLink98";
             public const string AvoidDummys = "AvoidDummys";
+            public const string PreventSameType = "PreventSameType";
+            public const string EnsureMaxLink100 = "EnsureMaxLink100";
         }
         public SimpleRandomizer() : base("Randomize")
         {
-            AddOption(Option.ScenarioPokemon, "Scenario Pokemon");
+            AddOption(Option.ScenarioPokemon, "Warrior's Pokemon");
             AddOption(Option.Abilities, "Pokemon's Abilities");
             AddOption(Option.Types, "Pokemon's Types");
+            AddOption(Option.PreventSameType, "Prevent two of the same type on a pokemon");
             AddOption(Option.Moves, "Pokemon's Moves");
-            AddOption(Option.AllMaxLink98, "Set All Max Links to 98");
-            AddOption(Option.AvoidDummys, "Avoid Dummys");
+            AddOption(Option.AllMaxLink98, "Set All Max Links to at least 98");
+            AddOption(Option.AvoidDummys, "Avoid Dummys", "Avoid dummy moves, abilities, etc when randomizing.");
         }
 
         public override void Apply(IDataService service)
@@ -33,6 +36,7 @@ namespace Core.Randomization
             TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
             MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
             WarriorId[] warriorIds = EnumUtil.GetValues<WarriorId>().ToArray();
+            ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
 
             if (OptionDict[Option.AvoidDummys].Enabled)
             {
@@ -59,7 +63,10 @@ namespace Core.Randomization
                         if (OptionDict[Option.Types].Enabled)
                         {
                             poke.Type1 = random.Choice(typeIds);
-                            poke.Type2 = random.Choice(typeIds);
+                            poke.Type2 = OptionDict[Option.PreventSameType].Enabled
+                                ? random.Choice(typeIds.Where(i => i != poke.Type1).ToArray())
+                                : random.Choice(typeIds);
+
                         }
                         if (OptionDict[Option.Moves].Enabled)
                         {
@@ -69,11 +76,11 @@ namespace Core.Randomization
                     }
                 }
 
-                using (var scenarioPokemonService = service.ScenarioPokemon.Disposable())
+                if (OptionDict[Option.ScenarioPokemon].Enabled)
                 {
-                    if (OptionDict[Option.ScenarioPokemon].Enabled)
+                    using (var scenarioPokemonService = service.ScenarioPokemon.Disposable())
                     {
-                        for (int i = 0; i < Constants.ScenarioCount; i++)
+                        foreach (var i in scenarioIds)
                         {
                             for (int j = 0; j < Constants.ScenarioPokemonCount; j++)
                             {
@@ -97,7 +104,10 @@ namespace Core.Randomization
                         var maxLinkTable = maxLinkService.Retrieve(wid);
                         foreach (PokemonId pid in pokemonIds)
                         {
-                            maxLinkTable.SetMaxLink(pid, 98);
+                            if (maxLinkTable.GetMaxLink(pid) < 98)
+                            {
+                                maxLinkTable.SetMaxLink(pid, 98);
+                            }
                         }
                         maxLinkService.Save(wid, maxLinkTable);
                     }

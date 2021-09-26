@@ -1,20 +1,29 @@
-﻿
+﻿using Core;
+using Core.Enums;
+using System;
+using System.Linq;
+
 namespace RanseiWpf.ViewModels
 {
-    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveable where TViewModel : IViewModelForModel<TModel>, new()
+    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveable where TViewModel : IViewModelForModel<TModel>
     {
-        public ScenarioSelectorViewModelBase(uint minIndex, uint maxIndex)
+        public ScenarioSelectorViewModelBase(Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
         {
+            NewViewModel = newViewModel;
             MinIndex = minIndex;
             MaxIndex = maxIndex;
         }
 
+        private readonly Func<ScenarioId, TViewModel> NewViewModel;
+
         protected void Init()
         {
-            _selectedScenario = 0;
+            _selectedScenario = ScenarioId.TheLegendOfRansei;
             _selectedItem = 0;
             TModel model = RetrieveModel(SelectedScenario, SelectedItem);
-            NestedViewModel = new TViewModel() { Model = model };
+            var vm = NewViewModel(SelectedScenario);
+            vm.Model = model;
+            NestedViewModel = vm;
         }
 
 
@@ -22,7 +31,18 @@ namespace RanseiWpf.ViewModels
         public TViewModel NestedViewModel
         {
             get => _nestedViewModel;
-            set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
+            set
+            {
+                if (!value.Equals(_nestedViewModel))
+                {
+                    if (_nestedViewModel is ISaveable saveable)
+                    {
+                        saveable.Save();
+                    }
+                    _nestedViewModel = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public uint MinIndex { get; }
@@ -36,31 +56,41 @@ namespace RanseiWpf.ViewModels
             {
                 Save();
                 TModel model = RetrieveModel(SelectedScenario, value);
-                NestedViewModel = new TViewModel() { Model = model };
+                var vm = NewViewModel(SelectedScenario);
+                vm.Model = model;
+                NestedViewModel = vm;
                 _selectedItem = value;
             }
         }
 
-        private uint _selectedScenario;
-        public uint SelectedScenario
+        public ScenarioId[] ScenarioItems { get; } = EnumUtil.GetValues<ScenarioId>().ToArray();
+
+        private ScenarioId _selectedScenario;
+        public ScenarioId SelectedScenario
         {
             get => _selectedScenario;
             set
             {
                 Save();
                 TModel model = RetrieveModel(value, SelectedItem);
-                NestedViewModel = new TViewModel() { Model = model };
+                var vm = NewViewModel(value);
+                vm.Model = model;
+                NestedViewModel = vm;
                 _selectedScenario = value;
             }
         }
 
-        protected abstract TModel RetrieveModel(uint scenario, uint index);
-        protected abstract void SaveModel(uint scenario, uint index, TModel model);
+        protected abstract TModel RetrieveModel(ScenarioId scenario, uint index);
+        protected abstract void SaveModel(ScenarioId scenario, uint index, TModel model);
 
         public virtual void Save()
         {
             if (NestedViewModel != null)
             {
+                if (_nestedViewModel is ISaveable saveable)
+                {
+                    saveable.Save();
+                }
                 SaveModel(SelectedScenario, SelectedItem, NestedViewModel.Model);
             }
         }

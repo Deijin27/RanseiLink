@@ -3,6 +3,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.IO.Compression;
 using System;
+using Core.Enums;
 
 namespace Core.Services
 {
@@ -148,10 +149,12 @@ namespace Core.Services
                 nds.InsertFixedLengthFile(Constants.MoveRangeRomPath, Path.Combine(currentModFolder, Constants.MoveRangeRomPath));
                 nds.InsertFixedLengthFile(Constants.EventSpeakerRomPath, Path.Combine(currentModFolder, Constants.EventSpeakerRomPath));
                 nds.InsertFixedLengthFile(Constants.BaseBushouMaxSyncTableRomPath, Path.Combine(currentModFolder, Constants.BaseBushouMaxSyncTableRomPath));
-                for (int i = 0; i < Constants.ScenarioCount; i++)
+                foreach (var i in EnumUtil.GetValues<ScenarioId>())
                 {
                     var spPath = Constants.ScenarioPokemonPathFromId(i);
                     nds.InsertFixedLengthFile(spPath, Path.Combine(currentModFolder, spPath));
+                    var swPath = Constants.ScenarioWarriorPathFromId(i);
+                    nds.InsertFixedLengthFile(swPath, Path.Combine(currentModFolder, swPath));
                 }
             }
         }

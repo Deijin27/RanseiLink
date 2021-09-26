@@ -12,7 +12,7 @@
         xmlns:vm="clr-namespace:RanseiWpf.ViewModels"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
-        Title="ModCreationDialog" Height="500" Width="300" Background="Transparent">
+        Title="ModCreationDialog" Height="500" Width="400" Background="Transparent">
     <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
         <DockPanel Background="WhiteSmoke">
             <Grid DockPanel.Dock="Bottom">

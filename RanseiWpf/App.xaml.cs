@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace RanseiWpf
 {
@@ -13,5 +7,6 @@ namespace RanseiWpf
     /// </summary>
     public partial class App : Application
     {
+        public const string Version = "0.2.0";
     }
 }

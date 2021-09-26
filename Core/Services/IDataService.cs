@@ -18,6 +18,7 @@ namespace Core.Services
         IModelDataService<EventSpeakerId, IEventSpeaker> EventSpeaker { get; }
         IModelDataService<IEvolutionTable> EvolutionTable { get; }
         IScenarioPokemonService ScenarioPokemon { get; }
+        IScenarioWarriorService ScenarioWarrior { get; }
         IWarriorMaxSyncService MaxLink { get; }
     }
 }

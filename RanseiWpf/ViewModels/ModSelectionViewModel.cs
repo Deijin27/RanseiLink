@@ -9,7 +9,6 @@ using System.Windows.Input;
 
 namespace RanseiWpf.ViewModels
 {
-
     public class ModListItem : ViewModelBase
     {
         private readonly ModSelectionViewModel ParentVm;

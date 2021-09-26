@@ -1,11 +1,13 @@
 ﻿using Core.Services;
 using RanseiWpf.DragDrop;
+using RanseiWpf.Services;
+using System.Windows.Input;
 
 namespace RanseiWpf.ViewModels
 {
     public class ModCreationViewModel : ViewModelBase
     {
-        public ModCreationViewModel(string initFile)
+        public ModCreationViewModel(IDialogService dialogService, string initFile)
         {
             ModInfo = new ModInfo();
             RomDropHandler = new RomDropHandler();
@@ -19,7 +21,18 @@ namespace RanseiWpf.ViewModels
                 File = f;
                 OkEnabled = true;
             };
+
+            FilePickerCommand = new RelayCommand(() =>
+            {
+                if (dialogService.RequestRomFile(out string file))
+                {
+                    File = file;
+                    OkEnabled = true;
+                }
+            });
         }
+
+        public ICommand FilePickerCommand { get; }
 
         public RomDropHandler RomDropHandler { get; }
 

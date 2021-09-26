@@ -85,20 +85,15 @@ namespace RanseiConsole
         {
             switch (id)
             {
-                case MoveEffectId.Unused_15:
                 case MoveEffectId.Unused_16:
                 case MoveEffectId.Unused_17:
                 case MoveEffectId.Unused_18:
                 case MoveEffectId.Unused_19:
-                case MoveEffectId.Unused_11:
-                case MoveEffectId.Unused_12:
-                case MoveEffectId.Unused_9:
-                case MoveEffectId.Unused_10:
-                case MoveEffectId.Unused_7:
                 case MoveEffectId.Multihit_Unused:
                 case MoveEffectId.Unused_1:
                     return $"({value}?) ";
 
+                case MoveEffectId.TargetInvincibleForOneTurn:
                 case MoveEffectId.ThawsUserIfFrozen:
                 case MoveEffectId.WakesTargetIfSleep:
                 case MoveEffectId.DestroysTargetsConsumableItem:
@@ -136,6 +131,11 @@ namespace RanseiConsole
                 case MoveEffectId.InflictsFixedHpDamage:
                     return $"({value} HP) ";
 
+                case MoveEffectId.ChanceToRaiseUserDefence:
+                case MoveEffectId.ChanceToLowerUserDefence:
+                case MoveEffectId.ChanceToRaiseUserSpeed:
+                case MoveEffectId.ChanceToLowerUserSpeed:
+                case MoveEffectId.ChanceToLowerTargetAttack:
                 case MoveEffectId.ChanceToLowerUserAttackAndDefence:
                 case MoveEffectId.ChanceToLowerTargetRange:
                 case MoveEffectId.ChanceToLowerTargetSpeed:
@@ -153,7 +153,6 @@ namespace RanseiConsole
                 case MoveEffectId.ChanceToLowerTargetDefence:
                 case MoveEffectId.HealsUserByPercentageOfDamageDealt:
                     return $"({value}%) ";
-
                 default:
                     throw new ArgumentException($"Unexpected {nameof(MoveEffectId)} value of {id}");
             }
@@ -225,7 +224,7 @@ namespace RanseiConsole
             }
         }
 
-        public static void Render(this IConsole console, IScenarioPokemon scenarioPokemon, int scenarioId, int scenarioPokemonId)
+        public static void Render(this IConsole console, IScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
         {
             console.WriteTitle($"Scenario: {scenarioId}, ScenarioPokemon: {scenarioPokemonId}");
             console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());

@@ -37,8 +37,10 @@
                         FontSize="13"
                         ToolTip="Go Back"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
-                    <TextBlock Text="RanseiLink - Version 0.2.0" FontSize="12" 
-                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <TextBlock FontSize="12" 
+                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                           RanseiLink v<Run Text="{x:Static local:App.Version}"/>
+                    </TextBlock>
                 </StackPanel>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="1" MouseDown="TopBar_MouseDown" Background="WhiteSmoke">

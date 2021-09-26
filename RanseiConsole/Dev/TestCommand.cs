@@ -32,13 +32,39 @@ namespace RanseiConsole.Dev
             //console.Output.WriteLine(Testing.GetBits(potion));
             //Test2(console, true);
 
+            //for (int scenarioNumber = 0; scenarioNumber < 11; scenarioNumber++)
+            //{
+            //    console.Output.WriteLine($"Scenario {scenarioNumber} ------------------------------------------------");
+            //    int count = 0;
+            //    foreach (var sp in IterateScenarioPokemon(scenarioNumber))
+            //    {
+            //        console.Output.WriteLine($"{count.ToString().PadLeft(3, '0')} {sp.Pokemon,-12} {sp.Ability,-12} IVs: HP {sp.GetUInt32(1, 5, 0)} / Atk {sp.GetUInt32(1, 5, 5)} / Def {sp.GetUInt32(1, 5, 10)} / Spe {sp.GetUInt32(1, 5, 15)}");
+            //    }
+            //}
+
             for (int scenarioNumber = 0; scenarioNumber < 11; scenarioNumber++)
             {
-                console.Output.WriteLine($"Scenario {scenarioNumber} ------------------------------------------------");
-                int count = 0;
+                console.Output.WriteLine($"\nScenario {scenarioNumber} -----------------------------------------------\n");
+                List<ScenarioPokemon> scenarioPokemons = new List<ScenarioPokemon>();
+
                 foreach (var sp in IterateScenarioPokemon(scenarioNumber))
                 {
-                    console.Output.WriteLine($"{count.ToString().PadLeft(3, '0')} {sp.Pokemon,-12} {sp.Ability,-12} IVs: HP {sp.GetUInt32(1, 5, 0)} / Atk {sp.GetUInt32(1, 5, 5)} / Def {sp.GetUInt32(1, 5, 10)} / Spe {sp.GetUInt32(1, 5, 15)}");
+                    scenarioPokemons.Add(sp);
+                }
+
+                int count = 0;
+                foreach (var sb in IterateScenarioBushou(scenarioNumber))
+                {
+                    console.Output.Write($"{count.ToString().PadLeft(3, '0')}: {sb.Warrior,-12} ");
+                    if (sb.ScenarioPokemonIsDefault)
+                    {
+                        console.Output.WriteLine("<default>");
+                    }
+                    else
+                    {
+                        console.Output.WriteLine($"{sb.ScenarioPokemon} ({scenarioPokemons[(int)sb.ScenarioPokemon].Pokemon})");
+                    }
+                    count++;
                 }
             }
 
@@ -66,7 +92,7 @@ namespace RanseiConsole.Dev
             //    var bdw = new BaseDataWindow(ba, 0xC);
             //    console.Output.WriteLine("0x" + $"{count++:x}".PadLeft(2, '0').ToUpperInvariant() + $": {bdw.GetPaddedUtf8String(0, 0xb)}");
             //}
-            
+
             return default;
         }
 
@@ -229,6 +255,19 @@ namespace RanseiConsole.Dev
             {
                 var pk = file.ReadBytes(ScenarioPokemon.DataLength);
                 yield return new ScenarioPokemon(pk);
+            }
+
+        }
+
+        static IEnumerable<ScenarioWarrior> IterateScenarioBushou(int scenario)
+        {
+            using var file = new BinaryReader(File.OpenRead(@$"C:\Users\Mia\Desktop\ConquestData\Scenario\Scenario{scenario.ToString().PadLeft(2, '0')}\ScenarioBushou.dat"));
+
+            int count = (int)(file.BaseStream.Length / ScenarioWarrior.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var pk = file.ReadBytes(ScenarioWarrior.DataLength);
+                yield return new ScenarioWarrior(pk);
             }
 
         }

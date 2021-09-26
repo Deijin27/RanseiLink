@@ -9,23 +9,40 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid d:Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="10"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Scenario" VerticalAlignment="Center" TextAlignment="Right"/>
-        <controls:NumberBox Grid.Column="2" Value="{Binding SelectedScenario, Mode=TwoWay}" Min="0" Max="10"/>
 
-        <TextBlock Grid.Column="4" Text="Entry" VerticalAlignment="Center" TextAlignment="Right"/>
-        <controls:NumberBox Grid.Column="6" Value="{Binding SelectedItem, Mode=TwoWay}" Min="{Binding MinIndex, Mode=OneTime}" Max="{Binding MaxIndex, Mode=OneTime}"/>
-        <ContentControl Grid.Row="1" Grid.ColumnSpan="7" Content="{Binding NestedViewModel}"/>
+        <GroupBox Header="Select Scenario and Entry" Grid.ColumnSpan="4" Grid.RowSpan="3" Padding="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="Scenario" VerticalAlignment="Center" />
+                <ComboBox Height="20" Grid.Column="2" ItemsSource="{Binding ScenarioItems}" SelectedItem="{Binding SelectedScenario}"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Entry Number" VerticalAlignment="Center" />
+                <controls:NumberBox Grid.Column="2" Grid.Row="1" Value="{Binding SelectedItem, Mode=TwoWay}" Min="{Binding MinIndex, Mode=OneTime}" Max="{Binding MaxIndex, Mode=OneTime}"/>
+
+            </Grid>
+        </GroupBox>
+        
+        <ContentControl Grid.Row="3" Grid.ColumnSpan="4" Content="{Binding NestedViewModel}"/>
+        
     </Grid>
 </UserControl>

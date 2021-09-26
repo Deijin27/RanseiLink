@@ -12,16 +12,17 @@ namespace RanseiWpf.Services
         {
             Settings = settings;
         }
-        
+
         public MessageBoxResult ShowMessageBox(MessageBoxArgs options)
         {
             return MessageBox.Show(options.Message, options.Title, options.Button, options.Icon, options.DefaultResult);
         }
-        public bool RequestRomFile(string dialogWindowTitle, out string result)
+
+        public bool RequestRomFile(out string result)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                Title = dialogWindowTitle,
+                Title = "Select a Rom",
                 DefaultExt = ".nds",
                 Filter = "Pokemon Conquest Rom (.nds)|*.nds",
                 CheckFileExists = true,
@@ -32,19 +33,59 @@ namespace RanseiWpf.Services
             bool? proceed = dialog.ShowDialog();
             result = dialog.FileName;
             // Process save file dialog box results
+            return proceed == true;
+        }
+
+        public bool RequestModFile(out string result)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Select a Mod",
+                DefaultExt = ".rlmod",
+                Filter = "RanseiLink Mod (.rlmod)|*.rlmod",
+                CheckFileExists = true,
+                CheckPathExists = true,
+            };
+
+            // Show save file dialog box
+            bool? proceed = dialog.ShowDialog();
+            result = dialog.FileName;
+            // Process save file dialog box results
+            return proceed == true;
+        }
+
+        public bool RequestFolder(out string result)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Navigate to a folder and click Open",
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+            };
+
+            // Show save file dialog box
+            bool? proceed = dialog.ShowDialog();
+            result = dialog.FileName;
+            // Process save file dialog box results
             if (proceed == true)
             {
-                return true;
+                if (System.IO.Directory.Exists(result))
+                {
+                    return true;
+                }
+                else if (System.IO.File.Exists(result))
+                {
+                    result = System.IO.Path.GetDirectoryName(result);
+                    return true;
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public bool CreateMod(out ModInfo modInfo, out string romPath)
         {
-            var vm = new ModCreationViewModel(Settings.RecentLoadRom);
+            var vm = new ModCreationViewModel(this, Settings.RecentLoadRom);
 
             var dialog = new Dialogs.ModCreationDialog
             {
@@ -120,7 +161,7 @@ namespace RanseiWpf.Services
 
         public bool ImportMod(out string file)
         {
-            var vm = new ModImportViewModel();
+            var vm = new ModImportViewModel(this);
 
             var dialog = new Dialogs.ModImportDialog
             {
@@ -169,7 +210,7 @@ namespace RanseiWpf.Services
 
         public bool CommitToRom(ModInfo info, out string romPath)
         {
-            var vm = new ModCommitViewModel(info, Settings.RecentCommitRom);
+            var vm = new ModCommitViewModel(this, info, Settings.RecentCommitRom);
 
             var dialog = new Dialogs.ModCommitDialog
             {
@@ -206,8 +247,7 @@ namespace RanseiWpf.Services
 
             return proceed == true;
         }
-    
-    
+
         public bool Randomize(IRandomizer randomizer)
         {
             var dialog = new Dialogs.RandomizeDialog(randomizer)

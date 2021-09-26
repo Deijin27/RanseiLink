@@ -12,9 +12,11 @@ namespace RanseiWpf.Services
         bool ImportMod(out string file);
         bool EditModInfo(ModInfo info);
         bool CommitToRom(ModInfo info, out string romPath);
-        bool RequestRomFile(string dialogWindowTitle, out string result);
+        bool RequestRomFile(out string result);
         bool ConfirmDelete(ModInfo info);
         MessageBoxResult ShowMessageBox(MessageBoxArgs options);
         bool Randomize(IRandomizer randomizer);
+        bool RequestFolder(out string result);
+        bool RequestModFile(out string result);
     }
 }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace RanseiConsole.ModelCommands
 {
-    [Command("scenariopokemon", Description = "Get data on a given ScenarioPokemon for a given Scenario.")]
-    public class ScenarioPokemonCommand : ICommand
+    [Command("scenariowarrior", Description = "Get data on a given ScenarioPokemon for a given Scenario.")]
+    public class ScenarioWarriorCommand : ICommand
     {
         [CommandParameter(0, Description = "Scenario ID.", Name = "scenarioid")]
         public ScenarioId ScenarioId { get; set; }
 
-        [CommandParameter(1, Description = "ScenarioPokemon ID.", Name = "id")]
-        public int ScenarioPokemonId { get; set; }
+        [CommandParameter(1, Description = "ScenarioWarrior ID.", Name = "id")]
+        public int ScenarioWarriorId { get; set; }
 
         public ValueTask ExecuteAsync(IConsole console)
         {
@@ -25,9 +25,9 @@ namespace RanseiConsole.ModelCommands
                 return default;
             }
             var dataService = services.CoreServices.DataService(services.CurrentMod);
-            var model = dataService.ScenarioPokemon.Retrieve(ScenarioId, ScenarioPokemonId);
+            var model = dataService.ScenarioPokemon.Retrieve(ScenarioId, ScenarioWarriorId);
 
-            console.Render(model, ScenarioId, ScenarioPokemonId);
+            console.Render(model, ScenarioId, ScenarioWarriorId);
 
             return default;
         }

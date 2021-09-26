@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Core.Enums;
+using System.IO;
 
 namespace Core.Services
 {
@@ -42,8 +43,10 @@ namespace Core.Services
         #region Scenario Folder
         public const int ScenarioCount = 11;
         public const int ScenarioPokemonCount = 200;
-        public static string ScenarioPathFromId(int id) => Path.Combine(DataFolderPath, "Scenario", $"Scenario{id.ToString().PadLeft(2, '0')}");
-        public static string ScenarioPokemonPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioPokemon.dat");
+        public const int ScenarioWarriorCount = 210;
+        public static string ScenarioPathFromId(ScenarioId id) => Path.Combine(DataFolderPath, "Scenario", $"Scenario{((int)id).ToString().PadLeft(2, '0')}");
+        public static string ScenarioPokemonPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioPokemon.dat");
+        public static string ScenarioWarriorPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBushou.dat");
         #endregion
 
     }
