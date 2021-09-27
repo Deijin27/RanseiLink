@@ -6,6 +6,7 @@ using Core.Services;
 using Core.Enums;
 using System;
 using Tests.Mocks;
+using RanseiConsole.Services;
 
 namespace Tests.ScriptTests
 {
@@ -16,10 +17,23 @@ namespace Tests.ScriptTests
         [Fact]
         public async void ScriptInteractWithRomSuccessfully()
         {
+            ModInfo modInfo = new ModInfo();
 
-            // Initialize
-            IDataService service = new MockDataService();
-            service.Save(PokemonId.Pikachu, new MockPokemon() { Type1 = TypeId.Grass });
+            MockCoreAppServices coreServices = new MockCoreAppServices();
+            MockPokemonService mockPokemonService = new MockPokemonService();
+            coreServices.DataServiceReturn[modInfo] = new MockDataService()
+            {
+                Pokemon = mockPokemonService
+            };
+
+            ConsoleAppServices.Instance = new MockConsoleAppServices()
+            {
+                CurrentMod = modInfo,
+                CoreServices = coreServices
+            };
+
+            var input = new MockPokemon() { Type1 = TypeId.Grass };
+            mockPokemonService.RetrieveReturn[PokemonId.Pikachu] = input;
 
             // Create 
 
@@ -30,7 +44,6 @@ namespace Tests.ScriptTests
             var command = new LuaCommand()
             {
                 FilePath = file,
-                Service = service
             };
 
             // Execute
@@ -39,9 +52,13 @@ namespace Tests.ScriptTests
 
             // Test Changes Occurred
 
-            var elePika = service.Retrieve(PokemonId.Pikachu);
-            Assert.Equal(TypeId.Electric, elePika.Type1);
+            Assert.Single(mockPokemonService.RetrieveCalls);
+            Assert.Equal(PokemonId.Pikachu, mockPokemonService.RetrieveCalls.Dequeue());
+            Assert.Single(mockPokemonService.SaveCalls);
+            var (callId, callModel) = mockPokemonService.SaveCalls.Dequeue();
+            Assert.Equal(PokemonId.Pikachu, callId);
+            Assert.Same(input, callModel);
+            Assert.Equal(TypeId.Electric, callModel.Type1);
         }
-
     }
 }

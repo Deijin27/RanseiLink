@@ -1,6 +1,6 @@
 
-local pika = service:Retrieve(PokemonId.Pikachu)
+local pika = service.Pokemon:Retrieve(PokemonId.Pikachu)
 
 pika.Type1 = TypeId.Electric
 
-service:Save(PokemonId.Pikachu, pika)
+service.Pokemon:Save(PokemonId.Pikachu, pika)

@@ -49,6 +49,7 @@ namespace Tests.Mocks
         public byte[] Data { get; set; }
         public uint NationalPokedexNumber { get; set; }
         public uint MovementRange { get; set; }
+        public PokemonEvolutionRange EvolutionRange { get; set; } = new PokemonEvolutionRange();
 
         Dictionary<KingdomId, bool> RequiresLv2Dict;
         Dictionary<KingdomId, bool> DefaultDict;
@@ -107,6 +108,12 @@ namespace Tests.Mocks
                 Spe = Spe,
                 Type1 = Type1,
                 Type2 = Type2,
+                EvolutionRange = new PokemonEvolutionRange() 
+                { 
+                    CanEvolve = EvolutionRange.CanEvolve, 
+                    MaxEntry = EvolutionRange.MaxEntry,
+                    MinEntry = EvolutionRange.MinEntry,
+                },
                 Data = Data,
                 RequiresLv2Dict = cloneRequiresDict,
                 DefaultDict = cloneDefaultDict
