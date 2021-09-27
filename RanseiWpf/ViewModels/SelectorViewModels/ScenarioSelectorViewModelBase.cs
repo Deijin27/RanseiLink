@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace RanseiWpf.ViewModels
 {
-    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveable where TViewModel : IViewModelForModel<TModel>
+    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>
     {
         public ScenarioSelectorViewModelBase(Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
         {
@@ -93,6 +93,14 @@ namespace RanseiWpf.ViewModels
                 }
                 SaveModel(SelectedScenario, SelectedItem, NestedViewModel.Model);
             }
+        }
+
+        public void Refresh()
+        {
+            TModel model = RetrieveModel(SelectedScenario, SelectedItem);
+            var vm = NewViewModel(SelectedScenario);
+            vm.Model = model;
+            NestedViewModel = vm;
         }
     }
 }

@@ -9,7 +9,16 @@ namespace RanseiWpf.ViewModels
         void Save();
     }
 
-    public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveable where TViewModel : IViewModelForModel<TModel>, new()
+    public interface IRefreshable
+    {
+        void Refresh();
+    }
+
+    public interface ISaveableRefreshable : ISaveable, IRefreshable
+    {
+    }
+
+    public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>, new()
     {
         public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
         {
@@ -39,6 +48,15 @@ namespace RanseiWpf.ViewModels
                 NestedViewModel = new TViewModel() { Model = model };
                 _selected = value;
             }
+        }
+
+        /// <summary>
+        /// Reload without saving.
+        /// </summary>
+        public void Refresh()
+        {
+            TModel model = DataService.Retrieve(_selected);
+            NestedViewModel = new TViewModel() { Model = model };
         }
 
         public virtual void Save()

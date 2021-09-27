@@ -12,13 +12,13 @@ namespace RanseiWpf.ViewModels
 {
     public class ListItem
     {
-        public ListItem(string itemName, ISaveable itemValue)
+        public ListItem(string itemName, ISaveableRefreshable itemValue)
         {
             ItemName = itemName;
             ItemValue = itemValue;
         }
         public string ItemName { get; }
-        public ISaveable ItemValue { get; }
+        public ISaveableRefreshable ItemValue { get; }
     }
 
     public class MainEditorViewModel : ViewModelBase, ISaveable
@@ -26,8 +26,8 @@ namespace RanseiWpf.ViewModels
         public ICommand CommitRomCommand { get; }
         public ICommand RandomizeCommand { get; }
 
-        private ISaveable _currentVm;
-        public ISaveable CurrentVm
+        private ISaveableRefreshable _currentVm;
+        public ISaveableRefreshable CurrentVm
         {
             get => _currentVm;
             set
@@ -36,6 +36,7 @@ namespace RanseiWpf.ViewModels
                 {
                     _currentVm?.Save();
                     _currentVm = value;
+                    _currentVm?.Refresh();
                     RaisePropertyChanged();
                 }
             }

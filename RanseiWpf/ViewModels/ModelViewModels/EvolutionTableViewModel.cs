@@ -20,10 +20,10 @@ namespace RanseiWpf.ViewModels
         public PokemonId Pokemon { get; set; }
         public PokemonId[] PokemonItems { get; }
     }
-    public class EvolutionTableViewModel : ViewModelBase, IViewModelForModel<IEvolutionTable>, ISaveable
+    public class EvolutionTableViewModel : ViewModelBase, IViewModelForModel<IEvolutionTable>, ISaveableRefreshable
     {
         private readonly IModelDataService<IEvolutionTable> DataService;
-        private readonly IEvolutionTable evolutionTable;
+        private IEvolutionTable evolutionTable;
 
         public EvolutionTableViewModel(IModelDataService<IEvolutionTable> dataService)
         {
@@ -39,7 +39,7 @@ namespace RanseiWpf.ViewModels
 
         public IEvolutionTable Model { get; set; }
 
-        public IReadOnlyList<EvolutionTableItem> Items { get; }
+        public IReadOnlyList<EvolutionTableItem> Items { get; private set; }
 
         public PokemonId[] PokemonItems { get; } = EnumUtil.GetValues<PokemonId>().ToArray();
 
@@ -50,6 +50,17 @@ namespace RanseiWpf.ViewModels
                 evolutionTable.SetEntry(item.Index, item.Pokemon);
             }
             DataService.Save(evolutionTable);
+        }
+
+        public void Refresh()
+        {
+            evolutionTable = DataService.Retrieve();
+            var lst = new List<EvolutionTableItem>();
+            for (int i = 0; i < EvolutionTable.DataLength; i++)
+            {
+                lst.Add(new EvolutionTableItem(i, evolutionTable.GetEntry(i), PokemonItems));
+            }
+            Items = lst;
         }
     }
 }
