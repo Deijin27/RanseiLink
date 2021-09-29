@@ -16,7 +16,7 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TSource))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value of type {value.GetType().Name} to type of {typeof(TSource).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TSource).FullName}.");
             }
             return Convert((TSource)value);
         }
@@ -25,7 +25,7 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
             return ConvertBack((TTarget)value);
         }
@@ -41,11 +41,11 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TSource))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value of type {value.GetType().Name} to type of {typeof(TSource).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TSource).FullName}.");
             }
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
             return Convert((TSource)value, (TParameter)parameter);
         }
@@ -54,11 +54,11 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
             return ConvertBack((TTarget)value, (TParameter)parameter);
         }
@@ -76,11 +76,17 @@ namespace RanseiWpf.ValueConverters
 
         object IMultiValueConverter.Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            // First do a check to stop exceptions in design view
+            if (values[0] == System.Windows.DependencyProperty.UnsetValue)
+            {
+                return System.Windows.DependencyProperty.UnsetValue;
+            }
+
             TSource[] castValues = Array.ConvertAll(values, value =>
             {
                 if (value != null && !(value is TSource))
                 {
-                    throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                    throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
                 }
                 return (TSource)value;
             });
@@ -92,7 +98,7 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
 
             TSource[] results = ConvertBack((TTarget)value);
@@ -111,13 +117,13 @@ namespace RanseiWpf.ValueConverters
         {
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
             TSource[] castValues = Array.ConvertAll(values, value =>
             {
                 if (value != null && !(value is TSource))
                 {
-                    throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                    throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
                 }
                 return (TSource)value;
             });
@@ -129,11 +135,11 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
 
             TSource[] results = ConvertBack((TTarget)value, (TParameter)parameter);
@@ -156,17 +162,17 @@ namespace RanseiWpf.ValueConverters
         {
             if (values.Length != 2)
             {
-                throw new ArgumentException($"In {GetType().Name} {nameof(Convert)}, the number of values should be 2, but was {values.Length}.");
+                throw new ArgumentException($"In {GetType().FullName} {nameof(Convert)}, the number of values should be 2, but was {values.Length}.");
             }
             object value0 = values[0];
             if (value0 != null && !(value0 is TSource0))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value0 of type {value0.GetType().Name} to type of {typeof(TSource0).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value0 of type {value0.GetType().FullName} to type of {typeof(TSource0).FullName}.");
             }
             object value1 = values[1];
             if (value1 != null && !(value1 is TSource1))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value1 of type {value1.GetType().Name} to type of {typeof(TSource1).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value1 of type {value1.GetType().FullName} to type of {typeof(TSource1).FullName}.");
             }
 
             return Convert((TSource0)value0, (TSource1)value1);
@@ -176,7 +182,7 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
 
             var (value0, value1) = ConvertBack((TTarget)value);
@@ -195,21 +201,21 @@ namespace RanseiWpf.ValueConverters
         {
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
             if (values.Length != 2)
             {
-                throw new ArgumentException($"In {GetType().Name} {nameof(Convert)}, the number of values should be 2, but was {values.Length}.");
+                throw new ArgumentException($"In {GetType().FullName} {nameof(Convert)}, the number of values should be 2, but was {values.Length}.");
             }
             object value0 = values[0];
             if (value0 != null && !(value0 is TSource0))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value0 of type {value0.GetType().Name} to type of {typeof(TSource0).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value0 of type {value0.GetType().FullName} to type of {typeof(TSource0).FullName}.");
             }
             object value1 = values[1];
             if (value1 != null && !(value1 is TSource1))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value1 of type {value1.GetType().Name} to type of {typeof(TSource1).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value1 of type {value1.GetType().FullName} to type of {typeof(TSource1).FullName}.");
             }
 
             return Convert((TSource0)value0, (TSource1)value1, (TParameter)parameter);
@@ -219,11 +225,11 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
 
             var (value0, value1) = ConvertBack((TTarget)value, (TParameter)parameter);
@@ -246,22 +252,22 @@ namespace RanseiWpf.ValueConverters
         {
             if (values.Length != 3)
             {
-                throw new ArgumentException($"In {GetType().Name} {nameof(Convert)}, the number of values should be 3, but was {values.Length}.");
+                throw new ArgumentException($"In {GetType().FullName} {nameof(Convert)}, the number of values should be 3, but was {values.Length}.");
             }
             object value0 = values[0];
             if (value0 != null && !(value0 is TSource0))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value0 of type {value0.GetType().Name} to type of {typeof(TSource0).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value0 of type {value0.GetType().FullName} to type of {typeof(TSource0).FullName}.");
             }
             object value1 = values[1];
             if (value1 != null && !(value1 is TSource1))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value1 of type {value1.GetType().Name} to type of {typeof(TSource1).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value1 of type {value1.GetType().FullName} to type of {typeof(TSource1).FullName}.");
             }
             object value2 = values[2];
             if (value2 != null && !(value2 is TSource2))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value2 of type {value1.GetType().Name} to type of {typeof(TSource2).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value2 of type {value1.GetType().FullName} to type of {typeof(TSource2).FullName}.");
             }
 
             return Convert((TSource0)value0, (TSource1)value1, (TSource2)value2);
@@ -271,7 +277,7 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
 
             var (value0, value1, value2) = ConvertBack((TTarget)value);
@@ -290,26 +296,26 @@ namespace RanseiWpf.ValueConverters
         {
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
             if (values.Length != 3)
             {
-                throw new ArgumentException($"In {GetType().Name} {nameof(Convert)}, the number of values should be 3, but was {values.Length}.");
+                throw new ArgumentException($"In {GetType().FullName} {nameof(Convert)}, the number of values should be 3, but was {values.Length}.");
             }
             object value0 = values[0];
             if (value0 != null && !(value0 is TSource0))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value0 of type {value0.GetType().Name} to type of {typeof(TSource0).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value0 of type {value0.GetType().FullName} to type of {typeof(TSource0).FullName}.");
             }
             object value1 = values[1];
             if (value1 != null && !(value1 is TSource1))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value1 of type {value1.GetType().Name} to type of {typeof(TSource1).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value1 of type {value1.GetType().FullName} to type of {typeof(TSource1).FullName}.");
             }
             object value2 = values[2];
             if (value2 != null && !(value2 is TSource2))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(Convert)}, unable cast value2 of type {value1.GetType().Name} to type of {typeof(TSource2).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(Convert)}, unable cast value2 of type {value1.GetType().FullName} to type of {typeof(TSource2).FullName}.");
             }
 
             return Convert((TSource0)value0, (TSource1)value1, (TSource2)value2, (TParameter)parameter);
@@ -319,11 +325,11 @@ namespace RanseiWpf.ValueConverters
         {
             if (value != null && !(value is TTarget))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast value of type {value.GetType().Name} to type of {typeof(TTarget).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast value of type {value.GetType().FullName} to type of {typeof(TTarget).FullName}.");
             }
             if (parameter != null && !(parameter is TParameter))
             {
-                throw new InvalidCastException($"In {GetType().Name} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().Name} to type of {typeof(TParameter).Name}.");
+                throw new InvalidCastException($"In {GetType().FullName} {nameof(ConvertBack)}, unable cast parameter of type {parameter.GetType().FullName} to type of {typeof(TParameter).FullName}.");
             }
 
             var (value0, value1, value2) = ConvertBack((TTarget)value, (TParameter)parameter);

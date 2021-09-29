@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Styles/RedHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/GrayHoverButtonStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MenuToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ListViewStyle1.xaml"/>
                 <ResourceDictionary Source="Styles/ScrollBarStyle1.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             

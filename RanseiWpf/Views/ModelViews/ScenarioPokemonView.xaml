@@ -51,30 +51,17 @@
         <TextBlock Text="Ability" Grid.Row="1" />
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
 
-        <GroupBox Header="IVs" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="1.5*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-                <TextBlock Text="HP" Grid.Row="0" />
-                <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding HpIv, Mode=TwoWay}" Max="31"/>
+        <TextBlock Text="HP IV" Grid.Row="2" />
+        <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding HpIv, Mode=TwoWay}" Max="31"/>
                 
-                <TextBlock Text="Atk" Grid.Row="1" />
-                <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding AtkIv, Mode=TwoWay}" Max="31"/>
+        <TextBlock Text="Atk IV" Grid.Row="3" />
+        <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding AtkIv, Mode=TwoWay}" Max="31"/>
                 
-                <TextBlock Text="Def" Grid.Row="2" />
-                <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding DefIv, Mode=TwoWay}" Max="31"/>
+        <TextBlock Text="Def IV" Grid.Row="4" />
+        <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding DefIv, Mode=TwoWay}" Max="31"/>
                 
-                <TextBlock Text="Spe" Grid.Row="3" />
-                <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding SpeIv, Mode=TwoWay}" Max="31"/>
-            </Grid>
-        </GroupBox>
+        <TextBlock Text="Spe IV" Grid.Row="5" />
+        <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding SpeIv, Mode=TwoWay}" Max="31"/>
+        
     </Grid>
 </UserControl>

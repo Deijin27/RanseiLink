@@ -13,6 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
+        <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -56,17 +57,30 @@
         <TextBlock Text="Warrior"/>
         <ComboBox ItemsSource="{Binding WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
 
-        <CheckBox Grid.Column="3" Content="Scenario Pokemon" VerticalAlignment="Center" IsChecked="{Binding ScenarioPokemonIsDefault, Mode=TwoWay, Converter={StaticResource invertBoolConverter}}"/>
-        <controls:NumberBox Grid.Column="4" Value="{Binding ScenarioPokemon, Mode=TwoWay}" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}"/>
+        <CheckBox x:Name="AllowScenarioPokemonEdit" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="False" 
+                  Content="Allow Editing of Scenario Pokemon Selected Entry"
+                  ToolTip="Editing of selected entry is disabled by default because it's unlikely you'll need to edit it and the checkbox is a particularly annoying misclick"/>
 
-        <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="9" Padding="5" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
+        <CheckBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Content="Scenario Pokemon" VerticalAlignment="Center" 
+                  IsChecked="{Binding ScenarioPokemonIsDefault, Mode=TwoWay, Converter={StaticResource invertBoolConverter}}"
+                  IsEnabled="{Binding ElementName=AllowScenarioPokemonEdit, Path=IsChecked, Mode=OneWay}"/>
+        
+        <controls:NumberBox Grid.Row="1" Grid.Column="4" Value="{Binding ScenarioPokemon, Mode=TwoWay}" >
+            <controls:NumberBox.IsEnabled>
+                <MultiBinding Mode="OneWay" Converter="{StaticResource boolAggregateAndConverter}">
+                    <Binding ElementName="AllowScenarioPokemonEdit" Path="IsChecked" Mode="OneWay"/>
+                    <Binding Path="ScenarioPokemonIsDefault" Mode="OneWay" Converter="{StaticResource invertBoolConverter}"/>
+                </MultiBinding>
+            </controls:NumberBox.IsEnabled>
+        </controls:NumberBox>
+
+        <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
             <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
         </GroupBox>
 
-        <GroupBox Header="Max Link With Selected Pokemon" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="10" Grid.RowSpan="2" Padding="5">
+        <GroupBox Header="Max Link With Selected Pokemon" Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="9" Grid.RowSpan="2" Padding="5">
             <controls:NumberBox Value="{Binding MaxLink, Mode=TwoWay}" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}"/>
         </GroupBox>
         
-    
     </Grid>
 </UserControl>
