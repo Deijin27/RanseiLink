@@ -1,7 +1,6 @@
 ﻿using Core.Models;
 using Core.Enums;
 using Xunit;
-using Core;
 using Core.Models.Interfaces;
 
 namespace Tests.ModelTests

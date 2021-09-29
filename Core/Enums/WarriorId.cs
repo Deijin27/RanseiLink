@@ -217,7 +217,7 @@
         Yazaemon,
         Isuke,
         Tadatsugu,
-        Naomasu,
+        Naomasa,
         Yasumasa,
         Masanobu,
         Hidetada,
