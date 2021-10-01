@@ -1,9 +1,14 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
+using Core;
+using Core.Enums;
 using NLua;
 using RanseiConsole.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.Commands
@@ -33,11 +38,62 @@ namespace RanseiConsole.Commands
 
                 lua["service"] = services.CoreServices.DataService(services.CurrentMod);
 
+                // add all enum id items to the state to allow users to enumerate them with luanet.each
+                void AddEnumToState<T>()
+                {
+                    string typeName = typeof(T).Name;
+                    lua.DoString(typeName + "s = { " +
+                        string.Join(", ", EnumUtil.GetValues<T>().Select(i => $"{typeName}.{i}"))
+                        + " }"
+                        );
+                }
+
+                AddEnumToState<AbilityEffectId>();
+                AddEnumToState<AbilityId>();
+                AddEnumToState<BuildingId>();
+                AddEnumToState<EventSpeakerId>();
+                AddEnumToState<EvolutionConditionId>();
+                AddEnumToState<GenderId>();
+                AddEnumToState<GimmickId>();
+                AddEnumToState<ItemId>();
+                AddEnumToState<KingdomId>();
+                AddEnumToState<MoveEffectId>();
+                AddEnumToState<MoveId>();
+                AddEnumToState<MoveRangeId>();
+                AddEnumToState<PokemonId>();
+                AddEnumToState<ScenarioId>();
+                AddEnumToState<TypeId>();
+                AddEnumToState<WarriorId>();
+                AddEnumToState<WarriorSkillEffectId>();
+                AddEnumToState<WarriorSkillId>();
+                AddEnumToState<WarriorSkillTargetId>();
+
+                var luaFunctions = new LuaFunctions();
+
+                lua.RegisterFunction("using", luaFunctions, typeof(LuaFunctions).GetMethod(nameof(LuaFunctions.Using)));
+
                 lua.DoFile(FilePath);
+
+                foreach (var disposable in luaFunctions.Disposables)
+                {
+                    disposable.Dispose();
+                }
+
             }
 
             console.Output.WriteLine("Script executed successfully.");
             return default;
         }
+    }
+
+    internal class LuaFunctions
+    {
+        public IDisposable Using(IDisposable disposable)
+        {
+            Disposables.Add(disposable);
+            return disposable;
+        }
+
+        public readonly IList<IDisposable> Disposables = new List<IDisposable>();
     }
 }

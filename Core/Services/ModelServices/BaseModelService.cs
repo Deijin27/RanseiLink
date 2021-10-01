@@ -41,7 +41,7 @@ namespace Core.Services.ModelServices
     {
         private readonly int ItemLength;
 
-        private readonly Stream stream;
+        protected readonly Stream stream;
 
         public BaseDisposableModelService(ModInfo mod, string romPath, int itemLength)
         {

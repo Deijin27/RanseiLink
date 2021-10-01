@@ -1,6 +1,7 @@
 ﻿using CliFx.Infrastructure;
 using Core;
 using Core.Enums;
+using Core.Models;
 using Core.Models.Interfaces;
 using System;
 using System.Text;
@@ -54,6 +55,12 @@ namespace RanseiConsole
                 pokemon.EvolutionCondition2,
                 RenderQuantityForEvolutionCondition(pokemon.EvolutionCondition2, pokemon.QuantityForEvolutionCondition2)
                 ));
+
+            var evolutionRange = pokemon.EvolutionRange;
+            console.WriteProperty("Evolution Table Range", 
+                evolutionRange.CanEvolve 
+                    ? $"{evolutionRange.MinEntry} - {evolutionRange.MaxEntry}" 
+                    : "does not evolve");
 
             console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
             console.WriteProperty("Movement Range", pokemon.MovementRange.ToString());
@@ -237,6 +244,15 @@ namespace RanseiConsole
             console.WriteTitle($"Scenario: {scenarioId}, Entry: {scenarioWarriorId}");
             console.WriteProperty("Warrior", scenarioWarrior.Warrior);
             console.WriteProperty("Scenario Pokemon Entry", scenarioWarrior.ScenarioPokemonIsDefault ? "<default>" : scenarioWarrior.ScenarioPokemon.ToString());
+        }
+
+        public static void Render(this IConsole console, IEvolutionTable model)
+        {
+            console.WriteTitle("Evolution Table");
+            for (int i = 0; i < EvolutionTable.DataLength; i++)
+            {
+                console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry(i));
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using Core.Enums;
 using Core.Models.Interfaces;
 using Core.Models;
-using Core.Services;
 using System.Collections.Generic;
 using System.Linq;
 using Core;
+using Core.Services.ModelServices;
 
 namespace RanseiWpf.ViewModels
 {
@@ -22,19 +22,13 @@ namespace RanseiWpf.ViewModels
     }
     public class EvolutionTableViewModel : ViewModelBase, IViewModelForModel<IEvolutionTable>, ISaveableRefreshable
     {
-        private readonly IModelDataService<IEvolutionTable> DataService;
+        private readonly IPokemonService DataService;
         private IEvolutionTable evolutionTable;
 
-        public EvolutionTableViewModel(IModelDataService<IEvolutionTable> dataService)
+        public EvolutionTableViewModel(IPokemonService dataService)
         {
             DataService = dataService;
-            evolutionTable = DataService.Retrieve();
-            var lst = new List<EvolutionTableItem>();
-            for (int i = 0; i < EvolutionTable.DataLength; i++)
-            {
-                lst.Add(new EvolutionTableItem(i, evolutionTable.GetEntry(i), PokemonItems));
-            }
-            Items = lst;
+            Refresh();
         }
 
         public IEvolutionTable Model { get; set; }
@@ -49,12 +43,12 @@ namespace RanseiWpf.ViewModels
             {
                 evolutionTable.SetEntry(item.Index, item.Pokemon);
             }
-            DataService.Save(evolutionTable);
+            DataService.SaveEvolutionTable(evolutionTable);
         }
 
         public void Refresh()
         {
-            evolutionTable = DataService.Retrieve();
+            evolutionTable = DataService.RetrieveEvolutionTable();
             var lst = new List<EvolutionTableItem>();
             for (int i = 0; i < EvolutionTable.DataLength; i++)
             {

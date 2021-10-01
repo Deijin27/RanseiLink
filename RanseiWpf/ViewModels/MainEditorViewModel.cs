@@ -78,7 +78,7 @@ namespace RanseiWpf.ViewModels
                 new ListItem("Abilities", new AbilitySelectorViewModel(AbilityId.Levitate, DataService.Ability)),
                 new ListItem("Warrior Skills", new WarriorSkillSelectorViewModel(WarriorSkillId.Adrenaline, DataService.WarriorSkill)),
                 new ListItem("Move Ranges", new MoveRangeSelectorViewModel(MoveRangeId.Ahead1Tile, DataService.MoveRange)),
-                new ListItem("Evolution Table", new EvolutionTableViewModel(DataService.EvolutionTable)),
+                new ListItem("Evolution Table", new EvolutionTableViewModel(DataService.Pokemon)),
                 new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(DataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(DataService, scenario))),
                 new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(DataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
                 new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(WarriorId.PlayerMale_1, DataService.MaxLink))

@@ -14,7 +14,6 @@ namespace Core.Services
         IKingdomService Kingdom { get; }
         IMoveRangeService MoveRange { get; }
         IEventSpeakerService EventSpeaker { get; }
-        IEvolutionTableService EvolutionTable { get; }
         IScenarioPokemonService ScenarioPokemon { get; }
         IScenarioWarriorService ScenarioWarrior { get; }
         IWarriorMaxLinkService MaxLink { get; }

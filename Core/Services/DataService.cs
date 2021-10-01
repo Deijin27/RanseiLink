@@ -16,8 +16,6 @@ namespace Core.Services
             Kingdom = new KingdomService(mod);
             MoveRange = new MoveRangeService(mod);
             EventSpeaker = new EventSpeakerService(mod);
-            EvolutionTable = new EvolutionTableService(mod);
-            EvolutionTable = new EvolutionTableService(mod);
             ScenarioPokemon = new ScenarioPokemonService(mod);
             ScenarioWarrior = new ScenarioWarriorService(mod);
             MaxLink = new WarriorMaxSyncService(mod);
@@ -33,7 +31,6 @@ namespace Core.Services
         public IKingdomService Kingdom { get; }
         public IMoveRangeService MoveRange { get; }
         public IEventSpeakerService EventSpeaker { get; }
-        public IEvolutionTableService EvolutionTable { get; }
         public IScenarioPokemonService ScenarioPokemon { get; }
         public IScenarioWarriorService ScenarioWarrior { get; }
         public IWarriorMaxLinkService MaxLink { get; }
