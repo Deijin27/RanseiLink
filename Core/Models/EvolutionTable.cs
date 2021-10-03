@@ -7,6 +7,7 @@ namespace Core.Models
     {
         public const int DataLength = 0x74; // DataLength == itemcount
         public EvolutionTable(byte[] data) : base(data, DataLength) { }
+        public EvolutionTable() : this(new byte[DataLength]) { }
 
         public PokemonId GetEntry(int index)
         {
