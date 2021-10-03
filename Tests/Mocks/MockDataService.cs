@@ -1,55 +1,35 @@
-﻿using Core.Enums;
-using Core.Models.Interfaces;
-using Core.Services;
+﻿using Core.Services;
 using Core.Services.ModelServices;
-using System;
-using System.Collections.Generic;
 
 namespace Tests.Mocks
 {
     internal class MockDataService : IDataService
     {
-        public Dictionary<PokemonId, IPokemon> PokemonDict = new Dictionary<PokemonId, IPokemon>();
-
-        public Queue<string> CommitRomCallLog = new Queue<string>();
-        public void CommitToRom(string path)
-        {
-            CommitRomCallLog.Enqueue(path);
-        }
-
-        public IPokemon Retrieve(PokemonId id)
-        {
-            return PokemonDict[id].Clone();
-        }
-
         public IPokemonService Pokemon { get; set; }
 
-        public IMoveService Move => throw new NotImplementedException();
+        public IMoveService Move { get; set; }
 
-        public IAbilityService Ability => throw new NotImplementedException();
+        public IAbilityService Ability { get; set; }
 
-        public IWarriorSkillService WarriorSkill => throw new NotImplementedException();
+        public IWarriorSkillService WarriorSkill { get; set; }
 
-        public IGimmickService Gimmick => throw new NotImplementedException();
+        public IGimmickService Gimmick { get; set; }
 
-        public IBuildingService Building => throw new NotImplementedException();
+        public IBuildingService Building { get; set; }
 
-        public IItemService Item => throw new NotImplementedException();
+        public IItemService Item { get; set; }
 
-        public IKingdomService Kingdom => throw new NotImplementedException();
+        public IKingdomService Kingdom { get; set; }
 
-        public IMoveRangeService MoveRange => throw new NotImplementedException();
+        public IMoveRangeService MoveRange { get; set; }
 
-        public IEventSpeakerService EventSpeaker => throw new NotImplementedException();
+        public IEventSpeakerService EventSpeaker { get; set; }
 
-        public IEvolutionTableService EvolutionTable => throw new NotImplementedException();
+        public IScenarioPokemonService ScenarioPokemon { get; set; }
 
-        public IScenarioPokemonService ScenarioPokemon => throw new NotImplementedException();
+        public IScenarioWarriorService ScenarioWarrior { get; set; }
 
-        public IScenarioWarriorService ScenarioWarrior => throw new NotImplementedException();
+        public IWarriorMaxLinkService MaxLink { get; set; }
 
-        public IWarriorMaxLinkService MaxLink => throw new NotImplementedException();
-
-        
     }
 }

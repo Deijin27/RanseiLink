@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Core.Services
 {
-    internal static class Constants
+    public static class Constants
     {
         public const string DataFolderPath = "data";
 

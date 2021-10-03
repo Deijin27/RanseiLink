@@ -26,5 +26,19 @@ namespace Tests.Mocks
         {
             SaveCalls.Enqueue((id, model));
         }
+
+        public IEvolutionTable RetrieveEvolutionTableReturn { get; set; }
+        public int RetrieveEvolutionTableCallCount = 0;
+        public IEvolutionTable RetrieveEvolutionTable()
+        {
+            RetrieveEvolutionTableCallCount++;
+            return RetrieveEvolutionTableReturn;
+        }
+
+        public Queue<IEvolutionTable> SaveEvolutionTableCalls = new Queue<IEvolutionTable>();
+        public void SaveEvolutionTable(IEvolutionTable model)
+        {
+            SaveEvolutionTableCalls.Enqueue(model);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Nds;
+using System;
 using System.IO;
 
 namespace Core.Services
@@ -30,6 +31,12 @@ namespace Core.Services
 
         public string RootFolder { get; }
         public IDataService DataService(ModInfo mod) => new DataService(mod);
+
+        public INds Nds(string path)
+        {
+            return new Nds.Nds(path);
+        }
+
         public IModService ModService { get; }
         public ISettingsService Settings { get; }
 

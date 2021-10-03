@@ -1,4 +1,5 @@
-﻿using Core.Services;
+﻿using Core.Nds;
+using Core.Services;
 using System;
 using System.Collections.Generic;
 
@@ -18,6 +19,14 @@ namespace Tests.Mocks
         {
             DataServiceCalls.Enqueue(mod);
             return DataServiceReturn[mod];
+        }
+
+        public INds NdsReturn { get; set; }
+        public Queue<string> NdsCalls = new Queue<string>();
+        public INds Nds(string path)
+        {
+            NdsCalls.Enqueue(path);
+            return NdsReturn;
         }
     }
 }

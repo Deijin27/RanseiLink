@@ -1,10 +1,7 @@
-﻿using RanseiWpf.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Core.Enums;
+using RanseiWpf.ViewModels;
 using Tests.Mocks;
 using Xunit;
-using Core.Enums;
 
 namespace Tests.ViewModelTests.PokemonViewModelTests
 {

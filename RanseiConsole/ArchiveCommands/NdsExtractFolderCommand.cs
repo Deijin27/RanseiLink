@@ -1,9 +1,9 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using Core.Nds;
 using System.Threading.Tasks;
 using System.IO;
+using Core.Services;
 
 namespace RanseiConsole.ArchiveCommands
 {
@@ -30,7 +30,7 @@ namespace RanseiConsole.ArchiveCommands
                 Directory.CreateDirectory(DestinationFolder);
             }
 
-            using var nds = new Nds(NdsPath);
+            using var nds = CoreAppServices.Instance.Nds(NdsPath);
             nds.ExtractCopyOfDirectory(FilePath, DestinationFolder);
 
             return default;

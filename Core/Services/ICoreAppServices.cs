@@ -1,4 +1,6 @@
 ﻿
+using Core.Nds;
+
 namespace Core.Services
 {
     public interface ICoreAppServices
@@ -7,5 +9,6 @@ namespace Core.Services
         ISettingsService Settings { get; }
         IModService ModService { get; }
         string RootFolder { get; }
+        INds Nds(string path);
     }
 }

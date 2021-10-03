@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.Nds
 {
-    public class Nds : IDisposable
+    public class Nds : INds
     {
         private readonly BinaryReader UnderlyingStream;
         private readonly long nameTableStartOffset;
@@ -58,7 +58,7 @@ namespace Core.Nds
             }
         }
 
-        
+
         /// <summary>
         /// Make a copy of a file within the nds file system to the destination on the computer file system.
         /// </summary>

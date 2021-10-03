@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Nds\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Page Include="Models\BaseClasses\Accessor.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

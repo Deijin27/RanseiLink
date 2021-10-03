@@ -13,9 +13,11 @@ namespace Core.Services
         public const string ModInfoFileName = "RanseiLinkModInfo.xml";
         public const string ExportModFileExtension = ".rlmod";
 
+        private readonly ICoreAppServices _services;
 
         public ModService(ICoreAppServices services)
         {
+            _services = services;
             modFolder = modFolder = Path.Combine(services.RootFolder, "Mods");
             Directory.CreateDirectory(modFolder);
         }
@@ -125,7 +127,7 @@ namespace Core.Services
 
         public void LoadRom(string path, ModInfo modInfo)
         {
-            using (var nds = new Nds.Nds(path))
+            using (var nds = _services.Nds(path))
             {
                 nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
             }
@@ -136,7 +138,7 @@ namespace Core.Services
         public void Commit(ModInfo modInfo, string path)
         {
             string currentModFolder = modInfo.FolderPath;
-            using (var nds = new Nds.Nds(path))
+            using (var nds = _services.Nds(path))
             {
                 nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
                 nds.InsertFixedLengthFile(Constants.MoveRomPath, Path.Combine(currentModFolder, Constants.MoveRomPath));
