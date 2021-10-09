@@ -1,28 +1,31 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using Core.Services;
 using RanseiConsole.Services;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.ModCommands
 {
     [Command("commit mod", Description = "Commit current mod to rom.")]
-    public class CommitModCommand : ICommand
+    public class CommitModCommand : BaseCommand
     {
+        public CommitModCommand(IServiceContainer container) : base(container) { }
+        public CommitModCommand() : base() { }
+
         [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
         public string Path { get; set; }
 
-        public ValueTask ExecuteAsync(IConsole console)
+        public override ValueTask ExecuteAsync(IConsole console)
         {
-            var service = ConsoleAppServices.Instance;
-            var currentMod = service.CurrentMod;
-            if (currentMod == null)
+            var currentModService = Container.Resolve<ICurrentModService>();
+            var modService = Container.Resolve<IModService>();
+
+            if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
             {
-                console.Output.WriteLine("No mod selected");
                 return default;
             }
-            
-            service.CoreServices.ModService.Commit(currentMod, Path);
+
+            modService.Commit(currentMod, Path);
             console.Output.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
             console.Render(currentMod);
             return default;

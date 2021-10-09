@@ -12,25 +12,25 @@ namespace Tests.ScriptTests
 {
     public class ScriptTests
     {
-        readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.CodeBase).AbsolutePath), "ScriptTests");
+        private readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.CodeBase).AbsolutePath), "ScriptTests");
 
         [Fact]
         public async void ScriptInteractWithRomSuccessfully()
         {
-            ModInfo modInfo = new ModInfo();
-
-            MockCoreAppServices coreServices = new MockCoreAppServices();
             MockPokemonService mockPokemonService = new MockPokemonService();
-            coreServices.DataServiceReturn[modInfo] = new MockDataService()
+
+            MockCurrentModService mockCurrentModService = new MockCurrentModService()
             {
-                Pokemon = mockPokemonService
+                TryGetDataServiceSucceed = true,
+                TryGetDataServiceReturn = new MockDataService()
+                {
+                    Pokemon = mockPokemonService
+                }
             };
 
-            ConsoleAppServices.Instance = new MockConsoleAppServices()
-            {
-                CurrentMod = modInfo,
-                CoreServices = coreServices
-            };
+            IServiceContainer container = new ServiceContainer();
+            container.RegisterSingleton<ICurrentModService>(mockCurrentModService);
+
 
             var input = new MockPokemon() { Type1 = TypeId.Grass };
             mockPokemonService.RetrieveReturn[PokemonId.Pikachu] = input;
@@ -41,7 +41,7 @@ namespace Tests.ScriptTests
 
             string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
 
-            var command = new LuaCommand()
+            var command = new LuaCommand(container)
             {
                 FilePath = file,
             };
@@ -52,10 +52,9 @@ namespace Tests.ScriptTests
 
             // Test Changes Occurred
 
-            Assert.Single(mockPokemonService.RetrieveCalls);
-            Assert.Equal(PokemonId.Pikachu, mockPokemonService.RetrieveCalls.Dequeue());
-            Assert.Single(mockPokemonService.SaveCalls);
-            var (callId, callModel) = mockPokemonService.SaveCalls.Dequeue();
+            var retrieveItem = Assert.Single(mockPokemonService.RetrieveCalls);
+            Assert.Equal(PokemonId.Pikachu, retrieveItem);
+            var (callId, callModel) = Assert.Single(mockPokemonService.SaveCalls);
             Assert.Equal(PokemonId.Pikachu, callId);
             Assert.Same(input, callModel);
             Assert.Equal(TypeId.Electric, callModel.Type1);

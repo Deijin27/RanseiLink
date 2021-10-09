@@ -4,8 +4,9 @@ using System.Xml.Linq;
 using System.IO.Compression;
 using System;
 using Core.Enums;
+using Core.Nds;
 
-namespace Core.Services
+namespace Core.Services.Concrete
 {
     public class ModService : IModService
     {
@@ -13,12 +14,12 @@ namespace Core.Services
         public const string ModInfoFileName = "RanseiLinkModInfo.xml";
         public const string ExportModFileExtension = ".rlmod";
 
-        private readonly ICoreAppServices _services;
+        private readonly INdsFactory _ndsFactory;
 
-        public ModService(ICoreAppServices services)
+        public ModService(string rootFolder, INdsFactory ndsFactory)
         {
-            _services = services;
-            modFolder = modFolder = Path.Combine(services.RootFolder, "Mods");
+            _ndsFactory = ndsFactory;
+            modFolder = modFolder = Path.Combine(rootFolder, "Mods");
             Directory.CreateDirectory(modFolder);
         }
 
@@ -127,7 +128,7 @@ namespace Core.Services
 
         public void LoadRom(string path, ModInfo modInfo)
         {
-            using (var nds = _services.Nds(path))
+            using (var nds = _ndsFactory.Create(path))
             {
                 nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
             }
@@ -138,7 +139,7 @@ namespace Core.Services
         public void Commit(ModInfo modInfo, string path)
         {
             string currentModFolder = modInfo.FolderPath;
-            using (var nds = _services.Nds(path))
+            using (var nds = _ndsFactory.Create(path))
             {
                 nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
                 nds.InsertFixedLengthFile(Constants.MoveRomPath, Path.Combine(currentModFolder, Constants.MoveRomPath));

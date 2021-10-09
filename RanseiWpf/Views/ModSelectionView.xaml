@@ -30,9 +30,9 @@
         <ScrollViewer d:Background="WhiteSmoke">
             <ItemsControl ItemsSource="{Binding ModItems}">
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:ModListItem}">
+                    <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
                         <Button HorizontalContentAlignment="Left"
-                                CommandParameter="{Binding Info}" 
+                                CommandParameter="{Binding Mod}" 
                                 Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource GrayHoverButtonStyle}">
@@ -57,7 +57,7 @@
                                     <MenuItem Header="Delete" Command="{Binding DeleteModCommand}"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
-                            <controls:ModInfoControl ModInfo="{Binding Info, Mode=OneWay}"/>
+                            <controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

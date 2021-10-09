@@ -1,6 +1,6 @@
 ﻿using Core.Services.ModelServices;
 
-namespace Core.Services
+namespace Core.Services.Concrete
 {
     public class DataService : IDataService
     {

@@ -1,15 +1,16 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core.Services;
-using RanseiConsole.Services;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.ModCommands
 {
     [Command("create mod", Description = "Create a new mod (and by default set the current mod to it).")]
-    public class CreateModCommand : ICommand
+    public class CreateModCommand : BaseCommand
     {
+        public CreateModCommand(IServiceContainer container) : base(container) { }
+        public CreateModCommand() : base() { }
+
         [CommandParameter(0, Description = "Path to unchanged rom file to serve as a base.", Name = "romPath", Converter = typeof(PathConverter))]
         public string RomPath { get; set; }
 
@@ -25,13 +26,15 @@ namespace RanseiConsole.ModCommands
         [CommandOption("setAsCurrent", 's', Description = "Set the current mod to the created after creation.")]
         public bool SetAsCurrent { get; set; } = true;
 
-        public ValueTask ExecuteAsync(IConsole console)
+        public override ValueTask ExecuteAsync(IConsole console)
         {
-            ICoreAppServices services = ConsoleAppServices.Instance.CoreServices;
-            ModInfo modInfo = services.ModService.Create(RomPath, ModName, ModVersion, ModAuthor);
+            var modService = Container.Resolve<IModService>();
+            var settingsService = Container.Resolve<ISettingsService>();
+
+            ModInfo modInfo = modService.Create(RomPath, ModName, ModVersion, ModAuthor);
             if (SetAsCurrent)
             {
-                services.Settings.CurrentConsoleModSlot = services.ModService.GetAllModInfo().Count - 1;
+                settingsService.CurrentConsoleModSlot = modService.GetAllModInfo().Count - 1;
             }
             console.Output.WriteLine("Mod created successfully");
             console.Render(modInfo);

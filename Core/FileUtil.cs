@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Core.Services
+namespace Core
 {
     public static class FileUtil
     {

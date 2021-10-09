@@ -23,7 +23,7 @@ namespace RanseiConsole.Dev
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateItems().ElementAt((int)ItemId.dummy_4)));
-            //Test1(console);
+            Test1(console);
             //Test2(console);
 
             //BuildEnum(console, IterateEventSpeakers(), i => i.Name);
@@ -42,31 +42,31 @@ namespace RanseiConsole.Dev
             //    }
             //}
 
-            for (int scenarioNumber = 0; scenarioNumber < 11; scenarioNumber++)
-            {
-                console.Output.WriteLine($"\nScenario {scenarioNumber} -----------------------------------------------\n");
-                List<ScenarioPokemon> scenarioPokemons = new List<ScenarioPokemon>();
+            //for (int scenarioNumber = 0; scenarioNumber < 11; scenarioNumber++)
+            //{
+            //    console.Output.WriteLine($"\nScenario {scenarioNumber} -----------------------------------------------\n");
+            //    List<ScenarioPokemon> scenarioPokemons = new List<ScenarioPokemon>();
 
-                foreach (var sp in IterateScenarioPokemon(scenarioNumber))
-                {
-                    scenarioPokemons.Add(sp);
-                }
+            //    foreach (var sp in IterateScenarioPokemon(scenarioNumber))
+            //    {
+            //        scenarioPokemons.Add(sp);
+            //    }
 
-                int count = 0;
-                foreach (var sb in IterateScenarioBushou(scenarioNumber))
-                {
-                    console.Output.Write($"{count.ToString().PadLeft(3, '0')}: {sb.Warrior,-12} ");
-                    if (sb.ScenarioPokemonIsDefault)
-                    {
-                        console.Output.WriteLine("<default>");
-                    }
-                    else
-                    {
-                        console.Output.WriteLine($"{sb.ScenarioPokemon} ({scenarioPokemons[(int)sb.ScenarioPokemon].Pokemon})");
-                    }
-                    count++;
-                }
-            }
+            //    int count = 0;
+            //    foreach (var sb in IterateScenarioBushou(scenarioNumber))
+            //    {
+            //        console.Output.Write($"{count.ToString().PadLeft(3, '0')}: {sb.Warrior,-12} ");
+            //        if (sb.ScenarioPokemonIsDefault)
+            //        {
+            //            console.Output.WriteLine("<default>");
+            //        }
+            //        else
+            //        {
+            //            console.Output.WriteLine($"{sb.ScenarioPokemon} ({scenarioPokemons[(int)sb.ScenarioPokemon].Pokemon})");
+            //        }
+            //        count++;
+            //    }
+            //}
 
             //int count = 0;
             //var pokemonIds = EnumUtil.GetValues<PokemonId>().ToArray();
@@ -99,11 +99,13 @@ namespace RanseiConsole.Dev
         void Test1(IConsole console)
         {
             // log byte groups
-            var int_idx = 7;
-            var bitCount = 1;
-            var shift = 30;
+            var int_idx = 0;
+            var bitCount = 8; // 5; //8
+            var shift = 9; //17; //9;
 
-            var gpk = IteratePokemon().OrderBy(i => i.Name)
+            var sp = IterateScenarioPokemon(1).ToArray();
+
+            var gpk = IterateScenarioBushou(1).OrderBy(i => i.Warrior)
                 .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key).ToArray();
 
@@ -114,7 +116,8 @@ namespace RanseiConsole.Dev
 
                 foreach (var pk in group)
                 {
-                    console.Output.WriteLine(pk.Name);
+                    string sptext = pk.ScenarioPokemonIsDefault ? "<default>" : sp[pk.ScenarioPokemon].Pokemon.ToString();
+                    console.Output.WriteLine($"{pk.Warrior} - {sptext}");
                 }
 
                 console.Output.WriteLine();

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace Core.Services
+namespace Core.Services.Concrete
 {
     public abstract class BaseSettingsService
     {
@@ -74,7 +74,7 @@ namespace Core.Services
 
     public class SettingsService : BaseSettingsService, ISettingsService
     {
-        public SettingsService(ICoreAppServices services) : base(Path.Combine(services.RootFolder, "RanseiLinkSettings.xml")) { }
+        public SettingsService(string rootFolder) : base(Path.Combine(rootFolder, "RanseiLinkSettings.xml")) { }
 
         private static class ElementNames
         {

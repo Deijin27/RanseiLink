@@ -1,23 +1,18 @@
-﻿using RanseiWpf.Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Core.Services;
 using System.Windows.Input;
 
 namespace RanseiWpf.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private readonly IWpfAppServices Services;
-        public MainWindowViewModel(IWpfAppServices services)
+        public MainWindowViewModel(IServiceContainer container)
         {
-            Services = services;
-            ModSelectionVm = new ModSelectionViewModel(services);
+            ModSelectionVm = new ModSelectionViewModel(container);
             CurrentVm = ModSelectionVm;
 
             ModSelectionVm.ModSelected += mi =>
             {
-                var mevm = new MainEditorViewModel(services, mi);
+                var mevm = new MainEditorViewModel(container, mi);
                 CurrentVm = mevm;
                 BackButtonVisible = true;
             };

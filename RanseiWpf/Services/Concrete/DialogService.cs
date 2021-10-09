@@ -3,7 +3,7 @@ using Core.Services;
 using RanseiWpf.ViewModels;
 using System.Windows;
 
-namespace RanseiWpf.Services
+namespace RanseiWpf.Services.Concrete
 {
     public class DialogService : IDialogService
     {

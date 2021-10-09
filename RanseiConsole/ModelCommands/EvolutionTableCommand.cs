@@ -1,23 +1,25 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using Core.Services;
 using RanseiConsole.Services;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.ModelCommands
 {
     [Command("evolutiontable", Description = "Get evolution table data.")]
-    public class EvolutionTableCommand : ICommand
+    public class EvolutionTableCommand : BaseCommand
     {
-        public ValueTask ExecuteAsync(IConsole console)
+        public EvolutionTableCommand(IServiceContainer container) : base(container) { }
+        public EvolutionTableCommand() : base() { }
+
+        public override ValueTask ExecuteAsync(IConsole console)
         {
-            var services = ConsoleAppServices.Instance;
-            if (services.CurrentMod == null)
+            var currentModService = Container.Resolve<ICurrentModService>();
+            if (!currentModService.TryGetDataService(console, out IDataService dataService))
             {
-                console.Output.WriteLine("No mod selected");
                 return default;
             }
-            var dataService = services.CoreServices.DataService(services.CurrentMod);
+
             var model = dataService.Pokemon.RetrieveEvolutionTable();
 
             console.Render(model);

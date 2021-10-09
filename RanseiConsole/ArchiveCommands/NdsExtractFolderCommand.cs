@@ -1,15 +1,18 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 using System.IO;
 using Core.Services;
+using Core.Nds;
 
 namespace RanseiConsole.ArchiveCommands
 {
     [Command("nds extract folder", Description = "Extract a copy of a folder and all contents including sub-folders from an nds file system.")]
-    public class NdsExtractFolderCommand : ICommand
+    public class NdsExtractFolderCommand : BaseCommand
     {
+        public NdsExtractFolderCommand(IServiceContainer container) : base(container) { }
+        public NdsExtractFolderCommand() : base() { }
+
         [CommandParameter(0, Description = "Path of nds file.", Name = "NdsPath")]
         public string NdsPath { get; set; }
 
@@ -19,8 +22,10 @@ namespace RanseiConsole.ArchiveCommands
         [CommandOption("destinationFolder", 'd', Description = "Optional destination folder to extract to; default is a in the same location as the nds file.")]
         public string DestinationFolder { get; set; }
 
-        public ValueTask ExecuteAsync(IConsole console)
+        public override ValueTask ExecuteAsync(IConsole console)
         {
+            var ndsFactory = Container.Resolve<INdsFactory>();
+
             if (string.IsNullOrEmpty(DestinationFolder))
             {
                 DestinationFolder = Path.GetDirectoryName(NdsPath);
@@ -30,7 +35,7 @@ namespace RanseiConsole.ArchiveCommands
                 Directory.CreateDirectory(DestinationFolder);
             }
 
-            using var nds = CoreAppServices.Instance.Nds(NdsPath);
+            using INds nds = ndsFactory.Create(NdsPath);
             nds.ExtractCopyOfDirectory(FilePath, DestinationFolder);
 
             return default;

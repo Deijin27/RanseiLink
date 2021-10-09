@@ -4,20 +4,6 @@ using System.Collections.Generic;
 
 namespace RanseiWpf.ViewModels
 {
-    public interface ISaveable
-    {
-        void Save();
-    }
-
-    public interface IRefreshable
-    {
-        void Refresh();
-    }
-
-    public interface ISaveableRefreshable : ISaveable, IRefreshable
-    {
-    }
-
     public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>, new()
     {
         public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
@@ -44,9 +30,8 @@ namespace RanseiWpf.ViewModels
             set
             {
                 Save();
-                TModel model = DataService.Retrieve(value);
-                NestedViewModel = new TViewModel() { Model = model };
                 _selected = value;
+                Refresh();
             }
         }
 

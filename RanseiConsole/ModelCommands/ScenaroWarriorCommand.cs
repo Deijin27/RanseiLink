@@ -1,30 +1,32 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core.Enums;
+using Core.Services;
 using RanseiConsole.Services;
 using System.Threading.Tasks;
 
 namespace RanseiConsole.ModelCommands
 {
     [Command("scenariowarrior", Description = "Get data on a given ScenarioPokemon for a given Scenario.")]
-    public class ScenarioWarriorCommand : ICommand
+    public class ScenarioWarriorCommand : BaseCommand
     {
+        public ScenarioWarriorCommand(IServiceContainer container) : base(container) { }
+        public ScenarioWarriorCommand() : base() { }
+
         [CommandParameter(0, Description = "Scenario ID.", Name = "scenarioid")]
         public ScenarioId ScenarioId { get; set; }
 
         [CommandParameter(1, Description = "ScenarioWarrior ID.", Name = "id")]
         public int ScenarioWarriorId { get; set; }
 
-        public ValueTask ExecuteAsync(IConsole console)
+        public override ValueTask ExecuteAsync(IConsole console)
         {
-            var services = ConsoleAppServices.Instance;
-            if (services.CurrentMod == null)
+            var currentModService = Container.Resolve<ICurrentModService>();
+            if (!currentModService.TryGetDataService(console, out IDataService dataService))
             {
-                console.Output.WriteLine("No mod selected");
                 return default;
             }
-            var dataService = services.CoreServices.DataService(services.CurrentMod);
+
             var model = dataService.ScenarioWarrior.Retrieve(ScenarioId, ScenarioWarriorId);
 
             console.Render(model, ScenarioId, ScenarioWarriorId);

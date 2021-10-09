@@ -1,4 +1,4 @@
-﻿using RanseiWpf.Services;
+﻿using Core.Services;
 using RanseiWpf.ViewModels;
 using System.Windows;
 using System.Windows.Input;
@@ -13,8 +13,8 @@ namespace RanseiWpf
         public MainWindow()
         {
             InitializeComponent();
-            IWpfAppServices services = WpfAppServices.Instance;
-            DataContext = new MainWindowViewModel(services);
+
+            DataContext = new MainWindowViewModel(ServiceContainer.Instance);
         }
 
         private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)

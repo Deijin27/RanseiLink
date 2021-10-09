@@ -1,8 +1,8 @@
-﻿using CliFx;
-using CliFx.Attributes;
+﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using Core;
 using Core.Enums;
+using Core.Services;
 using NLua;
 using RanseiConsole.Services;
 using System;
@@ -14,18 +14,26 @@ using System.Threading.Tasks;
 namespace RanseiConsole.Commands
 {
     [Command("lua", Description = "Run given lua script.")]
-    public class LuaCommand : ICommand
+    public class LuaCommand : BaseCommand
     {
+        public LuaCommand(IServiceContainer container) : base(container) { }
+        public LuaCommand() : base() { }
+
         [CommandParameter(0, Description = "Absolute path to entry point script", Name = "path")]
         public string FilePath { get; set; }
 
-        public ValueTask ExecuteAsync(IConsole console)
+        public override ValueTask ExecuteAsync(IConsole console)
         {
+            var currentModService = Container.Resolve<ICurrentModService>();
+
+            if (!currentModService.TryGetDataService(console, out IDataService dataService))
+            {
+                return default;
+            }
+
             Directory.SetCurrentDirectory(Path.GetDirectoryName(FilePath));
 
-            FilePath = Path.GetFileName(FilePath);
-
-            var services = ConsoleAppServices.Instance;
+            string fileName = Path.GetFileName(FilePath);
 
             using (var lua = new Lua())
             {
@@ -36,7 +44,7 @@ namespace RanseiConsole.Commands
                     import = function () end
                 ");
 
-                lua["service"] = services.CoreServices.DataService(services.CurrentMod);
+                lua["service"] = dataService;
 
                 // add all enum id items to the state to allow users to enumerate them with luanet.each
                 void AddEnumToState<T>()
@@ -69,16 +77,11 @@ namespace RanseiConsole.Commands
                 AddEnumToState<WarriorSkillTargetId>();
 
                 var luaFunctions = new LuaFunctions();
-
                 lua.RegisterFunction("using", luaFunctions, typeof(LuaFunctions).GetMethod(nameof(LuaFunctions.Using)));
 
-                lua.DoFile(FilePath);
+                lua.DoFile(fileName);
 
-                foreach (var disposable in luaFunctions.Disposables)
-                {
-                    disposable.Dispose();
-                }
-
+                luaFunctions.DisposeAll();
             }
 
             console.Output.WriteLine("Script executed successfully.");
@@ -94,6 +97,14 @@ namespace RanseiConsole.Commands
             return disposable;
         }
 
-        public readonly IList<IDisposable> Disposables = new List<IDisposable>();
+        private readonly IList<IDisposable> Disposables = new List<IDisposable>();
+
+        public void DisposeAll()
+        {
+            foreach (var disposable in Disposables)
+            {
+                disposable.Dispose();
+            }
+        }
     }
 }
