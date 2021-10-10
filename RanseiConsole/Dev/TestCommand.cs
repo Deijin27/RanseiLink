@@ -23,7 +23,7 @@ namespace RanseiConsole.Dev
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
             //console.Output.WriteLine(Testing.GetBits(IterateItems().ElementAt((int)ItemId.dummy_4)));
-            Test1(console);
+            //Test4(console);
             //Test2(console);
 
             //BuildEnum(console, IterateEventSpeakers(), i => i.Name);
@@ -94,6 +94,55 @@ namespace RanseiConsole.Dev
             //}
 
             return default;
+        }
+
+        void Test4(IConsole console)
+        {
+            // log byte groups
+            var int_idx = 8;
+            var bitCount = 2;
+            var shift = 11;
+
+            var gpk = IterateItems()
+                .OrderBy(i => i.Name)
+                .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
+                .OrderBy(g => g.Key)
+                .ToArray();
+
+            foreach (var group in gpk)
+            {
+                console.Output.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
+                console.Output.WriteLine();
+
+                foreach (var pk in group)
+                {
+                    console.Output.WriteLine($"{pk.Name}");
+                }
+
+                console.Output.WriteLine();
+            }
+        }
+
+        void Test0(IConsole console)
+        {
+            var gpk = IterateMoveEffects()
+                .Select((me, c) => (me, (MoveEffectId)c))
+                .OrderBy(tup => tup.Item2)
+                .GroupBy(i => i.Item1.UnknownB)
+                .OrderBy(g => g.Key).ToArray();
+
+            foreach (var group in gpk)
+            {
+                console.Output.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
+                console.Output.WriteLine();
+
+                foreach (var pk in group)
+                {
+                    console.Output.WriteLine($"{pk.Item2}");
+                }
+
+                console.Output.WriteLine();
+            }
         }
 
         void Test1(IConsole console)
@@ -323,19 +372,25 @@ namespace RanseiConsole.Dev
             }
         }
 
-        static IEnumerable<byte[]> IterateBaseBushouPart1()
-        {
-            throw new NotImplementedException();
-        }
-
-        static IEnumerable<byte[]> IterateBaseBushouPart2()
+        static IEnumerable<BaseWarrior> IterateBaseBushouPart1()
         {
             using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\BaseBushou.dat"));
 
-            file.BaseStream.Position = 0x13B0;
-            for (int i = 0; i < 0xD2; i++)
+            for (int i = 0; i < 0xFC; i++)
             {
-                yield return file.ReadBytes(0xC);
+                yield return new BaseWarrior(file.ReadBytes(0x14));
+            }
+        }
+
+        static IEnumerable<MoveEffect> IterateMoveEffects()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\WazaEffect.dat"));
+
+            int count = (int)(file.BaseStream.Length / MoveEffect.DataLength);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(MoveEffect.DataLength);
+                yield return new MoveEffect(item);
             }
         }
     }

@@ -244,5 +244,15 @@
         Nobutsuna,
         Bokuden,
         Otsu,
+        Merchant_A,
+        Merchant_B, // probably not "evolution"
+        Captain,
+        Chief,
+        Counselor,
+        Underling,
+        Henchman,
+        Minion,
+        Mob_A,
+        Mob_B
     }
 }

@@ -29,6 +29,9 @@ namespace Core.Models
         public byte GetByte(int offset) => Data[offset];
         public void SetByte(int offset, byte value) => Data[offset] = value;
 
+        public ushort GetUInt16(int offset) => BitConverter.ToUInt16(Data, offset);
+        public void SetUInt16(int offset, ushort newValue) => BitConverter.GetBytes(newValue).CopyTo(Data, offset);
+
         public uint GetUInt32(int index, int bitCount, int offset)
         {
             return (BitConverter.ToUInt32(Data, index * 4) >> offset) & GetMask(bitCount);

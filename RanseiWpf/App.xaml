@@ -63,6 +63,10 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:BaseWarriorSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
@@ -99,6 +103,14 @@
 
             <DataTemplate DataType="{x:Type vm:WarriorMaxSyncViewModel}">
                 <views:WarriorMaxSyncView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorNameTableViewModel}">
+                <views:WarriorNameTableView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BaseWarriorViewModel}">
+                <views:BaseWarriorView/>
             </DataTemplate>
 
         </ResourceDictionary>

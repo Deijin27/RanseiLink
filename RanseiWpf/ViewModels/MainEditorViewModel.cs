@@ -75,7 +75,6 @@ namespace RanseiWpf.ViewModels
 
         private void ReloadListItems()
         {
-            
             ListItems = new List<ListItem>()
             {
                 new ListItem("Pokemon", new PokemonSelectorViewModel(PokemonId.Eevee, _dataService.Pokemon)),
@@ -84,6 +83,8 @@ namespace RanseiWpf.ViewModels
                 new ListItem("Warrior Skills", new WarriorSkillSelectorViewModel(WarriorSkillId.Adrenaline, _dataService.WarriorSkill)),
                 new ListItem("Move Ranges", new MoveRangeSelectorViewModel(MoveRangeId.Ahead1Tile, _dataService.MoveRange)),
                 new ListItem("Evolution Table", new EvolutionTableViewModel(_dataService.Pokemon)),
+                new ListItem("Warrior Name Table", new WarriorNameTableViewModel(_dataService.BaseWarrior)),
+                new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
                 new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
                 new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
                 new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(WarriorId.PlayerMale_1, _dataService.MaxLink))

@@ -224,7 +224,7 @@ namespace RanseiConsole
 
         public static void Render(this IConsole console, IWarriorMaxLink maxSync, WarriorId id)
         {
-            console.WriteTitle($"{id} {(int)id}");
+            console.WriteTitle($"{id} ({(int)id})");
             foreach (var pid in EnumUtil.GetValues<PokemonId>())
             {
                 console.WriteProperty(pid.ToString(), maxSync.GetMaxLink(pid).ToString());
@@ -253,6 +253,20 @@ namespace RanseiConsole
             {
                 console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry(i));
             }
+        }
+        public static void Render(this IConsole console, IWarriorNameTable model)
+        {
+            console.WriteTitle("Warrior Name Table");
+            for (int i = 0; i < WarriorNameTable.EntryCount; i++)
+            {
+                console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry((uint)i));
+            }
+        }
+
+        public static void Render(this IConsole console, IBaseWarrior model, WarriorId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Warrior Name Table Entry", model.WarriorName);
         }
     }
 }

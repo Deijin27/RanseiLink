@@ -1,5 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models.Interfaces;
+using System;
 
 namespace Core.Models
 {
@@ -9,14 +10,22 @@ namespace Core.Models
         public EvolutionTable(byte[] data) : base(data, DataLength) { }
         public EvolutionTable() : this(new byte[DataLength]) { }
 
-        public PokemonId GetEntry(int index)
+        public PokemonId GetEntry(int id)
         {
-            return (PokemonId)GetByte(index);
+            return (PokemonId)GetByte(id);
         }
 
-        public void SetEntry(int index, PokemonId pokemon)
+        public void SetEntry(int id, PokemonId pokemon)
         {
-            SetByte(index, (byte)pokemon);
+            SetByte(id, (byte)pokemon);
+        }
+
+        private void ValidateId(uint id)
+        {
+            if (id >= DataLength)
+            {
+                throw new ArgumentException($"{nameof(id)} of entry requested from {nameof(EvolutionTable)} must be less than {DataLength}");
+            }
         }
     }
 }
