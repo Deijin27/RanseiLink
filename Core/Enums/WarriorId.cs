@@ -253,6 +253,7 @@
         Henchman,
         Minion,
         Mob_A,
-        Mob_B
+        Mob_B,
+        NoWarrior
     }
 }

@@ -15,7 +15,7 @@ namespace RanseiConsole
             container.RegisterConsoleServices();
 
             return await new CliApplicationBuilder()
-               .SetVersion("v0.2.0")
+               .SetVersion("vMinnow-beta1")
                .SetTitle("RanseiLink Console")
                .SetDescription("Pokemon Conquest ROM Editor")
                .AddCommandsFromThisAssembly()

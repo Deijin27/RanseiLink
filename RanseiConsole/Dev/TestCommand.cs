@@ -22,7 +22,7 @@ namespace RanseiConsole.Dev
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
-            //console.Output.WriteLine(Testing.GetBits(IterateItems().ElementAt((int)ItemId.dummy_4)));
+            //console.Output.WriteLine(Testing.GetBits(IterateScenarioBushou(0).ElementAt(1).Data));
             //Test4(console);
             //Test2(console);
 
@@ -86,12 +86,28 @@ namespace RanseiConsole.Dev
             //    count++;
             //}
 
-            //var count = 0;
-            //foreach (var ba in IterateBaseBushouPart2())
+            //var used = new List<WarriorSpriteId>();
+            //WarriorId count = 0;
+            //var items = new List<(WarriorId, WarriorSpriteId)>();
+            //foreach (var ba in IterateBaseBushouPart1())
             //{
-            //    var bdw = new BaseDataWindow(ba, 0xC);
-            //    console.Output.WriteLine("0x" + $"{count++:x}".PadLeft(2, '0').ToUpperInvariant() + $": {bdw.GetPaddedUtf8String(0, 0xb)}");
+            //    //console.Output.WriteLine($"{(WarriorId)count++}".PadLeft(15, ' ') + $": {ba.Id} ({(int)ba.Id})");
+            //    if (!used.Contains(ba.Sprite))
+            //    {
+            //        used.Add(ba.Sprite);
+            //        items.Add((count, ba.Sprite));
+            //    }
+            //    count++;
             //}
+
+            //foreach (var (wid, wsid) in items.OrderBy(i => i.Item2))
+            //{
+            //    console.Output.WriteLine($"{wid}, // {wsid}");
+            //}
+
+            console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_2).Data));
+            console.Output.WriteLine();
+            console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_3).Data));
 
             return default;
         }

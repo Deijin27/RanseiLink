@@ -266,7 +266,15 @@ namespace RanseiConsole
         public static void Render(this IConsole console, IBaseWarrior model, WarriorId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Sprite", model.Sprite);
             console.WriteProperty("Warrior Name Table Entry", model.WarriorName);
+            console.WriteProperty("Specialities", $"{model.Speciality1} / {model.Speciality2}");
+            console.WriteProperty("Skill", model.Skill);
+            console.WriteProperty("Power", model.Power);
+            console.WriteProperty("Wisdom", model.Wisdom);
+            console.WriteProperty("Charisma", model.Charisma);
+            console.WriteProperty("Capacity", model.Capacity);
+            console.WriteProperty("Evolution", model.Evolution);
         }
     }
 }

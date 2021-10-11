@@ -51,5 +51,32 @@
         <TextBlock Text="Warrior Name Entry" Grid.Row="0" />
         <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
 
+        <TextBlock Text="Sprite" Grid.Row="1"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SpriteItems, Mode=OneTime}" SelectedItem="{Binding Sprite, Mode=TwoWay}"/>
+
+        <TextBlock Text="Speciality 1" Grid.Row="2" />
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SpecialityItems, Mode=OneTime}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
+
+        <TextBlock Text="Speciality 2" Grid.Row="3" />
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding SpecialityItems, Mode=OneTime}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
+
+        <TextBlock Text="Skill" Grid.Row="4"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems, Mode=OneTime}" SelectedItem="{Binding Skill, Mode=TwoWay}"/>
+
+        <TextBlock Text="Power" Grid.Row="5" />
+        <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
+
+        <TextBlock Text="Wisdom" Grid.Row="6" />
+        <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
+
+        <TextBlock Text="Charisma" Grid.Row="7" />
+        <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
+
+        <TextBlock Text="Capacity" Grid.Row="8" />
+        <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="15"/>
+
+        <TextBlock Text="Evolution" Grid.Row="9"/>
+        <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding WarriorItems, Mode=OneTime}" SelectedItem="{Binding Evolution, Mode=TwoWay}"/>
+
     </Grid>
 </UserControl>

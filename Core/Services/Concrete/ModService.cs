@@ -152,6 +152,7 @@ namespace Core.Services.Concrete
                 nds.InsertFixedLengthFile(Constants.MoveRangeRomPath, Path.Combine(currentModFolder, Constants.MoveRangeRomPath));
                 nds.InsertFixedLengthFile(Constants.EventSpeakerRomPath, Path.Combine(currentModFolder, Constants.EventSpeakerRomPath));
                 nds.InsertFixedLengthFile(Constants.BaseBushouMaxSyncTableRomPath, Path.Combine(currentModFolder, Constants.BaseBushouMaxSyncTableRomPath));
+                nds.InsertFixedLengthFile(Constants.BaseBushouRomPath, Path.Combine(currentModFolder, Constants.BaseBushouRomPath));
                 foreach (var i in EnumUtil.GetValues<ScenarioId>())
                 {
                     var spPath = Constants.ScenarioPokemonPathFromId(i);
