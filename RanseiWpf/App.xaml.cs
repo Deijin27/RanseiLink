@@ -10,7 +10,7 @@ namespace RanseiWpf
     /// </summary>
     public partial class App : Application
     {
-        public const string Version = "Minnow-beta1";
+        public const string Version = "Minnow-beta2";
 
         public App()
         {

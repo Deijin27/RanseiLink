@@ -46,6 +46,9 @@
     <Compile Update="Dialogs\ModCommitDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\ScenarioAppearPokemonView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\WarriorNameTableView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,6 +95,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Dialogs\ModCommitDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\ScenarioAppearPokemonView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

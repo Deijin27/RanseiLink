@@ -276,5 +276,17 @@ namespace RanseiConsole
             console.WriteProperty("Capacity", model.Capacity);
             console.WriteProperty("Evolution", model.Evolution);
         }
+
+        public static void Render(this IConsole console, IScenarioAppearPokemon model, ScenarioId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            foreach (var pid in EnumUtil.GetValues<PokemonId>())
+            {
+                if (model.GetCanAppear(pid))
+                {
+                    console.Output.WriteLine($"    {pid}");
+                }
+            }
+        }
     }
 }

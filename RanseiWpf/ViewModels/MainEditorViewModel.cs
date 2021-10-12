@@ -87,6 +87,7 @@ namespace RanseiWpf.ViewModels
                 new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
                 new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
                 new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
+                new ListItem("Scenario Appear Pokemon", new ScenarioAppearPokemonSelectorViewModel(ScenarioId.TheLegendOfRansei, _dataService.ScenarioAppearPokemon)),
                 new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(WarriorId.PlayerMale_1, _dataService.MaxLink))
             };
         }

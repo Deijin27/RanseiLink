@@ -159,6 +159,8 @@ namespace Core.Services.Concrete
                     nds.InsertFixedLengthFile(spPath, Path.Combine(currentModFolder, spPath));
                     var swPath = Constants.ScenarioWarriorPathFromId(i);
                     nds.InsertFixedLengthFile(swPath, Path.Combine(currentModFolder, swPath));
+                    var sapPath = Constants.ScenarioAppearPokemonPathFromId(i);
+                    nds.InsertFixedLengthFile(sapPath, Path.Combine(currentModFolder, sapPath));
                 }
             }
         }

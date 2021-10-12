@@ -18,5 +18,6 @@ namespace Core.Services
         IScenarioWarriorService ScenarioWarrior { get; }
         IWarriorMaxLinkService MaxLink { get; }
         IBaseWarriorService BaseWarrior { get; }
+        IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
     }
 }

@@ -31,5 +31,9 @@ namespace Tests.Mocks
 
         public IWarriorMaxLinkService MaxLink { get; set; }
 
+        public IBaseWarriorService BaseWarrior { get; set; }
+
+        public IScenarioAppearPokemonService ScenarioAppearPokemon { get; set; }
+
     }
 }
