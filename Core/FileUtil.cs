@@ -16,10 +16,12 @@ namespace Core
         public static string MakeUniquePath(string path)
         {
             string testPath = path;
+            string root = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
+            string ext = Path.GetExtension(path);
             int count = 1;
             while (File.Exists(testPath) || Directory.Exists(testPath))
             {
-                testPath = path + $" [{count++}]";
+                testPath = $"{root} [{count++}]{ext}";
             }
             return testPath;
         }
