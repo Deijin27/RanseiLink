@@ -1,6 +1,7 @@
 ﻿using Core.Enums;
 using Core.Models.Interfaces;
 using Core.Services;
+using RanseiWpf.Services;
 using System;
 
 namespace RanseiWpf.ViewModels
@@ -8,7 +9,8 @@ namespace RanseiWpf.ViewModels
     public class ScenarioPokemonSelectorViewModel : ScenarioSelectorViewModelBase<IScenarioPokemon, ScenarioPokemonViewModel>
     {
         private readonly IModelDataService<ScenarioId, int, IScenarioPokemon> Service;
-        public ScenarioPokemonSelectorViewModel(IModelDataService<ScenarioId, int, IScenarioPokemon> service, Func<ScenarioId, ScenarioPokemonViewModel> newVm) : base(newVm, 0, 199)
+        public ScenarioPokemonSelectorViewModel(IDialogService dialogService, IModelDataService<ScenarioId, int, IScenarioPokemon> service, Func<ScenarioId, ScenarioPokemonViewModel> newVm)
+            : base(dialogService, newVm, 0, 199)
         {
             Service = service;
             Init();

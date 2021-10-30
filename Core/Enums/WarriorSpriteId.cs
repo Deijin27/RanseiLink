@@ -83,61 +83,37 @@ namespace Core.Enums
         Masanori_1, // 77
         Masanori_2, // 78
 
-        MightNotWork_0,
-        MightNotWork_1,
-        MightNotWork_2,
-        MightNotWork_3,
-        MightNotWork_4,
-        MightNotWork_5,
-        MightNotWork_6,
-        MightNotWork_7,
-        MightNotWork_8,
-        MightNotWork_9,
-        MightNotWork_10,
-        MightNotWork_11,
-        MightNotWork_12,
-        MightNotWork_13,
-        MightNotWork_14,
-        MightNotWork_15,
-        MightNotWork_16,
-        MightNotWork_17,
-        MightNotWork_18,
-        MightNotWork_19,
-        MightNotWork_20,
-
         // Shared between multiple warriors
-        Dosetsu, // 100
-        Naoshige, // 101
-        Takanobu, // 102
-        Harutaka, // 103
-        Hidenaga, // 104
-        Nagayoshi, // 105
-        Nagayasu, // 106
-        Takakage, // 107
-        Naoie, // 108
-        Harunaga, // 109
-        Takatora, // 110
-        Hideaki, // 111
-        Tsunehisa, // 112
-        Go, // 113
-        Chacha, // 114
-        Unused_0, // 115 --------------
-        Yoshitaka, // 116
-        Koroku, // 117
-        Ujisato, // 118
-        Yukinaga, // 119
-        Merchant_B, // 120
-        Sekiso, // 121
-        Kazumasu, // 122
-        Yasunaga, // 123
-        Seikuro, // 124
-        Chiyome, // 125
-        Hatsume, // 126
-        Unused_1, // 127 ---------------
-        Naka, // 128
-        Tomonori, // 129
-
-        MightNotWork_A,
-        MightNotWork_B,
+        Dosetsu = 100, // 100 = 0x64
+        Naoshige, // 101 = 0x65
+        Takanobu, // 102 = 0x66
+        Harutaka, // 103 = 0x67
+        Hidenaga, // 104 = 0x68
+        Nagayoshi, // 105 = 0x69
+        Nagayasu, // 106 = 0x6A
+        Takakage, // 107 = 0x6B
+        Naoie, // 108 = 0x6C
+        Harunaga, // 109 = 0x6D
+        Takatora, // 110 = 0x6E
+        Hideaki, // 111 = 0x6F
+        Tsunehisa, // 112 = 0x70
+        Go, // 113 = 0x71
+        Chacha, // 114 = 0x72
+        Messenger, // 115 = 0x73 --------------
+        Yoshitaka, // 116 = 0x74
+        Koroku, // 117 = 0x75
+        Ujisato, // 118 = 0x76
+        Yukinaga, // 119 = 0x77
+        MerchantFemale, // 120 = 0x78
+        Sekiso, // 121 = 0x79
+        Kazumasu, // 122 = 0x7A
+        Yasunaga, // 123 = 0x7B
+        Seikuro, // 124 = 0x7C
+        Chiyome, // 125 = 0x7D
+        Hatsume, // 126 = 0x7E
+        Farmer, // 127 = 0x7F ---------------
+        Naka, // 128 = 0x80
+        Tomonori, // 129 = 0x81
+        Dummy_Hideyoshi // 0x82
     }
 }

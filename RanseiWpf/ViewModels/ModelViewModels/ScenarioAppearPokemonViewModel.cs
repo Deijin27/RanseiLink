@@ -33,7 +33,7 @@ namespace RanseiWpf.ViewModels
             set
             {
                 _model = value;
-                AppearItems = EnumUtil.GetValues<PokemonId>().Select(i => new AppearItem(value, i)).ToList();
+                AppearItems = EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(value, i)).ToList();
             }
         }
 

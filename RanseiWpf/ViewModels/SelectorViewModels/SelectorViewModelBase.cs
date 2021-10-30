@@ -1,15 +1,29 @@
 ﻿using Core;
 using Core.Services;
+using RanseiWpf.Services;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RanseiWpf.ViewModels
 {
     public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>, new()
     {
-        public SelectorViewModelBase(TId initialSelected, IModelDataService<TId, TModel> dataService)
+        private readonly IDialogService _dialogService;
+        public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService)
         {
+            _dialogService = dialogService;
             DataService = dataService;
             Selected = initialSelected;
+            Items = EnumUtil.GetValues<TId>().ToArray();
+        }
+
+        public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService, TId[] items)
+        {
+            _dialogService = dialogService;
+            DataService = dataService;
+            Selected = initialSelected;
+            Items = items;
         }
 
         private readonly IModelDataService<TId, TModel> DataService;
@@ -21,7 +35,7 @@ namespace RanseiWpf.ViewModels
             set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
         }
 
-        public IEnumerable<TId> Items { get; } = EnumUtil.GetValues<TId>();
+        public IEnumerable<TId> Items { get; }
 
         private TId _selected;
         public TId Selected
@@ -40,15 +54,40 @@ namespace RanseiWpf.ViewModels
         /// </summary>
         public void Refresh()
         {
-            TModel model = DataService.Retrieve(_selected);
-            NestedViewModel = new TViewModel() { Model = model };
+            try
+            {
+                TModel model = DataService.Retrieve(_selected);
+                NestedViewModel = new TViewModel() { Model = model };
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs() 
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error retrieving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
+            
         }
 
         public virtual void Save()
         {
             if (NestedViewModel != null && _selected != null)
             {
-                DataService.Save(_selected, NestedViewModel.Model);
+                try
+                {
+                    DataService.Save(_selected, NestedViewModel.Model);
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(new MessageBoxArgs()
+                    {
+                        Icon = System.Windows.MessageBoxImage.Error,
+                        Title = $"Error saving data in {GetType().Name}",
+                        Message = e.Message
+                    });
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Core;
 using Core.Services.ModelServices;
+using RanseiWpf.Services;
+using System;
 
 namespace RanseiWpf.ViewModels
 {
@@ -22,11 +24,13 @@ namespace RanseiWpf.ViewModels
     }
     public class EvolutionTableViewModel : ViewModelBase, IViewModelForModel<IEvolutionTable>, ISaveableRefreshable
     {
+        private readonly IDialogService _dialogService;
         private readonly IPokemonService DataService;
         private IEvolutionTable evolutionTable;
 
-        public EvolutionTableViewModel(IPokemonService dataService)
+        public EvolutionTableViewModel(IDialogService dialogService, IPokemonService dataService)
         {
+            _dialogService = dialogService;
             DataService = dataService;
             Refresh();
         }
@@ -35,7 +39,7 @@ namespace RanseiWpf.ViewModels
 
         public IReadOnlyList<EvolutionTableItem> Items { get; private set; }
 
-        public PokemonId[] PokemonItems { get; } = EnumUtil.GetValues<PokemonId>().ToArray();
+        public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
 
         public void Save()
         {
@@ -43,18 +47,42 @@ namespace RanseiWpf.ViewModels
             {
                 evolutionTable.SetEntry(item.Index, item.Pokemon);
             }
-            DataService.SaveEvolutionTable(evolutionTable);
+            try
+            {
+                DataService.SaveEvolutionTable(evolutionTable);
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error saving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
         }
 
         public void Refresh()
         {
-            evolutionTable = DataService.RetrieveEvolutionTable();
-            var lst = new List<EvolutionTableItem>();
-            for (int i = 0; i < EvolutionTable.DataLength; i++)
+            try
             {
-                lst.Add(new EvolutionTableItem(i, evolutionTable.GetEntry(i), PokemonItems));
+                evolutionTable = DataService.RetrieveEvolutionTable();
+                var lst = new List<EvolutionTableItem>();
+                for (int i = 0; i < EvolutionTable.DataLength; i++)
+                {
+                    lst.Add(new EvolutionTableItem(i, evolutionTable.GetEntry(i), PokemonItems));
+                }
+                Items = lst;
             }
-            Items = lst;
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error retrieving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
         }
     }
 }

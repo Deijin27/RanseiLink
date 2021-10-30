@@ -1,5 +1,6 @@
 ﻿namespace Core.Enums
 {
+    [DefaultValues(NoWarrior)]
     public enum WarriorId : uint
     {
         PlayerMale_1,
@@ -244,8 +245,8 @@
         Nobutsuna,
         Bokuden,
         Otsu,
-        Merchant_A,
-        Merchant_B, // probably not "evolution"
+        MerchantMale,
+        MerchantFemale,
         Captain,
         Chief,
         Counselor,

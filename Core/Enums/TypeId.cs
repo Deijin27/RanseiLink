@@ -24,7 +24,7 @@ namespace Core.Enums
         Dark,
         Steel,
 
-        NoType = 0b11111
+        NoType = 0b11111,
 
     }
 }

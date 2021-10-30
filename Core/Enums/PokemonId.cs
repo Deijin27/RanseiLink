@@ -1,6 +1,7 @@
 ﻿
 namespace Core.Enums
 {
+    [DefaultValues(Default)]
     public enum PokemonId : uint
     {
         Eevee,
@@ -203,5 +204,7 @@ namespace Core.Enums
         Zekrom,
         Arceus,
         Rayquaza,
+
+        Default = 511
     }
 }

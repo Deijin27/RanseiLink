@@ -2,6 +2,7 @@
 
 namespace Core.Enums
 {
+    [DefaultValues(NoAbility)]
     public enum AbilityId : uint
     {
         NoAbility = 0b_1000_0000,

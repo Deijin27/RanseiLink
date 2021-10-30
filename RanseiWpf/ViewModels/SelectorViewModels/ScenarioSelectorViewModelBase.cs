@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Enums;
+using RanseiWpf.Services;
 using System;
 using System.Linq;
 
@@ -7,9 +8,11 @@ namespace RanseiWpf.ViewModels
 {
     public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>
     {
-        public ScenarioSelectorViewModelBase(Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
+        private readonly IDialogService _dialogService;
+        public ScenarioSelectorViewModelBase(IDialogService dialogService, Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
         {
-            NewViewModel = newViewModel;
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
+            NewViewModel = newViewModel ?? throw new ArgumentNullException(nameof(newViewModel));
             MinIndex = minIndex;
             MaxIndex = maxIndex;
         }
@@ -20,10 +23,22 @@ namespace RanseiWpf.ViewModels
         {
             _selectedScenario = ScenarioId.TheLegendOfRansei;
             _selectedItem = 0;
-            TModel model = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario);
-            vm.Model = model;
-            NestedViewModel = vm;
+            try
+            {
+                TModel model = RetrieveModel(SelectedScenario, SelectedItem);
+                var vm = NewViewModel(SelectedScenario);
+                vm.Model = model;
+                NestedViewModel = vm;
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error retrieving initial data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
         }
 
 
@@ -37,7 +52,20 @@ namespace RanseiWpf.ViewModels
                 {
                     if (_nestedViewModel is ISaveable saveable)
                     {
-                        saveable.Save();
+                        try
+                        {
+                            saveable.Save();
+                        }
+                        catch (Exception e)
+                        {
+                            _dialogService.ShowMessageBox(new MessageBoxArgs()
+                            {
+                                Icon = System.Windows.MessageBoxImage.Error,
+                                Title = $"Error saving nested saveable {saveable.GetType().Name} in {GetType().Name}",
+                                Message = e.Message
+                            });
+                        }
+                        
                     }
                     _nestedViewModel = value;
                     RaisePropertyChanged();
@@ -55,11 +83,23 @@ namespace RanseiWpf.ViewModels
             set
             {
                 Save();
-                TModel model = RetrieveModel(SelectedScenario, value);
-                var vm = NewViewModel(SelectedScenario);
-                vm.Model = model;
-                NestedViewModel = vm;
-                _selectedItem = value;
+                try
+                {
+                    TModel model = RetrieveModel(SelectedScenario, value);
+                    var vm = NewViewModel(SelectedScenario);
+                    vm.Model = model;
+                    NestedViewModel = vm;
+                    _selectedItem = value;
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(new MessageBoxArgs()
+                    {
+                        Icon = System.Windows.MessageBoxImage.Error,
+                        Title = $"Error retrieving new selection data in {GetType().Name}",
+                        Message = e.Message
+                    });
+                }
             }
         }
 
@@ -72,11 +112,23 @@ namespace RanseiWpf.ViewModels
             set
             {
                 Save();
-                TModel model = RetrieveModel(value, SelectedItem);
-                var vm = NewViewModel(value);
-                vm.Model = model;
-                NestedViewModel = vm;
-                _selectedScenario = value;
+                try
+                {
+                    TModel model = RetrieveModel(value, SelectedItem);
+                    var vm = NewViewModel(value);
+                    vm.Model = model;
+                    NestedViewModel = vm;
+                    _selectedScenario = value;
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(new MessageBoxArgs()
+                    {
+                        Icon = System.Windows.MessageBoxImage.Error,
+                        Title = $"Error retrieving new selection data in {GetType().Name}",
+                        Message = e.Message
+                    });
+                }
             }
         }
 
@@ -87,20 +139,45 @@ namespace RanseiWpf.ViewModels
         {
             if (NestedViewModel != null)
             {
-                if (_nestedViewModel is ISaveable saveable)
+                try
                 {
-                    saveable.Save();
+                    if (_nestedViewModel is ISaveable saveable)
+                    {
+                        saveable.Save();
+                    }
+                    SaveModel(SelectedScenario, SelectedItem, NestedViewModel.Model);
                 }
-                SaveModel(SelectedScenario, SelectedItem, NestedViewModel.Model);
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(new MessageBoxArgs()
+                    {
+                        Icon = System.Windows.MessageBoxImage.Error,
+                        Title = $"Error retrieving data in {GetType().Name}",
+                        Message = e.Message
+                    });
+                }
             }
         }
 
         public void Refresh()
         {
-            TModel model = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario);
-            vm.Model = model;
-            NestedViewModel = vm;
+            try
+            {
+                TModel model = RetrieveModel(SelectedScenario, SelectedItem);
+                var vm = NewViewModel(SelectedScenario);
+                vm.Model = model;
+                NestedViewModel = vm;
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error retrieving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
+            
         }
     }
 }
