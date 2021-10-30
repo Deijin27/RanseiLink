@@ -11,8 +11,14 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 15);
-            set => SetPaddedUtf8String(0, 15, value);
+            get => GetPaddedUtf8String(0, 16);
+            set => SetPaddedUtf8String(0, 16, value);
+        }
+
+        public WarriorSpriteId Sprite
+        {
+            get => (WarriorSpriteId)GetByte(0x11);
+            set => SetByte(0x11, (byte)value);
         }
 
         public IEventSpeaker Clone()

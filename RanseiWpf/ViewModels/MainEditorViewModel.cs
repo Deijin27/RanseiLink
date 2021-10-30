@@ -3,6 +3,7 @@ using Core.Randomization;
 using Core.Services;
 using RanseiWpf.Dialogs;
 using RanseiWpf.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,12 +60,12 @@ namespace RanseiWpf.ViewModels
 
         public MainEditorViewModel(IServiceContainer container, ModInfo mod)
         {
-            var dataServiceFactory = container.Resolve<IDataServiceFactory>();
+            var dataServiceFactory = container.Resolve<DataServiceFactory>();
             _dialogService = container.Resolve<IDialogService>();
             _modService = container.Resolve<IModService>();
 
             Mod = mod;
-            _dataService = dataServiceFactory.Create(Mod);
+            _dataService = dataServiceFactory(Mod);
 
             ReloadListItems();
 
@@ -77,18 +78,20 @@ namespace RanseiWpf.ViewModels
         {
             ListItems = new List<ListItem>()
             {
-                new ListItem("Pokemon", new PokemonSelectorViewModel(PokemonId.Eevee, _dataService.Pokemon)),
-                new ListItem("Moves", new MoveSelectorViewModel(MoveId.Splash, _dataService.Move)),
-                new ListItem("Abilities", new AbilitySelectorViewModel(AbilityId.Levitate, _dataService.Ability)),
-                new ListItem("Warrior Skills", new WarriorSkillSelectorViewModel(WarriorSkillId.Adrenaline, _dataService.WarriorSkill)),
-                new ListItem("Move Ranges", new MoveRangeSelectorViewModel(MoveRangeId.Ahead1Tile, _dataService.MoveRange)),
-                new ListItem("Evolution Table", new EvolutionTableViewModel(_dataService.Pokemon)),
-                new ListItem("Warrior Name Table", new WarriorNameTableViewModel(_dataService.BaseWarrior)),
-                new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
-                new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
-                new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
-                new ListItem("Scenario Appear Pokemon", new ScenarioAppearPokemonSelectorViewModel(ScenarioId.TheLegendOfRansei, _dataService.ScenarioAppearPokemon)),
-                new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(WarriorId.PlayerMale_1, _dataService.MaxLink))
+                new ListItem("Pokemon", new PokemonSelectorViewModel(_dialogService, PokemonId.Eevee, _dataService.Pokemon)),
+                new ListItem("Moves", new MoveSelectorViewModel(_dialogService, MoveId.Splash, _dataService.Move)),
+                new ListItem("Abilities", new AbilitySelectorViewModel(_dialogService, AbilityId.Levitate, _dataService.Ability)),
+                new ListItem("Warrior Skills", new WarriorSkillSelectorViewModel(_dialogService, WarriorSkillId.Adrenaline, _dataService.WarriorSkill)),
+                new ListItem("Move Ranges", new MoveRangeSelectorViewModel(_dialogService, MoveRangeId.Ahead1Tile, _dataService.MoveRange)),
+                new ListItem("Evolution Table", new EvolutionTableViewModel(_dialogService, _dataService.Pokemon)),
+                new ListItem("Warrior Name Table", new WarriorNameTableViewModel(_dialogService, _dataService.BaseWarrior)),
+                new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
+                new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.MaxLink)),
+                new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dialogService, _dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
+                new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dialogService, _dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
+                new ListItem("Scenario Appear Pokemon", new ScenarioAppearPokemonSelectorViewModel(_dialogService, ScenarioId.TheLegendOfRansei, _dataService.ScenarioAppearPokemon)),
+                new ListItem("Scenario Kingdom", new ScenarioKingdomSelectorViewModel(_dialogService, 0, _dataService.ScenarioKingdom)),
+                new ListItem("Event Speaker", new EventSpeakerSelectorViewModel(_dialogService, 0, _dataService.EventSpeaker))
             };
         }
 
@@ -102,7 +105,19 @@ namespace RanseiWpf.ViewModels
             if (_dialogService.CommitToRom(Mod, out string romPath))
             {
                 Save();
-                _modService.Commit(Mod, romPath);
+                try
+                {
+                    _modService.Commit(Mod, romPath);
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(new MessageBoxArgs()
+                    {
+                        Title = "Error Writing To Rom",
+                        Message = e.Message,
+                        Icon = System.Windows.MessageBoxImage.Error
+                    });
+                }
             }
         }
 
