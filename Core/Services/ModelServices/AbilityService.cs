@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class AbilityService : BaseModelService, IAbilityService
     {
-        public AbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength) { }
+        public AbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
 
         public IDisposableAbilityService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableAbilityService : BaseDisposableModelService, IDisposableAbilityService
     {
-        public DisposableAbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength) { }
+        public DisposableAbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
 
         public IAbility Retrieve(AbilityId id)
         {

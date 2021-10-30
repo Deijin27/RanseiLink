@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class MoveRangeService : BaseModelService, IMoveRangeService
     {
-        public MoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength) { }
+        public MoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
 
         public IDisposableMoveRangeService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableMoveRangeService : BaseDisposableModelService, IDisposableMoveRangeService
     {
-        public DisposableMoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength) { }
+        public DisposableMoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
 
         public IMoveRange Retrieve(MoveRangeId id)
         {

@@ -1,9 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
 using Core.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Core.Services.ModelServices
 {
@@ -16,14 +13,10 @@ namespace Core.Services.ModelServices
     {
     }
 
-    public class ScenarioWarriorService : IScenarioWarriorService
+    public class ScenarioWarriorService : BaseScenarioService, IScenarioWarriorService
     {
-        private readonly string CurrentModFolder;
-        private readonly ModInfo Mod;
-        public ScenarioWarriorService(ModInfo mod)
+        public ScenarioWarriorService(ModInfo mod) : base(mod, ScenarioWarrior.DataLength, Constants.ScenarioWarriorCount - 1, Constants.ScenarioWarriorPathFromId)
         {
-            Mod = mod;
-            CurrentModFolder = mod.FolderPath;
 
         }
 
@@ -34,75 +27,30 @@ namespace Core.Services.ModelServices
 
         public IScenarioWarrior Retrieve(ScenarioId scenario, int id)
         {
-            if (id < 0 || id >= Constants.ScenarioWarriorCount)
-            {
-                throw new Exception("Invalid scenario warrior ID");
-            }
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(CurrentModFolder, Constants.ScenarioWarriorPathFromId(scenario)))))
-            {
-                file.BaseStream.Position = id * ScenarioWarrior.DataLength;
-                return new ScenarioWarrior(file.ReadBytes(ScenarioWarrior.DataLength));
-            }
+            return new ScenarioWarrior(RetrieveData(scenario, id));
         }
 
         public void Save(ScenarioId scenario, int id, IScenarioWarrior model)
         {
-            if (id < 0 || id >= Constants.ScenarioWarriorCount)
-            {
-                throw new Exception("Invalid scenario warrior ID");
-            }
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(CurrentModFolder, Constants.ScenarioWarriorPathFromId(scenario)))))
-            {
-                file.BaseStream.Position = id * ScenarioWarrior.DataLength;
-                file.Write(model.Data);
-            }
+            SaveData(scenario, id, model.Data);
         }
     }
 
-    public class DisposableScenarioWarriorService : IDisposableScenarioWarriorService
+    public class DisposableScenarioWarriorService : BaseDisposableScenarioService, IDisposableScenarioWarriorService
     {
-        private readonly int ItemLength;
-        private readonly List<Stream> streams = new List<Stream>();
-
-        public DisposableScenarioWarriorService(ModInfo mod)
+        public DisposableScenarioWarriorService(ModInfo mod) : base(mod, ScenarioWarrior.DataLength, Constants.ScenarioWarriorCount - 1, Constants.ScenarioWarriorPathFromId)
         {
-            ItemLength = ScenarioWarrior.DataLength;
-            foreach (ScenarioId i in EnumUtil.GetValues<ScenarioId>())
-            {
-                streams.Add(File.Open(Path.Combine(mod.FolderPath, Constants.ScenarioWarriorPathFromId(i)), FileMode.Open, FileAccess.ReadWrite));
-            }
-        }
 
-        public void Dispose()
-        {
-            foreach (var stream in streams)
-            {
-                stream.Close();
-            }
         }
 
         public IScenarioWarrior Retrieve(ScenarioId scenario, int id)
         {
-            if (id < 0 || id >= Constants.ScenarioWarriorCount)
-            {
-                throw new Exception("Invalid scenario warrior ID");
-            }
-            Stream stream = streams[(int)scenario];
-            stream.Position = id * ItemLength;
-            byte[] buffer = new byte[ItemLength];
-            stream.Read(buffer, 0, ItemLength);
-            return new ScenarioWarrior(buffer);
+            return new ScenarioWarrior(RetrieveData(scenario, id));
         }
 
         public void Save(ScenarioId scenario, int id, IScenarioWarrior model)
         {
-            if (id < 0 || id >= Constants.ScenarioWarriorCount)
-            {
-                throw new Exception("Invalid scenario warrior ID");
-            }
-            Stream stream = streams[(int)scenario];
-            stream.Position = id * ItemLength;
-            stream.Write(model.Data, 0, ItemLength);
+            SaveData(scenario, id, model.Data);
         }
     }
 }

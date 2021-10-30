@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class WarriorSkillService : BaseModelService, IWarriorSkillService
     {
-        public WarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength) { }
+        public WarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength, 72) { }
 
         public IDisposableWarriorSkillService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableWarriorSkillService : BaseDisposableModelService, IDisposableWarriorSkillService
     {
-        public DisposableWarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength) { }
+        public DisposableWarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength, 72) { }
 
         public IWarriorSkill Retrieve(WarriorSkillId id)
         {

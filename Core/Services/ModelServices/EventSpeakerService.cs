@@ -16,7 +16,7 @@ namespace Core.Services.ModelServices
 
     public class EventSpeakerService : BaseModelService, IEventSpeakerService
     {
-        public EventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength) { }
+        public EventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength, 59) { }
 
         public IDisposableEventSpeakerService Disposable()
         {
@@ -36,7 +36,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableEventSpeakerService : BaseDisposableModelService, IDisposableEventSpeakerService
     {
-        public DisposableEventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength) { }
+        public DisposableEventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength, 59) { }
 
         public IEventSpeaker Retrieve(EventSpeakerId id)
         {

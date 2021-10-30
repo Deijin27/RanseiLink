@@ -1,9 +1,6 @@
 ﻿using Core.Enums;
 using Core.Models;
 using Core.Models.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Core.Services.ModelServices
 {
@@ -16,14 +13,10 @@ namespace Core.Services.ModelServices
     {
     }
 
-    public class ScenarioAppearPokemonService : IScenarioAppearPokemonService
+    public class ScenarioAppearPokemonService : BaseScenarioService, IScenarioAppearPokemonService
     {
-        private readonly string CurrentModFolder;
-        private readonly ModInfo Mod;
-        public ScenarioAppearPokemonService(ModInfo mod)
+        public ScenarioAppearPokemonService(ModInfo mod) : base(mod, ScenarioAppearPokemon.DataLength, 0, Constants.ScenarioAppearPokemonPathFromId)
         {
-            Mod = mod;
-            CurrentModFolder = mod.FolderPath;
 
         }
 
@@ -32,59 +25,32 @@ namespace Core.Services.ModelServices
             return new DisposableScenarioAppearPokemonService(Mod);
         }
 
-        public IScenarioAppearPokemon Retrieve(ScenarioId id)
+        public IScenarioAppearPokemon Retrieve(ScenarioId scenario)
         {
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(CurrentModFolder, Constants.ScenarioAppearPokemonPathFromId(id)))))
-            {
-                return new ScenarioAppearPokemon(file.ReadBytes(ScenarioAppearPokemon.DataLength));
-            }
+            return new ScenarioAppearPokemon(RetrieveData(scenario, 0));
         }
 
-        public void Save(ScenarioId ScenarioAppear, IScenarioAppearPokemon model)
+        public void Save(ScenarioId scenario, IScenarioAppearPokemon model)
         {
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(CurrentModFolder, Constants.ScenarioAppearPokemonPathFromId(ScenarioAppear)))))
-            {
-                file.Write(model.Data);
-            }
+            SaveData(scenario, 0, model.Data);
         }
     }
 
-    public class DisposableScenarioAppearPokemonService : IDisposableScenarioAppearPokemonService
+    public class DisposableScenarioAppearPokemonService : BaseDisposableScenarioService, IDisposableScenarioAppearPokemonService
     {
-        private readonly int ItemLength;
-        private readonly List<Stream> streams = new List<Stream>();
-
-        public DisposableScenarioAppearPokemonService(ModInfo mod)
+        public DisposableScenarioAppearPokemonService(ModInfo mod) : base(mod, ScenarioAppearPokemon.DataLength, 0, Constants.ScenarioAppearPokemonPathFromId)
         {
-            ItemLength = ScenarioAppearPokemon.DataLength;
-            foreach (ScenarioId i in EnumUtil.GetValues<ScenarioId>())
-            {
-                streams.Add(File.Open(Path.Combine(mod.FolderPath, Constants.ScenarioAppearPokemonPathFromId(i)), FileMode.Open, FileAccess.ReadWrite));
-            }
+
         }
 
-        public void Dispose()
+        public IScenarioAppearPokemon Retrieve(ScenarioId scenario)
         {
-            foreach (var stream in streams)
-            {
-                stream.Close();
-            }
+            return new ScenarioAppearPokemon(RetrieveData(scenario, 0));
         }
 
-        public IScenarioAppearPokemon Retrieve(ScenarioId id)
+        public void Save(ScenarioId scenario, IScenarioAppearPokemon model)
         {
-            Stream stream = streams[(int)id];
-            stream.Position = 0;
-            byte[] buffer = new byte[ItemLength];
-            stream.Read(buffer, 0, ItemLength);
-            return new ScenarioAppearPokemon(buffer);
-        }
-
-        public void Save(ScenarioId id, IScenarioAppearPokemon model)
-        {
-            Stream stream = streams[(int)id];
-            stream.Position = 0;
-            stream.Write(model.Data, 0, ItemLength);
+            SaveData(scenario, 0, model.Data);
         }
     }
 }

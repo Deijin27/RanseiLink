@@ -5,22 +5,31 @@ namespace Core.Services.ModelServices
 {
     public abstract class BaseModelService
     {
-        protected readonly string CurrentModFolder;
         private readonly string RomPath;
         private readonly int ItemLength;
-        protected ModInfo Mod;
+        protected readonly ModInfo Mod;
+        private readonly int MaxIndex;
 
-        public BaseModelService(ModInfo mod, string romPath, int itemLength)
+        public BaseModelService(ModInfo mod, string romPath, int itemLength, int maxIndex)
         {
             Mod = mod;
             RomPath = romPath;
             ItemLength = itemLength;
-            CurrentModFolder = mod.FolderPath;
+            MaxIndex = maxIndex;
+        }
+
+        private void ValidateIndex(int index)
+        {
+            if (index > MaxIndex || index < 0)
+            {
+                throw new ArgumentOutOfRangeException($"Index in {GetType().Name} should not be greater than {MaxIndex}");
+            }
         }
 
         protected byte[] RetrieveData(int id)
         {
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(CurrentModFolder, RomPath))))
+            ValidateIndex(id);
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(Mod.FolderPath, RomPath))))
             {
                 file.BaseStream.Position = id * ItemLength;
                 return file.ReadBytes(ItemLength);
@@ -29,7 +38,8 @@ namespace Core.Services.ModelServices
 
         protected void SaveData(int id, byte[] data)
         {
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(CurrentModFolder, RomPath))))
+            ValidateIndex(id);
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(Mod.FolderPath, RomPath))))
             {
                 file.BaseStream.Position = id * ItemLength;
                 file.Write(data);
@@ -40,11 +50,13 @@ namespace Core.Services.ModelServices
     public abstract class BaseDisposableModelService : IDisposable
     {
         private readonly int ItemLength;
+        private readonly int MaxIndex;
 
         protected readonly Stream stream;
 
-        public BaseDisposableModelService(ModInfo mod, string romPath, int itemLength)
+        public BaseDisposableModelService(ModInfo mod, string romPath, int itemLength, int maxIndex)
         {
+            MaxIndex = maxIndex;
             ItemLength = itemLength;
             stream = File.Open(Path.Combine(mod.FolderPath, romPath), FileMode.Open, FileAccess.ReadWrite);
         }
@@ -54,8 +66,17 @@ namespace Core.Services.ModelServices
             stream.Close();
         }
 
+        private void ValidateIndex(int index)
+        {
+            if (index > MaxIndex || index < 0)
+            {
+                throw new ArgumentOutOfRangeException($"Index in {GetType().Name} should not be greater than {MaxIndex}");
+            }
+        }
+
         protected byte[] RetrieveData(int id)
         {
+            ValidateIndex(id);
             stream.Position = id * ItemLength;
             byte[] buffer = new byte[ItemLength];
             stream.Read(buffer, 0, ItemLength);
@@ -64,6 +85,7 @@ namespace Core.Services.ModelServices
 
         protected void SaveData(int id, byte[] data)
         {
+            ValidateIndex(id);
             stream.Position = id * ItemLength;
             stream.Write(data, 0, ItemLength);
         }

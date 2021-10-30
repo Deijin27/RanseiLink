@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class BuildingService : BaseModelService, IBuildingService
     {
-        public BuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength) { }
+        public BuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength, 118) { }
 
         public IDisposableBuildingService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableBuildingService : BaseDisposableModelService, IDisposableBuildingService
     {
-        public DisposableBuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength) { }
+        public DisposableBuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength, 118) { }
 
         public IBuilding Retrieve(BuildingId id)
         {

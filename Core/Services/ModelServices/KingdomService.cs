@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class KingdomService : BaseModelService, IKingdomService
     {
-        public KingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength) { }
+        public KingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
 
         public IDisposableKingdomService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableKingdomService : BaseDisposableModelService, IDisposableKingdomService
     {
-        public DisposableKingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength) { }
+        public DisposableKingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
 
         public IKingdom Retrieve(KingdomId id)
         {

@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class ItemService : BaseModelService, IItemService
     {
-        public ItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength) { }
+        public ItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
 
         public IDisposableItemService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableItemService : BaseDisposableModelService, IDisposableItemService
     {
-        public DisposableItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength) { }
+        public DisposableItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
 
         public IItem Retrieve(ItemId id)
         {

@@ -15,7 +15,7 @@ namespace Core.Services.ModelServices
 
     public class GimmickService : BaseModelService, IGimmickService
     {
-        public GimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength) { }
+        public GimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
 
         public IDisposableGimmickService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableGimmickService : BaseDisposableModelService, IDisposableGimmickService
     {
-        public DisposableGimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength) { }
+        public DisposableGimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
 
         public IGimmick Retrieve(GimmickId id)
         {

@@ -13,9 +13,9 @@ namespace Core.Services.ModelServices
     {
     }
 
-    public class WarriorMaxSyncService : BaseModelService, IWarriorMaxLinkService
+    public class WarriorMaxLinkService : BaseModelService, IWarriorMaxLinkService
     {
-        public WarriorMaxSyncService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength) { }
+        public WarriorMaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength, 251) { }
 
         public IDisposableWarriorMaxLinkService Disposable()
         {
@@ -35,7 +35,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableWarriorMaxSyncService : BaseDisposableModelService, IDisposableWarriorMaxLinkService
     {
-        public DisposableWarriorMaxSyncService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength)
+        public DisposableWarriorMaxSyncService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, WarriorMaxLink.DataLength, 251)
         {
         }
 

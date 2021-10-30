@@ -23,7 +23,7 @@ namespace Core.Services.ModelServices
 
     public class PokemonService : BaseModelService, IPokemonService
     {
-        public PokemonService(ModInfo mod) : base(mod, Constants.PokemonRomPath, Pokemon.DataLength) { }
+        public PokemonService(ModInfo mod) : base(mod, Constants.PokemonRomPath, Pokemon.DataLength, 199) { }
 
         public IDisposablePokemonService Disposable() => new DisposablePokemonService(Mod);
 
@@ -39,7 +39,7 @@ namespace Core.Services.ModelServices
 
         public IEvolutionTable RetrieveEvolutionTable()
         {
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(CurrentModFolder, Constants.PokemonRomPath))))
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(Mod.FolderPath, Constants.PokemonRomPath))))
             {
                 file.BaseStream.Position = 0x25C4;
                 return new EvolutionTable(file.ReadBytes(EvolutionTable.DataLength));
@@ -48,7 +48,7 @@ namespace Core.Services.ModelServices
 
         public void SaveEvolutionTable(IEvolutionTable model)
         {
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(CurrentModFolder, Constants.PokemonRomPath))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(Mod.FolderPath, Constants.PokemonRomPath))))
             {
                 file.BaseStream.Position = 0x25C4;
                 file.Write(model.Data);
@@ -58,7 +58,7 @@ namespace Core.Services.ModelServices
 
     public class DisposablePokemonService : BaseDisposableModelService, IDisposablePokemonService
     {
-        public DisposablePokemonService(ModInfo mod) : base(mod, Constants.PokemonRomPath, Pokemon.DataLength) { }
+        public DisposablePokemonService(ModInfo mod) : base(mod, Constants.PokemonRomPath, Pokemon.DataLength, 199) { }
 
         public IPokemon Retrieve(PokemonId id)
         {

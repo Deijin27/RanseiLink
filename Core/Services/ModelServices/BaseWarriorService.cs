@@ -20,7 +20,7 @@ namespace Core.Services.ModelServices
 
     public class BaseWarriorService : BaseModelService, IBaseWarriorService
     {
-        public BaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength) { }
+        public BaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength, 251) { }
 
         public IDisposableBaseWarriorService Disposable()
         {
@@ -39,7 +39,7 @@ namespace Core.Services.ModelServices
 
         public IWarriorNameTable RetrieveNameTable()
         {
-            using (var file = new BinaryReader(File.OpenRead(Path.Combine(CurrentModFolder, Constants.BaseBushouRomPath))))
+            using (var file = new BinaryReader(File.OpenRead(Path.Combine(Mod.FolderPath, Constants.BaseBushouRomPath))))
             {
                 file.BaseStream.Position = 0x13B0;
                 return new WarriorNameTable(file.ReadBytes(WarriorNameTable.DataLength));
@@ -48,7 +48,7 @@ namespace Core.Services.ModelServices
 
         public void SaveNameTable(IWarriorNameTable model)
         {
-            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(CurrentModFolder, Constants.BaseBushouRomPath))))
+            using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(Mod.FolderPath, Constants.BaseBushouRomPath))))
             {
                 file.BaseStream.Position = 0x13B0;
                 file.Write(model.Data);
@@ -58,7 +58,7 @@ namespace Core.Services.ModelServices
 
     public class DisposableBaseWarriorService : BaseDisposableModelService, IDisposableBaseWarriorService
     {
-        public DisposableBaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength) { }
+        public DisposableBaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength, 251) { }
 
         public IBaseWarrior Retrieve(WarriorId id)
         {
