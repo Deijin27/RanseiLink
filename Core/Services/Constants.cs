@@ -48,6 +48,7 @@ namespace Core.Services
         public static string ScenarioPokemonPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioPokemon.dat");
         public static string ScenarioWarriorPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBushou.dat");
         public static string ScenarioAppearPokemonPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioAppearPokemon.dat");
+        public static string ScenarioKingdomPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioKuni.dat");
         #endregion
 
     }

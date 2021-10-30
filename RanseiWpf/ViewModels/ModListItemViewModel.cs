@@ -13,9 +13,9 @@ namespace RanseiWpf.ViewModels
         private readonly ModSelectionViewModel _parentVm;
         private readonly IModService _modService;
         private readonly IDialogService _dialogService;
-        private readonly IDataServiceFactory _dataServiceFactory;
+        private readonly DataServiceFactory _dataServiceFactory;
 
-        public ModListItemViewModel(ModSelectionViewModel parentVm, ModInfo mod, IModService modService, IDialogService dialogService, IDataServiceFactory dataServiceFactory)
+        public ModListItemViewModel(ModSelectionViewModel parentVm, ModInfo mod, IModService modService, IDialogService dialogService, DataServiceFactory dataServiceFactory)
         {
             _parentVm = parentVm;
             _modService = modService;
@@ -129,7 +129,7 @@ namespace RanseiWpf.ViewModels
                 var dialog = new LoadingDialog("Randomizing...");
                 dialog.Owner = App.Current.MainWindow;
                 dialog.Show();
-                await Task.Run(() => randomizer.Apply(_dataServiceFactory.Create(mod)));
+                await Task.Run(() => randomizer.Apply(_dataServiceFactory(mod)));
                 dialog.Close();
             }
         }

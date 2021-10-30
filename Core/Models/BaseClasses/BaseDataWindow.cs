@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Core.Models
@@ -51,20 +52,50 @@ namespace Core.Models
             return Encoding.UTF8.GetString(Data, index, length);
         }
 
+        /// <summary>
+        /// Read text from data, removing 0x00 padding.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="maxLength"></param>
+        /// <returns></returns>
         public string GetPaddedUtf8String(int index, int maxLength)
         {
-            return GetUtf8String(index, maxLength).TrimEnd('\x0');
+            var bytes = Data.Skip(index).TakeWhile((i, c) => i != 0 && c <= maxLength).ToArray();
+
+            var reader = new Text.PNAReader(bytes, false, true);
+
+            return reader.Text;
         }
 
+        /// <summary>
+        /// Write text to data, padding to max length with 0x00
+        /// </summary>
+        /// <param name="index">byte index in data to start name</param>
+        /// <param name="maxLength">Max length of the text <strong>excluding</strong> the required 0x00 terminator</param>
+        /// <param name="value">name to write</param>
         public void SetPaddedUtf8String(int index, int maxLength, string value)
         {
             if (value.Length > maxLength)
             {
                 value = value.Substring(0, maxLength);
             }
-            var output = new byte[maxLength];
-            Encoding.UTF8.GetBytes(value).CopyTo(output, 0);
-            output.CopyTo(Data, index);
+            byte[] output;
+            int count = 0;
+            while (true)
+            {
+                var writer = new Text.PNAWriter(value, false, true);
+                output = writer.Data;
+                if (output.Length <= maxLength)
+                {
+                    break;
+                }
+                value = value.Substring(0, value.Length - 1);
+            }
+
+            byte[] final = new byte[maxLength + 1]; // ensure padding section is overwritten and required 0x00 terminator exists.
+            output.CopyTo(final, 0);
+
+            final.CopyTo(Data, index);
         }
     }
 

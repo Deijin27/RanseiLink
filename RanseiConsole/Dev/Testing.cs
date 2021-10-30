@@ -19,16 +19,16 @@ namespace RanseiConsole.Dev
             return bits;
         }
 
-        public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, string> nameSelector) where T : BaseDataWindow
+        public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, int, string> nameSelector) where T : BaseDataWindow
         {
             Directory.CreateDirectory(folderToPutLogsInto);
-            var opk = dataItems.OrderBy(i => nameSelector(i)).ToArray();
-            var dataLength = opk[0].Data.Length;
+            var opk = dataItems.Select((a, b) => (a, b)).OrderBy(i => nameSelector(i.a, 0)).ToArray();
+            var dataLength = opk[0].a.Data.Length;
 
             for (int i = 0; i < dataLength; i++)
             {
                 using var sw = new StreamWriter(File.Create(Path.Combine(folderToPutLogsInto, i.ToString().PadLeft(2, '0') + $" - 0x{i:x}.txt")));
-                var gpk = opk.GroupBy(p => p.Data[i]).OrderBy(g => g.Key);
+                var gpk = opk.GroupBy(p => p.a.Data[i]).OrderBy(g => g.Key);
 
                 foreach (var group in gpk)
                 {
@@ -37,7 +37,7 @@ namespace RanseiConsole.Dev
 
                     foreach (var pk in group)
                     {
-                        sw.WriteLine(nameSelector(pk));
+                        sw.WriteLine(nameSelector(pk.a, pk.b));
                     }
 
                     sw.WriteLine();

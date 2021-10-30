@@ -1,6 +1,8 @@
 ﻿using Core.Models;
 using Core.Models.Interfaces;
 using Core.Services.ModelServices;
+using RanseiWpf.Services;
+using System;
 using System.Collections.Generic;
 
 namespace RanseiWpf.ViewModels
@@ -23,11 +25,13 @@ namespace RanseiWpf.ViewModels
     }
     public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
     {
+        private readonly IDialogService _dialogService; 
         private readonly IBaseWarriorService _service;
         private IWarriorNameTable _model;
 
-        public WarriorNameTableViewModel(IBaseWarriorService dataService)
+        public WarriorNameTableViewModel(IDialogService dialogService, IBaseWarriorService dataService)
         {
+            _dialogService = dialogService;
             _service = dataService;
             Refresh();
         }
@@ -36,18 +40,42 @@ namespace RanseiWpf.ViewModels
 
         public void Save()
         {
-            _service.SaveNameTable(_model);
+            try
+            {
+                _service.SaveNameTable(_model);
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error saving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
         }
 
         public void Refresh()
         {
-            _model = _service.RetrieveNameTable();
-            var lst = new List<WarriorNameTableItem>();
-            for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
+            try
             {
-                lst.Add(new WarriorNameTableItem(i, _model));
+                _model = _service.RetrieveNameTable();
+                var lst = new List<WarriorNameTableItem>();
+                for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
+                {
+                    lst.Add(new WarriorNameTableItem(i, _model));
+                }
+                Items = lst;
             }
-            Items = lst;
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = System.Windows.MessageBoxImage.Error,
+                    Title = $"Error retrieving data in {GetType().Name}",
+                    Message = e.Message
+                });
+            }
         }
     }
 }

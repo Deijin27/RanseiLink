@@ -35,5 +35,6 @@ namespace Tests.Mocks
 
         public IScenarioAppearPokemonService ScenarioAppearPokemon { get; set; }
 
+        public IScenarioKingdomService ScenarioKingdom { get; set; }
     }
 }

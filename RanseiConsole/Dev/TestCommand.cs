@@ -18,7 +18,8 @@ namespace RanseiConsole.Dev
     {
         public ValueTask ExecuteAsync(IConsole console)
         {
-            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\KingdomGroups", IterateKingdoms(), i => i.Name);
+            //Test6(console);
+            //Testing.LogDataGroupings(@"C:\Users\Mia\Desktop\BuildingGroups", IterateBuilding(), (building, id) => $"{(BuildingId)id} (Name = {building.Name}, Kingdom = {building.Kingdom})");
 
             //BuildEnum(console, IterateBuilding(), i => i.Name);
 
@@ -105,23 +106,36 @@ namespace RanseiConsole.Dev
             //    console.Output.WriteLine($"{wid}, // {wsid}");
             //}
 
-            console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_2).Data));
-            console.Output.WriteLine();
-            console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_3).Data));
+            //console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_2).Data));
+            //console.Output.WriteLine();
+            //console.Output.WriteLine(Testing.GetBits(IterateBaseBushouPart1().ElementAt((int)WarriorId.PlayerMale_3).Data));
+
+            int count = 0;
+            var sb = new StringBuilder();
+            foreach (var trainer in IterateTrainers())
+            {
+                sb.AppendLine($"{count.ToString().PadLeft(3, '0')}: {trainer.GetPaddedUtf8String(0, 0x13)}");
+                count++;
+            }
+
+            File.WriteAllText(@"C:\Users\Mia\Desktop\New Text Document.txt", sb.ToString());
 
             return default;
         }
 
-        void Test4(IConsole console)
+        void Test6(IConsole console)
         {
             // log byte groups
-            var int_idx = 8;
-            var bitCount = 2;
-            var shift = 11;
+            var int_idx = 7;
+            var shift = 26;
+            var bitCount = 5;
 
-            var gpk = IterateItems()
-                .OrderBy(i => i.Name)
-                .GroupBy(p => p.GetUInt32(int_idx, bitCount, shift))
+            console.Output.WriteLine($"[Row = {int_idx}, Col = {shift}, Len = {bitCount}]\n");
+
+            var gpk = IterateMoves()
+                .Select((model, id) => (model, (MoveId)id))
+                .OrderBy(i => i.Item2)
+                .GroupBy(p => p.model.GetUInt32(int_idx, bitCount, shift))
                 .OrderBy(g => g.Key)
                 .ToArray();
 
@@ -132,7 +146,67 @@ namespace RanseiConsole.Dev
 
                 foreach (var pk in group)
                 {
-                    console.Output.WriteLine($"{pk.Name}");
+                    console.Output.WriteLine($"{pk.Item2}");
+                }
+
+                console.Output.WriteLine();
+            }
+        }
+
+        void Test5(IConsole console)
+        {
+            // log byte groups
+            var int_idx = 0;
+            var shift = 8;
+            var bitCount = 8;
+
+            console.Output.WriteLine($"[Row = {int_idx}, Col = {shift}, Len = {bitCount}]\n");
+
+            var gpk = IterateBaseBushouPart1()
+                .Select((model, id) => (model, (WarriorId)id))
+                .OrderBy(i => i.Item2)
+                .GroupBy(p => p.model.GetUInt32(int_idx, bitCount, shift))
+                .OrderBy(g => g.Key)
+                .ToArray();
+
+            foreach (var group in gpk)
+            {
+                console.Output.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} = {(WarriorSprite2Id)group.Key} ---------------------------------------");
+                console.Output.WriteLine();
+
+                foreach (var pk in group)
+                {
+                    console.Output.WriteLine($"{pk.Item2}");
+                }
+
+                console.Output.WriteLine();
+            }
+        }
+
+        void Test4(IConsole console)
+        {
+            // log byte groups
+            var int_idx = 8;
+            var shift = 0;
+            var bitCount = 7;
+
+            console.Output.WriteLine($"[Row = {int_idx}, Col = {shift}, Len = {bitCount}]\n");
+
+            var gpk = IterateBuilding()
+                .Select((building, id) => (building, (BuildingId)id))
+                .OrderBy(i => i.building.Name)
+                .GroupBy(p => p.building.GetUInt32(int_idx, bitCount, shift))
+                .OrderBy(g => g.Key)
+                .ToArray();
+
+            foreach (var group in gpk)
+            {
+                console.Output.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
+                console.Output.WriteLine();
+
+                foreach (var pk in group)
+                {
+                    console.Output.WriteLine($"{pk.Item2} ({pk.building.Kingdom})");
                 }
 
                 console.Output.WriteLine();
@@ -407,6 +481,18 @@ namespace RanseiConsole.Dev
             {
                 var item = file.ReadBytes(MoveEffect.DataLength);
                 yield return new MoveEffect(item);
+            }
+        }
+
+        static IEnumerable<BaseDataWindow> IterateTrainers()
+        {
+            using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\Trainer.dat"));
+
+            int count = (int)(file.BaseStream.Length / 0x2c);
+            for (int i = 0; i < count; i++)
+            {
+                var item = file.ReadBytes(0x2c);
+                yield return new BaseDataWindow(item, 0x2c);
             }
         }
     }

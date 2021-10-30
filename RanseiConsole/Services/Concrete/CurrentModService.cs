@@ -7,9 +7,9 @@ namespace RanseiConsole.Services.Concrete
     {
         private readonly ISettingsService _settingsService;
         private readonly IModService _modService;
-        private readonly IDataServiceFactory _dataServiceFactory;
+        private readonly DataServiceFactory _dataServiceFactory;
 
-        public CurrentModService(ISettingsService settingsService, IModService modService, IDataServiceFactory dataServiceFactory)
+        public CurrentModService(ISettingsService settingsService, IModService modService, DataServiceFactory dataServiceFactory)
         {
             _modService = modService;
             _settingsService = settingsService;
@@ -38,7 +38,7 @@ namespace RanseiConsole.Services.Concrete
                 return false;
             }
 
-            dataService = _dataServiceFactory.Create(currentMod);
+            dataService = _dataServiceFactory(currentMod);
             return true;
         }
     }

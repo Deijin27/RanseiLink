@@ -18,9 +18,10 @@ namespace Core.Services.Concrete
             EventSpeaker = new EventSpeakerService(mod);
             ScenarioPokemon = new ScenarioPokemonService(mod);
             ScenarioWarrior = new ScenarioWarriorService(mod);
-            MaxLink = new WarriorMaxSyncService(mod);
+            MaxLink = new WarriorMaxLinkService(mod);
             BaseWarrior = new BaseWarriorService(mod);
             ScenarioAppearPokemon = new ScenarioAppearPokemonService(mod);
+            ScenarioKingdom = new ScenarioKingdomService(mod);
         }
 
         public IPokemonService Pokemon { get; }
@@ -38,5 +39,6 @@ namespace Core.Services.Concrete
         public IWarriorMaxLinkService MaxLink { get; }
         public IBaseWarriorService BaseWarrior { get; }
         public IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
+        public IScenarioKingdomService ScenarioKingdom { get; }
     }
 }

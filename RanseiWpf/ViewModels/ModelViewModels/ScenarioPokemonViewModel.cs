@@ -9,7 +9,7 @@ namespace RanseiWpf.ViewModels
     {
         public IScenarioPokemon Model { get; set; }
 
-        public PokemonId[] PokemonItems { get; } = EnumUtil.GetValues<PokemonId>().ToArray();
+        public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
         public AbilityId[] AbilityItems { get; } = EnumUtil.GetValues<AbilityId>().ToArray();
  
         public PokemonId Pokemon

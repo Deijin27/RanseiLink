@@ -11,14 +11,14 @@ namespace Core.Models
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 0x13);
-            set => SetPaddedUtf8String(0, 0x13, value);
+            get => GetPaddedUtf8String(0, 0x12);
+            set => SetPaddedUtf8String(0, 0x12, value);
         }
 
         public KingdomId Kingdom
         {
-            get => (KingdomId)GetUInt32(6, 5, 24);
-            set => SetUInt32(6, 5, 24, (uint)value);
+            get => (KingdomId)GetByte(27);
+            set => SetByte(27, (byte)value);
         }
 
         public IBuilding Clone()

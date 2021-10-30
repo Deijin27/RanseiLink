@@ -8,9 +8,9 @@ using System.Text;
 
 namespace RanseiConsole
 {
-    internal static partial class RenderExtensions
+    public static partial class RenderExtensions
     {
-        public static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
+        private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
         {
             switch (id)
             {
@@ -38,6 +38,39 @@ namespace RanseiConsole
 
                 default:
                     throw new ArgumentException("Unexpected enum value");
+            }
+        }
+
+        private static string RenderQuantityForRankUpCondition(RankUpConditionId id, uint quantity)
+        {
+            switch (id)
+            {
+                case RankUpConditionId.Unknown:
+                case RankUpConditionId.NoCondition:
+                case RankUpConditionId.Unused_1:
+                case RankUpConditionId.Unused_2:
+                case RankUpConditionId.Unused_3:
+                case RankUpConditionId.Unused_4:
+                    return $"{quantity}";
+
+                case RankUpConditionId.AtLeastNFemaleWarlordsInSameKingdom:
+                case RankUpConditionId.AtLeastNGalleryPokemon:
+                case RankUpConditionId.AtLeastNGalleryWarriors:
+                    return $"{quantity}";
+
+                case RankUpConditionId.AfterCompletingEpisode:
+                case RankUpConditionId.DuringEpisode:
+                    return $"{(EpisodeId)quantity}";
+
+                case RankUpConditionId.MonotypeGallery:
+                    return $"{(TypeId)quantity}";
+
+                case RankUpConditionId.WarriorInSameArmyNotNearby:
+                case RankUpConditionId.WarriorInSameKingdom:
+                    return $"{(WarriorLineId)quantity}";
+
+                default:
+                    throw new ArgumentException($"Unexpeted {nameof(RankUpConditionId)}");
             }
         }
 
@@ -225,7 +258,7 @@ namespace RanseiConsole
         public static void Render(this IConsole console, IWarriorMaxLink maxSync, WarriorId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
-            foreach (var pid in EnumUtil.GetValues<PokemonId>())
+            foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
             {
                 console.WriteProperty(pid.ToString(), maxSync.GetMaxLink(pid).ToString());
             }
@@ -269,23 +302,44 @@ namespace RanseiConsole
             console.WriteProperty("Sprite", model.Sprite);
             console.WriteProperty("Warrior Name Table Entry", model.WarriorName);
             console.WriteProperty("Specialities", $"{model.Speciality1} / {model.Speciality2}");
+            console.WriteProperty("Weaknesses", $"{model.Weakness1} / {model.Weakness2}");
             console.WriteProperty("Skill", model.Skill);
-            console.WriteProperty("Power", model.Power);
-            console.WriteProperty("Wisdom", model.Wisdom);
-            console.WriteProperty("Charisma", model.Charisma);
+            console.WriteProperty("Stats", $"Power {model.Power} / Wisdom {model.Wisdom} / Charisma {model.Charisma}");
             console.WriteProperty("Capacity", model.Capacity);
-            console.WriteProperty("Evolution", model.Evolution);
+            console.WriteProperty("Gender", model.Gender);
+            console.WriteProperty("Rank Up Into", model.RankUp);
+            console.WriteProperty("Rank Up Pokemon", $"{model.RankUpPokemon1} / {model.RankUpPokemon2}");
+            console.WriteProperty("Rank Up Link", $"{model.RankUpLink}%");
+            console.WriteProperty("Rank Up Condition 1", model.RankUpCondition1);
+            console.WriteProperty("Rank Up Condition 2",
+                $"{model.RankUpCondition2} ({RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity1ForRankUpCondition)}, {RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity2ForRankUpCondition)})");
         }
 
         public static void Render(this IConsole console, IScenarioAppearPokemon model, ScenarioId id)
         {
             console.WriteTitle($"{id} ({(int)id})");
-            foreach (var pid in EnumUtil.GetValues<PokemonId>())
+            foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
             {
                 if (model.GetCanAppear(pid))
                 {
                     console.Output.WriteLine($"    {pid}");
                 }
+            }
+        }
+
+        public static void Render(this IConsole console, IEventSpeaker model, EventSpeakerId id)
+        {
+            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteProperty("Name", model.Name);
+            console.WriteProperty("Sprite", model.Sprite);
+        }
+
+        public static void Render(this IConsole console, IScenarioKingdom model, ScenarioId id)
+        {
+            console.WriteTitle($"{id} ({(int)id}) number of battles to unlock each kingdom");
+            foreach (var k in EnumUtil.GetValues<KingdomId>())
+            {
+                console.WriteProperty(k, model.GetBattlesToUnlock(k));
             }
         }
     }

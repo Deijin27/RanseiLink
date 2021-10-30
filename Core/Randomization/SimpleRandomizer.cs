@@ -31,11 +31,11 @@ namespace Core.Randomization
 
         public override void Apply(IDataService service)
         {
-            PokemonId[] pokemonIds = EnumUtil.GetValues<PokemonId>().ToArray();
+            PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
             AbilityId[] abilityIds = EnumUtil.GetValues<AbilityId>().ToArray();
             TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
             MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
-            WarriorId[] warriorIds = EnumUtil.GetValues<WarriorId>().ToArray();
+            WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
             ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
 
             if (OptionDict[Option.AvoidDummys].Enabled)

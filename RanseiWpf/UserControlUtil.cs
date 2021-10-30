@@ -32,6 +32,30 @@ namespace RanseiWpf
 
         public static DependencyProperty RegisterDependencyProperty<TView, TProperty>(
             Expression<Func<TView, TProperty>> property,
+            TProperty defaultValue, FrameworkPropertyMetadataOptions options, PropertyChangedCallback<TView, TProperty> propertyChangedCallback)
+            where TView : DependencyObject
+        {
+            var expression = (MemberExpression)property.Body;
+            var propertyName = expression.Member.Name;
+
+            PropertyChangedCallback callback = (d, e) =>
+            {
+                DependencyPropertyChangedEventArgs<TProperty> eArgs =
+                new DependencyPropertyChangedEventArgs<TProperty>(e.Property, (TProperty)e.OldValue, (TProperty)e.NewValue);
+
+                propertyChangedCallback?.Invoke((TView)d, eArgs);
+            };
+
+            return DependencyProperty.Register(
+                propertyName,
+                typeof(TProperty),
+                typeof(TView),
+                new FrameworkPropertyMetadata(defaultValue, options, callback)
+                );
+        }
+
+        public static DependencyProperty RegisterDependencyProperty<TView, TProperty>(
+            Expression<Func<TView, TProperty>> property,
             TProperty defaultValue)
             where TView : DependencyObject
         {

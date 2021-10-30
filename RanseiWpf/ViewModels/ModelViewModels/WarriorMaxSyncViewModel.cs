@@ -5,9 +5,19 @@ using System.Collections.Generic;
 
 namespace RanseiWpf.ViewModels
 {
-    public class WarriorMaxSyncListItem
+    public class WarriorMaxSyncListItem : ViewModelBase
     {
-        public uint MaxSyncValue { get; set; }
+        private readonly IWarriorMaxLink _model;
+        public WarriorMaxSyncListItem(PokemonId pokemon, IWarriorMaxLink model)
+        {
+            _model = model;
+            Pokemon = pokemon;
+        }
+        public uint MaxSyncValue
+        {
+            get => _model.GetMaxLink(Pokemon);
+            set => RaiseAndSetIfChanged(MaxSyncValue, value, v => _model.SetMaxLink(Pokemon, v));
+        }
         public PokemonId Pokemon { get; set; }
     }
     public class WarriorMaxSyncViewModel : ViewModelBase, IViewModelForModel<IWarriorMaxLink>
@@ -15,25 +25,14 @@ namespace RanseiWpf.ViewModels
         private IWarriorMaxLink _model;
         public IWarriorMaxLink Model
         {
-            get
-            {
-                foreach (var i in Items)
-                {
-                    _model.SetMaxLink(i.Pokemon, i.MaxSyncValue);
-                }
-                return _model;
-            }
+            get => _model;
             set
             {
                 _model = value;
                 var items = new List<WarriorMaxSyncListItem>();
-                foreach (PokemonId pid in EnumUtil.GetValues<PokemonId>())
+                foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
                 {
-                    items.Add(new WarriorMaxSyncListItem()
-                    {
-                        MaxSyncValue = value.GetMaxLink(pid),
-                        Pokemon = pid
-                    });
+                    items.Add(new WarriorMaxSyncListItem(pid, value));
                 }
                 Items = items;
             }

@@ -12,14 +12,14 @@ namespace Core.Services.Registration
             string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RanseiLink");
             Directory.CreateDirectory(rootFolder);
 
-            INdsFactory ndsFactory = new NdsFactory();
+            NdsFactory ndsFactory = i => new Nds.Nds(i);
             container.RegisterSingleton(ndsFactory);
 
             container.RegisterSingleton<IModService>(new ModService(rootFolder, ndsFactory));
 
             container.RegisterSingleton<ISettingsService>(new SettingsService(rootFolder));
 
-            container.RegisterSingleton<IDataServiceFactory>(new DataServiceFactory());
+            container.RegisterSingleton<DataServiceFactory>(m => new DataService(m));
         }
     }
 }

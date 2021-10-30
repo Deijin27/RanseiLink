@@ -3,7 +3,7 @@ using System;
 
 namespace RanseiConsole
 {
-    internal static partial class RenderExtensions
+    public static partial class RenderExtensions
     {
         private static void WriteTitle(this IConsole console, object title)
         {

@@ -71,6 +71,14 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:EventSpeakerSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioKingdomSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
@@ -119,6 +127,14 @@
 
             <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonViewModel}">
                 <views:ScenarioAppearPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EventSpeakerViewModel}">
+                <views:EventSpeakerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioKingdomViewModel}">
+                <views:ScenarioKingdomView/>
             </DataTemplate>
 
         </ResourceDictionary>

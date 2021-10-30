@@ -3,7 +3,7 @@ using Core.Services;
 
 namespace RanseiConsole
 {
-    internal static partial class RenderExtensions
+    public static partial class RenderExtensions
     {
         public static void Render(this IConsole console, ModInfo modInfo, string title = "Mod Info")
         {

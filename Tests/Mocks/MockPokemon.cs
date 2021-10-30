@@ -50,6 +50,7 @@ namespace Tests.Mocks
         public uint NationalPokedexNumber { get; set; }
         public uint MovementRange { get; set; }
         public PokemonEvolutionRange EvolutionRange { get; set; } = new PokemonEvolutionRange();
+        public uint UnknownValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         Dictionary<KingdomId, bool> RequiresLv2Dict;
         Dictionary<KingdomId, bool> DefaultDict;

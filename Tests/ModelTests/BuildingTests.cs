@@ -34,11 +34,11 @@ namespace Tests.ModelTests
             IBuilding b = new Building
             {
                 Name = "Sacred Ruins",
-                Kingdom = KingdomId.Aurora
+                Kingdom = KingdomId.Cragspur
             };
 
             Assert.Equal("Sacred Ruins", b.Name);
-            Assert.Equal(KingdomId.Aurora, b.Kingdom);
+            Assert.Equal(KingdomId.Cragspur, b.Kingdom);
 
             // Add Array equal test when possible
         }

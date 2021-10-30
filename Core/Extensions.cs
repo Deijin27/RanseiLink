@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Core
 {
-    internal static class Extensions
+    public static class Extensions
     {
         internal static string ReadMagicNumber(this BinaryReader br)
         {

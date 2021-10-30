@@ -14,9 +14,9 @@ namespace Core.Services.Concrete
         public const string ModInfoFileName = "RanseiLinkModInfo.xml";
         public const string ExportModFileExtension = ".rlmod";
 
-        private readonly INdsFactory _ndsFactory;
+        private readonly NdsFactory _ndsFactory;
 
-        public ModService(string rootFolder, INdsFactory ndsFactory)
+        public ModService(string rootFolder, NdsFactory ndsFactory)
         {
             _ndsFactory = ndsFactory;
             modFolder = modFolder = Path.Combine(rootFolder, "Mods");
@@ -128,7 +128,7 @@ namespace Core.Services.Concrete
 
         public void LoadRom(string path, ModInfo modInfo)
         {
-            using (var nds = _ndsFactory.Create(path))
+            using (var nds = _ndsFactory(path))
             {
                 nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
             }
@@ -139,7 +139,7 @@ namespace Core.Services.Concrete
         public void Commit(ModInfo modInfo, string path)
         {
             string currentModFolder = modInfo.FolderPath;
-            using (var nds = _ndsFactory.Create(path))
+            using (var nds = _ndsFactory(path))
             {
                 nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
                 nds.InsertFixedLengthFile(Constants.MoveRomPath, Path.Combine(currentModFolder, Constants.MoveRomPath));
@@ -161,6 +161,8 @@ namespace Core.Services.Concrete
                     nds.InsertFixedLengthFile(swPath, Path.Combine(currentModFolder, swPath));
                     var sapPath = Constants.ScenarioAppearPokemonPathFromId(i);
                     nds.InsertFixedLengthFile(sapPath, Path.Combine(currentModFolder, sapPath));
+                    var skPath = Constants.ScenarioKingdomPathFromId(i);
+                    nds.InsertFixedLengthFile(skPath, Path.Combine(currentModFolder, skPath));
                 }
             }
         }

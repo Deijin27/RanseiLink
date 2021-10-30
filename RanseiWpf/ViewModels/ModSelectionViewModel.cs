@@ -11,13 +11,13 @@ namespace RanseiWpf.ViewModels
     {
         private readonly IModService _modService;
         private readonly IDialogService _dialogService;
-        private readonly IDataServiceFactory _dataServiceFactory;
+        private readonly DataServiceFactory _dataServiceFactory;
 
         public ModSelectionViewModel(IServiceContainer container)
         {
             _modService = container.Resolve<IModService>();
             _dialogService = container.Resolve<IDialogService>();
-            _dataServiceFactory = container.Resolve<IDataServiceFactory>();
+            _dataServiceFactory = container.Resolve<DataServiceFactory>();
 
 
             RefreshModItems();
