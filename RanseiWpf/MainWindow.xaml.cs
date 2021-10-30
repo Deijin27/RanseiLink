@@ -17,6 +17,8 @@ namespace RanseiWpf
             DataContext = new MainWindowViewModel(ServiceContainer.Instance);
         }
 
+        private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+
         private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -27,6 +29,7 @@ namespace RanseiWpf
 
         private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
         {
+            ViewModel.OnShutdown();
             App.Current.Shutdown();
         }
 

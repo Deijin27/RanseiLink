@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace RanseiWpf.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, ISaveable
     {
         public MainWindowViewModel(IServiceContainer container)
         {
@@ -35,10 +35,7 @@ namespace RanseiWpf.ViewModels
             {
                 if (currentVm != value)
                 {
-                    if (currentVm is ISaveable saveable)
-                    {
-                        saveable.Save();
-                    }
+                    Save();
                     currentVm = value;
                     RaisePropertyChanged();
                 }
@@ -53,5 +50,18 @@ namespace RanseiWpf.ViewModels
         }
 
         public ICommand BackButtonCommand { get; }
+
+        public void OnShutdown()
+        {
+            Save();
+        }
+
+        public void Save()
+        {
+            if (currentVm is ISaveable saveable)
+            {
+                saveable.Save();
+            }
+        }
     }
 }
