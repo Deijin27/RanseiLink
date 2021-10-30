@@ -24,7 +24,7 @@ namespace RanseiWpf.Controls
             NumberTextBox.Text = "0";
         }
 
-        public static DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Value, default, OnValuePropertyChanged);
+        public static DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Value, default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValuePropertyChanged);
 
         public uint Value
         {
@@ -83,12 +83,17 @@ namespace RanseiWpf.Controls
 
         private void NumberTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string text = ((TextBox)sender).Text;
+            var senderTextBox = (TextBox)sender;
+            string text = senderTextBox.Text;
             var newVal = uint.TryParse(text, out uint i) ? i : Min;
             if (Value != newVal)
             {
                 Value = newVal;
                 RaiseValueChanged();
+                if (string.IsNullOrEmpty(text))
+                {
+                    senderTextBox.Text = "";
+                }
             }
         }
 

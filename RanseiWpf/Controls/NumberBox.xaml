@@ -8,19 +8,20 @@
              d:DesignHeight="20" d:DesignWidth="100">
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style TargetType="Button">
+            <Style TargetType="RepeatButton">
                 <Setter Property="Width" Value="18"/>
-                <Setter Property="Foreground" Value="#606060"/>
-                <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="FontSize" Value="11"/>
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border x:Name="SurroundingBorder" BorderThickness="1" BorderBrush="#ABADB3" Background="#ABADB3" Height="20">
         <DockPanel>
-            <Button x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0"></Button>
-            <Button x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0"></Button>
+            <RepeatButton x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0">
+                <Path Stroke="#606060" Data="M 0 0 l 4.5 4.5 4.5 -4.5"/>
+            </RepeatButton>
+            <RepeatButton x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0">
+                <Path Stroke="#606060" Data="M 0 4.5 l 4.5 -4.5 4.5 4.5"/>
+            </RepeatButton>
             <TextBox x:Name="NumberTextBox" TextChanged="NumberTextBox_TextChanged" PreviewTextInput="NumberTextBox_PreviewTextInput" BorderThickness="0" Background="White"/>
         </DockPanel>
     </Border>
