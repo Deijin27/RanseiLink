@@ -24,7 +24,7 @@ namespace RanseiConsole.ArchiveCommands
 
         public override ValueTask ExecuteAsync(IConsole console)
         {
-            var ndsFactory = Container.Resolve<INdsFactory>();
+            var ndsFactory = Container.Resolve<NdsFactory>();
 
             if (string.IsNullOrEmpty(DestinationFolder))
             {
@@ -35,7 +35,7 @@ namespace RanseiConsole.ArchiveCommands
                 Directory.CreateDirectory(DestinationFolder);
             }
 
-            using INds nds = ndsFactory.Create(NdsPath);
+            using INds nds = ndsFactory(NdsPath);
             nds.ExtractCopyOfDirectory(FilePath, DestinationFolder);
 
             return default;
