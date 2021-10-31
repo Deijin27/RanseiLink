@@ -1,5 +1,4 @@
 ﻿using Core.Enums;
-using System.Text;
 using Core.Models.Interfaces;
 
 namespace Core.Models
@@ -33,17 +32,17 @@ namespace Core.Models
 
         public uint Power
         {
-            get => GetUInt32(4, 7, 5);
-            set => SetUInt32(4, 7, 5, value);
+            get => GetUInt32(4, 8, 5);
+            set => SetUInt32(4, 8, 5, value);
         }
 
-        public MoveEffectId Effect0
+        public MoveEffectId Effect1
         {
             get => (MoveEffectId)GetUInt32(4, 7, 13);
             set => SetUInt32(4, 7, 13, (uint)value);
         }
 
-        public uint Effect0Chance
+        public uint Effect1Chance
         {
             get => GetUInt32(4, 7, 20);
             set => SetUInt32(4, 7, 20, value);
@@ -55,37 +54,37 @@ namespace Core.Models
             set => SetUInt32(4, 5, 27, (uint)value);
         }
 
-        public MoveEffectId Effect1
+        public MoveEffectId Effect2
         {
             get => (MoveEffectId)GetUInt32(6, 7, 0);
             set => SetUInt32(6, 7, 0, (uint)value);
         }
 
-        public uint Effect1Chance
+        public uint Effect2Chance
         {
             get => GetUInt32(6, 7, 7);
             set => SetUInt32(6, 7, 7, value);
         }
 
-        public MoveEffectId Effect2
+        public MoveEffectId Effect3
         {
             get => (MoveEffectId)GetUInt32(6, 7, 14);
             set => SetUInt32(6, 7, 14, (uint)value);
         }
 
-        public uint Effect2Chance
+        public uint Effect3Chance
         {
             get => GetUInt32(6, 7, 21);
             set => SetUInt32(6, 7, 21, value);
         }
 
-        public MoveEffectId Effect3
+        public MoveEffectId Effect4
         {
             get => (MoveEffectId)GetUInt32(7, 7, 0);
             set => SetUInt32(7, 7, 0, (uint)value);
         }
 
-        public uint Effect3Chance
+        public uint Effect4Chance
         {
             get => GetUInt32(7, 7, 7);
             set => SetUInt32(7, 7, 7, value);
@@ -97,36 +96,45 @@ namespace Core.Models
             set => SetUInt32(7, 7, 19, value);
         }
 
-        public override string ToString()
+        public MoveAnimationId StartupAnimation
         {
-            var sb = new StringBuilder();
+            get => (MoveAnimationId)GetUInt32(5, 9, 0);
+            set => SetUInt32(5, 9, 0, (uint)value);
+        }
 
-            void add(string tag, string content)
-            {
-                sb.Append("    ");
-                sb.Append(tag);
-                sb.Append(": ");
-                sb.AppendLine(content);
-            }
+        public MoveAnimationId ProjectileAnimation
+        {
+            get => (MoveAnimationId)GetUInt32(5, 9, 9);
+            set => SetUInt32(5, 9, 9, (uint)value);
+        }
 
-            sb.AppendLine(nameof(Move) + ":");
+        public MoveAnimationId ImpactAnimation
+        {
+            get => (MoveAnimationId)GetUInt32(5, 9, 18);
+            set => SetUInt32(5, 9, 18, (uint)value);
+        }
 
-            add(nameof(Name), Name);
-            add(nameof(MovementFlags), MovementFlags.ToString());
-            add(nameof(Type), Type.ToString());
-            add(nameof(Power), Power.ToString());
-            add(nameof(Effect0), Effect0.ToString());
-            add(nameof(Effect0Chance), Effect0Chance.ToString());
-            add(nameof(Range), Range.ToString());
-            add(nameof(Effect1), Effect1.ToString());
-            add(nameof(Effect1Chance), Effect1Chance.ToString());
-            add(nameof(Effect2), Effect2.ToString());
-            add(nameof(Effect2Chance), Effect2Chance.ToString());
-            add(nameof(Effect3), Effect3.ToString());
-            add(nameof(Effect3Chance), Effect3Chance.ToString());
-            add(nameof(Accuracy), Accuracy.ToString());
+        /// <summary>
+        /// This is either wrong or i don't understand it yet
+        /// </summary>
+        public MoveAnimationTargetId AnimationTarget1
+        {
+            get => (MoveAnimationTargetId)GetUInt32(7, 3, 26);
+            set => SetUInt32(7, 3, 26, (uint)value);
+        }
+        /// <summary>
+        /// This is either wrong or i don't understand it yet
+        /// </summary>
+        public MoveAnimationTargetId AnimationTarget2
+        {
+            get => (MoveAnimationTargetId)GetUInt32(7, 3, 29);
+            set => SetUInt32(7, 3, 29, (uint)value);
+        }
 
-            return sb.ToString();
+        public MoveMovementAnimationId MovementAnimation
+        {
+            get => (MoveMovementAnimationId)GetUInt32(7, 5, 14);
+            set => SetUInt32(7, 5, 14, (uint)value);
         }
 
         public IMove Clone()

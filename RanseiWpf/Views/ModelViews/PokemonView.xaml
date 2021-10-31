@@ -122,7 +122,7 @@
             <TextBlock Grid.Column="1" HorizontalAlignment="Center">to</TextBlock>
             <controls:NumberBox Grid.Column="2" Max="115" Value="{Binding MaxEvolutionEntry, Mode=TwoWay}" IsEnabled="{Binding CanEvolve}"/>
         </Grid>
-        
+
 
         <GroupBox Header="Encounterable at Location" Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="11">
             <StackPanel>
@@ -131,12 +131,11 @@
                 <CheckBox Content="Encounterable in area unlocked at level 2" IsChecked="{Binding EncounterableWithLevel2Area, Mode=TwoWay}"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="Flags" Grid.Row="12" Grid.Column="3" Grid.RowSpan="2" Grid.ColumnSpan="2" Padding="11">
-            <StackPanel>
-                <CheckBox Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
-            </StackPanel>
-        </GroupBox>
-        
+        <CheckBox VerticalAlignment="Center" Grid.Row="12" Grid.Column="3" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+
+        <TextBlock Text="Unknown Value" Grid.Row="13" Grid.Column="3"/>
+        <controls:NumberBox Grid.Row="13" Grid.Column="4" Value="{Binding UnknownValue}"/>
+
 
     </Grid>
 </UserControl>

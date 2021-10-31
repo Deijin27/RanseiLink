@@ -24,6 +24,7 @@ namespace Core.Models.Interfaces
         uint NationalPokedexNumber { get; set; }
         uint MovementRange { get; set; }
         PokemonEvolutionRange EvolutionRange { get; set; }
+        uint UnknownValue { get; set; }
 
         bool GetEncounterable(KingdomId kingdom, bool requiresLevel2);
         void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value);

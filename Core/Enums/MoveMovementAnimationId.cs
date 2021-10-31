@@ -1,7 +1,7 @@
 ﻿
 namespace Core.Enums
 {
-    public enum MoveChargingAnimationId : uint
+    public enum MoveMovementAnimationId : uint
     {
         Splash,
         Unknown_1,

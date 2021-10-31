@@ -207,8 +207,8 @@ namespace RanseiConsole
             console.WriteProperty("Accuracy", $"{move.Accuracy}%");
             console.WriteProperty("MovementFlags", move.MovementFlags.ToString());
             console.WriteProperty("Range", move.Range.ToString());
-            console.WriteProperty("Effects", $"{move.Effect0} {RenderQuantityForMoveEffect(move.Effect0, move.Effect0Chance)}/ {move.Effect1} {RenderQuantityForMoveEffect(move.Effect1, move.Effect1Chance)}");
-            console.WriteProperty("Unused Effect Duplicates", $"{move.Effect2} {RenderQuantityForMoveEffect(move.Effect2, move.Effect2Chance)}/ {move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}");
+            console.WriteProperty("Effects", $"{move.Effect1} {RenderQuantityForMoveEffect(move.Effect1, move.Effect1Chance)}/ {move.Effect2} {RenderQuantityForMoveEffect(move.Effect2, move.Effect2Chance)}");
+            console.WriteProperty("Unused Effect Duplicates", $"{move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}/ {move.Effect4} {RenderQuantityForMoveEffect(move.Effect4, move.Effect4Chance)}");
         }
 
         public static void Render(this IConsole console, IAbility ability, AbilityId id)

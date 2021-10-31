@@ -179,6 +179,12 @@ namespace Core.Models
             set => SetUInt32(11, 8, 0, value);
         }
 
+        public uint UnknownValue
+        {
+            get => GetUInt32(3, 4, 18);
+            set => SetUInt32(3, 4, 18, value);
+        }
+
         public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
             var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);

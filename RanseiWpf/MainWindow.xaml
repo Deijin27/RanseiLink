@@ -8,6 +8,7 @@
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         WindowStyle="None"
+        ResizeMode="NoResize"
         AllowsTransparency="True"
         Height="500" Width="900" Background="Transparent">
     <Window.Resources>

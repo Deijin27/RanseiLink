@@ -218,6 +218,12 @@ namespace RanseiWpf.ViewModels
             }
         }
 
+        public uint UnknownValue
+        {
+            get => Model.UnknownValue;
+            set => RaiseAndSetIfChanged(Model.UnknownValue, value, v => Model.UnknownValue = v);
+        }
+
         public bool EncounterableAtDefaultArea
         {
             get => Model.GetEncounterable(SelectedEncounterKingdom, false);
