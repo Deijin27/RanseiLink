@@ -1,0 +1,142 @@
+﻿<Application x:Class="RanseiLink.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RanseiLink"
+             xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:views="clr-namespace:RanseiLink.Views"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/RedHoverButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/GrayHoverButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/MenuToggleButtonStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ListViewStyle1.xaml"/>
+                <ResourceDictionary Source="Styles/ScrollBarStyle1.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Fonts -->
+            <FontFamily x:Key="SegoeMDL2Assets">pack://application:,,,/Fonts/#Segoe MDL2 Assets</FontFamily>
+            
+            <!-- Register Main View Models -->
+
+            <DataTemplate DataType="{x:Type vm:ModSelectionViewModel}">
+                <views:ModSelectionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MainEditorViewModel}">
+                <views:MainEditorView/>
+            </DataTemplate>
+
+            <!-- Register Selector View Models -->
+            
+            <DataTemplate DataType="{x:Type vm:PokemonSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AbilitySelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorSkillSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveRangeSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
+                <views:ScenarioSelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorSelectorViewModel}">
+                <views:ScenarioSelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BaseWarriorSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EventSpeakerSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioKingdomSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <!-- Register View Models -->
+
+            <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
+                <views:PokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveViewModel}">
+                <views:MoveView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
+                <views:AbilityView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">
+                <views:WarriorSkillView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
+                <views:MoveRangeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EvolutionTableViewModel}">
+                <views:EvolutionTableView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioPokemonViewModel}">
+                <views:ScenarioPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorViewModel}">
+                <views:ScenarioWarriorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncViewModel}">
+                <views:WarriorMaxSyncView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorNameTableViewModel}">
+                <views:WarriorNameTableView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BaseWarriorViewModel}">
+                <views:BaseWarriorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonViewModel}">
+                <views:ScenarioAppearPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EventSpeakerViewModel}">
+                <views:EventSpeakerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioKingdomViewModel}">
+                <views:ScenarioKingdomView/>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

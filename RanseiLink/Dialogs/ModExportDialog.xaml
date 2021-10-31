@@ -1,0 +1,44 @@
+﻿<Window x:Class="RanseiLink.Dialogs.ModExportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RanseiLink.Dialogs"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+        xmlns:controls="clr-namespace:RanseiLink.Controls"
+        d:DataContext="{d:DesignInstance vm:ModExportViewModel, IsDesignTimeCreatable=False}"
+        Background="Transparent"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        Title="ModExportDialog" Height="225" Width="550">
+    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
+        <DockPanel>
+            <Grid Width="200" DockPanel.Dock="Left" Background="LightGray" Opacity="0.9"
+              dd:DragDrop.IsDropTarget="True"
+              dd:DragDrop.DropHandler="{Binding RomDropHandler}">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
+                    <TextBlock Text="Drop a folder to&#x0a; export to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <TextBlock FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE197;" HorizontalAlignment="Center" FontSize="40" Height="60"/>
+                    <TextBlock Text="{Binding Folder, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
+                    <Button Command="{Binding DesktopCommand}" Width="130" Margin="10,0,10,0">Desktop</Button>
+                </StackPanel>
+            </Grid>
+            <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Export" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+                    <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Column="1" Background="WhiteSmoke">
+                <StackPanel>
+                    <TextBlock Margin="10" FontSize="18">Exporting Mod</TextBlock>
+                    <controls:ModInfoControl ModInfo="{Binding ModInfo, Mode=OneWay}"/>
+                </StackPanel>
+                
+            </Border>
+        </DockPanel>
+    </Border>
+</Window>

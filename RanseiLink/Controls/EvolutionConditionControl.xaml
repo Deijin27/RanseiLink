@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="RanseiLink.Controls.EvolutionConditionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiLink.Controls"
+             mc:Ignorable="d" 
+             d:DesignWidth="300" d:Background="WhiteSmoke">
+    <StackPanel>
+        <ComboBox x:Name="ConditionCombo" Margin="0,0,0,11" SelectionChanged="ConditionCombo_SelectionChanged"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="11"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="QuantityName" Text="Placeholder" VerticalAlignment="Center"/>
+            <local:NumberBox x:Name="QuantityNumberBox" Grid.Column="2" ValueChanged="QuantityNumberBox_ValueChanged" Max="511"/>
+            <ComboBox x:Name="GenderComboBox" Grid.Column="2" SelectionChanged="QuantityComboBox_SelectionChanged"/>
+            <ComboBox x:Name="ItemComboBox" Grid.Column="2" SelectionChanged="QuantityComboBox_SelectionChanged"/>
+            <ComboBox x:Name="KingdomComboBox" Grid.Column="2" SelectionChanged="QuantityComboBox_SelectionChanged"/>
+        </Grid>
+    </StackPanel>
+</UserControl>
