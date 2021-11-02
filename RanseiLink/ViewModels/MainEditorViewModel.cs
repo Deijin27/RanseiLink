@@ -86,7 +86,7 @@ namespace RanseiLink.ViewModels
                 new ListItem("Evolution Table", new EvolutionTableViewModel(_dialogService, _dataService.Pokemon)),
                 new ListItem("Warrior Name Table", new WarriorNameTableViewModel(_dialogService, _dataService.BaseWarrior)),
                 new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
-                new ListItem("Max Link", new WarriorMaxSyncSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.MaxLink)),
+                new ListItem("Max Link", new MaxLinkSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.MaxLink)),
                 new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dialogService, _dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
                 new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dialogService, _dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
                 new ListItem("Scenario Appear Pokemon", new ScenarioAppearPokemonSelectorViewModel(_dialogService, ScenarioId.TheLegendOfRansei, _dataService.ScenarioAppearPokemon)),

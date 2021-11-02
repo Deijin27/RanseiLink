@@ -40,7 +40,7 @@
                         Style="{StaticResource GrayHoverButtonStyle}"/>
                     <TextBlock FontSize="12" 
                        HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-                           RanseiLink v<Run Text="{x:Static local:App.Version}"/>
+                           RanseiLink <Run Text="{x:Static local:App.Version}"/>
                     </TextBlock>
                 </StackPanel>
             </Grid>

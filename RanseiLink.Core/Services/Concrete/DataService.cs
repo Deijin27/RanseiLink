@@ -18,7 +18,7 @@ namespace RanseiLink.Core.Services.Concrete
             EventSpeaker = new EventSpeakerService(mod);
             ScenarioPokemon = new ScenarioPokemonService(mod);
             ScenarioWarrior = new ScenarioWarriorService(mod);
-            MaxLink = new WarriorMaxLinkService(mod);
+            MaxLink = new MaxLinkService(mod);
             BaseWarrior = new BaseWarriorService(mod);
             ScenarioAppearPokemon = new ScenarioAppearPokemonService(mod);
             ScenarioKingdom = new ScenarioKingdomService(mod);
@@ -36,7 +36,7 @@ namespace RanseiLink.Core.Services.Concrete
         public IEventSpeakerService EventSpeaker { get; }
         public IScenarioPokemonService ScenarioPokemon { get; }
         public IScenarioWarriorService ScenarioWarrior { get; }
-        public IWarriorMaxLinkService MaxLink { get; }
+        public IMaxLinkService MaxLink { get; }
         public IBaseWarriorService BaseWarrior { get; }
         public IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
         public IScenarioKingdomService ScenarioKingdom { get; }

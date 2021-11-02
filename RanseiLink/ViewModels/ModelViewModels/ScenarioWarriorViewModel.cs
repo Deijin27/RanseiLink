@@ -126,7 +126,7 @@ namespace RanseiLink.ViewModels
             }
         }
 
-        private IWarriorMaxLink MaxLinkTable;
+        private IMaxLink MaxLinkTable;
 
         public uint MaxLink
         {

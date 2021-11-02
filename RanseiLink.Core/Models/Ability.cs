@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using System;
 
 namespace RanseiLink.Core.Models
 {
@@ -10,7 +11,7 @@ namespace RanseiLink.Core.Models
     {
         public const int DataLength = 0x14;
         public Ability(byte[] data) : base(data, DataLength) { }
-        public Ability() : base(new byte[DataLength], DataLength) { }
+        public Ability() : this(new byte[DataLength]) { }
 
         public string Name
         {

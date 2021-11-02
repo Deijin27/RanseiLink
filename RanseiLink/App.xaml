@@ -59,7 +59,7 @@
                 <views:ScenarioSelectorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncSelectorViewModel}">
+            <DataTemplate DataType="{x:Type vm:MaxLinkSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
 
@@ -113,8 +113,8 @@
                 <views:ScenarioWarriorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WarriorMaxSyncViewModel}">
-                <views:WarriorMaxSyncView/>
+            <DataTemplate DataType="{x:Type vm:MaxLinkViewModel}">
+                <views:MaxLinkView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:WarriorNameTableViewModel}">

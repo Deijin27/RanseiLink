@@ -9,19 +9,23 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid d:Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="10"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="90"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header="Select Scenario and Entry" Grid.ColumnSpan="4" Grid.RowSpan="3" Padding="5">
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Copy" Command="{Binding CopyCommand}"/>
+            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Paste" Command="{Binding PasteCommand}"/>
+            
+        </StackPanel>
+
+        <GroupBox Header="Select Scenario and Entry" Padding="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -42,7 +46,7 @@
             </Grid>
         </GroupBox>
         
-        <ContentControl Grid.Row="3" Grid.ColumnSpan="4" Content="{Binding NestedViewModel}"/>
+        <ContentControl Grid.Row="3" Grid.ColumnSpan="2" Content="{Binding NestedViewModel}"/>
         
     </Grid>
 </UserControl>

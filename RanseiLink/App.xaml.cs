@@ -10,7 +10,7 @@ namespace RanseiLink
     /// </summary>
     public partial class App : Application
     {
-        public const string Version = "Minnow-beta5";
+        public const string Version = "3 - beta6";
 
         public App()
         {

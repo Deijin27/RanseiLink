@@ -450,15 +450,15 @@ namespace RanseiLink.Console.Dev
             }
         }
 
-        static IEnumerable<WarriorMaxLink> IterateMaxSync()
+        static IEnumerable<MaxLink> IterateMaxSync()
         {
             using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\BaseBushouMaxSyncTable.dat"));
 
-            int count = (int)(file.BaseStream.Length / WarriorMaxLink.DataLength);
+            int count = (int)(file.BaseStream.Length / MaxLink.DataLength);
             for (int i = 0; i < count; i++)
             {
-                var item = file.ReadBytes(WarriorMaxLink.DataLength);
-                yield return new WarriorMaxLink(item);
+                var item = file.ReadBytes(MaxLink.DataLength);
+                yield return new MaxLink(item);
             }
         }
 

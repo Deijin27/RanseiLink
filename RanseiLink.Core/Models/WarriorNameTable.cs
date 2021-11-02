@@ -8,7 +8,7 @@ namespace RanseiLink.Core.Models
         public const int DataLength = 0x9D8;
         public const int EntryLength = 0xC;
         public const int EntryCount = 0xD2;
-        public WarriorNameTable(byte[] data) : base(data, DataLength) { }
+        public WarriorNameTable(byte[] data) : base(data, DataLength, true) { }
         public WarriorNameTable() : this(new byte[DataLength]) { }
 
         public string GetEntry(uint id)

@@ -76,7 +76,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IPokemon pokemon, PokemonId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {pokemon.Serialize()}");
             console.WriteProperty("Name", pokemon.Name);
             console.WriteProperty("Types", $"{pokemon.Type1} / {pokemon.Type2}");
             console.WriteProperty("Abilities", $"{pokemon.Ability1} / {pokemon.Ability2} / {pokemon.Ability3}");
@@ -200,7 +200,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IMove move, MoveId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {move.Serialize()}");
             console.WriteProperty("Name", move.Name);
             console.WriteProperty("Type", move.Type.ToString());
             console.WriteProperty("Power", move.Power.ToString());
@@ -213,7 +213,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IAbility ability, AbilityId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {ability.Serialize()}");
             console.WriteProperty("Name", ability.Name);
             console.WriteProperty("Effect1", $"{ability.Effect1} ({ability.Effect1Amount})");
             console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
@@ -221,7 +221,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IWarriorSkill saihai, WarriorSkillId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {saihai.Serialize()}");
             console.WriteProperty("Name", saihai.Name);
             console.WriteProperty("Effect1", $"{saihai.Effect1} ({saihai.Effect1Amount})");
             console.WriteProperty("Effect2", $"{saihai.Effect2} ({saihai.Effect2Amount})");
@@ -232,32 +232,32 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IGimmick gimmick, GimmickId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {gimmick.Serialize()}");
             console.WriteProperty("Name", gimmick.Name);
         }
 
         public static void Render(this IConsole console, IBuilding building, BuildingId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {building.Serialize()}");
             console.WriteProperty("Name", building.Name);
             console.WriteProperty("Kingdom", building.Kingdom.ToString());
         }
 
         public static void Render(this IConsole console, IItem item, ItemId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {item.Serialize()}");
             console.WriteProperty("Name", item.Name);
         }
 
         public static void Render(this IConsole console, IKingdom kingdom, KingdomId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {kingdom.Serialize()}");
             console.WriteProperty("Name", kingdom.Name);
         }
 
-        public static void Render(this IConsole console, IWarriorMaxLink maxSync, WarriorId id)
+        public static void Render(this IConsole console, IMaxLink maxSync, WarriorId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {maxSync.Serialize()}");
             foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
             {
                 console.WriteProperty(pid.ToString(), maxSync.GetMaxLink(pid).ToString());
@@ -266,7 +266,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
         {
-            console.WriteTitle($"Scenario: {scenarioId}, Entry: {scenarioPokemonId}");
+            console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioPokemonId} : {scenarioPokemon.Serialize()}");
             console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());
             console.WriteProperty("Ability", scenarioPokemon.Ability.ToString());
             console.WriteProperty("IVs", $"Hp {scenarioPokemon.HpIv} / Atk {scenarioPokemon.AtkIv} / Def {scenarioPokemon.DefIv} / Spe {scenarioPokemon.SpeIv}");
@@ -274,14 +274,14 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)
         {
-            console.WriteTitle($"Scenario: {scenarioId}, Entry: {scenarioWarriorId}");
+            console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioWarriorId} : {scenarioWarrior.Serialize()}");
             console.WriteProperty("Warrior", scenarioWarrior.Warrior);
             console.WriteProperty("Scenario Pokemon Entry", scenarioWarrior.ScenarioPokemonIsDefault ? "<default>" : scenarioWarrior.ScenarioPokemon.ToString());
         }
 
         public static void Render(this IConsole console, IEvolutionTable model)
         {
-            console.WriteTitle("Evolution Table");
+            console.WriteTitle($"Evolution Table : {model.Serialize()}");
             for (int i = 0; i < EvolutionTable.DataLength; i++)
             {
                 console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry(i));
@@ -289,7 +289,7 @@ namespace RanseiLink.Console
         }
         public static void Render(this IConsole console, IWarriorNameTable model)
         {
-            console.WriteTitle("Warrior Name Table");
+            console.WriteTitle($"Warrior Name Table : {model.Serialize()}");
             for (int i = 0; i < WarriorNameTable.EntryCount; i++)
             {
                 console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry((uint)i));
@@ -298,7 +298,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IBaseWarrior model, WarriorId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {model.Serialize()}");
             console.WriteProperty("Sprite", model.Sprite);
             console.WriteProperty("Warrior Name Table Entry", model.WarriorName);
             console.WriteProperty("Specialities", $"{model.Speciality1} / {model.Speciality2}");
@@ -317,7 +317,7 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IScenarioAppearPokemon model, ScenarioId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} : {model.Serialize()}");
             foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
             {
                 if (model.GetCanAppear(pid))
@@ -329,14 +329,14 @@ namespace RanseiLink.Console
 
         public static void Render(this IConsole console, IEventSpeaker model, EventSpeakerId id)
         {
-            console.WriteTitle($"{id} ({(int)id})");
+            console.WriteTitle($"{id} :  {model.Serialize()}");
             console.WriteProperty("Name", model.Name);
             console.WriteProperty("Sprite", model.Sprite);
         }
 
         public static void Render(this IConsole console, IScenarioKingdom model, ScenarioId id)
         {
-            console.WriteTitle($"{id} ({(int)id}) number of battles to unlock each kingdom");
+            console.WriteTitle($"{id} : {model.Serialize()}");
             foreach (var k in EnumUtil.GetValues<KingdomId>())
             {
                 console.WriteProperty(k, model.GetBattlesToUnlock(k));

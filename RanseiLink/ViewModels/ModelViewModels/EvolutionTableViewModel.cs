@@ -7,6 +7,8 @@ using RanseiLink.Core;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System;
+using System.Windows.Input;
+using System.Windows;
 
 namespace RanseiLink.ViewModels
 {
@@ -22,20 +24,21 @@ namespace RanseiLink.ViewModels
         public PokemonId Pokemon { get; set; }
         public PokemonId[] PokemonItems { get; }
     }
-    public class EvolutionTableViewModel : ViewModelBase, IViewModelForModel<IEvolutionTable>, ISaveableRefreshable
+    public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
     {
         private readonly IDialogService _dialogService;
         private readonly IPokemonService DataService;
-        private IEvolutionTable evolutionTable;
+        private IEvolutionTable _model;
 
         public EvolutionTableViewModel(IDialogService dialogService, IPokemonService dataService)
         {
             _dialogService = dialogService;
             DataService = dataService;
             Refresh();
-        }
 
-        public IEvolutionTable Model { get; set; }
+            PasteCommand = new RelayCommand(Paste);
+            CopyCommand = new RelayCommand(Copy);
+        }
 
         public IReadOnlyList<EvolutionTableItem> Items { get; private set; }
 
@@ -45,11 +48,11 @@ namespace RanseiLink.ViewModels
         {
             foreach (var item in Items)
             {
-                evolutionTable.SetEntry(item.Index, item.Pokemon);
+                _model.SetEntry(item.Index, item.Pokemon);
             }
             try
             {
-                DataService.SaveEvolutionTable(evolutionTable);
+                DataService.SaveEvolutionTable(_model);
             }
             catch (Exception e)
             {
@@ -66,11 +69,11 @@ namespace RanseiLink.ViewModels
         {
             try
             {
-                evolutionTable = DataService.RetrieveEvolutionTable();
+                _model = DataService.RetrieveEvolutionTable();
                 var lst = new List<EvolutionTableItem>();
                 for (int i = 0; i < EvolutionTable.DataLength; i++)
                 {
-                    lst.Add(new EvolutionTableItem(i, evolutionTable.GetEntry(i), PokemonItems));
+                    lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
                 }
                 Items = lst;
             }
@@ -81,6 +84,40 @@ namespace RanseiLink.ViewModels
                     Icon = System.Windows.MessageBoxImage.Error,
                     Title = $"Error retrieving data in {GetType().Name}",
                     Message = e.Message
+                });
+            }
+        }
+
+        public ICommand CopyCommand { get; }
+        public ICommand PasteCommand { get; }
+
+        private void Copy()
+        {
+            Clipboard.SetText(_model.Serialize());
+        }
+
+        private void Paste()
+        {
+            string text = Clipboard.GetText();
+
+            if (_model.TryDeserialize(text))
+            {
+                _model = DataService.RetrieveEvolutionTable();
+                var lst = new List<EvolutionTableItem>();
+                for (int i = 0; i < EvolutionTable.DataLength; i++)
+                {
+                    lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
+                }
+                Items = lst;
+            }
+            else
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = MessageBoxImage.Warning,
+                    Title = "Invalid Paste Data",
+                    Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
+                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
                 });
             }
         }

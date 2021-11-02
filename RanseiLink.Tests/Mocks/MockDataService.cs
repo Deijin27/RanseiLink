@@ -29,7 +29,7 @@ namespace RanseiLink.Tests.Mocks
 
         public IScenarioWarriorService ScenarioWarrior { get; set; }
 
-        public IWarriorMaxLinkService MaxLink { get; set; }
+        public IMaxLinkService MaxLink { get; set; }
 
         public IBaseWarriorService BaseWarrior { get; set; }
 

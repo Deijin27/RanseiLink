@@ -8,7 +8,13 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:WarriorNameTableViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <DockPanel>
+        <StackPanel HorizontalAlignment="Right" DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Copy" Command="{Binding CopyCommand}"/>
+            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Paste" Command="{Binding PasteCommand}"/>
+        </StackPanel>
         <ScrollViewer>
             <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}">
                 <ItemsControl.ItemTemplate>
@@ -26,5 +32,5 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </Grid>
+    </DockPanel>
 </UserControl>

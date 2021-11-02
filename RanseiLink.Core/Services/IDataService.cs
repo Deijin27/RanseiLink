@@ -16,7 +16,7 @@ namespace RanseiLink.Core.Services
         IEventSpeakerService EventSpeaker { get; }
         IScenarioPokemonService ScenarioPokemon { get; }
         IScenarioWarriorService ScenarioWarrior { get; }
-        IWarriorMaxLinkService MaxLink { get; }
+        IMaxLinkService MaxLink { get; }
         IBaseWarriorService BaseWarrior { get; }
         IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
         IScenarioKingdomService ScenarioKingdom { get; }
