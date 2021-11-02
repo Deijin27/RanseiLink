@@ -35,7 +35,7 @@ namespace RanseiLink.ViewModels
             set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
         }
 
-        public IEnumerable<TId> Items { get; }
+        public TId[] Items { get; }
 
         private TId _selected;
         public TId Selected
