@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Core.Models.Interfaces
 {
-    public interface IWarriorMaxLink : IDataWrapper
+    public interface IMaxLink : IDataWrapper
     {
         uint GetMaxLink(PokemonId pokemon);
         void SetMaxLink(PokemonId pokemon, uint value);

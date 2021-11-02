@@ -4,6 +4,8 @@ using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels
 {
@@ -16,7 +18,7 @@ namespace RanseiLink.ViewModels
             _table = table;
         }
         public uint Index { get; }
-        
+
         public string Name
         {
             get => _table.GetEntry(Index);
@@ -25,7 +27,7 @@ namespace RanseiLink.ViewModels
     }
     public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
     {
-        private readonly IDialogService _dialogService; 
+        private readonly IDialogService _dialogService;
         private readonly IBaseWarriorService _service;
         private IWarriorNameTable _model;
 
@@ -34,6 +36,9 @@ namespace RanseiLink.ViewModels
             _dialogService = dialogService;
             _service = dataService;
             Refresh();
+
+            PasteCommand = new RelayCommand(Paste);
+            CopyCommand = new RelayCommand(Copy);
         }
 
         public IReadOnlyList<WarriorNameTableItem> Items { get; private set; }
@@ -74,6 +79,39 @@ namespace RanseiLink.ViewModels
                     Icon = System.Windows.MessageBoxImage.Error,
                     Title = $"Error retrieving data in {GetType().Name}",
                     Message = e.Message
+                });
+            }
+        }
+
+        public ICommand CopyCommand { get; }
+        public ICommand PasteCommand { get; }
+
+        private void Copy()
+        {
+            Clipboard.SetText(_model.Serialize());
+        }
+
+        private void Paste()
+        {
+            string text = Clipboard.GetText();
+
+            if (_model.TryDeserialize(text))
+            {
+                var lst = new List<WarriorNameTableItem>();
+                for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
+                {
+                    lst.Add(new WarriorNameTableItem(i, _model));
+                }
+                Items = lst;
+            }
+            else
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = MessageBoxImage.Warning,
+                    Title = "Invalid Paste Data",
+                    Message = "The data that you pasted is invalid. Make sure you have the right label." +
+                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
                 });
             }
         }

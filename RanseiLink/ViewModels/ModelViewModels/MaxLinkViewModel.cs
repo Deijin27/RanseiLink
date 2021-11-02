@@ -7,8 +7,8 @@ namespace RanseiLink.ViewModels
 {
     public class WarriorMaxSyncListItem : ViewModelBase
     {
-        private readonly IWarriorMaxLink _model;
-        public WarriorMaxSyncListItem(PokemonId pokemon, IWarriorMaxLink model)
+        private readonly IMaxLink _model;
+        public WarriorMaxSyncListItem(PokemonId pokemon, IMaxLink model)
         {
             _model = model;
             Pokemon = pokemon;
@@ -20,10 +20,10 @@ namespace RanseiLink.ViewModels
         }
         public PokemonId Pokemon { get; set; }
     }
-    public class WarriorMaxSyncViewModel : ViewModelBase, IViewModelForModel<IWarriorMaxLink>
+    public class MaxLinkViewModel : ViewModelBase, IViewModelForModel<IMaxLink>
     {
-        private IWarriorMaxLink _model;
-        public IWarriorMaxLink Model
+        private IMaxLink _model;
+        public IMaxLink Model
         {
             get => _model;
             set

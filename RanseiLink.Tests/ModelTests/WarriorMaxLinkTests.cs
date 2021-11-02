@@ -10,7 +10,7 @@ namespace RanseiLink.Tests.ModelTests
         [Fact]
         public void AccessorsReturnCorrectValues()
         {
-            IWarriorMaxLink model = new WarriorMaxLink(new byte[]
+            IMaxLink model = new MaxLink(new byte[]
             {
                 0x64, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x50, 0x50, 0x50, 0x32, 0x56, 0x56, 0x50, 0x50,
                 0x56, 0x50, 0x50, 0x5A, 0x5A, 0x5A, 0x50, 0x50, 0x50, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x56, 0x56,
@@ -34,7 +34,7 @@ namespace RanseiLink.Tests.ModelTests
         [Fact]
         public void AccessorsSetCorrectValues()
         {
-            IWarriorMaxLink model = new WarriorMaxLink();
+            IMaxLink model = new MaxLink();
             model.SetMaxLink(PokemonId.Eevee, 75);
             model.SetMaxLink(PokemonId.Vaporeon, 12);
             model.SetMaxLink(PokemonId.Pikachu, 56);

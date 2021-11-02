@@ -113,7 +113,7 @@ namespace RanseiLink.Tests.ViewModelTests.SelectorTests
         [Fact]
         public void WarriorMaxLinkSelector()
         {
-            var selector = new WarriorMaxSyncSelectorViewModel(dialogService, 0, dataService.MaxLink);
+            var selector = new MaxLinkSelectorViewModel(dialogService, 0, dataService.MaxLink);
 
             selector.Selected = selector.Items[^1];
             selector.Selected = selector.Items[2];

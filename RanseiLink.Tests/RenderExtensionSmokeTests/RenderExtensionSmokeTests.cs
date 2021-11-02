@@ -56,7 +56,7 @@ namespace RanseiLink.Tests.RenderExtensionSmokeTests
         [Fact]
         public void WarriorMaxLinkRunsWithoutException()
         {
-            console.Render(new WarriorMaxLink(), 0);
+            console.Render(new MaxLink(), 0);
         }
         [Fact]
         public void ScenarioPokemonRunsWithoutException()

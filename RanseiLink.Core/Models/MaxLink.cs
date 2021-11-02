@@ -3,11 +3,11 @@ using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models
 {
-    public class WarriorMaxLink : BaseDataWindow, IWarriorMaxLink
+    public class MaxLink : BaseDataWindow, IMaxLink
     {
         public const int DataLength = 200;
-        public WarriorMaxLink(byte[] data) : base(data, DataLength) { }
-        public WarriorMaxLink() : this(new byte[DataLength]) { }
+        public MaxLink(byte[] data) : base(data, DataLength) { }
+        public MaxLink() : this(new byte[DataLength]) { }
 
         public uint GetMaxLink(PokemonId pokemon)
         {

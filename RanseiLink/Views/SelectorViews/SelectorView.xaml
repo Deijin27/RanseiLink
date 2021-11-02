@@ -11,7 +11,14 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox Grid.Row="0" Height="20" ItemsSource="{Binding Items, Mode=OneTime}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
+        <DockPanel>
+            <Button Style="{StaticResource GrayHoverButtonStyle}" DockPanel.Dock="Right" Height="20" Width="20" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Paste" Command="{Binding PasteCommand}"/>
+            <Button Style="{StaticResource GrayHoverButtonStyle}" DockPanel.Dock="Right" Height="20" Width="20" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
+                    ToolTip="Copy" Command="{Binding CopyCommand}"/>
+            <ComboBox Grid.Row="0" Height="20" ItemsSource="{Binding Items, Mode=OneTime}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
+        </DockPanel>
+        
         <ContentControl Grid.Row="1" Content="{Binding NestedViewModel}"/>
     </Grid>
 </UserControl>

@@ -1,12 +1,17 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using RanseiLink.Services;
 using System;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels
 {
-    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveableRefreshable where TViewModel : IViewModelForModel<TModel>
+    public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveableRefreshable
+        where TViewModel : IViewModelForModel<TModel>
+        where TModel : IDataWrapper
     {
         private readonly IDialogService _dialogService;
         public ScenarioSelectorViewModelBase(IDialogService dialogService, Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
@@ -15,6 +20,8 @@ namespace RanseiLink.ViewModels
             NewViewModel = newViewModel ?? throw new ArgumentNullException(nameof(newViewModel));
             MinIndex = minIndex;
             MaxIndex = maxIndex;
+            CopyCommand = new RelayCommand(Copy);
+            PasteCommand = new RelayCommand(Paste);
         }
 
         private readonly Func<ScenarioId, TViewModel> NewViewModel;
@@ -178,6 +185,40 @@ namespace RanseiLink.ViewModels
                 });
             }
             
+        }
+
+
+        public ICommand CopyCommand { get; }
+
+        public ICommand PasteCommand { get; }
+
+
+        private void Copy()
+        {
+            Clipboard.SetText(NestedViewModel.Model.Serialize());
+        }
+
+        private void Paste()
+        {
+            string text = Clipboard.GetText();
+
+            if (NestedViewModel.Model.TryDeserialize(text))
+            {
+                var newvm = NewViewModel(SelectedScenario);
+                newvm.Model = NestedViewModel.Model;
+                _nestedViewModel = newvm;
+                RaisePropertyChanged(nameof(NestedViewModel));
+            }
+            else
+            {
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
+                {
+                    Icon = MessageBoxImage.Warning,
+                    Title = "Invalid Paste Data",
+                    Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
+                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
+                });
+            }
         }
     }
 }

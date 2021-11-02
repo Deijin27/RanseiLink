@@ -120,5 +120,15 @@ namespace RanseiLink.Tests.Mocks
                 DefaultDict = cloneDefaultDict
             };
         }
+
+        public string Serialize()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryDeserialize(string serialized)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

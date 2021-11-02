@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels
 {
-    public class WarriorMaxSyncSelectorViewModel : SelectorViewModelBase<WarriorId, IWarriorMaxLink, WarriorMaxSyncViewModel>
+    public class MaxLinkSelectorViewModel : SelectorViewModelBase<WarriorId, IMaxLink, MaxLinkViewModel>
     {
-        public WarriorMaxSyncSelectorViewModel(
+        public MaxLinkSelectorViewModel(
             IDialogService dialogService,
             WarriorId initialSelected,
-            IModelDataService<WarriorId, IWarriorMaxLink> dataService)
+            IModelDataService<WarriorId, IMaxLink> dataService)
         : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) { }
     }
 }

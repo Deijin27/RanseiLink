@@ -2,9 +2,9 @@
 
 namespace RanseiLink.Views
 {
-    public partial class WarriorMaxSyncView : UserControl
+    public partial class MaxLinkView : UserControl
     {
-        public WarriorMaxSyncView()
+        public MaxLinkView()
         {
             InitializeComponent();
         }

@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Models
     {
         public const int DataLength = 0x14;
         public BaseWarrior(byte[] data) : base(data, DataLength) { }
-        public BaseWarrior() : base(new byte[DataLength], DataLength) { }
+        public BaseWarrior() : this(new byte[DataLength]) { }
 
         public WarriorSpriteId Sprite
         {
