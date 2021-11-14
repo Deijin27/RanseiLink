@@ -3,117 +3,133 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             d:Background="WhiteSmoke"
+             d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:BaseWarriorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="1.5*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="TextBox">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="ComboBox">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+    </UserControl.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Warrior Name Entry" Grid.Row="0" />
-        <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
+            <TextBlock Text="Warrior Name Entry" Grid.Row="0" />
+            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
 
-        <TextBlock Text="Sprite" Grid.Row="1"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SpriteItems, Mode=OneTime}" SelectedItem="{Binding Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="Sprite" Grid.Row="1"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SpriteItems, Mode=OneTime}" SelectedItem="{Binding Sprite, Mode=TwoWay}"/>
 
-        <TextBlock Text="Sprite Unknown" Grid.Row="2"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Sprite2Items, Mode=OneTime}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
+            <TextBlock Text="Sprite Unknown" Grid.Row="2"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Sprite2Items, Mode=OneTime}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
 
-        <TextBlock Text="Speciality 1" Grid.Row="3" />
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
+            <TextBlock Text="Speciality 1" Grid.Row="3" />
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
 
-        <TextBlock Text="Speciality 2" Grid.Row="4" />
-        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
+            <TextBlock Text="Speciality 2" Grid.Row="4" />
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
 
-        <TextBlock Text="Weakness 1" Grid.Row="5" />
-        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Weakness1, Mode=TwoWay}"/>
+            <TextBlock Text="Weakness 1" Grid.Row="5" />
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Weakness1, Mode=TwoWay}"/>
 
-        <TextBlock Text="Weakness 2" Grid.Row="6" />
-        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Weakness2, Mode=TwoWay}"/>
+            <TextBlock Text="Weakness 2" Grid.Row="6" />
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Weakness2, Mode=TwoWay}"/>
 
-        <TextBlock Text="Skill" Grid.Row="7"/>
-        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems, Mode=OneTime}" SelectedItem="{Binding Skill, Mode=TwoWay}"/>
+            <TextBlock Text="Skill" Grid.Row="7"/>
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems, Mode=OneTime}" SelectedItem="{Binding Skill, Mode=TwoWay}"/>
 
-        <TextBlock Text="Power" Grid.Row="8" />
-        <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Power" Grid.Row="8" />
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
 
-        <TextBlock Text="Wisdom" Grid.Row="9" />
-        <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Wisdom" Grid.Row="9" />
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
 
-        <TextBlock Text="Charisma" Grid.Row="10" />
-        <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Charisma" Grid.Row="10" />
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
 
-        <TextBlock Text="Capacity" Grid.Row="11" />
-        <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="15"/>
+            <TextBlock Text="Capacity" Grid.Row="11" />
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="15"/>
 
-        <TextBlock Text="Gender" Grid.Row="12"/>
-        <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding GenderItems, Mode=OneTime}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
-        
-        
-        
-        
-        
+            <TextBlock Text="Gender" Grid.Row="12"/>
+            <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding GenderItems, Mode=OneTime}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
 
-        <TextBlock Text="Rank Up Into" Grid.Row="0" Grid.Column="3"/>
-        <ComboBox Grid.Row="0" Grid.Column="4" ItemsSource="{Binding WarriorItems, Mode=OneTime}" SelectedItem="{Binding RankUp, Mode=TwoWay}"/>
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Rank Up Pokemon 1" Grid.Row="1" Grid.Column="3"/>
-        <ComboBox Grid.Row="1" Grid.Column="4" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding RankUpPokemon1, Mode=TwoWay}"/>
+            <TextBlock Text="Rank Up Into" Grid.Row="0" Grid.Column="0"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding WarriorItems, Mode=OneTime}" SelectedItem="{Binding RankUp, Mode=TwoWay}"/>
 
-        <TextBlock Text="Rank Up Pokemon 2" Grid.Row="2" Grid.Column="3"/>
-        <ComboBox Grid.Row="2" Grid.Column="4" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding RankUpPokemon2, Mode=TwoWay}"/>
+            <TextBlock Text="Rank Up Pokemon 1" Grid.Row="1" Grid.Column="0"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding RankUpPokemon1, Mode=TwoWay}"/>
 
-        <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="3"/>
-        <controls:NumberBox Grid.Row="3" Grid.Column="4" Value="{Binding RankUpLink}"/>
+            <TextBlock Text="Rank Up Pokemon 2" Grid.Row="2" Grid.Column="0"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding RankUpPokemon2, Mode=TwoWay}"/>
 
-        <GroupBox Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
-            <controls:RankUpConditionControl Condition="{Binding RankUpCondition2, Mode=TwoWay}"
+            <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}"/>
+
+            <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
+                <controls:RankUpConditionControl Condition="{Binding RankUpCondition2, Mode=TwoWay}"
                                              Quantity1="{Binding Quantity1ForRankUpCondition, Mode=TwoWay}"
                                              Quantity2="{Binding Quantity2ForRankUpCondition, Mode=TwoWay}"
                                              />
-        </GroupBox>
+            </GroupBox>
 
-        <GroupBox Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Header="Alt Rank Up Condition (probably unused)">
-            <ComboBox ItemsSource="{Binding RankUpConditionItems}" SelectedItem="{Binding RankUpCondition1}"/>
-        </GroupBox>
+            <GroupBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Header="Alt Rank Up Condition (probably unused)">
+                <ComboBox ItemsSource="{Binding RankUpConditionItems}" SelectedItem="{Binding RankUpCondition1}"/>
+            </GroupBox>
 
-    </Grid>
+        </Grid>
+    </WrapPanel>
 </UserControl>

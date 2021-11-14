@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.ViewModels;
 using System.Windows;
-using System.Windows.Input;
 
 namespace RanseiLink
 {
@@ -14,18 +13,13 @@ namespace RanseiLink
         {
             InitializeComponent();
 
+            // Ensure maximized window doesn't cover taskbar
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+
             DataContext = new MainWindowViewModel(ServiceContainer.Instance);
         }
 
         private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
-
-        private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
-        }
 
         private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -37,5 +31,13 @@ namespace RanseiLink
         {
             WindowState = WindowState.Minimized;
         }
+
+        private void MaximizeWindowButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
+        }
+
     }
 }

@@ -14,17 +14,17 @@
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModDeleteViewModel, IsDesignTimeCreatable=False}"
         Title="Patch rom" Height="200" Width="350" Background="Transparent">
-    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
-            <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">
+            <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
                     <Button Height="20" Width="100" Margin="0,0,20,0" Content="Delete" Click="OkButton_Click"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
-            <Border Grid.Column="1" Background="WhiteSmoke">
+            <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel>
-                    <TextBlock FontSize="17" Margin="10">Are you sure you want to delete this mod?</TextBlock>
+                    <TextBlock FontSize="17" Margin="10" FontWeight="DemiBold">Are you sure you want to delete this mod?</TextBlock>
                     <controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
                 </StackPanel>
                 

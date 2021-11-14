@@ -17,9 +17,9 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
     </Window.Resources>
-    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
-            <Grid Width="200" DockPanel.Dock="Left" Background="LightGray" Opacity="0.9"
+            <Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}" Opacity="0.9"
               dd:DragDrop.IsDropTarget="True"
               dd:DragDrop.DropHandler="{Binding ModDropHandler}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
@@ -29,15 +29,15 @@
                     <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>
             </Grid>
-            <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">
+            <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
                     <Button Height="20" Width="100" Margin="0,0,20,0" Content="Import" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
-            <Border Grid.Column="1" Background="WhiteSmoke">
+            <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel>
-                    <TextBlock Margin="10" FontSize="18">Import mod</TextBlock>
+                    <TextBlock Margin="10" FontSize="18" FontWeight="DemiBold">Import mod</TextBlock>
                     <controls:ModInfoControl ModInfo="{Binding ModInfo, Mode=OneWay}" Visibility="{Binding OkEnabled, Converter={StaticResource boolToVis}}"/>
                 </StackPanel>
             </Border>

@@ -5,16 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RanseiLink"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+        WindowStyle="None"
+        AllowsTransparency="True"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        WindowStyle="None"
-        ResizeMode="NoResize"
-        AllowsTransparency="True"
         Height="500" Width="900" Background="Transparent">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30" 
+                      ResizeBorderThickness="5" 
+                      CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConv"/>
     </Window.Resources>
-    <Border BorderThickness="1" BorderBrush="Gray">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -25,42 +29,48 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="LightGray" Opacity="0.9" BorderThickness="0"/>
-            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="WhiteSmoke" BorderThickness="0"/>
+            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" Opacity="0.9" BorderThickness="0"/>
+            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
 
-            <Grid Grid.Row="0" Grid.Column="0" MouseDown="TopBar_MouseDown">
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" MouseDown="TopBar_MouseDown">
-                    <Button Content="&#xE0A6;"
-                        Command="{Binding BackButtonCommand}"
-                        Visibility="{Binding BackButtonVisible, Converter={StaticResource BoolToVisConv}}"
-                        FontFamily="{StaticResource SegoeMDL2Assets}"
+            <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Background="Transparent">
+                <Button DockPanel.Dock="Left" Content="&#xE0A6;" WindowChrome.IsHitTestVisibleInChrome="True"
+                    Command="{Binding BackButtonCommand}"
+                    Visibility="{Binding BackButtonVisible, Converter={StaticResource BoolToVisConv}}"
+                    FontFamily="{StaticResource SegoeMDL2Assets}"
+                    Width="45" Height="30"
+                    FontSize="13"
+                    ToolTip="Go Back"
+                    Style="{StaticResource GrayHoverButtonStyle}"/>
+
+                <Button DockPanel.Dock="Right" FontSize="13" Width="45" Height="30"  WindowChrome.IsHitTestVisibleInChrome="True"
+                        FontFamily="{StaticResource SegoeMDL2Assets}" 
+                        Click="CloseWindowButton_Click" Content="&#xE10A;"
+                        ToolTip="Close window"
+                        Style="{StaticResource RedHoverButtonStyle}"/>
+
+                <Button DockPanel.Dock="Right" Click="MaximizeWindowButton_Click" Content="&#xE003;"
+                        FontFamily="{StaticResource SegoeMDL2Assets}"  WindowChrome.IsHitTestVisibleInChrome="True"
                         Width="45" Height="30"
-                        FontSize="13"
-                        ToolTip="Go Back"
+                        FontSize="10"
+                        ToolTip="Maximize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
-                    <TextBlock FontSize="12" 
-                       HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-                           RanseiLink <Run Text="{x:Static local:App.Version}"/>
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-            <Grid Grid.Row="0" Grid.Column="1" MouseDown="TopBar_MouseDown" Background="WhiteSmoke">
-                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Orientation="Horizontal" MouseDown="TopBar_MouseDown">
-                    <Button Click="MinimizeWindowButton_Click" Content="&#xE108;"
+
+                <Button Click="MinimizeWindowButton_Click" Content="&#xE108;"
+                        DockPanel.Dock="Right"  WindowChrome.IsHitTestVisibleInChrome="True"
                         FontFamily="{StaticResource SegoeMDL2Assets}"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Minimize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
-                    <Button FontSize="13" Width="45" Height="30" 
-                        FontFamily="{StaticResource SegoeMDL2Assets}" 
-                        Click="CloseWindowButton_Click" Content="&#xE10A;"
-                        ToolTip="Close window"
-                        Style="{StaticResource RedHoverButtonStyle}"/>
-                </StackPanel>
-            </Grid>
+                
+                <TextBlock FontSize="12" FontWeight="SemiBold"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                        RanseiLink <Run Text="{x:Static local:App.Version}"/>
+                </TextBlock>
+            </DockPanel>
 
             <ContentControl Content="{Binding CurrentVm}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
         </Grid>
     </Border>
+
 </Window>

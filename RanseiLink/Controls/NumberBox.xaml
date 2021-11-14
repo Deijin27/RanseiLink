@@ -7,22 +7,62 @@
              mc:Ignorable="d" 
              d:DesignHeight="20" d:DesignWidth="100">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <Style TargetType="RepeatButton">
-                <Setter Property="Width" Value="18"/>
-                <Setter Property="BorderThickness" Value="0"/>
-            </Style>
-        </ResourceDictionary>
+        <Style x:Key="MiddleButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type RepeatButton}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border Padding="{TemplateBinding Padding}" 
+                            CornerRadius="0"
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="contentPresenter" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RightButtonStyle" TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource {x:Type RepeatButton}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ButtonBase}">
+                        <Border Padding="{TemplateBinding Padding}" 
+                            CornerRadius="0,2,2,0"
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="contentPresenter" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="NumberBoxTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border CornerRadius="2,0,0,2" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
-    <Border x:Name="SurroundingBorder" BorderThickness="1" BorderBrush="#ABADB3" Background="#ABADB3" Height="20">
-        <DockPanel>
-            <RepeatButton x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0">
-                <Path Stroke="#606060" Data="M 0 0 l 4.5 4.5 4.5 -4.5"/>
+    <Border Height="20" Background="{DynamicResource ControlBorderBrush}" CornerRadius="2">
+        <DockPanel >
+            <RepeatButton Style="{StaticResource RightButtonStyle}" BorderThickness="0.5,1,1,1" Width="18" x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right">
+                <Path Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=RepeatButton}}" Data="{StaticResource DownArrowGeometry}"/>
             </RepeatButton>
-            <RepeatButton x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right" Margin="1,0,0,0">
-                <Path Stroke="#606060" Data="M 0 4.5 l 4.5 -4.5 4.5 4.5"/>
+            <RepeatButton Style="{StaticResource MiddleButtonStyle}" BorderThickness="0.5,1" Width="18" x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right">
+                <Path Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=RepeatButton}}" Data="{StaticResource UpArrowGeometry}"/>
             </RepeatButton>
-            <TextBox x:Name="NumberTextBox" TextChanged="NumberTextBox_TextChanged" PreviewTextInput="NumberTextBox_PreviewTextInput" BorderThickness="0" Background="White"/>
+            <TextBox Style="{StaticResource NumberBoxTextBoxStyle}" BorderThickness="1,1,0.5,1" x:Name="NumberTextBox" TextChanged="NumberTextBox_TextChanged" PreviewTextInput="NumberTextBox_PreviewTextInput" />
         </DockPanel>
     </Border>
+    
 </UserControl>

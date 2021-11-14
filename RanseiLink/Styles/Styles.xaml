@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        
+        <ResourceDictionary Source="RedHoverButtonStyle.xaml"/>
+        <ResourceDictionary Source="GrayHoverButtonStyle.xaml"/>
+        <ResourceDictionary Source="RoundedGrayHoverButton.xaml"/>
+        <ResourceDictionary Source="MenuToggleButtonStyle.xaml"/>
+        
+        <ResourceDictionary Source="ListViewStyle1.xaml"/>
+
+        <ResourceDictionary Source="ControlStyles/Button.xaml"/>
+        <ResourceDictionary Source="ControlStyles/CheckBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ComboBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ContextMenu.xaml"/>
+        <ResourceDictionary Source="ControlStyles/GroupBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/MenuItem.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ScrollBar.xaml"/>
+        <ResourceDictionary Source="ControlStyles/TextBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ToolTip.xaml"/>
+        
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+    </Style>
+
+    
+
+</ResourceDictionary>

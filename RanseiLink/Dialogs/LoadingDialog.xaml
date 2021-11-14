@@ -13,9 +13,9 @@
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Height="100" Width="300" Background="Transparent">
-    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown" Background="WhiteSmoke">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}">
         <StackPanel>
-            <TextBlock x:Name="HeaderTextBlock" Margin="20" FontSize="18" HorizontalAlignment="Center" Text="Header Text"/>
+            <TextBlock x:Name="HeaderTextBlock" Margin="20" FontSize="18" FontWeight="DemiBold" HorizontalAlignment="Center" Text="Header Text"/>
             <ProgressBar Height="10" Margin="10" IsIndeterminate="True"/>
         </StackPanel>
     </Border>

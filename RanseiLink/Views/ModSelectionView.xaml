@@ -11,15 +11,15 @@
              d:DesignHeight="350" d:DesignWidth="500" Background="Transparent">
     <DockPanel>
         <Border Width="200" BorderThickness="0">
-            <Grid d:Background="LightGray">
+            <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
                 <StackPanel Margin="10">
                     <StackPanel.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Height" Value="23"/>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Height" Value="25"/>
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
+                    <Button Content="Create Mod" Margin="0,0,0,10" Command="{Binding CreateModCommand}"/>
                     <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
                     <TextBlock FontSize="9" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
                 </StackPanel>
@@ -27,32 +27,30 @@
             
         </Border>
 
-        <ScrollViewer d:Background="WhiteSmoke">
-            <ItemsControl ItemsSource="{Binding ModItems}">
+        <ScrollViewer d:Background="{DynamicResource WindowBackgroundBrush}">
+            <ItemsControl ItemsSource="{Binding ModItems}" Margin="10">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
                         <Button HorizontalContentAlignment="Left"
                                 CommandParameter="{Binding Mod}" 
                                 Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
                             <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource GrayHoverButtonStyle}">
+                                <Style TargetType="Button" BasedOn="{StaticResource RoundedGrayHoverButtonStyle}">
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#D9D9D9"/>
+                                            <Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
                             <Button.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}"/>
-                                    <MenuItem Header="Export mod" Command="{Binding ExportModCommand}"/>
+                                    <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}" Icon="{StaticResource CommitRomIcon}"/>
+                                    <MenuItem Header="Export mod" Command="{Binding ExportModCommand}" Icon="{StaticResource ExportModIcon}"/>
+                                    <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
+                                    <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
                                     <Separator/>
-                                    <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}"/>
-                                    <Separator/>
-                                    <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}"/>
-                                    <Separator/>
-                                    <MenuItem Header="Randomize" Command="{Binding RandomizeCommand}"/>
+                                    <MenuItem Header="Randomize" Command="{Binding RandomizeCommand}" Icon="{StaticResource RandomizeIcon}"/>
                                     <Separator/>
                                     <MenuItem Header="Delete" Command="{Binding DeleteModCommand}"/>
                                 </ContextMenu>

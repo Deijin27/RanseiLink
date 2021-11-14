@@ -1,10 +1,17 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Registration;
 using RanseiLink.Services;
+using System;
 using System.Windows;
 
 namespace RanseiLink
 {
+    public enum Theme
+    {
+        Light,
+        Dark
+    }
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -17,6 +24,11 @@ namespace RanseiLink
             IServiceContainer container = ServiceContainer.Instance;
             container.RegisterCoreServices();
             container.RegisterWpfServices();
+        }
+
+        public void SetTheme(Theme theme)
+        {
+            Resources.MergedDictionaries[0].Source = new Uri($"/Styles/Colors/{theme}.xaml", UriKind.Relative);
         }
     }
 }

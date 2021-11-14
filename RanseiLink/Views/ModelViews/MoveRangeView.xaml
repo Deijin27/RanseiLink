@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:RanseiLink.Views"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:MoveRangeViewModel, IsDesignTimeCreatable=False}"
-             d:Background="WhiteSmoke"
+             d:Background="{DynamicResource WindowBackgroundBrush}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <ResourceDictionary>

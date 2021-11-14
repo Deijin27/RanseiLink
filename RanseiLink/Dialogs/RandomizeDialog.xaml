@@ -13,20 +13,20 @@
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Height="500" Width="400" Background="Transparent">
-    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
-        <DockPanel Background="WhiteSmoke">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
+        <DockPanel Background="{DynamicResource WindowBackgroundBrush}">
             <Grid DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
                     <Button Height="20" Width="100" Margin="0,0,20,0" Content="Randomize!" Click="OkButton_Click"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
-            <TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18">Randomize</TextBlock>
-            <ScrollViewer Margin="20,0,20,0">
+            <TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18" FontWeight="DemiBold">Randomize</TextBlock>
+            <ScrollViewer Margin="20,0">
                 <ItemsControl x:Name="ListItems" BorderThickness="0">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <CheckBox Content="{Binding DisplayName, Mode=OneTime}"
+                            <CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}"
                                       IsChecked="{Binding Enabled, Mode=TwoWay}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

@@ -10,7 +10,7 @@
     <Grid d:Background="WhiteSmoke">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="90"/>
@@ -18,9 +18,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
+            <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5" Height="30" Width="30" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
                     ToolTip="Copy" Command="{Binding CopyCommand}"/>
-            <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
+            <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5,0,5,5" Height="30" Width="30" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
                     ToolTip="Paste" Command="{Binding PasteCommand}"/>
             
         </StackPanel>

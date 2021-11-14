@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:Background="WhiteSmoke">
+             d:Background="{DynamicResource WindowBackgroundBrush}">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <!--<ColumnDefinition Width="40"/>
@@ -18,8 +18,8 @@
             <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <!--<Rectangle Fill="Gray" Grid.RowSpan="2" />-->
-        <TextBlock x:Name="NameTextBlock" Text="Mod Name" FontSize="14" VerticalAlignment="Center" Grid.Column="0"/>
-        <TextBlock x:Name="AuthorTextBlock" Foreground="#333333" Text="by Author" FontSize="11" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
-        <TextBlock x:Name="VersionTextBlock" Foreground="#333333" Text="v1.0.1" Grid.Column="2" FontSize="11" TextAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock x:Name="NameTextBlock" FontWeight="SemiBold" Text="Mod Name" FontSize="14" VerticalAlignment="Center" Grid.Column="0"/>
+        <TextBlock x:Name="AuthorTextBlock" Foreground="{DynamicResource AltForegroundBrush}" Text="by Author" FontSize="11" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
+        <TextBlock x:Name="VersionTextBlock" Foreground="{DynamicResource AltForegroundBrush}" Text="v1.0.1" Grid.Column="2" FontSize="11" TextAlignment="Left" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

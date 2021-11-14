@@ -13,19 +13,19 @@
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
         d:DataContext="{d:DesignInstance vm:ModCreateBasedOnViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Height="300" Width="350" Background="Transparent">
-    <Border BorderThickness="1" BorderBrush="Gray" MouseDown="TopBar_MouseDown">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Background="WhiteSmoke">
-                <TextBlock FontSize="18" Margin="10">Create mod based on</TextBlock>
+            <StackPanel DockPanel.Dock="Top" Background="{DynamicResource WindowBackgroundBrush}">
+                <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Create mod based on</TextBlock>
                 <controls:ModInfoControl ModInfo="{Binding BaseMod}"/>
             </StackPanel>
-            <Grid DockPanel.Dock="Bottom" Background="WhiteSmoke">
+            <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
                     <Button Height="20" Width="100" Margin="0,0,20,0" Content="Create" Click="OkButton_Click"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
-            <Border Grid.Column="1" Background="WhiteSmoke">
+            <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
                 <Grid Grid.Column="1" Margin="20,20,20,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -38,10 +38,10 @@
                     </Grid.RowDefinitions>
                     <Grid.Resources>
                         <ResourceDictionary>
-                            <Style TargetType="TextBlock">
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="Height" Value="20"/>
                             </Style>
-                            <Style TargetType="TextBox">
+                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
                                 <Setter Property="Height" Value="20"/>
                             </Style>
                             <Style TargetType="ComboBox">

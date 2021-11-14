@@ -44,7 +44,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Border x:Name="lviBorder" Background="Transparent" BorderThickness="0">
+                    <Border x:Name="lviBorder" Background="Transparent" BorderThickness="0" CornerRadius="4" Margin="4,2">
                         <ContentPresenter x:Name="contentPresenter" 
                                                       ContentTemplate="{TemplateBinding ContentTemplate}" 
                                                       Content="{TemplateBinding Content}"
@@ -53,10 +53,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="lviBorder" Value="#e0e0e0"/>
+                            <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" TargetName="lviBorder" Value="#eaeaea"/>
+                            <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource WindowTransparentSelectedBackgroundBrush}"/>
+                            <Setter Property="TextElement.FontWeight" Value="SemiBold"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
