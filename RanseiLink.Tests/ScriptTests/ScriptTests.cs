@@ -12,7 +12,7 @@ namespace RanseiLink.Tests.ScriptTests
 {
     public class ScriptTests
     {
-        private readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.CodeBase).AbsolutePath), "ScriptTests");
+        private readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.Location).AbsolutePath), "ScriptTests");
 
         [Fact]
         public async void ScriptInteractWithRomSuccessfully()
