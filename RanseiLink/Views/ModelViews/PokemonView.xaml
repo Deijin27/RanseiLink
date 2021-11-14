@@ -53,7 +53,7 @@
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
 
             <TextBlock Text="Type1" Grid.Row="1"/>
-            <ComboBox Template="{DynamicResource ComboBoxTemplate132434234}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}"  SelectedItem="{Binding Type1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}"  SelectedItem="{Binding Type1, Mode=TwoWay}"/>
 
             <TextBlock Text="Type2" Grid.Row="2"/>
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Type2, Mode=TwoWay}"/>
