@@ -20,7 +20,7 @@
             <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:EvolutionTableItem}">
-                        <Grid>
+                        <Grid Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="10"/>
