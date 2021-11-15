@@ -1,21 +1,20 @@
 ﻿
-namespace RanseiLink.Core.Enums
+namespace RanseiLink.Core.Enums;
+
+public enum RankUpConditionId : uint
 {
-    public enum RankUpConditionId : uint
-    {
-        Unknown,
-        AfterCompletingEpisode,
-        DuringEpisode,
-        Unused_1,
-        WarriorInSameArmyNotNearby,
-        WarriorInSameKingdom,
-        AtLeastNFemaleWarlordsInSameKingdom,
-        Unused_2,
-        AtLeastNGalleryPokemon,
-        MonotypeGallery,
-        AtLeastNGalleryWarriors,
-        Unused_3,
-        Unused_4,
-        NoCondition
-    }
+    Unknown,
+    AfterCompletingEpisode,
+    DuringEpisode,
+    Unused_1,
+    WarriorInSameArmyNotNearby,
+    WarriorInSameKingdom,
+    AtLeastNFemaleWarlordsInSameKingdom,
+    Unused_2,
+    AtLeastNGalleryPokemon,
+    MonotypeGallery,
+    AtLeastNGalleryWarriors,
+    Unused_3,
+    Unused_4,
+    NoCondition
 }

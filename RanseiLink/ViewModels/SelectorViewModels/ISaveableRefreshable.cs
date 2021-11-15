@@ -1,16 +1,15 @@
-﻿namespace RanseiLink.ViewModels
+﻿namespace RanseiLink.ViewModels;
+
+public interface ISaveable
 {
-    public interface ISaveable
-    {
-        void Save();
-    }
+    void Save();
+}
 
-    public interface IRefreshable
-    {
-        void Refresh();
-    }
+public interface IRefreshable
+{
+    void Refresh();
+}
 
-    public interface ISaveableRefreshable : ISaveable, IRefreshable
-    {
-    }
+public interface ISaveableRefreshable : ISaveable, IRefreshable
+{
 }

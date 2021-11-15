@@ -8,56 +8,55 @@ using System;
 using RanseiLink.Tests.Mocks;
 using RanseiLink.Console.Services;
 
-namespace RanseiLink.Tests.ScriptTests
+namespace RanseiLink.Tests.ScriptTests;
+
+public class ScriptTests
 {
-    public class ScriptTests
+    private readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.Location).AbsolutePath), "ScriptTests");
+
+    [Fact]
+    public async void ScriptInteractWithRomSuccessfully()
     {
-        private readonly string TestScriptFolder = Path.Combine(Path.GetDirectoryName(new Uri(typeof(ScriptTests).Assembly.Location).AbsolutePath), "ScriptTests");
+        MockPokemonService mockPokemonService = new MockPokemonService();
 
-        [Fact]
-        public async void ScriptInteractWithRomSuccessfully()
+        MockCurrentModService mockCurrentModService = new MockCurrentModService()
         {
-            MockPokemonService mockPokemonService = new MockPokemonService();
-
-            MockCurrentModService mockCurrentModService = new MockCurrentModService()
+            TryGetDataServiceSucceed = true,
+            TryGetDataServiceReturn = new MockDataService()
             {
-                TryGetDataServiceSucceed = true,
-                TryGetDataServiceReturn = new MockDataService()
-                {
-                    Pokemon = mockPokemonService
-                }
-            };
+                Pokemon = mockPokemonService
+            }
+        };
 
-            IServiceContainer container = new ServiceContainer();
-            container.RegisterSingleton<ICurrentModService>(mockCurrentModService);
+        IServiceContainer container = new ServiceContainer();
+        container.RegisterSingleton<ICurrentModService>(mockCurrentModService);
 
 
-            var input = new MockPokemon() { Type1 = TypeId.Grass };
-            mockPokemonService.RetrieveReturn[PokemonId.Pikachu] = input;
+        var input = new MockPokemon() { Type1 = TypeId.Grass };
+        mockPokemonService.RetrieveReturn[PokemonId.Pikachu] = input;
 
-            // Create 
+        // Create 
 
-            var console = new FakeInMemoryConsole();
+        var console = new FakeInMemoryConsole();
 
-            string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
+        string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
 
-            var command = new LuaCommand(container)
-            {
-                FilePath = file,
-            };
+        var command = new LuaCommand(container)
+        {
+            FilePath = file,
+        };
 
-            // Execute
+        // Execute
 
-            await command.ExecuteAsync(console);
+        await command.ExecuteAsync(console);
 
-            // Test Changes Occurred
+        // Test Changes Occurred
 
-            var retrieveItem = Assert.Single(mockPokemonService.RetrieveCalls);
-            Assert.Equal(PokemonId.Pikachu, retrieveItem);
-            var (callId, callModel) = Assert.Single(mockPokemonService.SaveCalls);
-            Assert.Equal(PokemonId.Pikachu, callId);
-            Assert.Same(input, callModel);
-            Assert.Equal(TypeId.Electric, callModel.Type1);
-        }
+        var retrieveItem = Assert.Single(mockPokemonService.RetrieveCalls);
+        Assert.Equal(PokemonId.Pikachu, retrieveItem);
+        var (callId, callModel) = Assert.Single(mockPokemonService.SaveCalls);
+        Assert.Equal(PokemonId.Pikachu, callId);
+        Assert.Same(input, callModel);
+        Assert.Equal(TypeId.Electric, callModel.Type1);
     }
 }

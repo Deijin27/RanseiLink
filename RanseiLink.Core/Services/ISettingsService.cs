@@ -1,11 +1,10 @@
 ﻿
-namespace RanseiLink.Core.Services
+namespace RanseiLink.Core.Services;
+
+public interface ISettingsService
 {
-    public interface ISettingsService
-    {
-        int CurrentConsoleModSlot { get; set; }
-        string RecentCommitRom { get; set; }
-        string RecentLoadRom { get; set; }
-        string RecentExportModFolder { get; set; }
-    }
+    int CurrentConsoleModSlot { get; set; }
+    string RecentCommitRom { get; set; }
+    string RecentLoadRom { get; set; }
+    string RecentExportModFolder { get; set; }
 }

@@ -7,120 +7,119 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable
+    where TViewModel : IViewModelForModel<TModel>, new()
+    where TModel : IDataWrapper
 {
-    public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable 
-        where TViewModel : IViewModelForModel<TModel>, new()
-        where TModel : IDataWrapper
+    private readonly IDialogService _dialogService;
+    public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService)
+        : this(dialogService, initialSelected, dataService, EnumUtil.GetValues<TId>().ToArray()) { }
+
+    public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService, TId[] items)
     {
-        private readonly IDialogService _dialogService;
-        public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService)
-            : this(dialogService, initialSelected, dataService, EnumUtil.GetValues<TId>().ToArray()) { }
+        _dialogService = dialogService;
+        DataService = dataService;
+        Selected = initialSelected;
+        Items = items;
 
-        public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService, TId[] items)
+        CopyCommand = new RelayCommand(Copy);
+        PasteCommand = new RelayCommand(Paste);
+    }
+
+    private readonly IModelDataService<TId, TModel> DataService;
+
+    private TViewModel _nestedViewModel;
+    public TViewModel NestedViewModel
+    {
+        get => _nestedViewModel;
+        set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
+    }
+
+    public TId[] Items { get; }
+
+    private TId _selected;
+    public TId Selected
+    {
+        get => _selected;
+        set
         {
-            _dialogService = dialogService;
-            DataService = dataService;
-            Selected = initialSelected;
-            Items = items;
-
-            CopyCommand = new RelayCommand(Copy);
-            PasteCommand = new RelayCommand(Paste);
+            Save();
+            _selected = value;
+            Refresh();
         }
+    }
 
-        private readonly IModelDataService<TId, TModel> DataService;
-
-        private TViewModel _nestedViewModel;
-        public TViewModel NestedViewModel
+    /// <summary>
+    /// Reload without saving.
+    /// </summary>
+    public void Refresh()
+    {
+        try
         {
-            get => _nestedViewModel;
-            set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
+            TModel model = DataService.Retrieve(_selected);
+            NestedViewModel = new TViewModel() { Model = model };
         }
-
-        public TId[] Items { get; }
-
-        private TId _selected;
-        public TId Selected
+        catch (Exception e)
         {
-            get => _selected;
-            set
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                Save();
-                _selected = value;
-                Refresh();
-            }
+                Icon = System.Windows.MessageBoxImage.Error,
+                Title = $"Error retrieving data in {GetType().Name}",
+                Message = e.Message
+            });
         }
 
-        /// <summary>
-        /// Reload without saving.
-        /// </summary>
-        public void Refresh()
+    }
+
+    public virtual void Save()
+    {
+        if (NestedViewModel != null && _selected != null)
         {
             try
             {
-                TModel model = DataService.Retrieve(_selected);
-                NestedViewModel = new TViewModel() { Model = model };
+                DataService.Save(_selected, NestedViewModel.Model);
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs() 
+                _dialogService.ShowMessageBox(new MessageBoxArgs()
                 {
                     Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving data in {GetType().Name}",
+                    Title = $"Error saving data in {GetType().Name}",
                     Message = e.Message
                 });
             }
-            
         }
+    }
 
-        public virtual void Save()
+    public ICommand CopyCommand { get; }
+
+    public ICommand PasteCommand { get; }
+
+
+    private void Copy()
+    {
+        Clipboard.SetText(NestedViewModel.Model.Serialize());
+    }
+
+    private void Paste()
+    {
+        string text = Clipboard.GetText();
+
+        if (NestedViewModel.Model.TryDeserialize(text))
         {
-            if (NestedViewModel != null && _selected != null)
-            {
-                try
-                {
-                    DataService.Save(_selected, NestedViewModel.Model);
-                }
-                catch (Exception e)
-                {
-                    _dialogService.ShowMessageBox(new MessageBoxArgs()
-                    {
-                        Icon = System.Windows.MessageBoxImage.Error,
-                        Title = $"Error saving data in {GetType().Name}",
-                        Message = e.Message
-                    });
-                }
-            }
+            NestedViewModel = new TViewModel { Model = NestedViewModel.Model };
         }
-
-        public ICommand CopyCommand { get; }
-
-        public ICommand PasteCommand { get; }
-
-
-        private void Copy()
+        else
         {
-            Clipboard.SetText(NestedViewModel.Model.Serialize());
-        }
-
-        private void Paste()
-        {
-            string text = Clipboard.GetText();
-
-            if (NestedViewModel.Model.TryDeserialize(text))
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                NestedViewModel = new TViewModel { Model = NestedViewModel.Model };
-            }
-            else
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = MessageBoxImage.Warning,
-                    Title = "Invalid Paste Data",
-                    Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
-                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
-                });
-            }
+                Icon = MessageBoxImage.Warning,
+                Title = "Invalid Paste Data",
+                Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
+                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
+            });
         }
     }
 }

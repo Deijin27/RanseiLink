@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for MoveRangeView.xaml
+/// </summary>
+public partial class MoveRangeView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for MoveRangeView.xaml
-    /// </summary>
-    public partial class MoveRangeView : UserControl
+    public MoveRangeView()
     {
-        public MoveRangeView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

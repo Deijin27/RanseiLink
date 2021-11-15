@@ -1,12 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+public partial class EventSpeakerView : UserControl
 {
-    public partial class EventSpeakerView : UserControl
+    public EventSpeakerView()
     {
-        public EventSpeakerView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

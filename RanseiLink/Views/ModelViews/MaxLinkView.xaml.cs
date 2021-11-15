@@ -1,12 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+public partial class MaxLinkView : UserControl
 {
-    public partial class MaxLinkView : UserControl
+    public MaxLinkView()
     {
-        public MaxLinkView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -4,31 +4,30 @@ using RanseiLink.Services;
 using System;
 using System.Windows;
 
-namespace RanseiLink
+namespace RanseiLink;
+
+public enum Theme
 {
-    public enum Theme
+    Light,
+    Dark
+}
+
+/// <summary>
+/// Interaction logic for App.xaml
+/// </summary>
+public partial class App : Application
+{
+    public const string Version = "3 - beta6";
+
+    public App()
     {
-        Light,
-        Dark
+        IServiceContainer container = ServiceContainer.Instance;
+        container.RegisterCoreServices();
+        container.RegisterWpfServices();
     }
 
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    public void SetTheme(Theme theme)
     {
-        public const string Version = "3 - beta6";
-
-        public App()
-        {
-            IServiceContainer container = ServiceContainer.Instance;
-            container.RegisterCoreServices();
-            container.RegisterWpfServices();
-        }
-
-        public void SetTheme(Theme theme)
-        {
-            Resources.MergedDictionaries[0].Source = new Uri($"/Styles/Colors/{theme}.xaml", UriKind.Relative);
-        }
+        Resources.MergedDictionaries[0].Source = new Uri($"/Styles/Colors/{theme}.xaml", UriKind.Relative);
     }
 }

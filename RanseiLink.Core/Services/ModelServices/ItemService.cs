@@ -2,49 +2,48 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IItemService : IModelDataService<ItemId, IItem>
 {
-    public interface IItemService : IModelDataService<ItemId, IItem>
+    IDisposableItemService Disposable();
+}
+
+public interface IDisposableItemService : IDisposableModelDataService<ItemId, IItem>
+{
+}
+
+public class ItemService : BaseModelService, IItemService
+{
+    public ItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
+
+    public IDisposableItemService Disposable()
     {
-        IDisposableItemService Disposable();
+        return new DisposableItemService(Mod);
     }
 
-    public interface IDisposableItemService : IDisposableModelDataService<ItemId, IItem>
+    public IItem Retrieve(ItemId id)
     {
+        return new Item(RetrieveData((int)id));
     }
 
-    public class ItemService : BaseModelService, IItemService
+    public void Save(ItemId id, IItem model)
     {
-        public ItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
+        SaveData((int)id, model.Data);
+    }
+}
 
-        public IDisposableItemService Disposable()
-        {
-            return new DisposableItemService(Mod);
-        }
+public class DisposableItemService : BaseDisposableModelService, IDisposableItemService
+{
+    public DisposableItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
 
-        public IItem Retrieve(ItemId id)
-        {
-            return new Item(RetrieveData((int)id));
-        }
-
-        public void Save(ItemId id, IItem model)
-        {
-            SaveData((int)id, model.Data);
-        }
+    public IItem Retrieve(ItemId id)
+    {
+        return new Item(RetrieveData((int)id));
     }
 
-    public class DisposableItemService : BaseDisposableModelService, IDisposableItemService
+    public void Save(ItemId id, IItem model)
     {
-        public DisposableItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
-
-        public IItem Retrieve(ItemId id)
-        {
-            return new Item(RetrieveData((int)id));
-        }
-
-        public void Save(ItemId id, IItem model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        SaveData((int)id, model.Data);
     }
 }

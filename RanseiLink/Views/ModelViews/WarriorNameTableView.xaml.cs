@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for EvolutionTableView.xaml
+/// </summary>
+public partial class WarriorNameTableView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for EvolutionTableView.xaml
-    /// </summary>
-    public partial class WarriorNameTableView : UserControl
+    public WarriorNameTableView()
     {
-        public WarriorNameTableView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

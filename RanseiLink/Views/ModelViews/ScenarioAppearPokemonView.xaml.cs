@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for EvolutionTableView.xaml
+/// </summary>
+public partial class ScenarioAppearPokemonView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for EvolutionTableView.xaml
-    /// </summary>
-    public partial class ScenarioAppearPokemonView : UserControl
+    public ScenarioAppearPokemonView()
     {
-        public ScenarioAppearPokemonView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

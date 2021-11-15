@@ -1,7 +1,6 @@
-﻿namespace RanseiLink.Core.Models.Interfaces
+﻿namespace RanseiLink.Core.Models.Interfaces;
+
+public interface IKingdom : IDataWrapper, ICloneable<IKingdom>
 {
-    public interface IKingdom : IDataWrapper, ICloneable<IKingdom>
-    {
-        string Name { get; set; }
-    }
+    string Name { get; set; }
 }

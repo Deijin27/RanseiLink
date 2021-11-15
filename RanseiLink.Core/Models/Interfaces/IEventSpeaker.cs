@@ -1,10 +1,9 @@
 ﻿using RanseiLink.Core.Enums;
 
-namespace RanseiLink.Core.Models.Interfaces
+namespace RanseiLink.Core.Models.Interfaces;
+
+public interface IEventSpeaker : IDataWrapper, ICloneable<IEventSpeaker>
 {
-    public interface IEventSpeaker : IDataWrapper, ICloneable<IEventSpeaker>
-    {
-        string Name { get; set; }
-        WarriorSpriteId Sprite { get; set; }
-    }
+    string Name { get; set; }
+    WarriorSpriteId Sprite { get; set; }
 }

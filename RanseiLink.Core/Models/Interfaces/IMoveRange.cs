@@ -1,9 +1,8 @@
-﻿namespace RanseiLink.Core.Models.Interfaces
-{
-    public interface IMoveRange : IDataWrapper, ICloneable<IMoveRange>
-    {
-        bool GetInRange(int position);
+﻿namespace RanseiLink.Core.Models.Interfaces;
 
-        void SetInRange(int position, bool isInRange);
-    }
+public interface IMoveRange : IDataWrapper, ICloneable<IMoveRange>
+{
+    bool GetInRange(int position);
+
+    void SetInRange(int position, bool isInRange);
 }

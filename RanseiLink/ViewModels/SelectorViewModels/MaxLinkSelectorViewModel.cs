@@ -5,14 +5,13 @@ using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Linq;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class MaxLinkSelectorViewModel : SelectorViewModelBase<WarriorId, IMaxLink, MaxLinkViewModel>
 {
-    public class MaxLinkSelectorViewModel : SelectorViewModelBase<WarriorId, IMaxLink, MaxLinkViewModel>
-    {
-        public MaxLinkSelectorViewModel(
-            IDialogService dialogService,
-            WarriorId initialSelected,
-            IModelDataService<WarriorId, IMaxLink> dataService)
-        : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) { }
-    }
+    public MaxLinkSelectorViewModel(
+        IDialogService dialogService,
+        WarriorId initialSelected,
+        IModelDataService<WarriorId, IMaxLink> dataService)
+    : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) { }
 }

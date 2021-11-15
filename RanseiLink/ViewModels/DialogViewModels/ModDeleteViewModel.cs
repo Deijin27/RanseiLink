@@ -1,15 +1,14 @@
 ﻿using RanseiLink.Core.Services;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class ModDeleteViewModel : ViewModelBase
 {
-    public class ModDeleteViewModel : ViewModelBase
+    public ModDeleteViewModel(ModInfo modInfo)
     {
-        public ModDeleteViewModel(ModInfo modInfo)
-        {
-            ModInfo = modInfo;
-        }
-
-        public ModInfo ModInfo { get; }
-
+        ModInfo = modInfo;
     }
+
+    public ModInfo ModInfo { get; }
+
 }

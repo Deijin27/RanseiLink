@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for SelectorView.xaml
+/// </summary>
+public partial class ScenarioSelectorView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SelectorView.xaml
-    /// </summary>
-    public partial class ScenarioSelectorView : UserControl
+    public ScenarioSelectorView()
     {
-        public ScenarioSelectorView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

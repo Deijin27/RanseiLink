@@ -1,45 +1,44 @@
 ﻿using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Console.Services.Concrete
+namespace RanseiLink.Console.Services.Concrete;
+
+public class CurrentModService : ICurrentModService
 {
-    public class CurrentModService : ICurrentModService
+    private readonly ISettingsService _settingsService;
+    private readonly IModService _modService;
+    private readonly DataServiceFactory _dataServiceFactory;
+
+    public CurrentModService(ISettingsService settingsService, IModService modService, DataServiceFactory dataServiceFactory)
     {
-        private readonly ISettingsService _settingsService;
-        private readonly IModService _modService;
-        private readonly DataServiceFactory _dataServiceFactory;
+        _modService = modService;
+        _settingsService = settingsService;
+        _dataServiceFactory = dataServiceFactory;
+    }
 
-        public CurrentModService(ISettingsService settingsService, IModService modService, DataServiceFactory dataServiceFactory)
+    public bool TryGetCurrentMod(IConsole console, out ModInfo mod)
+    {
+        var currentModSlot = _settingsService.CurrentConsoleModSlot;
+        var allModInfo = _modService.GetAllModInfo();
+        if (currentModSlot < allModInfo.Count)
         {
-            _modService = modService;
-            _settingsService = settingsService;
-            _dataServiceFactory = dataServiceFactory;
+            mod = allModInfo[currentModSlot];
+            return true;
         }
+        mod = default;
+        console.Output.WriteLine("No mod selected");
+        return false;
+    }
 
-        public bool TryGetCurrentMod(IConsole console, out ModInfo mod)
+    public bool TryGetDataService(IConsole console, out IDataService dataService)
+    {
+        if (!TryGetCurrentMod(console, out ModInfo currentMod))
         {
-            var currentModSlot = _settingsService.CurrentConsoleModSlot;
-            var allModInfo = _modService.GetAllModInfo();
-            if (currentModSlot < allModInfo.Count)
-            {
-                mod = allModInfo[currentModSlot];
-                return true;
-            }
-            mod = default;
-            console.Output.WriteLine("No mod selected");
+            dataService = default;
             return false;
         }
 
-        public bool TryGetDataService(IConsole console, out IDataService dataService)
-        {
-            if (!TryGetCurrentMod(console, out ModInfo currentMod))
-            {
-                dataService = default;
-                return false;
-            }
-
-            dataService = _dataServiceFactory(currentMod);
-            return true;
-        }
+        dataService = _dataServiceFactory(currentMod);
+        return true;
     }
 }

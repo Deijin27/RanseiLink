@@ -10,116 +10,115 @@ using System;
 using System.Windows.Input;
 using System.Windows;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class EvolutionTableItem
 {
-    public class EvolutionTableItem
+    public EvolutionTableItem(int index, PokemonId pokemon, PokemonId[] pokemonItems)
     {
-        public EvolutionTableItem(int index, PokemonId pokemon, PokemonId[] pokemonItems)
-        {
-            Index = index;
-            Pokemon = pokemon;
-            PokemonItems = pokemonItems;
-        }
-        public int Index { get; }
-        public PokemonId Pokemon { get; set; }
-        public PokemonId[] PokemonItems { get; }
+        Index = index;
+        Pokemon = pokemon;
+        PokemonItems = pokemonItems;
     }
-    public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
+    public int Index { get; }
+    public PokemonId Pokemon { get; set; }
+    public PokemonId[] PokemonItems { get; }
+}
+public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
+{
+    private readonly IDialogService _dialogService;
+    private readonly IPokemonService DataService;
+    private IEvolutionTable _model;
+
+    public EvolutionTableViewModel(IDialogService dialogService, IPokemonService dataService)
     {
-        private readonly IDialogService _dialogService;
-        private readonly IPokemonService DataService;
-        private IEvolutionTable _model;
+        _dialogService = dialogService;
+        DataService = dataService;
+        Refresh();
 
-        public EvolutionTableViewModel(IDialogService dialogService, IPokemonService dataService)
+        PasteCommand = new RelayCommand(Paste);
+        CopyCommand = new RelayCommand(Copy);
+    }
+
+    public IReadOnlyList<EvolutionTableItem> Items { get; private set; }
+
+    public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
+
+    public void Save()
+    {
+        foreach (var item in Items)
         {
-            _dialogService = dialogService;
-            DataService = dataService;
-            Refresh();
-
-            PasteCommand = new RelayCommand(Paste);
-            CopyCommand = new RelayCommand(Copy);
+            _model.SetEntry(item.Index, item.Pokemon);
         }
-
-        public IReadOnlyList<EvolutionTableItem> Items { get; private set; }
-
-        public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-
-        public void Save()
+        try
         {
-            foreach (var item in Items)
-            {
-                _model.SetEntry(item.Index, item.Pokemon);
-            }
-            try
-            {
-                DataService.SaveEvolutionTable(_model);
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error saving data in {GetType().Name}",
-                    Message = e.Message
-                });
-            }
+            DataService.SaveEvolutionTable(_model);
         }
-
-        public void Refresh()
+        catch (Exception e)
         {
-            try
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                _model = DataService.RetrieveEvolutionTable();
-                var lst = new List<EvolutionTableItem>();
-                for (int i = 0; i < EvolutionTable.DataLength; i++)
-                {
-                    lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
-                }
-                Items = lst;
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving data in {GetType().Name}",
-                    Message = e.Message
-                });
-            }
+                Icon = System.Windows.MessageBoxImage.Error,
+                Title = $"Error saving data in {GetType().Name}",
+                Message = e.Message
+            });
         }
+    }
 
-        public ICommand CopyCommand { get; }
-        public ICommand PasteCommand { get; }
-
-        private void Copy()
+    public void Refresh()
+    {
+        try
         {
-            Clipboard.SetText(_model.Serialize());
+            _model = DataService.RetrieveEvolutionTable();
+            var lst = new List<EvolutionTableItem>();
+            for (int i = 0; i < EvolutionTable.DataLength; i++)
+            {
+                lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
+            }
+            Items = lst;
         }
-
-        private void Paste()
+        catch (Exception e)
         {
-            string text = Clipboard.GetText();
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
+            {
+                Icon = System.Windows.MessageBoxImage.Error,
+                Title = $"Error retrieving data in {GetType().Name}",
+                Message = e.Message
+            });
+        }
+    }
 
-            if (_model.TryDeserialize(text))
+    public ICommand CopyCommand { get; }
+    public ICommand PasteCommand { get; }
+
+    private void Copy()
+    {
+        Clipboard.SetText(_model.Serialize());
+    }
+
+    private void Paste()
+    {
+        string text = Clipboard.GetText();
+
+        if (_model.TryDeserialize(text))
+        {
+            _model = DataService.RetrieveEvolutionTable();
+            var lst = new List<EvolutionTableItem>();
+            for (int i = 0; i < EvolutionTable.DataLength; i++)
             {
-                _model = DataService.RetrieveEvolutionTable();
-                var lst = new List<EvolutionTableItem>();
-                for (int i = 0; i < EvolutionTable.DataLength; i++)
-                {
-                    lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
-                }
-                Items = lst;
+                lst.Add(new EvolutionTableItem(i, _model.GetEntry(i), PokemonItems));
             }
-            else
+            Items = lst;
+        }
+        else
+        {
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = MessageBoxImage.Warning,
-                    Title = "Invalid Paste Data",
-                    Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
-                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
-                });
-            }
+                Icon = MessageBoxImage.Warning,
+                Title = "Invalid Paste Data",
+                Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
+                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
+            });
         }
     }
 }

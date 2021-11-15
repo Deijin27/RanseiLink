@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for WarriorSkillView.xaml
+/// </summary>
+public partial class ScenarioPokemonView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for WarriorSkillView.xaml
-    /// </summary>
-    public partial class ScenarioPokemonView : UserControl
+    public ScenarioPokemonView()
     {
-        public ScenarioPokemonView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

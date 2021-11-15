@@ -7,113 +7,112 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 
-namespace RanseiLink.ViewModels
-{
-    public class WarriorNameTableItem : ViewModelBase
-    {
-        private readonly IWarriorNameTable _table;
-        public WarriorNameTableItem(uint index, IWarriorNameTable table)
-        {
-            Index = index;
-            _table = table;
-        }
-        public uint Index { get; }
+namespace RanseiLink.ViewModels;
 
-        public string Name
+public class WarriorNameTableItem : ViewModelBase
+{
+    private readonly IWarriorNameTable _table;
+    public WarriorNameTableItem(uint index, IWarriorNameTable table)
+    {
+        Index = index;
+        _table = table;
+    }
+    public uint Index { get; }
+
+    public string Name
+    {
+        get => _table.GetEntry(Index);
+        set => RaiseAndSetIfChanged(Name, value, v => _table.SetEntry(Index, v));
+    }
+}
+public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
+{
+    private readonly IDialogService _dialogService;
+    private readonly IBaseWarriorService _service;
+    private IWarriorNameTable _model;
+
+    public WarriorNameTableViewModel(IDialogService dialogService, IBaseWarriorService dataService)
+    {
+        _dialogService = dialogService;
+        _service = dataService;
+        Refresh();
+
+        PasteCommand = new RelayCommand(Paste);
+        CopyCommand = new RelayCommand(Copy);
+    }
+
+    public IReadOnlyList<WarriorNameTableItem> Items { get; private set; }
+
+    public void Save()
+    {
+        try
         {
-            get => _table.GetEntry(Index);
-            set => RaiseAndSetIfChanged(Name, value, v => _table.SetEntry(Index, v));
+            _service.SaveNameTable(_model);
+        }
+        catch (Exception e)
+        {
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
+            {
+                Icon = System.Windows.MessageBoxImage.Error,
+                Title = $"Error saving data in {GetType().Name}",
+                Message = e.Message
+            });
         }
     }
-    public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
+
+    public void Refresh()
     {
-        private readonly IDialogService _dialogService;
-        private readonly IBaseWarriorService _service;
-        private IWarriorNameTable _model;
-
-        public WarriorNameTableViewModel(IDialogService dialogService, IBaseWarriorService dataService)
+        try
         {
-            _dialogService = dialogService;
-            _service = dataService;
-            Refresh();
-
-            PasteCommand = new RelayCommand(Paste);
-            CopyCommand = new RelayCommand(Copy);
+            _model = _service.RetrieveNameTable();
+            var lst = new List<WarriorNameTableItem>();
+            for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
+            {
+                lst.Add(new WarriorNameTableItem(i, _model));
+            }
+            Items = lst;
         }
-
-        public IReadOnlyList<WarriorNameTableItem> Items { get; private set; }
-
-        public void Save()
+        catch (Exception e)
         {
-            try
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                _service.SaveNameTable(_model);
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error saving data in {GetType().Name}",
-                    Message = e.Message
-                });
-            }
+                Icon = System.Windows.MessageBoxImage.Error,
+                Title = $"Error retrieving data in {GetType().Name}",
+                Message = e.Message
+            });
         }
+    }
 
-        public void Refresh()
+    public ICommand CopyCommand { get; }
+    public ICommand PasteCommand { get; }
+
+    private void Copy()
+    {
+        Clipboard.SetText(_model.Serialize());
+    }
+
+    private void Paste()
+    {
+        string text = Clipboard.GetText();
+
+        if (_model.TryDeserialize(text))
         {
-            try
+            var lst = new List<WarriorNameTableItem>();
+            for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
             {
-                _model = _service.RetrieveNameTable();
-                var lst = new List<WarriorNameTableItem>();
-                for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
-                {
-                    lst.Add(new WarriorNameTableItem(i, _model));
-                }
-                Items = lst;
+                lst.Add(new WarriorNameTableItem(i, _model));
             }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving data in {GetType().Name}",
-                    Message = e.Message
-                });
-            }
+            Items = lst;
         }
-
-        public ICommand CopyCommand { get; }
-        public ICommand PasteCommand { get; }
-
-        private void Copy()
+        else
         {
-            Clipboard.SetText(_model.Serialize());
-        }
-
-        private void Paste()
-        {
-            string text = Clipboard.GetText();
-
-            if (_model.TryDeserialize(text))
+            _dialogService.ShowMessageBox(new MessageBoxArgs()
             {
-                var lst = new List<WarriorNameTableItem>();
-                for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
-                {
-                    lst.Add(new WarriorNameTableItem(i, _model));
-                }
-                Items = lst;
-            }
-            else
-            {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = MessageBoxImage.Warning,
-                    Title = "Invalid Paste Data",
-                    Message = "The data that you pasted is invalid. Make sure you have the right label." +
-                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
-                });
-            }
+                Icon = MessageBoxImage.Warning,
+                Title = "Invalid Paste Data",
+                Message = "The data that you pasted is invalid. Make sure you have the right label." +
+                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"
+            });
         }
     }
 }

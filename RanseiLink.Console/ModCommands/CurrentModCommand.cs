@@ -4,25 +4,24 @@ using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
 
-namespace RanseiLink.Console.ModCommands
+namespace RanseiLink.Console.ModCommands;
+
+[Command("current mod", Description = "Current Mod.")]
+public class CurrentModCommand : BaseCommand
 {
-    [Command("current mod", Description = "Current Mod.")]
-    public class CurrentModCommand : BaseCommand
+    public CurrentModCommand(IServiceContainer container) : base(container) { }
+    public CurrentModCommand() : base() { }
+
+    public override ValueTask ExecuteAsync(IConsole console)
     {
-        public CurrentModCommand(IServiceContainer container) : base(container) { }
-        public CurrentModCommand() : base() { }
+        var currentModService = Container.Resolve<ICurrentModService>();
 
-        public override ValueTask ExecuteAsync(IConsole console)
+        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
         {
-            var currentModService = Container.Resolve<ICurrentModService>();
-
-            if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
-            {
-                return default;
-            }
-
-            console.Render(currentMod);
             return default;
         }
+
+        console.Render(currentMod);
+        return default;
     }
 }

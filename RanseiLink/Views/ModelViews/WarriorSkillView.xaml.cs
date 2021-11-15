@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for WarriorSkillView.xaml
+/// </summary>
+public partial class WarriorSkillView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for WarriorSkillView.xaml
-    /// </summary>
-    public partial class WarriorSkillView : UserControl
+    public WarriorSkillView()
     {
-        public WarriorSkillView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public interface IViewModelForModel<TModel>
 {
-    public interface IViewModelForModel<TModel>
-    {
-        TModel Model { get; set; }
-    }
+    TModel Model { get; set; }
 }

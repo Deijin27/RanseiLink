@@ -2,51 +2,50 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IMaxLinkService : IModelDataService<WarriorId, IMaxLink>
 {
-    public interface IMaxLinkService : IModelDataService<WarriorId, IMaxLink>
+    IDisposableMaxLinkService Disposable();
+}
+
+public interface IDisposableMaxLinkService : IDisposableModelDataService<WarriorId, IMaxLink>
+{
+}
+
+public class MaxLinkService : BaseModelService, IMaxLinkService
+{
+    public MaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251) { }
+
+    public IDisposableMaxLinkService Disposable()
     {
-        IDisposableMaxLinkService Disposable();
+        return new DisposableMaxLinkService(Mod);
     }
 
-    public interface IDisposableMaxLinkService : IDisposableModelDataService<WarriorId, IMaxLink>
+    public IMaxLink Retrieve(WarriorId id)
+    {
+        return new MaxLink(RetrieveData((int)id));
+    }
+
+    public void Save(WarriorId id, IMaxLink model)
+    {
+        SaveData((int)id, model.Data);
+    }
+}
+
+public class DisposableMaxLinkService : BaseDisposableModelService, IDisposableMaxLinkService
+{
+    public DisposableMaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251)
     {
     }
 
-    public class MaxLinkService : BaseModelService, IMaxLinkService
+    public IMaxLink Retrieve(WarriorId id)
     {
-        public MaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251) { }
-
-        public IDisposableMaxLinkService Disposable()
-        {
-            return new DisposableMaxLinkService(Mod);
-        }
-
-        public IMaxLink Retrieve(WarriorId id)
-        {
-            return new MaxLink(RetrieveData((int)id));
-        }
-
-        public void Save(WarriorId id, IMaxLink model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        return new MaxLink(RetrieveData((int)id));
     }
 
-    public class DisposableMaxLinkService : BaseDisposableModelService, IDisposableMaxLinkService
+    public void Save(WarriorId id, IMaxLink model)
     {
-        public DisposableMaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251)
-        {
-        }
-
-        public IMaxLink Retrieve(WarriorId id)
-        {
-            return new MaxLink(RetrieveData((int)id));
-        }
-
-        public void Save(WarriorId id, IMaxLink model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        SaveData((int)id, model.Data);
     }
 }

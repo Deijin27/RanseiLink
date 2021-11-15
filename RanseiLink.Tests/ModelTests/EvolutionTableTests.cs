@@ -3,15 +3,15 @@ using RanseiLink.Core.Enums;
 using Xunit;
 using RanseiLink.Core.Models.Interfaces;
 
-namespace RanseiLink.Tests.ModelTests
+namespace RanseiLink.Tests.ModelTests;
+
+public class EvolutionTableTests
 {
-    public class EvolutionTableTests
+    [Fact]
+    public void AccessorsReturnCorrectValues()
     {
-        [Fact]
-        public void AccessorsReturnCorrectValues()
+        IEvolutionTable model = new EvolutionTable(new byte[]
         {
-            IEvolutionTable model = new EvolutionTable(new byte[]
-            {
                 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x09, 0x0A, 0x0B,
                 0x0D, 0x0F, 0x10, 0x12, 0x14, 0x15, 0x17, 0x18, 0x1A, 0x1B,
                 0x1D, 0x1F, 0x20, 0x22, 0x23, 0x25, 0x26, 0x28, 0x29, 0x2B,
@@ -24,23 +24,23 @@ namespace RanseiLink.Tests.ModelTests
                 0x8E, 0x90, 0x91, 0x93, 0x95, 0x96, 0x98, 0x9A, 0x9C, 0x9E,
                 0xA0, 0xA1, 0xA3, 0xA5, 0xA7, 0xA9, 0xAB, 0xAD, 0xAF, 0xB2,
                 0xB5, 0xB7, 0xBC, 0x00, 0x00, 0x00
-            });
+        });
 
-            Assert.Equal(PokemonId.Vaporeon, model.GetEntry(0));
-            Assert.Equal(PokemonId.Jolteon, model.GetEntry(1));
-            Assert.Equal(PokemonId.Flareon, model.GetEntry(2));
-        }
+        Assert.Equal(PokemonId.Vaporeon, model.GetEntry(0));
+        Assert.Equal(PokemonId.Jolteon, model.GetEntry(1));
+        Assert.Equal(PokemonId.Flareon, model.GetEntry(2));
+    }
 
-        [Fact]
-        public void AccessorsSetCorrectValues()
+    [Fact]
+    public void AccessorsSetCorrectValues()
+    {
+        IEvolutionTable model = new EvolutionTable();
+        model.SetEntry(0, PokemonId.Fraxure);
+        model.SetEntry(11, PokemonId.Ampharos);
+        model.SetEntry(23, PokemonId.Arbok);
+
+        byte[] expected = new byte[]
         {
-            IEvolutionTable model = new EvolutionTable();
-            model.SetEntry(0, PokemonId.Fraxure);
-            model.SetEntry(11, PokemonId.Ampharos);
-            model.SetEntry(23, PokemonId.Arbok);
-
-            byte[] expected = new byte[]
-            {
                 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x2E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -53,9 +53,8 @@ namespace RanseiLink.Tests.ModelTests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-            };
+        };
 
-            Assert.Equal(expected, model.Data);
-        }
+        Assert.Equal(expected, model.Data);
     }
 }

@@ -5,11 +5,10 @@ using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Linq;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, IPokemon, PokemonViewModel>
 {
-    public class PokemonSelectorViewModel : SelectorViewModelBase<PokemonId, IPokemon, PokemonViewModel>
-    {
-        public PokemonSelectorViewModel(IDialogService dialogService, PokemonId initialSelected, IModelDataService<PokemonId, IPokemon> dataService)
-            : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray()) { }
-    }
+    public PokemonSelectorViewModel(IDialogService dialogService, PokemonId initialSelected, IModelDataService<PokemonId, IPokemon> dataService)
+        : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray()) { }
 }

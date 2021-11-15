@@ -1,11 +1,10 @@
 ﻿
-namespace RanseiLink.Core.Enums
+namespace RanseiLink.Core.Enums;
+
+public enum WarriorSkillTargetId : uint
 {
-    public enum WarriorSkillTargetId : uint
-    {
-        Self,
-        SelfAndAdjacentAllies,
-        SelfAndAllAllies,
-        AllOpponents,
-    }
+    Self,
+    SelfAndAdjacentAllies,
+    SelfAndAllAllies,
+    AllOpponents,
 }

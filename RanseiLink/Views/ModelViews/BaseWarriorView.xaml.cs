@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for WarriorSkillView.xaml
+/// </summary>
+public partial class BaseWarriorView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for WarriorSkillView.xaml
-    /// </summary>
-    public partial class BaseWarriorView : UserControl
+    public BaseWarriorView()
     {
-        public BaseWarriorView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

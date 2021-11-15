@@ -3,35 +3,15 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
 using Xunit;
 
-namespace RanseiLink.Tests.ModelTests
+namespace RanseiLink.Tests.ModelTests;
+
+public class GimmickTests
 {
-    public class GimmickTests
+    [Fact]
+    public void AccessorsReturnCorrectValues()
     {
-        [Fact]
-        public void AccessorsReturnCorrectValues()
+        IGimmick a = new Gimmick(new byte[]
         {
-            IGimmick a = new Gimmick(new byte[]
-            {
-                0x50, 0x69, 0x6C, 0x6C, 
-                0x61, 0x72, 0x20, 0x6F, 
-                0x66, 0x20, 0x46, 0x69, 
-                0x72, 0x65, 0x00, 0x00, 
-                0x00, 0x0A, 0x00, 0x00, 
-                0x41, 0x48, 0xAC, 0x80, 
-                0x00, 0xFF, 0xCA, 0x94, 
-                0x41, 0x20, 0x2A, 0x00, 
-                0xFF, 0x07, 0x01, 0x04, 
-                0x4A, 0x69, 0x73, 0x03,
-            });
-
-            Assert.Equal("Pillar of Fire", a.Name);
-        }
-
-        [Fact]
-        public void AccessorsSetCorrectValues()
-        {
-            var pillarOfFire = new byte[]
-            {
                 0x50, 0x69, 0x6C, 0x6C,
                 0x61, 0x72, 0x20, 0x6F,
                 0x66, 0x20, 0x46, 0x69,
@@ -42,14 +22,33 @@ namespace RanseiLink.Tests.ModelTests
                 0x41, 0x20, 0x2A, 0x00,
                 0xFF, 0x07, 0x01, 0x04,
                 0x4A, 0x69, 0x73, 0x03,
-            };
+        });
 
-            IGimmick a = new Gimmick
-            {
-                Name = "Pillar of Fire",
-            };
+        Assert.Equal("Pillar of Fire", a.Name);
+    }
 
-            Assert.Equal("Pillar of Fire", a.Name);
-        }
+    [Fact]
+    public void AccessorsSetCorrectValues()
+    {
+        var pillarOfFire = new byte[]
+        {
+                0x50, 0x69, 0x6C, 0x6C,
+                0x61, 0x72, 0x20, 0x6F,
+                0x66, 0x20, 0x46, 0x69,
+                0x72, 0x65, 0x00, 0x00,
+                0x00, 0x0A, 0x00, 0x00,
+                0x41, 0x48, 0xAC, 0x80,
+                0x00, 0xFF, 0xCA, 0x94,
+                0x41, 0x20, 0x2A, 0x00,
+                0xFF, 0x07, 0x01, 0x04,
+                0x4A, 0x69, 0x73, 0x03,
+        };
+
+        IGimmick a = new Gimmick
+        {
+            Name = "Pillar of Fire",
+        };
+
+        Assert.Equal("Pillar of Fire", a.Name);
     }
 }

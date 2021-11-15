@@ -1,4 +1,3 @@
-﻿namespace RanseiLink.Core.Services
-{
-    public delegate IDataService DataServiceFactory(ModInfo mod);
-}
+﻿namespace RanseiLink.Core.Services;
+
+public delegate IDataService DataServiceFactory(ModInfo mod);

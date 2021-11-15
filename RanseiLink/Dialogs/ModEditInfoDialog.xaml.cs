@@ -10,37 +10,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Dialogs
+namespace RanseiLink.Dialogs;
+
+/// <summary>
+/// Interaction logic for ModCreationDialog.xaml
+/// </summary>
+public partial class ModEditInfoDialog : Window
 {
-    /// <summary>
-    /// Interaction logic for ModCreationDialog.xaml
-    /// </summary>
-    public partial class ModEditInfoDialog : Window
+    public ModEditInfoDialog()
     {
-        public ModEditInfoDialog()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
+    private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
+            DragMove();
         }
+    }
 
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-            Close();
-        }
+    private void OkButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = true;
+        Close();
+    }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
-            Close();
+    private void CancelButton_Click(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
+        Close();
 
-        }
     }
 }

@@ -5,43 +5,42 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace RanseiLink.Console.Dev
+namespace RanseiLink.Console.Dev;
+
+static class Testing
 {
-    static class Testing
+    public static string GetBits(byte[] data)
     {
-        public static string GetBits(byte[] data)
+        string bits = "";
+        foreach (var b in data)
         {
-            string bits = "";
-            foreach (var b in data)
-            {
-                bits = Convert.ToString(b, 2).PadLeft(8, '0') + bits;
-            }
-            return bits;
+            bits = Convert.ToString(b, 2).PadLeft(8, '0') + bits;
         }
+        return bits;
+    }
 
-        public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, int, string> nameSelector) where T : BaseDataWindow
+    public static void LogDataGroupings<T>(string folderToPutLogsInto, IEnumerable<T> dataItems, Func<T, int, string> nameSelector) where T : BaseDataWindow
+    {
+        Directory.CreateDirectory(folderToPutLogsInto);
+        var opk = dataItems.Select((a, b) => (a, b)).OrderBy(i => nameSelector(i.a, 0)).ToArray();
+        var dataLength = opk[0].a.Data.Length;
+
+        for (int i = 0; i < dataLength; i++)
         {
-            Directory.CreateDirectory(folderToPutLogsInto);
-            var opk = dataItems.Select((a, b) => (a, b)).OrderBy(i => nameSelector(i.a, 0)).ToArray();
-            var dataLength = opk[0].a.Data.Length;
+            using var sw = new StreamWriter(File.Create(Path.Combine(folderToPutLogsInto, i.ToString().PadLeft(2, '0') + $" - 0x{i:x}.txt")));
+            var gpk = opk.GroupBy(p => p.a.Data[i]).OrderBy(g => g.Key);
 
-            for (int i = 0; i < dataLength; i++)
+            foreach (var group in gpk)
             {
-                using var sw = new StreamWriter(File.Create(Path.Combine(folderToPutLogsInto, i.ToString().PadLeft(2, '0') + $" - 0x{i:x}.txt")));
-                var gpk = opk.GroupBy(p => p.a.Data[i]).OrderBy(g => g.Key);
+                sw.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
+                sw.WriteLine();
 
-                foreach (var group in gpk)
+                foreach (var pk in group)
                 {
-                    sw.WriteLine($"{group.Key} = 0x{group.Key:x} = 0b{Convert.ToString(group.Key, 2).PadLeft(8, '0')} ---------------------------------------");
-                    sw.WriteLine();
-
-                    foreach (var pk in group)
-                    {
-                        sw.WriteLine(nameSelector(pk.a, pk.b));
-                    }
-
-                    sw.WriteLine();
+                    sw.WriteLine(nameSelector(pk.a, pk.b));
                 }
+
+                sw.WriteLine();
             }
         }
     }

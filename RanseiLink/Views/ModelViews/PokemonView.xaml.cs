@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for PokemonView.xaml
+/// </summary>
+public partial class PokemonView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for PokemonView.xaml
-    /// </summary>
-    public partial class PokemonView : UserControl
+    public PokemonView()
     {
-        public PokemonView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -2,49 +2,48 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IGimmickService : IModelDataService<GimmickId, IGimmick>
 {
-    public interface IGimmickService : IModelDataService<GimmickId, IGimmick>
+    IDisposableGimmickService Disposable();
+}
+
+public interface IDisposableGimmickService : IDisposableModelDataService<GimmickId, IGimmick>
+{
+}
+
+public class GimmickService : BaseModelService, IGimmickService
+{
+    public GimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
+
+    public IDisposableGimmickService Disposable()
     {
-        IDisposableGimmickService Disposable();
+        return new DisposableGimmickService(Mod);
     }
 
-    public interface IDisposableGimmickService : IDisposableModelDataService<GimmickId, IGimmick>
+    public IGimmick Retrieve(GimmickId id)
     {
+        return new Gimmick(RetrieveData((int)id));
     }
 
-    public class GimmickService : BaseModelService, IGimmickService
+    public void Save(GimmickId id, IGimmick model)
     {
-        public GimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
+        SaveData((int)id, model.Data);
+    }
+}
 
-        public IDisposableGimmickService Disposable()
-        {
-            return new DisposableGimmickService(Mod);
-        }
+public class DisposableGimmickService : BaseDisposableModelService, IDisposableGimmickService
+{
+    public DisposableGimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
 
-        public IGimmick Retrieve(GimmickId id)
-        {
-            return new Gimmick(RetrieveData((int)id));
-        }
-
-        public void Save(GimmickId id, IGimmick model)
-        {
-            SaveData((int)id, model.Data);
-        }
+    public IGimmick Retrieve(GimmickId id)
+    {
+        return new Gimmick(RetrieveData((int)id));
     }
 
-    public class DisposableGimmickService : BaseDisposableModelService, IDisposableGimmickService
+    public void Save(GimmickId id, IGimmick model)
     {
-        public DisposableGimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
-
-        public IGimmick Retrieve(GimmickId id)
-        {
-            return new Gimmick(RetrieveData((int)id));
-        }
-
-        public void Save(GimmickId id, IGimmick model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        SaveData((int)id, model.Data);
     }
 }

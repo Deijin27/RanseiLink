@@ -1,8 +1,7 @@
 ﻿
-namespace RanseiLink.Core.Models.Interfaces
+namespace RanseiLink.Core.Models.Interfaces;
+
+public interface IGimmick : IDataWrapper, ICloneable<IGimmick>
 {
-    public interface IGimmick : IDataWrapper, ICloneable<IGimmick>
-    {
-        string Name { get; set; }
-    }
+    string Name { get; set; }
 }

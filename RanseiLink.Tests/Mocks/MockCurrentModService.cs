@@ -2,22 +2,21 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 
-namespace RanseiLink.Tests.Mocks
+namespace RanseiLink.Tests.Mocks;
+
+class MockCurrentModService : ICurrentModService
 {
-    class MockCurrentModService : ICurrentModService
+    public bool TryGetCurrentMod(IConsole console, out ModInfo mod)
     {
-        public bool TryGetCurrentMod(IConsole console, out ModInfo mod)
-        {
-            throw new System.NotImplementedException();
-        }
+        throw new System.NotImplementedException();
+    }
 
 
-        public IDataService TryGetDataServiceReturn { get; set; }
-        public bool TryGetDataServiceSucceed { get; set; }
-        public bool TryGetDataService(IConsole console, out IDataService dataService)
-        {
-            dataService = TryGetDataServiceReturn;
-            return TryGetDataServiceSucceed;
-        }
+    public IDataService TryGetDataServiceReturn { get; set; }
+    public bool TryGetDataServiceSucceed { get; set; }
+    public bool TryGetDataService(IConsole console, out IDataService dataService)
+    {
+        dataService = TryGetDataServiceReturn;
+        return TryGetDataServiceSucceed;
     }
 }

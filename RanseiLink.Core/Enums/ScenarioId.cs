@@ -1,18 +1,17 @@
 ﻿
-namespace RanseiLink.Core.Enums
+namespace RanseiLink.Core.Enums;
+
+public enum ScenarioId : uint
 {
-    public enum ScenarioId : uint
-    {
-        TheLegendOfRansei,
-        Ninja,
-        UniteRansei,
-        Collect100Pokemon,
-        JuniorWarlord,
-        ShingenVsKenshin,
-        NotWorthFightingOver,
-        RanseisGreatestBeauty,
-        DefeatNobunaga,
-        Recruit40Warriors,
-        TwoHeroes
-    }
+    TheLegendOfRansei,
+    Ninja,
+    UniteRansei,
+    Collect100Pokemon,
+    JuniorWarlord,
+    ShingenVsKenshin,
+    NotWorthFightingOver,
+    RanseisGreatestBeauty,
+    DefeatNobunaga,
+    Recruit40Warriors,
+    TwoHeroes
 }

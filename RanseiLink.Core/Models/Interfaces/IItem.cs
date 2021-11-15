@@ -1,7 +1,6 @@
-﻿namespace RanseiLink.Core.Models.Interfaces
+﻿namespace RanseiLink.Core.Models.Interfaces;
+
+public interface IItem : IDataWrapper, ICloneable<IItem>
 {
-    public interface IItem : IDataWrapper, ICloneable<IItem>
-    {
-        string Name { get; set; }
-    }
+    string Name { get; set; }
 }

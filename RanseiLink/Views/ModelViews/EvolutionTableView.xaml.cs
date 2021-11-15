@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for EvolutionTableView.xaml
+/// </summary>
+public partial class EvolutionTableView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for EvolutionTableView.xaml
-    /// </summary>
-    public partial class EvolutionTableView : UserControl
+    public EvolutionTableView()
     {
-        public EvolutionTableView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

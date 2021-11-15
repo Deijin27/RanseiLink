@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for SelectorView.xaml
+/// </summary>
+public partial class SelectorView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for SelectorView.xaml
-    /// </summary>
-    public partial class SelectorView : UserControl
+    public SelectorView()
     {
-        public SelectorView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

@@ -1,5 +1,4 @@
 ﻿
-namespace RanseiLink.Core.Nds
-{
-    public delegate INds NdsFactory(string ndsPath);
-}
+namespace RanseiLink.Core.Nds;
+
+public delegate INds NdsFactory(string ndsPath);

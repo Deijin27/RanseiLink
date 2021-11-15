@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for MainEditorView.xaml
+/// </summary>
+public partial class MainEditorView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for MainEditorView.xaml
-    /// </summary>
-    public partial class MainEditorView : UserControl
+    public MainEditorView()
     {
-        public MainEditorView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

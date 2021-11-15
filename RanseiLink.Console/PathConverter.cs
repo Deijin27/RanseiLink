@@ -1,19 +1,18 @@
 ﻿
-namespace RanseiLink.Console
+namespace RanseiLink.Console;
+
+internal class PathConverter : CliFx.Extensibility.BindingConverter<string>
 {
-    internal class PathConverter : CliFx.Extensibility.BindingConverter<string>
+    public override string Convert(string rawValue)
     {
-        public override string Convert(string rawValue)
+        if (rawValue.StartsWith('"'))
         {
-            if (rawValue.StartsWith('"'))
-            {
-                rawValue = rawValue[1..];
-            }
-            if (rawValue.EndsWith('"'))
-            {
-                rawValue = rawValue[..^1];
-            }
-            return rawValue;
+            rawValue = rawValue[1..];
         }
+        if (rawValue.EndsWith('"'))
+        {
+            rawValue = rawValue[..^1];
+        }
+        return rawValue;
     }
 }

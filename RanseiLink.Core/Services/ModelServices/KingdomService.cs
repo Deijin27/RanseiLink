@@ -2,49 +2,48 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IKingdomService : IModelDataService<KingdomId, IKingdom>
 {
-    public interface IKingdomService : IModelDataService<KingdomId, IKingdom>
+    IDisposableKingdomService Disposable();
+}
+
+public interface IDisposableKingdomService : IDisposableModelDataService<KingdomId, IKingdom>
+{
+}
+
+public class KingdomService : BaseModelService, IKingdomService
+{
+    public KingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
+
+    public IDisposableKingdomService Disposable()
     {
-        IDisposableKingdomService Disposable();
+        return new DisposableKingdomService(Mod);
     }
 
-    public interface IDisposableKingdomService : IDisposableModelDataService<KingdomId, IKingdom>
+    public IKingdom Retrieve(KingdomId id)
     {
+        return new Kingdom(RetrieveData((int)id));
     }
 
-    public class KingdomService : BaseModelService, IKingdomService
+    public void Save(KingdomId id, IKingdom model)
     {
-        public KingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
+        SaveData((int)id, model.Data);
+    }
+}
 
-        public IDisposableKingdomService Disposable()
-        {
-            return new DisposableKingdomService(Mod);
-        }
+public class DisposableKingdomService : BaseDisposableModelService, IDisposableKingdomService
+{
+    public DisposableKingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
 
-        public IKingdom Retrieve(KingdomId id)
-        {
-            return new Kingdom(RetrieveData((int)id));
-        }
-
-        public void Save(KingdomId id, IKingdom model)
-        {
-            SaveData((int)id, model.Data);
-        }
+    public IKingdom Retrieve(KingdomId id)
+    {
+        return new Kingdom(RetrieveData((int)id));
     }
 
-    public class DisposableKingdomService : BaseDisposableModelService, IDisposableKingdomService
+    public void Save(KingdomId id, IKingdom model)
     {
-        public DisposableKingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
-
-        public IKingdom Retrieve(KingdomId id)
-        {
-            return new Kingdom(RetrieveData((int)id));
-        }
-
-        public void Save(KingdomId id, IKingdom model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        SaveData((int)id, model.Data);
     }
 }

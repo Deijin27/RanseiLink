@@ -2,49 +2,48 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IAbilityService : IModelDataService<AbilityId, IAbility>
 {
-    public interface IAbilityService : IModelDataService<AbilityId, IAbility>
+    IDisposableAbilityService Disposable();
+}
+
+public interface IDisposableAbilityService : IDisposableModelDataService<AbilityId, IAbility>
+{
+}
+
+public class AbilityService : BaseModelService, IAbilityService
+{
+    public AbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
+
+    public IDisposableAbilityService Disposable()
     {
-        IDisposableAbilityService Disposable();
+        return new DisposableAbilityService(Mod);
     }
 
-    public interface IDisposableAbilityService : IDisposableModelDataService<AbilityId, IAbility>
+    public IAbility Retrieve(AbilityId id)
     {
+        return new Ability(RetrieveData((int)id));
     }
 
-    public class AbilityService : BaseModelService, IAbilityService
+    public void Save(AbilityId id, IAbility model)
     {
-        public AbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
+        SaveData((int)id, model.Data);
+    }
+}
 
-        public IDisposableAbilityService Disposable()
-        {
-            return new DisposableAbilityService(Mod);
-        }
+public class DisposableAbilityService : BaseDisposableModelService, IDisposableAbilityService
+{
+    public DisposableAbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
 
-        public IAbility Retrieve(AbilityId id)
-        {
-            return new Ability(RetrieveData((int)id));
-        }
-
-        public void Save(AbilityId id, IAbility model)
-        {
-            SaveData((int)id, model.Data);
-        }
+    public IAbility Retrieve(AbilityId id)
+    {
+        return new Ability(RetrieveData((int)id));
     }
 
-    public class DisposableAbilityService : BaseDisposableModelService, IDisposableAbilityService
+    public void Save(AbilityId id, IAbility model)
     {
-        public DisposableAbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
-
-        public IAbility Retrieve(AbilityId id)
-        {
-            return new Ability(RetrieveData((int)id));
-        }
-
-        public void Save(AbilityId id, IAbility model)
-        {
-            SaveData((int)id, model.Data);
-        }
+        SaveData((int)id, model.Data);
     }
 }

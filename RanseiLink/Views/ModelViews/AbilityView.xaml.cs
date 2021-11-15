@@ -11,16 +11,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RanseiLink.Views
+namespace RanseiLink.Views;
+
+/// <summary>
+/// Interaction logic for AbilityView.xaml
+/// </summary>
+public partial class AbilityView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for AbilityView.xaml
-    /// </summary>
-    public partial class AbilityView : UserControl
+    public AbilityView()
     {
-        public AbilityView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

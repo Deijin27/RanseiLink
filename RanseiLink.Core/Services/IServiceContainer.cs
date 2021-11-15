@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace RanseiLink.Core.Services
+namespace RanseiLink.Core.Services;
+
+public interface IServiceContainer
 {
-    public interface IServiceContainer
-    {
-        void RegisterSingleton<T>(T instance);
-        void RegisterTransient<T>(Func<T> factory);
-        T Resolve<T>();
-        bool TryResolve<T>(out T result);
-    }
+    void RegisterSingleton<T>(T instance);
+    void RegisterTransient<T>(Func<T> factory);
+    T Resolve<T>();
+    bool TryResolve<T>(out T result);
 }

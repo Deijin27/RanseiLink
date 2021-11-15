@@ -5,11 +5,10 @@ using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Linq;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class BaseWarriorSelectorViewModel : SelectorViewModelBase<WarriorId, IBaseWarrior, BaseWarriorViewModel>
 {
-    public class BaseWarriorSelectorViewModel : SelectorViewModelBase<WarriorId, IBaseWarrior, BaseWarriorViewModel>
-    {
-        public BaseWarriorSelectorViewModel(IDialogService dialogService, WarriorId initialSelected, IModelDataService<WarriorId, IBaseWarrior> dataService) 
-            : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) { }
-    }
+    public BaseWarriorSelectorViewModel(IDialogService dialogService, WarriorId initialSelected, IModelDataService<WarriorId, IBaseWarrior> dataService)
+        : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) { }
 }

@@ -5,11 +5,10 @@ using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Linq;
 
-namespace RanseiLink.ViewModels
+namespace RanseiLink.ViewModels;
+
+public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, IAbility, AbilityViewModel>
 {
-    public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, IAbility, AbilityViewModel>
-    {
-        public AbilitySelectorViewModel(IDialogService dialogService, AbilityId initialSelected, IModelDataService<AbilityId, IAbility> dataService) 
-            : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray()) { }
-    }
+    public AbilitySelectorViewModel(IDialogService dialogService, AbilityId initialSelected, IModelDataService<AbilityId, IAbility> dataService)
+        : base(dialogService, initialSelected, dataService, EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray()) { }
 }
