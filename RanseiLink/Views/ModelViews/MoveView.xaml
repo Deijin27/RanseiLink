@@ -24,6 +24,14 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Height" Value="20"/>
         </Style>
+
+        <Style x:Key="PreviewButtonStyle" TargetType="Button" BasedOn="{StaticResource RoundedGrayHoverButtonStyle}">
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Content" Value="&#xE714;"/>
+            <Setter Property="FontFamily" Value="{StaticResource SegoeMDL2Assets}"/>
+            <Setter Property="Command" Value="{Binding SetPreviewAnimationModeCommand}"/>
+        </Style>
         
     </UserControl.Resources>
     <WrapPanel>
@@ -113,24 +121,21 @@
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup Animation"/>
             <DockPanel Grid.Row="1" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource GrayHoverButtonStyle}" Width="30" Content="&#xE714;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Startup}"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Startup}"/>
                 <ComboBox ItemsSource="{Binding AnimationItems}" SelectedItem="{Binding StartupAnimation}"/>
             </DockPanel>
 
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Projectile Animation"/>
             <DockPanel Grid.Row="2" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource GrayHoverButtonStyle}" Width="30" Content="&#xE714;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Projectile}"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Projectile}"/>
                 <ComboBox ItemsSource="{Binding AnimationItems}" SelectedItem="{Binding ProjectileAnimation}"/>
             </DockPanel>
 
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Impact Animation"/>
             <DockPanel Grid.Row="3" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource GrayHoverButtonStyle}" Width="30" Content="&#xE714;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Impact}"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Impact}"/>
                 <ComboBox ItemsSource="{Binding AnimationItems}" SelectedItem="{Binding ImpactAnimation}"/>
             </DockPanel>
 
