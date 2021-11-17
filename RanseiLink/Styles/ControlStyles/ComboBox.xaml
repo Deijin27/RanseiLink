@@ -118,10 +118,16 @@
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="4,2"/>
+
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="{x:Type ComboBoxItem}">
                     <Setter Property="Padding" Value="4,1"/>
+                    
+                    <!-- Remove dotted border on focused item. It's not really necessary here.
+                    But leave it on the combobox itself because it indicates keyboard focus when the drop down is closed-->
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -135,6 +141,12 @@
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource WindowTransparentSelectedBackgroundBrush}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
