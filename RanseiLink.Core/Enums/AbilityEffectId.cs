@@ -7,7 +7,7 @@ public enum AbilityEffectId : uint
     IncreaseUserAttack,
     IncreaseUserDefence,
     IncreaseUserMovementRange,
-    Unknown_1,
+    Unknown_1, // Raises user speed (maybe after flinching)
     IncreaseUserAccuracy,
     Unused_2,
     DecreaseOpponentAttack,

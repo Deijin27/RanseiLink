@@ -13,12 +13,12 @@ public enum WarriorSkillEffectId : uint
     RestoreHp,
     SleepAllies,
     CureStatus,
-    CureParalysis, // Maybe swap with poison
-    CureSleep, // Maybe swap with confusion
-    CurePoison, // Maybe swap with paralysis
-    CureBurn, // Maybe swap with freeze
-    CureFreeze, // Maybe swap with burn
-    CureConfusion, // Maybe swap with sleep
+    CureParalysis,
+    CureSleep,
+    CurePoison,
+    CureBurn,
+    CureFreeze,
+    CureConfusion,
     CancelOpponentWarriorSkill,
     RestoreHpOverTime,
     CantMove,

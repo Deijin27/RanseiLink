@@ -49,7 +49,7 @@ public enum AbilityId : uint
     Swarm,
     Guts,
     Pride,
-    dummy0,
+    Steadfast, // dummy0
     Justified,
     DeepSleep,
     PowerNap,
@@ -70,7 +70,7 @@ public enum AbilityId : uint
     Bodyguard,
     Hero,
     LastBastion,
-    dummy1,
+    NoGuard, // dummy1
     Stealth,
     Vanguard,
     Nomad,
@@ -95,8 +95,8 @@ public enum AbilityId : uint
     Omnipotent,
     Share,
     BlackHole,
-    dummy2,
-    dummy3,
+    dummy2, // Enables a Pokémon to chop down trees with their attacks.
+    dummy3, // Enables a Pokémon to smash rocks with their attacks.
     ShadowDash,
     Sprint,
     Disgust,
@@ -109,11 +109,11 @@ public enum AbilityId : uint
     Shackle,
     Decoy,
     Shield,
-    dummy4,
-    dummy5,
-    dummy6,
-    dummy7,
-    dummy8,
+    dummy4, // The Pokémon can move freely through squares that contain allies.
+    dummy5, // The Pokémon can restore a used Warrior Skill when their army is struggling.
+    dummy6, // Improves stats when surrounded by enemies.
+    dummy7, // Adjacent enemies can move only one square.
+    dummy8, // There's no room for this move to have a description
     dummy9,
     dummy10,
     dummy11,
