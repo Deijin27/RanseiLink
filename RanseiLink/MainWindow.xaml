@@ -5,20 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RanseiLink"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
-        WindowStyle="None"
-        AllowsTransparency="True"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
-        Height="500" Width="900" Background="Transparent">
+        Height="500" Width="900" Background="Black">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" 
-                      ResizeBorderThickness="5" 
-                      CornerRadius="0"/>
+                      ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConv"/>
     </Window.Resources>
-    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}">
+    <Border BorderThickness="0" BorderBrush="{DynamicResource WindowBorderBrush}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
@@ -29,7 +26,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" Opacity="0.9" BorderThickness="0"/>
+            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
             <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
 
             <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Background="Transparent">
@@ -62,7 +59,7 @@
                         FontSize="13"
                         ToolTip="Minimize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
-                
+
                 <TextBlock FontSize="12" FontWeight="SemiBold"
                     HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
                         RanseiLink <Run Text="{x:Static local:App.Version}"/>
@@ -72,5 +69,4 @@
             <ContentControl Content="{Binding CurrentVm}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
         </Grid>
     </Border>
-
 </Window>

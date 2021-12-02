@@ -3,7 +3,8 @@
 
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#171717"/>
     <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#1F1F1F"/>
-    <SolidColorBrush x:Key="WindowBorderBrush" Color="#ada872"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
+    <!--Color="#ada872"/>-->
 
     <SolidColorBrush x:Key="AccentBrush" Color="#9d8abf"/>
 

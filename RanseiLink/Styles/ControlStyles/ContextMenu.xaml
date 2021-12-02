@@ -14,7 +14,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
                     <Border x:Name="Border" 
-                            Background="{DynamicResource WindowBackgroundBrush}" BorderBrush="{DynamicResource AccentBrush}"
+                            Background="{DynamicResource WindowBackgroundBrush}" BorderBrush="{DynamicResource WindowBorderBrush}"
                             BorderThickness="1">
                         <StackPanel IsItemsHost="True" Margin="0"  KeyboardNavigation.DirectionalNavigation="Cycle" />
                     </Border>
