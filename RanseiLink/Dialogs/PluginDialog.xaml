@@ -1,0 +1,83 @@
+﻿<Window x:Class="RanseiLink.Dialogs.PluginDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:RanseiLink.Controls"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        mc:Ignorable="d"
+        xmlns:vm="clr-namespace:RanseiLink.PluginModule.Services;assembly=RanseiLink.PluginModule"
+        d:DataContext="{d:DesignInstance vm:PluginFormInfo, IsDesignTimeCreatable=False}"
+        Title="Dialog" Height="500" Width="400" Background="Transparent">
+    <Window.Resources>
+        
+        <DataTemplate DataType="{x:Type vm:BoolPluginFormItem}">
+            <CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding Value, Mode=TwoWay}" ToolTip="{Binding Description}"/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:UIntPluginFormItem}">
+            <Grid Margin="0,5" ToolTip="{Binding Description}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
+                <controls:NumberBox Grid.Column="1" Value="{Binding Value}" Max="{Binding MaxValue}" Min="{Binding MinValue}"/>
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:StringPluginFormItem}">
+            <Grid Margin="0,5" ToolTip="{Binding Description}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="RowHeaderGroup"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding DisplayName}"/>
+                <TextBox Grid.Column="1" Text="{Binding Value}" MaxLength="{Binding MaxLength}"/>
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:CollectionPluginFormItem}">
+            <Grid Margin="0,5" ToolTip="{Binding Description}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="RowHeaderGroup"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding DisplayName}"/>
+                <ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" />
+            </Grid>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:TextPluginFormItem}">
+            <TextBlock Margin="0,5" Text="{Binding Value}" TextWrapping="Wrap"/>
+        </DataTemplate>
+        
+    </Window.Resources>
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
+        <DockPanel Background="{DynamicResource WindowBackgroundBrush}">
+            <Grid DockPanel.Dock="Bottom">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click" d:Content="OK"/>
+                    <Button Height="20" Width="100" Content="{Binding Form.CancelButtonText}" Click="CancelButton_Click" d:Content="Cancel"/>
+                </StackPanel>
+            </Grid>
+            <TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18" FontWeight="DemiBold" Text="{Binding Form.Title}" d:Text="Randomization Options"/>
+            <ScrollViewer Margin="20,0">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding UngroupedItems}"/>
+                    <ItemsControl ItemsSource="{Binding Groups}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:PluginFormGroup}">
+                                <GroupBox Header="{Binding GroupName}">
+                                    <ItemsControl ItemsSource="{Binding Items}"/>
+                                </GroupBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</Window>

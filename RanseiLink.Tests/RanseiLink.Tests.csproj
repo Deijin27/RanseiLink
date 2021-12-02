@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
     <ProjectReference Include="..\RanseiLink.Console\RanseiLink.Console.csproj" />
+    <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
     <ProjectReference Include="..\RanseiLink\RanseiLink.csproj" />
   </ItemGroup>
 

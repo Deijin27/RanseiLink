@@ -1,9 +1,9 @@
-﻿using RanseiLink.Core.Randomization;
-using RanseiLink.Core.Services;
-using RanseiLink.Dialogs;
+﻿using RanseiLink.Core.Services;
+using RanseiLink.PluginModule.Api;
+using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -13,38 +13,34 @@ public class ModListItemViewModel : ViewModelBase
     private readonly ModSelectionViewModel _parentVm;
     private readonly IModService _modService;
     private readonly IDialogService _dialogService;
-    private readonly DataServiceFactory _dataServiceFactory;
+    private readonly IServiceContainer _container;
 
-    public ModListItemViewModel(ModSelectionViewModel parentVm, ModInfo mod, IModService modService, IDialogService dialogService, DataServiceFactory dataServiceFactory)
+    public ModListItemViewModel(ModSelectionViewModel parentVm, ModInfo mod, IServiceContainer container)
     {
+        _container = container;
         _parentVm = parentVm;
-        _modService = modService;
-        _dialogService = dialogService;
-        _dataServiceFactory = dataServiceFactory;
+        _modService = container.Resolve<IModService>();
+        _dialogService = container.Resolve<IDialogService>();
         Mod = mod;
+        PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
 
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
         EditModInfoCommand = new RelayCommand(() => EditModInfo(Mod));
         CreateModBasedOnCommand = new RelayCommand(() => CreateModBasedOn(Mod));
-        RandomizeCommand = new RelayCommand(() => Randomize(Mod));
         DeleteModCommand = new RelayCommand(() => DeleteMod(Mod));
+        RunPluginCommand = new RelayCommand<PluginInfo>(parameter => RunPlugin(Mod, parameter));
     }
 
-    private ModInfo _mod;
-    public ModInfo Mod
-    {
-        get => _mod;
-        private set => RaiseAndSetIfChanged(ref _mod, value);
-    }
-
-
+    public IReadOnlyCollection<PluginInfo> PluginItems { get; }
+    public ModInfo Mod { get; }
     public ICommand PatchRomCommand { get; }
     public ICommand ExportModCommand { get; }
     public ICommand EditModInfoCommand { get; }
     public ICommand CreateModBasedOnCommand { get; }
     public ICommand RandomizeCommand { get; }
     public ICommand DeleteModCommand { get; }
+    public ICommand RunPluginCommand { get; }
 
     #region Mod Specific Command Implementations
 
@@ -58,12 +54,11 @@ public class ModListItemViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Error Writing To Rom",
-                    Message = e.Message,
-                    Icon = System.Windows.MessageBoxImage.Error
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Writing To Rom",
+                    message: e.Message,
+                    icon: MessageBoxIcon.Error
+                ));
                 return;
             }
 
@@ -79,12 +74,11 @@ public class ModListItemViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Error Exporting Mod",
-                    Message = e.Message,
-                    Icon = System.Windows.MessageBoxImage.Error
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Exporting Mod",
+                    message: e.Message,
+                    icon: MessageBoxIcon.Error
+                ));
                 return;
             }
         }
@@ -108,29 +102,15 @@ public class ModListItemViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Error creating mod",
-                    Message = e.Message,
-                    Icon = System.Windows.MessageBoxImage.Error
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Creating Mod",
+                    message: e.Message,
+                    icon: MessageBoxIcon.Error
+                ));
                 return;
             }
 
             _parentVm.RefreshModItems();
-        }
-    }
-
-    private async void Randomize(ModInfo mod)
-    {
-        IRandomizer randomizer = new SimpleRandomizer();
-        if (_dialogService.Randomize(randomizer))
-        {
-            var dialog = new LoadingDialog("Randomizing...");
-            dialog.Owner = App.Current.MainWindow;
-            dialog.Show();
-            await Task.Run(() => randomizer.Apply(_dataServiceFactory(mod)));
-            dialog.Close();
         }
     }
 
@@ -140,6 +120,22 @@ public class ModListItemViewModel : ViewModelBase
         {
             _modService.Delete(mod);
             _parentVm.ModItems.Remove(this);
+        }
+    }
+
+    private void RunPlugin(ModInfo mod, PluginInfo chosen)
+    {
+        try
+        {
+            chosen.Plugin.Run(new PluginContext(_container, mod));
+        }
+        catch (Exception e)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                title: $"Error running {chosen.Name}",
+                message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.Message,
+                icon: MessageBoxIcon.Error
+                ));
         }
     }
     #endregion

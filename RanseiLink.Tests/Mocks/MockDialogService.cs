@@ -1,20 +1,11 @@
-﻿using RanseiLink.Core.Randomization;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System;
-using System.Windows;
 
 namespace RanseiLink.Tests.Mocks;
 
 public class MockDialogService : IDialogService
 {
-    public int ShowMessageBoxCallCount = 0;
-    public MessageBoxResult ShowMessageBoxReturn = MessageBoxResult.OK;
-    public MessageBoxResult ShowMessageBox(MessageBoxArgs options)
-    {
-        ShowMessageBoxCallCount++;
-        return ShowMessageBoxReturn;
-    }
 
     public bool CreateMod(out ModInfo modInfo, out string romPath)
     {
@@ -56,11 +47,6 @@ public class MockDialogService : IDialogService
         throw new NotImplementedException();
     }
 
-    public bool Randomize(IRandomizer randomizer)
-    {
-        throw new NotImplementedException();
-    }
-
     public bool RequestFolder(out string result)
     {
         throw new NotImplementedException();
@@ -69,5 +55,13 @@ public class MockDialogService : IDialogService
     public bool RequestModFile(out string result)
     {
         throw new NotImplementedException();
+    }
+
+    public int ShowMessageBoxCallCount { get; set; } = 0;
+    public MessageBoxResult ShowMessageBoxResult { get; set; } = MessageBoxResult.Ok;
+    public MessageBoxResult ShowMessageBox(MessageBoxArgs options)
+    {
+        ShowMessageBoxCallCount++;
+        return ShowMessageBoxResult;
     }
 }

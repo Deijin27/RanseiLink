@@ -9,16 +9,16 @@ namespace RanseiLink.ViewModels;
 
 public class ModSelectionViewModel : ViewModelBase
 {
+    private readonly IServiceContainer _container;
     private readonly IModService _modService;
     private readonly IDialogService _dialogService;
-    private readonly DataServiceFactory _dataServiceFactory;
 
     public ModSelectionViewModel(IServiceContainer container)
     {
+        _container = container;
         _modService = container.Resolve<IModService>();
         _dialogService = container.Resolve<IDialogService>();
-        _dataServiceFactory = container.Resolve<DataServiceFactory>();
-
+        
 
         RefreshModItems();
 
@@ -42,13 +42,12 @@ public class ModSelectionViewModel : ViewModelBase
         ModItems.Clear();
         foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
         {
-            ModItems.Add(new ModListItemViewModel(this, mi, _modService, _dialogService, _dataServiceFactory));
+            ModItems.Add(new ModListItemViewModel(this, mi, _container));
         }
     }
 
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
-
 
     private void CreateMod()
     {
@@ -61,12 +60,11 @@ public class ModSelectionViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Error creating mod",
-                    Message = e.Message,
-                    Icon = System.Windows.MessageBoxImage.Error
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Creating Mod",
+                    message: e.Message,
+                    icon: MessageBoxIcon.Error
+                ));
                 return;
             }
 
@@ -84,12 +82,11 @@ public class ModSelectionViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Title = "Error importing mod",
-                    Message = e.Message,
-                    Icon = System.Windows.MessageBoxImage.Error
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Importing Mod",
+                    message: e.Message,
+                    icon: MessageBoxIcon.Error
+                ));
                 return;
             }
             RefreshModItems();

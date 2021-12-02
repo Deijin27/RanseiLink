@@ -1,5 +1,4 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.ViewModels;
+﻿using RanseiLink.ViewModels;
 using System.Windows;
 
 namespace RanseiLink;
@@ -16,7 +15,7 @@ public partial class MainWindow : Window
         // Ensure maximized window doesn't cover taskbar
         MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
 
-        DataContext = new MainWindowViewModel(ServiceContainer.Instance);
+        DataContext = new MainWindowViewModel(((App)Application.Current).ServiceContainer);
     }
 
     private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;

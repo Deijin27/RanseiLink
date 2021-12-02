@@ -1,4 +1,6 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.PluginModule.Services;
+using RanseiLink.Services;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -7,6 +9,20 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
 {
     public MainWindowViewModel(IServiceContainer container)
     {
+        var dialogService = container.Resolve<IDialogService>();
+        var pluginLoader = container.Resolve<IPluginLoader>();
+
+        // Initial load of plugins to create cache and alert user of failures
+        pluginLoader.LoadPlugins(out var failures);
+        if (failures.AnyFailures)
+        {
+            dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                title: "Plugin Load Failures",
+                message: $"Unable to load some of the plugins, details:\n\n{failures}",
+                icon: MessageBoxIcon.Warning
+                ));
+        }
+
         ModSelectionVm = new ModSelectionViewModel(container);
         CurrentVm = ModSelectionVm;
 

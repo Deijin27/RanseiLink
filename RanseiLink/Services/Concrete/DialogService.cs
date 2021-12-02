@@ -1,11 +1,10 @@
-﻿using RanseiLink.Core.Randomization;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.ViewModels;
 using System.Windows;
 
 namespace RanseiLink.Services.Concrete;
 
-public class DialogService : IDialogService
+internal class DialogService : IDialogService
 {
     private readonly ISettingsService Settings;
     public DialogService(ISettingsService settings)
@@ -15,7 +14,8 @@ public class DialogService : IDialogService
 
     public MessageBoxResult ShowMessageBox(MessageBoxArgs options)
     {
-        return MessageBox.Show(options.Message, options.Title, options.Button, options.Icon, options.DefaultResult);
+        MessageBox.Show(options.Message, options.Title);
+        return MessageBoxResult.Ok;
     }
 
     public bool RequestRomFile(out string result)
@@ -241,18 +241,6 @@ public class DialogService : IDialogService
         {
             Owner = Application.Current.MainWindow,
             DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        return proceed == true;
-    }
-
-    public bool Randomize(IRandomizer randomizer)
-    {
-        var dialog = new Dialogs.RandomizeDialog(randomizer)
-        {
-            Owner = Application.Current.MainWindow
         };
 
         bool? proceed = dialog.ShowDialog();

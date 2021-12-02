@@ -1,18 +1,16 @@
-﻿using RanseiLink.Core.Randomization;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace RanseiLink.Dialogs;
 
 /// <summary>
-/// Interaction logic for ModCreationDialog.xaml
+/// Interaction logic for PluginDialog.xaml
 /// </summary>
-public partial class RandomizeDialog : Window
+public partial class PluginDialog : Window
 {
-    public RandomizeDialog(IRandomizer randomizer)
+    public PluginDialog()
     {
         InitializeComponent();
-        ListItems.ItemsSource = randomizer.Options;
     }
 
     private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)

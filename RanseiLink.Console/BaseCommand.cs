@@ -12,7 +12,7 @@ public abstract class BaseCommand : ICommand
         Container = container;
     }
 
-    protected BaseCommand() : this(ServiceContainer.Instance)
+    protected BaseCommand() : this(Program.ServiceContainer)
     {
     }
 

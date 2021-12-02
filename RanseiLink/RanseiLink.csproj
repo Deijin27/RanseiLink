@@ -7,7 +7,7 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <Authors>Deijin</Authors>
-    <Version>0.3.0</Version>
+    <Version>3.0</Version>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
+    <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +38,7 @@
     <Compile Update="Dialogs\LoadingDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Dialogs\RandomizeDialog.xaml.cs">
+    <Compile Update="Dialogs\PluginDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Dialogs\ModImportDialog.xaml.cs">
@@ -93,7 +94,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Dialogs\RandomizeDialog.xaml">
+    <Page Update="Dialogs\PluginDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -114,6 +115,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Styles\Colors\Dark.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Styles\RoundedGrayToggleButton.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

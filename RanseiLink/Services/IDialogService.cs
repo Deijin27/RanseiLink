@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Randomization;
-using RanseiLink.Core.Services;
-using System.Windows;
+﻿using RanseiLink.Core.Services;
 
 namespace RanseiLink.Services;
 
@@ -15,7 +13,6 @@ public interface IDialogService
     bool RequestRomFile(out string result);
     bool ConfirmDelete(ModInfo info);
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);
-    bool Randomize(IRandomizer randomizer);
     bool RequestFolder(out string result);
     bool RequestModFile(out string result);
 }

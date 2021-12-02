@@ -50,9 +50,29 @@
                                     <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
                                     <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
                                     <Separator/>
-                                    <MenuItem Header="Randomize" Command="{Binding RandomizeCommand}" Icon="{StaticResource RandomizeIcon}"/>
+                                    <MenuItem Header="Plugins" Icon="{StaticResource RandomizeIcon}" ItemsSource="{Binding PluginItems}">
+                                        <MenuItem.ItemContainerStyle>
+                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                                <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
+                                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                                                <Setter Property="Header">
+                                                    <Setter.Value>
+                                                        <TextBlock>
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0} v{1} by {2}">
+                                                                    <Binding Path="Name" />
+                                                                    <Binding Path="Version" />
+                                                                    <Binding Path="Author" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </MenuItem.ItemContainerStyle>
+                                    </MenuItem>
                                     <Separator/>
-                                    <MenuItem Header="Delete" Command="{Binding DeleteModCommand}"/>
+                                    <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" />
                                 </ContextMenu>
                             </Button.ContextMenu>
                             <controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>

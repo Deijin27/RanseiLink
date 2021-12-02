@@ -1,7 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Console.Services.Concrete;
 
-namespace RanseiLink.Console.Services;
+namespace RanseiLink.Console.Services.Registration;
 
 public static class RegistrationExtensions
 {

@@ -39,12 +39,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(new MessageBoxArgs()
-            {
-                Icon = System.Windows.MessageBoxImage.Error,
-                Title = $"Error retrieving initial data in {GetType().Name}",
-                Message = e.Message
-            });
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                icon: MessageBoxIcon.Error,
+                title: $"Error retrieving initial data in {GetType().Name}",
+                message: e.Message
+            ));
         }
     }
 
@@ -65,12 +64,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                     }
                     catch (Exception e)
                     {
-                        _dialogService.ShowMessageBox(new MessageBoxArgs()
-                        {
-                            Icon = System.Windows.MessageBoxImage.Error,
-                            Title = $"Error saving nested saveable {saveable.GetType().Name} in {GetType().Name}",
-                            Message = e.Message
-                        });
+                        _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                            icon: MessageBoxIcon.Error,
+                            title: $"Error saving nested saveable {saveable.GetType().Name} in {GetType().Name}",
+                            message: e.Message
+                        ));
                     }
 
                 }
@@ -100,12 +98,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving new selection data in {GetType().Name}",
-                    Message = e.Message
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    icon: MessageBoxIcon.Error,
+                    title: $"Error retrieving new selection data in {GetType().Name}",
+                    message: e.Message
+            ));
             }
         }
     }
@@ -129,12 +126,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving new selection data in {GetType().Name}",
-                    Message = e.Message
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    icon: MessageBoxIcon.Error,
+                    title: $"Error retrieving new selection data in {GetType().Name}",
+                    message: e.Message
+                    ));
             }
         }
     }
@@ -156,12 +152,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(new MessageBoxArgs()
-                {
-                    Icon = System.Windows.MessageBoxImage.Error,
-                    Title = $"Error retrieving data in {GetType().Name}",
-                    Message = e.Message
-                });
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    icon: MessageBoxIcon.Error,
+                    title: $"Error saving data in {GetType().Name}",
+                    message: e.Message
+                    ));
             }
         }
     }
@@ -177,12 +172,11 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(new MessageBoxArgs()
-            {
-                Icon = System.Windows.MessageBoxImage.Error,
-                Title = $"Error retrieving data in {GetType().Name}",
-                Message = e.Message
-            });
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                 icon: MessageBoxIcon.Error,
+                 title: $"Error retrieving data in {GetType().Name}",
+                 message: e.Message
+             ));
         }
 
     }
@@ -211,13 +205,12 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         }
         else
         {
-            _dialogService.ShowMessageBox(new MessageBoxArgs()
-            {
-                Icon = MessageBoxImage.Warning,
-                Title = "Invalid Paste Data",
-                Message = "The data that you pasted is invalid. Make sure you have the right label and length." +
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                icon: MessageBoxIcon.Warning,
+                title: "Invalid Paste Data",
+                message: "The data that you pasted is invalid. Make sure you have the right label and length." +
                           $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
-            });
+            ));
         }
     }
 }
