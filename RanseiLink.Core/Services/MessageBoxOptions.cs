@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Services;
+﻿namespace RanseiLink.Core.Services;
 
 public enum MessageBoxIcon
 {

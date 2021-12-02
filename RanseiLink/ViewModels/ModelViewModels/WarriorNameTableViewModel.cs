@@ -1,7 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Services;
+using RanseiLink.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows;

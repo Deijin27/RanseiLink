@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RanseiLink.Core;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Services;
+using RanseiLink.Core.Services;
 using System;
 using System.Windows.Input;
 using System.Windows;

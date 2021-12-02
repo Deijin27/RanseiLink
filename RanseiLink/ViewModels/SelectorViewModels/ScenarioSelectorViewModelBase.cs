@@ -1,7 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Services;
+using RanseiLink.Core.Services;
 using System;
 using System.Linq;
 using System.Windows;

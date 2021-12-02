@@ -12,10 +12,10 @@ internal class DialogService : IDialogService
         Settings = settings;
     }
 
-    public MessageBoxResult ShowMessageBox(MessageBoxArgs options)
+    public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxArgs options)
     {
         MessageBox.Show(options.Message, options.Title);
-        return MessageBoxResult.Ok;
+        return Core.Services.MessageBoxResult.Ok;
     }
 
     public bool RequestRomFile(out string result)

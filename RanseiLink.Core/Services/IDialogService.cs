@@ -1,6 +1,5 @@
-﻿using RanseiLink.Core.Services;
-
-namespace RanseiLink.Services;
+﻿
+namespace RanseiLink.Core.Services;
 
 public interface IDialogService
 {
