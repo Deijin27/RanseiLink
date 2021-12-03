@@ -50,7 +50,7 @@
                                     <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
                                     <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
                                     <Separator/>
-                                    <MenuItem Header="Plugins" Icon="{StaticResource RandomizeIcon}" ItemsSource="{Binding PluginItems}">
+                                    <MenuItem Header="Plugins" Icon="{StaticResource PluginIcon}" ItemsSource="{Binding PluginItems}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                                                 <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>

@@ -73,9 +73,9 @@
                     <ContentPresenter Height="18" Content="{StaticResource CommitRomIcon}" />
                 </Button>
                 <!-- hit test stuff prevents double trigger when clicking on button to close popup -->
-                <ToggleButton Height="30" Width="30" Style="{StaticResource RoundedGrayToggleButtonStyle}" IsChecked="{Binding PluginPopupOpen}"
+                <ToggleButton ToolTip="Plugins" Height="30" Width="30" Style="{StaticResource RoundedGrayToggleButtonStyle}" IsChecked="{Binding PluginPopupOpen}"
                               IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={StaticResource Converter.InvertBool}}">
-                    <ContentPresenter Height="18" Content="{StaticResource RandomizeIcon}" />
+                    <ContentPresenter Height="18" Content="{StaticResource PluginIcon}" />
                 </ToggleButton>
             </StackPanel>
         </Grid>
