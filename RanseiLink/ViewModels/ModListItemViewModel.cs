@@ -57,7 +57,7 @@ public class ModListItemViewModel : ViewModelBase
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Writing To Rom",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
                 return;
             }
@@ -77,7 +77,7 @@ public class ModListItemViewModel : ViewModelBase
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Exporting Mod",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
                 return;
             }
@@ -105,7 +105,7 @@ public class ModListItemViewModel : ViewModelBase
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Creating Mod",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
                 return;
             }
@@ -134,7 +134,7 @@ public class ModListItemViewModel : ViewModelBase
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.Message,
-                icon: MessageBoxIcon.Error
+                type: MessageBoxType.Error
                 ));
         }
     }

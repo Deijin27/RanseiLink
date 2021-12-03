@@ -14,8 +14,12 @@ internal class DialogService : IDialogService
 
     public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxArgs options)
     {
-        MessageBox.Show(options.Message, options.Title);
-        return Core.Services.MessageBoxResult.Ok;
+        var dialog = new Dialogs.MessageBoxDialog(options)
+        {
+            Owner = Application.Current.MainWindow
+        };
+        dialog.ShowDialog();
+        return dialog.Result;
     }
 
     public bool RequestRomFile(out string result)

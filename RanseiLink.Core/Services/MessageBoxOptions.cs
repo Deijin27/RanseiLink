@@ -1,12 +1,10 @@
 ﻿namespace RanseiLink.Core.Services;
 
-public enum MessageBoxIcon
+public enum MessageBoxType
 {
-    None,
-    Error,
+    Information,
     Warning,
-    Question,
-    Information
+    Error,
 }
 
 public enum MessageBoxResult
@@ -26,13 +24,13 @@ public class MessageBoxArgs
         string title,
         string message,
         MessageBoxButton[] buttons,
-        MessageBoxIcon icon = MessageBoxIcon.Information,
+        MessageBoxType type = MessageBoxType.Information,
         MessageBoxResult defaultResult = MessageBoxResult.Ok)
     {
         Title = title;
         Message = message;
         Buttons = buttons;
-        Icon = icon;
+        Type = type;
         DefaultResult = defaultResult;
     }
 
@@ -41,13 +39,13 @@ public class MessageBoxArgs
     /// </summary>
     public static MessageBoxArgs Ok(string title,
         string message,
-        MessageBoxIcon icon = MessageBoxIcon.Information)
+        MessageBoxType type = MessageBoxType.Information)
     {
         return new MessageBoxArgs(
             title,
             message,
             new MessageBoxButton[] { new MessageBoxButton("OK", MessageBoxResult.Ok) },
-            icon,
+            type,
             MessageBoxResult.Ok
             );
     }
@@ -55,6 +53,6 @@ public class MessageBoxArgs
     public string Title { get; }
     public string Message { get; }
     public MessageBoxButton[] Buttons { get; }
-    public MessageBoxIcon Icon { get; }
+    public MessageBoxType Type { get; }
     public MessageBoxResult DefaultResult { get; }
 }

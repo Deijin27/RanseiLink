@@ -19,7 +19,7 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
             dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: "Plugin Load Failures",
                 message: $"Unable to load some of the plugins, details:\n\n{failures}",
-                icon: MessageBoxIcon.Warning
+                type: MessageBoxType.Warning
                 ));
         }
 

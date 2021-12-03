@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Dialogs\MessageBoxDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Dialogs\ModCreateBasedOnDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -85,6 +88,10 @@
   <ItemGroup>
     <Page Update="Controls\RankUpConditionControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Dialogs\MessageBoxDialog.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Dialogs\ModCreateBasedOnDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

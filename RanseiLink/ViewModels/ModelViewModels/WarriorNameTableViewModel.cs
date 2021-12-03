@@ -52,7 +52,7 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
         catch (Exception e)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                icon: MessageBoxIcon.Error,
+                type: MessageBoxType.Error,
                 title: $"Error saving data in {GetType().Name}",
                 message: e.Message
             ));
@@ -74,7 +74,7 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
         catch (Exception e)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                icon: MessageBoxIcon.Error,
+                type: MessageBoxType.Error,
                 title: $"Error retrieving data in {GetType().Name}",
                 message: e.Message
             ));
@@ -105,7 +105,7 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
         else
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                icon: MessageBoxIcon.Warning,
+                type: MessageBoxType.Warning,
                 title: "Invalid Paste Data",
                 message: "The data that you pasted is invalid. Make sure you have the right label." +
                           $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_model.Serialize()}"

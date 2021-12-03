@@ -64,7 +64,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
         catch (Exception e)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                icon: MessageBoxIcon.Error,
+                type: MessageBoxType.Error,
                 title: $"Error saving data in {GetType().Name}",
                 message: e.Message
             ));
@@ -83,7 +83,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
             catch (Exception e)
             {
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    icon: MessageBoxIcon.Error,
+                    type: MessageBoxType.Error,
                     title: $"Error saving data in {GetType().Name}",
                     message: e.Message
                 ));
@@ -112,7 +112,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
         else
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                icon: MessageBoxIcon.Warning,
+                type: MessageBoxType.Warning,
                 title: "Invalid Paste Data",
                 message: "The data that you pasted is invalid. Make sure you have the right label and length." +
                           $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"

@@ -108,7 +108,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Writing To Rom",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
             }
         }
@@ -129,7 +129,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.Message,
-                icon: MessageBoxIcon.Error
+                type: MessageBoxType.Error
                 ));
         }
 

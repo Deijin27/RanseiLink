@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Services;
-using RanseiLink.Services;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -51,6 +50,10 @@ public class ModSelectionViewModel : ViewModelBase
 
     private void CreateMod()
     {
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Information));
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Warning));
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Error));
+
         if (_dialogService.CreateMod(out ModInfo modInfo, out string romPath))
         {
             ModInfo newMod;
@@ -63,7 +66,7 @@ public class ModSelectionViewModel : ViewModelBase
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Creating Mod",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
                 return;
             }
@@ -85,7 +88,7 @@ public class ModSelectionViewModel : ViewModelBase
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Importing Mod",
                     message: e.Message,
-                    icon: MessageBoxIcon.Error
+                    type: MessageBoxType.Error
                 ));
                 return;
             }

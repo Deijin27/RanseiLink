@@ -59,7 +59,7 @@ public class ModImportViewModel : ViewModelBase
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: "Unable to load mod",
                 message: e.Message,
-                icon: MessageBoxIcon.Error
+                type: MessageBoxType.Error
             ));
         }
     }
