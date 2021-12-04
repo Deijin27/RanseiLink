@@ -1,12 +1,13 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
+
+public delegate ModListItemViewModel ModListItemViewModelFactory(ModSelectionViewModel parent, ModInfo mod);
 
 public class ModListItemViewModel : ViewModelBase
 {
@@ -15,10 +16,10 @@ public class ModListItemViewModel : ViewModelBase
     private readonly IDialogService _dialogService;
     private readonly IServiceContainer _container;
 
-    public ModListItemViewModel(ModSelectionViewModel parentVm, ModInfo mod, IServiceContainer container)
+    public ModListItemViewModel(ModSelectionViewModel parent, ModInfo mod, IServiceContainer container)
     {
         _container = container;
-        _parentVm = parentVm;
+        _parentVm = parent;
         _modService = container.Resolve<IModService>();
         _dialogService = container.Resolve<IDialogService>();
         Mod = mod;

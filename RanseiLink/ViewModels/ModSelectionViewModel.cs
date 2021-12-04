@@ -11,13 +11,14 @@ public class ModSelectionViewModel : ViewModelBase
     private readonly IServiceContainer _container;
     private readonly IModService _modService;
     private readonly IDialogService _dialogService;
+    private readonly ModListItemViewModelFactory _itemViewModelFactory;
 
     public ModSelectionViewModel(IServiceContainer container)
     {
         _container = container;
         _modService = container.Resolve<IModService>();
         _dialogService = container.Resolve<IDialogService>();
-        
+        _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
 
         RefreshModItems();
 
@@ -41,7 +42,7 @@ public class ModSelectionViewModel : ViewModelBase
         ModItems.Clear();
         foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
         {
-            ModItems.Add(new ModListItemViewModel(this, mi, _container));
+            ModItems.Add(_itemViewModelFactory(this, mi));
         }
     }
 
