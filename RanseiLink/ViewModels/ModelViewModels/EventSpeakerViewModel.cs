@@ -5,22 +5,29 @@ using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.ViewModels;
 
-public class EventSpeakerViewModel : ViewModelBase, IViewModelForModel<IEventSpeaker>
+public delegate EventSpeakerViewModel EventSpeakerViewModelFactory(IEventSpeaker model);
+
+public class EventSpeakerViewModel : ViewModelBase
 {
-    public IEventSpeaker Model { get; set; }
+    private readonly IEventSpeaker _model;
+
+    public EventSpeakerViewModel(IEventSpeaker model)
+    {
+        _model = model;
+    }
 
     public string Name
     {
-        get => Model.Name;
-        set => RaiseAndSetIfChanged(Model.Name, value, v => Model.Name = v);
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
     public WarriorSpriteId[] SpriteItems { get; } = EnumUtil.GetValues<WarriorSpriteId>().ToArray();
 
     public WarriorSpriteId Sprite
     {
-        get => Model.Sprite;
-        set => RaiseAndSetIfChanged(Model.Sprite, value, v => Model.Sprite = v);
+        get => _model.Sprite;
+        set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
     }
 
 }

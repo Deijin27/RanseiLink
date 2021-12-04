@@ -1,12 +1,21 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.ViewModels;
 
+public delegate ScenarioKingdomSelectorViewModel ScenarioKingdomSelectorViewModelFactory(IScenarioKingdomService service);
+
 public class ScenarioKingdomSelectorViewModel : SelectorViewModelBase<ScenarioId, IScenarioKingdom, ScenarioKingdomViewModel>
 {
-    public ScenarioKingdomSelectorViewModel(IDialogService dialogService, ScenarioId initialSelected, IModelDataService<ScenarioId, IScenarioKingdom> dataService)
-        : base(dialogService, initialSelected, dataService) { }
+    private readonly ScenarioKingdomViewModelFactory _factory;
+    public ScenarioKingdomSelectorViewModel(IServiceContainer container, IScenarioKingdomService dataService)
+        : base(container, dataService) 
+    {
+        _factory = container.Resolve<ScenarioKingdomViewModelFactory>();
+        Selected = ScenarioId.TheLegendOfRansei;
+    }
+
+    protected override ScenarioKingdomViewModel NewViewModel(IScenarioKingdom model) => _factory(model);
 }

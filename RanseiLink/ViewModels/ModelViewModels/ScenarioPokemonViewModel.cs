@@ -5,46 +5,53 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class ScenarioPokemonViewModel : ViewModelBase, IViewModelForModel<IScenarioPokemon>
+public delegate ScenarioPokemonViewModel ScenarioPokemonViewModelFactory(IScenarioPokemon model);
+
+public class ScenarioPokemonViewModel : ViewModelBase
 {
-    public IScenarioPokemon Model { get; set; }
+    private readonly IScenarioPokemon _model;
+
+    public ScenarioPokemonViewModel(IScenarioPokemon model)
+    {
+        _model = model;
+    }
 
     public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
     public AbilityId[] AbilityItems { get; } = EnumUtil.GetValues<AbilityId>().ToArray();
 
     public PokemonId Pokemon
     {
-        get => Model.Pokemon;
-        set => RaiseAndSetIfChanged(Model.Pokemon, value, v => Model.Pokemon = v);
+        get => _model.Pokemon;
+        set => RaiseAndSetIfChanged(_model.Pokemon, value, v => _model.Pokemon = v);
     }
 
     public AbilityId Ability
     {
-        get => Model.Ability;
-        set => RaiseAndSetIfChanged(Model.Ability, value, v => Model.Ability = v);
+        get => _model.Ability;
+        set => RaiseAndSetIfChanged(_model.Ability, value, v => _model.Ability = v);
     }
 
     public uint HpIv
     {
-        get => Model.HpIv;
-        set => RaiseAndSetIfChanged(Model.HpIv, value, v => Model.HpIv = v);
+        get => _model.HpIv;
+        set => RaiseAndSetIfChanged(_model.HpIv, value, v => _model.HpIv = v);
     }
 
     public uint AtkIv
     {
-        get => Model.AtkIv;
-        set => RaiseAndSetIfChanged(Model.AtkIv, value, v => Model.AtkIv = v);
+        get => _model.AtkIv;
+        set => RaiseAndSetIfChanged(_model.AtkIv, value, v => _model.AtkIv = v);
     }
 
     public uint DefIv
     {
-        get => Model.DefIv;
-        set => RaiseAndSetIfChanged(Model.DefIv, value, v => Model.DefIv = v);
+        get => _model.DefIv;
+        set => RaiseAndSetIfChanged(_model.DefIv, value, v => _model.DefIv = v);
     }
 
     public uint SpeIv
     {
-        get => Model.SpeIv;
-        set => RaiseAndSetIfChanged(Model.SpeIv, value, v => Model.SpeIv = v);
+        get => _model.SpeIv;
+        set => RaiseAndSetIfChanged(_model.SpeIv, value, v => _model.SpeIv = v);
     }
 }

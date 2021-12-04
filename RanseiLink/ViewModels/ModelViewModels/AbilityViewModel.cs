@@ -1,47 +1,50 @@
-﻿using RanseiLink.Core.Models;
+﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using RanseiLink.Core;
-using System.Linq;
 using RanseiLink.Core.Models.Interfaces;
+using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class AbilityViewModel : ViewModelBase, IViewModelForModel<IAbility>
+public delegate AbilityViewModel AbilityViewModelFactory(IAbility model);
+
+public class AbilityViewModel : ViewModelBase
 {
-    public IAbility Model { get; set; }
+    private readonly IAbility _model;
+
+    public AbilityViewModel(IAbility model)
+    {
+        _model = model;
+    }
 
     public string Name
     {
-        get => Model.Name;
-        set => RaiseAndSetIfChanged(Model.Name, value, v => Model.Name = v);
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
     public AbilityEffectId[] EffectItems { get; } = EnumUtil.GetValues<AbilityEffectId>().ToArray();
     public AbilityEffectId Effect1
     {
-        get => Model.Effect1;
-        set => RaiseAndSetIfChanged(Model.Effect1, value, v => Model.Effect1 = v);
+        get => _model.Effect1;
+        set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
     public uint Effect1Amount
     {
-        get => Model.Effect1Amount;
-        set => RaiseAndSetIfChanged(Model.Effect1Amount, value, v => Model.Effect1Amount = value);
+        get => _model.Effect1Amount;
+        set => RaiseAndSetIfChanged(_model.Effect1Amount, value, v => _model.Effect1Amount = value);
     }
 
     public AbilityEffectId Effect2
     {
-        get => Model.Effect2;
-        set => RaiseAndSetIfChanged(Model.Effect2, value, v => Model.Effect2 = v);
+        get => _model.Effect2;
+        set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
     public uint Effect2Amount
     {
-        get => Model.Effect2Amount;
-        set => RaiseAndSetIfChanged(Model.Effect2Amount, value, v => Model.Effect2Amount = value);
+        get => _model.Effect2Amount;
+        set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
     }
 
 }

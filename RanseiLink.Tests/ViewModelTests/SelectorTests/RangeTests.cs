@@ -16,16 +16,19 @@ public class RangeTests
 {
     private readonly MockDialogService dialogService;
     private readonly IDataService dataService;
+    private readonly IServiceContainer _container;
     public RangeTests()
     {
         dataService = new DataService(new ModInfo() { FolderPath = TestConstants.TestModFolder });
         dialogService = new MockDialogService();
+        _container = new ServiceContainer();
+        _container.RegisterSingleton<IDialogService>(dialogService);
     }
 
     [Fact]
     public void AbilitySelector()
     {
-        var selector = new AbilitySelectorViewModel(dialogService, 0, dataService.Ability);
+        var selector = new AbilitySelectorViewModel(_container, 0, dataService.Ability);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -36,7 +39,7 @@ public class RangeTests
     [Fact]
     public void BaseWarriorSelector()
     {
-        var selector = new BaseWarriorSelectorViewModel(dialogService, 0, dataService.BaseWarrior);
+        var selector = new BaseWarriorSelectorViewModel(_container, 0, dataService.BaseWarrior);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -47,7 +50,7 @@ public class RangeTests
     [Fact]
     public void EventSpeakerSelector()
     {
-        var selector = new EventSpeakerSelectorViewModel(dialogService, 0, dataService.EventSpeaker);
+        var selector = new EventSpeakerSelectorViewModel(_container, 0, dataService.EventSpeaker);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -58,7 +61,7 @@ public class RangeTests
     [Fact]
     public void MoveRangeSelector()
     {
-        var selector = new MoveRangeSelectorViewModel(dialogService, 0, dataService.MoveRange);
+        var selector = new MoveRangeSelectorViewModel(_container, 0, dataService.MoveRange);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -69,7 +72,7 @@ public class RangeTests
     [Fact]
     public void MoveSelector()
     {
-        var selector = new MoveSelectorViewModel(dialogService, 0, dataService.Move);
+        var selector = new MoveSelectorViewModel(_container, 0, dataService.Move);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -80,7 +83,7 @@ public class RangeTests
     [Fact]
     public void PokemonSelector()
     {
-        var selector = new PokemonSelectorViewModel(dialogService, 0, dataService.Pokemon);
+        var selector = new PokemonSelectorViewModel(_container, 0, dataService.Pokemon);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -91,7 +94,7 @@ public class RangeTests
     [Fact]
     public void ScenarioAppearPokemonSelector()
     {
-        var selector = new ScenarioAppearPokemonSelectorViewModel(dialogService, 0, dataService.ScenarioAppearPokemon);
+        var selector = new ScenarioAppearPokemonSelectorViewModel(_container, 0, dataService.ScenarioAppearPokemon);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -102,7 +105,7 @@ public class RangeTests
     [Fact]
     public void ScenarioKingdomSelector()
     {
-        var selector = new ScenarioKingdomSelectorViewModel(dialogService, 0, dataService.ScenarioKingdom);
+        var selector = new ScenarioKingdomSelectorViewModel(_container, 0, dataService.ScenarioKingdom);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -113,7 +116,7 @@ public class RangeTests
     [Fact]
     public void WarriorMaxLinkSelector()
     {
-        var selector = new MaxLinkSelectorViewModel(dialogService, 0, dataService.MaxLink);
+        var selector = new MaxLinkSelectorViewModel(_container, 0, dataService.MaxLink);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];
@@ -124,7 +127,7 @@ public class RangeTests
     [Fact]
     public void WarriorSkillSelector()
     {
-        var selector = new WarriorSkillSelectorViewModel(dialogService, 0, dataService.WarriorSkill);
+        var selector = new WarriorSkillSelectorViewModel(_container, 0, dataService.WarriorSkill);
 
         selector.Selected = selector.Items[^1];
         selector.Selected = selector.Items[2];

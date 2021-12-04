@@ -1,8 +1,6 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +9,8 @@ using System.Windows.Input;
 namespace RanseiLink.ViewModels;
 
 public record ListItem(string ItemName, ISaveableRefreshable ItemValue);
+
+public delegate MainEditorViewModel MainEditorViewModelFactory(ModInfo mod);
 
 public class MainEditorViewModel : ViewModelBase, ISaveable
 {
@@ -72,20 +72,20 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     {
         ListItems = new List<ListItem>()
         {
-            new ListItem("Pokemon", new PokemonSelectorViewModel(_dialogService, PokemonId.Eevee, _dataService.Pokemon)),
-            new ListItem("Moves", new MoveSelectorViewModel(_dialogService, MoveId.Splash, _dataService.Move)),
-            new ListItem("Abilities", new AbilitySelectorViewModel(_dialogService, AbilityId.Levitate, _dataService.Ability)),
-            new ListItem("Warrior Skills", new WarriorSkillSelectorViewModel(_dialogService, WarriorSkillId.Adrenaline, _dataService.WarriorSkill)),
-            new ListItem("Move Ranges", new MoveRangeSelectorViewModel(_dialogService, MoveRangeId.Ahead1Tile, _dataService.MoveRange)),
-            new ListItem("Evolution Table", new EvolutionTableViewModel(_dialogService, _dataService.Pokemon)),
-            new ListItem("Warrior Name Table", new WarriorNameTableViewModel(_dialogService, _dataService.BaseWarrior)),
-            new ListItem("Base Warrior", new BaseWarriorSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.BaseWarrior)),
-            new ListItem("Max Link", new MaxLinkSelectorViewModel(_dialogService, WarriorId.PlayerMale_1, _dataService.MaxLink)),
-            new ListItem("Scenario Warrior", new ScenarioWarriorSelectorViewModel(_dialogService, _dataService.ScenarioWarrior, scenario => new ScenarioWarriorViewModel(_dataService, scenario))),
-            new ListItem("Scenario Pokemon", new ScenarioPokemonSelectorViewModel(_dialogService, _dataService.ScenarioPokemon, scenario => new ScenarioPokemonViewModel())),
-            new ListItem("Scenario Appear Pokemon", new ScenarioAppearPokemonSelectorViewModel(_dialogService, ScenarioId.TheLegendOfRansei, _dataService.ScenarioAppearPokemon)),
-            new ListItem("Scenario Kingdom", new ScenarioKingdomSelectorViewModel(_dialogService, 0, _dataService.ScenarioKingdom)),
-            new ListItem("Event Speaker", new EventSpeakerSelectorViewModel(_dialogService, 0, _dataService.EventSpeaker))
+            new ListItem("Pokemon", _container.Resolve<PokemonSelectorViewModelFactory>()(_dataService.Pokemon)),
+            new ListItem("Moves", _container.Resolve<MoveSelectorViewModelFactory>()(_dataService.Move)),
+            new ListItem("Abilities", _container.Resolve<AbilitySelectorViewModelFactory>()(_dataService.Ability)),
+            new ListItem("Warrior Skills", _container.Resolve<WarriorSkillSelectorViewModelFactory>()(_dataService.WarriorSkill)),
+            new ListItem("Move Ranges", _container.Resolve<MoveRangeSelectorViewModelFactory>()(_dataService.MoveRange)),
+            new ListItem("Evolution Table", _container.Resolve<EvolutionTableViewModelFactory>()(_dataService.Pokemon)),
+            new ListItem("Warrior Name Table", _container.Resolve<WarriorNameTableViewModelFactory>()(_dataService.BaseWarrior)),
+            new ListItem("Base Warrior", _container.Resolve<BaseWarriorSelectorViewModelFactory>()(_dataService.BaseWarrior)),
+            new ListItem("Max Link", _container.Resolve<MaxLinkSelectorViewModelFactory>()(_dataService.MaxLink)),
+            new ListItem("Scenario Warrior", _container.Resolve<ScenarioWarriorSelectorViewModelFactory>()(_dataService)),
+            new ListItem("Scenario Pokemon", _container.Resolve<ScenarioPokemonSelectorViewModelFactory>()(_dataService.ScenarioPokemon)),
+            new ListItem("Scenario Appear Pokemon", _container.Resolve<ScenarioAppearPokemonSelectorViewModelFactory>()(_dataService.ScenarioAppearPokemon)),
+            new ListItem("Scenario Kingdom", _container.Resolve<ScenarioKingdomSelectorViewModelFactory>()(_dataService.ScenarioKingdom)),
+            new ListItem("Event Speaker", _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_dataService.EventSpeaker))
         };
     }
 

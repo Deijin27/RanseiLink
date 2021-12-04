@@ -10,21 +10,22 @@ using System.Windows.Input;
 namespace RanseiLink.ViewModels;
 
 public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase, ISaveableRefreshable
-    where TViewModel : IViewModelForModel<TModel>
     where TModel : IDataWrapper
 {
     private readonly IDialogService _dialogService;
-    public ScenarioSelectorViewModelBase(IDialogService dialogService, Func<ScenarioId, TViewModel> newViewModel, uint minIndex, uint maxIndex)
+
+    protected abstract TViewModel NewViewModel(ScenarioId scenarioId, TModel model);
+
+    private TModel _currentModel;
+
+    protected ScenarioSelectorViewModelBase(IServiceContainer container, uint minIndex, uint maxIndex)
     {
-        _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-        NewViewModel = newViewModel ?? throw new ArgumentNullException(nameof(newViewModel));
+        _dialogService = container.Resolve<IDialogService>();
         MinIndex = minIndex;
         MaxIndex = maxIndex;
         CopyCommand = new RelayCommand(Copy);
         PasteCommand = new RelayCommand(Paste);
     }
-
-    private readonly Func<ScenarioId, TViewModel> NewViewModel;
 
     protected void Init()
     {
@@ -32,9 +33,8 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         _selectedItem = 0;
         try
         {
-            TModel model = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario);
-            vm.Model = model;
+            _currentModel = RetrieveModel(SelectedScenario, SelectedItem);
+            var vm = NewViewModel(SelectedScenario, _currentModel);
             NestedViewModel = vm;
         }
         catch (Exception e)
@@ -78,6 +78,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         }
     }
 
+    // min and max indexes bound to by number box
     public uint MinIndex { get; }
     public uint MaxIndex { get; }
 
@@ -90,9 +91,8 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             Save();
             try
             {
-                TModel model = RetrieveModel(SelectedScenario, value);
-                var vm = NewViewModel(SelectedScenario);
-                vm.Model = model;
+                _currentModel = RetrieveModel(SelectedScenario, value);
+                var vm = NewViewModel(SelectedScenario, _currentModel);
                 NestedViewModel = vm;
                 _selectedItem = value;
             }
@@ -118,9 +118,8 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             Save();
             try
             {
-                TModel model = RetrieveModel(value, SelectedItem);
-                var vm = NewViewModel(value);
-                vm.Model = model;
+                _currentModel = RetrieveModel(value, SelectedItem);
+                var vm = NewViewModel(value, _currentModel);
                 NestedViewModel = vm;
                 _selectedScenario = value;
             }
@@ -148,7 +147,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 {
                     saveable.Save();
                 }
-                SaveModel(SelectedScenario, SelectedItem, NestedViewModel.Model);
+                SaveModel(SelectedScenario, SelectedItem, _currentModel);
             }
             catch (Exception e)
             {
@@ -165,9 +164,8 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
     {
         try
         {
-            TModel model = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario);
-            vm.Model = model;
+            _currentModel = RetrieveModel(SelectedScenario, SelectedItem);
+            var vm = NewViewModel(SelectedScenario, _currentModel);
             NestedViewModel = vm;
         }
         catch (Exception e)
@@ -189,17 +187,16 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
 
     private void Copy()
     {
-        Clipboard.SetText(NestedViewModel.Model.Serialize());
+        Clipboard.SetText(_currentModel.Serialize());
     }
 
     private void Paste()
     {
         string text = Clipboard.GetText();
 
-        if (NestedViewModel.Model.TryDeserialize(text))
+        if (_currentModel.TryDeserialize(text))
         {
-            var newvm = NewViewModel(SelectedScenario);
-            newvm.Model = NestedViewModel.Model;
+            var newvm = NewViewModel(SelectedScenario, _currentModel);
             _nestedViewModel = newvm;
             RaisePropertyChanged(nameof(NestedViewModel));
         }
@@ -209,7 +206,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 type: MessageBoxType.Warning,
                 title: "Invalid Paste Data",
                 message: "The data that you pasted is invalid. Make sure you have the right label and length." +
-                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
+                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_currentModel.Serialize()}"
             ));
         }
     }

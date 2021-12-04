@@ -15,9 +15,9 @@ public static class RegistrationExtensions
         NdsFactory ndsFactory = i => new Nds.Nds(i);
         container.RegisterSingleton(ndsFactory);
 
-        container.RegisterSingleton<IModService>(new ModService(rootFolder, ndsFactory));
+        container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, ndsFactory));
 
-        container.RegisterSingleton<ISettingsService>(new SettingsService(rootFolder));
+        container.RegisterLazySingleton<ISettingsService>(() => new SettingsService(rootFolder));
 
         container.RegisterSingleton<DataServiceFactory>(m => new DataService(m));
     }

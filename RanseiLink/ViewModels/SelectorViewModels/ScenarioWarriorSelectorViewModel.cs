@@ -1,28 +1,36 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
-using System;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.ViewModels;
 
+public delegate ScenarioWarriorSelectorViewModel ScenarioWarriorSelectorViewModelFactory(IDataService service);
+
 public class ScenarioWarriorSelectorViewModel : ScenarioSelectorViewModelBase<IScenarioWarrior, ScenarioWarriorViewModel>
 {
-    private readonly IModelDataService<ScenarioId, int, IScenarioWarrior> Service;
-    public ScenarioWarriorSelectorViewModel(IDialogService dialogService, IModelDataService<ScenarioId, int, IScenarioWarrior> service, Func<ScenarioId, ScenarioWarriorViewModel> newVm)
-        : base(dialogService, newVm, 0, 199)
+    private readonly ScenarioWarriorViewModelFactory _factory;
+    private readonly IScenarioWarriorService _service;
+    private readonly IDataService _dataService;
+
+    public ScenarioWarriorSelectorViewModel(IServiceContainer container, IDataService contextualDataService)
+        : base(container, 0, 199)
     {
-        Service = service;
+        _factory = container.Resolve<ScenarioWarriorViewModelFactory>();
+        _service = contextualDataService.ScenarioWarrior;
+        _dataService = contextualDataService;
         Init();
     }
 
+    protected override ScenarioWarriorViewModel NewViewModel(ScenarioId scenarioId, IScenarioWarrior model) => _factory(scenarioId, _dataService, model);
+
     protected override IScenarioWarrior RetrieveModel(ScenarioId scenario, uint index)
     {
-        return Service.Retrieve(scenario, (int)index);
+        return _service.Retrieve(scenario, (int)index);
     }
 
     protected override void SaveModel(ScenarioId scenario, uint index, IScenarioWarrior model)
     {
-        Service.Save(scenario, (int)index, model);
+        _service.Save(scenario, (int)index, model);
     }
 }

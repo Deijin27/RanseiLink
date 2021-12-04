@@ -5,65 +5,72 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class WarriorSkillViewModel : ViewModelBase, IViewModelForModel<IWarriorSkill>
+public delegate WarriorSkillViewModel WarriorSkillViewModelFactory(IWarriorSkill model);
+
+public class WarriorSkillViewModel : ViewModelBase
 {
-    public IWarriorSkill Model { get; set; }
+    public IWarriorSkill _model;
+
+    public WarriorSkillViewModel(IWarriorSkill model)
+    {
+        _model = model;
+    }
 
     public WarriorSkillTargetId[] TargetItems { get; } = EnumUtil.GetValues<WarriorSkillTargetId>().ToArray();
     public WarriorSkillEffectId[] EffectItems { get; } = EnumUtil.GetValues<WarriorSkillEffectId>().ToArray();
 
     public string Name
     {
-        get => Model.Name;
-        set => RaiseAndSetIfChanged(Model.Name, value, v => Model.Name = v);
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
     public WarriorSkillEffectId Effect1
     {
-        get => Model.Effect1;
-        set => RaiseAndSetIfChanged(Model.Effect1, value, v => Model.Effect1 = v);
+        get => _model.Effect1;
+        set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
     public uint Effect1Amount
     {
-        get => Model.Effect1Amount;
-        set => RaiseAndSetIfChanged(Model.Effect1Amount, value, v => Model.Effect1Amount = v);
+        get => _model.Effect1Amount;
+        set => RaiseAndSetIfChanged(_model.Effect1Amount, value, v => _model.Effect1Amount = v);
     }
 
     public WarriorSkillEffectId Effect2
     {
-        get => Model.Effect2;
-        set => RaiseAndSetIfChanged(Model.Effect2, value, v => Model.Effect2 = v);
+        get => _model.Effect2;
+        set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
     public uint Effect2Amount
     {
-        get => Model.Effect2Amount;
-        set => RaiseAndSetIfChanged(Model.Effect2Amount, value, v => Model.Effect2Amount = v);
+        get => _model.Effect2Amount;
+        set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
     }
 
     public WarriorSkillEffectId Effect3
     {
-        get => Model.Effect3;
-        set => RaiseAndSetIfChanged(Model.Effect3, value, v => Model.Effect3 = v);
+        get => _model.Effect3;
+        set => RaiseAndSetIfChanged(_model.Effect3, value, v => _model.Effect3 = v);
     }
 
     public uint Effect3Amount
     {
-        get => Model.Effect3Amount;
-        set => RaiseAndSetIfChanged(Model.Effect3Amount, value, v => Model.Effect3Amount = v);
+        get => _model.Effect3Amount;
+        set => RaiseAndSetIfChanged(_model.Effect3Amount, value, v => _model.Effect3Amount = v);
     }
 
     public uint Duration
     {
-        get => Model.Duration;
-        set => RaiseAndSetIfChanged(Model.Duration, value, v => Model.Duration = v);
+        get => _model.Duration;
+        set => RaiseAndSetIfChanged(_model.Duration, value, v => _model.Duration = v);
     }
 
     public WarriorSkillTargetId Target
     {
-        get => Model.Target;
-        set => RaiseAndSetIfChanged(Model.Target, value, v => Model.Target = v);
+        get => _model.Target;
+        set => RaiseAndSetIfChanged(_model.Target, value, v => _model.Target = v);
     }
 
 

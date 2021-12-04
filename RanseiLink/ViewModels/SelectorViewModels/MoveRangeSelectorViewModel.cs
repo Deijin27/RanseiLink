@@ -1,12 +1,22 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.ViewModels;
 
+public delegate MoveRangeSelectorViewModel MoveRangeSelectorViewModelFactory(IMoveRangeService service);
+
 public class MoveRangeSelectorViewModel : SelectorViewModelBase<MoveRangeId, IMoveRange, MoveRangeViewModel>
 {
-    public MoveRangeSelectorViewModel(IDialogService dialogService, MoveRangeId initialSelected, IModelDataService<MoveRangeId, IMoveRange> dataService)
-        : base(dialogService, initialSelected, dataService) { }
+    private readonly MoveRangeViewModelFactory _factory;
+
+    public MoveRangeSelectorViewModel(IServiceContainer container, IMoveRangeService dataService)
+        : base(container, dataService) 
+    {
+        _factory = container.Resolve<MoveRangeViewModelFactory>();
+        Selected = MoveRangeId.Ahead1Tile;
+    }
+
+    protected override MoveRangeViewModel NewViewModel(IMoveRange model) => _factory(model);
 }

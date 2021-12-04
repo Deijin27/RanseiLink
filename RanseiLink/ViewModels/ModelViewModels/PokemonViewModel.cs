@@ -2,143 +2,134 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
+public delegate PokemonViewModel PokemonViewModelFactory(IPokemon model);
+
+public class PokemonViewModel : ViewModelBase
 {
-    public PokemonViewModel()
+    private readonly IPokemon _model;
+    public PokemonViewModel(IPokemon model)
     {
-
-    }
-
-    private IPokemon _model;
-    public IPokemon Model
-    {
-        get => _model;
-        set
-        {
-            _model = value;
-            UpdateEvolution();
-        }
+        _model = model;
+        UpdateEvolution();
     }
 
     public string Name
     {
-        get => Model.Name;
-        set => RaiseAndSetIfChanged(Model.Name, value, v => Model.Name = v);
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
     public TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
     public TypeId Type1
     {
-        get => Model.Type1;
-        set => RaiseAndSetIfChanged(Model.Type1, value, v => Model.Type1 = v);
+        get => _model.Type1;
+        set => RaiseAndSetIfChanged(_model.Type1, value, v => _model.Type1 = v);
     }
     public TypeId Type2
     {
-        get => Model.Type2;
-        set => RaiseAndSetIfChanged(Model.Type2, value, v => Model.Type2 = v);
+        get => _model.Type2;
+        set => RaiseAndSetIfChanged(_model.Type2, value, v => _model.Type2 = v);
     }
 
     public MoveId[] MoveItems { get; } = EnumUtil.GetValues<MoveId>().ToArray();
     public MoveId Move
     {
-        get => Model.Move;
-        set => RaiseAndSetIfChanged(Model.Move, value, v => Model.Move = v);
+        get => _model.Move;
+        set => RaiseAndSetIfChanged(_model.Move, value, v => _model.Move = v);
     }
 
     public AbilityId[] AbilityItems { get; } = EnumUtil.GetValues<AbilityId>().ToArray();
     public AbilityId Ability1
     {
-        get => Model.Ability1;
-        set => RaiseAndSetIfChanged(Model.Ability1, value, v => Model.Ability1 = v);
+        get => _model.Ability1;
+        set => RaiseAndSetIfChanged(_model.Ability1, value, v => _model.Ability1 = v);
     }
     public AbilityId Ability2
     {
-        get => Model.Ability2;
-        set => RaiseAndSetIfChanged(Model.Ability2, value, v => Model.Ability2 = v);
+        get => _model.Ability2;
+        set => RaiseAndSetIfChanged(_model.Ability2, value, v => _model.Ability2 = v);
     }
     public AbilityId Ability3
     {
-        get => Model.Ability3;
-        set => RaiseAndSetIfChanged(Model.Ability3, value, v => Model.Ability3 = v);
+        get => _model.Ability3;
+        set => RaiseAndSetIfChanged(_model.Ability3, value, v => _model.Ability3 = v);
     }
 
     public uint Hp
     {
-        get => Model.Hp;
-        set => RaiseAndSetIfChanged(Model.Hp, value, v => Model.Hp = v);
+        get => _model.Hp;
+        set => RaiseAndSetIfChanged(_model.Hp, value, v => _model.Hp = v);
     }
 
     public uint Atk
     {
-        get => Model.Atk;
-        set => RaiseAndSetIfChanged(Model.Atk, value, v => Model.Atk = v);
+        get => _model.Atk;
+        set => RaiseAndSetIfChanged(_model.Atk, value, v => _model.Atk = v);
     }
 
     public uint Def
     {
-        get => Model.Def;
-        set => RaiseAndSetIfChanged(Model.Def, value, v => Model.Def = v);
+        get => _model.Def;
+        set => RaiseAndSetIfChanged(_model.Def, value, v => _model.Def = v);
     }
 
     public uint Spe
     {
-        get => Model.Spe;
-        set => RaiseAndSetIfChanged(Model.Spe, value, v => Model.Spe = v);
+        get => _model.Spe;
+        set => RaiseAndSetIfChanged(_model.Spe, value, v => _model.Spe = v);
     }
 
     public bool IsLegendary
     {
-        get => Model.IsLegendary;
-        set => RaiseAndSetIfChanged(Model.IsLegendary, value, v => Model.IsLegendary = v);
+        get => _model.IsLegendary;
+        set => RaiseAndSetIfChanged(_model.IsLegendary, value, v => _model.IsLegendary = v);
     }
 
     public uint NameOrderIndex
     {
-        get => Model.NameOrderIndex;
-        set => RaiseAndSetIfChanged(Model.NameOrderIndex, value, v => Model.NameOrderIndex = v);
+        get => _model.NameOrderIndex;
+        set => RaiseAndSetIfChanged(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
     }
 
     public uint NationalPokedexNumber
     {
-        get => Model.NationalPokedexNumber;
-        set => RaiseAndSetIfChanged(Model.NationalPokedexNumber, value, v => Model.NationalPokedexNumber = v);
+        get => _model.NationalPokedexNumber;
+        set => RaiseAndSetIfChanged(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
     }
 
     public EvolutionConditionId[] EvolutionConditionItems { get; } = EnumUtil.GetValues<EvolutionConditionId>().ToArray();
 
     public EvolutionConditionId EvolutionCondition1
     {
-        get => Model.EvolutionCondition1;
-        set => RaiseAndSetIfChanged(Model.EvolutionCondition1, value, v => Model.EvolutionCondition1 = value);
+        get => _model.EvolutionCondition1;
+        set => RaiseAndSetIfChanged(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
     }
 
     public uint QuantityForEvolutionCondition1
     {
-        get => Model.QuantityForEvolutionCondition1;
-        set => RaiseAndSetIfChanged(Model.QuantityForEvolutionCondition1, value, v => Model.QuantityForEvolutionCondition1 = value);
+        get => _model.QuantityForEvolutionCondition1;
+        set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
     }
 
     public EvolutionConditionId EvolutionCondition2
     {
-        get => Model.EvolutionCondition2;
-        set => RaiseAndSetIfChanged(Model.EvolutionCondition2, value, v => Model.EvolutionCondition2 = value);
+        get => _model.EvolutionCondition2;
+        set => RaiseAndSetIfChanged(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
     }
     public uint QuantityForEvolutionCondition2
     {
-        get => Model.QuantityForEvolutionCondition2;
-        set => RaiseAndSetIfChanged(Model.QuantityForEvolutionCondition2, value, v => Model.QuantityForEvolutionCondition2 = value);
+        get => _model.QuantityForEvolutionCondition2;
+        set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
     }
 
     public uint MovementRange
     {
-        get => Model.MovementRange;
-        set => RaiseAndSetIfChanged(Model.MovementRange, value, v => Model.MovementRange = value);
+        get => _model.MovementRange;
+        set => RaiseAndSetIfChanged(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
     private uint _minEvolutionEntry;
@@ -147,7 +138,7 @@ public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
         get => _minEvolutionEntry;
         set
         {
-            Model.EvolutionRange = new PokemonEvolutionRange()
+            _model.EvolutionRange = new PokemonEvolutionRange()
             {
                 CanEvolve = _canEvolve,
                 MaxEntry = _maxEvolutionEntry,
@@ -163,7 +154,7 @@ public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
         get => _maxEvolutionEntry;
         set
         {
-            Model.EvolutionRange = new PokemonEvolutionRange()
+            _model.EvolutionRange = new PokemonEvolutionRange()
             {
                 CanEvolve = _canEvolve,
                 MaxEntry = value,
@@ -179,7 +170,7 @@ public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
         get => _canEvolve;
         set
         {
-            Model.EvolutionRange = new PokemonEvolutionRange()
+            _model.EvolutionRange = new PokemonEvolutionRange()
             {
                 CanEvolve = value,
                 MaxEntry = _maxEvolutionEntry,
@@ -191,7 +182,7 @@ public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
 
     private void UpdateEvolution()
     {
-        var newVal = Model.EvolutionRange;
+        var newVal = _model.EvolutionRange;
         _canEvolve = newVal.CanEvolve;
         _minEvolutionEntry = newVal.MinEntry;
         _maxEvolutionEntry = newVal.MaxEntry;
@@ -220,20 +211,20 @@ public class PokemonViewModel : ViewModelBase, IViewModelForModel<IPokemon>
 
     public uint UnknownValue
     {
-        get => Model.UnknownValue;
-        set => RaiseAndSetIfChanged(Model.UnknownValue, value, v => Model.UnknownValue = v);
+        get => _model.UnknownValue;
+        set => RaiseAndSetIfChanged(_model.UnknownValue, value, v => _model.UnknownValue = v);
     }
 
     public bool EncounterableAtDefaultArea
     {
-        get => Model.GetEncounterable(SelectedEncounterKingdom, false);
-        set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => Model.SetEncounterable(SelectedEncounterKingdom, false, v));
+        get => _model.GetEncounterable(SelectedEncounterKingdom, false);
+        set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => _model.SetEncounterable(SelectedEncounterKingdom, false, v));
     }
 
     public bool EncounterableWithLevel2Area
     {
-        get => Model.GetEncounterable(SelectedEncounterKingdom, true);
-        set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => Model.SetEncounterable(SelectedEncounterKingdom, true, v));
+        get => _model.GetEncounterable(SelectedEncounterKingdom, true);
+        set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(SelectedEncounterKingdom, true, v));
     }
 
 

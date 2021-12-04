@@ -12,26 +12,18 @@ public class ServiceNotRegisteredException : Exception
 
 public class ServiceContainer : IServiceContainer
 {
-    private static IServiceContainer _instance;
-    public static IServiceContainer Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = new ServiceContainer();
-            }
-            return _instance;
-        }
-        set => _instance = value;
-    }
-
     private readonly Dictionary<Type, object> Singletons = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, Func<object>> SingletonFactories = new Dictionary<Type, Func<object>>();
     private readonly Dictionary<Type, Func<object>> TransientFactories = new Dictionary<Type, Func<object>>();
 
     public void RegisterSingleton<T>(T instance)
     {
         Singletons[typeof(T)] = instance;
+    }
+
+    public void RegisterLazySingleton<T>(Func<T> factory)
+    {
+        SingletonFactories[typeof(T)] = () => factory();
     }
 
     public void RegisterTransient<T>(Func<T> factory)
@@ -55,7 +47,13 @@ public class ServiceContainer : IServiceContainer
             result = (T)value;
             return true;
         }
-        else if (TransientFactories.TryGetValue(typeof(T), out Func<object> factory))
+        if (SingletonFactories.TryGetValue(typeof(T), out Func<object> singletonFactory))
+        {
+            result = (T)singletonFactory();
+            Singletons[typeof(T)] = result;
+            return true;
+        }
+        if (TransientFactories.TryGetValue(typeof(T), out Func<object> factory))
         {
             result = (T)factory();
             return true;

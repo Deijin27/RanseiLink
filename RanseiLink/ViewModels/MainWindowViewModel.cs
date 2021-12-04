@@ -8,12 +8,14 @@ namespace RanseiLink.ViewModels;
 public class MainWindowViewModel : ViewModelBase, ISaveable
 {
     private readonly IThemeService _themeService;
+    private readonly MainEditorViewModelFactory _mainEditorViewModelFactory;
 
     public MainWindowViewModel(IServiceContainer container)
     {
         var dialogService = container.Resolve<IDialogService>();
         var pluginLoader = container.Resolve<IPluginLoader>();
         _themeService = container.Resolve<IThemeService>();
+        _mainEditorViewModelFactory = container.Resolve<MainEditorViewModelFactory>();
 
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
@@ -26,12 +28,12 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
                 ));
         }
 
-        ModSelectionVm = new ModSelectionViewModel(container);
+        ModSelectionVm = container.Resolve<ModSelectionViewModel>();
         CurrentVm = ModSelectionVm;
 
         ModSelectionVm.ModSelected += mi =>
         {
-            var mevm = new MainEditorViewModel(container, mi);
+            var mevm = _mainEditorViewModelFactory(mi);
             CurrentVm = mevm;
             BackButtonVisible = true;
         };

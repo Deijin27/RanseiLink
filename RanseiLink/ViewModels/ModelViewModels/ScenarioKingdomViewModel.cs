@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
+public delegate ScenarioKingdomViewModel ScenarioKingdomViewModelFactory(IScenarioKingdom model);
+
 public class ScenarioKingdomItem : ViewModelBase
 {
     private readonly IScenarioKingdom _model;
@@ -22,24 +24,12 @@ public class ScenarioKingdomItem : ViewModelBase
         set => RaiseAndSetIfChanged(BattlesToUnlock, value, v => _model.SetBattlesToUnlock(Kingdom, v));
     }
 }
-public class ScenarioKingdomViewModel : ViewModelBase, IViewModelForModel<IScenarioKingdom>
+public class ScenarioKingdomViewModel : ViewModelBase
 {
-    private IScenarioKingdom _model;
-    public IScenarioKingdom Model
+    public ScenarioKingdomViewModel(IScenarioKingdom model)
     {
-        get => _model;
-        set
-        {
-            _model = value;
-            KingdomItems = EnumUtil.GetValues<KingdomId>().Select(i => new ScenarioKingdomItem(value, i)).ToList();
-        }
+        KingdomItems = EnumUtil.GetValues<KingdomId>().Select(i => new ScenarioKingdomItem(model, i)).ToList();
     }
 
-
-    private List<ScenarioKingdomItem> _KingdomItems;
-    public List<ScenarioKingdomItem> KingdomItems
-    {
-        get => _KingdomItems;
-        set => RaiseAndSetIfChanged(ref _KingdomItems, value);
-    }
+    public List<ScenarioKingdomItem> KingdomItems { get; }
 }

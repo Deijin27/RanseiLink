@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace RanseiLink.ViewModels;
 
+public delegate MaxLinkViewModel MaxLinkViewModelFactory(IMaxLink model);
+
 public class WarriorMaxSyncListItem : ViewModelBase
 {
     private readonly IMaxLink _model;
@@ -20,28 +22,18 @@ public class WarriorMaxSyncListItem : ViewModelBase
     }
     public PokemonId Pokemon { get; set; }
 }
-public class MaxLinkViewModel : ViewModelBase, IViewModelForModel<IMaxLink>
+
+public class MaxLinkViewModel : ViewModelBase
 {
-    private IMaxLink _model;
-    public IMaxLink Model
+    public MaxLinkViewModel(IMaxLink model)
     {
-        get => _model;
-        set
+        var items = new List<WarriorMaxSyncListItem>();
+        foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
         {
-            _model = value;
-            var items = new List<WarriorMaxSyncListItem>();
-            foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
-            {
-                items.Add(new WarriorMaxSyncListItem(pid, value));
-            }
-            Items = items;
+            items.Add(new WarriorMaxSyncListItem(pid, model));
         }
+        Items = items;
     }
 
-    private IList<WarriorMaxSyncListItem> _items;
-    public IList<WarriorMaxSyncListItem> Items
-    {
-        get => _items;
-        set => RaiseAndSetIfChanged(ref _items, value);
-    }
+    public IList<WarriorMaxSyncListItem> Items { get; }
 }

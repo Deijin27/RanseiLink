@@ -7,7 +7,7 @@ public static class RegistrationExtensions
 {
     public static void RegisterPluginServices(this IServiceContainer container)
     {
-        container.RegisterSingleton<IPluginFormLoader>(new PluginFormLoader());
-        container.RegisterSingleton<IPluginLoader>(new PluginLoader());
+        container.RegisterLazySingleton<IPluginFormLoader>(() => new PluginFormLoader());
+        container.RegisterLazySingleton<IPluginLoader>(() => new PluginLoader());
     }
 }

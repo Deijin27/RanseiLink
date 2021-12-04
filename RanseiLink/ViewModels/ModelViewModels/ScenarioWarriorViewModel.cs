@@ -6,42 +6,37 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class ScenarioWarriorViewModel : ViewModelBase, IViewModelForModel<IScenarioWarrior>, ISaveable
+public delegate ScenarioWarriorViewModel ScenarioWarriorViewModelFactory(ScenarioId scenarioId, IDataService dataService, IScenarioWarrior model);
+
+public class ScenarioWarriorViewModel : ViewModelBase, ISaveable
 {
-    private readonly IDataService DataService;
-    public ScenarioWarriorViewModel(IDataService service, ScenarioId scenario)
+    private readonly IDataService _dataService;
+    private readonly ScenarioId _scenario;
+    private readonly IScenarioWarrior _model;
+    private readonly ScenarioPokemonViewModelFactory _scenarioPokemonVmFactory;
+    private IScenarioPokemon _currentScenarioPokemon;
+
+    public ScenarioWarriorViewModel(IServiceContainer container, IDataService service, ScenarioId scenario, IScenarioWarrior model)
     {
-        DataService = service;
-        Scenario = scenario;
+        _dataService = service;
+        _scenario = scenario;
+        _model = model;
+        _scenarioPokemonVmFactory = container.Resolve<ScenarioPokemonViewModelFactory>();
+        UpdateEmbedded();
     }
 
-    private readonly ScenarioId Scenario;
-
-    private IScenarioWarrior _model;
-    public IScenarioWarrior Model
-    {
-        get => _model;
-        set
-        {
-            _model = value;
-            if (_model != null)
-            {
-                UpdateEmbedded();
-            }
-        }
-    }
 
     public WarriorId[] WarriorItems { get; } = EnumUtil.GetValues<WarriorId>().ToArray();
 
     public WarriorId Warrior
     {
-        get => Model.Warrior;
+        get => _model.Warrior;
         set
         {
-            if (Model.Warrior != value)
+            if (_model.Warrior != value)
             {
                 Save();
-                Model.Warrior = value;
+                _model.Warrior = value;
                 RaisePropertyChanged();
                 UpdateEmbedded();
             }
@@ -50,13 +45,13 @@ public class ScenarioWarriorViewModel : ViewModelBase, IViewModelForModel<IScena
 
     public uint ScenarioPokemon
     {
-        get => Model.ScenarioPokemon;
+        get => _model.ScenarioPokemon;
         set
         {
-            if (Model.ScenarioPokemon != value)
+            if (_model.ScenarioPokemon != value)
             {
                 Save();
-                Model.ScenarioPokemon = value;
+                _model.ScenarioPokemon = value;
                 RaisePropertyChanged();
                 UpdateEmbedded();
             }
@@ -65,13 +60,13 @@ public class ScenarioWarriorViewModel : ViewModelBase, IViewModelForModel<IScena
 
     public bool ScenarioPokemonIsDefault
     {
-        get => Model.ScenarioPokemonIsDefault;
+        get => _model.ScenarioPokemonIsDefault;
         set
         {
-            if (Model.ScenarioPokemonIsDefault != value)
+            if (_model.ScenarioPokemonIsDefault != value)
             {
                 Save();
-                Model.ScenarioPokemonIsDefault = value;
+                _model.ScenarioPokemonIsDefault = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged(nameof(ScenarioPokemon));
                 UpdateEmbedded();
@@ -83,26 +78,26 @@ public class ScenarioWarriorViewModel : ViewModelBase, IViewModelForModel<IScena
     {
         if (ScenarioPokemonVm != null)
         {
-            DataService.ScenarioPokemon.Save(Scenario, (int)ScenarioPokemon, ScenarioPokemonVm.Model);
+            _dataService.ScenarioPokemon.Save(_scenario, (int)ScenarioPokemon, _currentScenarioPokemon);
         }
 
         if (MaxLinkTable != null)
         {
-            DataService.MaxLink.Save(Warrior, MaxLinkTable);
+            _dataService.MaxLink.Save(Warrior, MaxLinkTable);
         }
     }
 
     private void UpdateEmbedded()
     {
-        MaxLinkTable = DataService.MaxLink.Retrieve(Warrior);
+        MaxLinkTable = _dataService.MaxLink.Retrieve(Warrior);
         if (ScenarioPokemonIsDefault)
         {
             ScenarioPokemonVm = null;
         }
         else
         {
-            var sp = DataService.ScenarioPokemon.Retrieve(Scenario, (int)ScenarioPokemon);
-            ScenarioPokemonVm = new ScenarioPokemonViewModel() { Model = sp };
+            _currentScenarioPokemon = _dataService.ScenarioPokemon.Retrieve(_scenario, (int)ScenarioPokemon);
+            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon);
             RaisePropertyChanged(nameof(MaxLink));
         }
     }

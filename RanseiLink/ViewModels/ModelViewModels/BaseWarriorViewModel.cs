@@ -5,148 +5,155 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class BaseWarriorViewModel : ViewModelBase, IViewModelForModel<IBaseWarrior>
-{
-    public IBaseWarrior Model { get; set; }
+public delegate BaseWarriorViewModel BaseWarriorViewModelFactory(IBaseWarrior model);
 
+public class BaseWarriorViewModel : ViewModelBase
+{
+    private readonly IBaseWarrior _model;
+
+    public BaseWarriorViewModel(IBaseWarrior model)
+    {
+        _model = model;
+    }
+    
     public WarriorSpriteId[] SpriteItems { get; } = EnumUtil.GetValues<WarriorSpriteId>().ToArray();
 
     public WarriorSpriteId Sprite
     {
-        get => Model.Sprite;
-        set => RaiseAndSetIfChanged(Model.Sprite, value, v => Model.Sprite = v);
+        get => _model.Sprite;
+        set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
     }
     public WarriorSprite2Id[] Sprite2Items { get; } = EnumUtil.GetValues<WarriorSprite2Id>().ToArray();
 
     public WarriorSprite2Id Sprite_Unknown
     {
-        get => Model.Sprite_Unknown;
-        set => RaiseAndSetIfChanged(Model.Sprite_Unknown, value, v => Model.Sprite_Unknown = v);
+        get => _model.Sprite_Unknown;
+        set => RaiseAndSetIfChanged(_model.Sprite_Unknown, value, v => _model.Sprite_Unknown = v);
     }
 
     public GenderId[] GenderItems { get; } = EnumUtil.GetValues<GenderId>().ToArray();
 
     public GenderId Gender
     {
-        get => Model.Gender;
-        set => RaiseAndSetIfChanged(Model.Gender, value, v => Model.Gender = v);
+        get => _model.Gender;
+        set => RaiseAndSetIfChanged(_model.Gender, value, v => _model.Gender = v);
     }
 
     public uint WarriorName
     {
-        get => Model.WarriorName;
-        set => RaiseAndSetIfChanged(Model.WarriorName, value, v => Model.WarriorName = v);
+        get => _model.WarriorName;
+        set => RaiseAndSetIfChanged(_model.WarriorName, value, v => _model.WarriorName = v);
     }
 
     public TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
 
     public TypeId Speciality1
     {
-        get => Model.Speciality1;
-        set => RaiseAndSetIfChanged(Model.Speciality1, value, v => Model.Speciality1 = v);
+        get => _model.Speciality1;
+        set => RaiseAndSetIfChanged(_model.Speciality1, value, v => _model.Speciality1 = v);
     }
 
     public TypeId Speciality2
     {
-        get => Model.Speciality2;
-        set => RaiseAndSetIfChanged(Model.Speciality2, value, v => Model.Speciality2 = v);
+        get => _model.Speciality2;
+        set => RaiseAndSetIfChanged(_model.Speciality2, value, v => _model.Speciality2 = v);
     }
 
     public TypeId Weakness1
     {
-        get => Model.Weakness1;
-        set => RaiseAndSetIfChanged(Model.Weakness1, value, v => Model.Weakness1 = v);
+        get => _model.Weakness1;
+        set => RaiseAndSetIfChanged(_model.Weakness1, value, v => _model.Weakness1 = v);
     }
 
     public TypeId Weakness2
     {
-        get => Model.Weakness2;
-        set => RaiseAndSetIfChanged(Model.Weakness2, value, v => Model.Weakness2 = v);
+        get => _model.Weakness2;
+        set => RaiseAndSetIfChanged(_model.Weakness2, value, v => _model.Weakness2 = v);
     }
 
     public WarriorSkillId[] WarriorSkillItems { get; } = EnumUtil.GetValues<WarriorSkillId>().ToArray();
 
     public WarriorSkillId Skill
     {
-        get => Model.Skill;
-        set => RaiseAndSetIfChanged(Model.Skill, value, v => Model.Skill = v);
+        get => _model.Skill;
+        set => RaiseAndSetIfChanged(_model.Skill, value, v => _model.Skill = v);
     }
 
     public WarriorId[] WarriorItems { get; } = EnumUtil.GetValues<WarriorId>().ToArray();
 
     public WarriorId RankUp
     {
-        get => Model.RankUp;
-        set => RaiseAndSetIfChanged(Model.RankUp, value, v => Model.RankUp = v);
+        get => _model.RankUp;
+        set => RaiseAndSetIfChanged(_model.RankUp, value, v => _model.RankUp = v);
     }
 
     public uint Power
     {
-        get => Model.Power;
-        set => RaiseAndSetIfChanged(Model.Power, value, v => Model.Power = v);
+        get => _model.Power;
+        set => RaiseAndSetIfChanged(_model.Power, value, v => _model.Power = v);
     }
 
     public uint Wisdom
     {
-        get => Model.Wisdom;
-        set => RaiseAndSetIfChanged(Model.Wisdom, value, v => Model.Wisdom = v);
+        get => _model.Wisdom;
+        set => RaiseAndSetIfChanged(_model.Wisdom, value, v => _model.Wisdom = v);
     }
 
     public uint Charisma
     {
-        get => Model.Charisma;
-        set => RaiseAndSetIfChanged(Model.Charisma, value, v => Model.Charisma = v);
+        get => _model.Charisma;
+        set => RaiseAndSetIfChanged(_model.Charisma, value, v => _model.Charisma = v);
     }
 
     public uint Capacity
     {
-        get => Model.Capacity;
-        set => RaiseAndSetIfChanged(Model.Capacity, value, v => Model.Capacity = v);
+        get => _model.Capacity;
+        set => RaiseAndSetIfChanged(_model.Capacity, value, v => _model.Capacity = v);
     }
 
     public PokemonId[] PokemonItems { get; } = EnumUtil.GetValues<PokemonId>().ToArray();
 
     public PokemonId RankUpPokemon1
     {
-        get => Model.RankUpPokemon1;
-        set => RaiseAndSetIfChanged(Model.RankUpPokemon1, value, v => Model.RankUpPokemon1 = value);
+        get => _model.RankUpPokemon1;
+        set => RaiseAndSetIfChanged(_model.RankUpPokemon1, value, v => _model.RankUpPokemon1 = value);
     }
 
     public PokemonId RankUpPokemon2
     {
-        get => Model.RankUpPokemon2;
-        set => RaiseAndSetIfChanged(Model.RankUpPokemon2, value, v => Model.RankUpPokemon2 = value);
+        get => _model.RankUpPokemon2;
+        set => RaiseAndSetIfChanged(_model.RankUpPokemon2, value, v => _model.RankUpPokemon2 = value);
     }
 
     public uint RankUpLink
     {
-        get => Model.RankUpLink;
-        set => RaiseAndSetIfChanged(Model.RankUpLink, value, v => Model.RankUpLink = value);
+        get => _model.RankUpLink;
+        set => RaiseAndSetIfChanged(_model.RankUpLink, value, v => _model.RankUpLink = value);
     }
 
     public RankUpConditionId[] RankUpConditionItems { get; } = EnumUtil.GetValues<RankUpConditionId>().ToArray();
 
     public RankUpConditionId RankUpCondition1
     {
-        get => Model.RankUpCondition1;
-        set => RaiseAndSetIfChanged(Model.RankUpCondition1, value, v => Model.RankUpCondition1 = value);
+        get => _model.RankUpCondition1;
+        set => RaiseAndSetIfChanged(_model.RankUpCondition1, value, v => _model.RankUpCondition1 = value);
     }
 
     public RankUpConditionId RankUpCondition2
     {
-        get => Model.RankUpCondition2;
-        set => RaiseAndSetIfChanged(Model.RankUpCondition2, value, v => Model.RankUpCondition2 = value);
+        get => _model.RankUpCondition2;
+        set => RaiseAndSetIfChanged(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value);
     }
 
     public uint Quantity1ForRankUpCondition
     {
-        get => Model.Quantity1ForRankUpCondition;
-        set => RaiseAndSetIfChanged(Model.Quantity1ForRankUpCondition, value, v => Model.Quantity1ForRankUpCondition = value);
+        get => _model.Quantity1ForRankUpCondition;
+        set => RaiseAndSetIfChanged(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value);
     }
 
     public uint Quantity2ForRankUpCondition
     {
-        get => Model.Quantity2ForRankUpCondition;
-        set => RaiseAndSetIfChanged(Model.Quantity2ForRankUpCondition, value, v => Model.Quantity2ForRankUpCondition = value);
+        get => _model.Quantity2ForRankUpCondition;
+        set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
     }
 }

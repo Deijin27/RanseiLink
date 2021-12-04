@@ -15,114 +15,111 @@ public enum MoveAnimationPreviewMode
     Impact,
 }
 
-public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
+public delegate MoveViewModel MoveViewModelFactory(IMove model);
+
+public class MoveViewModel : ViewModelBase
 {
     private readonly IExternalService _externalService;
-    public MoveViewModel()
+    private readonly IMove _model;
+
+    public MoveViewModel(IServiceContainer container, IMove model)
     {
-        _externalService = new Services.Concrete.ExternalService();
+        _externalService = container.Resolve<IExternalService>();
+
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
             UpdatePreviewAnimation();
         });
-    }
 
-    private IMove _model;
-    public IMove Model
-    {
-        get => _model;
-        set
-        {
-            _model = value;
-            UpdatePreviewAnimation();
-        }
+        _model = model;
+        UpdatePreviewAnimation();
     }
 
     public string Name
     {
-        get => Model.Name;
-        set => RaiseAndSetIfChanged(Model.Name, value, v => Model.Name = v);
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
     public bool MovementFlag_MovementOrKnockback
     {
-        get => (Model.MovementFlags & MoveMovementFlags.MovementOrKnockback) != 0;
-        set => RaiseAndSetIfChanged(MovementFlag_MovementOrKnockback, value, v => Model.MovementFlags ^= MoveMovementFlags.MovementOrKnockback);
+        get => (_model.MovementFlags & MoveMovementFlags.MovementOrKnockback) != 0;
+        set => RaiseAndSetIfChanged(MovementFlag_MovementOrKnockback, value, v => _model.MovementFlags ^= MoveMovementFlags.MovementOrKnockback);
     }
 
     public bool MovementFlag_InvertMovementDirection
     {
-        get => (Model.MovementFlags & MoveMovementFlags.InvertMovementDirection) != 0;
-        set => RaiseAndSetIfChanged(MovementFlag_InvertMovementDirection, value, v => Model.MovementFlags ^= MoveMovementFlags.InvertMovementDirection);
+        get => (_model.MovementFlags & MoveMovementFlags.InvertMovementDirection) != 0;
+        set => RaiseAndSetIfChanged(MovementFlag_InvertMovementDirection, value, v => _model.MovementFlags ^= MoveMovementFlags.InvertMovementDirection);
     }
 
     public bool MovementFlag_DoubleMovementDistance
     {
-        get => (Model.MovementFlags & MoveMovementFlags.DoubleMovementDistance) != 0;
-        set => RaiseAndSetIfChanged(MovementFlag_DoubleMovementDistance, value, v => Model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
+        get => (_model.MovementFlags & MoveMovementFlags.DoubleMovementDistance) != 0;
+        set => RaiseAndSetIfChanged(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
     public TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
     public TypeId Type
     {
-        get => Model.Type;
-        set => RaiseAndSetIfChanged(Model.Type, value, v => Model.Type = v);
+        get => _model.Type;
+        set => RaiseAndSetIfChanged(_model.Type, value, v => _model.Type = v);
     }
 
     public uint Power
     {
-        get => Model.Power;
-        set => RaiseAndSetIfChanged(Model.Power, value, v => Model.Power = v);
+        get => _model.Power;
+        set => RaiseAndSetIfChanged(_model.Power, value, v => _model.Power = v);
     }
 
     public uint Accuracy
     {
-        get => Model.Accuracy;
-        set => RaiseAndSetIfChanged(Model.Accuracy, value, v => Model.Accuracy = v);
+        get => _model.Accuracy;
+        set => RaiseAndSetIfChanged(_model.Accuracy, value, v => _model.Accuracy = v);
     }
 
     public MoveRangeId[] RangeItems { get; } = EnumUtil.GetValues<MoveRangeId>().ToArray();
     public MoveRangeId Range
     {
-        get => Model.Range;
-        set => RaiseAndSetIfChanged(Model.Range, value, v => Model.Range = v);
+        get => _model.Range;
+        set => RaiseAndSetIfChanged(_model.Range, value, v => _model.Range = v);
     }
 
     public MoveEffectId[] EffectItems { get; } = EnumUtil.GetValues<MoveEffectId>().ToArray();
 
     public MoveEffectId Effect1
     {
-        get => Model.Effect1;
-        set => RaiseAndSetIfChanged(Model.Effect1, value, v => Model.Effect1 = v);
+        get => _model.Effect1;
+        set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
     public uint Effect1Chance
     {
-        get => Model.Effect1Chance;
-        set => RaiseAndSetIfChanged(Model.Effect1Chance, value, v => Model.Effect1Chance = v);
+        get => _model.Effect1Chance;
+        set => RaiseAndSetIfChanged(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
     }
 
     public MoveEffectId Effect2
     {
-        get => Model.Effect2;
-        set => RaiseAndSetIfChanged(Model.Effect2, value, v => Model.Effect2 = v);
+        get => _model.Effect2;
+        set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
     public uint Effect2Chance
     {
-        get => Model.Effect2Chance;
-        set => RaiseAndSetIfChanged(Model.Effect2Chance, value, v => Model.Effect2Chance = v);
+        get => _model.Effect2Chance;
+        set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
     public MoveAnimationId[] AnimationItems { get; } = EnumUtil.GetValues<MoveAnimationId>().ToArray();
 
     public MoveAnimationId StartupAnimation
     {
-        get => Model.StartupAnimation;
+        get => _model.StartupAnimation;
         set
         {
-            if (RaiseAndSetIfChanged(Model.StartupAnimation, value, v => Model.StartupAnimation = v))
+            if (RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
             {
                 UpdatePreviewAnimation();
             }
@@ -131,10 +128,10 @@ public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
 
     public MoveAnimationId ProjectileAnimation
     {
-        get => Model.ProjectileAnimation;
+        get => _model.ProjectileAnimation;
         set
         {
-            if (RaiseAndSetIfChanged(Model.ProjectileAnimation, value, v => Model.ProjectileAnimation = v))
+            if (RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
             {
                 UpdatePreviewAnimation();
             }
@@ -143,10 +140,10 @@ public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
 
     public MoveAnimationId ImpactAnimation
     {
-        get => Model.ImpactAnimation;
+        get => _model.ImpactAnimation;
         set
         {
-            if (RaiseAndSetIfChanged(Model.ImpactAnimation, value, v => Model.ImpactAnimation = v))
+            if (RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
             {
                 UpdatePreviewAnimation();
             }
@@ -157,22 +154,22 @@ public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
 
     public MoveAnimationTargetId AnimationTarget1
     {
-        get => Model.AnimationTarget1;
-        set => RaiseAndSetIfChanged(Model.AnimationTarget1, value, v => Model.AnimationTarget1 = v);
+        get => _model.AnimationTarget1;
+        set => RaiseAndSetIfChanged(_model.AnimationTarget1, value, v => _model.AnimationTarget1 = v);
     }
 
     public MoveAnimationTargetId AnimationTarget2
     {
-        get => Model.AnimationTarget2;
-        set => RaiseAndSetIfChanged(Model.AnimationTarget2, value, v => Model.AnimationTarget2 = v);
+        get => _model.AnimationTarget2;
+        set => RaiseAndSetIfChanged(_model.AnimationTarget2, value, v => _model.AnimationTarget2 = v);
     }
 
     public MoveMovementAnimationId[] MovementAnimationItems { get; } = EnumUtil.GetValues<MoveMovementAnimationId>().ToArray();
 
     public MoveMovementAnimationId MovementAnimation
     {
-        get => Model.MovementAnimation;
-        set => RaiseAndSetIfChanged(Model.MovementAnimation, value, v => Model.MovementAnimation = v);
+        get => _model.MovementAnimation;
+        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
     }
 
     private string _currentPreviewAnimationUri;

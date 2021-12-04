@@ -12,6 +12,8 @@ using System.Windows;
 
 namespace RanseiLink.ViewModels;
 
+public delegate EvolutionTableViewModel EvolutionTableViewModelFactory(IPokemonService contextualPokemonService);
+
 public class EvolutionTableItem
 {
     public EvolutionTableItem(int index, PokemonId pokemon, PokemonId[] pokemonItems)
@@ -27,13 +29,13 @@ public class EvolutionTableItem
 public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
 {
     private readonly IDialogService _dialogService;
-    private readonly IPokemonService DataService;
+    private readonly IPokemonService _dataService;
     private IEvolutionTable _model;
 
-    public EvolutionTableViewModel(IDialogService dialogService, IPokemonService dataService)
+    public EvolutionTableViewModel(IServiceContainer container, IPokemonService pokemonService)
     {
-        _dialogService = dialogService;
-        DataService = dataService;
+        _dialogService = container.Resolve<IDialogService>();
+        _dataService = pokemonService;
         Refresh();
 
         PasteCommand = new RelayCommand(Paste);
@@ -52,7 +54,7 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
         }
         try
         {
-            DataService.SaveEvolutionTable(_model);
+            _dataService.SaveEvolutionTable(_model);
         }
         catch (Exception e)
         {
@@ -68,7 +70,7 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
     {
         try
         {
-            _model = DataService.RetrieveEvolutionTable();
+            _model = _dataService.RetrieveEvolutionTable();
             var lst = new List<EvolutionTableItem>();
             for (int i = 0; i < EvolutionTable.DataLength; i++)
             {
@@ -100,7 +102,7 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
 
         if (_model.TryDeserialize(text))
         {
-            _model = DataService.RetrieveEvolutionTable();
+            _model = _dataService.RetrieveEvolutionTable();
             var lst = new List<EvolutionTableItem>();
             for (int i = 0; i < EvolutionTable.DataLength; i++)
             {

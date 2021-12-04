@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
 using System;
 using System.Linq;
 using System.Windows;
@@ -10,18 +9,21 @@ using System.Windows.Input;
 namespace RanseiLink.ViewModels;
 
 public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable
-    where TViewModel : IViewModelForModel<TModel>, new()
     where TModel : IDataWrapper
-{
+{ 
     private readonly IDialogService _dialogService;
-    public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService)
-        : this(dialogService, initialSelected, dataService, EnumUtil.GetValues<TId>().ToArray()) { }
 
-    public SelectorViewModelBase(IDialogService dialogService, TId initialSelected, IModelDataService<TId, TModel> dataService, TId[] items)
+    protected abstract TViewModel NewViewModel(TModel model);
+
+    private TModel _currentModel;
+
+    public SelectorViewModelBase(IServiceContainer container, IModelDataService<TId, TModel> dataService)
+        : this(container, dataService, EnumUtil.GetValues<TId>().ToArray()) { }
+
+    public SelectorViewModelBase(IServiceContainer container, IModelDataService<TId, TModel> dataService, TId[] items)
     {
-        _dialogService = dialogService;
+        _dialogService = container.Resolve<IDialogService>();
         DataService = dataService;
-        Selected = initialSelected;
         Items = items;
 
         CopyCommand = new RelayCommand(Copy);
@@ -58,8 +60,8 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
     {
         try
         {
-            TModel model = DataService.Retrieve(_selected);
-            NestedViewModel = new TViewModel() { Model = model };
+            _currentModel = DataService.Retrieve(_selected);
+            NestedViewModel = NewViewModel(_currentModel);
         }
         catch (Exception e)
         {
@@ -74,11 +76,11 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
 
     public virtual void Save()
     {
-        if (NestedViewModel != null && _selected != null)
+        if (_currentModel != null && _selected != null)
         {
             try
             {
-                DataService.Save(_selected, NestedViewModel.Model);
+                DataService.Save(_selected, _currentModel);
             }
             catch (Exception e)
             {
@@ -98,16 +100,17 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
 
     private void Copy()
     {
-        Clipboard.SetText(NestedViewModel.Model.Serialize());
+        Clipboard.SetText(_currentModel.Serialize());
     }
 
     private void Paste()
     {
         string text = Clipboard.GetText();
 
-        if (NestedViewModel.Model.TryDeserialize(text))
+        if (_currentModel.TryDeserialize(text))
         {
-            NestedViewModel = new TViewModel { Model = NestedViewModel.Model };
+            // trigger visual update
+            NestedViewModel = NewViewModel(_currentModel);
         }
         else
         {
@@ -115,7 +118,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
                 type: MessageBoxType.Warning,
                 title: "Invalid Paste Data",
                 message: "The data that you pasted is invalid. Make sure you have the right label and length." +
-                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{NestedViewModel.Model.Serialize()}"
+                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_currentModel.Serialize()}"
             ));
         }
     }

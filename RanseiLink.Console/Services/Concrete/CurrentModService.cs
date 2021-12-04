@@ -9,11 +9,11 @@ public class CurrentModService : ICurrentModService
     private readonly IModService _modService;
     private readonly DataServiceFactory _dataServiceFactory;
 
-    public CurrentModService(ISettingsService settingsService, IModService modService, DataServiceFactory dataServiceFactory)
+    public CurrentModService(IServiceContainer container)
     {
-        _modService = modService;
-        _settingsService = settingsService;
-        _dataServiceFactory = dataServiceFactory;
+        _modService = container.Resolve<IModService>();
+        _settingsService = container.Resolve<ISettingsService>();
+        _dataServiceFactory = container.Resolve<DataServiceFactory>();
     }
 
     public bool TryGetCurrentMod(IConsole console, out ModInfo mod)

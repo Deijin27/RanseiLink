@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
+public delegate ScenarioAppearPokemonViewModel ScenarioAppearPokemonViewModelFactory(IScenarioAppearPokemon model);
+
 public class AppearItem : ViewModelBase
 {
     private readonly IScenarioAppearPokemon _model;
@@ -24,24 +26,12 @@ public class AppearItem : ViewModelBase
     public PokemonId Pokemon { get; set; }
 }
 
-public class ScenarioAppearPokemonViewModel : ViewModelBase, IViewModelForModel<IScenarioAppearPokemon>
+public class ScenarioAppearPokemonViewModel : ViewModelBase
 {
-    private IScenarioAppearPokemon _model;
-    public IScenarioAppearPokemon Model
+    public ScenarioAppearPokemonViewModel(IScenarioAppearPokemon model)
     {
-        get => _model;
-        set
-        {
-            _model = value;
-            AppearItems = EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(value, i)).ToList();
-        }
+        AppearItems = EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(model, i)).ToList();
     }
 
-
-    private List<AppearItem> _appearItems;
-    public List<AppearItem> AppearItems
-    {
-        get => _appearItems;
-        set => RaiseAndSetIfChanged(ref _appearItems, value);
-    }
+    public List<AppearItem> AppearItems { get; }
 }

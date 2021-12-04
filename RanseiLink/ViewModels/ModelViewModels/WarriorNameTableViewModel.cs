@@ -9,6 +9,8 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
+public delegate WarriorNameTableViewModel WarriorNameTableViewModelFactory(IBaseWarriorService warriorService);
+
 public class WarriorNameTableItem : ViewModelBase
 {
     private readonly IWarriorNameTable _table;
@@ -31,9 +33,9 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
     private readonly IBaseWarriorService _service;
     private IWarriorNameTable _model;
 
-    public WarriorNameTableViewModel(IDialogService dialogService, IBaseWarriorService dataService)
+    public WarriorNameTableViewModel(IServiceContainer container, IBaseWarriorService dataService)
     {
-        _dialogService = dialogService;
+        _dialogService = container.Resolve<IDialogService>();
         _service = dataService;
         Refresh();
 
