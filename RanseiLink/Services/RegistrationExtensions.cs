@@ -14,5 +14,6 @@ public static class RegistrationExtensions
 
         container.RegisterSingleton<IDialogService>(new DialogService(settingsService));
         container.RegisterSingleton<IPluginService>(new PluginService(pluginFormLoader));
+        container.RegisterSingleton<IThemeService>(new ThemeService(settingsService));
     }
 }

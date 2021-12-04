@@ -82,12 +82,19 @@ public class SettingsService : BaseSettingsService, ISettingsService
         public const string RecentCommitRom = "RecentCommitRom";
         public const string RecentLoadRom = "RecentLoadRom";
         public const string RecentExportModFolder = "RecentExportFolder";
+        public const string Theme = "Theme";
     }
 
     public int CurrentConsoleModSlot
     {
         get => Get(ElementNames.CurrentConsoleModSlot, 0);
         set => Set(ElementNames.CurrentConsoleModSlot, value);
+    }
+
+    public string Theme
+    {
+        get => Get(ElementNames.Theme, "Dark");
+        set => Set(ElementNames.Theme, value);
     }
 
     public string RecentCommitRom

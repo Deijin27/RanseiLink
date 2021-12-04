@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F3F3"/>
+    <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#EAEAEA"/>
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#8068a8"/>
+
+    <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#ECECEC"/>
+    <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#DDDDDD"/>
+    <SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#DDDDDD"/>
+
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#1B1B1B"/>
+    <SolidColorBrush x:Key="AltForegroundBrush" Color="#5b5b5b"/>
+    <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7B7B7B"/>
+
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#777777"/>
+    <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#000000"/>
+
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#e0e0e0"/>
+    <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#CDCDCD"/>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#C0C0C0"/>
+
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FBFBFB"/>
+    <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#EBEBEB"/>
+
+</ResourceDictionary>

@@ -7,4 +7,5 @@ public interface ISettingsService
     string RecentCommitRom { get; set; }
     string RecentLoadRom { get; set; }
     string RecentExportModFolder { get; set; }
+    string Theme { get; set; }
 }

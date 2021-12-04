@@ -7,10 +7,13 @@ namespace RanseiLink.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase, ISaveable
 {
+    private readonly IThemeService _themeService;
+
     public MainWindowViewModel(IServiceContainer container)
     {
         var dialogService = container.Resolve<IDialogService>();
         var pluginLoader = container.Resolve<IPluginLoader>();
+        _themeService = container.Resolve<IThemeService>();
 
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
@@ -37,6 +40,17 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
         {
             CurrentVm = ModSelectionVm;
             BackButtonVisible = false;
+        });
+
+        ToggleThemeCommand = new RelayCommand(() =>
+        {
+            var newTheme = _themeService.CurrentTheme switch
+            {
+                Theme.Dark => Theme.Light,
+                Theme.Light => Theme.Dark,
+                _ => throw new System.Exception("Invalid theme enum value"),
+            };
+            _themeService.SetTheme(newTheme);
         });
     }
 
@@ -66,6 +80,7 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
     }
 
     public ICommand BackButtonCommand { get; }
+    public ICommand ToggleThemeCommand { get; }
 
     public void OnShutdown()
     {

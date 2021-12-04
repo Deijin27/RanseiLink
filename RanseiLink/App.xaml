@@ -9,7 +9,13 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/Colors/Dark.xaml" />
+                <ResourceDictionary x:Name="ThemeResourceDictionary">
+                    <ResourceDictionary.MergedDictionaries>
+                        <!-- Theme resource dictionary -->
+                        <ResourceDictionary Source="Styles/Colors/Dark.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+               
                 <ResourceDictionary Source="Styles/Icons.xaml"/>
                 <ResourceDictionary Source="Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>

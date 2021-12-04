@@ -60,6 +60,14 @@
                         ToolTip="Minimize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
 
+                <Button Command="{Binding ToggleThemeCommand}" Content="&#xE2B1;"
+                        DockPanel.Dock="Right"  WindowChrome.IsHitTestVisibleInChrome="True"
+                        FontFamily="{StaticResource SegoeMDL2Assets}"
+                        Width="45" Height="30"
+                        FontSize="13"
+                        ToolTip="Toggle Theme"
+                        Style="{StaticResource GrayHoverButtonStyle}"/>
+
                 <TextBlock FontSize="12" FontWeight="SemiBold"
                     HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
                         RanseiLink <Run Text="{x:Static local:App.Version}"/>

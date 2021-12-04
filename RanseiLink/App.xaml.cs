@@ -19,6 +19,12 @@ public partial class App : Application
         ServiceContainer = new ServiceContainer();
         ServiceContainer.RegisterCoreServices();
         ServiceContainer.RegisterPluginServices();
+    }
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        // Register wpf services here because theme service requires that application resources are already initialized
         ServiceContainer.RegisterWpfServices();
+        base.OnStartup(e);
     }
 }

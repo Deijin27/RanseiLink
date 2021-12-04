@@ -50,10 +50,6 @@ public class ModSelectionViewModel : ViewModelBase
 
     private void CreateMod()
     {
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Information));
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Warning));
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("title", "message", MessageBoxType.Error));
-
         if (_dialogService.CreateMod(out ModInfo modInfo, out string romPath))
         {
             ModInfo newMod;
