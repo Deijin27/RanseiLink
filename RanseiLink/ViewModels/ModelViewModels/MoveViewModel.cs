@@ -1,6 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Services;
+using RanseiLink.Services;
 using System.Linq;
 using System.Windows.Input;
 
@@ -15,8 +17,10 @@ public enum MoveAnimationPreviewMode
 
 public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
 {
+    private readonly IExternalService _externalService;
     public MoveViewModel()
     {
+        _externalService = new Services.Concrete.ExternalService();
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
@@ -210,16 +214,6 @@ public class MoveViewModel : ViewModelBase, IViewModelForModel<IMove>
 
     private string GetAnimationUri(MoveAnimationId id)
     {
-        string uri = id switch
-        {
-            MoveAnimationId.WaterDropletSplash => "https://media2.giphy.com/media/iUYeOIoi5AyxCeqScu/giphy.gif",
-            MoveAnimationId.OrangeOrbBurst => "https://media1.giphy.com/media/4HTfc17O2Nug1gfLvw/giphy.gif",
-            MoveAnimationId.DoubleOrangeOrbBurst => "https://media4.giphy.com/media/lZHEYKCD0W7GEjRvmV/giphy.gif",
-            MoveAnimationId.OrangeOrbScratch => "https://media1.giphy.com/media/bsTxxxv8uB8nIfFUVk/giphy.gif",
-            MoveAnimationId.PurpleBiteBubble => "https://media.giphy.com/media/PchxUWre1Mtp0O9OAb/giphy.gif",
-            _ => "https://media0.giphy.com/media/xFtpI1mGHZvLV5Sqf3/giphy.gif"
-        };
-
-        return uri;
+        return _externalService.GetMoveAnimationUri(id);
     }
 }

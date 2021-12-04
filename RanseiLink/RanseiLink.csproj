@@ -86,6 +86,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="External\MoveAnimations.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Page Update="Controls\RankUpConditionControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
