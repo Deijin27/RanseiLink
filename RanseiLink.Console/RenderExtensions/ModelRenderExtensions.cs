@@ -247,6 +247,7 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id} : {item.Serialize()}");
         console.WriteProperty("Name", item.Name);
+        console.WriteProperty("Shop Price Multiplier", item.ShopPriceMultiplier);
     }
 
     public static void Render(this IConsole console, IKingdom kingdom, KingdomId id)

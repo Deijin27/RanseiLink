@@ -85,7 +85,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             new ListItem("Scenario Pokemon", _container.Resolve<ScenarioPokemonSelectorViewModelFactory>()(_dataService.ScenarioPokemon)),
             new ListItem("Scenario Appear Pokemon", _container.Resolve<ScenarioAppearPokemonSelectorViewModelFactory>()(_dataService.ScenarioAppearPokemon)),
             new ListItem("Scenario Kingdom", _container.Resolve<ScenarioKingdomSelectorViewModelFactory>()(_dataService.ScenarioKingdom)),
-            new ListItem("Event Speaker", _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_dataService.EventSpeaker))
+            new ListItem("Event Speaker", _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_dataService.EventSpeaker)),
+            new ListItem("Items", _container.Resolve<ItemSelectorViewModelFactory>()(_dataService.Item))
         };
     }
 

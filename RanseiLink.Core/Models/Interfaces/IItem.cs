@@ -3,4 +3,5 @@
 public interface IItem : IDataWrapper, ICloneable<IItem>
 {
     string Name { get; set; }
+    uint ShopPriceMultiplier { get; set; }
 }

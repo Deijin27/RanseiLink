@@ -30,6 +30,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<AbilityViewModelFactory>(i => new AbilityViewModel(i));
         container.RegisterSingleton<BaseWarriorViewModelFactory>(i => new BaseWarriorViewModel(i));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
+        container.RegisterSingleton<ItemViewModelFactory>(i => new ItemViewModel(i));
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
         container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
         container.RegisterSingleton<MoveViewModelFactory>(i => new MoveViewModel(container, i));
@@ -47,6 +48,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<AbilitySelectorViewModelFactory>(i => new AbilitySelectorViewModel(container, i));
         container.RegisterSingleton<BaseWarriorSelectorViewModelFactory>(i => new BaseWarriorSelectorViewModel(container, i));
         container.RegisterSingleton<EventSpeakerSelectorViewModelFactory>(i => new EventSpeakerSelectorViewModel(container, i));
+        container.RegisterSingleton<ItemSelectorViewModelFactory>(i => new ItemSelectorViewModel(container, i));
         container.RegisterSingleton<MaxLinkSelectorViewModelFactory>(i => new MaxLinkSelectorViewModel(container, i));
         container.RegisterSingleton<MoveRangeSelectorViewModelFactory>(i => new MoveRangeSelectorViewModel(container, i));
         container.RegisterSingleton<MoveSelectorViewModelFactory>(i => new MoveSelectorViewModel(container, i));

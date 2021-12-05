@@ -80,6 +80,9 @@
     <Compile Update="Views\ModelViews\BaseWarriorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\ItemView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\SelectorViews\ScenarioSelectorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -168,6 +171,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ModelViews\BaseWarriorView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\ItemView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
