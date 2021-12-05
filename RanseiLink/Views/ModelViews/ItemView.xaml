@@ -49,7 +49,7 @@
         </Grid.Resources>
 
         <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="20"/>
 
         <TextBlock Text="Shop Price Multiplier" Grid.Row="1" ToolTip="Max shop price / 100" />
         <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ShopPriceMultiplier, Mode=TwoWay}" Max="511"/>
