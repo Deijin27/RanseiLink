@@ -24,6 +24,7 @@ public class ItemTests
         });
 
         Assert.Equal("Potion", a.Name);
+        Assert.Equal(3u, a.ShopPriceMultiplier);
     }
 
     [Fact]
@@ -45,8 +46,10 @@ public class ItemTests
         IItem a = new Item
         {
             Name = "Potion",
+            ShopPriceMultiplier = 12
         };
 
         Assert.Equal("Potion", a.Name);
+        Assert.Equal(12u, a.ShopPriceMultiplier);
     }
 }
