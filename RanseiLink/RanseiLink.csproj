@@ -59,6 +59,9 @@
     <Compile Update="Views\ModelViews\EventSpeakerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\BuildingView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\ScenarioKingdomView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -143,6 +146,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ModelViews\EventSpeakerView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\BuildingView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
