@@ -9,14 +9,14 @@ public class ScenarioKingdom : BaseDataWindow, IScenarioKingdom
     public ScenarioKingdom(byte[] data) : base(data, DataLength) { }
     public ScenarioKingdom() : this(new byte[DataLength]) { }
 
-    public uint GetBattlesToUnlock(KingdomId kingdom)
+    public uint GetArmy(KingdomId kingdom)
     {
         return GetByte((int)kingdom);
     }
 
-    public void SetBattlesToUnlock(KingdomId kingdom, uint value)
+    public void SetArmy(KingdomId kingdom, uint armyId)
     {
-        SetByte((int)kingdom, (byte)value);
+        SetByte((int)kingdom, (byte)armyId);
     }
 
     public IScenarioKingdom Clone()

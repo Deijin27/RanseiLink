@@ -16,6 +16,24 @@ public class ScenarioWarrior : BaseDataWindow, IScenarioWarrior
         set => SetByte(0, (byte)value);
     }
 
+    public WarriorClassId Class
+    {
+        get => (WarriorClassId)GetUInt32(0, 3, 9);
+        set => SetUInt32(0, 3, 9, (uint)value);
+    }
+
+    public KingdomId Kingdom
+    {
+        get => (KingdomId)GetUInt32(0, 5, 12);
+        set => SetUInt32(0, 5, 12, (uint)value);
+    }
+
+    public uint Army
+    {
+        get => GetUInt32(0, 5, 17);
+        set => SetUInt32(0, 5, 17, value);
+    }
+
     public uint ScenarioPokemon
     {
         get => GetByte(0xE);

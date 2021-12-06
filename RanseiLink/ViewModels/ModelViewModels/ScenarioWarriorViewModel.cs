@@ -43,6 +43,28 @@ public class ScenarioWarriorViewModel : ViewModelBase, ISaveable
         }
     }
 
+    public WarriorClassId[] ClassItems { get; } = EnumUtil.GetValues<WarriorClassId>().ToArray();
+
+    public WarriorClassId Class
+    {
+        get => _model.Class;
+        set => RaiseAndSetIfChanged(_model.Class, value, v => _model.Class = v);
+    }
+
+    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
+
+    public KingdomId Kingdom
+    {
+        get => _model.Kingdom;
+        set => RaiseAndSetIfChanged(_model.Kingdom, value, v => _model.Kingdom = v);
+    }
+
+    public uint Army
+    {
+        get => _model.Army;
+        set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);
+    }
+
     public uint ScenarioPokemon
     {
         get => _model.ScenarioPokemon;

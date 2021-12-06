@@ -1,6 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
+[DefaultValues(Default)]
 public enum KingdomId : uint
 {
     Aurora,
@@ -19,5 +20,6 @@ public enum KingdomId : uint
     Spectra,
     Dragnor,
     Yakasha,
-    Valora
+    Valora,
+    Default
 }

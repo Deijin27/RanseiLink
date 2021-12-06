@@ -14,7 +14,7 @@ class MockPokemon : IPokemon
     {
         RequiresLv2Dict = new Dictionary<KingdomId, bool>();
         DefaultDict = new Dictionary<KingdomId, bool>();
-        foreach (var val in EnumUtil.GetValues<KingdomId>())
+        foreach (var val in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
             RequiresLv2Dict[val] = false;
             DefaultDict[val] = false;

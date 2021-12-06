@@ -4,6 +4,6 @@ namespace RanseiLink.Core.Models.Interfaces;
 
 public interface IScenarioKingdom : IDataWrapper, ICloneable<IScenarioKingdom>
 {
-    uint GetBattlesToUnlock(KingdomId kingdom);
-    void SetBattlesToUnlock(KingdomId kingdom, uint value);
+    uint GetArmy(KingdomId kingdom);
+    void SetArmy(KingdomId kingdom, uint armyId);
 }

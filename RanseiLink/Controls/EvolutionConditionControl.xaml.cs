@@ -12,7 +12,7 @@ namespace RanseiLink.Controls;
 /// </summary>
 public partial class EvolutionConditionControl : UserControl
 {
-    private readonly KingdomId[] KingdomItems = EnumUtil.GetValues<KingdomId>().ToArray();
+    private readonly KingdomId[] KingdomItems = EnumUtil.GetValuesExceptDefaults<KingdomId>().ToArray();
     private readonly GenderId[] GenderItems = EnumUtil.GetValues<GenderId>().ToArray();
     private readonly ItemId[] ItemItems = EnumUtil.GetValues<ItemId>().ToArray();
     public EvolutionConditionControl()

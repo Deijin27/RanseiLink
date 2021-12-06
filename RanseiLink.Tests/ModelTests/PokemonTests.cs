@@ -37,7 +37,7 @@ public class PokemonTests
         Assert.False(p.IsLegendary);
         Assert.Equal(0x40u, p.NameOrderIndex);
         Assert.Equal(475u, p.NationalPokedexNumber);
-        foreach (KingdomId location in EnumUtil.GetValues<KingdomId>())
+        foreach (KingdomId location in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
             Assert.False(p.GetEncounterable(location, false));
         }

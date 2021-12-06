@@ -15,7 +15,7 @@
         <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
         <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="1.5*"/>
@@ -56,6 +56,15 @@
 
         <TextBlock Text="Warrior"/>
         <ComboBox ItemsSource="{Binding WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Kingdom"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
+        <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
 
         <CheckBox x:Name="AllowScenarioPokemonEdit" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="False" 
                   Content="Allow Editing of Scenario Pokemon Selected Entry"

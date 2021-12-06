@@ -20,15 +20,15 @@ public class ScenarioKingdomItem : ViewModelBase
 
     public uint BattlesToUnlock
     {
-        get => _model.GetBattlesToUnlock(Kingdom);
-        set => RaiseAndSetIfChanged(BattlesToUnlock, value, v => _model.SetBattlesToUnlock(Kingdom, v));
+        get => _model.GetArmy(Kingdom);
+        set => RaiseAndSetIfChanged(BattlesToUnlock, value, v => _model.SetArmy(Kingdom, v));
     }
 }
 public class ScenarioKingdomViewModel : ViewModelBase
 {
     public ScenarioKingdomViewModel(IScenarioKingdom model)
     {
-        KingdomItems = EnumUtil.GetValues<KingdomId>().Select(i => new ScenarioKingdomItem(model, i)).ToList();
+        KingdomItems = EnumUtil.GetValuesExceptDefaults<KingdomId>().Select(i => new ScenarioKingdomItem(model, i)).ToList();
     }
 
     public List<ScenarioKingdomItem> KingdomItems { get; }

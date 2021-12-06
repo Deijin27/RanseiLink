@@ -22,7 +22,7 @@ public class BuildingViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
+    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValuesExceptDefaults<KingdomId>().ToArray();
 
     public KingdomId Kingdom
     {

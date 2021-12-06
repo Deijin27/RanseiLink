@@ -191,7 +191,7 @@ public class PokemonViewModel : ViewModelBase
         RaisePropertyChanged(nameof(MaxEvolutionEntry));
     }
 
-    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValues<KingdomId>().ToArray();
+    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValuesExceptDefaults<KingdomId>().ToArray();
     KingdomId _selectedEncounterKingdom;
     public KingdomId SelectedEncounterKingdom
     {
