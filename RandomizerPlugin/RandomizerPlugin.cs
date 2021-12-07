@@ -35,7 +35,7 @@ public class RandomizerPlugin : IPlugin
             moveIds = moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
-        Random random = new();
+        var random = new Random(options.Seed.GetHashCode());
 
         using var pokemonService = dataService.Pokemon.Disposable();
 
