@@ -29,7 +29,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         {
             if (_currentVm != value)
             {
-                _currentVm?.Save();
+                Save();
                 _currentVm = value;
                 _currentVm?.Refresh();
                 RaisePropertyChanged();
@@ -93,7 +93,10 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public void Save()
     {
-        CurrentVm.Save();
+        if (!_blockSave)
+        {
+            CurrentVm?.Save();
+        }
     }
 
     private void CommitRom()
@@ -116,6 +119,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
     }
 
+    private bool _blockSave = false;
+
     private void RunPlugin(PluginInfo chosen)
     {
         // first save
@@ -134,13 +139,14 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 type: MessageBoxType.Error
                 ));
         }
-
+        // block the save directly because reloading the list items triggers the CurrentVm setter
+        _blockSave = true;
         // finally reload the items
         var currentItemId = CurrentListItem.ItemName;
         ReloadListItems();
-        // make sure to not trigger Save by the CurrentVm setter
         _currentVm = ListItems.First(i => i.ItemName == currentItemId).ItemValue;
         RaisePropertyChanged(nameof(CurrentVm));
+        _blockSave = false;
     }
 
     public PluginInfo SelectedPlugin
