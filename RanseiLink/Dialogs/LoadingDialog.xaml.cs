@@ -8,10 +8,9 @@ namespace RanseiLink.Dialogs;
 /// </summary>
 public partial class LoadingDialog : Window
 {
-    public LoadingDialog(string headerText)
+    public LoadingDialog()
     {
         InitializeComponent();
-        HeaderTextBlock.Text = headerText;
     }
 
     private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)

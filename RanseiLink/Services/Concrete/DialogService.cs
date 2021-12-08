@@ -1,5 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.ViewModels;
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace RanseiLink.Services.Concrete;
@@ -250,5 +252,27 @@ internal class DialogService : IDialogService
         bool? proceed = dialog.ShowDialog();
 
         return proceed == true;
+    }
+
+    public void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null)
+    {
+        var progressWindow = new Dialogs.LoadingDialog
+        {
+            Owner = Application.Current.MainWindow
+        };
+
+        var progressText = new Progress<string>(text => progressWindow.HeaderTextBlock.Text = text);
+        var progressNumber = new Progress<int>(num => progressWindow.ProgressBar.Value = num);
+
+        var workingTask = workAsync(progressText, progressNumber);
+
+        progressWindow.Loaded += async (s, e) =>
+        {
+            await workingTask;
+
+            progressWindow.Close();
+        };
+
+        progressWindow.ShowDialog();
     }
 }

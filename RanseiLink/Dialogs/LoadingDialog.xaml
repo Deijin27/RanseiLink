@@ -16,7 +16,7 @@
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}">
         <StackPanel>
             <TextBlock x:Name="HeaderTextBlock" Margin="20" FontSize="18" FontWeight="DemiBold" HorizontalAlignment="Center" Text="Header Text"/>
-            <ProgressBar Height="10" Margin="10" IsIndeterminate="True"/>
+            <ProgressBar x:Name="ProgressBar" Height="7" Margin="10" Value="0" Foreground="{DynamicResource AccentBrush}"/>
         </StackPanel>
     </Border>
 </Window>

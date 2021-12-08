@@ -1,4 +1,7 @@
 ﻿
+using System;
+using System.Threading.Tasks;
+
 namespace RanseiLink.Core.Services;
 
 public interface IDialogService
@@ -14,4 +17,5 @@ public interface IDialogService
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);
     bool RequestFolder(out string result);
     bool RequestModFile(out string result);
+    void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null);
 }

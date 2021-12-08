@@ -3,6 +3,7 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -47,55 +48,100 @@ public class ModListItemViewModel : ViewModelBase
 
     private void PatchRom(ModInfo mod)
     {
-        if (_dialogService.CommitToRom(mod, out string targetRom))
+        if (!_dialogService.CommitToRom(Mod, out string romPath))
         {
+            return;
+        }
+
+        Exception error = null;
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Patching rom...");
             try
             {
-                _modService.Commit(mod, targetRom);
+                _modService.Commit(mod, romPath);
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Writing To Rom",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
+                error = e;
                 return;
             }
+            number.Report(100);
+            text.Report("Patching Complete!");
+            await Task.Delay(500);
+        });
 
+        if (error != null)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                title: "Error Writing To Rom",
+                message: error.Message,
+                type: MessageBoxType.Error
+            ));
         }
     }
     private void ExportMod(ModInfo mod)
     {
-        if (_dialogService.ExportMod(mod, out string folder))
+        if (!_dialogService.ExportMod(mod, out string folder))
         {
+            return;
+        }
+        Exception error = null;
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Exporting mod...");
             try
             {
                 _modService.Export(mod, folder);
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Exporting Mod",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
+                error = e;
                 return;
             }
+            number.Report(100);
+            text.Report("Export Complete!");
+            await Task.Delay(500);
+        });
+
+        if (error != null)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Exporting Mod",
+                    message: error.Message,
+                    type: MessageBoxType.Error
+                ));
         }
+        
     }
     private void EditModInfo(ModInfo mod)
     {
-        if (_dialogService.EditModInfo(mod))
+        if (!_dialogService.EditModInfo(mod))
         {
-            _modService.Update(mod);
-            _parentVm.RefreshModItems();
+            return;
         }
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Editing mod info...");
+            _modService.Update(mod);
+            number.Report(50);
+            text.Report("Updating mod list...");
+            _parentVm.RefreshModItems();
+            number.Report(100);
+            text.Report("Edit Complete!");
+            await Task.Delay(500);
+        });
     }
     private void CreateModBasedOn(ModInfo mod)
     {
-        if (_dialogService.CreateModBasedOn(mod, out ModInfo newModInfo))
+        if (!_dialogService.CreateModBasedOn(mod, out ModInfo newModInfo))
         {
+            return;
+        }
+        Exception error = null;
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Creating mod...");
             ModInfo newMod;
             try
             {
@@ -103,25 +149,45 @@ public class ModListItemViewModel : ViewModelBase
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Creating Mod",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
+                error = e;
                 return;
             }
 
+            number.Report(60);
+            text.Report("Updating mod list...");
             _parentVm.RefreshModItems();
+            number.Report(100);
+            text.Report("Mod Creating Complete!");
+            await Task.Delay(500);
+        });
+
+        if (error != null)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    title: "Error Creating Mod",
+                    message: error.Message,
+                    type: MessageBoxType.Error
+                ));
         }
     }
 
     private void DeleteMod(ModInfo mod)
     {
-        if (_dialogService.ConfirmDelete(mod))
+        if (!_dialogService.ConfirmDelete(mod))
         {
-            _modService.Delete(mod);
-            _parentVm.ModItems.Remove(this);
+            return;
         }
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Deleting mod...");
+            _modService.Delete(mod);
+            text.Report("Updating mod list");
+            number.Report(90);
+            _parentVm.ModItems.Remove(this);
+            text.Report("Mod Deleted!");
+            number.Report(100);
+            await Task.Delay(500);
+        });
     }
 
     private void RunPlugin(ModInfo mod, PluginInfo chosen)

@@ -4,6 +4,7 @@ using RanseiLink.PluginModule.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -101,21 +102,38 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     private void CommitRom()
     {
-        if (_dialogService.CommitToRom(Mod, out string romPath))
+        if (!_dialogService.CommitToRom(Mod, out string romPath))
         {
+            return;
+        }
+
+        Exception error = null;
+        _dialogService.ProgressDialog(async (text, number) =>
+        {
+            text.Report("Saving...");
             Save();
+            number.Report(20);
+            text.Report("Patching rom...");
             try
             {
                 _modService.Commit(Mod, romPath);
             }
             catch (Exception e)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Writing To Rom",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
+                error = e;
             }
+            number.Report(100);
+            text.Report("Patching Complete!");
+            await Task.Delay(500);
+        });
+
+        if (error != null)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                title: "Error Writing To Rom",
+                message: error.Message,
+                type: MessageBoxType.Error
+            ));
         }
     }
 
