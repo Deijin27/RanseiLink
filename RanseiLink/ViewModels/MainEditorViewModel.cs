@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
+using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     private readonly IDataService _dataService;
     private readonly IDialogService _dialogService;
     private readonly IModService _modService;
+    private readonly IEditorContext _editorContext;
 
     public ICommand CommitRomCommand { get; }
 
@@ -40,8 +42,6 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
 
-    public ListItem CurrentListItem { get; set; } // bound one way to source
-
     public ModInfo Mod { get; }
 
     private IList<ListItem> _listItems;
@@ -55,6 +55,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     {
         _container = container;
         var dataServiceFactory = container.Resolve<DataServiceFactory>();
+        var editorContextFactory = container.Resolve<EditorContextFactory>();
         _dialogService = container.Resolve<IDialogService>();
         _modService = container.Resolve<IModService>();
 
@@ -62,6 +63,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
         Mod = mod;
         _dataService = dataServiceFactory(Mod);
+        _editorContext = editorContextFactory(_dataService, this);
 
         ReloadListItems();
 
@@ -69,26 +71,60 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         CommitRomCommand = new RelayCommand(CommitRom);
     }
 
+    public PokemonSelectorViewModel PokemonSelector { get; private set; }
+    public MoveSelectorViewModel MoveSelector { get; private set; }
+    public AbilitySelectorViewModel AbilitySelector { get; private set; }
+    public WarriorSkillSelectorViewModel WarriorSkillSelector { get; private set; }
+    public MoveRangeSelectorViewModel MoveRangeSelector { get; private set; }
+    public EvolutionTableViewModel EvolutionTableViewModel { get; private set; }
+    public WarriorNameTableViewModel WarriorNameTableViewModel { get; private set; }
+    public BaseWarriorSelectorViewModel BaseWarriorSelector { get; private set; }
+    public MaxLinkSelectorViewModel MaxLinkSelector { get; private set; }
+    public ScenarioWarriorSelectorViewModel ScenarioWarriorSelector { get; private set; }
+    public ScenarioPokemonSelectorViewModel ScenarioPokemonSelector { get; private set; }
+    public ScenarioAppearPokemonSelectorViewModel ScenarioAppearPokemonSelector { get; private set; }
+    public ScenarioKingdomSelectorViewModel ScenarioKingdomSelector { get; private set; }
+    public EventSpeakerSelectorViewModel EventSpeakerSelector { get; private set; }
+    public ItemSelectorViewModel ItemSelector { get; private set; }
+    public BuildingSelectorViewModel BuildingSelector { get; private set; }
+
     private void ReloadListItems()
     {
+        PokemonSelector = _container.Resolve<PokemonSelectorViewModelFactory>()(_editorContext);
+        MoveSelector = _container.Resolve<MoveSelectorViewModelFactory>()(_editorContext);
+        AbilitySelector = _container.Resolve<AbilitySelectorViewModelFactory>()(_editorContext);
+        WarriorSkillSelector = _container.Resolve<WarriorSkillSelectorViewModelFactory>()(_editorContext);
+        MoveRangeSelector = _container.Resolve<MoveRangeSelectorViewModelFactory>()(_editorContext);
+        EvolutionTableViewModel = _container.Resolve<EvolutionTableViewModelFactory>()(_editorContext);
+        WarriorNameTableViewModel = _container.Resolve<WarriorNameTableViewModelFactory>()(_editorContext);
+        BaseWarriorSelector = _container.Resolve<BaseWarriorSelectorViewModelFactory>()(_editorContext);
+        MaxLinkSelector = _container.Resolve<MaxLinkSelectorViewModelFactory>()(_editorContext);
+        ScenarioWarriorSelector = _container.Resolve<ScenarioWarriorSelectorViewModelFactory>()(_editorContext);
+        ScenarioPokemonSelector = _container.Resolve<ScenarioPokemonSelectorViewModelFactory>()(_editorContext);
+        ScenarioAppearPokemonSelector = _container.Resolve<ScenarioAppearPokemonSelectorViewModelFactory>()(_editorContext);
+        ScenarioKingdomSelector = _container.Resolve<ScenarioKingdomSelectorViewModelFactory>()(_editorContext);
+        EventSpeakerSelector = _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_editorContext);
+        ItemSelector = _container.Resolve<ItemSelectorViewModelFactory>()(_editorContext);
+        BuildingSelector = _container.Resolve<BuildingSelectorViewModelFactory>()(_editorContext);
+
         ListItems = new List<ListItem>()
         {
-            new ListItem("Pokemon", _container.Resolve<PokemonSelectorViewModelFactory>()(_dataService.Pokemon)),
-            new ListItem("Moves", _container.Resolve<MoveSelectorViewModelFactory>()(_dataService.Move)),
-            new ListItem("Abilities", _container.Resolve<AbilitySelectorViewModelFactory>()(_dataService.Ability)),
-            new ListItem("Warrior Skills", _container.Resolve<WarriorSkillSelectorViewModelFactory>()(_dataService.WarriorSkill)),
-            new ListItem("Move Ranges", _container.Resolve<MoveRangeSelectorViewModelFactory>()(_dataService.MoveRange)),
-            new ListItem("Evolution Table", _container.Resolve<EvolutionTableViewModelFactory>()(_dataService.Pokemon)),
-            new ListItem("Warrior Name Table", _container.Resolve<WarriorNameTableViewModelFactory>()(_dataService.BaseWarrior)),
-            new ListItem("Base Warrior", _container.Resolve<BaseWarriorSelectorViewModelFactory>()(_dataService.BaseWarrior)),
-            new ListItem("Max Link", _container.Resolve<MaxLinkSelectorViewModelFactory>()(_dataService.MaxLink)),
-            new ListItem("Scenario Warrior", _container.Resolve<ScenarioWarriorSelectorViewModelFactory>()(_dataService)),
-            new ListItem("Scenario Pokemon", _container.Resolve<ScenarioPokemonSelectorViewModelFactory>()(_dataService.ScenarioPokemon)),
-            new ListItem("Scenario Appear Pokemon", _container.Resolve<ScenarioAppearPokemonSelectorViewModelFactory>()(_dataService.ScenarioAppearPokemon)),
-            new ListItem("Scenario Kingdom", _container.Resolve<ScenarioKingdomSelectorViewModelFactory>()(_dataService.ScenarioKingdom)),
-            new ListItem("Event Speaker", _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_dataService.EventSpeaker)),
-            new ListItem("Items", _container.Resolve<ItemSelectorViewModelFactory>()(_dataService.Item)),
-            new ListItem("Buildings", _container.Resolve<BuildingSelectorViewModelFactory>()(_dataService.Building)),
+            new ListItem("Pokemon", PokemonSelector),
+            new ListItem("Moves", MoveSelector),
+            new ListItem("Abilities", AbilitySelector),
+            new ListItem("Warrior Skills", WarriorSkillSelector),
+            new ListItem("Move Ranges", MoveRangeSelector),
+            new ListItem("Evolution Table", EvolutionTableViewModel),
+            new ListItem("Warrior Name Table", WarriorNameTableViewModel),
+            new ListItem("Base Warrior", BaseWarriorSelector),
+            new ListItem("Max Link", MaxLinkSelector),
+            new ListItem("Scenario Warrior", ScenarioWarriorSelector),
+            new ListItem("Scenario Pokemon", ScenarioPokemonSelector),
+            new ListItem("Scenario Appear Pokemon", ScenarioAppearPokemonSelector),
+            new ListItem("Scenario Kingdom", ScenarioKingdomSelector),
+            new ListItem("Event Speaker", EventSpeakerSelector),
+            new ListItem("Items", ItemSelector),
+            new ListItem("Buildings", BuildingSelector),
         };
     }
 
@@ -160,9 +196,9 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         // block the save directly because reloading the list items triggers the CurrentVm setter
         _blockSave = true;
         // finally reload the items
-        var currentItemId = CurrentListItem.ItemName;
+        var currentItemType = CurrentVm.GetType();
         ReloadListItems();
-        _currentVm = ListItems.First(i => i.ItemName == currentItemId).ItemValue;
+        _currentVm = ListItems.First(i => i.GetType() == currentItemType).ItemValue;
         RaisePropertyChanged(nameof(CurrentVm));
         _blockSave = false;
     }

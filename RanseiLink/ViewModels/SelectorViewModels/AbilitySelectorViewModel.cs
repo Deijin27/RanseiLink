@@ -2,19 +2,19 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public delegate AbilitySelectorViewModel AbilitySelectorViewModelFactory(IAbilityService service);
+public delegate AbilitySelectorViewModel AbilitySelectorViewModelFactory(IEditorContext context);
 
 public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, IAbility, AbilityViewModel>
 {
     private readonly AbilityViewModelFactory _factory;
 
-    public AbilitySelectorViewModel(IServiceContainer container, IAbilityService dataService)
-        : base(container, dataService, EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray()) 
+    public AbilitySelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.Ability, EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray()) 
     {
         _factory = container.Resolve<AbilityViewModelFactory>();
         Selected = AbilityId.Levitate;

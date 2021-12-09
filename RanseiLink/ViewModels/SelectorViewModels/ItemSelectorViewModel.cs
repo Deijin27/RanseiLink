@@ -1,18 +1,18 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ItemSelectorViewModel ItemSelectorViewModelFactory(IItemService service);
+public delegate ItemSelectorViewModel ItemSelectorViewModelFactory(IEditorContext context);
 
 public class ItemSelectorViewModel : SelectorViewModelBase<ItemId, IItem, ItemViewModel>
 {
     private readonly ItemViewModelFactory _factory;
 
-    public ItemSelectorViewModel(IServiceContainer container, IItemService dataService)
-        : base(container, dataService) 
+    public ItemSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.Item) 
     {
         _factory = container.Resolve<ItemViewModelFactory>();
         Selected = ItemId.Potion;

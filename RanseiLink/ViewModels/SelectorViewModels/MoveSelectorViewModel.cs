@@ -1,17 +1,17 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate MoveSelectorViewModel MoveSelectorViewModelFactory(IMoveService service);
+public delegate MoveSelectorViewModel MoveSelectorViewModelFactory(IEditorContext context);
 
 public class MoveSelectorViewModel : SelectorViewModelBase<MoveId, IMove, MoveViewModel>
 {
     private readonly MoveViewModelFactory _factory;
-    public MoveSelectorViewModel(IServiceContainer container, IMoveService dataService)
-        : base(container, dataService) 
+    public MoveSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.Move) 
     { 
         _factory = container.Resolve<MoveViewModelFactory>();
         Selected = MoveId.Splash;

@@ -1,18 +1,18 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate WarriorSkillSelectorViewModel WarriorSkillSelectorViewModelFactory(IWarriorSkillService service);
+public delegate WarriorSkillSelectorViewModel WarriorSkillSelectorViewModelFactory(IEditorContext context);
 
 public class WarriorSkillSelectorViewModel : SelectorViewModelBase<WarriorSkillId, IWarriorSkill, WarriorSkillViewModel>
 {
     private readonly WarriorSkillViewModelFactory _factory;
 
-    public WarriorSkillSelectorViewModel(IServiceContainer container, IWarriorSkillService dataService)
-        : base(container, dataService) 
+    public WarriorSkillSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.WarriorSkill) 
     {
         _factory = container.Resolve<WarriorSkillViewModelFactory>();
         Selected = WarriorSkillId.Adrenaline;

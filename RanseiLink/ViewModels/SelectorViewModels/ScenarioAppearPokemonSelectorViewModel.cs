@@ -1,17 +1,17 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioAppearPokemonSelectorViewModel ScenarioAppearPokemonSelectorViewModelFactory(IScenarioAppearPokemonService service);
+public delegate ScenarioAppearPokemonSelectorViewModel ScenarioAppearPokemonSelectorViewModelFactory(IEditorContext context);
 
 public class ScenarioAppearPokemonSelectorViewModel : SelectorViewModelBase<ScenarioId, IScenarioAppearPokemon, ScenarioAppearPokemonViewModel>
 {
     private readonly ScenarioAppearPokemonViewModelFactory _factory;
-    public ScenarioAppearPokemonSelectorViewModel(IServiceContainer container, IScenarioAppearPokemonService dataService)
-        : base(container, dataService) 
+    public ScenarioAppearPokemonSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.ScenarioAppearPokemon) 
     {
         _factory = container.Resolve<ScenarioAppearPokemonViewModelFactory>();
         Selected = ScenarioId.TheLegendOfRansei;

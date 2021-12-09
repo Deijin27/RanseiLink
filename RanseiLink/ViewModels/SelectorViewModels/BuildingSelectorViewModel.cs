@@ -1,18 +1,18 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BuildingSelectorViewModel BuildingSelectorViewModelFactory(IBuildingService service);
+public delegate BuildingSelectorViewModel BuildingSelectorViewModelFactory(IEditorContext context);
 
 public class BuildingSelectorViewModel : SelectorViewModelBase<BuildingId, IBuilding, BuildingViewModel>
 {
     private readonly BuildingViewModelFactory _factory;
 
-    public BuildingSelectorViewModel(IServiceContainer container, IBuildingService dataService)
-        : base(container, dataService) 
+    public BuildingSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.Building) 
     {
         _factory = container.Resolve<BuildingViewModelFactory>();
         Selected = BuildingId.Shop_0;

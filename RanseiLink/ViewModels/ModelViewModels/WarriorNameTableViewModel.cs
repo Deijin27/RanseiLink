@@ -6,10 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate WarriorNameTableViewModel WarriorNameTableViewModelFactory(IBaseWarriorService warriorService);
+public delegate WarriorNameTableViewModel WarriorNameTableViewModelFactory(IEditorContext context);
 
 public class WarriorNameTableItem : ViewModelBase
 {
@@ -33,10 +34,10 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
     private readonly IBaseWarriorService _service;
     private IWarriorNameTable _model;
 
-    public WarriorNameTableViewModel(IServiceContainer container, IBaseWarriorService dataService)
+    public WarriorNameTableViewModel(IServiceContainer container, IEditorContext context)
     {
         _dialogService = container.Resolve<IDialogService>();
-        _service = dataService;
+        _service = context.DataService.BaseWarrior;
         Refresh();
 
         PasteCommand = new RelayCommand(Paste);

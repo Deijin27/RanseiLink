@@ -9,10 +9,11 @@ using RanseiLink.Core.Services;
 using System;
 using System.Windows.Input;
 using System.Windows;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate EvolutionTableViewModel EvolutionTableViewModelFactory(IPokemonService contextualPokemonService);
+public delegate EvolutionTableViewModel EvolutionTableViewModelFactory(IEditorContext contextualPokemonService);
 
 public class EvolutionTableItem
 {
@@ -32,10 +33,10 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
     private readonly IPokemonService _dataService;
     private IEvolutionTable _model;
 
-    public EvolutionTableViewModel(IServiceContainer container, IPokemonService pokemonService)
+    public EvolutionTableViewModel(IServiceContainer container, IEditorContext context)
     {
         _dialogService = container.Resolve<IDialogService>();
-        _dataService = pokemonService;
+        _dataService = context.DataService.Pokemon;
         Refresh();
 
         PasteCommand = new RelayCommand(Paste);

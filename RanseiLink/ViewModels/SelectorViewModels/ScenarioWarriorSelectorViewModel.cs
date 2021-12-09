@@ -2,10 +2,11 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioWarriorSelectorViewModel ScenarioWarriorSelectorViewModelFactory(IDataService service);
+public delegate ScenarioWarriorSelectorViewModel ScenarioWarriorSelectorViewModelFactory(IEditorContext context);
 
 public class ScenarioWarriorSelectorViewModel : ScenarioSelectorViewModelBase<IScenarioWarrior, ScenarioWarriorViewModel>
 {
@@ -13,12 +14,12 @@ public class ScenarioWarriorSelectorViewModel : ScenarioSelectorViewModelBase<IS
     private readonly IScenarioWarriorService _service;
     private readonly IDataService _dataService;
 
-    public ScenarioWarriorSelectorViewModel(IServiceContainer container, IDataService contextualDataService)
+    public ScenarioWarriorSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, 0, 199)
     {
         _factory = container.Resolve<ScenarioWarriorViewModelFactory>();
-        _service = contextualDataService.ScenarioWarrior;
-        _dataService = contextualDataService;
+        _service = context.DataService.ScenarioWarrior;
+        _dataService = context.DataService;
         Init();
     }
 

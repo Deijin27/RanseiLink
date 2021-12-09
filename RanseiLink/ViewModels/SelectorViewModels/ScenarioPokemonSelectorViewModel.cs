@@ -2,21 +2,22 @@
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioPokemonSelectorViewModel ScenarioPokemonSelectorViewModelFactory(IScenarioPokemonService service);
+public delegate ScenarioPokemonSelectorViewModel ScenarioPokemonSelectorViewModelFactory(IEditorContext context);
 
 public class ScenarioPokemonSelectorViewModel : ScenarioSelectorViewModelBase<IScenarioPokemon, ScenarioPokemonViewModel>
 {
     private readonly ScenarioPokemonViewModelFactory _factory;
     private readonly IScenarioPokemonService _service;
 
-    public ScenarioPokemonSelectorViewModel(IServiceContainer container, IScenarioPokemonService contextualDataService)
+    public ScenarioPokemonSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, 0, 199)
     {
         _factory = container.Resolve<ScenarioPokemonViewModelFactory>();
-        _service = contextualDataService;
+        _service = context.DataService.ScenarioPokemon;
         Init();
     }
 

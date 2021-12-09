@@ -2,20 +2,30 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
 using System.Linq;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate PokemonViewModel PokemonViewModelFactory(IPokemon model);
+public delegate PokemonViewModel PokemonViewModelFactory(IPokemon model, IEditorContext context);
 
 public class PokemonViewModel : ViewModelBase
 {
     private readonly IPokemon _model;
-    public PokemonViewModel(IPokemon model)
+    public PokemonViewModel(IPokemon model, IEditorContext context)
     {
         _model = model;
+        var jumpService = context.JumpService;
+
         UpdateEvolution();
+
+        JumpToMoveCommand = new RelayCommand<MoveId>(jumpService.JumpToMove);
+        JumpToAbilityCommand = new RelayCommand<AbilityId>(jumpService.JumpToAbility);
     }
+
+    public ICommand JumpToMoveCommand { get; }
+    public ICommand JumpToAbilityCommand { get; }
 
     public string Name
     {
@@ -226,6 +236,4 @@ public class PokemonViewModel : ViewModelBase
         get => _model.GetEncounterable(SelectedEncounterKingdom, true);
         set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(SelectedEncounterKingdom, true, v));
     }
-
-
 }

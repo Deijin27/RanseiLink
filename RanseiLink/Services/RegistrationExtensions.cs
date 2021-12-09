@@ -25,6 +25,7 @@ public static class RegistrationExtensions
         container.RegisterLazySingleton(() => new MainWindowViewModel(container));
         container.RegisterLazySingleton(() => new ModSelectionViewModel(container));
         container.RegisterSingleton<MainEditorViewModelFactory>(mod => new MainEditorViewModel(container, mod));
+        container.RegisterSingleton<EditorContextFactory>((dataService, editor) => new EditorContext(dataService, editor));
         container.RegisterSingleton<ModListItemViewModelFactory>((parent, mod) => new ModListItemViewModel(parent, mod, container));
 
         container.RegisterSingleton<AbilityViewModelFactory>(i => new AbilityViewModel(i));
@@ -35,7 +36,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
         container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
         container.RegisterSingleton<MoveViewModelFactory>(i => new MoveViewModel(container, i));
-        container.RegisterSingleton<PokemonViewModelFactory>(i => new PokemonViewModel(i));
+        container.RegisterSingleton<PokemonViewModelFactory>((i, c) => new PokemonViewModel(i, c));
         container.RegisterSingleton<ScenarioAppearPokemonViewModelFactory>(i => new ScenarioAppearPokemonViewModel(i));
         container.RegisterSingleton<ScenarioWarriorViewModelFactory>((sid, dataService, model) => new ScenarioWarriorViewModel(container, dataService, sid, model));
         container.RegisterSingleton<WarriorSkillViewModelFactory>(i => new WarriorSkillViewModel(i));
@@ -61,6 +62,5 @@ public static class RegistrationExtensions
 
         container.RegisterSingleton<ScenarioPokemonSelectorViewModelFactory>(i => new ScenarioPokemonSelectorViewModel(container, i));
         container.RegisterSingleton<ScenarioWarriorSelectorViewModelFactory>(i => new ScenarioWarriorSelectorViewModel(container, i));
-
     }
 }

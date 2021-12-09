@@ -2,19 +2,19 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.ModelServices;
 using System.Linq;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate MaxLinkSelectorViewModel MaxLinkSelectorViewModelFactory(IMaxLinkService service);
+public delegate MaxLinkSelectorViewModel MaxLinkSelectorViewModelFactory(IEditorContext context);
 
 public class MaxLinkSelectorViewModel : SelectorViewModelBase<WarriorId, IMaxLink, MaxLinkViewModel>
 {
     private readonly MaxLinkViewModelFactory _factory;
 
-    public MaxLinkSelectorViewModel(IServiceContainer container, IMaxLinkService dataService)
-        : base(container, dataService, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) 
+    public MaxLinkSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.MaxLink, EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray()) 
     { 
         _factory = container.Resolve<MaxLinkViewModelFactory>();
         Selected = WarriorId.PlayerMale_1;

@@ -58,16 +58,20 @@
             <TextBlock Text="Type2" Grid.Row="2"/>
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Type2, Mode=TwoWay}"/>
 
-            <TextBlock Text="Move" Grid.Row="3"  />
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Move" Grid.Row="3" ToolTip="Jump to selected move" 
+                    Command="{Binding JumpToMoveCommand}" CommandParameter="{Binding Move}"/>
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding MoveItems, Mode=OneTime}" SelectedItem="{Binding Move, Mode=TwoWay}"/>
 
-            <TextBlock Text="Ability1" Grid.Row="4" />
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 1" Grid.Row="4" ToolTip="Jump to selected ability" 
+                    Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability1}"/>
             <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability1, Mode=TwoWay}"/>
 
-            <TextBlock Text="Ability2" Grid.Row="5" />
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 2" Grid.Row="5" ToolTip="Jump to selected ability" 
+                    Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability2}"/>
             <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability2, Mode=TwoWay}" />
 
-            <TextBlock Text="Ability3" Grid.Row="6" />
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 3" Grid.Row="6" ToolTip="Jump to selected ability" 
+                    Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability3}"/>
             <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability3, Mode=TwoWay}"/>
 
             <TextBlock Text="HP" Grid.Row="7" />
