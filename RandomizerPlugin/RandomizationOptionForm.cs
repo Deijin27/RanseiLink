@@ -13,7 +13,7 @@ public class RandomizationOptionForm : IPluginForm
     public string Description => "Adjust the options to your choosing, then hit randomize to randomize the mod.";
 
     [StringOption("Randomization Seed", "Seed used for the randomizer. Using the same seed will give the same result")]
-    public string Seed { get; set; } = new Random().Next().ToString();
+    public string Seed { get; set; } = Guid.NewGuid().ToString("N");
 
     [BoolOption("Warrior's Pokemon", "Randomize warrior's pokemon")]
     public bool ScenarioPokemon { get; set; }
