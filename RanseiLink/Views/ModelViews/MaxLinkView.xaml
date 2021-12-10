@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance vm:MaxLinkViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}">
+    <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}">
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type vm:WarriorMaxSyncListItem}">
                 <Grid Margin="10,5,10,5">

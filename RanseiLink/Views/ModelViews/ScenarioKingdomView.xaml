@@ -10,13 +10,17 @@
              d:DataContext="{d:DesignInstance vm:ScenarioKingdomViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <TextBlock Margin="10,10,10,0" TextWrapping="Wrap">
             Army initially assigned to each kingdom. 
             These numbers correspond to the "Army" numbers on the Scenario Warrior page. 
             The leader of the army is set via the "Warrior Class" on that page.
         </TextBlock>
-        <ItemsControl Margin="10" ItemsSource="{Binding KingdomItems, Mode=OneTime}" Grid.IsSharedSizeScope="True">
+        <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding KingdomItems, Mode=OneTime}" Grid.IsSharedSizeScope="True" Style="{StaticResource ItemsControlVirtualizedStyle}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:ScenarioKingdomItem}">
                     <Grid Margin="10,5,10,5">
@@ -31,5 +35,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </StackPanel>
+    </Grid>
 </UserControl>

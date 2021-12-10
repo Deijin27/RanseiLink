@@ -7,17 +7,17 @@
              xmlns:local="clr-namespace:RanseiLink.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid d:Background="WhiteSmoke">
+    <Grid d:Background="{DynamicResource WindowBackgroundBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="90"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+        <StackPanel Margin="0,10,10,0" Grid.Column="1" VerticalAlignment="Center" Width="40">
             <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5" Height="30" Width="30" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
                     ToolTip="Copy" Command="{Binding CopyCommand}"/>
             <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5,0,5,5" Height="30" Width="30" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
@@ -25,7 +25,7 @@
             
         </StackPanel>
 
-        <GroupBox Header="Select Scenario and Entry" Padding="5">
+        <GroupBox Margin="10,10,0,0" Header="Select Scenario and Entry" Padding="5">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -45,8 +45,10 @@
 
             </Grid>
         </GroupBox>
-        
-        <ContentControl Grid.Row="3" Grid.ColumnSpan="2" Content="{Binding NestedViewModel}"/>
-        
+
+        <ScrollViewer Grid.Row="3" Grid.ColumnSpan="2">
+            <ContentControl  Content="{Binding NestedViewModel}"/>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

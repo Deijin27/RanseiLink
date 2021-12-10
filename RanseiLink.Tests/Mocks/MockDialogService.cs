@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Tests.Mocks;
 
@@ -63,5 +64,10 @@ public class MockDialogService : IDialogService
     {
         ShowMessageBoxCallCount++;
         return ShowMessageBoxResult;
+    }
+
+    public void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null)
+    {
+        throw new NotImplementedException();
     }
 }

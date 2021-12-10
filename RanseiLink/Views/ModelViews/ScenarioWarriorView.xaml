@@ -14,87 +14,98 @@
     <UserControl.Resources>
         <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
         <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
+
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        
     </UserControl.Resources>
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="20"/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="1.5*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
                     Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
-        <ComboBox ItemsSource="{Binding WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="Kingdom"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Kingdom"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
-        <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
 
-        <CheckBox x:Name="AllowScenarioPokemonEdit" Grid.Column="3" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="False" 
+        </Grid>
+        
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <CheckBox x:Name="AllowScenarioPokemonEdit" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="False" 
                   Content="Allow Editing of Scenario Pokemon Selected Entry"
                   ToolTip="Editing of selected entry is disabled by default because it's unlikely you'll need to edit it and the checkbox is a particularly annoying misclick"/>
 
-        <CheckBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Content="Scenario Pokemon" VerticalAlignment="Center" 
+            <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Scenario Pokemon" VerticalAlignment="Center" 
                   IsChecked="{Binding ScenarioPokemonIsDefault, Mode=TwoWay, Converter={StaticResource invertBoolConverter}}"
                   IsEnabled="{Binding ElementName=AllowScenarioPokemonEdit, Path=IsChecked, Mode=OneWay}"/>
-        
-        <controls:NumberBox Grid.Row="1" Grid.Column="4" Value="{Binding ScenarioPokemon, Mode=TwoWay}" >
-            <controls:NumberBox.IsEnabled>
-                <MultiBinding Mode="OneWay" Converter="{StaticResource boolAggregateAndConverter}">
-                    <Binding ElementName="AllowScenarioPokemonEdit" Path="IsChecked" Mode="OneWay"/>
-                    <Binding Path="ScenarioPokemonIsDefault" Mode="OneWay" Converter="{StaticResource invertBoolConverter}"/>
-                </MultiBinding>
-            </controls:NumberBox.IsEnabled>
-        </controls:NumberBox>
 
-        <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
-            <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
-        </GroupBox>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ScenarioPokemon, Mode=TwoWay}" >
+                <controls:NumberBox.IsEnabled>
+                    <MultiBinding Mode="OneWay" Converter="{StaticResource boolAggregateAndConverter}">
+                        <Binding ElementName="AllowScenarioPokemonEdit" Path="IsChecked" Mode="OneWay"/>
+                        <Binding Path="ScenarioPokemonIsDefault" Mode="OneWay" Converter="{StaticResource invertBoolConverter}"/>
+                    </MultiBinding>
+                </controls:NumberBox.IsEnabled>
+            </controls:NumberBox>
 
-        <GroupBox Grid.ColumnSpan="2" Grid.Column="3" Grid.Row="9" Grid.RowSpan="2" Padding="5">
-            <GroupBox.Header>
-                <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Max link between selected warrior and pokemon" Grid.Row="1" ToolTip="Jump to full max link table for selected warrior" 
+            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
+                <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
+            </GroupBox>
+
+            <GroupBox Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="9" Grid.RowSpan="2" Padding="5">
+                <GroupBox.Header>
+                    <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Max link between selected warrior and pokemon" Grid.Row="1" ToolTip="Jump to full max link table for selected warrior" 
                     Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
-            </GroupBox.Header>
-            <controls:NumberBox Value="{Binding MaxLink, Mode=TwoWay}" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}"/>
-        </GroupBox>
-        
-    </Grid>
+                </GroupBox.Header>
+                <controls:NumberBox Value="{Binding MaxLink, Mode=TwoWay}" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}"/>
+            </GroupBox>
+        </Grid>
+    </WrapPanel>
+    
 </UserControl>

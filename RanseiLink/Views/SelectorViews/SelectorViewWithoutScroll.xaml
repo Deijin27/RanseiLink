@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="RanseiLink.Views.SelectorView"
+﻿<UserControl x:Class="RanseiLink.Views.SelectorViewWithoutScroll"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,9 +19,6 @@
             <ComboBox Grid.Row="0" Height="20" ItemsSource="{Binding Items, Mode=OneTime}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
         </DockPanel>
 
-        <ScrollViewer Grid.Row="1">
-            <ContentControl Content="{Binding NestedViewModel}"/>
-        </ScrollViewer>
-        
+        <ContentControl Grid.Row="1" Content="{Binding NestedViewModel}"/>
     </Grid>
 </UserControl>

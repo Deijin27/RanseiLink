@@ -89,6 +89,9 @@
     <Compile Update="Views\SelectorViews\ScenarioSelectorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\SelectorViews\SelectorViewWithoutScroll.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -190,6 +193,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SelectorViews\ScenarioSelectorView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SelectorViews\SelectorViewWithoutScroll.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

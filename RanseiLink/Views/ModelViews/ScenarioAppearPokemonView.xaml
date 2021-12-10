@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance vm:ScenarioAppearPokemonViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ItemsControl Margin="10" ItemsSource="{Binding AppearItems, Mode=OneTime}">
+        <ItemsControl Margin="10" ItemsSource="{Binding AppearItems, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:AppearItem}">
                     <CheckBox Margin="2" IsChecked="{Binding CanAppear, Mode=TwoWay}" Content="{Binding Pokemon}"/>

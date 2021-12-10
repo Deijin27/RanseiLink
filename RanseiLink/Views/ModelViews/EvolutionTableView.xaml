@@ -16,22 +16,20 @@
             <Button Style="{StaticResource GrayHoverButtonStyle}" Height="20" Width="20" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
                     ToolTip="Paste" Command="{Binding PasteCommand}"/>
         </StackPanel>
-        <ScrollViewer>
-            <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:EvolutionTableItem}">
-                        <Grid Margin="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="30"/>
-                                <ColumnDefinition Width="10"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding Index}" TextAlignment="Right"/>
-                            <ComboBox Grid.Column="2" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedValue="{Binding Pokemon, Mode=TwoWay}"/>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:EvolutionTableItem}">
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Index}" TextAlignment="Right"/>
+                        <ComboBox Grid.Column="2" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedValue="{Binding Pokemon, Mode=TwoWay}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </DockPanel>
 </UserControl>

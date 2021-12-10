@@ -121,7 +121,7 @@
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding RankUpPokemon2, Mode=TwoWay}"/>
 
             <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="100"/>
 
             <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
                 <controls:RankUpConditionControl Condition="{Binding RankUpCondition2, Mode=TwoWay}"

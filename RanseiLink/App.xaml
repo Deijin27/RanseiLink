@@ -64,7 +64,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:MaxLinkSelectorViewModel}">
-                <views:SelectorView/>
+                <views:SelectorViewWithoutScroll/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:BaseWarriorSelectorViewModel}">
@@ -72,7 +72,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonSelectorViewModel}">
-                <views:SelectorView/>
+                <views:SelectorViewWithoutScroll/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:EventSpeakerSelectorViewModel}">
@@ -80,7 +80,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ScenarioKingdomSelectorViewModel}">
-                <views:SelectorView/>
+                <views:SelectorViewWithoutScroll/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ItemSelectorViewModel}">
