@@ -19,7 +19,17 @@
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding Pokemon}" Grid.Column="0"/>
+                    <TextBlock Text="{Binding Pokemon}" Grid.Column="0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding MaxSyncValue}" Value="100">
+                                        <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <controls:NumberBox Value="{Binding MaxSyncValue, Mode=TwoWay}" Max="100" Grid.Column="2" Width="100" HorizontalAlignment="Left"/>
                 </Grid>
             </DataTemplate>
