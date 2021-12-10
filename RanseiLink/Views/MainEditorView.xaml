@@ -32,9 +32,8 @@
                   Style="{StaticResource ListViewStyle1}" 
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
                   Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
-                  ItemsSource="{Binding ListItems}" 
-                  SelectedItem="{Binding CurrentListItem, Mode=OneWayToSource}"
-                  SelectedValue="{Binding CurrentVm}" 
+                  ItemsSource="{Binding ListItems}"
+                  SelectedValue="{Binding CurrentPage}" 
                   SelectedValuePath="ItemValue">
             <ListView.ItemTemplate>
                 <DataTemplate>

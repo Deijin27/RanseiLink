@@ -47,9 +47,13 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
         get => _selected;
         set
         {
-            Save();
-            _selected = value;
-            Refresh();
+            if (!_selected.Equals(value))
+            {
+                Save();
+                _selected = value;
+                Refresh();
+                RaisePropertyChanged();
+            }
         }
     }
 

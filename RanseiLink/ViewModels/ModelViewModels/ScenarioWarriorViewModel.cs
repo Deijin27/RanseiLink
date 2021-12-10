@@ -2,29 +2,39 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
+using RanseiLink.Services;
 using System.Linq;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioWarriorViewModel ScenarioWarriorViewModelFactory(ScenarioId scenarioId, IDataService dataService, IScenarioWarrior model);
+public delegate ScenarioWarriorViewModel ScenarioWarriorViewModelFactory(ScenarioId scenarioId, IEditorContext context, IScenarioWarrior model);
 
 public class ScenarioWarriorViewModel : ViewModelBase, ISaveable
 {
+    private readonly IEditorContext _context;
     private readonly IDataService _dataService;
     private readonly ScenarioId _scenario;
     private readonly IScenarioWarrior _model;
     private readonly ScenarioPokemonViewModelFactory _scenarioPokemonVmFactory;
     private IScenarioPokemon _currentScenarioPokemon;
 
-    public ScenarioWarriorViewModel(IServiceContainer container, IDataService service, ScenarioId scenario, IScenarioWarrior model)
+    public ScenarioWarriorViewModel(IServiceContainer container, IEditorContext context, ScenarioId scenario, IScenarioWarrior model)
     {
-        _dataService = service;
+        _context = context;
+        _dataService = context.DataService;
         _scenario = scenario;
         _model = model;
         _scenarioPokemonVmFactory = container.Resolve<ScenarioPokemonViewModelFactory>();
         UpdateEmbedded();
+
+        var jumpService = context.JumpService;
+        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
+        JumpToMaxLinkCommand = new RelayCommand<WarriorId>(jumpService.JumpToMaxLink);
     }
 
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToMaxLinkCommand { get; }
 
     public WarriorId[] WarriorItems { get; } = EnumUtil.GetValues<WarriorId>().ToArray();
 
@@ -119,7 +129,7 @@ public class ScenarioWarriorViewModel : ViewModelBase, ISaveable
         else
         {
             _currentScenarioPokemon = _dataService.ScenarioPokemon.Retrieve(_scenario, (int)ScenarioPokemon);
-            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon);
+            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon, _context);
             RaisePropertyChanged(nameof(MaxLink));
         }
     }

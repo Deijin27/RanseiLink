@@ -29,20 +29,20 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ModListItemViewModelFactory>((parent, mod) => new ModListItemViewModel(parent, mod, container));
 
         container.RegisterSingleton<AbilityViewModelFactory>(i => new AbilityViewModel(i));
-        container.RegisterSingleton<BaseWarriorViewModelFactory>(i => new BaseWarriorViewModel(i));
+        container.RegisterSingleton<BaseWarriorViewModelFactory>((i, c) => new BaseWarriorViewModel(i, c));
         container.RegisterSingleton<BuildingViewModelFactory>(i => new BuildingViewModel(i));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
         container.RegisterSingleton<ItemViewModelFactory>(i => new ItemViewModel(i));
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
         container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
-        container.RegisterSingleton<MoveViewModelFactory>(i => new MoveViewModel(container, i));
+        container.RegisterSingleton<MoveViewModelFactory>((i, c) => new MoveViewModel(container, i, c));
         container.RegisterSingleton<PokemonViewModelFactory>((i, c) => new PokemonViewModel(i, c));
         container.RegisterSingleton<ScenarioAppearPokemonViewModelFactory>(i => new ScenarioAppearPokemonViewModel(i));
         container.RegisterSingleton<ScenarioWarriorViewModelFactory>((sid, dataService, model) => new ScenarioWarriorViewModel(container, dataService, sid, model));
         container.RegisterSingleton<WarriorSkillViewModelFactory>(i => new WarriorSkillViewModel(i));
         
         container.RegisterSingleton<ScenarioKingdomViewModelFactory>(i => new ScenarioKingdomViewModel(i));
-        container.RegisterSingleton<ScenarioPokemonViewModelFactory>(model => new ScenarioPokemonViewModel(model));
+        container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c) => new ScenarioPokemonViewModel(model, c));
         
         container.RegisterSingleton<WarriorNameTableViewModelFactory>(i => new WarriorNameTableViewModel(container, i));
         container.RegisterSingleton<EvolutionTableViewModelFactory>(i => new EvolutionTableViewModel(container, i));

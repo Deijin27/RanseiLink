@@ -91,10 +91,14 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             Save();
             try
             {
-                _currentModel = RetrieveModel(SelectedScenario, value);
-                var vm = NewViewModel(SelectedScenario, _currentModel);
-                NestedViewModel = vm;
-                _selectedItem = value;
+                if (value != _selectedItem)
+                {
+                    _currentModel = RetrieveModel(SelectedScenario, value);
+                    var vm = NewViewModel(SelectedScenario, _currentModel);
+                    NestedViewModel = vm;
+                    _selectedItem = value;
+                    RaisePropertyChanged();
+                }
             }
             catch (Exception e)
             {
@@ -118,10 +122,14 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             Save();
             try
             {
-                _currentModel = RetrieveModel(value, SelectedItem);
-                var vm = NewViewModel(value, _currentModel);
-                NestedViewModel = vm;
-                _selectedScenario = value;
+                if (_selectedScenario != value)
+                {
+                    _currentModel = RetrieveModel(value, SelectedItem);
+                    var vm = NewViewModel(value, _currentModel);
+                    NestedViewModel = vm;
+                    _selectedScenario = value;
+                    RaisePropertyChanged();
+                }
             }
             catch (Exception e)
             {

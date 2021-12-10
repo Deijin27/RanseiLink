@@ -1,20 +1,31 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
 using System.Linq;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BaseWarriorViewModel BaseWarriorViewModelFactory(IBaseWarrior model);
+public delegate BaseWarriorViewModel BaseWarriorViewModelFactory(IBaseWarrior model, IEditorContext context);
 
 public class BaseWarriorViewModel : ViewModelBase
 {
     private readonly IBaseWarrior _model;
 
-    public BaseWarriorViewModel(IBaseWarrior model)
+    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context)
     {
         _model = model;
+        var jumpService = context.JumpService;
+
+        JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);
+        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
+        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
     }
+
+    public ICommand JumpToWarriorSkillCommand { get; }
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToPokemonCommand { get; }
     
     public WarriorSpriteId[] SpriteItems { get; } = EnumUtil.GetValues<WarriorSpriteId>().ToArray();
 

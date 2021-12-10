@@ -12,16 +12,18 @@ public class ScenarioPokemonSelectorViewModel : ScenarioSelectorViewModelBase<IS
 {
     private readonly ScenarioPokemonViewModelFactory _factory;
     private readonly IScenarioPokemonService _service;
+    private readonly IEditorContext _context;
 
     public ScenarioPokemonSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, 0, 199)
     {
+        _context = context;
         _factory = container.Resolve<ScenarioPokemonViewModelFactory>();
         _service = context.DataService.ScenarioPokemon;
         Init();
     }
 
-    protected override ScenarioPokemonViewModel NewViewModel(ScenarioId scenarioId, IScenarioPokemon model) => _factory(model);
+    protected override ScenarioPokemonViewModel NewViewModel(ScenarioId scenarioId, IScenarioPokemon model) => _factory(model, _context);
 
     protected override IScenarioPokemon RetrieveModel(ScenarioId scenario, uint index)
     {

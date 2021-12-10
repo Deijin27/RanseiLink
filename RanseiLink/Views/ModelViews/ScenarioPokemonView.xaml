@@ -45,10 +45,12 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <TextBlock Text="Pokemon" Grid.Row="0" />
+        <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Pokemon" Grid.Row="0" ToolTip="Jump to selected pokemon" 
+                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding Pokemon}"/>
         <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding Pokemon, Mode=TwoWay}"/>
 
-        <TextBlock Text="Ability" Grid.Row="1" />
+        <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability" Grid.Row="1" ToolTip="Jump to selected ability" 
+                    Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability}"/>
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
 
         <TextBlock Text="HP IV" Grid.Row="2" />

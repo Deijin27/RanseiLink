@@ -1,20 +1,29 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
 using System.Linq;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioPokemonViewModel ScenarioPokemonViewModelFactory(IScenarioPokemon model);
+public delegate ScenarioPokemonViewModel ScenarioPokemonViewModelFactory(IScenarioPokemon model, IEditorContext context);
 
 public class ScenarioPokemonViewModel : ViewModelBase
 {
     private readonly IScenarioPokemon _model;
 
-    public ScenarioPokemonViewModel(IScenarioPokemon model)
+    public ScenarioPokemonViewModel(IScenarioPokemon model, IEditorContext context)
     {
         _model = model;
+
+        var jumpService = context.JumpService;
+        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
+        JumpToAbilityCommand = new RelayCommand<AbilityId>(jumpService.JumpToAbility);
     }
+
+    public ICommand JumpToPokemonCommand { get; }
+    public ICommand JumpToAbilityCommand { get; }
 
     public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
     public AbilityId[] AbilityItems { get; } = EnumUtil.GetValues<AbilityId>().ToArray();

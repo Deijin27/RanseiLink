@@ -59,7 +59,7 @@ public class ModListItemViewModel : ViewModelBase
             text.Report("Patching rom...");
             try
             {
-                _modService.Commit(mod, romPath);
+                await Task.Run(() => _modService.Commit(mod, romPath));
             }
             catch (Exception e)
             {
@@ -92,7 +92,7 @@ public class ModListItemViewModel : ViewModelBase
             text.Report("Exporting mod...");
             try
             {
-                _modService.Export(mod, folder);
+                await Task.Run(() => _modService.Export(mod, folder));
             }
             catch (Exception e)
             {
@@ -123,7 +123,7 @@ public class ModListItemViewModel : ViewModelBase
         _dialogService.ProgressDialog(async (text, number) =>
         {
             text.Report("Editing mod info...");
-            _modService.Update(mod);
+            await Task.Run(() => _modService.Update(mod));
             number.Report(50);
             text.Report("Updating mod list...");
             _parentVm.RefreshModItems();
@@ -145,7 +145,7 @@ public class ModListItemViewModel : ViewModelBase
             ModInfo newMod;
             try
             {
-                newMod = _modService.CreateBasedOn(mod, newModInfo.Name, newModInfo.Version, newModInfo.Author);
+                newMod = await Task.Run(() => _modService.CreateBasedOn(mod, newModInfo.Name, newModInfo.Version, newModInfo.Author));
             }
             catch (Exception e)
             {
@@ -180,7 +180,7 @@ public class ModListItemViewModel : ViewModelBase
         _dialogService.ProgressDialog(async (text, number) =>
         {
             text.Report("Deleting mod...");
-            _modService.Delete(mod);
+            await Task.Run(() => _modService.Delete(mod));
             text.Report("Updating mod list");
             number.Report(90);
             _parentVm.ModItems.Remove(this);

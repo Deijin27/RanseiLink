@@ -10,9 +10,29 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public record ListItem(string ItemName, ISaveableRefreshable ItemValue);
+public record ListItem(string ItemName, MainEditorPage ItemValue);
 
 public delegate MainEditorViewModel MainEditorViewModelFactory(ModInfo mod);
+
+public enum MainEditorPage
+{
+    Pokemon,
+    Move,
+    Ability,
+    WarriorSkill,
+    MoveRange,
+    EvolutionTable,
+    WarriorNameTable,
+    BaseWarrior,
+    MaxLink,
+    ScenarioWarrior,
+    ScenarioPokemon,
+    ScenarioAppearPokemon,
+    ScenarioKingdom,
+    EventSpeaker,
+    Item,
+    Building,
+}
 
 public class MainEditorViewModel : ViewModelBase, ISaveable
 {
@@ -30,26 +50,29 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         get => _currentVm;
         set
         {
-            if (_currentVm != value)
+            Save();
+            _currentVm = value;
+            _currentVm?.Refresh();
+            RaisePropertyChanged();
+        }
+    }
+
+    private MainEditorPage _currentPage = MainEditorPage.Pokemon;
+    public MainEditorPage CurrentPage
+    {
+        get => _currentPage;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _currentPage, value))
             {
-                Save();
-                _currentVm = value;
-                _currentVm?.Refresh();
-                RaisePropertyChanged();
+                CurrentVm = SelectViewModel(value);
             }
         }
     }
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
-
     public ModInfo Mod { get; }
-
-    private IList<ListItem> _listItems;
-    public IList<ListItem> ListItems
-    {
-        get => _listItems;
-        set => RaiseAndSetIfChanged(ref _listItems, value);
-    }
+    public IList<ListItem> ListItems { get; }
 
     public MainEditorViewModel(IServiceContainer container, ModInfo mod)
     {
@@ -65,10 +88,32 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         _dataService = dataServiceFactory(Mod);
         _editorContext = editorContextFactory(_dataService, this);
 
-        ReloadListItems();
+        ListItems = new List<ListItem>()
+        {
+            new ListItem("Pokemon", MainEditorPage.Pokemon),
+            new ListItem("Moves", MainEditorPage.Move),
+            new ListItem("Abilities", MainEditorPage.Ability),
+            new ListItem("Warrior Skills", MainEditorPage.WarriorSkill),
+            new ListItem("Move Ranges", MainEditorPage.MoveRange),
+            new ListItem("Evolution Table", MainEditorPage.EvolutionTable),
+            new ListItem("Warrior Name Table", MainEditorPage.WarriorNameTable),
+            new ListItem("Base Warrior", MainEditorPage.BaseWarrior),
+            new ListItem("Max Link", MainEditorPage.MaxLink),
+            new ListItem("Scenario Warrior", MainEditorPage.ScenarioWarrior),
+            new ListItem("Scenario Pokemon", MainEditorPage.ScenarioPokemon),
+            new ListItem("Scenario Appear Pokemon", MainEditorPage.ScenarioAppearPokemon),
+            new ListItem("Scenario Kingdom", MainEditorPage.ScenarioKingdom),
+            new ListItem("Event Speaker", MainEditorPage.EventSpeaker),
+            new ListItem("Items", MainEditorPage.Item),
+            new ListItem("Buildings", MainEditorPage.Building),
+        };
 
-        CurrentVm = ListItems[0].ItemValue;
+        ReloadViewModels();
+        CurrentVm = SelectViewModel(_currentPage);
+
         CommitRomCommand = new RelayCommand(CommitRom);
+
+        
     }
 
     public PokemonSelectorViewModel PokemonSelector { get; private set; }
@@ -88,7 +133,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     public ItemSelectorViewModel ItemSelector { get; private set; }
     public BuildingSelectorViewModel BuildingSelector { get; private set; }
 
-    private void ReloadListItems()
+    private void ReloadViewModels()
     {
         PokemonSelector = _container.Resolve<PokemonSelectorViewModelFactory>()(_editorContext);
         MoveSelector = _container.Resolve<MoveSelectorViewModelFactory>()(_editorContext);
@@ -106,34 +151,35 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         EventSpeakerSelector = _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_editorContext);
         ItemSelector = _container.Resolve<ItemSelectorViewModelFactory>()(_editorContext);
         BuildingSelector = _container.Resolve<BuildingSelectorViewModelFactory>()(_editorContext);
+    }
 
-        ListItems = new List<ListItem>()
+    private ISaveableRefreshable SelectViewModel(MainEditorPage id)
+    {
+        return id switch
         {
-            new ListItem("Pokemon", PokemonSelector),
-            new ListItem("Moves", MoveSelector),
-            new ListItem("Abilities", AbilitySelector),
-            new ListItem("Warrior Skills", WarriorSkillSelector),
-            new ListItem("Move Ranges", MoveRangeSelector),
-            new ListItem("Evolution Table", EvolutionTableViewModel),
-            new ListItem("Warrior Name Table", WarriorNameTableViewModel),
-            new ListItem("Base Warrior", BaseWarriorSelector),
-            new ListItem("Max Link", MaxLinkSelector),
-            new ListItem("Scenario Warrior", ScenarioWarriorSelector),
-            new ListItem("Scenario Pokemon", ScenarioPokemonSelector),
-            new ListItem("Scenario Appear Pokemon", ScenarioAppearPokemonSelector),
-            new ListItem("Scenario Kingdom", ScenarioKingdomSelector),
-            new ListItem("Event Speaker", EventSpeakerSelector),
-            new ListItem("Items", ItemSelector),
-            new ListItem("Buildings", BuildingSelector),
+            MainEditorPage.Pokemon => PokemonSelector,
+            MainEditorPage.Move => MoveSelector,
+            MainEditorPage.Ability => AbilitySelector,
+            MainEditorPage.WarriorSkill => WarriorSkillSelector,
+            MainEditorPage.MoveRange => MoveRangeSelector,
+            MainEditorPage.EvolutionTable => EvolutionTableViewModel,
+            MainEditorPage.WarriorNameTable => WarriorNameTableViewModel,
+            MainEditorPage.BaseWarrior => BaseWarriorSelector,
+            MainEditorPage.MaxLink => MaxLinkSelector,
+            MainEditorPage.ScenarioWarrior => ScenarioWarriorSelector,
+            MainEditorPage.ScenarioPokemon => ScenarioPokemonSelector,
+            MainEditorPage.ScenarioAppearPokemon => ScenarioAppearPokemonSelector,
+            MainEditorPage.ScenarioKingdom => ScenarioKingdomSelector,
+            MainEditorPage.EventSpeaker => EventSpeakerSelector,
+            MainEditorPage.Item => ItemSelector,
+            MainEditorPage.Building => BuildingSelector,
+            _ => throw new ArgumentException($"Invalid {nameof(MainEditorPage)} enum value"),
         };
     }
 
     public void Save()
     {
-        if (!_blockSave)
-        {
-            CurrentVm?.Save();
-        }
+        CurrentVm?.Save();
     }
 
     private void CommitRom()
@@ -152,7 +198,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             text.Report("Patching rom...");
             try
             {
-                _modService.Commit(Mod, romPath);
+                await Task.Run(() => _modService.Commit(Mod, romPath));
             }
             catch (Exception e)
             {
@@ -173,8 +219,6 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
     }
 
-    private bool _blockSave = false;
-
     private void RunPlugin(PluginInfo chosen)
     {
         // first save
@@ -193,14 +237,9 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 type: MessageBoxType.Error
                 ));
         }
-        // block the save directly because reloading the list items triggers the CurrentVm setter
-        _blockSave = true;
-        // finally reload the items
-        var currentItemType = CurrentVm.GetType();
-        ReloadListItems();
-        _currentVm = ListItems.First(i => i.GetType() == currentItemType).ItemValue;
-        RaisePropertyChanged(nameof(CurrentVm));
-        _blockSave = false;
+        ReloadViewModels();
+        _currentVm = null;
+        CurrentVm = SelectViewModel(_currentPage);
     }
 
     public PluginInfo SelectedPlugin

@@ -15,14 +15,14 @@ public enum MoveAnimationPreviewMode
     Impact,
 }
 
-public delegate MoveViewModel MoveViewModelFactory(IMove model);
+public delegate MoveViewModel MoveViewModelFactory(IMove model, IEditorContext context);
 
 public class MoveViewModel : ViewModelBase
 {
     private readonly IExternalService _externalService;
     private readonly IMove _model;
 
-    public MoveViewModel(IServiceContainer container, IMove model)
+    public MoveViewModel(IServiceContainer container, IMove model, IEditorContext context)
     {
         _externalService = container.Resolve<IExternalService>();
 
@@ -34,7 +34,12 @@ public class MoveViewModel : ViewModelBase
 
         _model = model;
         UpdatePreviewAnimation();
+
+        var jumpService = context.JumpService;
+        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(jumpService.JumpToMoveRange);
     }
+
+    public ICommand JumpToMoveRangeCommand { get; }
 
     public string Name
     {

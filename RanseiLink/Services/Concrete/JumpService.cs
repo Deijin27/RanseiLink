@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.ViewModels;
+using System.Linq;
 
 namespace RanseiLink.Services.Concrete;
 
@@ -14,97 +15,145 @@ internal class JumpService : IJumpService
 
     public void JumpToAbility(AbilityId id)
     {
-        _mainEditor.AbilitySelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.AbilitySelector;
+        if (_mainEditor.AbilitySelector.Items.Contains(id))
+        {
+            _mainEditor.AbilitySelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.Ability;
+        }
     }
 
     public void JumpToBaseWarrior(WarriorId id)
     {
-        _mainEditor.BaseWarriorSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.BaseWarriorSelector;
+        if (_mainEditor.BaseWarriorSelector.Items.Contains(id))
+        {
+            _mainEditor.BaseWarriorSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.BaseWarrior;
+        }
     }
 
     public void JumpToBuilding(BuildingId id)
     {
-        _mainEditor.BuildingSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.BuildingSelector;
+        if (_mainEditor.BuildingSelector.Items.Contains(id))
+        {
+            _mainEditor.BuildingSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.Building;
+        }
     }
 
     public void JumpToEventSpeaker(EventSpeakerId id)
     {
-        _mainEditor.EventSpeakerSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.EventSpeakerSelector;
+        if (_mainEditor.EventSpeakerSelector.Items.Contains(id))
+        {
+            _mainEditor.EventSpeakerSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.EventSpeaker;
+        }
     }
 
     public void JumpToEvolutionTable()
     {
-        _mainEditor.CurrentVm = _mainEditor.EvolutionTableViewModel;
+        _mainEditor.CurrentPage = MainEditorPage.EvolutionTable;
     }
 
     public void JumpToItem(ItemId id)
     {
-        _mainEditor.ItemSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.ItemSelector;
+        if (_mainEditor.ItemSelector.Items.Contains(id))
+        {
+            _mainEditor.ItemSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.Item;
+        }
     }
 
     public void JumpToMaxLink(WarriorId id)
     {
-        _mainEditor.MaxLinkSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.MaxLinkSelector;
+        if (_mainEditor.MaxLinkSelector.Items.Contains(id))
+        {
+            _mainEditor.MaxLinkSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.MaxLink;
+        }
     }
 
     public void JumpToMove(MoveId id)
     {
-        _mainEditor.MoveSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.MoveSelector;
+        if (_mainEditor.MoveSelector.Items.Contains(id))
+        {
+            _mainEditor.MoveSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.Move;
+        }
     }
 
     public void JumpToMoveRange(MoveRangeId id)
     {
-        _mainEditor.MoveRangeSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.MoveRangeSelector;
+        if (_mainEditor.MoveRangeSelector.Items.Contains(id))
+        {
+            _mainEditor.MoveRangeSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.MoveRange;
+        }
     }
 
     public void JumpToPokemon(PokemonId id)
     {
-        _mainEditor.PokemonSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.PokemonSelector;
+        if (_mainEditor.PokemonSelector.Items.Contains(id))
+        {
+            _mainEditor.PokemonSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.Pokemon;
+        }
     }
 
     public void JumpToScenarioAppearPokemon(ScenarioId id)
     {
-        _mainEditor.ScenarioAppearPokemonSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.ScenarioAppearPokemonSelector;
+        if (_mainEditor.ScenarioAppearPokemonSelector.Items.Contains(id))
+        {
+            _mainEditor.ScenarioAppearPokemonSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.ScenarioAppearPokemon;
+        }
     }
 
     public void JumpToScenarioKingdom(ScenarioId id)
     {
-        _mainEditor.ScenarioKingdomSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.ScenarioKingdomSelector;
+        if (_mainEditor.ScenarioKingdomSelector.Items.Contains(id))
+        {
+            _mainEditor.ScenarioKingdomSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.ScenarioKingdom;
+        }
     }
 
     public void JumpToScenarioPokemon(ScenarioId scenario, uint id)
     {
-        _mainEditor.ScenarioPokemonSelector.SelectedScenario = scenario;
-        _mainEditor.ScenarioPokemonSelector.SelectedItem = id;
-        _mainEditor.CurrentVm = _mainEditor.ScenarioPokemonSelector;
+        var selector = _mainEditor.ScenarioPokemonSelector;
+        if (selector.ScenarioItems.Contains(scenario)
+            && selector.MinIndex <= id
+            && selector.MaxIndex >= id)
+        {
+            selector.SelectedScenario = scenario;
+            selector.SelectedItem = id;
+            _mainEditor.CurrentPage = MainEditorPage.ScenarioPokemon;
+        }
     }
 
     public void JumpToScenarioWarrior(ScenarioId scenario, uint id)
     {
-        _mainEditor.ScenarioWarriorSelector.SelectedScenario = scenario;
-        _mainEditor.ScenarioWarriorSelector.SelectedItem = id;
-        _mainEditor.CurrentVm = _mainEditor.ScenarioWarriorSelector;
+        var selector = _mainEditor.ScenarioWarriorSelector;
+        if (selector.ScenarioItems.Contains(scenario)
+            && selector.MinIndex <= id
+            && selector.MaxIndex >= id)
+        {
+            selector.SelectedScenario = scenario;
+            selector.SelectedItem = id;
+            _mainEditor.CurrentPage = MainEditorPage.ScenarioWarrior;
+        }
     }
 
     public void JumpToWarriorNameTable()
     {
-        _mainEditor.CurrentVm = _mainEditor.WarriorNameTableViewModel;
+        _mainEditor.CurrentPage = MainEditorPage.WarriorNameTable;
     }
 
     public void JumpToWarriorSkill(WarriorSkillId id)
     {
-        _mainEditor.WarriorSkillSelector.Selected = id;
-        _mainEditor.CurrentVm = _mainEditor.WarriorSkillSelector;
+        if (_mainEditor.WarriorSkillSelector.Items.Contains(id))
+        {
+            _mainEditor.WarriorSkillSelector.Selected = id;
+            _mainEditor.CurrentPage = MainEditorPage.WarriorSkill;
+        }
     }
 }

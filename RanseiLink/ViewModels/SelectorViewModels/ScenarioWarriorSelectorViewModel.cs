@@ -12,18 +12,18 @@ public class ScenarioWarriorSelectorViewModel : ScenarioSelectorViewModelBase<IS
 {
     private readonly ScenarioWarriorViewModelFactory _factory;
     private readonly IScenarioWarriorService _service;
-    private readonly IDataService _dataService;
+    private readonly IEditorContext _context;
 
     public ScenarioWarriorSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, 0, 199)
     {
+        _context = context;
         _factory = container.Resolve<ScenarioWarriorViewModelFactory>();
         _service = context.DataService.ScenarioWarrior;
-        _dataService = context.DataService;
         Init();
     }
 
-    protected override ScenarioWarriorViewModel NewViewModel(ScenarioId scenarioId, IScenarioWarrior model) => _factory(scenarioId, _dataService, model);
+    protected override ScenarioWarriorViewModel NewViewModel(ScenarioId scenarioId, IScenarioWarrior model) => _factory(scenarioId, _context, model);
 
     protected override IScenarioWarrior RetrieveModel(ScenarioId scenario, uint index)
     {

@@ -77,7 +77,8 @@
             <TextBlock Text="Accuracy" Grid.Row="7" />
             <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Accuracy}" Max="127"/>
 
-            <TextBlock Text="Range" Grid.Row="8"/>
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Range" Grid.Row="8" ToolTip="Jump to selected move range" 
+                    Command="{Binding JumpToMoveRangeCommand}" CommandParameter="{Binding Range}"/>
             <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding RangeItems, Mode=OneTime}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
 
             <TextBlock Text="Effect 1" Grid.Row="9"/>
