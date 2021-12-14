@@ -22,7 +22,8 @@
         <ResourceDictionary Source="ControlStyles/ScrollBar.xaml"/>
         <ResourceDictionary Source="ControlStyles/TextBox.xaml"/>
         <ResourceDictionary Source="ControlStyles/ToolTip.xaml"/>
-        
+        <ResourceDictionary Source="ControlStyles/DataGrid.xaml"/>
+
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type TextBlock}">

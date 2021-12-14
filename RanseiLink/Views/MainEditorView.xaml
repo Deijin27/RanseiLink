@@ -10,6 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="420" d:DesignWidth="800">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter.BoolToVisibility"/>
         <vc:InvertBoolToVisibilityConverter x:Key="Converter.InvertBoolToVisibility"/>
         <vc:InvertBoolConverter x:Key="Converter.InvertBool" />
     </UserControl.Resources>
@@ -23,10 +24,12 @@
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
+        
         <Grid Grid.Column="1" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
             <ContentControl Content="{Binding CurrentVm}" Margin="0"/>
         </Grid>
         <controls:ModInfoControl ModInfo="{Binding Mod}"/>
+        
         <ListView x:Name="editorListView" 
                   Visibility="{Binding PluginPopupOpen, Converter={StaticResource Converter.InvertBoolToVisibility}}" 
                   Style="{StaticResource ListViewStyle1}" 

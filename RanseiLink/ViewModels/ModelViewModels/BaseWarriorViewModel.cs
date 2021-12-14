@@ -1,48 +1,33 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Services;
-using System.Linq;
+using System;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
 public delegate BaseWarriorViewModel BaseWarriorViewModelFactory(IBaseWarrior model, IEditorContext context);
 
-public class BaseWarriorViewModel : ViewModelBase
+public abstract class BaseWarriorViewModelBase : ViewModelBase
 {
-    private readonly IBaseWarrior _model;
+    protected readonly IBaseWarrior _model;
 
-    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context)
+    public BaseWarriorViewModelBase(IBaseWarrior model)
     {
         _model = model;
-        var jumpService = context.JumpService;
-
-        JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);
-        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
-        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
     }
-
-    public ICommand JumpToWarriorSkillCommand { get; }
-    public ICommand JumpToBaseWarriorCommand { get; }
-    public ICommand JumpToPokemonCommand { get; }
-    
-    public WarriorSpriteId[] SpriteItems { get; } = EnumUtil.GetValues<WarriorSpriteId>().ToArray();
 
     public WarriorSpriteId Sprite
     {
         get => _model.Sprite;
         set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
     }
-    public WarriorSprite2Id[] Sprite2Items { get; } = EnumUtil.GetValues<WarriorSprite2Id>().ToArray();
-
+    
     public WarriorSprite2Id Sprite_Unknown
     {
         get => _model.Sprite_Unknown;
         set => RaiseAndSetIfChanged(_model.Sprite_Unknown, value, v => _model.Sprite_Unknown = v);
     }
-
-    public GenderId[] GenderItems { get; } = EnumUtil.GetValues<GenderId>().ToArray();
 
     public GenderId Gender
     {
@@ -55,8 +40,6 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.WarriorName;
         set => RaiseAndSetIfChanged(_model.WarriorName, value, v => _model.WarriorName = v);
     }
-
-    public TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
 
     public TypeId Speciality1
     {
@@ -82,15 +65,11 @@ public class BaseWarriorViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Weakness2, value, v => _model.Weakness2 = v);
     }
 
-    public WarriorSkillId[] WarriorSkillItems { get; } = EnumUtil.GetValues<WarriorSkillId>().ToArray();
-
     public WarriorSkillId Skill
     {
         get => _model.Skill;
         set => RaiseAndSetIfChanged(_model.Skill, value, v => _model.Skill = v);
     }
-
-    public WarriorId[] WarriorItems { get; } = EnumUtil.GetValues<WarriorId>().ToArray();
 
     public WarriorId RankUp
     {
@@ -122,8 +101,6 @@ public class BaseWarriorViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Capacity, value, v => _model.Capacity = v);
     }
 
-    public PokemonId[] PokemonItems { get; } = EnumUtil.GetValues<PokemonId>().ToArray();
-
     public PokemonId RankUpPokemon1
     {
         get => _model.RankUpPokemon1;
@@ -142,7 +119,22 @@ public class BaseWarriorViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.RankUpLink, value, v => _model.RankUpLink = value);
     }
 
-    public RankUpConditionId[] RankUpConditionItems { get; } = EnumUtil.GetValues<RankUpConditionId>().ToArray();
+}
+
+public class BaseWarriorViewModel : BaseWarriorViewModelBase
+{
+    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context) : base(model)
+    {
+        var jumpService = context.JumpService;
+
+        JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);
+        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
+        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
+    }
+
+    public ICommand JumpToWarriorSkillCommand { get; }
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToPokemonCommand { get; }
 
     public RankUpConditionId RankUpCondition1
     {
@@ -166,5 +158,64 @@ public class BaseWarriorViewModel : ViewModelBase
     {
         get => _model.Quantity2ForRankUpCondition;
         set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
+    }
+
+}
+
+public class BaseWarriorGridItemViewModel : BaseWarriorViewModelBase
+{
+    public BaseWarriorGridItemViewModel(WarriorId id, IBaseWarrior model) : base(model)
+    {
+        Id = id;
+    }
+
+    public WarriorId Id { get; }
+
+    public RankUpConditionId RankUpCondition
+    {
+        get => _model.RankUpCondition2;
+    }
+
+    public string Quantity1ForRankUpCondition
+    {
+        get => FormatQuantity(RankUpCondition, _model.Quantity1ForRankUpCondition);
+    }
+
+    public string Quantity2ForRankUpCondition
+    {
+        get => FormatQuantity(RankUpCondition, _model.Quantity2ForRankUpCondition);
+    }
+
+    private string FormatQuantity(RankUpConditionId id, uint quantity)
+    {
+        switch (id)
+        {
+            case RankUpConditionId.Unknown:
+            case RankUpConditionId.NoCondition:
+            case RankUpConditionId.Unused_1:
+            case RankUpConditionId.Unused_2:
+            case RankUpConditionId.Unused_3:
+            case RankUpConditionId.Unused_4:
+                return $"{quantity}";
+
+            case RankUpConditionId.AtLeastNFemaleWarlordsInSameKingdom:
+            case RankUpConditionId.AtLeastNGalleryPokemon:
+            case RankUpConditionId.AtLeastNGalleryWarriors:
+                return $"{quantity}";
+
+            case RankUpConditionId.AfterCompletingEpisode:
+            case RankUpConditionId.DuringEpisode:
+                return $"{(EpisodeId)quantity}";
+
+            case RankUpConditionId.MonotypeGallery:
+                return $"{(TypeId)quantity}";
+
+            case RankUpConditionId.WarriorInSameArmyNotNearby:
+            case RankUpConditionId.WarriorInSameKingdom:
+                return $"{(WarriorLineId)quantity}";
+
+            default:
+                throw new ArgumentException($"Unexpeted {nameof(RankUpConditionId)}");
+        }
     }
 }

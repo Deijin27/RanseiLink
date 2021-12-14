@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
@@ -52,22 +53,22 @@
         <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Duration, Mode=TwoWay}" Max="7"/>
 
         <TextBlock Text="Target" Grid.Row="2"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding TargetItems, Mode=OneTime}" SelectedItem="{Binding Target, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSkillTargetItems}" SelectedItem="{Binding Target, Mode=TwoWay}"/>
 
         <TextBlock Text="Effect1" Grid.Row="3"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding EffectItems, Mode=OneTime}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSkillEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
 
         <TextBlock Text="Effect1 Amount" Grid.Row="4" />
         <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Effect1Amount, Mode=TwoWay}" Max="255"/>
 
         <TextBlock Text="Effect2" Grid.Row="5"/>
-        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding EffectItems, Mode=OneTime}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSkillEffectItems}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
 
         <TextBlock Text="Effect2 Amount" Grid.Row="6" />
         <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding Effect2Amount, Mode=TwoWay}" Max="255"/>
 
         <TextBlock Text="Effect3" Grid.Row="7"/>
-        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding EffectItems, Mode=OneTime}" SelectedItem="{Binding Effect3, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSkillEffectItems}" SelectedItem="{Binding Effect3, Mode=TwoWay}"/>
 
         <TextBlock Text="Effect3 Amount" Grid.Row="8" />
         <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Effect3Amount, Mode=TwoWay}" Max="255"/>

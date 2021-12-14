@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:local="clr-namespace:RanseiLink.Views"
              mc:Ignorable="d" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
@@ -53,26 +54,26 @@
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
 
             <TextBlock Text="Type1" Grid.Row="1"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}"  SelectedItem="{Binding Type1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}"  SelectedItem="{Binding Type1, Mode=TwoWay}"/>
 
             <TextBlock Text="Type2" Grid.Row="2"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding TypeItems, Mode=OneTime}" SelectedItem="{Binding Type2, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Type2, Mode=TwoWay}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Move" Grid.Row="3" ToolTip="Jump to selected move" 
                     Command="{Binding JumpToMoveCommand}" CommandParameter="{Binding Move}"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding MoveItems, Mode=OneTime}" SelectedItem="{Binding Move, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveItems}" SelectedItem="{Binding Move, Mode=TwoWay}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 1" Grid.Row="4" ToolTip="Jump to selected ability" 
                     Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability1}"/>
-            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityItems}" SelectedItem="{Binding Ability1, Mode=TwoWay}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 2" Grid.Row="5" ToolTip="Jump to selected ability" 
                     Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability2}"/>
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability2, Mode=TwoWay}" />
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityItems}" SelectedItem="{Binding Ability2, Mode=TwoWay}" />
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability 3" Grid.Row="6" ToolTip="Jump to selected ability" 
                     Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability3}"/>
-            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability3, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityItems}" SelectedItem="{Binding Ability3, Mode=TwoWay}"/>
 
             <TextBlock Text="HP" Grid.Row="7" />
             <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Hp, Mode=TwoWay}" Max="511"/>
@@ -148,7 +149,7 @@
 
             <GroupBox Header="Encounterable at Location" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="11">
                 <StackPanel>
-                    <ComboBox Margin="0,0,0,11" ItemsSource="{Binding KingdomItems, Mode=OneTime}" SelectedValue="{Binding SelectedEncounterKingdom, Mode=TwoWay}"/>
+                    <ComboBox Margin="0,0,0,11" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedValue="{Binding SelectedEncounterKingdom, Mode=TwoWay}"/>
                     <CheckBox Content="Encounterable in basic area" Margin="0,0,0,11" IsChecked="{Binding EncounterableAtDefaultArea, Mode=TwoWay}"/>
                     <CheckBox Content="Encounterable in area unlocked at level 2" IsChecked="{Binding EncounterableWithLevel2Area, Mode=TwoWay}"/>
                 </StackPanel>

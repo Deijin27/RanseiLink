@@ -8,6 +8,7 @@
     <SolidColorBrush x:Key="AccentBrush" Color="#8068a8"/>
 
     <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#ECECEC"/>
+    <SolidColorBrush x:Key="WindowSelectedBrush" Color="#e0e0e0"/>
     <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#DDDDDD"/>
     <SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#DDDDDD"/>
 

@@ -18,10 +18,10 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock  VerticalAlignment="Center" TextWrapping="Wrap">
+        <TextBlock  VerticalAlignment="Center" TextWrapping="Wrap" Margin="10">
             The red zone will not be visible in the small preview on the top screen.<LineBreak/>
             Behavior of the rest is correct on the aformentioned preview, but certain configurations can be inconsistent in battle.<LineBreak/>
             It is recommended that you test any changes you make in-game.

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:BuildingViewModel, IsDesignTimeCreatable=False}"
@@ -49,7 +50,7 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="18"/>
 
         <TextBlock Text="Kingdom" Grid.Row="1" />
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding KingdomItems, Mode=OneTime}" SelectedItem="{Binding Kingdom, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}"/>
 
     </Grid>
 </UserControl>

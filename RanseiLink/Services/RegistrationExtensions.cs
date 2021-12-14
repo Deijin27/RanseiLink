@@ -40,27 +40,33 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ScenarioAppearPokemonViewModelFactory>(i => new ScenarioAppearPokemonViewModel(i));
         container.RegisterSingleton<ScenarioWarriorViewModelFactory>((sid, dataService, model) => new ScenarioWarriorViewModel(container, dataService, sid, model));
         container.RegisterSingleton<WarriorSkillViewModelFactory>(i => new WarriorSkillViewModel(i));
-        
         container.RegisterSingleton<ScenarioKingdomViewModelFactory>(i => new ScenarioKingdomViewModel(i));
         container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c) => new ScenarioPokemonViewModel(model, c));
-        
-        container.RegisterSingleton<WarriorNameTableViewModelFactory>(i => new WarriorNameTableViewModel(container, i));
-        container.RegisterSingleton<EvolutionTableViewModelFactory>(i => new EvolutionTableViewModel(container, i));
 
-        container.RegisterSingleton<AbilitySelectorViewModelFactory>(i => new AbilitySelectorViewModel(container, i));
-        container.RegisterSingleton<BaseWarriorSelectorViewModelFactory>(i => new BaseWarriorSelectorViewModel(container, i));
-        container.RegisterSingleton<BuildingSelectorViewModelFactory>(i => new BuildingSelectorViewModel(container, i));
-        container.RegisterSingleton<EventSpeakerSelectorViewModelFactory>(i => new EventSpeakerSelectorViewModel(container, i));
-        container.RegisterSingleton<ItemSelectorViewModelFactory>(i => new ItemSelectorViewModel(container, i));
-        container.RegisterSingleton<MaxLinkSelectorViewModelFactory>(i => new MaxLinkSelectorViewModel(container, i));
-        container.RegisterSingleton<MoveRangeSelectorViewModelFactory>(i => new MoveRangeSelectorViewModel(container, i));
-        container.RegisterSingleton<MoveSelectorViewModelFactory>(i => new MoveSelectorViewModel(container, i));
-        container.RegisterSingleton<PokemonSelectorViewModelFactory>(i => new PokemonSelectorViewModel(container, i));
-        container.RegisterSingleton<ScenarioAppearPokemonSelectorViewModelFactory>(i => new ScenarioAppearPokemonSelectorViewModel(container, i));
-        container.RegisterSingleton<ScenarioKingdomSelectorViewModelFactory>(i => new ScenarioKingdomSelectorViewModel(container, i));
-        container.RegisterSingleton<WarriorSkillSelectorViewModelFactory>(i => new WarriorSkillSelectorViewModel(container, i));
-
-        container.RegisterSingleton<ScenarioPokemonSelectorViewModelFactory>(i => new ScenarioPokemonSelectorViewModel(container, i));
-        container.RegisterSingleton<ScenarioWarriorSelectorViewModelFactory>(i => new ScenarioWarriorSelectorViewModel(container, i));
+        container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
+        {
+            editor.AddModule<AbilitySelectorEditorModule>();
+            editor.AddModule<AbilityGridEditorModule>();
+            editor.AddModule<BaseWarriorSelectorEditorModule>();
+            editor.AddModule<BaseWarriorGridEditorModule>();
+            editor.AddModule<BuildingSelectorEditorModule>();
+            editor.AddModule<EventSpeakerSelectorEditorModule>();
+            editor.AddModule<EvolutionTableEditorModule>();
+            editor.AddModule<ItemSelectorEditorModule>();
+            editor.AddModule<MaxLinkSelectorEditorModule>();
+            editor.AddModule<MoveRangeSelectorEditorModule>();
+            editor.AddModule<MoveSelectorEditorModule>();
+            editor.AddModule<MoveGridEditorModule>();
+            editor.AddModule<PokemonSelectorEditorModule>();
+            editor.AddModule<PokemonGridEditorModule>();
+            editor.AddModule<ScenarioAppearPokemonSelectorEditorModule>();
+            editor.AddModule<ScenarioKingdomSelectorEditorModule>();
+            editor.AddModule<ScenarioPokemonSelectorEditorModule>();
+            editor.AddModule<ScenarioWarriorSelectorEditorModule>();
+            editor.AddModule<ScenarioWarriorGridEditorModule>();
+            editor.AddModule<WarriorNameTableEditorModule>();
+            editor.AddModule<WarriorSkillSelectorEditorModule>();
+            editor.AddModule<WarriorSkillGridEditorModule>();
+        });
     }
 }

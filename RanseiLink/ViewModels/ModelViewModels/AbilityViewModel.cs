@@ -1,17 +1,15 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
-using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
 public delegate AbilityViewModel AbilityViewModelFactory(IAbility model);
 
-public class AbilityViewModel : ViewModelBase
+public abstract class AbilityViewModelBase : ViewModelBase
 {
     private readonly IAbility _model;
 
-    public AbilityViewModel(IAbility model)
+    public AbilityViewModelBase(IAbility model)
     {
         _model = model;
     }
@@ -22,7 +20,6 @@ public class AbilityViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public AbilityEffectId[] EffectItems { get; } = EnumUtil.GetValues<AbilityEffectId>().ToArray();
     public AbilityEffectId Effect1
     {
         get => _model.Effect1;
@@ -47,4 +44,19 @@ public class AbilityViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
     }
 
+}
+
+public class AbilityViewModel : AbilityViewModelBase
+{
+    public AbilityViewModel(IAbility model) : base(model) { }
+}
+
+public class AbilityGridItemViewModel : AbilityViewModelBase
+{
+    public AbilityGridItemViewModel(AbilityId id, IAbility model) : base(model)
+    {
+        Id = id;
+    }
+
+    public AbilityId Id { get; }
 }

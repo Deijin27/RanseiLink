@@ -156,7 +156,31 @@
             <DataTemplate DataType="{x:Type vm:BuildingViewModel}">
                 <views:BuildingView/>
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vm:AbilityGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BaseWarriorGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorSkillGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorGridSelectorViewModel}">
+                <views:ScenarioWarriorGridSelectorView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

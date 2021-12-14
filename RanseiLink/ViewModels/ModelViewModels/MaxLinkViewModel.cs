@@ -20,7 +20,7 @@ public class WarriorMaxSyncListItem : ViewModelBase
         get => _model.GetMaxLink(Pokemon);
         set => RaiseAndSetIfChanged(MaxSyncValue, value, v => _model.SetMaxLink(Pokemon, v));
     }
-    public PokemonId Pokemon { get; set; }
+    public PokemonId Pokemon { get; }
 }
 
 public class MaxLinkViewModel : ViewModelBase

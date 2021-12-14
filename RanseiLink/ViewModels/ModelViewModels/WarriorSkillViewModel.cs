@@ -1,7 +1,5 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
-using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
@@ -15,9 +13,6 @@ public class WarriorSkillViewModel : ViewModelBase
     {
         _model = model;
     }
-
-    public WarriorSkillTargetId[] TargetItems { get; } = EnumUtil.GetValues<WarriorSkillTargetId>().ToArray();
-    public WarriorSkillEffectId[] EffectItems { get; } = EnumUtil.GetValues<WarriorSkillEffectId>().ToArray();
 
     public string Name
     {
@@ -73,5 +68,14 @@ public class WarriorSkillViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Target, value, v => _model.Target = v);
     }
 
+}
 
+public class WarriorSkillGridItemViewModel : WarriorSkillViewModel 
+{
+    public WarriorSkillGridItemViewModel(WarriorSkillId id, IWarriorSkill model) : base(model)
+    {
+        Id = id;
+    }
+
+    public WarriorSkillId Id { get; }
 }

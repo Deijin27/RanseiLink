@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              xmlns:vc="clr-namespace:RanseiLink.ValueConverters"
              xmlns:views="clr-namespace:RanseiLink.Views"
@@ -42,13 +43,13 @@
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
                     Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
-            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
+            <ComboBox ItemsSource="{x:Static const:EnumProvider.WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding ClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Kingdom"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
@@ -98,13 +99,8 @@
                 <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
             </GroupBox>
 
-            <GroupBox Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="9" Grid.RowSpan="2" Padding="5">
-                <GroupBox.Header>
-                    <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Max link between selected warrior and pokemon" Grid.Row="1" ToolTip="Jump to full max link table for selected warrior" 
+            <Button Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
                     Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
-                </GroupBox.Header>
-                <controls:NumberBox Value="{Binding MaxLink, Mode=TwoWay}" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}"/>
-            </GroupBox>
         </Grid>
     </WrapPanel>
     

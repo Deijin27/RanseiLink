@@ -3,11 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RanseiLink.Views"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
-             xmlns:valueConverters="clr-namespace:RanseiLink.ValueConverters"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              d:DataContext="{d:DesignInstance Type=vm:AbilityViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -42,13 +41,13 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
         <TextBlock Text="Effect1" Grid.Row="1"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding EffectItems, Mode=OneTime}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
 
         <TextBlock Text="Amount" Grid.Row="2" />
         <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding Effect1Amount, Mode=TwoWay}" Max="3"/>
 
         <TextBlock Text="Effect2" Grid.Row="3"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding EffectItems, Mode=OneTime}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityEffectItems}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
 
         <TextBlock Text="Amount" Grid.Row="4" />
         <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Effect2Amount, Mode=TwoWay}" Max="3"/>

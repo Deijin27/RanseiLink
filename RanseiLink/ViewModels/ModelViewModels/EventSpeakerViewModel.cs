@@ -1,6 +1,4 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core;
-using System.Linq;
 using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.ViewModels;
@@ -21,8 +19,6 @@ public class EventSpeakerViewModel : ViewModelBase
         get => _model.Name;
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
-
-    public WarriorSpriteId[] SpriteItems { get; } = EnumUtil.GetValues<WarriorSpriteId>().ToArray();
 
     public WarriorSpriteId Sprite
     {

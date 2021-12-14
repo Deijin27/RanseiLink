@@ -30,7 +30,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <TextBlock VerticalAlignment="Center" Text="{Binding Kingdom}"/>
-                        <controls:NumberBox Grid.Column="2" Max="255" Value="{Binding BattlesToUnlock}" Width="100" HorizontalAlignment="Left"/>
+                        <controls:NumberBox Grid.Column="2" Max="255" Value="{Binding Army}" Width="100" HorizontalAlignment="Left"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

@@ -1,9 +1,7 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
-using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -17,29 +15,14 @@ public enum MoveAnimationPreviewMode
 
 public delegate MoveViewModel MoveViewModelFactory(IMove model, IEditorContext context);
 
-public class MoveViewModel : ViewModelBase
+public abstract class MoveViewModelBase : ViewModelBase
 {
-    private readonly IExternalService _externalService;
-    private readonly IMove _model;
+    protected readonly IMove _model;
 
-    public MoveViewModel(IServiceContainer container, IMove model, IEditorContext context)
+    public MoveViewModelBase(IMove model)
     {
-        _externalService = container.Resolve<IExternalService>();
-
-        SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
-        {
-            PreviewAnimationMode = mode;
-            UpdatePreviewAnimation();
-        });
-
         _model = model;
-        UpdatePreviewAnimation();
-
-        var jumpService = context.JumpService;
-        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(jumpService.JumpToMoveRange);
     }
-
-    public ICommand JumpToMoveRangeCommand { get; }
 
     public string Name
     {
@@ -65,7 +48,6 @@ public class MoveViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
-    public TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
     public TypeId Type
     {
         get => _model.Type;
@@ -84,14 +66,11 @@ public class MoveViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Accuracy, value, v => _model.Accuracy = v);
     }
 
-    public MoveRangeId[] RangeItems { get; } = EnumUtil.GetValues<MoveRangeId>().ToArray();
     public MoveRangeId Range
     {
         get => _model.Range;
         set => RaiseAndSetIfChanged(_model.Range, value, v => _model.Range = v);
     }
-
-    public MoveEffectId[] EffectItems { get; } = EnumUtil.GetValues<MoveEffectId>().ToArray();
 
     public MoveEffectId Effect1
     {
@@ -117,9 +96,38 @@ public class MoveViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
-    public MoveAnimationId[] AnimationItems { get; } = EnumUtil.GetValues<MoveAnimationId>().ToArray();
+    public abstract MoveAnimationId StartupAnimation { get; set; }
 
-    public MoveAnimationId StartupAnimation
+    public abstract MoveAnimationId ProjectileAnimation { get; set; }
+
+    public abstract MoveAnimationId ImpactAnimation { get; set; }
+
+    public abstract MoveMovementAnimationId MovementAnimation { get; set; }
+}
+
+public class MoveViewModel : MoveViewModelBase
+{
+    private readonly IExternalService _externalService;
+
+    public MoveViewModel(IServiceContainer container, IMove model, IEditorContext context) : base(model)
+    {
+        _externalService = container.Resolve<IExternalService>();
+
+        SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
+        {
+            PreviewAnimationMode = mode;
+            UpdatePreviewAnimation();
+        });
+
+        UpdatePreviewAnimation();
+
+        var jumpService = context.JumpService;
+        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(jumpService.JumpToMoveRange);
+    }
+
+    public ICommand JumpToMoveRangeCommand { get; }
+
+    public override MoveAnimationId StartupAnimation
     {
         get => _model.StartupAnimation;
         set
@@ -131,7 +139,7 @@ public class MoveViewModel : ViewModelBase
         }
     }
 
-    public MoveAnimationId ProjectileAnimation
+    public override MoveAnimationId ProjectileAnimation
     {
         get => _model.ProjectileAnimation;
         set
@@ -143,7 +151,7 @@ public class MoveViewModel : ViewModelBase
         }
     }
 
-    public MoveAnimationId ImpactAnimation
+    public override MoveAnimationId ImpactAnimation
     {
         get => _model.ImpactAnimation;
         set
@@ -155,23 +163,7 @@ public class MoveViewModel : ViewModelBase
         }
     }
 
-    public MoveAnimationTargetId[] AnimationTargetItems { get; } = EnumUtil.GetValues<MoveAnimationTargetId>().ToArray();
-
-    public MoveAnimationTargetId AnimationTarget1
-    {
-        get => _model.AnimationTarget1;
-        set => RaiseAndSetIfChanged(_model.AnimationTarget1, value, v => _model.AnimationTarget1 = v);
-    }
-
-    public MoveAnimationTargetId AnimationTarget2
-    {
-        get => _model.AnimationTarget2;
-        set => RaiseAndSetIfChanged(_model.AnimationTarget2, value, v => _model.AnimationTarget2 = v);
-    }
-
-    public MoveMovementAnimationId[] MovementAnimationItems { get; } = EnumUtil.GetValues<MoveMovementAnimationId>().ToArray();
-
-    public MoveMovementAnimationId MovementAnimation
+    public override MoveMovementAnimationId MovementAnimation
     {
         get => _model.MovementAnimation;
         set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
@@ -217,5 +209,45 @@ public class MoveViewModel : ViewModelBase
     private string GetAnimationUri(MoveAnimationId id)
     {
         return _externalService.GetMoveAnimationUri(id);
+    }
+}
+
+public class MoveGridItemViewModel : MoveViewModelBase 
+{
+    public MoveGridItemViewModel(MoveId id, IMove model) : base(model)
+    {
+        Id = id;
+    }
+
+    public MoveId Id { get; }
+
+    public new string Name // force name to be second in auto generated order
+    {
+        get => _model.Name;
+        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+    }
+
+    public override MoveAnimationId StartupAnimation
+    {
+        get => _model.StartupAnimation;
+        set => RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v);
+    }
+
+    public override MoveAnimationId ProjectileAnimation
+    {
+        get => _model.ProjectileAnimation;
+        set => RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v);
+    }
+
+    public override MoveAnimationId ImpactAnimation
+    {
+        get => _model.ImpactAnimation;
+        set => RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v);
+    }
+
+    public override MoveMovementAnimationId MovementAnimation
+    {
+        get => _model.MovementAnimation;
+        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
     }
 }

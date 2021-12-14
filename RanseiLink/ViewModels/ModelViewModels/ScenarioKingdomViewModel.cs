@@ -18,10 +18,10 @@ public class ScenarioKingdomItem : ViewModelBase
     }
     public KingdomId Kingdom { get; }
 
-    public uint BattlesToUnlock
+    public uint Army
     {
         get => _model.GetArmy(Kingdom);
-        set => RaiseAndSetIfChanged(BattlesToUnlock, value, v => _model.SetArmy(Kingdom, v));
+        set => RaiseAndSetIfChanged(Army, value, v => _model.SetArmy(Kingdom, v));
     }
 }
 public class ScenarioKingdomViewModel : ViewModelBase

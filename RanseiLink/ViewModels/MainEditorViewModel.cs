@@ -4,35 +4,16 @@ using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public record ListItem(string ItemName, MainEditorPage ItemValue);
+public record ListItem(string ItemName, string ItemValue);
 
 public delegate MainEditorViewModel MainEditorViewModelFactory(ModInfo mod);
-
-public enum MainEditorPage
-{
-    Pokemon,
-    Move,
-    Ability,
-    WarriorSkill,
-    MoveRange,
-    EvolutionTable,
-    WarriorNameTable,
-    BaseWarrior,
-    MaxLink,
-    ScenarioWarrior,
-    ScenarioPokemon,
-    ScenarioAppearPokemon,
-    ScenarioKingdom,
-    EventSpeaker,
-    Item,
-    Building,
-}
+public delegate void EditorModuleRegistrationFunction(MainEditorViewModel editor);
 
 public class MainEditorViewModel : ViewModelBase, ISaveable
 {
@@ -48,7 +29,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     public ISaveableRefreshable CurrentVm
     {
         get => _currentVm;
-        set
+        private set
         {
             Save();
             _currentVm = value;
@@ -57,8 +38,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
     }
 
-    private MainEditorPage _currentPage = MainEditorPage.Pokemon;
-    public MainEditorPage CurrentPage
+    private string _currentPage;
+    public string CurrentPage
     {
         get => _currentPage;
         set
@@ -72,7 +53,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ModInfo Mod { get; }
-    public IList<ListItem> ListItems { get; }
+    public ObservableCollection<ListItem> ListItems { get; } = new();
 
     public MainEditorViewModel(IServiceContainer container, ModInfo mod)
     {
@@ -88,93 +69,37 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         _dataService = dataServiceFactory(Mod);
         _editorContext = editorContextFactory(_dataService, this);
 
-        ListItems = new List<ListItem>()
-        {
-            new ListItem("Pokemon", MainEditorPage.Pokemon),
-            new ListItem("Moves", MainEditorPage.Move),
-            new ListItem("Abilities", MainEditorPage.Ability),
-            new ListItem("Warrior Skills", MainEditorPage.WarriorSkill),
-            new ListItem("Move Ranges", MainEditorPage.MoveRange),
-            new ListItem("Evolution Table", MainEditorPage.EvolutionTable),
-            new ListItem("Warrior Name Table", MainEditorPage.WarriorNameTable),
-            new ListItem("Base Warrior", MainEditorPage.BaseWarrior),
-            new ListItem("Max Link", MainEditorPage.MaxLink),
-            new ListItem("Scenario Warrior", MainEditorPage.ScenarioWarrior),
-            new ListItem("Scenario Pokemon", MainEditorPage.ScenarioPokemon),
-            new ListItem("Scenario Appear Pokemon", MainEditorPage.ScenarioAppearPokemon),
-            new ListItem("Scenario Kingdom", MainEditorPage.ScenarioKingdom),
-            new ListItem("Event Speaker", MainEditorPage.EventSpeaker),
-            new ListItem("Items", MainEditorPage.Item),
-            new ListItem("Buildings", MainEditorPage.Building),
-        };
-
-        ReloadViewModels();
-        CurrentVm = SelectViewModel(_currentPage);
-
         CommitRomCommand = new RelayCommand(CommitRom);
-
-        
     }
 
-    public PokemonSelectorViewModel PokemonSelector { get; private set; }
-    public MoveSelectorViewModel MoveSelector { get; private set; }
-    public AbilitySelectorViewModel AbilitySelector { get; private set; }
-    public WarriorSkillSelectorViewModel WarriorSkillSelector { get; private set; }
-    public MoveRangeSelectorViewModel MoveRangeSelector { get; private set; }
-    public EvolutionTableViewModel EvolutionTableViewModel { get; private set; }
-    public WarriorNameTableViewModel WarriorNameTableViewModel { get; private set; }
-    public BaseWarriorSelectorViewModel BaseWarriorSelector { get; private set; }
-    public MaxLinkSelectorViewModel MaxLinkSelector { get; private set; }
-    public ScenarioWarriorSelectorViewModel ScenarioWarriorSelector { get; private set; }
-    public ScenarioPokemonSelectorViewModel ScenarioPokemonSelector { get; private set; }
-    public ScenarioAppearPokemonSelectorViewModel ScenarioAppearPokemonSelector { get; private set; }
-    public ScenarioKingdomSelectorViewModel ScenarioKingdomSelector { get; private set; }
-    public EventSpeakerSelectorViewModel EventSpeakerSelector { get; private set; }
-    public ItemSelectorViewModel ItemSelector { get; private set; }
-    public BuildingSelectorViewModel BuildingSelector { get; private set; }
+    public void AddModule<TModule>() where TModule : IEditorModule, new()
+    {
+        var module = new TModule();
+        Modules.Add(module.UniqueId, module);
+        ViewModels.Add(module.UniqueId, module.NewViewModel(_container, _editorContext));
+        ListItems.Add(new(module.ListName, module.UniqueId));
+        if (ViewModels.Count == 1)
+        {
+            _currentPage = module.UniqueId;
+            CurrentVm = SelectViewModel(_currentPage);
+        }
+    }
+
+    public Dictionary<string, IEditorModule> Modules { get; } = new();
+    public Dictionary<string, ISaveableRefreshable> ViewModels { get; } = new();
 
     private void ReloadViewModels()
     {
-        PokemonSelector = _container.Resolve<PokemonSelectorViewModelFactory>()(_editorContext);
-        MoveSelector = _container.Resolve<MoveSelectorViewModelFactory>()(_editorContext);
-        AbilitySelector = _container.Resolve<AbilitySelectorViewModelFactory>()(_editorContext);
-        WarriorSkillSelector = _container.Resolve<WarriorSkillSelectorViewModelFactory>()(_editorContext);
-        MoveRangeSelector = _container.Resolve<MoveRangeSelectorViewModelFactory>()(_editorContext);
-        EvolutionTableViewModel = _container.Resolve<EvolutionTableViewModelFactory>()(_editorContext);
-        WarriorNameTableViewModel = _container.Resolve<WarriorNameTableViewModelFactory>()(_editorContext);
-        BaseWarriorSelector = _container.Resolve<BaseWarriorSelectorViewModelFactory>()(_editorContext);
-        MaxLinkSelector = _container.Resolve<MaxLinkSelectorViewModelFactory>()(_editorContext);
-        ScenarioWarriorSelector = _container.Resolve<ScenarioWarriorSelectorViewModelFactory>()(_editorContext);
-        ScenarioPokemonSelector = _container.Resolve<ScenarioPokemonSelectorViewModelFactory>()(_editorContext);
-        ScenarioAppearPokemonSelector = _container.Resolve<ScenarioAppearPokemonSelectorViewModelFactory>()(_editorContext);
-        ScenarioKingdomSelector = _container.Resolve<ScenarioKingdomSelectorViewModelFactory>()(_editorContext);
-        EventSpeakerSelector = _container.Resolve<EventSpeakerSelectorViewModelFactory>()(_editorContext);
-        ItemSelector = _container.Resolve<ItemSelectorViewModelFactory>()(_editorContext);
-        BuildingSelector = _container.Resolve<BuildingSelectorViewModelFactory>()(_editorContext);
+        ViewModels.Clear();
+        foreach (var (key, module) in Modules)
+        {
+            ViewModels[key] = module.NewViewModel(_container, _editorContext);
+        }
     }
 
-    private ISaveableRefreshable SelectViewModel(MainEditorPage id)
+    private ISaveableRefreshable SelectViewModel(string id)
     {
-        return id switch
-        {
-            MainEditorPage.Pokemon => PokemonSelector,
-            MainEditorPage.Move => MoveSelector,
-            MainEditorPage.Ability => AbilitySelector,
-            MainEditorPage.WarriorSkill => WarriorSkillSelector,
-            MainEditorPage.MoveRange => MoveRangeSelector,
-            MainEditorPage.EvolutionTable => EvolutionTableViewModel,
-            MainEditorPage.WarriorNameTable => WarriorNameTableViewModel,
-            MainEditorPage.BaseWarrior => BaseWarriorSelector,
-            MainEditorPage.MaxLink => MaxLinkSelector,
-            MainEditorPage.ScenarioWarrior => ScenarioWarriorSelector,
-            MainEditorPage.ScenarioPokemon => ScenarioPokemonSelector,
-            MainEditorPage.ScenarioAppearPokemon => ScenarioAppearPokemonSelector,
-            MainEditorPage.ScenarioKingdom => ScenarioKingdomSelector,
-            MainEditorPage.EventSpeaker => EventSpeakerSelector,
-            MainEditorPage.Item => ItemSelector,
-            MainEditorPage.Building => BuildingSelector,
-            _ => throw new ArgumentException($"Invalid {nameof(MainEditorPage)} enum value"),
-        };
+        return ViewModels[id];
     }
 
     public void Save()

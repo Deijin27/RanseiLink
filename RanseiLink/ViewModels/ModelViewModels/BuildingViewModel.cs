@@ -1,7 +1,5 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
-using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
@@ -21,8 +19,6 @@ public class BuildingViewModel : ViewModelBase
         get => _model.Name;
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
-
-    public KingdomId[] KingdomItems { get; } = EnumUtil.GetValuesExceptDefaults<KingdomId>().ToArray();
 
     public KingdomId Kingdom
     {
