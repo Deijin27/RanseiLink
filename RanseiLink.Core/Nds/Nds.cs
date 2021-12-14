@@ -103,6 +103,7 @@ public class Nds : INds
         if (oldEntryLength == sourceData.Length)
         {
             // Is still the same length so just process as fixed length file.
+            _underlyingStreamReader.BaseStream.Position = originalInsertDestinationEntry.Start;
             _underlyingStreamReader.BaseStream.Write(sourceData, 0, oldEntryLength);
             return;
         }
