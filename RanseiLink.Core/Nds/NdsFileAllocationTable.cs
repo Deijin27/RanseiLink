@@ -20,4 +20,8 @@ public static class NdsFileAllocationTable
         return GetEntry(stream, GetStartOffset(stream), entryIndex);
     }
 
+    public static void SetEntry(BinaryWriter stream, long fatStartOffset, uint entryIndex, Fat32.Entry entry)
+    {
+        Fat32.FileAllocationTable.WriteEntry(stream, fatStartOffset, entryIndex, entry);
+    }
 }

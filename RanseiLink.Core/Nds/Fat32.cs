@@ -6,27 +6,30 @@ public static class Fat32
 {
     public class Entry
     {
-        public const int Length = 8;
+
         public Entry(uint start, uint end)
         {
             Start = start;
             End = end;
         }
 
-        public readonly uint Start;
-        public readonly uint End;
+        /// <summary>
+        /// Length of entry itself
+        /// </summary>
+        public const int Length = 8;
 
+        public uint Start { get; }
+        public uint End { get; }
+
+        /// <summary>
+        /// Length of data block that entry points to
+        /// </summary>
         public int GetLength()
         {
             return (int)(End - Start);
         }
 
-        /// <summary>
-        /// Gets the offset pair from the stream, progressing the current position in the stream by 8
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-
+        public bool IsDefault => Start == uint.MaxValue && End == uint.MaxValue;
     }
 
     public static class FileAllocationTable
@@ -40,6 +43,13 @@ public static class Fat32
         static Entry ReadEntryFromCurrentOffset(BinaryReader stream)
         {
             return new Entry(stream.ReadUInt32(), stream.ReadUInt32());
+        }
+
+        public static void WriteEntry(BinaryWriter stream, long tableOffset, uint entryIndex, Entry entry)
+        {
+            stream.BaseStream.Position = tableOffset + entryIndex * Entry.Length;
+            stream.Write(entry.Start);
+            stream.Write(entry.End);
         }
 
         public static Entry[] AllEntries(BinaryReader stream, long tableOffset, uint entryCount)

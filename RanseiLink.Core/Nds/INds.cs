@@ -7,4 +7,5 @@ public interface INds : IDisposable
     void ExtractCopyOfDirectory(string path, string destinationFolder);
     void ExtractCopyOfFile(string path, string destinationFolder);
     void InsertFixedLengthFile(string path, string source);
+    void InsertVariableLengthFile(string path, string source);
 }
