@@ -14,7 +14,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox Margin="10,10,10,0" Grid.Row="0" Height="20" ItemsSource="{x:Static const:EnumProvider.ScenarioItems}" SelectedItem="{Binding SelectedScenario, Mode=TwoWay}" />
+        <ComboBox Margin="10,10,10,0" Grid.Row="0" Height="20" ItemsSource="{x:Static const:EnumProvider.ScenarioItems}" SelectedItem="{Binding SelectedScenario, Mode=TwoWay, Delay=10}" />
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2"
               styles:DataGridHelper.ComboBoxColumnEditingStyle="{StaticResource {x:Type ComboBox}}"

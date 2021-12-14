@@ -36,7 +36,7 @@
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
                   Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
                   ItemsSource="{Binding ListItems}"
-                  SelectedValue="{Binding CurrentPage}" 
+                  SelectedValue="{Binding CurrentPage, Delay=10}" 
                   SelectedValuePath="ItemValue">
             <ListView.ItemTemplate>
                 <DataTemplate>

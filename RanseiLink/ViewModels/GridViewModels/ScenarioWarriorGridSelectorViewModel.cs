@@ -4,15 +4,19 @@ using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
 
 namespace RanseiLink.ViewModels;
 
 public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefreshable
 {
     private readonly IDataService _dataService;
+    private readonly IDialogService _dialogService;
     public ScenarioWarriorGridSelectorViewModel(IServiceContainer container, IEditorContext context)
     {
         _dataService = context.DataService;
+        _dialogService = container.Resolve<IDialogService>();
     }
 
     private ScenarioId _selectedScenario = ScenarioId.TheLegendOfRansei;
@@ -23,9 +27,13 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
         {
             if (_selectedScenario != value)
             {
-                Save();
-                _selectedScenario = value;
-                Refresh();
+                if (CanSave())
+                {
+                    Save();
+                    _selectedScenario = value;
+                    Refresh();
+                }
+                
             }
         }
     }
@@ -51,7 +59,7 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
             {
                 initPokemon = PokemonId.Default;
                 initAbility = AbilityId.NoAbility;
-                initScenarioPokemon = -1;
+                initScenarioPokemon = DefaultScenarioPokemonId;
             }
             else
             {
@@ -71,6 +79,38 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
         }
     }
 
+    private const int DefaultScenarioPokemonId = -1;
+
+    public bool CanSave()
+    {
+        bool problemsExist = false;
+        var sb = new StringBuilder();
+        // find scenario warriors with the same scenario pokemon and validate that all properties are the same for them
+        foreach (var dupes in Items.GroupBy(i => i.ScenarioPokemonId).Where(i => i.Key != DefaultScenarioPokemonId && i.Count() > 1).Select(i => i.ToArray()))
+        {
+            var first = dupes.First();
+            if (!dupes.All(i => i.Pokemon == first.Pokemon && i.PokemonAbility == first.PokemonAbility))
+            {
+                problemsExist = true;
+                sb.AppendLine($"More than one scenario warrior has the same scenario pokemon '{first.ScenarioPokemonId}' but the pokemon and ability associated with them are different.\n");
+            }
+        }
+
+        if (!problemsExist)
+        {
+            return true;
+        }
+
+        var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+            "Problems with scenario pokemon",
+            "There are some issues with the scenario warriors' scenario pokemon. If you ignore these then the final data written to the scenario pokemon will be the last data encountered in the table. The issues:\n\n"
+            + sb.ToString(),
+            new[] { new MessageBoxButton("Ignore and proceed", MessageBoxResult.Ok), new MessageBoxButton("Cancel", MessageBoxResult.Cancel) }
+            ));
+
+        return result == MessageBoxResult.Ok;
+    }
+
     public void Save()
     {
         using var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable();
@@ -80,7 +120,7 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
         {
             var warrior = _scenarioWarriors[i];
             var vm = Items[i];
-            if (vm.Pokemon == PokemonId.Default || vm.ScenarioPokemonId == -1)
+            if (vm.Pokemon == PokemonId.Default || vm.ScenarioPokemonId == DefaultScenarioPokemonId)
             {
                 warrior.ScenarioPokemonIsDefault = true;
             }

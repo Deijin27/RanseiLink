@@ -2,6 +2,7 @@
 
 public interface ISaveable
 {
+    bool CanSave() => true;
     void Save();
 }
 

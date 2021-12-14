@@ -44,6 +44,11 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         get => _currentPage;
         set
         {
+            if (!CanSave())
+            {
+                RaisePropertyChanged();
+                return;
+            }
             if (RaiseAndSetIfChanged(ref _currentPage, value))
             {
                 CurrentVm = SelectViewModel(value);
@@ -102,6 +107,11 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         return ViewModels[id];
     }
 
+    public bool CanSave()
+    {
+        return CurrentVm?.CanSave() != false;
+    }
+
     public void Save()
     {
         CurrentVm?.Save();
@@ -109,6 +119,11 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     private void CommitRom()
     {
+        if (!CanSave())
+        {
+            return;
+        }
+
         if (!_dialogService.CommitToRom(Mod, out string romPath))
         {
             return;
@@ -146,7 +161,12 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     private void RunPlugin(PluginInfo chosen)
     {
+        
         // first save
+        if (!CanSave())
+        {
+            return;
+        }
         Save();
 
         // then run plugin
