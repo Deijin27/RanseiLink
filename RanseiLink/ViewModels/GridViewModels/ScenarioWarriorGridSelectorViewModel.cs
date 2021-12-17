@@ -9,7 +9,7 @@ using System.Text;
 
 namespace RanseiLink.ViewModels;
 
-public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefreshable
+public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefreshable, IGridViewModel<ScenarioWarriorGridItemViewModel>
 {
     private readonly IDataService _dataService;
     private readonly IDialogService _dialogService;
@@ -40,6 +40,8 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
 
     private readonly List<IScenarioWarrior> _scenarioWarriors = new();
     public ObservableCollection<ScenarioWarriorGridItemViewModel> Items { get; } = new();
+
+    public int FrozenColumnCount => 1;
 
     public void Refresh()
     {

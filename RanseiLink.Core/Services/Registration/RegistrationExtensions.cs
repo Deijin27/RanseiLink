@@ -12,13 +12,14 @@ public static class RegistrationExtensions
         string rootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RanseiLink");
         Directory.CreateDirectory(rootFolder);
 
-        NdsFactory ndsFactory = i => new Nds.Nds(i);
-        container.RegisterSingleton(ndsFactory);
+        container.RegisterSingleton<NdsFactory>(i => new Nds.Nds(i));
 
-        container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, ndsFactory));
+        container.RegisterLazySingleton<IMsgService>(() => new MsgService());
+
+        container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, container.Resolve<NdsFactory>(), container.Resolve<IMsgService>()));
 
         container.RegisterLazySingleton<ISettingsService>(() => new SettingsService(rootFolder));
 
-        container.RegisterSingleton<DataServiceFactory>(m => new DataService(m));
+        container.RegisterSingleton<DataServiceFactory>(m => new DataService(m, container));
     }
 }

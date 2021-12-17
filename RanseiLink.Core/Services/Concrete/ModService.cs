@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Nds;
+using System.Linq;
 
 namespace RanseiLink.Core.Services.Concrete;
 
@@ -13,11 +14,14 @@ public class ModService : IModService
     private readonly string modFolder;
     public const string ModInfoFileName = "RanseiLinkModInfo.xml";
     public const string ExportModFileExtension = ".rlmod";
+    private const uint CurrentModVersion = 2;
 
     private readonly NdsFactory _ndsFactory;
+    private readonly IMsgService _msgService;
 
-    public ModService(string rootFolder, NdsFactory ndsFactory)
+    public ModService(string rootFolder, NdsFactory ndsFactory, IMsgService msgService)
     {
+        _msgService = msgService;
         _ndsFactory = ndsFactory;
         modFolder = modFolder = Path.Combine(rootFolder, "Mods");
         Directory.CreateDirectory(modFolder);
@@ -67,6 +71,11 @@ public class ModService : IModService
 
     public IList<ModInfo> GetAllModInfo()
     {
+        return GetAllModInfoIncludingPreviousVersions().Where(i => i.RLModVersion == CurrentModVersion).ToList();
+    }
+
+    private IList<ModInfo> GetAllModInfoIncludingPreviousVersions()
+    {
         var modInfos = new List<ModInfo>();
         foreach (string folder in Directory.GetDirectories(modFolder))
         {
@@ -75,9 +84,15 @@ public class ModService : IModService
             {
                 info.FolderPath = folder;
                 modInfos.Add(info);
+
             }
         }
         return modInfos;
+    }
+
+    public IList<ModInfo> GetModInfoPreviousVersions()
+    {
+        return GetAllModInfoIncludingPreviousVersions().Where(i => i.RLModVersion < CurrentModVersion).ToList();
     }
 
     public ModInfo Create(string baseRomPath, string name = "", string version = "", string author = "")
@@ -88,7 +103,7 @@ public class ModService : IModService
             Name = name,
             Version = version,
             Author = author,
-            RLModVersion = 1
+            RLModVersion = CurrentModVersion
         };
         Directory.CreateDirectory(modInfo.FolderPath);
         LoadRom(baseRomPath, modInfo);
@@ -104,11 +119,39 @@ public class ModService : IModService
             Name = name,
             Version = version,
             Author = author,
-            RLModVersion = 1
+            RLModVersion = CurrentModVersion
         };
         FileUtil.CopyFilesRecursively(baseMod.FolderPath, modInfo.FolderPath);
         Update(modInfo);
         return modInfo;
+    }
+
+    public void UpgradeModsToLatestVersion(IEnumerable<ModInfo> mods, string romPath)
+    {
+        using INds nds = _ndsFactory(romPath);
+        foreach (ModInfo mod in mods)
+        {
+            switch (mod.RLModVersion)
+            {
+                case 1:
+                    AdvanceVersion1To2(mod, nds);
+                    goto case 2;
+                case 2:
+                default:
+                    break;
+            }
+            Update(mod);
+        }
+        
+    }
+
+    private void AdvanceVersion1To2(ModInfo modInfo, INds nds)
+    {
+        string msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
+        nds.ExtractCopyOfFile(Constants.MsgRomPath, Path.GetDirectoryName(msgPath));
+        _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
+        File.Delete(msgPath);
+        modInfo.RLModVersion = 2;
     }
 
     public void Update(ModInfo modInfo)
@@ -132,13 +175,17 @@ public class ModService : IModService
         {
             nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
         }
-        // Delete msg.dat for now cause not using and it's comparatively big
-        File.Delete(Path.Combine(modInfo.FolderPath, Constants.MsgRomPath));
+
+        var msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
+        _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
+        File.Delete(msgPath);
     }
 
     public void Commit(ModInfo modInfo, string path)
     {
         string currentModFolder = modInfo.FolderPath;
+        string msgTmpFile = Path.GetTempFileName();
+        _msgService.CreateMsgDat(Path.Combine(currentModFolder, Constants.MsgFolderPath), msgTmpFile);
         using (var nds = _ndsFactory(path))
         {
             nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
@@ -164,6 +211,7 @@ public class ModService : IModService
                 var skPath = Constants.ScenarioKingdomPathFromId(i);
                 nds.InsertFixedLengthFile(skPath, Path.Combine(currentModFolder, skPath));
             }
+            nds.InsertVariableLengthFile(Constants.MsgRomPath, msgTmpFile);
         }
     }
 }

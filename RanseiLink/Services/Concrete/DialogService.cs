@@ -275,4 +275,29 @@ internal class DialogService : IDialogService
 
         progressWindow.ShowDialog();
     }
+
+    public bool UpgradeMods(out string romPath)
+    {
+        var vm = new ModUpgradeViewModel(this, Settings.RecentLoadRom);
+
+        var dialog = new Dialogs.ModUpgradeDialog
+        {
+            Owner = Application.Current.MainWindow,
+            DataContext = vm
+        };
+
+        bool? proceed = dialog.ShowDialog();
+
+        if (proceed == true)
+        {
+            romPath = vm.File;
+            Settings.RecentLoadRom = vm.File;
+            return true;
+        }
+        else
+        {
+            romPath = null;
+            return false;
+        }
+    }
 }

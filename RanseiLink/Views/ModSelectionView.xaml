@@ -9,6 +9,9 @@
              d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="500" Background="Transparent">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
+    </UserControl.Resources>
     <DockPanel>
         <Border Width="200" BorderThickness="0">
             <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
@@ -21,6 +24,13 @@
                     </StackPanel.Resources>
                     <Button Content="Create Mod" Margin="0,0,0,10" Command="{Binding CreateModCommand}"/>
                     <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVis}}">
+                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
+                            Upgrade Old Mods
+                            <LineBreak/>
+                            <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Some mods are outdated. Click here to upgrade them to the latest version and they will appear in the list. </Span>
+                        </TextBlock>
+                    </Button>
                     <TextBlock FontSize="9" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
                 </StackPanel>
             </Grid>

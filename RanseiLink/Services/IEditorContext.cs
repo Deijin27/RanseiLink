@@ -9,4 +9,5 @@ public interface IEditorContext
 {
     IDataService DataService { get; }
     IJumpService JumpService { get; }
+    ICachedMsgBlockService CachedMsgBlockService { get; }
 }

@@ -181,6 +181,10 @@
                 <views:ScenarioWarriorGridSelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:MsgGridViewModel}">
+                <views:MsgGridView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

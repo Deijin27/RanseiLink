@@ -4,8 +4,10 @@ namespace RanseiLink.Core.Services.Concrete;
 
 public class DataService : IDataService
 {
-    public DataService(ModInfo mod)
+    public DataService(ModInfo mod, IServiceContainer container)
     {
+        var msgService = container.Resolve<IMsgService>();
+
         Pokemon = new PokemonService(mod);
         Move = new MoveService(mod);
         Ability = new AbilityService(mod);
@@ -22,6 +24,7 @@ public class DataService : IDataService
         BaseWarrior = new BaseWarriorService(mod);
         ScenarioAppearPokemon = new ScenarioAppearPokemonService(mod);
         ScenarioKingdom = new ScenarioKingdomService(mod);
+        Msg = new MsgBlockService(mod, msgService);
     }
 
     public IPokemonService Pokemon { get; }
@@ -40,4 +43,5 @@ public class DataService : IDataService
     public IBaseWarriorService BaseWarrior { get; }
     public IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
     public IScenarioKingdomService ScenarioKingdom { get; }
+    public IMsgBlockService Msg { get; }
 }

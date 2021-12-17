@@ -21,14 +21,28 @@ public class ModSelectionViewModel : ViewModelBase
         _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
 
         RefreshModItems();
+        RefreshOutdatedModsExist();
 
         CreateModCommand = new RelayCommand(CreateMod);
         ImportModCommand = new RelayCommand(ImportMod);
+        UpgradeOutdatedModsCommand = new RelayCommand(UpgradeOutdatedMods);
 
         ModItemClicked = new RelayCommand<ModInfo>(mi =>
         {
             ModSelected?.Invoke(mi);
         });
+    }
+
+    private void RefreshOutdatedModsExist()
+    {
+        OutdatedModsExist = _modService.GetModInfoPreviousVersions().Any();
+    }
+
+    private bool _outdatedModsExist;
+    public bool OutdatedModsExist
+    {
+        get => _outdatedModsExist;
+        set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
     }
 
     public ObservableCollection<ModListItemViewModel> ModItems { get; } = new ObservableCollection<ModListItemViewModel>();
@@ -48,6 +62,7 @@ public class ModSelectionViewModel : ViewModelBase
 
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
+    public ICommand UpgradeOutdatedModsCommand { get; }
 
     private void CreateMod()
     {
@@ -90,6 +105,29 @@ public class ModSelectionViewModel : ViewModelBase
                 return;
             }
             RefreshModItems();
+            RefreshOutdatedModsExist();
         }
+    }
+
+    private void UpgradeOutdatedMods()
+    {
+        if (_dialogService.UpgradeMods(out string romPath))
+        {
+            try
+            {
+                _modService.UpgradeModsToLatestVersion(_modService.GetModInfoPreviousVersions(), romPath);
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                        title: "Error Upgrading Mods",
+                        message: e.Message,
+                        type: MessageBoxType.Error
+                    ));
+                return;
+            }
+        }
+        RefreshModItems();
+        RefreshOutdatedModsExist();
     }
 }

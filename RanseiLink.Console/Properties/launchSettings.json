@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RanseiLink.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "msg 0 0"
+    }
+  }
+}

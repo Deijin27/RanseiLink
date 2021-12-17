@@ -4,6 +4,10 @@ namespace RanseiLink.Core.Services;
 
 public interface IModService
 {
+    /// <summary>
+    /// Delete mod
+    /// </summary>
+    /// <param name="modInfo">Mod to delete</param>
     void Delete(ModInfo modInfo);
 
     /// <summary>
@@ -24,7 +28,7 @@ public interface IModService
     string Export(ModInfo modInfo, string destinationFolder);
 
     /// <summary>
-    /// Get info on all existing mods.
+    /// Get info on all existing mods of the current version
     /// </summary>
     /// <returns>List of info on mods</returns>
     IList<ModInfo> GetAllModInfo();
@@ -49,5 +53,27 @@ public interface IModService
     /// </summary>
     /// <param name="modInfo"></param>
     void Update(ModInfo modInfo);
+
+    /// <summary>
+    /// Create a new mod based on an existing, duplicating the data.
+    /// </summary>
+    /// <param name="baseMod">Mod to copy</param>
+    /// <param name="name">Name of new mod</param>
+    /// <param name="version">Version of new mod</param>
+    /// <param name="author">Author of new mod</param>
+    /// <returns></returns>
     ModInfo CreateBasedOn(ModInfo baseMod, string name = "", string version = "", string author = "");
+
+    /// <summary>
+    /// Upgrade mods to the latest version.
+    /// </summary>
+    /// <param name="mods">mods to upgrade</param>
+    /// <param name="romPath">Path of rom to use as data source for mod upgrade</param>
+    void UpgradeModsToLatestVersion(IEnumerable<ModInfo> mods, string romPath);
+
+    /// <summary>
+    /// Get info on all existing mods of previous versions (i.e. can be upgraded to current)
+    /// </summary>
+    /// <returns></returns>
+    IList<ModInfo> GetModInfoPreviousVersions();
 }

@@ -46,6 +46,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
         {
             editor.AddModule<AbilitySelectorEditorModule>();
+            editor.AddModule<MsgGridEditorModule>();
             editor.AddModule<AbilityGridEditorModule>();
             editor.AddModule<BaseWarriorSelectorEditorModule>();
             editor.AddModule<BaseWarriorGridEditorModule>();

@@ -1,13 +1,14 @@
 ﻿using RanseiLink.Core.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
 public interface IGridViewModel<TItemViewModel>
 {
-    List<TItemViewModel> Items { get; }
+    ObservableCollection<TItemViewModel> Items { get; }
     int FrozenColumnCount { get; }
 }
 
@@ -29,7 +30,7 @@ public abstract class GridViewModelBase<TId, TModel, TGridItemViewModel, TDataSe
         Refresh();
     }
 
-    public List<TGridItemViewModel> Items { get; } = new();
+    public ObservableCollection<TGridItemViewModel> Items { get; } = new();
     public virtual int FrozenColumnCount => 1;
 
     public void Refresh()

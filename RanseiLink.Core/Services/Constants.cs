@@ -5,6 +5,12 @@ namespace RanseiLink.Core.Services;
 
 public static class Constants
 {
+    /// <summary>
+    /// folder that decrypted blocks are stored in relative to .rlmod file. not in rom.
+    /// </summary>
+    public const string MsgFolderPath = "msg";
+    public static string MsgBlockPathFromId(int id) => Path.Combine(MsgFolderPath, $"block{id}.bin");
+
     public const string DataFolderPath = "data";
 
     public static readonly string AppearPokemonRomPath = Path.Combine(DataFolderPath, "AppearPokemon.dat");

@@ -20,4 +20,5 @@ public interface IDataService
     IBaseWarriorService BaseWarrior { get; }
     IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
     IScenarioKingdomService ScenarioKingdom { get; }
+    IMsgBlockService Msg { get; }
 }

@@ -96,6 +96,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     private void ReloadViewModels()
     {
         ViewModels.Clear();
+        _editorContext.CachedMsgBlockService.RebuildCache();
         foreach (var (key, module) in Modules)
         {
             ViewModels[key] = module.NewViewModel(_container, _editorContext);

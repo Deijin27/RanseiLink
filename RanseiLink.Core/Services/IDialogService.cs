@@ -6,6 +6,7 @@ namespace RanseiLink.Core.Services;
 
 public interface IDialogService
 {
+    bool UpgradeMods(out string romPath);
     bool CreateMod(out ModInfo modInfo, out string romPath);
     bool CreateModBasedOn(ModInfo baseMod, out ModInfo newModInfo);
     bool ExportMod(ModInfo info, out string folder);
