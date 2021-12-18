@@ -54,7 +54,7 @@ public class LuaCommand : BaseCommand
             {
                 string typeName = typeof(T).Name;
                 lua.DoString(typeName + "s = { " +
-                    string.Join(", ", EnumUtil.GetValues<T>().Select(i => $"{typeName}.{i}"))
+                    string.Join(", ", EnumUtil.GetValuesExceptDefaultsWithFallback<T>().Select(i => $"{typeName}.{i}"))
                     + " }"
                     );
             }
@@ -62,22 +62,30 @@ public class LuaCommand : BaseCommand
             AddEnumToState<AbilityEffectId>();
             AddEnumToState<AbilityId>();
             AddEnumToState<BuildingId>();
+            AddEnumToState<EpisodeId>();
             AddEnumToState<EventSpeakerId>();
             AddEnumToState<EvolutionConditionId>();
             AddEnumToState<GenderId>();
             AddEnumToState<GimmickId>();
             AddEnumToState<ItemId>();
             AddEnumToState<KingdomId>();
+            AddEnumToState<MoveAnimationId>();
             AddEnumToState<MoveEffectId>();
             AddEnumToState<MoveId>();
+            AddEnumToState<MoveMovementAnimationId>();
             AddEnumToState<MoveRangeId>();
             AddEnumToState<PokemonId>();
+            AddEnumToState<RankUpConditionId>();
             AddEnumToState<ScenarioId>();
             AddEnumToState<TypeId>();
+            AddEnumToState<WarriorClassId>();
             AddEnumToState<WarriorId>();
+            AddEnumToState<WarriorLineId>();
             AddEnumToState<WarriorSkillEffectId>();
             AddEnumToState<WarriorSkillId>();
             AddEnumToState<WarriorSkillTargetId>();
+            AddEnumToState<WarriorSpriteId>();
+            AddEnumToState<WarriorSprite2Id>();
 
             var luaFunctions = new LuaFunctions();
             lua.RegisterFunction("using", luaFunctions, typeof(LuaFunctions).GetMethod(nameof(LuaFunctions.Using)));

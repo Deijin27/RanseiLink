@@ -31,4 +31,15 @@ public static class EnumUtil
 
         return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i));
     }
+
+    public static IEnumerable<T> GetValuesExceptDefaultsWithFallback<T>()
+    {
+        var attr = typeof(T).GetCustomAttributes(typeof(DefaultValuesAttribute), false).FirstOrDefault() as DefaultValuesAttribute;
+        if (attr == null)
+        {
+            return GetValues<T>();
+        }
+
+        return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i));
+    }
 }
