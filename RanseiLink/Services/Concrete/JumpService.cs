@@ -15,145 +15,159 @@ internal class JumpService : IJumpService
 
     public void JumpToAbility(AbilityId id)
     {
-        //if (_mainEditor.AbilitySelector.Items.Contains(id))
-        //{
-        //    _mainEditor.AbilitySelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.Ability;
-        //}
+        var moduleId = AbilitySelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is AbilitySelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToBaseWarrior(WarriorId id)
     {
-        //if (_mainEditor.BaseWarriorSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.BaseWarriorSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.BaseWarrior;
-        //}
+        var moduleId = BaseWarriorSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is BaseWarriorSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToBuilding(BuildingId id)
     {
-        //if (_mainEditor.BuildingSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.BuildingSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.Building;
-        //}
+        var moduleId = BuildingSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is BuildingSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToEventSpeaker(EventSpeakerId id)
     {
-        //if (_mainEditor.EventSpeakerSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.EventSpeakerSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.EventSpeaker;
-        //}
+        var moduleId = EventSpeakerSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is EventSpeakerSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToEvolutionTable()
     {
-        //_mainEditor.CurrentPage = MainEditorPage.EvolutionTable;
+        _mainEditor.CurrentPage = EvolutionTableEditorModule.Id;
     }
 
     public void JumpToItem(ItemId id)
     {
-        //if (_mainEditor.ItemSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.ItemSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.Item;
-        //}
+        var moduleId = ItemSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is ItemSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToMaxLink(WarriorId id)
     {
-        //if (_mainEditor.MaxLinkSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.MaxLinkSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.MaxLink;
-        //}
+        var moduleId = MaxLinkSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is MaxLinkSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToMove(MoveId id)
     {
-        //if (_mainEditor.MoveSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.MoveSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.Move;
-        //}
+        var moduleId = MoveSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is MoveSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToMoveRange(MoveRangeId id)
     {
-        //if (_mainEditor.MoveRangeSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.MoveRangeSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.MoveRange;
-        //}
+        var moduleId = MoveRangeSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is MoveRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToPokemon(PokemonId id)
     {
-        //if (_mainEditor.PokemonSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.PokemonSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.Pokemon;
-        //}
+        var moduleId = PokemonSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is PokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToScenarioAppearPokemon(ScenarioId id)
     {
-        //if (_mainEditor.ScenarioAppearPokemonSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.ScenarioAppearPokemonSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.ScenarioAppearPokemon;
-        //}
+        var moduleId = ScenarioAppearPokemonSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is ScenarioAppearPokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToScenarioKingdom(ScenarioId id)
     {
-        //if (_mainEditor.ScenarioKingdomSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.ScenarioKingdomSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.ScenarioKingdom;
-        //}
+        var moduleId = ScenarioKingdomSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is ScenarioKingdomSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToScenarioPokemon(ScenarioId scenario, uint id)
     {
-        //var selector = _mainEditor.ScenarioPokemonSelector;
-        //if (selector.ScenarioItems.Contains(scenario)
-        //    && selector.MinIndex <= id
-        //    && selector.MaxIndex >= id)
-        //{
-        //    selector.SelectedScenario = scenario;
-        //    selector.SelectedItem = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.ScenarioPokemon;
-        //}
+        var moduleId = ScenarioPokemonSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is ScenarioPokemonSelectorViewModel selectorVm 
+            && selectorVm.ScenarioItems.Contains(scenario)
+            && selectorVm.MinIndex <= id
+            && selectorVm.MaxIndex >= id)
+        {
+            selectorVm.SelectedScenario = scenario;
+            selectorVm.SelectedItem = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToScenarioWarrior(ScenarioId scenario, uint id)
     {
-        //var selector = _mainEditor.ScenarioWarriorSelector;
-        //if (selector.ScenarioItems.Contains(scenario)
-        //    && selector.MinIndex <= id
-        //    && selector.MaxIndex >= id)
-        //{
-        //    selector.SelectedScenario = scenario;
-        //    selector.SelectedItem = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.ScenarioWarrior;
-        //}
+        var moduleId = ScenarioWarriorSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is ScenarioWarriorSelectorViewModel selectorVm
+            && selectorVm.ScenarioItems.Contains(scenario)
+            && selectorVm.MinIndex <= id
+            && selectorVm.MaxIndex >= id)
+        {
+            selectorVm.SelectedScenario = scenario;
+            selectorVm.SelectedItem = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 
     public void JumpToWarriorNameTable()
     {
-        //_mainEditor.CurrentPage = MainEditorPage.WarriorNameTable;
+        _mainEditor.CurrentPage = WarriorNameTableEditorModule.Id;
     }
 
     public void JumpToWarriorSkill(WarriorSkillId id)
     {
-        //if (_mainEditor.WarriorSkillSelector.Items.Contains(id))
-        //{
-        //    _mainEditor.WarriorSkillSelector.Selected = id;
-        //    _mainEditor.CurrentPage = MainEditorPage.WarriorSkill;
-        //}
+        var moduleId = WarriorSkillSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is WarriorSkillSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
     }
 }
