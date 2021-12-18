@@ -70,4 +70,9 @@ public class MockDialogService : IDialogService
     {
         throw new NotImplementedException();
     }
+
+    public bool UpgradeMods(out string romPath)
+    {
+        throw new NotImplementedException();
+    }
 }

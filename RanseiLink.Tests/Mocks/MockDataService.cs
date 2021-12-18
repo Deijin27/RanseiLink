@@ -36,4 +36,6 @@ internal class MockDataService : IDataService
     public IScenarioAppearPokemonService ScenarioAppearPokemon { get; set; }
 
     public IScenarioKingdomService ScenarioKingdom { get; set; }
+
+    public IMsgBlockService Msg { get; set; }
 }

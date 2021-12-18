@@ -28,4 +28,10 @@ internal class MockNds : INds
     {
         InsertCalls.Enqueue((path, source));
     }
+
+    public Queue<(string path, string source)> InsertVariableCalls = new Queue<(string path, string source)>();
+    public void InsertVariableLengthFile(string path, string source)
+    {
+        InsertVariableCalls.Enqueue((path, source));
+    }
 }

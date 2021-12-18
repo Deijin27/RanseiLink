@@ -17,7 +17,7 @@ public class TestEncounterable
         mock.SetEncounterable(KingdomId.Fontaine, true, false);
         mock.SetEncounterable(KingdomId.Ignis, false, false);
 
-        ViewModel = new PokemonViewModel(mock);
+        ViewModel = new PokemonViewModel(mock, new MockEditorContext() { JumpService = new MockJumpService()});
     }
 
     [Fact]
