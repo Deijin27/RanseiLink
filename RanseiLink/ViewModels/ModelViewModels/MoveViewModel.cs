@@ -11,6 +11,7 @@ public enum MoveAnimationPreviewMode
     Startup,
     Projectile,
     Impact,
+    Movement,
 }
 
 public delegate MoveViewModel MoveViewModelFactory(MoveId id, IMove model, IEditorContext context);
@@ -193,7 +194,13 @@ public class MoveViewModel : MoveViewModelBase
     public override MoveMovementAnimationId MovementAnimation
     {
         get => _model.MovementAnimation;
-        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
+        set
+        { 
+            if (RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
+            {
+                UpdatePreviewAnimation();
+            }
+        }
     }
 
     private string _currentPreviewAnimationUri;
@@ -229,6 +236,10 @@ public class MoveViewModel : MoveViewModelBase
             case MoveAnimationPreviewMode.Impact:
                 CurrentPreviewAnimationUri = GetAnimationUri(ImpactAnimation);
                 CurrentPreviewAnimationName = ImpactAnimation.ToString();
+                break;
+            case MoveAnimationPreviewMode.Movement:
+                CurrentPreviewAnimationUri = _externalService.GetMoveMovementAnimationUri(MovementAnimation);
+                CurrentPreviewAnimationName = MovementAnimation.ToString();
                 break;
         };
     }

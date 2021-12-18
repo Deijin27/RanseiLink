@@ -125,7 +125,11 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Movement Animation" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveMovementAnimationItems}" SelectedItem="{Binding MovementAnimation, Mode=TwoWay}"/>
+
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Movement}"/>
+                <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveMovementAnimationItems}" SelectedItem="{Binding MovementAnimation}"/>
+            </DockPanel>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup Animation"/>
             <DockPanel Grid.Row="1" Grid.Column="1">
