@@ -12,7 +12,7 @@
              xmlns:local="clr-namespace:RanseiLink.Views"
              d:DataContext="{d:DesignInstance Type=vm:MoveViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:MoveEffectIdToQuantityNameConverter x:Key="moveEffectIdToQuantityNameConverter"/>
 
@@ -42,6 +42,9 @@
                 <ColumnDefinition Width="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -94,7 +97,10 @@
             <TextBlock Grid.Row="12" Grid.Column="0" Text="{Binding Effect2, Mode=OneWay, Converter={StaticResource moveEffectIdToQuantityNameConverter}}" />
             <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Effect2Chance, Mode=TwoWay}" Max="127"/>
 
-        
+            <GroupBox Header="Description" Grid.Row="13" Grid.RowSpan="4" Grid.ColumnSpan="2">
+                <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+            </GroupBox>
+
         </Grid>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>

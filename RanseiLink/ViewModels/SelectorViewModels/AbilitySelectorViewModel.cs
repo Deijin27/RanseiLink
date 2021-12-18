@@ -12,13 +12,15 @@ public delegate AbilitySelectorViewModel AbilitySelectorViewModelFactory(IEditor
 public class AbilitySelectorViewModel : SelectorViewModelBase<AbilityId, IAbility, AbilityViewModel>
 {
     private readonly AbilityViewModelFactory _factory;
+    private readonly IEditorContext _context;
 
     public AbilitySelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.Ability, EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray()) 
     {
+        _context = context;
         _factory = container.Resolve<AbilityViewModelFactory>();
         Selected = AbilityId.Levitate;
     }
 
-    protected override AbilityViewModel NewViewModel(IAbility model) => _factory(model);
+    protected override AbilityViewModel NewViewModel(IAbility model) => _factory(Selected, model, _context);
 }

@@ -8,6 +8,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
+// This doesn't actually need to be saveable refreshable but whatever
 public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISaveableRefreshable
 {
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
@@ -37,13 +38,13 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
 
     public void Refresh()
     {
-        // no need to refresh when switching tabs because this is kept in memory
-        // but probably do need to after running a plugin.
+        // refresh isn't necessary because this is cached.
+        // The cache is cleared and refreshed properly where necessary in MainEditorViewModel
     }
 
     public void Save()
     {
-        _cachedMsgBlockService.SaveChangedBlocks();
+        // save is done outside because the cache is used in multiple places and it's quick anyway
     }
 
     public ICommand SearchCommand { get; }

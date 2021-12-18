@@ -10,13 +10,14 @@ public delegate ItemSelectorViewModel ItemSelectorViewModelFactory(IEditorContex
 public class ItemSelectorViewModel : SelectorViewModelBase<ItemId, IItem, ItemViewModel>
 {
     private readonly ItemViewModelFactory _factory;
-
+    private readonly IEditorContext _context;
     public ItemSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.Item) 
     {
+        _context = context;
         _factory = container.Resolve<ItemViewModelFactory>();
         Selected = ItemId.Potion;
     }
 
-    protected override ItemViewModel NewViewModel(IItem model) => _factory(model);
+    protected override ItemViewModel NewViewModel(IItem model) => _factory(Selected, model, _context);
 }

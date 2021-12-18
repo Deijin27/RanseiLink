@@ -13,16 +13,19 @@ public enum MoveAnimationPreviewMode
     Impact,
 }
 
-public delegate MoveViewModel MoveViewModelFactory(IMove model, IEditorContext context);
+public delegate MoveViewModel MoveViewModelFactory(MoveId id, IMove model, IEditorContext context);
 
 public abstract class MoveViewModelBase : ViewModelBase
 {
     protected readonly IMove _model;
 
-    public MoveViewModelBase(IMove model)
+    public MoveViewModelBase(MoveId id, IMove model)
     {
+        Id = id;
         _model = model;
     }
+
+    public MoveId Id { get; }
 
     public string Name
     {
@@ -96,21 +99,39 @@ public abstract class MoveViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
-    public abstract MoveAnimationId StartupAnimation { get; set; }
+    public virtual MoveAnimationId StartupAnimation
+    {
+        get => _model.StartupAnimation;
+        set => RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v);
+    }
 
-    public abstract MoveAnimationId ProjectileAnimation { get; set; }
+    public virtual MoveAnimationId ProjectileAnimation
+    {
+        get => _model.ProjectileAnimation;
+        set => RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v);
+    }
 
-    public abstract MoveAnimationId ImpactAnimation { get; set; }
+    public virtual MoveAnimationId ImpactAnimation
+    {
+        get => _model.ImpactAnimation;
+        set => RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v);
+    }
 
-    public abstract MoveMovementAnimationId MovementAnimation { get; set; }
+    public virtual MoveMovementAnimationId MovementAnimation
+    {
+        get => _model.MovementAnimation;
+        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
+    }
 }
 
 public class MoveViewModel : MoveViewModelBase
 {
+    private readonly ICachedMsgBlockService _msgService;
     private readonly IExternalService _externalService;
 
-    public MoveViewModel(IServiceContainer container, IMove model, IEditorContext context) : base(model)
+    public MoveViewModel(MoveId id, IServiceContainer container, IMove model, IEditorContext context) : base(id, model)
     {
+        _msgService = context.CachedMsgBlockService;
         _externalService = container.Resolve<IExternalService>();
 
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
@@ -123,6 +144,12 @@ public class MoveViewModel : MoveViewModelBase
 
         var jumpService = context.JumpService;
         JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(jumpService.JumpToMoveRange);
+    }
+
+    public string Description
+    {
+        get => _msgService.GetMoveDescription(Id);
+        set => _msgService.SetMoveDescription(Id, value);
     }
 
     public ICommand JumpToMoveRangeCommand { get; }
@@ -214,40 +241,8 @@ public class MoveViewModel : MoveViewModelBase
 
 public class MoveGridItemViewModel : MoveViewModelBase 
 {
-    public MoveGridItemViewModel(MoveId id, IMove model) : base(model)
+    public MoveGridItemViewModel(MoveId id, IMove model) : base(id, model)
     {
-        Id = id;
     }
 
-    public MoveId Id { get; }
-
-    public new string Name // force name to be second in auto generated order
-    {
-        get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
-    }
-
-    public override MoveAnimationId StartupAnimation
-    {
-        get => _model.StartupAnimation;
-        set => RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v);
-    }
-
-    public override MoveAnimationId ProjectileAnimation
-    {
-        get => _model.ProjectileAnimation;
-        set => RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v);
-    }
-
-    public override MoveAnimationId ImpactAnimation
-    {
-        get => _model.ImpactAnimation;
-        set => RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v);
-    }
-
-    public override MoveMovementAnimationId MovementAnimation
-    {
-        get => _model.MovementAnimation;
-        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
-    }
 }

@@ -115,6 +115,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public void Save()
     {
+        _editorContext.CachedMsgBlockService.SaveChangedBlocks();
         CurrentVm?.Save();
     }
 

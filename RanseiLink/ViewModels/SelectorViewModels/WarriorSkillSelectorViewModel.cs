@@ -10,13 +10,14 @@ public delegate WarriorSkillSelectorViewModel WarriorSkillSelectorViewModelFacto
 public class WarriorSkillSelectorViewModel : SelectorViewModelBase<WarriorSkillId, IWarriorSkill, WarriorSkillViewModel>
 {
     private readonly WarriorSkillViewModelFactory _factory;
-
+    private readonly IEditorContext _context;
     public WarriorSkillSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.WarriorSkill) 
     {
+        _context = context;
         _factory = container.Resolve<WarriorSkillViewModelFactory>();
         Selected = WarriorSkillId.Adrenaline;
     }
 
-    protected override WarriorSkillViewModel NewViewModel(IWarriorSkill model) => _factory(model);
+    protected override WarriorSkillViewModel NewViewModel(IWarriorSkill model) => _factory(Selected, model, _context);
 }

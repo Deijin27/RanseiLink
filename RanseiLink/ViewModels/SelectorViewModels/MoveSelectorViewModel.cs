@@ -19,5 +19,5 @@ public class MoveSelectorViewModel : SelectorViewModelBase<MoveId, IMove, MoveVi
         Selected = MoveId.Splash;
     }
 
-    protected override MoveViewModel NewViewModel(IMove model) => _factory(model, _context);
+    protected override MoveViewModel NewViewModel(IMove model) => _factory(Selected, model, _context);
 }

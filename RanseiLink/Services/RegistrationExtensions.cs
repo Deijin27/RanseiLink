@@ -28,18 +28,18 @@ public static class RegistrationExtensions
         container.RegisterSingleton<EditorContextFactory>((dataService, editor) => new EditorContext(dataService, editor));
         container.RegisterSingleton<ModListItemViewModelFactory>((parent, mod) => new ModListItemViewModel(parent, mod, container));
 
-        container.RegisterSingleton<AbilityViewModelFactory>(i => new AbilityViewModel(i));
+        container.RegisterSingleton<AbilityViewModelFactory>((i, m, c) => new AbilityViewModel(i, m, c));
         container.RegisterSingleton<BaseWarriorViewModelFactory>((i, c) => new BaseWarriorViewModel(i, c));
         container.RegisterSingleton<BuildingViewModelFactory>(i => new BuildingViewModel(i));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
-        container.RegisterSingleton<ItemViewModelFactory>(i => new ItemViewModel(i));
+        container.RegisterSingleton<ItemViewModelFactory>((i, m, c) => new ItemViewModel(i, m, c));
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
         container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
-        container.RegisterSingleton<MoveViewModelFactory>((i, c) => new MoveViewModel(container, i, c));
+        container.RegisterSingleton<MoveViewModelFactory>((i, m, c) => new MoveViewModel(i, container, m, c));
         container.RegisterSingleton<PokemonViewModelFactory>((i, c) => new PokemonViewModel(i, c));
         container.RegisterSingleton<ScenarioAppearPokemonViewModelFactory>(i => new ScenarioAppearPokemonViewModel(i));
         container.RegisterSingleton<ScenarioWarriorViewModelFactory>((sid, dataService, model) => new ScenarioWarriorViewModel(container, dataService, sid, model));
-        container.RegisterSingleton<WarriorSkillViewModelFactory>(i => new WarriorSkillViewModel(i));
+        container.RegisterSingleton<WarriorSkillViewModelFactory>((i, m, c) => new WarriorSkillViewModel(i, m, c));
         container.RegisterSingleton<ScenarioKingdomViewModelFactory>(i => new ScenarioKingdomViewModel(i));
         container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c) => new ScenarioPokemonViewModel(model, c));
 

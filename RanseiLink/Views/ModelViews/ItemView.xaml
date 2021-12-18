@@ -51,5 +51,8 @@
         <TextBlock Text="Shop Price Multiplier" Grid.Row="1" ToolTip="Max shop price / 100" />
         <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ShopPriceMultiplier, Mode=TwoWay}" Max="511"/>
 
+        <GroupBox Header="Description" Grid.Row="2" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+        </GroupBox>
     </Grid>
 </UserControl>

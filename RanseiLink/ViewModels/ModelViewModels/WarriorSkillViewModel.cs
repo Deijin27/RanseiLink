@@ -1,18 +1,22 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate WarriorSkillViewModel WarriorSkillViewModelFactory(IWarriorSkill model);
+public delegate WarriorSkillViewModel WarriorSkillViewModelFactory(WarriorSkillId id, IWarriorSkill model, IEditorContext context);
 
-public class WarriorSkillViewModel : ViewModelBase
+public class WarriorSkillViewModelBase : ViewModelBase
 {
     public IWarriorSkill _model;
 
-    public WarriorSkillViewModel(IWarriorSkill model)
+    public WarriorSkillViewModelBase(WarriorSkillId id, IWarriorSkill model)
     {
+        Id = id;
         _model = model;
     }
+
+    public WarriorSkillId Id { get; }
 
     public string Name
     {
@@ -70,12 +74,24 @@ public class WarriorSkillViewModel : ViewModelBase
 
 }
 
-public class WarriorSkillGridItemViewModel : WarriorSkillViewModel 
+public class WarriorSkillViewModel : WarriorSkillViewModelBase
 {
-    public WarriorSkillGridItemViewModel(WarriorSkillId id, IWarriorSkill model) : base(model)
+    private readonly ICachedMsgBlockService _msgService;
+    public WarriorSkillViewModel(WarriorSkillId id, IWarriorSkill model, IEditorContext context) : base(id, model)
     {
-        Id = id;
+        _msgService = context.CachedMsgBlockService;
+    }
+    public string Description
+    {
+        get => _msgService.GetWarriorSkillDescription(Id);
+        set => _msgService.SetWarriorSkillDescription(Id, value);
+    }
+}
+
+public class WarriorSkillGridItemViewModel : WarriorSkillViewModelBase 
+{
+    public WarriorSkillGridItemViewModel(WarriorSkillId id, IWarriorSkill model) : base(id, model)
+    {
     }
 
-    public WarriorSkillId Id { get; }
 }

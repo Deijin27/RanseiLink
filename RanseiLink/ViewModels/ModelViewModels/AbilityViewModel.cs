@@ -1,18 +1,22 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate AbilityViewModel AbilityViewModelFactory(IAbility model);
+public delegate AbilityViewModel AbilityViewModelFactory(AbilityId id, IAbility model, IEditorContext context);
 
 public abstract class AbilityViewModelBase : ViewModelBase
 {
     private readonly IAbility _model;
 
-    public AbilityViewModelBase(IAbility model)
+    public AbilityViewModelBase(AbilityId id, IAbility model)
     {
+        Id = id;
         _model = model;
     }
+
+    public AbilityId Id { get; }
 
     public string Name
     {
@@ -43,20 +47,33 @@ public abstract class AbilityViewModelBase : ViewModelBase
         get => _model.Effect2Amount;
         set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
     }
-
 }
 
 public class AbilityViewModel : AbilityViewModelBase
 {
-    public AbilityViewModel(IAbility model) : base(model) { }
+    private readonly ICachedMsgBlockService _msgService;
+    public AbilityViewModel(AbilityId id, IAbility model, IEditorContext context) : base(id, model) 
+    {
+        _msgService = context.CachedMsgBlockService;
+    }
+
+    public string Description
+    {
+        get => _msgService.GetAbilityDescription(Id);
+        set => _msgService.SetAbilityDescription(Id, value);
+    }
+
+    public string HotSpringsDescription
+    {
+        get => _msgService.GetAbilityHotSpringsDescription(Id);
+        set => _msgService.SetAbilityHotSpringsDescription(Id, value);
+    }
 }
 
 public class AbilityGridItemViewModel : AbilityViewModelBase
 {
-    public AbilityGridItemViewModel(AbilityId id, IAbility model) : base(model)
+    public AbilityGridItemViewModel(AbilityId id, IAbility model) : base(id, model)
     {
-        Id = id;
     }
-
-    public AbilityId Id { get; }
+    
 }
