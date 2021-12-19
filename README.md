@@ -4,7 +4,7 @@ WIP Pokemon Conquest Rom Editor. A netcore windows app, as well as a netcore con
 
 ![](https://i.imgur.com/0WpMBxe.png)
 
-See the Wiki for explanations of file formats and data structures used within the game.
+See the [Wiki](https://github.com/Deijin27/RanseiLink/wiki) and [this drive folder](https://drive.google.com/drive/folders/1WXkIMyp8xqncDGO0tgiZQvT9JYS5CRJ1) for explanations of file formats and data structures used within the game.
 
 ## Windows App
 
