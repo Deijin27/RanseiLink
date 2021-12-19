@@ -4,27 +4,55 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             x:Name="msgGridViewControl"
              d:DataContext="{d:DesignInstance vm:MsgGridViewModel, IsDesignTimeCreatable=False}"
              xmlns:styles="clr-namespace:RanseiLink.Styles"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" Margin="10,0,0,0">
-            <TextBox.InputBindings>
-                <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
-            </TextBox.InputBindings>
-        </TextBox>
-        <Button Margin="10,0" Height="20" Padding="5,0" Content="Search" Grid.Column="2" Command="{Binding SearchCommand}"/>
+        <StackPanel>
+            <DockPanel Margin="0,0,0,10">
+                <CheckBox Margin="10,0" Padding="5,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
+                <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Search" Command="{Binding SearchCommand}" DockPanel.Dock="Right"/>
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2"
+                <TextBlock DockPanel.Dock="Left" Text="Find" Margin="10,0" TextAlignment="Right"/>
+                <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RegexInvalid}" Value="True">
+                                    <Setter Property="TextBox.BorderBrush" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding SearchCommand}"/>
+                    </TextBox.InputBindings>
+                    
+                </TextBox>
+            </DockPanel>
+            <DockPanel Margin="0,0,0,10" Visibility="{Binding ReplaceVisible, Converter={StaticResource Converter.BoolToVis}}">
+                <Button Margin="10,0" Height="20" Padding="5,0" Content="Replace All" Grid.Column="2" Command="{Binding ReplaceAllCommand}" DockPanel.Dock="Right"/>
+
+                <TextBlock DockPanel.Dock="Left" Text="Replace With" Margin="10,0" TextAlignment="Right"/>
+
+                <TextBox Text="{Binding ReplaceWith, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
+                </TextBox>
+            </DockPanel>
+        </StackPanel>
+        
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2"
               styles:DataGridHelper.ComboBoxColumnEditingStyle="{StaticResource {x:Type ComboBox}}"
               styles:DataGridHelper.TextColumnEditingStyle="{StaticResource {x:Type TextBox}}"/>
 

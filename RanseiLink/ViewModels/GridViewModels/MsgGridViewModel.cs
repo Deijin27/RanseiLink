@@ -4,6 +4,7 @@ using RanseiLink.ViewModels.ModelViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -12,6 +13,7 @@ namespace RanseiLink.ViewModels;
 public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISaveableRefreshable
 {
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
+
     public MsgGridViewModel(IServiceContainer container, IEditorContext context)
     {
         _cachedMsgBlockService = context.CachedMsgBlockService;
@@ -25,10 +27,74 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
         }
         Items = new ObservableCollection<MsgViewModel>(_allItems);
 
-        SearchCommand = new RelayCommand(Search, () => !_searching);
+        SearchCommand = new RelayCommand(Search, () => !_busy);
+        ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !_busy);
+        ClearCommand = new RelayCommand(() => SearchTerm = "", () => !_busy);
     }
 
-    public string SearchTerm { get; set; }
+    private bool _matchCase = false;
+    public bool MatchCase
+    {
+        get => _matchCase;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _matchCase, value))
+            {
+                Search();
+            }
+        }
+    }
+
+    private bool _useRegex = false;
+    public bool UseRegex
+    {
+        get => _useRegex;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _useRegex, value))
+            {
+                RaisePropertyChanged(nameof(RegexInvalid));
+                Search();
+            }
+        }
+    }
+
+
+    private bool _replaceVisible = false;
+    public bool ReplaceVisible
+    {
+        get => _replaceVisible;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _replaceVisible, value))
+            {
+                Search();
+            }
+        }
+    }
+
+    private string _searchTerm = "";
+    public string SearchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _searchTerm, value))
+            {
+                RaisePropertyChanged(nameof(RegexInvalid));
+                Search();
+            }
+        }
+    }
+
+    private string _replaceWith = "";
+    public string ReplaceWith
+    {
+        get => _replaceWith;
+        set => RaiseAndSetIfChanged(ref _replaceWith, value);
+    }
+
+    public bool RegexInvalid => UseRegex && !TryGenerateRegex(SearchTerm, RegexOptions.CultureInvariant, out var _);
 
     public int FrozenColumnCount => 1;
 
@@ -48,10 +114,13 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
     }
 
     public ICommand SearchCommand { get; }
-    private bool _searching;
+    public ICommand ClearCommand { get; }
+    public ICommand ReplaceAllCommand { get; }
+
+    private bool _busy;
     private void Search()
     {
-        _searching = true;
+        _busy = true;
         string searchTerm = SearchTerm;
         if (string.IsNullOrEmpty(searchTerm))
         {
@@ -62,13 +131,97 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
             }
         }
         Items.Clear();
-        foreach (var item in _allItems)
+        if (UseRegex)
         {
-            if (item.Text.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            var options = RegexOptions.CultureInvariant;
+            if (!MatchCase)
             {
-                Items.Add(item);
+                options |= RegexOptions.IgnoreCase;
+            }
+            
+            if (!TryGenerateRegex(searchTerm, options, out var rx))
+            {
+                return;
+            }
+            
+            foreach (var item in _allItems)
+            {
+                if (rx.IsMatch(item.Text))
+                {
+                    Items.Add(item);
+                }
             }
         }
-        _searching = false;
+        else
+        {
+            StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+            foreach (var item in _allItems)
+            {
+                if (item.Text.Contains(searchTerm, comparison))
+                {
+                    Items.Add(item);
+                }
+            }
+        }
+        
+        _busy = false;
     }
+
+    private static bool TryGenerateRegex(string pattern, RegexOptions options, out Regex regex)
+    {
+        try
+        {
+            regex = new Regex(pattern, options);
+            return true;
+        }
+        catch (ArgumentException)
+        {
+            regex = null;
+            return false;
+        }
+    }
+
+    public void ReplaceAll()
+    {
+        _busy = true;
+
+        string replaceTerm = ReplaceWith;
+        string searchTerm = SearchTerm;
+
+        Items.Clear();
+
+        if (UseRegex)
+        {
+            var options = RegexOptions.CultureInvariant;
+            if (!MatchCase)
+            {
+                options |= RegexOptions.IgnoreCase;
+            }
+            if (!TryGenerateRegex(searchTerm, options, out var rx))
+            {
+                return;
+            }
+            foreach (var item in _allItems)
+            {
+                if (rx.IsMatch(item.Text))
+                {
+                    rx.Replace(item.Text, replaceTerm);
+                    Items.Add(item);
+                }
+            }
+        }
+        else
+        {
+            StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+            foreach (var item in _allItems)
+            {
+                if (item.Text.Contains(searchTerm, comparison))
+                {
+                    item.Text = item.Text.Replace(searchTerm, replaceTerm, comparison);
+                    Items.Add(item);
+                }
+            }
+        }
+    }
+
 }
