@@ -35,4 +35,7 @@ public class RandomizationOptionForm : IPluginForm
 
     [BoolOption("Avoid Dummys", "Avoid dummy moves, abilities, etc when randomizing")]
     public bool AvoidDummys { get; set; } = true;
+
+    [BoolOption("Softlock Minimization", "Reduce the chance of softlocks caused by randomization (optimised for vanilla)")]
+    public bool SoftlockMinimization { get; set; } = true;
 }

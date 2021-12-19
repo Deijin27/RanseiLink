@@ -9,7 +9,7 @@ using System.Linq;
 namespace RandomizerPlugin;
 
 
-[Plugin("Randomizer", "Deijin", "1.0")]
+[Plugin("Randomizer", "Deijin", "1.1")]
 public class RandomizerPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -86,7 +86,7 @@ public class RandomizerPlugin : IPlugin
         }
 
         // Reduce likelihood of softlocks
-        if (options.Moves)
+        if (options.Moves && options.SoftlockMinimization)
         {
             uint playersPokemon;
             uint oichisPokemon;
