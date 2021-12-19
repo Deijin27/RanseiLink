@@ -26,8 +26,7 @@
                             <Setter Property="BorderBrush" TargetName="templateRoot" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Background" TargetName="templateRoot" Value="orange"/>
-                            <Setter Property="BorderBrush" TargetName="templateRoot" Value="cyan"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
