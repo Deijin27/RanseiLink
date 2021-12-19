@@ -34,4 +34,4 @@ The console app supports scripting using Lua, see: https://github.com/Deijin27/R
 - Baconfry (Testing)
 - [Pleonex](https://github.com/pleonex) ([Text editing](https://github.com/pleonex/PokemonConquest))
 - [Snap](https://allmylinks.com/snarp1969) (Testing, [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
-- [WhatAUsernameIHave](https://allmylinks.com/whatausernameihave) (Testing, [Video tutorial](https://www.youtube.com/watch?v=sw0Kpo-y9k0), [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
+- [WhatAUsernameIHave](https://allmylinks.com/whatausernameihave) (Testing, Social Media Manager, [Video tutorial](https://www.youtube.com/watch?v=sw0Kpo-y9k0), [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
