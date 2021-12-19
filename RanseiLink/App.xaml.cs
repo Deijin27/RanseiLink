@@ -11,7 +11,7 @@ namespace RanseiLink;
 /// </summary>
 public partial class App : Application
 {
-    public const string Version = "3.0 - beta6";
+    public const string Version = "3.0";
     public IServiceContainer ServiceContainer { get; }
 
     public App()
