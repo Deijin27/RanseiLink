@@ -25,6 +25,13 @@ Run `dotnet RanseiLink.Console.dll -h` to view the command options.
 
 The console app supports scripting using Lua, see: https://github.com/Deijin27/RanseiLink/wiki/Sample-Lua-Scripts
 
-## Preview of console app and scripting
+### Preview of console app and scripting
 
 ![](https://i.imgur.com/JSPIMkU.png)
+
+## Special thanks
+
+- Baconfry (Testing)
+- [Pleonex](https://github.com/pleonex) (10 year old text decryption code)
+- Snap (Testing, animation preview)
+- [WhatAUsernameIHave](https://allmylinks.com/whatausernameihave) (Testing, Video tutorial, animation preview)
