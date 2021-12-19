@@ -8,17 +8,9 @@ See the Wiki for explanations of file formats and data structures used within th
 
 ## Windows App
 
-![](https://i.imgur.com/4F25Bqv.png)
+[Installation Guide](https://github.com/Deijin27/RanseiLink/wiki/RanseiLink-3.0-Installation-Guide)
 
-How to get it running on your computer:
-
-1. Go to https://github.com/Deijin27/RanseiLink/releases
-2. Find the latest release
-3. On the page of the latest release, you will see a section called "Assets", open that and download `RanseiLink.<version>.zip`
-4. Extract from the zip using an application like 7zip
-5. Run the extracted exe.
-6. You may be prompted to download the .NET Core 3.1 Runtime at this [page](https://dotnet.microsoft.com/download/dotnet/3.1/runtime?utm_source=getdotnetcore&utm_medium=referral). If so, download and install the "Run Destktop Apps x64".
-7. Once that's done you should be able to run the application.
+![](https://i.imgur.com/ZHQ6yyN.png)
 
 How to use:
 
@@ -27,9 +19,9 @@ How to use:
 
 ## Console App
 
-Within the console, navigate to the folder containing `RanseiConsole.dll`.
+Within the console, navigate to the folder containing `RanseiLink.Console.dll`.
 
-Run `dotnet RanseiConsole.dll -h` to view the command options.
+Run `dotnet RanseiLink.Console.dll -h` to view the command options.
 
 The console app supports scripting using Lua, see: https://github.com/Deijin27/RanseiLink/wiki/Sample-Lua-Scripts
 
