@@ -4,48 +4,193 @@ using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
-
-[Plugin("Randomizer", "Deijin", "1.1")]
+[Plugin("Randomizer", "Deijin", "1.2")]
 public class RandomizerPlugin : IPlugin
 {
+    private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
+    private AbilityId[] abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
+    private TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
+    private MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
+    private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
+    private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
+    private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
+
+    private Dictionary<PokemonId, IPokemon> _allPokemon;
+    private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
+    private Dictionary<MoveId, IMove> _allMoves;
+    private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
+
+    private int _playersScenarioPokemonId;
+    private int _oichisScenarioPokemonId;
+    private int _korokusScenarioPokemonId;
+    private int _nagayasusScenarioPokemonId;
+
+    private IDataService _dataService;
+
+    private RandomizationOptionForm options;
+
+    private Random random;
+
+    private IScenarioPokemon PlayersScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_playersScenarioPokemonId];
+    private IScenarioPokemon OichisScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_oichisScenarioPokemonId];
+    private IScenarioPokemon KorokusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_korokusScenarioPokemonId];
+    private IScenarioPokemon NagayasusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_nagayasusScenarioPokemonId];
+
+    private readonly HashSet<MoveEffectId> invalidEffects = new() {
+                MoveEffectId.VanishesAndHitsStartOfNextTurn,
+                MoveEffectId.VanishesWithTargetAndHitsStartOfNextTurn,
+                MoveEffectId.HitsStartOfTurnAfterNext,
+                };
+
     public void Run(IPluginContext context)
     {
         var optionService = context.ServiceContainer.Resolve<IPluginService>();
-        var options = new RandomizationOptionForm();
+        options = new RandomizationOptionForm();
         if (!optionService.RequestOptions(options))
         {
             return;
         }
 
-        IDataService dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
+        var dialogService = context.ServiceContainer.Resolve<IDialogService>();
+        _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
 
-        PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-        AbilityId[] abilityIds = EnumUtil.GetValues<AbilityId>().ToArray();
-        TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
-        MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
-        WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
-        ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
+        dialogService.ProgressDialog(async (step, progress) =>
+        {
+            step.Report("Initializing Randomizer...");
+            await Task.Run(Init);
+            progress.Report(15);
+            step.Report("Randomizing...");
 
+            await Task.Run(() =>
+            {
+                Randomize();
+
+                if (options.SoftlockMinimization)
+                {
+                    while (!IsValid())
+                    {
+                        Randomize();
+                    }
+                }
+            });
+
+            if (options.AllMaxLinkValue > 0)
+            {
+                progress.Report(70);
+                step.Report("Handling max link values...");
+            }
+
+            progress.Report(85);
+            step.Report("Saving randomized data...");
+            await Task.Run(Save);
+
+            progress.Report(100);
+            step.Report("Randomization complete!");
+            await Task.Delay(500);
+
+        });
+    }
+
+    /// <summary>
+    /// Load all the required stuff into memory
+    /// </summary>
+    private void Init()
+    {
+        _allPokemon = new();
+        using (var pokemonService = _dataService.Pokemon.Disposable())
+        {
+            foreach (PokemonId pokemonId in pokemonIds)
+            {
+                _allPokemon[pokemonId] = pokemonService.Retrieve(pokemonId);
+            }
+        }
+            
+        _allMoves = new();
+        using (var moveService = _dataService.Move.Disposable())
+        {
+            foreach (MoveId moveId in moveIds)
+            {
+                _allMoves[moveId] = moveService.Retrieve(moveId);
+            }
+        }
+            
+        _allMoveRanges = new();
+        using (var moveRangeService = _dataService.MoveRange.Disposable())
+        {
+            foreach (MoveRangeId moveRangeId in moveRangeIds)
+            {
+                _allMoveRanges[moveRangeId] = moveRangeService.Retrieve(moveRangeId);
+            }
+        }
+            
+        _allScenarioPokemon = new();
+        using (var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable())
+        {
+            foreach (ScenarioId scenarioId in scenarioIds)
+            {
+                Dictionary<int, IScenarioPokemon> dict = new();
+                for (int j = 0; j < Constants.ScenarioPokemonCount; j++)
+                {
+                    dict[j] = scenarioPokemonService.Retrieve(scenarioId, j);
+                }
+                _allScenarioPokemon[scenarioId] = dict;
+            }
+        }
+
+        using (var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable())
+        {
+            _playersScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 0).ScenarioPokemon;
+            _oichisScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 2).ScenarioPokemon;
+            _korokusScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 58).ScenarioPokemon;
+            _nagayasusScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 66).ScenarioPokemon;
+        }
+            
         if (options.AvoidDummys)
         {
             abilityIds = abilityIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
             moveIds = moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
-        var random = new Random(options.Seed.GetHashCode());
+        random = new Random(options.Seed.GetHashCode());
+    }
 
-        using var pokemonService = dataService.Pokemon.Disposable();
+    /// <summary>
+    ///  Save only things that will change from randomization
+    /// </summary>
+    private void Save()
+    {
+        using var pokemonService = _dataService.Pokemon.Disposable();
+        using var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable();
 
+        foreach (var (id, pokemon) in _allPokemon)
+        {
+            pokemonService.Save(id, pokemon);
+        }
+
+        foreach (var (scenarioId, dict) in _allScenarioPokemon)
+        {
+            foreach (var (scenarioPokemonId, scenarioPokemon) in dict)
+            {
+                scenarioPokemonService.Save(scenarioId, scenarioPokemonId, scenarioPokemon);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Randomization code
+    /// </summary>
+    private void Randomize()
+    {
         if (options.Abilities || options.Types || options.Moves)
         {
-            foreach (var pid in pokemonIds)
+            foreach (IPokemon poke in _allPokemon.Values)
             {
-                var poke = pokemonService.Retrieve(pid);
-
                 if (options.Abilities)
                 {
                     poke.Ability1 = random.Choice(abilityIds);
@@ -64,107 +209,133 @@ public class RandomizerPlugin : IPlugin
                 {
                     poke.Move = random.Choice(moveIds);
                 }
-                pokemonService.Save(pid, poke);
             }
         }
-
-        using var scenarioPokemonService = dataService.ScenarioPokemon.Disposable();
 
         if (options.ScenarioPokemon)
         {
-            foreach (var i in scenarioIds)
+            foreach (IScenarioPokemon sp in _allScenarioPokemon.Values.SelectMany(i => i.Values))
             {
-                for (int j = 0; j < Constants.ScenarioPokemonCount; j++)
-                {
-                    var sp = scenarioPokemonService.Retrieve(i, j);
-                    sp.Pokemon = random.Choice(pokemonIds);
-                    var pk = pokemonService.Retrieve(sp.Pokemon);
-                    sp.Ability = random.Choice(new[] { pk.Ability1, pk.Ability2, pk.Ability3 });
-                    scenarioPokemonService.Save(i, j, sp);
-                }
-            }
-        }
-
-        // Reduce likelihood of softlocks
-        if (options.Moves && options.SoftlockMinimization)
-        {
-            uint playersPokemon;
-            uint oichisPokemon;
-            IPokemon korokusPokemon;
-            IPokemon nagayasusPokemon;
-            using (var scenarioWarriorService = dataService.ScenarioWarrior.Disposable())
-            {
-                playersPokemon = scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 0).ScenarioPokemon;
-                oichisPokemon = scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 2).ScenarioPokemon;
-                korokusPokemon = pokemonService.Retrieve(
-                    scenarioPokemonService.Retrieve(ScenarioId.TheLegendOfRansei, (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 58).ScenarioPokemon).Pokemon);
-                nagayasusPokemon = pokemonService.Retrieve(
-                    scenarioPokemonService.Retrieve(ScenarioId.TheLegendOfRansei, (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 66).ScenarioPokemon).Pokemon);
-            }
-            using var moveService = dataService.Move.Disposable();
-            using var moveRangeService = dataService.MoveRange.Disposable();
-
-            var invalidEffects = new[] { 
-                MoveEffectId.VanishesAndHitsStartOfNextTurn, 
-                MoveEffectId.VanishesWithTargetAndHitsStartOfNextTurn,
-                MoveEffectId.HitsStartOfTurnAfterNext,
-            };
-
-            bool validate(MoveId moveId, bool koroku, bool nagayasu)
-            {
-                var move = moveService.Retrieve(moveId);
-                if (move.Accuracy != 100)
-                {
-                    return false;
-                }
-                if (!moveRangeService.Retrieve(move.Range).GetInRange(1))
-                {
-                    return false;
-                }
-                if (new[] { move.Effect1, move.Effect2 }.Any(i => invalidEffects.Contains(i)))
-                {
-                    return false;
-                }
-                if (koroku && (korokusPokemon.Type1.IsImmuneTo(move.Type) || korokusPokemon.Type2.IsImmuneTo(move.Type)))
-                {
-                    return false;
-                }
-                if (nagayasu && (nagayasusPokemon.Type1.IsImmuneTo(move.Type) || nagayasusPokemon.Type2.IsImmuneTo(move.Type)))
-                {
-                    return false;
-                }
-                return true;
-            }
-
-            foreach (var i in new[] { playersPokemon, oichisPokemon })
-            {
-                var sp = scenarioPokemonService.Retrieve(ScenarioId.TheLegendOfRansei, (int)i);
-                var poke = pokemonService.Retrieve(sp.Pokemon);
-                while (!validate(poke.Move, i == playersPokemon, i == oichisPokemon))
-                {
-                    poke.Move = random.Choice(moveIds);
-                }
-                pokemonService.Save(sp.Pokemon, poke);
-            }
-        }
-
-        if (options.AllMaxLinkValue > 0)
-        {
-            using var maxLinkService = dataService.MaxLink.Disposable();
-
-            foreach (WarriorId wid in warriorIds)
-            {
-                var maxLinkTable = maxLinkService.Retrieve(wid);
-                foreach (PokemonId pid in pokemonIds)
-                {
-                    if (maxLinkTable.GetMaxLink(pid) < options.AllMaxLinkValue)
-                    {
-                        maxLinkTable.SetMaxLink(pid, options.AllMaxLinkValue);
-                    }
-                }
-                maxLinkService.Save(wid, maxLinkTable);
+                sp.Pokemon = random.Choice(pokemonIds);
+                var pk = _allPokemon[sp.Pokemon];
+                sp.Ability = random.Choice(new[] { pk.Ability1, pk.Ability2, pk.Ability3 });
             }
         }
     }
-}
 
+    /// <summary>
+    /// Validate current randomization to minimize softlock chance.
+    /// </summary>
+    /// <returns>False if a softlock will definitely occur</returns>
+    private bool IsValid()
+    {
+        if (!ValidateTutorial())
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ValidateTutorial()
+    {
+        if (_allPokemon[PlayersScenarioPokemon.Pokemon].MovementRange < 3)
+        {
+            return false;
+        }
+
+        if (!ValidateTutorialMatchup(PlayersScenarioPokemon, KorokusScenarioPokemon))
+        {
+            return false;
+        }
+
+        if (!ValidateTutorialMatchup(OichisScenarioPokemon, NagayasusScenarioPokemon))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon)
+    {
+        var attackingPokemon = _allPokemon[attackingScenarioPokemon.Pokemon];
+        var targetPokemon = _allPokemon[targetScenarioPokemon.Pokemon];
+        var move = _allMoves[attackingPokemon.Move];
+
+        if (move.Accuracy != 100)
+        {
+            return false;
+        }
+        if ((options.Moves || options.ScenarioPokemon) && move.Power < 30)
+        {
+            return false;
+        }
+        if (move.Power < 60 && targetPokemon.Resists(move.Type))
+        {
+            return false;
+        }
+        if (!_allMoveRanges[move.Range].GetInRange(1))
+        {
+            return false;
+        }
+        if (new[] { move.Effect1, move.Effect2 }.Any(i => invalidEffects.Contains(i)))
+        {
+            return false;
+        }
+        if (targetPokemon.IsImmuneTo(move.Type))
+        {
+            return false;
+        }
+        if (targetScenarioPokemon.Ability == AbilityId.Sturdy)
+        {
+            return false;
+        }
+        if (!MoldBreakerAbilitys.Contains(attackingScenarioPokemon.Ability))
+        {
+            switch (targetScenarioPokemon.Ability)
+            {
+                case AbilityId.Levitate:
+                    if (move.Type == TypeId.Ground)
+                        return false;
+                    break;
+                case AbilityId.WaterAbsorb:
+                    if (move.Type == TypeId.Water)
+                        return false;
+                    break;
+                case AbilityId.FlashFire:
+                    if (move.Type == TypeId.Fire)
+                        return false;
+                    break;
+                case AbilityId.VoltAbsorb:
+                case AbilityId.Lightningrod:
+                case AbilityId.MotorDrive:
+                    if (move.Type == TypeId.Electric)
+                        return false;
+                    break;
+            }
+        }
+        
+        return true;
+    }
+
+    private readonly AbilityId[] MoldBreakerAbilitys = new[] { AbilityId.MoldBreaker, AbilityId.Teravolt, AbilityId.Turboblaze };
+
+    private void HandleMaxLink()
+    {
+        using var maxLinkService = _dataService.MaxLink.Disposable();
+
+        foreach (WarriorId wid in warriorIds)
+        {
+            var maxLinkTable = maxLinkService.Retrieve(wid);
+            foreach (PokemonId pid in pokemonIds)
+            {
+                if (maxLinkTable.GetMaxLink(pid) < options.AllMaxLinkValue)
+                {
+                    maxLinkTable.SetMaxLink(pid, options.AllMaxLinkValue);
+                }
+            }
+            maxLinkService.Save(wid, maxLinkTable);
+        }
+    }
+}
