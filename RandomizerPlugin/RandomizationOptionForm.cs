@@ -30,6 +30,12 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Pokemon's Moves", "Randomize pokemon's moves")]
     public bool Moves { get; set; }
 
+    [BoolOption("Move Animations", "Ultimate chaos with random move animations")]
+    public bool MoveAnimations { get; set; }
+
+    [BoolOption("Warriors", "Randomize which warriors are where")]
+    public bool Warriors { get; set; }
+
     [UIntOption("Minimum max link value", "Set max link to at least this value", maximumValue: 100)]
     public uint AllMaxLinkValue { get; set; } = 98;
 

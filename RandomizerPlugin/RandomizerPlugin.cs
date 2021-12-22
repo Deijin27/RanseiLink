@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
-[Plugin("Randomizer", "Deijin", "1.2")]
+[Plugin("Randomizer", "Deijin", "1.3")]
 public class RandomizerPlugin : IPlugin
 {
     private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
@@ -20,16 +20,13 @@ public class RandomizerPlugin : IPlugin
     private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
     private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
+    private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().ToArray();
 
     private Dictionary<PokemonId, IPokemon> _allPokemon;
     private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
+    private Dictionary<ScenarioId, Dictionary<int, IScenarioWarrior>> _allScenarioWarriors;
     private Dictionary<MoveId, IMove> _allMoves;
     private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
-
-    private int _playersScenarioPokemonId;
-    private int _oichisScenarioPokemonId;
-    private int _korokusScenarioPokemonId;
-    private int _nagayasusScenarioPokemonId;
 
     private IDataService _dataService;
 
@@ -37,10 +34,10 @@ public class RandomizerPlugin : IPlugin
 
     private Random random;
 
-    private IScenarioPokemon PlayersScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_playersScenarioPokemonId];
-    private IScenarioPokemon OichisScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_oichisScenarioPokemonId];
-    private IScenarioPokemon KorokusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_korokusScenarioPokemonId];
-    private IScenarioPokemon NagayasusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][_nagayasusScenarioPokemonId];
+    private IScenarioPokemon PlayersScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][0].ScenarioPokemon];
+    private IScenarioPokemon OichisScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][2].ScenarioPokemon];
+    private IScenarioPokemon KorokusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][58].ScenarioPokemon];
+    private IScenarioPokemon NagayasusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][66].ScenarioPokemon];
 
     private readonly HashSet<MoveEffectId> invalidEffects = new() {
                 MoveEffectId.VanishesAndHitsStartOfNextTurn,
@@ -78,12 +75,15 @@ public class RandomizerPlugin : IPlugin
                         Randomize();
                     }
                 }
+
+                RandomizeNoValidationNeeded();
             });
 
             if (options.AllMaxLinkValue > 0)
             {
                 progress.Report(70);
                 step.Report("Handling max link values...");
+                await Task.Run(HandleMaxLink);
             }
 
             progress.Report(85);
@@ -143,12 +143,18 @@ public class RandomizerPlugin : IPlugin
             }
         }
 
+        _allScenarioWarriors = new();
         using (var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable())
         {
-            _playersScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 0).ScenarioPokemon;
-            _oichisScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 2).ScenarioPokemon;
-            _korokusScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 58).ScenarioPokemon;
-            _nagayasusScenarioPokemonId = (int)scenarioWarriorService.Retrieve(ScenarioId.TheLegendOfRansei, 66).ScenarioPokemon;
+            foreach (ScenarioId scenarioId in scenarioIds)
+            {
+                Dictionary<int, IScenarioWarrior> dict = new();
+                for (int j = 0; j < Constants.ScenarioWarriorCount; j++)
+                {
+                    dict[j] = scenarioWarriorService.Retrieve(scenarioId, j);
+                }
+                _allScenarioWarriors[scenarioId] = dict;
+            }
         }
             
         if (options.AvoidDummys)
@@ -167,6 +173,8 @@ public class RandomizerPlugin : IPlugin
     {
         using var pokemonService = _dataService.Pokemon.Disposable();
         using var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable();
+        using var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable();
+        using var moveService = _dataService.Move.Disposable();
 
         foreach (var (id, pokemon) in _allPokemon)
         {
@@ -180,10 +188,23 @@ public class RandomizerPlugin : IPlugin
                 scenarioPokemonService.Save(scenarioId, scenarioPokemonId, scenarioPokemon);
             }
         }
+
+        foreach (var (scenarioId, dict) in _allScenarioWarriors)
+        {
+            foreach (var (scenarioWarriorId, scenarioWarrior) in dict)
+            {
+                scenarioWarriorService.Save(scenarioId, scenarioWarriorId, scenarioWarrior);
+            }
+        }
+
+        foreach (var (id, move) in _allMoves)
+        {
+            moveService.Save(id, move);
+        }
     }
 
     /// <summary>
-    /// Randomization code
+    /// Randomization that requires validation
     /// </summary>
     private void Randomize()
     {
@@ -219,6 +240,30 @@ public class RandomizerPlugin : IPlugin
                 sp.Pokemon = random.Choice(pokemonIds);
                 var pk = _allPokemon[sp.Pokemon];
                 sp.Ability = random.Choice(new[] { pk.Ability1, pk.Ability2, pk.Ability3 });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Randomization that doesn't require validation
+    /// </summary>
+    private void RandomizeNoValidationNeeded()
+    {
+        if (options.Warriors)
+        {
+            foreach (IScenarioWarrior sw in _allScenarioWarriors.Values.SelectMany(i => i.Values))
+            {
+                sw.Warrior = random.Choice(warriorIds);
+            }
+        }
+
+        if (options.MoveAnimations)
+        {
+            foreach (var move in _allMoves.Values)
+            {
+                move.StartupAnimation = random.Choice(moveAnimationIds);
+                move.ProjectileAnimation = random.Choice(moveAnimationIds);
+                move.ImpactAnimation = random.Choice(moveAnimationIds);
             }
         }
     }
