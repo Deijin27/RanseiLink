@@ -10,6 +10,8 @@ See the [Wiki](https://github.com/Deijin27/RanseiLink/wiki) and [this drive fold
 
 [Installation Guide](https://github.com/Deijin27/RanseiLink/wiki/RanseiLink-3.0-Installation-Guide)
 
+Get the latest plugins made by deijin here: https://drive.google.com/drive/folders/1LQDr4OF5MiOdRu1AFNIN9P7eaCQLHSA_?usp=sharing
+
 ![](https://i.imgur.com/ZHQ6yyN.png)
 
 How to use:
