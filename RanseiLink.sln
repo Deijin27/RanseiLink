@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{1299
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomizerPlugin", "RandomizerPlugin\RandomizerPlugin.csproj", "{103B73E0-E090-4C5D-8459-ABE5E93190DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassActionPlugin", "QuickSetPlugin\MassActionPlugin.csproj", "{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MassActionPlugin", "MassActionPlugin\MassActionPlugin.csproj", "{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
