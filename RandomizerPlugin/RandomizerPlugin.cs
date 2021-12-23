@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
-[Plugin("Randomizer", "Deijin", "1.3")]
+[Plugin("Randomizer", "Deijin", "1.4")]
 public class RandomizerPlugin : IPlugin
 {
     private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
