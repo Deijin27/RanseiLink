@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace QuickSetPlugin;
 
-[Plugin("Quick Set", "Deijin", "1.0")]
-public class QuickSetPlugin : IPlugin
+[Plugin("Mass Action", "Deijin", "1.0")]
+public class MassActionPlugin : IPlugin
 {
     private readonly PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
     private readonly WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private readonly ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
 
-    private QuickSetOptionForm options;
+    private MassActionOptionForm options;
     private IDataService _dataService;
 
     public void Run(IPluginContext context)

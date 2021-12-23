@@ -13,9 +13,9 @@ public static class ConstOptions
 }
 
 
-public class QuickSetOptionForm : IPluginForm
+public class MassActionOptionForm : IPluginForm
 {
-    public string Title => "Quick Set Configuration";
+    public string Title => "Mass Action Configuration";
     public string ProceedButtonText => "Go!";
     public string CancelButtonText => "Cancel";
 
