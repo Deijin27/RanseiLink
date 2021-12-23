@@ -111,4 +111,57 @@ public class DataGridHelper : DependencyObject
 
     #endregion
 
+    #region CheckBoxColumn
+
+    private static readonly DependencyProperty CheckBoxColumnEditingStyleProperty = DependencyProperty.RegisterAttached(
+        "CheckBoxColumnEditingStyle",
+        typeof(Style),
+        typeof(DataGridHelper),
+        new PropertyMetadata(CheckBoxColumnEditingStylePropertyChangedCallback)
+    );
+
+    private static void CheckBoxColumnEditingStylePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var grid = (DataGrid)d;
+        if (e.OldValue == null && e.NewValue != null)
+        {
+            grid.Columns.CollectionChanged += (_, __) =>
+            {
+                UpdateCheckBoxColumnStyles(grid);
+            };
+        }
+    }
+
+    public static void SetCheckBoxColumnEditingStyle(DependencyObject element, Style value)
+    {
+        element.SetValue(CheckBoxColumnEditingStyleProperty, value);
+    }
+    public static Style GetCheckBoxColumnEditingStyle(DependencyObject element)
+    {
+        return (Style)element.GetValue(CheckBoxColumnEditingStyleProperty);
+    }
+
+    private static void UpdateCheckBoxColumnStyles(DataGrid grid)
+    {
+        var style = GetCheckBoxColumnEditingStyle(grid);
+        foreach (var column in grid.Columns.OfType<DataGridCheckBoxColumn>())
+        {
+            var newStyle = new Style
+            {
+                BasedOn = column.EditingElementStyle,
+                TargetType = style.TargetType
+            };
+
+            foreach (var setter in style.Setters.OfType<Setter>())
+            {
+                newStyle.Setters.Add(setter);
+            }
+
+            column.ElementStyle = newStyle;
+            column.EditingElementStyle = newStyle;
+        }
+    }
+
+    #endregion
+
 }

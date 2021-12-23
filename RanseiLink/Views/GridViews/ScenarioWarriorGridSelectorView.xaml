@@ -18,7 +18,8 @@
 
         <DataGrid Grid.Row="1" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2"
               styles:DataGridHelper.ComboBoxColumnEditingStyle="{StaticResource {x:Type ComboBox}}"
-              styles:DataGridHelper.TextColumnEditingStyle="{StaticResource {x:Type TextBox}}"/>
+              styles:DataGridHelper.TextColumnEditingStyle="{StaticResource {x:Type TextBox}}"
+              styles:DataGridHelper.CheckBoxColumnEditingStyle="{StaticResource {x:Type CheckBox}}"/>
 
     </Grid>
 </UserControl>
