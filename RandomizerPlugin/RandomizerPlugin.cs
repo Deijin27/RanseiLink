@@ -20,7 +20,7 @@ public class RandomizerPlugin : IPlugin
     private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
     private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
-    private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().ToArray();
+    private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
 
     private Dictionary<PokemonId, IPokemon> _allPokemon;
     private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
@@ -239,7 +239,8 @@ public class RandomizerPlugin : IPlugin
             {
                 sp.Pokemon = random.Choice(pokemonIds);
                 var pk = _allPokemon[sp.Pokemon];
-                sp.Ability = random.Choice(new[] { pk.Ability1, pk.Ability2, pk.Ability3 });
+                var abilities = new[] { pk.Ability1, pk.Ability2, pk.Ability3 }.Where(i => i != AbilityId.NoAbility).ToArray();
+                sp.Ability = abilities.Any() ? random.Choice(abilities) : AbilityId.NoAbility;
             }
         }
     }
