@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Tests", "RanseiL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.PluginModule", "RanseiLink.PluginModule\RanseiLink.PluginModule.csproj", "{A0B3B21C-6F24-4F2B-AA71-DBD7917A45E4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{1299A4A5-6254-426A-8CC1-966EACEDEA5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomizerPlugin", "Plugins\RandomizerPlugin\RandomizerPlugin.csproj", "{103B73E0-E090-4C5D-8459-ABE5E93190DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomizerPlugin", "RandomizerPlugin\RandomizerPlugin.csproj", "{103B73E0-E090-4C5D-8459-ABE5E93190DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassActionPlugin", "Plugins\MassActionPlugin\MassActionPlugin.csproj", "{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MassActionPlugin", "MassActionPlugin\MassActionPlugin.csproj", "{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PartialTransferPlugin", "Plugins\PartialTransferPlugin\PartialTransferPlugin.csproj", "{E47F4FF2-23D1-41E7-83EA-40270EA989C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartialTransferPlugin", "PartialTransferPlugin\PartialTransferPlugin.csproj", "{E47F4FF2-23D1-41E7-83EA-40270EA989C3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{678695B1-243E-4053-8D94-D7C45260D25D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,9 +64,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{103B73E0-E090-4C5D-8459-ABE5E93190DE} = {1299A4A5-6254-426A-8CC1-966EACEDEA5E}
-		{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56} = {1299A4A5-6254-426A-8CC1-966EACEDEA5E}
-		{E47F4FF2-23D1-41E7-83EA-40270EA989C3} = {1299A4A5-6254-426A-8CC1-966EACEDEA5E}
+		{103B73E0-E090-4C5D-8459-ABE5E93190DE} = {678695B1-243E-4053-8D94-D7C45260D25D}
+		{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56} = {678695B1-243E-4053-8D94-D7C45260D25D}
+		{E47F4FF2-23D1-41E7-83EA-40270EA989C3} = {678695B1-243E-4053-8D94-D7C45260D25D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0EAA867-9D8D-4241-851E-8701422504C7}
