@@ -131,7 +131,7 @@ public class SoftlockCheckerPlugin : IPlugin
         }
 
         string result = new StringBuilder()
-            .AppendLine($"Total softlock causes found: {totalCount}")
+            .AppendLine($"Total softlock/crash causes found: {totalCount}")
             .AppendLine()
             .AppendLine($"Guaranteed: {guaranteedCount}")
             .AppendLine($"Conditional: {conditionalCount}")
