@@ -68,6 +68,8 @@ public static class RegistrationExtensions
             editor.AddModule<WarriorNameTableEditorModule>();
             editor.AddModule<WarriorSkillSelectorEditorModule>();
             editor.AddModule<WarriorSkillGridEditorModule>();
+
+            editor.LoadModuleOrderFromSetting();
         });
     }
 }

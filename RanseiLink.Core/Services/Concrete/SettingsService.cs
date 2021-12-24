@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 
@@ -8,10 +9,10 @@ public abstract class BaseSettingsService
 {
     public BaseSettingsService(string settingsFilePath)
     {
-        SettingsFilePath = settingsFilePath;
+        _settingsFilePath = settingsFilePath;
     }
 
-    private string SettingsFilePath;
+    private readonly string _settingsFilePath;
     protected int Get(string key, int defaultValue)
     {
         if (TryGet(key, out string value))
@@ -34,14 +35,14 @@ public abstract class BaseSettingsService
         return TryGet(key, out string value) ? value : defaultValue;
     }
 
-    private bool TryGet(string key, out string value)
+    protected bool TryGet(string key, out string value)
     {
-        if (!File.Exists(SettingsFilePath))
+        if (!File.Exists(_settingsFilePath))
         {
             value = null;
             return false;
         }
-        XDocument doc = XDocument.Load(SettingsFilePath);
+        XDocument doc = XDocument.Load(_settingsFilePath);
         var element = doc.Root;
         var keyElement = element.Element(key);
         if (keyElement == null)
@@ -55,9 +56,9 @@ public abstract class BaseSettingsService
 
     protected void Set(string key, string value)
     {
-        if (!File.Exists(SettingsFilePath))
+        if (!File.Exists(_settingsFilePath))
         {
-            using (var file = File.Create(SettingsFilePath))
+            using (var file = File.Create(_settingsFilePath))
             {
                 var rootElement = new XElement("Settings", new XElement(key, value));
                 var newDoc = new XDocument(rootElement);
@@ -65,9 +66,9 @@ public abstract class BaseSettingsService
             }
             return;
         }
-        XDocument doc = XDocument.Load(SettingsFilePath);
+        XDocument doc = XDocument.Load(_settingsFilePath);
         doc.Root.SetElementValue(key, value);
-        doc.Save(SettingsFilePath);
+        doc.Save(_settingsFilePath);
 
     }
 }
@@ -83,6 +84,7 @@ public class SettingsService : BaseSettingsService, ISettingsService
         public const string RecentLoadRom = "RecentLoadRom";
         public const string RecentExportModFolder = "RecentExportFolder";
         public const string Theme = "Theme";
+        public const string EditorModuleOrder = "EditorModuleOrder";
     }
 
     public int CurrentConsoleModSlot
@@ -146,5 +148,21 @@ public class SettingsService : BaseSettingsService, ISettingsService
             }
         }
         set => Set(ElementNames.RecentExportModFolder, value);
+    }
+
+    public ICollection<string> EditorModuleOrder 
+    {
+        get
+        {
+            if (TryGet(ElementNames.EditorModuleOrder, out string value))
+            {
+                return value.Split(',');
+            }
+            return Array.Empty<string>();
+        }
+        set
+        {
+            Set(ElementNames.EditorModuleOrder, string.Join(',', value));
+        }
     }
 }

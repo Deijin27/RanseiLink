@@ -5,6 +5,7 @@ using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -22,6 +23,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     private readonly IDialogService _dialogService;
     private readonly IModService _modService;
     private readonly IEditorContext _editorContext;
+    private readonly ISettingsService _settingsService;
 
     public ICommand CommitRomCommand { get; }
 
@@ -49,7 +51,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 RaisePropertyChanged();
                 return;
             }
-            if (RaiseAndSetIfChanged(ref _currentPage, value))
+            if (value != null && RaiseAndSetIfChanged(ref _currentPage, value))
             {
                 CurrentVm = SelectViewModel(value);
             }
@@ -67,6 +69,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         var editorContextFactory = container.Resolve<EditorContextFactory>();
         _dialogService = container.Resolve<IDialogService>();
         _modService = container.Resolve<IModService>();
+        _settingsService = container.Resolve<ISettingsService>();
 
         PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
 
@@ -88,6 +91,28 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             _currentPage = module.UniqueId;
             CurrentVm = SelectViewModel(_currentPage);
         }
+    }
+
+    private bool _moduleOrderLoaded = false;
+    public void LoadModuleOrderFromSetting()
+    {
+        var items = ListItems.ToList();
+        ICollection<string> order = _settingsService.EditorModuleOrder;
+        ListItems.Clear();
+        foreach (var item in order)
+        {
+            var firstItem = items.FirstOrDefault(i => i.ItemValue == item);
+            if (firstItem != null)
+            {
+                ListItems.Add(firstItem);
+                items.Remove(firstItem);
+            }
+        }
+        foreach (var item in items)
+        {
+            ListItems.Add(item);
+        }
+        _moduleOrderLoaded = true;
     }
 
     public Dictionary<string, IEditorModule> Modules { get; } = new();
@@ -115,6 +140,10 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public void Save()
     {
+        if (_moduleOrderLoaded) // make sure default order isn't saved before saved order is loaded
+        {
+            _settingsService.EditorModuleOrder = ListItems.Select(i => i.ItemValue).ToArray();
+        }
         _editorContext.CachedMsgBlockService.SaveChangedBlocks();
         CurrentVm?.Save();
     }

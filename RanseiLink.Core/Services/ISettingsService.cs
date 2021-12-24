@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace RanseiLink.Core.Services;
 
 public interface ISettingsService
@@ -8,4 +10,5 @@ public interface ISettingsService
     string RecentLoadRom { get; set; }
     string RecentExportModFolder { get; set; }
     string Theme { get; set; }
+    ICollection<string> EditorModuleOrder { get; set; }
 }
