@@ -290,12 +290,27 @@ internal class Randomizer
             return false;
         }
 
+        if (_allPokemon[OichisScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            return false;
+        }
+
+        if (_allPokemon[KorokusScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            return false;
+        }
+
+        if (_allPokemon[NagayasusScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            return false;
+        }
+
         if (!ValidateTutorialMatchup(PlayersScenarioPokemon, KorokusScenarioPokemon))
         {
             return false;
         }
 
-        if (!ValidateTutorialMatchup(OichisScenarioPokemon, NagayasusScenarioPokemon))
+        if (!ValidateTutorialMatchup(OichisScenarioPokemon, NagayasusScenarioPokemon, true))
         {
             return false;
         }
@@ -303,16 +318,17 @@ internal class Randomizer
         return true;
     }
 
-    private bool ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon)
+    private bool ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
     {
         var attackingPokemon = _allPokemon[attackingScenarioPokemon.Pokemon];
         var targetPokemon = _allPokemon[targetScenarioPokemon.Pokemon];
         var move = _allMoves[attackingPokemon.Move];
 
-        if (move.Accuracy != 100)
-        {
-            return false;
-        }
+        // Moves always hit during the tutorial, so this doesn't matter
+        //if (move.Accuracy != 100)
+        //{
+        //    return false;
+        //}
         if ((options.Moves || options.ScenarioPokemon) && move.Power < 30)
         {
             return false;
@@ -322,6 +338,10 @@ internal class Randomizer
             return false;
         }
         if (!_allMoveRanges[move.Range].GetInRange(1))
+        {
+            return false;
+        }
+        if (oichisPokemon && _allMoveRanges[move.Range].GetInRange(24))
         {
             return false;
         }

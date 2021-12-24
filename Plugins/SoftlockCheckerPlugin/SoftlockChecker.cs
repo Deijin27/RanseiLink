@@ -259,22 +259,37 @@ internal class SoftlockChecker
         {
             ReportGuaranteed($"The player's pokemon ({PlayersScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
         }
+        if (_allPokemon[OichisScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            ReportGuaranteed($"Oichi's pokemon pokemon ({OichisScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+        }
+
+        if (_allPokemon[KorokusScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            ReportGuaranteed($"Koroku's pokemon ({KorokusScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+        }
+
+        if (_allPokemon[NagayasusScenarioPokemon.Pokemon].MovementRange < 2)
+        {
+            ReportGuaranteed($"Nagayasus's pokemon ({NagayasusScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+        }
 
         ValidateTutorialMatchup(PlayersScenarioPokemon, KorokusScenarioPokemon);
 
         ValidateTutorialMatchup(OichisScenarioPokemon, NagayasusScenarioPokemon);
     }
 
-    private void ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon)
+    private void ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
     {
         var attackingPokemon = _allPokemon[attackingScenarioPokemon.Pokemon];
         var targetPokemon = _allPokemon[targetScenarioPokemon.Pokemon];
         var move = _allMoves[attackingPokemon.Move];
 
-        if (move.Accuracy != 100)
-        {
-            ReportProbable($"The move {attackingPokemon.Move} used by {attackingScenarioPokemon.Pokemon} does not have 100% accuracy (it has {move.Accuracy}%). If it misses it will softlock the tutorial.");
-        }
+        // moves always hit during the tutorial, so  this isn't necessary
+        //if (move.Accuracy != 100)
+        //{
+        //    ReportProbable($"The move {attackingPokemon.Move} used by {attackingScenarioPokemon.Pokemon} does not have 100% accuracy (it has {move.Accuracy}%). If it misses it will softlock the tutorial.");
+        //}
         if (move.Power < 30)
         {
             ReportProbable($"The move used by {attackingScenarioPokemon.Pokemon} is weak ({move.Power}), thus there's a risk it doesn't one shot the opponent in the tutorial");
@@ -286,6 +301,10 @@ internal class SoftlockChecker
         if (!_allMoveRanges[move.Range].GetInRange(1))
         {
             ReportGuaranteed($"The move {attackingPokemon.Move} used by pokemon {attackingScenarioPokemon.Pokemon} has range {move.Range} which does not hit the square immediately ahead of the user. This causes a tutorial softlock.");
+        }
+        if (oichisPokemon && _allMoveRanges[move.Range].GetInRange(24))
+        {
+            ReportProbable($"The move {attackingPokemon.Move} used by pokemon {attackingScenarioPokemon.Pokemon} has range {move.Range} thus may take out Koroku, skipping the player's turn. This causes the 'Back' button to be not work in battles.");
         }
         if (invalidEffects.Contains(move.Effect1))
         {
