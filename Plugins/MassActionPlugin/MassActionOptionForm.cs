@@ -1,7 +1,6 @@
 ﻿using RanseiLink.PluginModule.Api;
 
-namespace QuickSetPlugin;
-
+namespace MassActionPlugin;
 
 public static class ConstOptions
 {
