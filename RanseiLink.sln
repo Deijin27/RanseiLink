@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PartialTransferPlugin", "Pl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{678695B1-243E-4053-8D94-D7C45260D25D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftlockCheckerPlugin", "SoftlockCheckerPlugin\SoftlockCheckerPlugin.csproj", "{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftlockCheckerPlugin", "Plugins\SoftlockCheckerPlugin\SoftlockCheckerPlugin.csproj", "{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
