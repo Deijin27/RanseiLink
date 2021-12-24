@@ -62,20 +62,23 @@
                                     <Separator/>
                                     <MenuItem Header="Plugins" Icon="{StaticResource PluginIcon}" ItemsSource="{Binding PluginItems}">
                                         <MenuItem.ItemContainerStyle>
-                                            <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+                                            <Style TargetType="{x:Type MenuItem}">
                                                 <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
                                                 <Setter Property="CommandParameter" Value="{Binding}"/>
-                                                <Setter Property="Header">
+                                                <Setter Property="HeaderTemplate">
                                                     <Setter.Value>
-                                                        <TextBlock>
-                                                            <TextBlock.Text>
-                                                                <MultiBinding StringFormat="{}{0} v{1} by {2}">
-                                                                    <Binding Path="Name" />
-                                                                    <Binding Path="Version" />
-                                                                    <Binding Path="Author" />
-                                                                </MultiBinding>
-                                                            </TextBlock.Text>
-                                                        </TextBlock>
+                                                        <DataTemplate>
+                                                            <TextBlock>
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="{}{0} v{1} by {2}">
+                                                                        <Binding Path="Name" />
+                                                                        <Binding Path="Version" />
+                                                                        <Binding Path="Author" />
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                        </DataTemplate>
+                                                        
                                                     </Setter.Value>
                                                 </Setter>
                                             </Style>
