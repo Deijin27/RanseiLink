@@ -76,5 +76,5 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
     public string GetWarriorSkillDescription(WarriorSkillId id) => GetWithOverflow(3, 155 + (int)id);
     public void SetWarriorSkillDescription(WarriorSkillId id, string description) => SetWithOverflow(3, 155 + (int)id, description);
     public string GetItemDescription(ItemId id) => GetWithOverflow(3, 218 + (int)id);
-    public void SetItemDescription(ItemId id, string description) => SetWithOverflow(2, 218 + (int)id, description);
+    public void SetItemDescription(ItemId id, string description) => SetWithOverflow(3, 218 + (int)id, description);
 }
