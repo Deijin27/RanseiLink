@@ -35,4 +35,9 @@ public class ItemViewModel : ViewModelBase
         get => _msgService.GetItemDescription(Id);
         set => _msgService.SetItemDescription(Id, value);
     }
+    public string Description2
+    {
+        get => _msgService.GetItemDescription2(Id);
+        set => _msgService.SetItemDescription2(Id, value);
+    }
 }

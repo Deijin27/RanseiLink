@@ -45,6 +45,8 @@ public interface ICachedMsgBlockService
     void SetWarriorSkillDescription(WarriorSkillId id, string description);
     string GetItemDescription(ItemId id);
     void SetItemDescription(ItemId id, string description);
+    string GetItemDescription2(ItemId id);
+    void SetItemDescription2(ItemId id, string description);
 
     #endregion
 
