@@ -64,10 +64,12 @@ public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
         var jumpService = context.JumpService;
         JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
         JumpToMaxLinkCommand = new RelayCommand<WarriorId>(jumpService.JumpToMaxLink);
+        JumpToScenarioPokemon = new RelayCommand<uint>(i => jumpService.JumpToScenarioPokemon(scenario, i));
     }
 
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToMaxLinkCommand { get; }
+    public ICommand JumpToScenarioPokemon { get; }
 
     public uint ScenarioPokemon
     {
@@ -109,7 +111,7 @@ public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
         else
         {
             _currentScenarioPokemon = _dataService.ScenarioPokemon.Retrieve(_scenario, (int)ScenarioPokemon);
-            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon, _context);
+            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon, _context, _scenario, ScenarioPokemon);
         }
     }
 

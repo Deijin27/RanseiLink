@@ -23,7 +23,7 @@ public class ScenarioWarriorSelectorViewModel : ScenarioSelectorViewModelBase<IS
         Init();
     }
 
-    protected override ScenarioWarriorViewModel NewViewModel(ScenarioId scenarioId, IScenarioWarrior model) => _factory(scenarioId, _context, model);
+    protected override ScenarioWarriorViewModel NewViewModel(ScenarioId scenarioId, uint id, IScenarioWarrior model) => _factory(scenarioId, _context, model);
 
     protected override IScenarioWarrior RetrieveModel(ScenarioId scenario, uint index)
     {

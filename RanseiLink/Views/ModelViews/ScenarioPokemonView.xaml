@@ -64,6 +64,9 @@
                 
         <TextBlock Text="Spe IV" Grid.Row="5" />
         <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding SpeIv, Mode=TwoWay}" Max="31"/>
-        
+
+        <Button Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
+                    Command="{Binding JumpToFirstWarriorCommand}" />
+
     </Grid>
 </UserControl>

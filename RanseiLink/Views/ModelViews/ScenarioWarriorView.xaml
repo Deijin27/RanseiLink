@@ -82,9 +82,14 @@
                   Content="Allow Editing of Scenario Pokemon Selected Entry"
                   ToolTip="Editing of selected entry is disabled by default because it's unlikely you'll need to edit it and the checkbox is a particularly annoying misclick"/>
 
-            <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Content="Scenario Pokemon" VerticalAlignment="Center" 
+            <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" 
                   IsChecked="{Binding ScenarioPokemonIsDefault, Mode=TwoWay, Converter={StaticResource invertBoolConverter}}"
-                  IsEnabled="{Binding ElementName=AllowScenarioPokemonEdit, Path=IsChecked, Mode=OneWay}"/>
+                  IsEnabled="{Binding ElementName=AllowScenarioPokemonEdit, Path=IsChecked, Mode=OneWay}">
+                <CheckBox.Content>
+                    <Button Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Scenario Pokemon"
+                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}" ToolTip="Jump to selected scenario pokemon"/>
+                </CheckBox.Content>
+            </CheckBox>
 
             <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ScenarioPokemon, Mode=TwoWay}" >
                 <controls:NumberBox.IsEnabled>

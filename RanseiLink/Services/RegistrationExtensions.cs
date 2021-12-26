@@ -41,7 +41,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ScenarioWarriorViewModelFactory>((sid, dataService, model) => new ScenarioWarriorViewModel(container, dataService, sid, model));
         container.RegisterSingleton<WarriorSkillViewModelFactory>((i, m, c) => new WarriorSkillViewModel(i, m, c));
         container.RegisterSingleton<ScenarioKingdomViewModelFactory>(i => new ScenarioKingdomViewModel(i));
-        container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c) => new ScenarioPokemonViewModel(model, c));
+        container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c, scenario, id) => new ScenarioPokemonViewModel(model, c, scenario, id));
 
         container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
         {

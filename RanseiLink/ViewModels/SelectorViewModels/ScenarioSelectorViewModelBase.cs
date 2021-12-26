@@ -14,7 +14,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
 {
     private readonly IDialogService _dialogService;
 
-    protected abstract TViewModel NewViewModel(ScenarioId scenarioId, TModel model);
+    protected abstract TViewModel NewViewModel(ScenarioId scenarioId, uint id, TModel model);
 
     private TModel _currentModel;
 
@@ -34,7 +34,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         try
         {
             _currentModel = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario, _currentModel);
+            var vm = NewViewModel(SelectedScenario, SelectedItem, _currentModel);
             NestedViewModel = vm;
         }
         catch (Exception e)
@@ -94,7 +94,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 if (value != _selectedItem)
                 {
                     _currentModel = RetrieveModel(SelectedScenario, value);
-                    var vm = NewViewModel(SelectedScenario, _currentModel);
+                    var vm = NewViewModel(SelectedScenario, value, _currentModel);
                     NestedViewModel = vm;
                     _selectedItem = value;
                     RaisePropertyChanged();
@@ -125,7 +125,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 if (_selectedScenario != value)
                 {
                     _currentModel = RetrieveModel(value, SelectedItem);
-                    var vm = NewViewModel(value, _currentModel);
+                    var vm = NewViewModel(value, SelectedItem, _currentModel);
                     NestedViewModel = vm;
                     _selectedScenario = value;
                     RaisePropertyChanged();
@@ -173,7 +173,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
         try
         {
             _currentModel = RetrieveModel(SelectedScenario, SelectedItem);
-            var vm = NewViewModel(SelectedScenario, _currentModel);
+            var vm = NewViewModel(SelectedScenario, SelectedItem, _currentModel);
             NestedViewModel = vm;
         }
         catch (Exception e)
@@ -204,7 +204,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
 
         if (_currentModel.TryDeserialize(text))
         {
-            var newvm = NewViewModel(SelectedScenario, _currentModel);
+            var newvm = NewViewModel(SelectedScenario, SelectedItem, _currentModel);
             _nestedViewModel = newvm;
             RaisePropertyChanged(nameof(NestedViewModel));
         }
