@@ -74,3 +74,17 @@ public class WarriorSkillGridViewModel : GridViewModelBase<WarriorSkillId, IWarr
 
     public override int FrozenColumnCount => 2;
 }
+
+public class GimmickGridViewModel : GridViewModelBase<GimmickId, IGimmick, GimmickGridItemViewModel, IDisposableGimmickService>, ISaveableRefreshable
+{
+    public GimmickGridViewModel(IServiceContainer container, IEditorContext context)
+        : base(
+            container,
+            context.DataService.Gimmick.Disposable,
+            EnumUtil.GetValues<GimmickId>().ToArray(),
+            (id, model) => new GimmickGridItemViewModel(id, model))
+    {
+    }
+
+    public override int FrozenColumnCount => 2;
+}

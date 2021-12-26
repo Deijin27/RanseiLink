@@ -1,7 +1,6 @@
 ﻿<Application x:Class="RanseiLink.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:RanseiLink"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:views="clr-namespace:RanseiLink.Views"
              StartupUri="MainWindow.xaml">
@@ -40,6 +39,10 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:MoveSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:GimmickSelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
 
@@ -99,6 +102,10 @@
 
             <DataTemplate DataType="{x:Type vm:MoveViewModel}">
                 <views:MoveView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:GimmickViewModel}">
+                <views:GimmickView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
@@ -183,6 +190,10 @@
 
             <DataTemplate DataType="{x:Type vm:MsgGridViewModel}">
                 <views:MsgGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:GimmickGridViewModel}">
+                <views:ModelGridView/>
             </DataTemplate>
 
         </ResourceDictionary>

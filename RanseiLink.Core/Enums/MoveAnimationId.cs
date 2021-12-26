@@ -78,7 +78,7 @@ public enum MoveAnimationId : uint
     FallingIcicles,
     Blank_5,
     PinkOrbImpact,
-    CynaImpactPurpleStars,
+    CyanImpactPurpleStars,
     BlueVortexRipple,
     BlueWhiteProjectile,
     BlueOrbRippleSlash,

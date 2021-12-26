@@ -186,3 +186,18 @@ public class MsgGridEditorModule : IEditorModule
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MsgGridViewModel(container, context);
 }
 
+public class GimmickSelectorEditorModule : IEditorModule
+{
+    public const string Id = "gimmick_selector";
+    public string UniqueId => Id;
+    public string ListName => "Gimmick";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickSelectorViewModel(container, context);
+}
+
+public class GimmickGridEditorModule : IEditorModule
+{
+    public const string Id = "gimmick_grid";
+    public string UniqueId => Id;
+    public string ListName => "Gimmick (Grid)";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickGridViewModel(container, context);
+}

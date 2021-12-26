@@ -100,28 +100,57 @@ public abstract class MoveViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
-    public virtual MoveAnimationId StartupAnimation
+    public MoveAnimationId StartupAnimation
     {
         get => _model.StartupAnimation;
-        set => RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
+            {
+                OnAnimationChanged();
+            }
+        }
     }
 
-    public virtual MoveAnimationId ProjectileAnimation
+    public MoveAnimationId ProjectileAnimation
     {
         get => _model.ProjectileAnimation;
-        set => RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
+            {
+                OnAnimationChanged();
+            }
+        }
     }
 
-    public virtual MoveAnimationId ImpactAnimation
+    public MoveAnimationId ImpactAnimation
     {
         get => _model.ImpactAnimation;
-        set => RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
+            {
+                OnAnimationChanged();
+            }
+        }
     }
 
-    public virtual MoveMovementAnimationId MovementAnimation
+    public MoveMovementAnimationId MovementAnimation
     {
         get => _model.MovementAnimation;
-        set => RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
+            {
+                OnAnimationChanged();
+            }
+        }
+    }
+
+    protected virtual void OnAnimationChanged()
+    {
+
     }
 }
 
@@ -155,53 +184,7 @@ public class MoveViewModel : MoveViewModelBase
 
     public ICommand JumpToMoveRangeCommand { get; }
 
-    public override MoveAnimationId StartupAnimation
-    {
-        get => _model.StartupAnimation;
-        set
-        {
-            if (RaiseAndSetIfChanged(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
-            {
-                UpdatePreviewAnimation();
-            }
-        }
-    }
-
-    public override MoveAnimationId ProjectileAnimation
-    {
-        get => _model.ProjectileAnimation;
-        set
-        {
-            if (RaiseAndSetIfChanged(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
-            {
-                UpdatePreviewAnimation();
-            }
-        }
-    }
-
-    public override MoveAnimationId ImpactAnimation
-    {
-        get => _model.ImpactAnimation;
-        set
-        {
-            if (RaiseAndSetIfChanged(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
-            {
-                UpdatePreviewAnimation();
-            }
-        }
-    }
-
-    public override MoveMovementAnimationId MovementAnimation
-    {
-        get => _model.MovementAnimation;
-        set
-        { 
-            if (RaiseAndSetIfChanged(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
-            {
-                UpdatePreviewAnimation();
-            }
-        }
-    }
+    
 
     private string _currentPreviewAnimationUri;
     public string CurrentPreviewAnimationUri
@@ -220,6 +203,11 @@ public class MoveViewModel : MoveViewModelBase
     private MoveAnimationPreviewMode PreviewAnimationMode { get; set; } = MoveAnimationPreviewMode.Startup;
 
     public ICommand SetPreviewAnimationModeCommand { get; }
+
+    protected override void OnAnimationChanged()
+    {
+        UpdatePreviewAnimation();
+    }
 
     private void UpdatePreviewAnimation()
     {
