@@ -56,7 +56,7 @@
         </GroupBox>
 
         <GroupBox Header="Description 2" Grid.Row="6" Grid.RowSpan="4" Grid.ColumnSpan="2">
-            <TextBox Text="{Binding DescriptionDuplicate}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+            <TextBox Text="{Binding Description2}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
         </GroupBox>
     </Grid>
 </UserControl>

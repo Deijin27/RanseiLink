@@ -71,24 +71,74 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
 
     private const string DescriptionNotSupportedMessage = "Description not supported";
 
-    public string GetAbilityDescription(AbilityId id) { return id <= AbilityId.dummy7 ? GetWithOverflow(2, 171 + (int)id) : DescriptionNotSupportedMessage; }
-    public void SetAbilityDescription(AbilityId id, string description) { if (id <= AbilityId.dummy7) SetWithOverflow(2, 171 + (int)id, description); }
 
-    public string GetAbilityHotSpringsDescription(AbilityId id) => GetWithOverflow(7, 109 + (int)id);
-    public void SetAbilityHotSpringsDescription(AbilityId id, string description) => SetWithOverflow(7, 109 + (int)id, description);
+    public string GetAbilityDescription(AbilityId id) 
+    { 
+        return id <= AbilityId.dummy7 ? GetWithOverflow(2, 171 + (int)id) : DescriptionNotSupportedMessage; 
+    }
+    public void SetAbilityDescription(AbilityId id, string description) 
+    { 
+        if (id <= AbilityId.dummy7) SetWithOverflow(2, 171 + (int)id, description); 
+    }
 
-    public string GetAbilityHotSpringsDescription2(AbilityId id) => GetWithOverflow(8, 15 + (int)id);
-    public void SetAbilityHotSpringsDescription2(AbilityId id, string description) => SetWithOverflow(8, 15 + (int)id, description);
 
-    public string GetMoveDescription(MoveId id) => GetWithOverflow(3, 32 + (int)id);
-    public void SetMoveDescription(MoveId id, string description) => SetWithOverflow(3, 32 + (int)id, description);
+    public string GetAbilityHotSpringsDescription(AbilityId id)
+    {
+        return id <= AbilityId.dummy7 ? GetWithOverflow(7, 109 + (int)id) : DescriptionNotSupportedMessage;
+    }
+    public void SetAbilityHotSpringsDescription(AbilityId id, string description)
+    {
+        if (id <= AbilityId.dummy7) SetWithOverflow(7, 109 + (int)id, description);
+    }
 
-    public string GetWarriorSkillDescription(WarriorSkillId id) => GetWithOverflow(3, 155 + (int)id);
-    public void SetWarriorSkillDescription(WarriorSkillId id, string description) => SetWithOverflow(3, 155 + (int)id, description);
 
-    public string GetItemDescription(ItemId id) => GetWithOverflow(3, 218 + (int)id);
-    public void SetItemDescription(ItemId id, string description) => SetWithOverflow(3, 218 + (int)id, description);
+    public string GetAbilityHotSpringsDescription2(AbilityId id)
+    {
+        return id <= AbilityId.dummy7 ? GetWithOverflow(8, 15 + (int)id) : DescriptionNotSupportedMessage;
+    }
+    public void SetAbilityHotSpringsDescription2(AbilityId id, string description)
+    {
+        if (id <= AbilityId.dummy7) SetWithOverflow(8, 15 + (int)id, description);
+    }
 
-    public string GetItemDescription2(ItemId id) => GetWithOverflow(4, 94 + (int)id);
-    public void SetItemDescription2(ItemId id, string description) => SetWithOverflow(4, 94 + (int)id, description);
+
+    public string GetMoveDescription(MoveId id)
+    {
+        return id <= MoveId.LowKick ? GetWithOverflow(3, 32 + (int)id) : DescriptionNotSupportedMessage;
+    }
+    public void SetMoveDescription(MoveId id, string description)
+    {
+        if (id <= MoveId.LowKick) SetWithOverflow(3, 32 + (int)id, description);
+    }
+
+
+    public string GetWarriorSkillDescription(WarriorSkillId id)
+    {
+        return id <= WarriorSkillId.Sacrifice ? GetWithOverflow(3, 155 + (int)id) : DescriptionNotSupportedMessage;
+    }
+    public void SetWarriorSkillDescription(WarriorSkillId id, string description)
+    { 
+        if (id <= WarriorSkillId.Sacrifice) SetWithOverflow(3, 155 + (int)id, description); 
+    }
+
+
+    public string GetItemDescription(ItemId id)
+    {
+        return id <= ItemId.JigglypuffCharm ? GetWithOverflow(3, 218 + (int)id) : DescriptionNotSupportedMessage;
+    }
+    public void SetItemDescription(ItemId id, string description)
+    { 
+        if (id <= ItemId.JigglypuffCharm) SetWithOverflow(3, 218 + (int)id, description); 
+    }
+
+
+    public string GetItemDescription2(ItemId id)
+    {
+        return id <= ItemId.JigglypuffCharm ? GetWithOverflow(4, 94 + (int)id) : DescriptionNotSupportedMessage;
+    }
+
+    public void SetItemDescription2(ItemId id, string description)
+    {
+        if (id <= ItemId.JigglypuffCharm) SetWithOverflow(4, 94 + (int)id, description);
+    }
 }

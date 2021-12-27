@@ -9,13 +9,18 @@
              xmlns:const="clr-namespace:RanseiLink.Constants"
              d:DataContext="{d:DesignInstance Type=vm:AbilityViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="680" d:DesignWidth="800">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="130"/>
             <ColumnDefinition Width="170"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
@@ -66,6 +71,10 @@
 
         <GroupBox Header="Hot Springs Description" Grid.Row="9" Grid.RowSpan="4" Grid.ColumnSpan="2">
             <TextBox Text="{Binding HotSpringsDescription}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+        </GroupBox>
+
+        <GroupBox Header="Hot Springs Description 2" Grid.Row="13" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <TextBox Text="{Binding HotSpringsDescription2}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
         </GroupBox>
 
     </Grid>

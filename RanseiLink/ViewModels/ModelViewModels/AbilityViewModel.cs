@@ -68,6 +68,12 @@ public class AbilityViewModel : AbilityViewModelBase
         get => _msgService.GetAbilityHotSpringsDescription(Id);
         set => _msgService.SetAbilityHotSpringsDescription(Id, value);
     }
+
+    public string HotSpringsDescription2
+    {
+        get => _msgService.GetAbilityHotSpringsDescription2(Id);
+        set => _msgService.SetAbilityHotSpringsDescription2(Id, value);
+    }
 }
 
 public class AbilityGridItemViewModel : AbilityViewModelBase
