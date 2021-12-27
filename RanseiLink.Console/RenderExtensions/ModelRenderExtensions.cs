@@ -234,6 +234,10 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", gimmick.Name);
+        console.WriteProperty("Attack Type", gimmick.AttackType);
+        console.WriteProperty("Destroy Type", gimmick.DestroyType);
+        console.WriteProperty("Animation 1", gimmick.Animation1);
+        console.WriteProperty("Animation 2", gimmick.Animation2);
     }
 
     public static void Render(this IConsole console, IBuilding building, BuildingId id)
