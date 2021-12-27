@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RanseiLink.Core.Text;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -65,9 +66,11 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
     {
         var bytes = Data.Skip(index).TakeWhile((i, c) => i != 0 && c <= maxLength).ToArray();
 
-        var reader = new Text.PNAReader(bytes, false, true);
+        //var reader = new Text.PNAReader(bytes, false, true);
 
-        return reader.Text;
+        //return reader.Text;
+
+        return NameLoader.LoadName(bytes);
     }
 
     /// <summary>
@@ -85,8 +88,9 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
         byte[] output;
         while (true)
         {
-            var writer = new Text.PNAWriter(value, false, true);
-            output = writer.Data;
+            //var writer = new Text.PNAWriter(value, false, true);
+            //output = writer.Data;
+            output = NameLoader.SaveName(value);
             if (output.Length <= maxLength)
             {
                 break;

@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Text\CharacterTable.tbl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Text\CharacterTable.tbl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 

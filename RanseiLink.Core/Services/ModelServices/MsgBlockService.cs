@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using RanseiLink.Core.Text;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMsgBlockService : IModelDataService<int, string[]>
+public interface IMsgBlockService : IModelDataService<int, List<Message>>
 {
     public int BlockCount { get; }
 }
@@ -20,13 +22,13 @@ internal class MsgBlockService : IMsgBlockService
 
     public int BlockCount { get; }
 
-    public string[] Retrieve(int id)
+    public List<Message> Retrieve(int id)
     {
         string file = Path.Combine(_mod.FolderPath, Constants.MsgBlockPathFromId(id));
         return _msgService.LoadBlock(file);
     }
 
-    public void Save(int id, string[] block)
+    public void Save(int id, List<Message> block)
     {
         string file = Path.Combine(_mod.FolderPath, Constants.MsgBlockPathFromId(id));
         _msgService.SaveBlock(file, block);

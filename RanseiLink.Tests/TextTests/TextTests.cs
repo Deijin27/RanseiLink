@@ -1,10 +1,18 @@
-﻿using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.Concrete;
+using System.IO;
 using Xunit;
 
 namespace RanseiLink.Tests.TextTests;
 
 public class TextTests
 {
+    private readonly IMsgService _msgService;
+    public TextTests()
+    {
+        _msgService = new MsgService();
+    }
+
     [Theory]
     [InlineData(new byte[] { 0x42, 0x6F, 0x6B, 0x75, 0x7A, 0x65, 0x6E }, "Bokuzen")]
     [InlineData(new byte[] { 0x4D, 0x61, 0x61 }, "Maa")]
@@ -16,8 +24,7 @@ public class TextTests
     [InlineData(new byte[] { 0x83, 0x47, 0x83, 0x8A, 0x81, 0x5B, 0x83, 0x67, 0x83, 0x67, 0x83, 0x8C, 0x81, 0x5B, 0x83, 0x69, 0x81, 0x5B }, "エリートトレーナー")]
     public void ReadConvertsNameCorrectly(byte[] input, string expected)
     {
-        var reader = new PNAReader(input, false, true);
-        Assert.Equal(expected, reader.Text);
+        Assert.Equal(expected, _msgService.LoadName(input));
     }
 
     [Theory]
@@ -31,7 +38,22 @@ public class TextTests
     [InlineData(new byte[] { 0x83, 0x47, 0x83, 0x8A, 0x81, 0x5B, 0x83, 0x67, 0x83, 0x67, 0x83, 0x8C, 0x81, 0x5B, 0x83, 0x69, 0x81, 0x5B }, "エリートトレーナー")]
     public void WriteConvertsNameCorrectly(byte[] expected, string input)
     {
-        var reader = new PNAWriter(input, false, true);
-        Assert.Equal(expected, reader.Data);
+        Assert.Equal(expected, _msgService.SaveName(input));
+    }
+
+    [Fact]
+    public void IdenticalThroughLoadSaveCycle()
+    {
+        foreach (var file in Directory.GetFiles(Path.Combine(TestConstants.TestModFolder, "msg")))
+        {
+            var unchangedBytes = File.ReadAllBytes(file);
+            string temp = Path.GetTempFileName();
+            var messages = _msgService.LoadBlock(file);
+            _msgService.SaveBlock(temp, messages);
+            var shouldBeUnchangedBytes = File.ReadAllBytes(temp);
+            File.Delete(temp);
+            Assert.Equal(unchangedBytes, shouldBeUnchangedBytes);
+            
+        }
     }
 }

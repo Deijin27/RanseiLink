@@ -3,29 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace RanseiLink.Core.Services.Concrete;
-
-internal class MsgService : IMsgService
+public class MsgService : IMsgService
 {
-
     public int BlockCount => _blockCount;
 
     private readonly int _blockCount;
-    private readonly string _encryptionKey;
-    private readonly uint _encryptionMult1;
-    private readonly int _encryptionMult2;
+
+    private readonly byte[] _encryptionKey;
 
     public MsgService(
         int blockCount = 0x21, // 0x2C for Pokemon Nobunaga Ambition (japanese version?)
-        string encryptionKey = "MsgLinker Ver1.00", 
-        uint encryptionMult1 = 0xF0F0F0F1, 
-        int encryptionMult2 = 0x11)
+        string encryptionKey = "MsgLinker Ver1.00")
     {
         _blockCount = blockCount;
-        _encryptionKey = encryptionKey;
-        _encryptionMult1 = encryptionMult1;
-        _encryptionMult2 = encryptionMult2;
+        _encryptionKey = Encoding.ASCII.GetBytes(encryptionKey);
     }
 
     public void ExtractFromMsgDat(string sourceFile, string destinationFolder)
@@ -35,7 +29,7 @@ internal class MsgService : IMsgService
         for (int i = 0; i < _blockCount; i++)
         {
             byte[] block = ExtractBlockFromMsgDat(sourceFile, i);
-            block = ApplyEncryption(block);
+            ApplyEncryption(block);
 
             string destFile = Path.Combine(destinationFolder, $"block{i}.bin");
             using var stream = File.Create(destFile);
@@ -51,7 +45,7 @@ internal class MsgService : IMsgService
         {
             string currFile = Array.Find(files, name => Path.GetFileNameWithoutExtension(name) == "block" + i.ToString());
             blocks[i] = File.ReadAllBytes(currFile);
-            blocks[i] = ApplyEncryption(blocks[i]);
+            ApplyEncryption(blocks[i]);
         }
 
         using var bw = new BinaryWriter(File.Create(destinationFile));
@@ -92,35 +86,81 @@ internal class MsgService : IMsgService
         }
     }
 
-    public string[] LoadBlock(string file)
+    public List<Message> LoadBlock(string file)
     {
-        byte[] blockData = File.ReadAllBytes(file);
-        uint entryCount = BitConverter.ToUInt32(blockData, 0);
-        string[] textItems = new string[entryCount];
+        using var br = new BinaryReader(File.OpenRead(file));
+        var pnaReader = new PnaTextReader(br);
+        uint entryCount = br.ReadUInt32();
+        List<Message> textItems = new();
         for (int i = 0; i < entryCount; i++)
         {
-            PNAReader reader = new(blockData, i, false);
-            textItems[i] = reader.Text;
+            br.BaseStream.Position = (i + 1) * 4;
+            uint offset = br.ReadUInt32();
+            uint endOffset;
+            if (i + 1 == entryCount)
+            {
+                endOffset = (uint)br.BaseStream.Length;
+            }
+            else
+            {
+                endOffset = br.ReadUInt32();
+            }
+            br.BaseStream.Position = offset;
+            int elementId = 0;
+            while (br.BaseStream.Position < endOffset)
+            {
+                Message msg = pnaReader.ReadMessage();
+                foreach (var (key, value) in NameLoader.LoadTable)
+                {
+                    msg.Text = msg.Text.Replace(key, value);
+                }
+                msg.GroupId = i;
+                msg.ElementId = elementId++;
+                textItems.Add(msg);
+            }
         }
+
         return textItems;
     }
 
-    public void SaveBlock(string file, string[] block)
+    public void SaveBlock(string file, List<Message> block)
     {
         using var bw = new BinaryWriter(File.Create(file));
-        bw.Write(block.Length);
+        var pnaWriter = new PnaTextWriter(bw);
+        // Group the messages by groupId so we can generate the table
+        var msgByGroup = block.GroupBy(m => m.GroupId).ToArray();
 
-        int offset = block.Length * 4 + 4;
-        List<byte> buffer = new();
-        for (int i = 0; i < block.Length; i++)
+        // Write number and empty offset table
+        bw.Write(msgByGroup.Length);
+        for (int i = 0; i < 4 * msgByGroup.Length; i++)
         {
-            bw.Write(offset);
-            var pw = new PNAWriter(block[i], false);
-            offset += pw.Data.Length;
-            buffer.AddRange(pw.Data);
+            bw.Write((byte)0);
         }
 
-        bw.Write(buffer.ToArray());
+        // Write every message with its offset
+        bool multiElements = false;
+        for (int i = 0; i < msgByGroup.Length; i++)
+        {
+            var currentPos = bw.BaseStream.Position;
+            bw.BaseStream.Position = 4 + (i * 4);
+            bw.Write((uint)bw.BaseStream.Length);
+            bw.BaseStream.Position = currentPos;
+
+            // Write all the elements of the message
+            foreach (var msg in msgByGroup[i])
+            {
+                if (msg.Context.Contains("text-if"))
+                {
+                    multiElements = true;
+                }
+
+                foreach (var (key, value) in NameLoader.SaveTable)
+                {
+                    msg.Text = msg.Text.Replace(key, value);
+                }
+                pnaWriter.WriteMessage(msg, multiElements);
+            }
+        }
     }
 
 
@@ -140,27 +180,23 @@ internal class MsgService : IMsgService
         
     }
 
-    public byte[] ApplyEncryption(byte[] data)
+    public void ApplyEncryption(byte[] data)
     {
-        int size = data.Length;
-        int pos = 0;
-
-        while (pos < size)
+        for (int i = 0; i < data.Length; i++)
         {
-            long mult = pos * _encryptionMult1;
-            int key_offset = (int)(mult >> 32) >> 4;
-            mult = key_offset * _encryptionMult2;
-            key_offset = (int)mult >> 32;
-            key_offset = pos - key_offset;
-
-            byte value = data[pos];
-            byte keyv = (byte)_encryptionKey[key_offset];
-            value = (byte)(value ^ keyv);
-            data[pos] = value;
-
-            pos++;
+            data[i] ^= _encryptionKey[i % _encryptionKey.Length];
         }
+    }
 
-        return data;
+    
+
+    public string LoadName(byte[] nameData)
+    {
+        return NameLoader.LoadName(nameData);
+    }
+
+    public byte[] SaveName(string name)
+    {
+        return NameLoader.SaveName(name);
     }
 }

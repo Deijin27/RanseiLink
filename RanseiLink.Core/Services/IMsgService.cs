@@ -1,23 +1,30 @@
 ﻿
+using RanseiLink.Core.Text;
+using System.Collections.Generic;
+
 namespace RanseiLink.Core.Services;
 
 public interface IMsgService
 {
     int BlockCount { get; }
 
+    string LoadName(byte[] nameData);
+
+    byte[] SaveName(string name);
+
     /// <summary>
     /// Load single block from file
     /// </summary>
     /// <param name="file">File containing block data</param>
     /// <returns>Loaded block</returns>
-    string[] LoadBlock(string file);
+    List<Message> LoadBlock(string file);
 
     /// <summary>
     /// Save single block to new file. Overrides existing file in location.
     /// </summary>
     /// <param name="file">Path of file to write to.</param>
     /// <param name="block">Block to write to file</param>
-    void SaveBlock(string file, string[] block);
+    void SaveBlock(string file, List<Message> block);
 
     /// <summary>
     /// Decrypt MSG.DAT blocks and export them into folder as separate files
@@ -45,7 +52,6 @@ public interface IMsgService
     /// Apply symmetric encryption to data
     /// </summary>
     /// <param name="data">Block data</param>
-    /// <returns>Encrypted / Decrypted block data</returns>
-    byte[] ApplyEncryption(byte[] data);
+    void ApplyEncryption(byte[] data);
     
 }
