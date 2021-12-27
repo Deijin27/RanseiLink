@@ -38,14 +38,14 @@ public class ScenarioWarriorTests
         {
             Warrior = WarriorId.Nobuchika,
             ScenarioPokemon = 57u,
-            Class = WarriorClassId.AreaEncounterable,
+            Class = WarriorClassId.FreeWarrior,
             Kingdom = KingdomId.Valora,
             Army = 5u
         };
 
         Assert.Equal(WarriorId.Nobuchika, p.Warrior);
         Assert.Equal(57u, p.ScenarioPokemon);
-        Assert.Equal(WarriorClassId.AreaEncounterable, p.Class);
+        Assert.Equal(WarriorClassId.FreeWarrior, p.Class);
         Assert.Equal(KingdomId.Valora, p.Kingdom);
         Assert.Equal(5u, p.Army);
         // Add Array equal test when possible

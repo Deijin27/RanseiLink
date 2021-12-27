@@ -5,7 +5,7 @@ public enum WarriorClassId : uint
 {
     ArmyLeader,
     ArmyMember,
-    AreaEncounterable,
+    FreeWarrior,
     Unknown_3,
     Unknown_4,
     Default
