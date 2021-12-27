@@ -33,6 +33,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<BuildingViewModelFactory>(i => new BuildingViewModel(i));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
         container.RegisterSingleton<ItemViewModelFactory>((i, m, c) => new ItemViewModel(i, m, c));
+        container.RegisterSingleton<KingdomViewModelFactory>((i, m, c) => new KingdomViewModel(i, m, c));
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
         container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
         container.RegisterSingleton<MoveViewModelFactory>((i, m, c) => new MoveViewModel(i, container, m, c));
@@ -57,6 +58,7 @@ public static class RegistrationExtensions
             editor.AddModule<GimmickSelectorEditorModule>();
             editor.AddModule<GimmickGridEditorModule>();
             editor.AddModule<ItemSelectorEditorModule>();
+            editor.AddModule<KingdomSelectorEditorModule>();
             editor.AddModule<MaxLinkSelectorEditorModule>();
             editor.AddModule<MoveRangeSelectorEditorModule>();
             editor.AddModule<MoveSelectorEditorModule>();

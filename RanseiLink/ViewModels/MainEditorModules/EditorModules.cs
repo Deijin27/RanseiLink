@@ -201,3 +201,11 @@ public class GimmickGridEditorModule : IEditorModule
     public string ListName => "Gimmick (Grid)";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickGridViewModel(container, context);
 }
+
+public class KingdomSelectorEditorModule : IEditorModule
+{
+    public const string Id = "kingdom_selector";
+    public string UniqueId => Id;
+    public string ListName => "Kingdom";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new KingdomSelectorViewModel(container, context);
+}
