@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using RanseiLink.Services;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.ViewModels;
 
@@ -40,11 +41,52 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
         _service = context.DataService.BaseWarrior;
         Refresh();
 
-        PasteCommand = new RelayCommand(Paste);
-        CopyCommand = new RelayCommand(Copy);
+        PasteCommand = new RelayCommand(Paste, () => !_busy);
+        CopyCommand = new RelayCommand(Copy, () => !_busy);
     }
 
-    public IReadOnlyList<WarriorNameTableItem> Items { get; private set; }
+    private bool _busy;
+
+    public ObservableCollection<WarriorNameTableItem> Items { get; } = new();
+
+    private readonly List<WarriorNameTableItem> _allItems = new();
+
+    private string _searchTerm = "";
+    public string SearchTerm
+    {
+        get => _searchTerm;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _searchTerm, value))
+            {
+                Search();
+            }
+        }
+    }
+    private void Search()
+    {
+        _busy = true;
+        string searchTerm = SearchTerm;
+        if (string.IsNullOrEmpty(searchTerm))
+        {
+            Items.Clear();
+            foreach (var item in _allItems)
+            {
+                Items.Add(item);
+            }
+        }
+        Items.Clear();
+        
+        foreach (var item in _allItems)
+        {
+            if (item.Name.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+            {
+                Items.Add(item);
+            }
+        }
+
+        _busy = false;
+    }
 
     public void Save()
     {
@@ -72,7 +114,9 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
             {
                 lst.Add(new WarriorNameTableItem(i, _model));
             }
-            Items = lst;
+            _allItems.Clear();
+            _allItems.AddRange(lst);
+            Search();
         }
         catch (Exception e)
         {
@@ -103,7 +147,9 @@ public class WarriorNameTableViewModel : ViewModelBase, ISaveableRefreshable
             {
                 lst.Add(new WarriorNameTableItem(i, _model));
             }
-            Items = lst;
+            _allItems.Clear();
+            _allItems.AddRange(lst);
+            Search();
         }
         else
         {
