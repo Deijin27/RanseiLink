@@ -56,6 +56,22 @@ public static class UserControlUtil
 
     public static DependencyProperty RegisterDependencyProperty<TView, TProperty>(
         Expression<Func<TView, TProperty>> property,
+        TProperty defaultValue, FrameworkPropertyMetadataOptions options)
+        where TView : DependencyObject
+    {
+        var expression = (MemberExpression)property.Body;
+        var propertyName = expression.Member.Name;
+
+        return DependencyProperty.Register(
+            propertyName,
+            typeof(TProperty),
+            typeof(TView),
+            new FrameworkPropertyMetadata(defaultValue, options)
+            );
+    }
+
+    public static DependencyProperty RegisterDependencyProperty<TView, TProperty>(
+        Expression<Func<TView, TProperty>> property,
         TProperty defaultValue)
         where TView : DependencyObject
     {

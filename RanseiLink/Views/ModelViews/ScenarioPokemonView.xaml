@@ -12,7 +12,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="1.5*"/>
+            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -54,16 +54,29 @@
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
 
         <TextBlock Text="HP IV" Grid.Row="2" />
-        <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding HpIv, Mode=TwoWay}" Max="31"/>
+        <DockPanel Grid.Row="2" Grid.Column="1">
+            <controls:NumberButtonPanel Value="{Binding HpIv}" DockPanel.Dock="Right" Items="0,5,10,15,20,25,31" Margin="1,0,-1,0"/>
+            <controls:NumberBox  Value="{Binding HpIv}" Max="31"/>
+        </DockPanel>
+        
                 
         <TextBlock Text="Atk IV" Grid.Row="3" />
-        <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding AtkIv, Mode=TwoWay}" Max="31"/>
+        <DockPanel Grid.Row="3" Grid.Column="1">
+            <controls:NumberButtonPanel Value="{Binding AtkIv}" DockPanel.Dock="Right" Items="0,5,10,15,20,25,31" Margin="1,0,-1,0"/>
+            <controls:NumberBox  Value="{Binding AtkIv}" Max="31"/>
+        </DockPanel>
                 
         <TextBlock Text="Def IV" Grid.Row="4" />
-        <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding DefIv, Mode=TwoWay}" Max="31"/>
+        <DockPanel Grid.Row="4" Grid.Column="1">
+            <controls:NumberButtonPanel Value="{Binding DefIv}" DockPanel.Dock="Right" Items="0,5,10,15,20,25,31" Margin="1,0,-1,0"/>
+            <controls:NumberBox  Value="{Binding DefIv}" Max="31"/>
+        </DockPanel>
                 
         <TextBlock Text="Spe IV" Grid.Row="5" />
-        <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding SpeIv, Mode=TwoWay}" Max="31"/>
+        <DockPanel Grid.Row="5" Grid.Column="1">
+            <controls:NumberButtonPanel Value="{Binding SpeIv}" DockPanel.Dock="Right" Items="0,5,10,15,20,25,31" Margin="1,0,-1,0"/>
+            <controls:NumberBox  Value="{Binding SpeIv}" Max="31"/>
+        </DockPanel>
 
         <Button Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
                     Command="{Binding JumpToFirstWarriorCommand}" />
