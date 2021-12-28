@@ -5,6 +5,8 @@ namespace RanseiLink.Core.Models.Interfaces;
 public interface IKingdom : IDataWrapper, ICloneable<IKingdom>
 {
     string Name { get; set; }
+
+    KingdomId MapConnection0 { get; set; }
     KingdomId MapConnection1 { get; set; }
     KingdomId MapConnection2 { get; set; }
     KingdomId MapConnection3 { get; set; }

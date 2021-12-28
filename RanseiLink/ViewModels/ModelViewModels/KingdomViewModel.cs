@@ -24,6 +24,11 @@ public abstract class KingdomViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
+    public KingdomId MapConnection0
+    {
+        get => _model.MapConnection0;
+        set => RaiseAndSetIfChanged(_model.MapConnection0, value, v => _model.MapConnection0 = v);
+    }
     public KingdomId MapConnection1
     {
         get => _model.MapConnection1;

@@ -16,6 +16,14 @@ public class Kingdom : BaseDataWindow, IKingdom
         set => SetPaddedUtf8String(0, 10, value);
     }
 
+    #region Kingdoms you can battle using warriors in this kingdom
+
+    public KingdomId MapConnection0
+    {
+        get => (KingdomId)GetUInt32(2, 5, 27);
+        set => SetUInt32(2, 5, 27, (uint)value);
+    }
+
     public KingdomId MapConnection1
     {
         get => (KingdomId)GetUInt32(3, 5, 0);
@@ -87,6 +95,8 @@ public class Kingdom : BaseDataWindow, IKingdom
         get => (KingdomId)GetUInt32(5, 5, 10);
         set => SetUInt32(5, 5, 10, (uint)value);
     }
+
+    #endregion
 
     public BattleMapId BattleMap
     {
