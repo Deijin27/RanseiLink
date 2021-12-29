@@ -26,7 +26,8 @@ public class MsgCommand : BaseCommand
             return default;
         }
         var block = dataService.Msg.Retrieve(BlockId);
-        console.Output.WriteLine(block[EntryId]);
+        console.Render(block[EntryId]);
+        
 
         return default;
     }
