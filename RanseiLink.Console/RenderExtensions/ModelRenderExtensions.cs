@@ -258,6 +258,8 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", kingdom.Name);
+        console.WriteProperty("BattleMap", kingdom.BattleMap);
+        console.WriteProperty("Can Battle: ", "- " + string.Join("\n- ", kingdom.MapConnections));
     }
 
     public static void Render(this IConsole console, IMaxLink maxSync, WarriorId id)

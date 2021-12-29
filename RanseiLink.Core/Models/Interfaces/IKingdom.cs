@@ -20,4 +20,6 @@ public interface IKingdom : IDataWrapper, ICloneable<IKingdom>
     KingdomId MapConnection11 { get; set; }
     KingdomId MapConnection12 { get; set; }
     BattleMapId BattleMap { get; set; }
+
+    KingdomId[] MapConnections { get; set; }
 }
