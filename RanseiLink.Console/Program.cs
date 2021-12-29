@@ -20,7 +20,7 @@ internal class Program
     public static async Task<int> Main()
     {
         return await new CliApplicationBuilder()
-           .SetVersion("3.0")
+           .SetVersion("3.1")
            .SetTitle("RanseiLink Console")
            .SetDescription("Pokemon Conquest ROM Editor")
            .AddCommandsFromThisAssembly()
