@@ -12,4 +12,5 @@ public interface IBuilding : IDataWrapper, ICloneable<IBuilding>
     BuildingSpriteId Sprite1 { get; set; }
     BuildingSpriteId Sprite2 { get; set; }
     BuildingSpriteId Sprite3 { get; set; }
+    BuildingFunctionId Function { get; set; }
 }

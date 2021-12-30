@@ -64,6 +64,12 @@ public abstract class BuildingViewModelBase : ViewModelBase
         get => _model.Sprite3;
         set => RaiseAndSetIfChanged(_model.Sprite3, value, v => _model.Sprite3 = v);
     }
+
+    public BuildingFunctionId Function
+    {
+        get => _model.Function;
+        set => RaiseAndSetIfChanged(_model.Function, value, v => _model.Function = v);
+    }
 }
 
 public class BuildingViewModel : BuildingViewModelBase

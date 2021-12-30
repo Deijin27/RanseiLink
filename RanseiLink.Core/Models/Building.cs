@@ -57,6 +57,12 @@ public class Building : BaseDataWindow, IBuilding
         set => SetUInt32(8, 7, 21, (uint)value);
     }
 
+    public BuildingFunctionId Function
+    {
+        get => (BuildingFunctionId)GetUInt32(8, 4, 28);
+        set => SetUInt32(8, 4, 28, (uint)value);
+    }
+
     public IBuilding Clone()
     {
         return new Building((byte[])Data.Clone());

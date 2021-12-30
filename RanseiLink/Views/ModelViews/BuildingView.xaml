@@ -69,5 +69,8 @@
 
         <TextBlock Text="Sprite 3" Grid.Row="7" />
         <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite3, Mode=TwoWay}"/>
+        
+        <TextBlock Text="Function" Grid.Row="8" />
+        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
     </Grid>
 </UserControl>
