@@ -121,5 +121,5 @@ public enum BuildingId : uint
     MysterySprings_1,
     SnowyMountain_3,
     Park_4,
-    ShrineofResolve,
+    ShrineOfResolve,
 }

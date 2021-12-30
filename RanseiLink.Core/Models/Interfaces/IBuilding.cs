@@ -9,4 +9,7 @@ public interface IBuilding : IDataWrapper, ICloneable<IBuilding>
     BattleMapId BattleMap1 { get; set; }
     BattleMapId BattleMap2 { get; set; }
     BattleMapId BattleMap3 { get; set; }
+    BuildingSpriteId Sprite1 { get; set; }
+    BuildingSpriteId Sprite2 { get; set; }
+    BuildingSpriteId Sprite3 { get; set; }
 }

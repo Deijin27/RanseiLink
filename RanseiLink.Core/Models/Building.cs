@@ -39,6 +39,24 @@ public class Building : BaseDataWindow, IBuilding
         set => SetUInt32(8, 7, 0, (uint)value);
     }
 
+    public BuildingSpriteId Sprite1
+    {
+        get => (BuildingSpriteId)GetUInt32(8, 7, 7);
+        set => SetUInt32(8, 7, 7, (uint)value);
+    }
+
+    public BuildingSpriteId Sprite2
+    {
+        get => (BuildingSpriteId)GetUInt32(8, 7, 14);
+        set => SetUInt32(8, 7, 14, (uint)value);
+    }
+
+    public BuildingSpriteId Sprite3
+    {
+        get => (BuildingSpriteId)GetUInt32(8, 7, 21);
+        set => SetUInt32(8, 7, 21, (uint)value);
+    }
+
     public IBuilding Clone()
     {
         return new Building((byte[])Data.Clone());
