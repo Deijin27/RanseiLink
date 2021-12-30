@@ -6,7 +6,7 @@ public enum BuildingFunctionId : uint
     Shop,
     RaiseEnergy,
     ObtainGold,
-    Unknown_3,
+    Airship,
     Bank,
     Alchemist,
     Blacksmith,
@@ -14,9 +14,4 @@ public enum BuildingFunctionId : uint
     IncreaseWildPokemonNumber,
     Battle,
     ChangePokemonAbility,
-    MightNotWork_11,
-    MightNotWork_12,
-    MightNotWork_13,
-    MightNotWork_14,
-    MightNotWork_15,
 }
