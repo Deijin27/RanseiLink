@@ -3,16 +3,19 @@ using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BuildingViewModel BuildingViewModelFactory(IBuilding model);
+public delegate BuildingViewModel BuildingViewModelFactory(BuildingId id, IBuilding model);
 
-public class BuildingViewModel : ViewModelBase
+public abstract class BuildingViewModelBase : ViewModelBase
 {
     private readonly IBuilding _model;
 
-    public BuildingViewModel(IBuilding model)
+    public BuildingViewModelBase(BuildingId id, IBuilding model)
     {
+        Id = id;
         _model = model;
     }
+
+    public BuildingId Id { get; }
 
     public string Name
     {
@@ -25,4 +28,32 @@ public class BuildingViewModel : ViewModelBase
         get => _model.Kingdom;
         set => RaiseAndSetIfChanged(_model.Kingdom, value, v => _model.Kingdom = v);
     }
+
+    public BattleMapId Battlemap1
+    {
+        get => _model.BattleMap1;
+        set => RaiseAndSetIfChanged(_model.BattleMap1, value, v => _model.BattleMap1 = v);
+    }
+
+    public BattleMapId Battlemap2
+    {
+        get => _model.BattleMap2;
+        set => RaiseAndSetIfChanged(_model.BattleMap2, value, v => _model.BattleMap2 = v);
+    }
+
+    public BattleMapId Battlemap3
+    {
+        get => _model.BattleMap3;
+        set => RaiseAndSetIfChanged(_model.BattleMap3, value, v => _model.BattleMap3 = v);
+    }
+}
+
+public class BuildingViewModel : BuildingViewModelBase
+{
+    public BuildingViewModel(BuildingId id, IBuilding model) : base(id, model) { }
+}
+
+public class BuildingGridItemViewModel : BuildingViewModelBase
+{
+    public BuildingGridItemViewModel(BuildingId id, IBuilding model) : base(id, model) { }
 }

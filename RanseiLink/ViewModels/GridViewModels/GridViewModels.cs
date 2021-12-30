@@ -88,3 +88,17 @@ public class GimmickGridViewModel : GridViewModelBase<GimmickId, IGimmick, Gimmi
 
     public override int FrozenColumnCount => 2;
 }
+
+public class BuildingGridViewModel : GridViewModelBase<BuildingId, IBuilding, BuildingGridItemViewModel, IDisposableBuildingService>, ISaveableRefreshable
+{
+    public BuildingGridViewModel(IServiceContainer container, IEditorContext context)
+        : base(
+            container,
+            context.DataService.Building.Disposable,
+            EnumUtil.GetValues<BuildingId>().ToArray(),
+            (id, model) => new BuildingGridItemViewModel(id, model))
+    {
+    }
+
+    public override int FrozenColumnCount => 2;
+}

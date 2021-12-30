@@ -18,5 +18,5 @@ public class BuildingSelectorViewModel : SelectorViewModelBase<BuildingId, IBuil
         Selected = BuildingId.Shop_0;
     }
 
-    protected override BuildingViewModel NewViewModel(IBuilding model) => _factory(model);
+    protected override BuildingViewModel NewViewModel(IBuilding model) => _factory(Selected, model);
 }

@@ -52,5 +52,14 @@
         <TextBlock Text="Kingdom" Grid.Row="1" />
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}"/>
 
+        <TextBlock Text="Battle Map 1" Grid.Row="2" />
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding Battlemap1, Mode=TwoWay}"/>
+
+        <TextBlock Text="Battle Map 2" Grid.Row="3" />
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding Battlemap2, Mode=TwoWay}"/>
+
+        <TextBlock Text="Battle Map 3" Grid.Row="4" />
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding Battlemap3, Mode=TwoWay}"/>
+
     </Grid>
 </UserControl>

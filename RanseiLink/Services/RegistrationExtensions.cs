@@ -30,7 +30,7 @@ public static class RegistrationExtensions
 
         container.RegisterSingleton<AbilityViewModelFactory>((i, m, c) => new AbilityViewModel(i, m, c));
         container.RegisterSingleton<BaseWarriorViewModelFactory>((i, c) => new BaseWarriorViewModel(i, c));
-        container.RegisterSingleton<BuildingViewModelFactory>(i => new BuildingViewModel(i));
+        container.RegisterSingleton<BuildingViewModelFactory>((i, m) => new BuildingViewModel(i, m));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
         container.RegisterSingleton<ItemViewModelFactory>((i, m, c) => new ItemViewModel(i, m, c));
         container.RegisterSingleton<KingdomViewModelFactory>((i, m, c) => new KingdomViewModel(i, m, c));
@@ -53,6 +53,7 @@ public static class RegistrationExtensions
             editor.AddModule<BaseWarriorSelectorEditorModule>();
             editor.AddModule<BaseWarriorGridEditorModule>();
             editor.AddModule<BuildingSelectorEditorModule>();
+            editor.AddModule<BuildingGridEditorModule>();
             editor.AddModule<EventSpeakerSelectorEditorModule>();
             editor.AddModule<EvolutionTableEditorModule>();
             editor.AddModule<GimmickSelectorEditorModule>();

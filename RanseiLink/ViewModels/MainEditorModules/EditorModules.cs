@@ -178,6 +178,14 @@ public class BuildingSelectorEditorModule : IEditorModule
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BuildingSelectorViewModel(container, context);
 }
 
+public class BuildingGridEditorModule : IEditorModule
+{
+    public const string Id = "building_grid";
+    public string UniqueId => Id;
+    public string ListName => "Building (Grid)";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BuildingGridViewModel(container, context);
+}
+
 public class MsgGridEditorModule : IEditorModule
 {
     public const string Id = "msg_grid";

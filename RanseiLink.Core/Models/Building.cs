@@ -21,6 +21,24 @@ public class Building : BaseDataWindow, IBuilding
         set => SetByte(27, (byte)value);
     }
 
+    public BattleMapId BattleMap1
+    {
+        get => (BattleMapId)GetUInt32(7, 7, 0);
+        set => SetUInt32(7, 7, 0, (uint)value);
+    }
+
+    public BattleMapId BattleMap2
+    {
+        get => (BattleMapId)GetUInt32(7, 7, 7);
+        set => SetUInt32(7, 7, 7, (uint)value);
+    }
+
+    public BattleMapId BattleMap3
+    {
+        get => (BattleMapId)GetUInt32(8, 7, 0);
+        set => SetUInt32(8, 7, 0, (uint)value);
+    }
+
     public IBuilding Clone()
     {
         return new Building((byte[])Data.Clone());
