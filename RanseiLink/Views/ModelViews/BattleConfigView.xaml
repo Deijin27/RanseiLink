@@ -6,76 +6,111 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
-             xmlns:const="clr-namespace:RanseiLink.Constants"
+             xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:BattleConfigViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <UserControl.Resources>
+        <conv:Rgb555ToColorConverter x:Key="Converter.Rgb555ToColor"/>
 
-        <TextBlock Text="Environment Map File" Grid.Row="0"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding EnvironmentItems}" SelectedItem="{Binding Environment, Mode=TwoWay}"/>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        
+    </UserControl.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="Environment Map File" Grid.Row="0"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding EnvironmentItems}" SelectedItem="{Binding Environment, Mode=TwoWay}"/>
 
-        <TextBlock Text="Number of Turns" Grid.Row="1"/>
-        <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="31"/>
+            <TextBlock Text="Number of Turns" Grid.Row="1"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="31"/>
 
-        <GroupBox Header="Victory Conditions" ToolTip="In addition to 'defeat all enemies'" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
-            <StackPanel>
-                <CheckBox Content="Unknown 1 (Aurora)" IsChecked="{Binding VictoryCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 2 (Dragnor/Viperia)" IsChecked="{Binding VictoryCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 3 (Greenleaf)" IsChecked="{Binding VictoryCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 4 (Pugilis)" IsChecked="{Binding VictoryCondition_Unknown_Pugilis, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Claim All Banners" IsChecked="{Binding VictoryCondition_ClaimAllBanners, Mode=TwoWay}" />
-                
-            </StackPanel>
-        </GroupBox>
+            <TextBlock Text="Upper Atmosphere Color" Grid.Row="2"/>
+            <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="2" ShowAlpha="False" 
+                                            SelectedColor="{Binding UpperAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
 
-        <GroupBox Header="Defeat Conditions" ToolTip="In addition to 'all allies are defeated'" Grid.Row="8" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
-            <StackPanel>
-                <CheckBox Content="Unknown 1 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 2 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 3 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Unknown 4 (Pugilis)" IsChecked="{Binding DefeatCondition_Unknown_Pugilis, Mode=TwoWay}" Margin="0,0,0,13"/>
-                <CheckBox Content="Claim All Banners" IsChecked="{Binding DefeatCondition_ClaimAllBanners, Mode=TwoWay}" />
+            <TextBlock Text="Middle Atmosphere Color" Grid.Row="3"/>
+            <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="3" ShowAlpha="False" 
+                                            SelectedColor="{Binding MiddleAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
 
-            </StackPanel>
-        </GroupBox>
-    </Grid>
+            <TextBlock Text="Lower Atmosphere Color" Grid.Row="4"/>
+            <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="4" ShowAlpha="False" 
+                                            SelectedColor="{Binding LowerAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
+
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="Victory Conditions" ToolTip="In addition to 'defeat all enemies'" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
+                <StackPanel>
+                    <CheckBox Content="Unknown 1 (Aurora)" IsChecked="{Binding VictoryCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 2 (Dragnor/Viperia)" IsChecked="{Binding VictoryCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 3 (Greenleaf)" IsChecked="{Binding VictoryCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 4 (Pugilis)" IsChecked="{Binding VictoryCondition_Unknown_Pugilis, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Claim All Banners" IsChecked="{Binding VictoryCondition_ClaimAllBanners, Mode=TwoWay}" />
+
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Defeat Conditions" ToolTip="In addition to 'all allies are defeated'" Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
+                <StackPanel>
+                    <CheckBox Content="Unknown 1 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 2 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 3 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 4 (Pugilis)" IsChecked="{Binding DefeatCondition_Unknown_Pugilis, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Claim All Banners" IsChecked="{Binding DefeatCondition_ClaimAllBanners, Mode=TwoWay}" />
+
+                </StackPanel>
+            </GroupBox>
+
+            
+        </Grid>
+    </WrapPanel>
 </UserControl>

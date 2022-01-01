@@ -36,5 +36,6 @@
 
     <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ButtonStyle1}"/>
     <Style TargetType="{x:Type RepeatButton}" BasedOn="{StaticResource ButtonStyle1}"/>
-    
+    <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource ButtonStyle1}"/>
+
 </ResourceDictionary>

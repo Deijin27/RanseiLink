@@ -38,4 +38,8 @@ internal class MockDataService : IDataService
     public IScenarioKingdomService ScenarioKingdom { get; set; }
 
     public IMsgBlockService Msg { get; set; }
+
+    public IBattleConfigService BattleConfig { get; set; }
+
+    public IBattleEnvironmentService BattleEnvironment { get; set; }
 }

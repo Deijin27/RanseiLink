@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Types;
 using RanseiLink.Services;
 using System.Collections.Generic;
 
@@ -38,6 +39,24 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
     {
         get => _model.NumberOfTurns;
         set => RaiseAndSetIfChanged(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
+    }
+
+    public Rgb555 UpperAtmosphereColor
+    {
+        get => _model.UpperAtmosphereColor;
+        set => RaiseAndSetIfChanged(_model.UpperAtmosphereColor, value, v => _model.UpperAtmosphereColor = v);
+    }
+
+    public Rgb555 MiddleAtmosphereColor
+    {
+        get => _model.MiddleAtmosphereColor;
+        set => RaiseAndSetIfChanged(_model.MiddleAtmosphereColor, value, v => _model.MiddleAtmosphereColor = v);
+    }
+
+    public Rgb555 LowerAtmosphereColor
+    {
+        get => _model.LowerAtmosphereColor;
+        set => RaiseAndSetIfChanged(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
     }
 
     #region Victory Conditions

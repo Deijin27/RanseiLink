@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="gong-wpf-dragdrop" Version="2.4.3" />
+    <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
@@ -32,6 +33,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\PortableSingleColorPicker.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Dialogs\MessageBoxDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -127,6 +131,10 @@
   <ItemGroup>
     <Page Update="Controls\RankUpConditionControl.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Controls\PortableSingleColorPicker.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Dialogs\MessageBoxDialog.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

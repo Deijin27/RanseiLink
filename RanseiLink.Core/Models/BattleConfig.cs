@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Types;
 
 namespace RanseiLink.Core.Models;
 
@@ -21,10 +22,22 @@ public class BattleConfig : BaseDataWindow, IBattleConfig
         set => SetUInt32(0, 5, 6, value);
     }
 
-    public uint NumberOfTurns
+    public Rgb555 UpperAtmosphereColor
     {
-        get => GetUInt32(2, 5, 24);
-        set => SetUInt32(2, 5, 24, value);
+        get => Rgb555.From(GetUInt32(0, 15, 11));
+        set => SetUInt32(0, 15, 11, value.ToUInt32());
+    }
+
+    public Rgb555 MiddleAtmosphereColor
+    {
+        get => Rgb555.From(GetUInt32(1, 15, 0));
+        set => SetUInt32(1, 15, 0, value.ToUInt32());
+    }
+
+    public Rgb555 LowerAtmosphereColor
+    {
+        get => Rgb555.From(GetUInt32(1, 15, 15));
+        set => SetUInt32(1, 15, 15, value.ToUInt32());
     }
 
     public BattleVictoryConditionFlags VictoryCondition
@@ -37,6 +50,12 @@ public class BattleConfig : BaseDataWindow, IBattleConfig
     {
         get => (BattleVictoryConditionFlags)GetUInt32(2, 5, 5);
         set => SetUInt32(2, 5, 5, (uint)value);
+    }
+
+    public uint NumberOfTurns
+    {
+        get => GetUInt32(2, 5, 24);
+        set => SetUInt32(2, 5, 24, value);
     }
 
     public IBattleConfig Clone()
