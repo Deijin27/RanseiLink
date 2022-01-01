@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Services;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
@@ -116,16 +117,13 @@ public abstract class KingdomViewModelBase : ViewModelBase
 
 public class KingdomViewModel : KingdomViewModelBase
 {
-    //private readonly ICachedMsgBlockService _msgService;
     public KingdomViewModel(KingdomId id, IKingdom model, IEditorContext context) : base(id, model) 
     {
-        //_msgService = context.CachedMsgBlockService;
+        var jumpService = context.JumpService;
+
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(jumpService.JumpToBattleConfig);
     }
 
-    //public string Description
-    //{
-    //    get => _msgService.GetKingdomDescription(Id);
-    //    set => _msgService.SetKingdomDescription(Id, value);
-    //}
+    public ICommand JumpToBattleConfigCommand { get; }
 
 }

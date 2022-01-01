@@ -30,7 +30,7 @@ public static class RegistrationExtensions
 
         container.RegisterSingleton<AbilityViewModelFactory>((i, m, c) => new AbilityViewModel(i, m, c));
         container.RegisterSingleton<BaseWarriorViewModelFactory>((i, c) => new BaseWarriorViewModel(i, c));
-        container.RegisterSingleton<BuildingViewModelFactory>((i, m) => new BuildingViewModel(i, m));
+        container.RegisterSingleton<BuildingViewModelFactory>((i, m, c) => new BuildingViewModel(i, m, c));
         container.RegisterSingleton<EventSpeakerViewModelFactory>(i => new EventSpeakerViewModel(i));
         container.RegisterSingleton<ItemViewModelFactory>((i, m, c) => new ItemViewModel(i, m, c));
         container.RegisterSingleton<KingdomViewModelFactory>((i, m, c) => new KingdomViewModel(i, m, c));

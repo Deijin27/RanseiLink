@@ -20,4 +20,5 @@ public interface IJumpService
     void JumpToScenarioPokemon(ScenarioId scenario, uint id);
     void JumpToWarriorNameTable();
     void JumpToWarriorSkill(WarriorSkillId id);
+    void JumpToBattleConfig(BattleConfigId id);
 }

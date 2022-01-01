@@ -1,9 +1,11 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Services;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BuildingViewModel BuildingViewModelFactory(BuildingId id, IBuilding model);
+public delegate BuildingViewModel BuildingViewModelFactory(BuildingId id, IBuilding model, IEditorContext context);
 
 public abstract class BuildingViewModelBase : ViewModelBase
 {
@@ -74,7 +76,14 @@ public abstract class BuildingViewModelBase : ViewModelBase
 
 public class BuildingViewModel : BuildingViewModelBase
 {
-    public BuildingViewModel(BuildingId id, IBuilding model) : base(id, model) { }
+    public BuildingViewModel(BuildingId id, IBuilding model, IEditorContext context) : base(id, model) 
+    {
+        var jumpService = context.JumpService;
+
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(jumpService.JumpToBattleConfig);
+    }
+
+    public ICommand JumpToBattleConfigCommand { get; }
 }
 
 public class BuildingGridItemViewModel : BuildingViewModelBase

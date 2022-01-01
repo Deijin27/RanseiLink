@@ -170,4 +170,14 @@ internal class JumpService : IJumpService
             _mainEditor.CurrentPage = moduleId;
         }
     }
+
+    public void JumpToBattleConfig(BattleConfigId id)
+    {
+        var moduleId = BattleConfigSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is BattleConfigSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
+    }
 }
