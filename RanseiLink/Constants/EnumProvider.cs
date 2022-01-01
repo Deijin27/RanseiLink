@@ -27,7 +27,7 @@ public static class EnumProvider
     public static WarriorClassId[] WarriorClassItems { get; } = EnumUtil.GetValues<WarriorClassId>().ToArray();
     public static WarriorSkillTargetId[] WarriorSkillTargetItems { get; } = EnumUtil.GetValues<WarriorSkillTargetId>().ToArray();
     public static WarriorSkillEffectId[] WarriorSkillEffectItems { get; } = EnumUtil.GetValues<WarriorSkillEffectId>().ToArray();
-    public static BattleMapId[] BattleMapItems { get; } = EnumUtil.GetValues<BattleMapId>().ToArray();
+    public static BattleConfigId[] BattleConfigItems { get; } = EnumUtil.GetValues<BattleConfigId>().ToArray();
     public static BuildingSpriteId[] BuildingSpriteItems { get; } = EnumUtil.GetValues<BuildingSpriteId>().ToArray();
     public static BuildingFunctionId[] BuildingFunctionItems { get; } = EnumUtil.GetValues<BuildingFunctionId>().ToArray();
 }

@@ -6,9 +6,10 @@
              xmlns:const="clr-namespace:RanseiLink.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:KingdomViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="550" d:DesignWidth="800">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Height" Value="20"/>
@@ -40,14 +41,17 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
         <TextBlock Text="Name" Grid.Row="0" />
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
 
-        <TextBlock Text="Battle Map" Grid.Row="1" />
-        <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding BattleMap}"/>
+        <TextBlock Text="Battle Config" Grid.Row="1" />
+        <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig}"/>
 
         <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
             <StackPanel>
@@ -66,6 +70,15 @@
                 <ComboBox Margin="4,2,4,4" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection12}"/>
             </StackPanel>
         </GroupBox>
+
+        <TextBlock Text="Unknown 1" Grid.Row="14" />
+        <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Unknown1}"/>
+
+        <TextBlock Text="Unknown 2" Grid.Row="15" />
+        <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding Unknown2}"/>
+
+        <TextBlock Text="Unknown 3" Grid.Row="16" />
+        <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Unknown3}"/>
 
     </Grid>
 </UserControl>

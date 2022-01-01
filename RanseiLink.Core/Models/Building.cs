@@ -21,21 +21,21 @@ public class Building : BaseDataWindow, IBuilding
         set => SetByte(27, (byte)value);
     }
 
-    public BattleMapId BattleMap1
+    public BattleConfigId BattleConfig1
     {
-        get => (BattleMapId)GetUInt32(7, 7, 0);
+        get => (BattleConfigId)GetUInt32(7, 7, 0);
         set => SetUInt32(7, 7, 0, (uint)value);
     }
 
-    public BattleMapId BattleMap2
+    public BattleConfigId BattleConfig2
     {
-        get => (BattleMapId)GetUInt32(7, 7, 7);
+        get => (BattleConfigId)GetUInt32(7, 7, 7);
         set => SetUInt32(7, 7, 7, (uint)value);
     }
 
-    public BattleMapId BattleMap3
+    public BattleConfigId BattleConfig3
     {
-        get => (BattleMapId)GetUInt32(8, 7, 0);
+        get => (BattleConfigId)GetUInt32(8, 7, 0);
         set => SetUInt32(8, 7, 0, (uint)value);
     }
 

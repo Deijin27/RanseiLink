@@ -29,22 +29,22 @@ public abstract class BuildingViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Kingdom, value, v => _model.Kingdom = v);
     }
 
-    public BattleMapId BattleMap1
+    public BattleConfigId BattleConfig1
     {
-        get => _model.BattleMap1;
-        set => RaiseAndSetIfChanged(_model.BattleMap1, value, v => _model.BattleMap1 = v);
+        get => _model.BattleConfig1;
+        set => RaiseAndSetIfChanged(_model.BattleConfig1, value, v => _model.BattleConfig1 = v);
     }
 
-    public BattleMapId BattleMap2
+    public BattleConfigId BattleConfig2
     {
-        get => _model.BattleMap2;
-        set => RaiseAndSetIfChanged(_model.BattleMap2, value, v => _model.BattleMap2 = v);
+        get => _model.BattleConfig2;
+        set => RaiseAndSetIfChanged(_model.BattleConfig2, value, v => _model.BattleConfig2 = v);
     }
 
-    public BattleMapId BattleMap3
+    public BattleConfigId BattleConfig3
     {
-        get => _model.BattleMap3;
-        set => RaiseAndSetIfChanged(_model.BattleMap3, value, v => _model.BattleMap3 = v);
+        get => _model.BattleConfig3;
+        set => RaiseAndSetIfChanged(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
     }
 
     public BuildingSpriteId Sprite1

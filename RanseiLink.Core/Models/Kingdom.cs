@@ -16,6 +16,12 @@ public class Kingdom : BaseDataWindow, IKingdom
         set => SetPaddedUtf8String(0, 10, value);
     }
 
+    public uint Unknown_R2_C24_L3
+    {
+        get => GetUInt32(2, 3, 24);
+        set => SetUInt32(2, 3, 24, value);
+    }
+
     #region Kingdoms you can battle using warriors in this kingdom
 
     public KingdomId MapConnection0
@@ -119,12 +125,24 @@ public class Kingdom : BaseDataWindow, IKingdom
 
     #endregion
 
-    public BattleMapId BattleMap
+    public BattleConfigId BattleConfig
     {
-        get => (BattleMapId)GetUInt32(5, 7, 15);
+        get => (BattleConfigId)GetUInt32(5, 7, 15);
         set => SetUInt32(5, 7, 15, (uint)value);
     }
 
+    public uint Unknown_R5_C22_L4
+    {
+        get => GetUInt32(5, 4, 22);
+        set => SetUInt32(5, 4, 22, value);
+    }
+
+
+    public uint Unknown_R5_C26_L4
+    {
+        get => GetUInt32(5, 4, 26);
+        set => SetUInt32(5, 4, 26, value);
+    }
     public IKingdom Clone()
     {
         return new Kingdom((byte[])Data.Clone());

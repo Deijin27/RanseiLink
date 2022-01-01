@@ -52,14 +52,14 @@
         <TextBlock Text="Kingdom" Grid.Row="1" />
         <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}"/>
 
-        <TextBlock Text="Battle Map 1" Grid.Row="2" />
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding BattleMap1, Mode=TwoWay}"/>
+        <TextBlock Text="Battle Config 1" Grid.Row="2" />
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
 
-        <TextBlock Text="Battle Map 2" Grid.Row="3" />
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding BattleMap2, Mode=TwoWay}"/>
+        <TextBlock Text="Battle Config 2" Grid.Row="3" />
+        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
 
-        <TextBlock Text="Battle Map 3" Grid.Row="4" />
-        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleMapItems}" SelectedItem="{Binding BattleMap3, Mode=TwoWay}"/>
+        <TextBlock Text="Battle Config 3" Grid.Row="4" />
+        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
 
         <TextBlock Text="Sprite 1" Grid.Row="5" />
         <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite1, Mode=TwoWay}"/>

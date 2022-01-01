@@ -25,6 +25,8 @@ public class DataService : IDataService
         ScenarioAppearPokemon = new ScenarioAppearPokemonService(mod);
         ScenarioKingdom = new ScenarioKingdomService(mod);
         Msg = new MsgBlockService(mod, msgService);
+        BattleConfig = new BattleConfigService(mod);
+        BattleEnvironment = new BattleEnvironmentService(mod);
     }
 
     public IPokemonService Pokemon { get; }
@@ -44,4 +46,7 @@ public class DataService : IDataService
     public IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
     public IScenarioKingdomService ScenarioKingdom { get; }
     public IMsgBlockService Msg { get; }
+    public IBattleConfigService BattleConfig { get; }
+
+    public IBattleEnvironmentService BattleEnvironment { get; }
 }

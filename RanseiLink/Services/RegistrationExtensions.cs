@@ -44,6 +44,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ScenarioKingdomViewModelFactory>(i => new ScenarioKingdomViewModel(i));
         container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c, scenario, id) => new ScenarioPokemonViewModel(model, c, scenario, id));
         container.RegisterSingleton<GimmickViewModelFactory>((i, m, c) => new GimmickViewModel(i, container, m, c));
+        container.RegisterSingleton<BattleConfigViewModelFactory>((i, m, c) => new BattleConfigViewModel(i, m, c));
 
         container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
         {
@@ -52,6 +53,7 @@ public static class RegistrationExtensions
             editor.AddModule<AbilityGridEditorModule>();
             editor.AddModule<BaseWarriorSelectorEditorModule>();
             editor.AddModule<BaseWarriorGridEditorModule>();
+            editor.AddModule<BattleConfigSelectorEditorModule>();
             editor.AddModule<BuildingSelectorEditorModule>();
             editor.AddModule<BuildingGridEditorModule>();
             editor.AddModule<EventSpeakerSelectorEditorModule>();

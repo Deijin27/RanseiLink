@@ -98,6 +98,10 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:BattleConfigSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
@@ -114,6 +118,10 @@
 
             <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
                 <views:AbilityView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BattleConfigViewModel}">
+                <views:BattleConfigView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">

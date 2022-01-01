@@ -217,3 +217,11 @@ public class KingdomSelectorEditorModule : IEditorModule
     public string ListName => "Kingdom";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new KingdomSelectorViewModel(container, context);
 }
+
+public class BattleConfigSelectorEditorModule : IEditorModule
+{
+    public const string Id = "battle_config_selector";
+    public string UniqueId => Id;
+    public string ListName => "Battle Config";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BattleConfigSelectorViewModel(container, context);
+}

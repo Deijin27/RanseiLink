@@ -258,7 +258,7 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", kingdom.Name);
-        console.WriteProperty("BattleMap", kingdom.BattleMap);
+        console.WriteProperty("Battle Config", kingdom.BattleConfig);
         console.WriteProperty("Can Battle", "\n    - " + string.Join("\n    - ", kingdom.MapConnections));
     }
 

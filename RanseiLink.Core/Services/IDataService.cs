@@ -21,4 +21,7 @@ public interface IDataService
     IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
     IScenarioKingdomService ScenarioKingdom { get; }
     IMsgBlockService Msg { get; }
+    IBattleConfigService BattleConfig { get; }
+
+    IBattleEnvironmentService BattleEnvironment { get; }
 }
