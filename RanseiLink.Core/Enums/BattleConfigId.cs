@@ -48,8 +48,8 @@ public enum BattleConfigId : uint
     Park_3,
     Park_2,
     Park_1,
-    Unknown_44,
-    Unknown_45,
-    Unknown_46,
+    TestMap_5,
+    TestMap_6,
+    TestMap_7,
     Default // anything this higher gives the black screen of death followed by a corrupt battle screen softlock
 }
