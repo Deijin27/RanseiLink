@@ -63,8 +63,8 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public bool VictoryCondition_Unknown_Aurora
     {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_Aurora) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Aurora);
+        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
+        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
     }
 
     public bool VictoryCondition_Unknown_ViperiaDragnor
@@ -81,8 +81,8 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public bool VictoryCondition_Unknown_Pugilis
     {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_Pugilis) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Pugilis, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Pugilis);
+        get => (_model.VictoryCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
+        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Pugilis, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool VictoryCondition_ClaimAllBanners
@@ -97,8 +97,8 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public bool DefeatCondition_Unknown_Aurora
     {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_Aurora) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Aurora);
+        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
+        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
     }
 
     public bool DefeatCondition_Unknown_ViperiaDragnor
@@ -115,8 +115,8 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public bool DefeatCondition_Unknown_Pugilis
     {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_Pugilis) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_Unknown_Pugilis, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Pugilis);
+        get => (_model.DefeatCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
+        set => RaiseAndSetIfChanged(DefeatCondition_Unknown_Pugilis, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool DefeatCondition_ClaimAllBanners

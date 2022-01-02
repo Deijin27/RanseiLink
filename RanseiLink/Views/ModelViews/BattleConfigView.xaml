@@ -90,7 +90,7 @@
 
             <GroupBox Header="Victory Conditions" ToolTip="In addition to 'defeat all enemies'" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
                 <StackPanel>
-                    <CheckBox Content="Unknown 1 (Aurora)" IsChecked="{Binding VictoryCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Unknown 1 (Dragnor/Aurora)" IsChecked="{Binding VictoryCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Unknown 2 (Dragnor/Viperia)" IsChecked="{Binding VictoryCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Unknown 3 (Greenleaf)" IsChecked="{Binding VictoryCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Unknown 4 (Pugilis)" IsChecked="{Binding VictoryCondition_Unknown_Pugilis, Mode=TwoWay}" Margin="0,0,0,13"/>
