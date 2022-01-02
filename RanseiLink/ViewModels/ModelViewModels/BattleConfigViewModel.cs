@@ -79,10 +79,10 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Greenleaf, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
     }
 
-    public bool VictoryCondition_Unknown_Pugilis
+    public bool VictoryCondition_HoldAllBannersFor5Turns
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Pugilis, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
+        set => RaiseAndSetIfChanged(VictoryCondition_HoldAllBannersFor5Turns, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool VictoryCondition_ClaimAllBanners
@@ -113,10 +113,10 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(DefeatCondition_Unknown_Greenleaf, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
     }
 
-    public bool DefeatCondition_Unknown_Pugilis
+    public bool DefeatCondition_HoldAllBannersFor5Turns
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_Unknown_Pugilis, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
+        set => RaiseAndSetIfChanged(DefeatCondition_HoldAllBannersFor5Turns, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool DefeatCondition_ClaimAllBanners
