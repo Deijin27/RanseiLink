@@ -51,9 +51,24 @@
                 </TextBox>
             </DockPanel>
         </StackPanel>
-        
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2"
-              styles:DataGridHelper.TextColumnEditingStyle="{StaticResource {x:Type TextBox}}"/>
+
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Block" Binding="{Binding BlockId}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Entry" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Text" Width="500" Binding="{Binding Text}">
+                    <DataGridTextColumn.EditingElementStyle>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.EditingElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Context" Binding="{Binding Context}" EditingElementStyle="{StaticResource {x:Type TextBox}}"/>
+                <DataGridTextColumn Header="BoxConfig" Binding="{Binding BoxConfig}" EditingElementStyle="{StaticResource {x:Type TextBox}}"/>
+                <DataGridTextColumn Header="Group" Binding="{Binding GroupId}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </UserControl>
