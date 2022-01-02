@@ -39,8 +39,11 @@ public class RandomizationOptionForm : IPluginForm
     [UIntOption("Minimum max link value", "Set max link to at least this value", maximumValue: 100)]
     public uint AllMaxLinkValue { get; set; } = 98;
 
-    [BoolOption("Avoid Dummys", "Avoid dummy moves, abilities, etc when randomizing")]
-    public bool AvoidDummys { get; set; } = true;
+    [BoolOption("Avoid Dummy Moves", "Avoid dummy moves when randomizing")]
+    public bool AvoidDummyMoves { get; set; } = true;
+
+    [BoolOption("Avoid Dummy Abilities", "Avoid dummy abilities when randomizing")]
+    public bool AvoidDummyAbilities { get; set; } = true;
 
     [BoolOption("Softlock Minimization", "Reduce the chance of softlocks caused by randomization (optimised for vanilla)")]
     public bool SoftlockMinimization { get; set; } = true;

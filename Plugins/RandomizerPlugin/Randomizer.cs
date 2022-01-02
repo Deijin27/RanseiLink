@@ -157,9 +157,12 @@ internal class Randomizer
             }
         }
 
-        if (options.AvoidDummys)
+        if (options.AvoidDummyAbilities)
         {
             abilityIds = abilityIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
+        }
+        if (options.AvoidDummyMoves)
+        {
             moveIds = moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
