@@ -43,6 +43,11 @@ internal class MassAction
                 step.Report("Setting IV values...");
                 await Task.Run(() => HandleIVs(progress));
             }
+            else if (options.Target == ConstOptions.Capacity)
+            {
+                step.Report("Setting capacity values...");
+                await Task.Run(() => HandleCapacity(progress));
+            }
 
             progress.Report(100);
             step.Report("Done!");
@@ -112,6 +117,36 @@ internal class MassAction
                     sp.SpeIv = options.Value;
                 }
                 scenarioPokemonService.Save(scenario, i, sp);
+            }
+        }
+    }
+
+    private void HandleCapacity(IProgress<int> progress)
+    {
+        using IDisposableBaseWarriorService service = _dataService.BaseWarrior.Disposable();
+
+        if (options.Mode == ConstOptions.AtLeast)
+        {
+            foreach (WarriorId id in warriorIds)
+            {
+                var warrior = service.Retrieve(id);
+                if (warrior.Capacity < options.Value)
+                {
+                    warrior.Capacity = options.Value;
+                    service.Save(id, warrior);
+                }
+            }
+        }
+        else if (options.Mode == ConstOptions.Exact)
+        {
+            foreach (WarriorId id in warriorIds)
+            {
+                var warrior = service.Retrieve(id);
+                if (warrior.Capacity != options.Value)
+                {
+                    warrior.Capacity = options.Value;
+                    service.Save(id, warrior);
+                }
             }
         }
     }
