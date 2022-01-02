@@ -27,6 +27,16 @@ public class Item : BaseDataWindow, IItem
         set => SetUInt32(7, 9, 9, value);
     }
 
+    public bool GetPurchasable(KingdomId kingdom)
+    {
+        return GetUInt32(8, 1, (int)kingdom) == 1u;
+    }
+
+    public void SetPurchasable(KingdomId kingdom, bool value)
+    {
+        SetUInt32(8, 1, (int)kingdom, value ? 1u : 0u);
+    }
+
     public IItem Clone()
     {
         return new Item((byte[])Data.Clone());
