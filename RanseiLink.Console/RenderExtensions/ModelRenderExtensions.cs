@@ -126,7 +126,7 @@ public static partial class RenderExtensions
         switch (id)
         {
             case MoveEffectId.Unused_16:
-            case MoveEffectId.Unused_17:
+            case MoveEffectId.HotSpring_WaterBucket_RevivalNode:
             case MoveEffectId.Unused_18:
             case MoveEffectId.Unused_19:
             case MoveEffectId.Multihit_Unused:
@@ -238,6 +238,11 @@ public static partial class RenderExtensions
         console.WriteProperty("Destroy Type", gimmick.DestroyType);
         console.WriteProperty("Animation 1", gimmick.Animation1);
         console.WriteProperty("Animation 2", gimmick.Animation2);
+        console.WriteProperty("Range", gimmick.Range);
+        console.WriteProperty("Image", gimmick.Image);
+        console.WriteProperty("State-1 Sprite", gimmick.State1Sprite);
+        console.WriteProperty("State-2 Sprite", gimmick.State2Sprite);
+        console.WriteProperty("Effect", gimmick.Effect);
     }
 
     public static void Render(this IConsole console, IBuilding building, BuildingId id)

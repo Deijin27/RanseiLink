@@ -36,6 +36,11 @@ internal class MockJumpService : IJumpService
         throw new NotImplementedException();
     }
 
+    public void JumpToGimmickRange(GimmickRangeId id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void JumpToItem(ItemId id)
     {
         throw new NotImplementedException();
