@@ -5,17 +5,15 @@ using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate MoveRangeSelectorViewModel MoveRangeSelectorViewModelFactory(IEditorContext context);
-
-public class MoveRangeSelectorViewModel : SelectorViewModelBase<MoveRangeId, IAttackRange, AttackRangeViewModel>
+public class GimmickRangeSelectorViewModel : SelectorViewModelBase<GimmickRangeId, IAttackRange, AttackRangeViewModel>
 {
     private readonly AttackRangeViewModelFactory _factory;
 
-    public MoveRangeSelectorViewModel(IServiceContainer container, IEditorContext context)
-        : base(container, context.DataService.MoveRange) 
+    public GimmickRangeSelectorViewModel(IServiceContainer container, IEditorContext context)
+        : base(container, context.DataService.GimmickRange) 
     {
         _factory = container.Resolve<AttackRangeViewModelFactory>();
-        Selected = MoveRangeId.Ahead1Tile;
+        Selected = GimmickRangeId.NoRange;
     }
 
     protected override AttackRangeViewModel NewViewModel(IAttackRange model) => _factory(model);

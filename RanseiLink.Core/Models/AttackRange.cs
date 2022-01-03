@@ -2,11 +2,11 @@
 
 namespace RanseiLink.Core.Models;
 
-public class MoveRange : BaseDataWindow, IMoveRange
+public class AttackRange : BaseDataWindow, IAttackRange
 {
     public const int DataLength = 4;
-    public MoveRange(byte[] data) : base(data, DataLength) { }
-    public MoveRange() : base(new byte[DataLength], DataLength) { }
+    public AttackRange(byte[] data) : base(data, DataLength) { }
+    public AttackRange() : base(new byte[DataLength], DataLength) { }
 
 
     public bool GetInRange(int position)
@@ -19,8 +19,8 @@ public class MoveRange : BaseDataWindow, IMoveRange
         SetUInt32(0, 1, position, isInRange ? 1u : 0u);
     }
 
-    public IMoveRange Clone()
+    public IAttackRange Clone()
     {
-        return new MoveRange((byte[])Data.Clone());
+        return new AttackRange((byte[])Data.Clone());
     }
 }

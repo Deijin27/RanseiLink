@@ -58,6 +58,10 @@
                 <views:SelectorView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:GimmickRangeSelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
                 <views:ScenarioSelectorView/>
             </DataTemplate>
@@ -128,8 +132,8 @@
                 <views:WarriorSkillView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
-                <views:MoveRangeView/>
+            <DataTemplate DataType="{x:Type vm:AttackRangeViewModel}">
+                <views:AttackRangeView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:EvolutionTableViewModel}">

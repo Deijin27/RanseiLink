@@ -25,7 +25,7 @@ internal class Randomizer
     private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
     private Dictionary<ScenarioId, Dictionary<int, IScenarioWarrior>> _allScenarioWarriors;
     private Dictionary<MoveId, IMove> _allMoves;
-    private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
+    private Dictionary<MoveRangeId, IAttackRange> _allMoveRanges;
 
     private IDataService _dataService;
 

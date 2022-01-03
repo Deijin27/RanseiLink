@@ -4,30 +4,30 @@ using RanseiLink.Core.Models;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMoveRangeService : IModelDataService<MoveRangeId, IMoveRange>
+public interface IMoveRangeService : IModelDataService<MoveRangeId, IAttackRange>
 {
     IDisposableMoveRangeService Disposable();
 }
 
-public interface IDisposableMoveRangeService : IDisposableModelDataService<MoveRangeId, IMoveRange>
+public interface IDisposableMoveRangeService : IDisposableModelDataService<MoveRangeId, IAttackRange>
 {
 }
 
 public class MoveRangeService : BaseModelService, IMoveRangeService
 {
-    public MoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
+    public MoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, AttackRange.DataLength, 29) { }
 
     public IDisposableMoveRangeService Disposable()
     {
         return new DisposableMoveRangeService(Mod);
     }
 
-    public IMoveRange Retrieve(MoveRangeId id)
+    public IAttackRange Retrieve(MoveRangeId id)
     {
-        return new MoveRange(RetrieveData((int)id));
+        return new AttackRange(RetrieveData((int)id));
     }
 
-    public void Save(MoveRangeId id, IMoveRange model)
+    public void Save(MoveRangeId id, IAttackRange model)
     {
         SaveData((int)id, model.Data);
     }
@@ -35,14 +35,14 @@ public class MoveRangeService : BaseModelService, IMoveRangeService
 
 public class DisposableMoveRangeService : BaseDisposableModelService, IDisposableMoveRangeService
 {
-    public DisposableMoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
+    public DisposableMoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, AttackRange.DataLength, 29) { }
 
-    public IMoveRange Retrieve(MoveRangeId id)
+    public IAttackRange Retrieve(MoveRangeId id)
     {
-        return new MoveRange(RetrieveData((int)id));
+        return new AttackRange(RetrieveData((int)id));
     }
 
-    public void Save(MoveRangeId id, IMoveRange model)
+    public void Save(MoveRangeId id, IAttackRange model)
     {
         SaveData((int)id, model.Data);
     }

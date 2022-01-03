@@ -225,3 +225,11 @@ public class BattleConfigSelectorEditorModule : IEditorModule
     public string ListName => "Battle Config";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BattleConfigSelectorViewModel(container, context);
 }
+
+public class GimmickRangeSelectorEditorModule : IEditorModule
+{
+    public const string Id = "gimmick_range_selector";
+    public string UniqueId => Id;
+    public string ListName => "Gimmick Range";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickRangeSelectorViewModel(container, context);
+}

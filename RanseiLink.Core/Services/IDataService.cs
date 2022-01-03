@@ -24,4 +24,5 @@ public interface IDataService
     IBattleConfigService BattleConfig { get; }
 
     IBattleEnvironmentService BattleEnvironment { get; }
+    IGimmickRangeService GimmickRange { get; }
 }

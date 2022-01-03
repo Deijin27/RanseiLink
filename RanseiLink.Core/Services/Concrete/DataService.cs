@@ -27,6 +27,7 @@ public class DataService : IDataService
         Msg = new MsgBlockService(mod, msgService);
         BattleConfig = new BattleConfigService(mod);
         BattleEnvironment = new BattleEnvironmentService(mod);
+        GimmickRange = new GimmickRangeService(mod);
     }
 
     public IPokemonService Pokemon { get; }
@@ -38,6 +39,7 @@ public class DataService : IDataService
     public IItemService Item { get; }
     public IKingdomService Kingdom { get; }
     public IMoveRangeService MoveRange { get; }
+    public IGimmickRangeService GimmickRange { get; }
     public IEventSpeakerService EventSpeaker { get; }
     public IScenarioPokemonService ScenarioPokemon { get; }
     public IScenarioWarriorService ScenarioWarrior { get; }

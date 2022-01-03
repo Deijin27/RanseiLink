@@ -16,6 +16,11 @@ internal class MockJumpService : IJumpService
         throw new NotImplementedException();
     }
 
+    public void JumpToBattleConfig(BattleConfigId id)
+    {
+        throw new NotImplementedException();
+    }
+
     public void JumpToBuilding(BuildingId id)
     {
         throw new NotImplementedException();
