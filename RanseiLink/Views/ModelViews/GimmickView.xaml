@@ -65,6 +65,9 @@
             <TextBlock Text="Destroy Type" Grid.Row="2" ToolTip="An attack of this type will destroy this gimmick"/>
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding DestroyType, Mode=TwoWay}"/>
 
+            <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Range" ToolTip="Jump to selected gimmick range" 
+                    Command="{Binding JumpToGimmickRangeCommand}" CommandParameter="{Binding Range}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
 
         </Grid>
         <Grid Margin="10">

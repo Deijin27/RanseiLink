@@ -10,4 +10,5 @@ public interface IGimmick : IDataWrapper, ICloneable<IGimmick>
     TypeId DestroyType { get; set; }
     MoveAnimationId Animation1 { get; set; }
     MoveAnimationId Animation2 { get; set; }
+    GimmickRangeId Range { get; set; }
 }

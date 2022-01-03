@@ -21,4 +21,5 @@ public interface IJumpService
     void JumpToWarriorNameTable();
     void JumpToWarriorSkill(WarriorSkillId id);
     void JumpToBattleConfig(BattleConfigId id);
+    void JumpToGimmickRange(GimmickRangeId id);
 }

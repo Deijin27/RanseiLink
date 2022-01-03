@@ -180,4 +180,14 @@ internal class JumpService : IJumpService
             _mainEditor.CurrentPage = moduleId;
         }
     }
+
+    public void JumpToGimmickRange(GimmickRangeId id)
+    {
+        var moduleId = GimmickRangeSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is GimmickRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
+    }
 }

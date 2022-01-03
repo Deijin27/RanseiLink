@@ -46,6 +46,12 @@ public abstract class GimmickViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.DestroyType, value, v => _model.DestroyType = v);
     }
 
+    public GimmickRangeId Range
+    {
+        get => _model.Range;
+        set => RaiseAndSetIfChanged(_model.Range, value, v => _model.Range = v);
+    }
+
     public MoveAnimationId Animation1
     {
         get => _model.Animation1;
@@ -84,6 +90,8 @@ public class GimmickViewModel : GimmickViewModelBase
     public GimmickViewModel(GimmickId id, IServiceContainer container, IGimmick model, IEditorContext context) : base(id, model)
     {
         _externalService = container.Resolve<IExternalService>();
+
+        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(context.JumpService.JumpToGimmickRange);
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
         {

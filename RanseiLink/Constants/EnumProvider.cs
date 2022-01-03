@@ -30,4 +30,5 @@ public static class EnumProvider
     public static BattleConfigId[] BattleConfigItems { get; } = EnumUtil.GetValues<BattleConfigId>().ToArray();
     public static BuildingSpriteId[] BuildingSpriteItems { get; } = EnumUtil.GetValues<BuildingSpriteId>().ToArray();
     public static BuildingFunctionId[] BuildingFunctionItems { get; } = EnumUtil.GetValues<BuildingFunctionId>().ToArray();
+    public static GimmickRangeId[] GimmickRangeItems { get; } = EnumUtil.GetValues<GimmickRangeId>().ToArray();
 }

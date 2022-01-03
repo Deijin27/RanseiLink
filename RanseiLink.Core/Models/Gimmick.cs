@@ -54,6 +54,12 @@ public class Gimmick : BaseDataWindow, IGimmick
         set => SetUInt32(6, 8, 16, (uint)value);
     }
 
+    public GimmickRangeId Range
+    {
+        get => (GimmickRangeId)GetUInt32(8, 5, 19);
+        set => SetUInt32(8, 5, 19, (uint)value);
+    }
+
     public IGimmick Clone()
     {
         return new Gimmick((byte[])Data.Clone());
