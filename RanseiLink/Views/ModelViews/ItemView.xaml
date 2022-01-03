@@ -48,9 +48,12 @@
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="20"/>
 
             <TextBlock Text="Shop Price Multiplier" Grid.Row="1" ToolTip="Max shop price / 100" />
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ShopPriceMultiplier, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="511"/>
 
-            <GroupBox Header="Purchasable in Kingdom" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
+            <TextBlock Text="Quantity For Effect" Grid.Row="2"  />
+            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding QuantityForEffect}" Max="511"/>
+            
+            <GroupBox Header="Purchasable in Kingdom" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
                 <UniformGrid Columns="3">
                     <CheckBox Content="Aurora" IsChecked="{Binding Purchasable_Aurora, Mode=TwoWay}"/>
                     <CheckBox Content="Ignis" IsChecked="{Binding Purchasable_Ignis, Mode=TwoWay}"/>

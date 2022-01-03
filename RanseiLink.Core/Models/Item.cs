@@ -27,6 +27,12 @@ public class Item : BaseDataWindow, IItem
         set => SetUInt32(7, 9, 9, value);
     }
 
+    public uint QuantityForEffect
+    {
+        get => GetUInt32(7, 9, 18);
+        set => SetUInt32(7, 9, 18, value);
+    }
+
     public bool GetPurchasable(KingdomId kingdom)
     {
         return GetUInt32(8, 1, (int)kingdom) == 1u;

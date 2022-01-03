@@ -6,6 +6,7 @@ public interface IItem : IDataWrapper, ICloneable<IItem>
 {
     string Name { get; set; }
     uint ShopPriceMultiplier { get; set; }
+    uint QuantityForEffect { get; set; }
 
     bool GetPurchasable(KingdomId kingdom);
     void SetPurchasable(KingdomId kingdom, bool value);

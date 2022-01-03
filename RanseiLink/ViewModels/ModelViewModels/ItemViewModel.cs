@@ -30,6 +30,12 @@ public class ItemViewModel : ViewModelBase
         get => _model.ShopPriceMultiplier;
         set => RaiseAndSetIfChanged(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
     }
+
+    public uint QuantityForEffect
+    {
+        get => _model.QuantityForEffect;
+        set => RaiseAndSetIfChanged(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
+    }
     public string Description
     {
         get => _msgService.GetItemDescription(Id);
