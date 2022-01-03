@@ -5,16 +5,16 @@ using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public class GimmickRangeSelectorViewModel : SelectorViewModelBase<GimmickRangeId, IAttackRange, AttackRangeViewModel>
+public class GimmickRangeSelectorViewModel : SelectorViewModelBase<GimmickRangeId, IMoveRange, MoveRangeViewModel>
 {
-    private readonly AttackRangeViewModelFactory _factory;
+    private readonly MoveRangeViewModelFactory _factory;
 
     public GimmickRangeSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.GimmickRange) 
     {
-        _factory = container.Resolve<AttackRangeViewModelFactory>();
+        _factory = container.Resolve<MoveRangeViewModelFactory>();
         Selected = GimmickRangeId.NoRange;
     }
 
-    protected override AttackRangeViewModel NewViewModel(IAttackRange model) => _factory(model);
+    protected override MoveRangeViewModel NewViewModel(IMoveRange model) => _factory(model);
 }

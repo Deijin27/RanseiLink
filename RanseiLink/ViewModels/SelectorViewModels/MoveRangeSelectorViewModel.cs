@@ -7,16 +7,16 @@ namespace RanseiLink.ViewModels;
 
 public delegate MoveRangeSelectorViewModel MoveRangeSelectorViewModelFactory(IEditorContext context);
 
-public class MoveRangeSelectorViewModel : SelectorViewModelBase<MoveRangeId, IAttackRange, AttackRangeViewModel>
+public class MoveRangeSelectorViewModel : SelectorViewModelBase<MoveRangeId, IMoveRange, MoveRangeViewModel>
 {
-    private readonly AttackRangeViewModelFactory _factory;
+    private readonly MoveRangeViewModelFactory _factory;
 
     public MoveRangeSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.MoveRange) 
     {
-        _factory = container.Resolve<AttackRangeViewModelFactory>();
+        _factory = container.Resolve<MoveRangeViewModelFactory>();
         Selected = MoveRangeId.Ahead1Tile;
     }
 
-    protected override AttackRangeViewModel NewViewModel(IAttackRange model) => _factory(model);
+    protected override MoveRangeViewModel NewViewModel(IMoveRange model) => _factory(model);
 }

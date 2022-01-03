@@ -32,7 +32,29 @@ public abstract class GimmickViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    
+    public GimmickImageId Image
+    {
+        get => _model.Image;
+        set => RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v);
+    }
+
+    public GimmickSpriteId State1Sprite
+    {
+        get => _model.State1Sprite;
+        set => RaiseAndSetIfChanged(_model.State1Sprite, value, v => _model.State1Sprite = v);
+    }
+
+    public GimmickSpriteId State2Sprite
+    {
+        get => _model.State2Sprite;
+        set => RaiseAndSetIfChanged(_model.State2Sprite, value, v => _model.State2Sprite = v);
+    }
+
+    public MoveEffectId Effect
+    {
+        get => _model.Effect;
+        set => RaiseAndSetIfChanged(_model.Effect, value, v => _model.Effect = v);
+    }
 
     public TypeId AttackType
     {

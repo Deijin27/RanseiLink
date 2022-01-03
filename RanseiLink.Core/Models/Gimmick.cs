@@ -16,6 +16,15 @@ public class Gimmick : BaseDataWindow, IGimmick
     }
 
     /// <summary>
+    /// Top screen square image when you hover over the object
+    /// </summary>
+    public GimmickImageId Image
+    {
+        get => (GimmickImageId)GetUInt32(4, 8, 8);
+        set => SetUInt32(4, 8, 8, (uint)value);
+    }
+
+    /// <summary>
     /// If attack damage caused by this, this is the type of the attack
     /// </summary>
     public TypeId AttackType
@@ -31,6 +40,27 @@ public class Gimmick : BaseDataWindow, IGimmick
     {
         get => (TypeId)GetUInt32(5, 5, 5);
         set => SetUInt32(5, 5, 5, (uint)value);
+    }
+
+    /// <summary>
+    /// Sprite shown on bottom screen in battle
+    /// </summary>
+    public GimmickSpriteId State1Sprite
+    {
+        get => (GimmickSpriteId)GetUInt32(5, 7, 11);
+        set => SetUInt32(5, 7, 11, (uint)value);
+    }
+
+    public GimmickSpriteId State2Sprite
+    {
+        get => (GimmickSpriteId)GetUInt32(5, 7, 18);
+        set => SetUInt32(5, 7, 18, (uint)value);
+    }
+
+    public MoveEffectId Effect
+    {
+        get => (MoveEffectId)GetUInt32(5, 7, 25);
+        set => SetUInt32(5, 7, 25, (uint)value);
     }
 
     /// <summary>

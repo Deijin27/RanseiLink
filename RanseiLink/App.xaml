@@ -132,8 +132,8 @@
                 <views:WarriorSkillView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:AttackRangeViewModel}">
-                <views:AttackRangeView/>
+            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
+                <views:MoveRangeView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:EvolutionTableViewModel}">

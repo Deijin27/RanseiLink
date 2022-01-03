@@ -2,13 +2,13 @@
 
 namespace RanseiLink.ViewModels;
 
-public delegate AttackRangeViewModel AttackRangeViewModelFactory(IAttackRange model);
+public delegate MoveRangeViewModel MoveRangeViewModelFactory(IMoveRange model);
 
-public class AttackRangeViewModel : ViewModelBase
+public class MoveRangeViewModel : ViewModelBase
 {
-    private readonly IAttackRange _model;
+    private readonly IMoveRange _model;
 
-    public AttackRangeViewModel(IAttackRange model)
+    public MoveRangeViewModel(IMoveRange model)
     {
         _model = model;
     }

@@ -35,7 +35,7 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ItemViewModelFactory>((i, m, c) => new ItemViewModel(i, m, c));
         container.RegisterSingleton<KingdomViewModelFactory>((i, m, c) => new KingdomViewModel(i, m, c));
         container.RegisterSingleton<MaxLinkViewModelFactory>(i => new MaxLinkViewModel(i));
-        container.RegisterSingleton<AttackRangeViewModelFactory>(i => new AttackRangeViewModel(i));
+        container.RegisterSingleton<MoveRangeViewModelFactory>(i => new MoveRangeViewModel(i));
         container.RegisterSingleton<MoveViewModelFactory>((i, m, c) => new MoveViewModel(i, container, m, c));
         container.RegisterSingleton<PokemonViewModelFactory>((i, c) => new PokemonViewModel(i, c));
         container.RegisterSingleton<ScenarioAppearPokemonViewModelFactory>(i => new ScenarioAppearPokemonViewModel(i));

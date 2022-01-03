@@ -3,7 +3,7 @@
 /// <summary>
 /// The same for MoveRange and GimmickRange
 /// </summary>
-public interface IAttackRange : IDataWrapper, ICloneable<IAttackRange>
+public interface IMoveRange : IDataWrapper, ICloneable<IMoveRange>
 {
     bool GetInRange(int position);
 

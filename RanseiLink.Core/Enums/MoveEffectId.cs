@@ -283,7 +283,13 @@ public enum MoveEffectId : uint
     TargetInvincibleForOneTurn,
 
     Unused_16,
-    Unused_17,
+
+    /// <summary>
+    /// Used by gimmicks HotSpring, WaterBucket, RevivalNode
+    /// May be "Cure all status"
+    /// </summary>
+    HotSpring_WaterBucket_RevivalNode,
+
     Unused_18,
     Unused_19,
 

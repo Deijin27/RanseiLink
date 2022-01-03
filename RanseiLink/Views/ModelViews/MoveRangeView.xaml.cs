@@ -5,9 +5,9 @@ namespace RanseiLink.Views;
 /// <summary>
 /// Interaction logic for MoveRangeView.xaml
 /// </summary>
-public partial class AttackRangeView : UserControl
+public partial class MoveRangeView : UserControl
 {
-    public AttackRangeView()
+    public MoveRangeView()
     {
         InitializeComponent();
     }

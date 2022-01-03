@@ -10,7 +10,7 @@ public class MoveEffectIdToQuantityNameConverter : ValueConverter<MoveEffectId, 
         switch (value)
         {
             case MoveEffectId.Unused_16:
-            case MoveEffectId.Unused_17:
+            case MoveEffectId.HotSpring_WaterBucket_RevivalNode:
             case MoveEffectId.Unused_18:
             case MoveEffectId.Multihit_Unused:
             case MoveEffectId.Unused_1:
