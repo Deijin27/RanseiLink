@@ -59,8 +59,17 @@ public class WarriorSkill : BaseDataWindow, IWarriorSkill
 
     public WarriorSkillTargetId Target
     {
-        get => (WarriorSkillTargetId)GetUInt32(6, 2, 8);
-        set => SetUInt32(6, 2, 8, (uint)value);
+        get => (WarriorSkillTargetId)GetUInt32(6, 3, 8);
+        set => SetUInt32(6, 3, 8, (uint)value);
+    }
+
+    /// <summary>
+    /// Seems to be unused.
+    /// </summary>
+    public MoveAnimationId Animation
+    {
+        get => (MoveAnimationId)GetUInt32(6, 9, 11);
+        set => SetUInt32(6, 9, 11, (uint)value);
     }
 
     public IWarriorSkill Clone()

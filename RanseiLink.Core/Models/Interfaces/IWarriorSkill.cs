@@ -13,4 +13,5 @@ public interface IWarriorSkill : IDataWrapper, ICloneable<IWarriorSkill>
     uint Effect3Amount { get; set; }
     string Name { get; set; }
     WarriorSkillTargetId Target { get; set; }
+    MoveAnimationId Animation { get; set; }
 }

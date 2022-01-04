@@ -72,6 +72,12 @@ public class WarriorSkillViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Target, value, v => _model.Target = v);
     }
 
+    public MoveAnimationId Animation
+    {
+        get => _model.Animation;
+        set => RaiseAndSetIfChanged(_model.Animation, value, v => _model.Animation = v);
+    }
+
 }
 
 public class WarriorSkillViewModel : WarriorSkillViewModelBase

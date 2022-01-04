@@ -7,4 +7,5 @@ public enum WarriorSkillTargetId : uint
     SelfAndAdjacentAllies,
     SelfAndAllAllies,
     AllOpponents,
+    Default
 }
