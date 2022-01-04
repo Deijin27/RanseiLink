@@ -220,6 +220,10 @@
                 <views:ModelGridView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:MoveAnimationGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

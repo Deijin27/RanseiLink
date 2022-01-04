@@ -64,6 +64,7 @@ public static class RegistrationExtensions
             editor.AddModule<ItemSelectorEditorModule>();
             editor.AddModule<KingdomSelectorEditorModule>();
             editor.AddModule<MaxLinkSelectorEditorModule>();
+            editor.AddModule<MoveAnimationGridEditorModule>();
             editor.AddModule<MoveRangeSelectorEditorModule>();
             editor.AddModule<MoveSelectorEditorModule>();
             editor.AddModule<MoveGridEditorModule>();

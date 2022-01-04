@@ -233,3 +233,11 @@ public class GimmickRangeSelectorEditorModule : IEditorModule
     public string ListName => "Gimmick Range";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickRangeSelectorViewModel(container, context);
 }
+
+public class MoveAnimationGridEditorModule : IEditorModule
+{
+    public const string Id = "move_animation_grid";
+    public string UniqueId => Id;
+    public string ListName => "Move Animation (Grid)";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveAnimationGridViewModel(container, context);
+}

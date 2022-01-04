@@ -202,6 +202,8 @@ public class ModService : IModService
             nds.InsertFixedLengthFile(Constants.BaseBushouRomPath, Path.Combine(currentModFolder, Constants.BaseBushouRomPath));
             nds.InsertFixedLengthFile(Constants.MapRomPath, Path.Combine(currentModFolder, Constants.MapRomPath));
             nds.InsertFixedLengthFile(Constants.GimmickRangeRomPath, Path.Combine(currentModFolder, Constants.GimmickRangeRomPath));
+            nds.InsertFixedLengthFile(Constants.MoveEffectRomPath, Path.Combine(currentModFolder, Constants.MoveEffectRomPath));
+
             foreach (var i in EnumUtil.GetValues<ScenarioId>())
             {
                 var spPath = Constants.ScenarioPokemonPathFromId(i);

@@ -102,3 +102,17 @@ public class BuildingGridViewModel : GridViewModelBase<BuildingId, IBuilding, Bu
 
     public override int FrozenColumnCount => 2;
 }
+
+public class MoveAnimationGridViewModel : GridViewModelBase<MoveAnimationId, IMoveAnimation, MoveAnimationGridItemViewModel, IDisposableMoveAnimationService>, ISaveableRefreshable
+{
+    public MoveAnimationGridViewModel(IServiceContainer container, IEditorContext context)
+        : base(
+            container,
+            context.DataService.MoveAnimation.Disposable,
+            EnumUtil.GetValuesExceptDefaults<MoveAnimationId>().ToArray(),
+            (id, model) => new MoveAnimationGridItemViewModel(id, model))
+    {
+    }
+
+    public override int FrozenColumnCount => 2;
+}

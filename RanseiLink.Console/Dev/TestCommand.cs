@@ -472,15 +472,15 @@ public class TestCommand : ICommand
         }
     }
 
-    static IEnumerable<MoveEffect> IterateMoveEffects()
+    static IEnumerable<MoveAnimation> IterateMoveEffects()
     {
         using var file = new BinaryReader(File.OpenRead(@"C:\Users\Mia\Desktop\ConquestData\WazaEffect.dat"));
 
-        int count = (int)(file.BaseStream.Length / MoveEffect.DataLength);
+        int count = (int)(file.BaseStream.Length / MoveAnimation.DataLength);
         for (int i = 0; i < count; i++)
         {
-            var item = file.ReadBytes(MoveEffect.DataLength);
-            yield return new MoveEffect(item);
+            var item = file.ReadBytes(MoveAnimation.DataLength);
+            yield return new MoveAnimation(item);
         }
     }
 

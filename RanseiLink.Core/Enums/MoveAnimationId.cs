@@ -1,6 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
+[DefaultValues(Default)]
 public enum MoveAnimationId : uint
 {
     WaterDropletSplash,
