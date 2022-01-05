@@ -3,6 +3,9 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services.Concrete;
 using RanseiLink.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RanseiLink.Services;
 
@@ -48,36 +51,16 @@ public static class RegistrationExtensions
 
         container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
         {
-            editor.AddModule<AbilitySelectorEditorModule>();
-            editor.AddModule<MsgGridEditorModule>();
-            editor.AddModule<AbilityGridEditorModule>();
-            editor.AddModule<BaseWarriorSelectorEditorModule>();
-            editor.AddModule<BaseWarriorGridEditorModule>();
-            editor.AddModule<BattleConfigSelectorEditorModule>();
-            editor.AddModule<BuildingSelectorEditorModule>();
-            editor.AddModule<BuildingGridEditorModule>();
-            editor.AddModule<EventSpeakerSelectorEditorModule>();
-            editor.AddModule<EvolutionTableEditorModule>();
-            editor.AddModule<GimmickSelectorEditorModule>();
-            editor.AddModule<GimmickGridEditorModule>();
-            editor.AddModule<GimmickRangeSelectorEditorModule>();
-            editor.AddModule<ItemSelectorEditorModule>();
-            editor.AddModule<KingdomSelectorEditorModule>();
-            editor.AddModule<MaxLinkSelectorEditorModule>();
-            editor.AddModule<MoveAnimationGridEditorModule>();
-            editor.AddModule<MoveRangeSelectorEditorModule>();
-            editor.AddModule<MoveSelectorEditorModule>();
-            editor.AddModule<MoveGridEditorModule>();
-            editor.AddModule<PokemonSelectorEditorModule>();
-            editor.AddModule<PokemonGridEditorModule>();
-            editor.AddModule<ScenarioAppearPokemonSelectorEditorModule>();
-            editor.AddModule<ScenarioKingdomSelectorEditorModule>();
-            editor.AddModule<ScenarioPokemonSelectorEditorModule>();
-            editor.AddModule<ScenarioWarriorSelectorEditorModule>();
-            editor.AddModule<ScenarioWarriorGridEditorModule>();
-            editor.AddModule<WarriorNameTableEditorModule>();
-            editor.AddModule<WarriorSkillSelectorEditorModule>();
-            editor.AddModule<WarriorSkillGridEditorModule>();
+            var types = System.Reflection.Assembly
+                .GetExecutingAssembly()
+                .GetTypes();
+
+            IEnumerable<Type> modules = types.Where(i => typeof(IEditorModule).IsAssignableFrom(i) && !i.IsInterface);
+
+            foreach (Type t in modules)
+            {
+                editor.AddModule(t);
+            }
 
             editor.LoadModuleOrderFromSetting();
         });

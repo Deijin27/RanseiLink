@@ -80,9 +80,17 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         CommitRomCommand = new RelayCommand(CommitRom);
     }
 
-    public void AddModule<TModule>() where TModule : IEditorModule, new()
+    /// <summary>
+    /// Add <see cref="IEditorModule"/>
+    /// </summary>
+    /// <param name="t"><see cref="IEditorModule"/> assignable type with blank constructor</param>
+    public void AddModule(Type t)
     {
-        var module = new TModule();
+        if (!typeof(IEditorModule).IsAssignableFrom(t))
+        {
+            return;
+        }
+        var module = (IEditorModule)Activator.CreateInstance(t);
         Modules.Add(module.UniqueId, module);
         ViewModels.Add(module.UniqueId, module.NewViewModel(_container, _editorContext));
         ListItems.Add(new(module.ListName, module.UniqueId));
