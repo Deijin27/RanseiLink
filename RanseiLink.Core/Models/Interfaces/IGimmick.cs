@@ -12,7 +12,7 @@ public interface IGimmick : IDataWrapper, ICloneable<IGimmick>
     MoveAnimationId Animation2 { get; set; }
     GimmickRangeId Range { get; set; }
     GimmickImageId Image { get; set; }
-    GimmickSpriteId State1Sprite { get; set; }
-    GimmickSpriteId State2Sprite { get; set; }
+    GimmickObjectId State1Object { get; set; }
+    GimmickObjectId State2Object { get; set; }
     MoveEffectId Effect { get; set; }
 }

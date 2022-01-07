@@ -88,6 +88,7 @@ public class LuaCommand : BaseCommand
             AddEnumToState<WarriorSprite2Id>();
             AddEnumToState<BattleConfigId>();
             AddEnumToState<GimmickRangeId>();
+            AddEnumToState<GimmickObjectId>();
 
             var luaFunctions = new LuaFunctions();
             lua.RegisterFunction("using", luaFunctions, typeof(LuaFunctions).GetMethod(nameof(LuaFunctions.Using)));

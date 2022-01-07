@@ -45,15 +45,15 @@ public class Gimmick : BaseDataWindow, IGimmick
     /// <summary>
     /// Sprite shown on bottom screen in battle
     /// </summary>
-    public GimmickSpriteId State1Sprite
+    public GimmickObjectId State1Object
     {
-        get => (GimmickSpriteId)GetUInt32(5, 7, 11);
+        get => (GimmickObjectId)GetUInt32(5, 7, 11);
         set => SetUInt32(5, 7, 11, (uint)value);
     }
 
-    public GimmickSpriteId State2Sprite
+    public GimmickObjectId State2Object
     {
-        get => (GimmickSpriteId)GetUInt32(5, 7, 18);
+        get => (GimmickObjectId)GetUInt32(5, 7, 18);
         set => SetUInt32(5, 7, 18, (uint)value);
     }
 

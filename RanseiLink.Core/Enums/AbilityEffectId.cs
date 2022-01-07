@@ -7,16 +7,16 @@ public enum AbilityEffectId : uint
     IncreaseUserAttack,
     IncreaseUserDefence,
     IncreaseUserMovementRange,
-    Unknown_1, // Raises user speed (maybe after flinching)
+    IncreaseUserSpeed,
     IncreaseUserAccuracy,
     Unused_2,
     DecreaseOpponentAttack,
     DecreaseOpponentDefence,
     DecreaseOpponentMovementRange,
-    Unknown_3,
+    DecreaseOpponentSpeed,
     DecreaseOpponentAccuracy,
 
 
-    NoEffect = 20, // why is aquaboost in this group???
+    NoEffect = 20,
 
 }

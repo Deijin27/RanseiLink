@@ -186,6 +186,7 @@ public class ModService : IModService
         string currentModFolder = modInfo.FolderPath;
         string msgTmpFile = Path.GetTempFileName();
         _msgService.CreateMsgDat(Path.Combine(currentModFolder, Constants.MsgFolderPath), msgTmpFile);
+
         using (var nds = _ndsFactory(path))
         {
             nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
@@ -203,6 +204,7 @@ public class ModService : IModService
             nds.InsertFixedLengthFile(Constants.MapRomPath, Path.Combine(currentModFolder, Constants.MapRomPath));
             nds.InsertFixedLengthFile(Constants.GimmickRangeRomPath, Path.Combine(currentModFolder, Constants.GimmickRangeRomPath));
             nds.InsertFixedLengthFile(Constants.MoveEffectRomPath, Path.Combine(currentModFolder, Constants.MoveEffectRomPath));
+            nds.InsertFixedLengthFile(Constants.GimmickObjectRomPath, Path.Combine(currentModFolder, Constants.GimmickObjectRomPath));
 
             foreach (var i in EnumUtil.GetValues<ScenarioId>())
             {
@@ -215,6 +217,7 @@ public class ModService : IModService
                 var skPath = Constants.ScenarioKingdomPathFromId(i);
                 nds.InsertFixedLengthFile(skPath, Path.Combine(currentModFolder, skPath));
             }
+
             nds.InsertVariableLengthFile(Constants.MsgRomPath, msgTmpFile);
         }
     }

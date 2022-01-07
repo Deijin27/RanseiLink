@@ -38,16 +38,16 @@ public abstract class GimmickViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v);
     }
 
-    public GimmickSpriteId State1Sprite
+    public GimmickObjectId State1Sprite
     {
-        get => _model.State1Sprite;
-        set => RaiseAndSetIfChanged(_model.State1Sprite, value, v => _model.State1Sprite = v);
+        get => _model.State1Object;
+        set => RaiseAndSetIfChanged(_model.State1Object, value, v => _model.State1Object = v);
     }
 
-    public GimmickSpriteId State2Sprite
+    public GimmickObjectId State2Sprite
     {
-        get => _model.State2Sprite;
-        set => RaiseAndSetIfChanged(_model.State2Sprite, value, v => _model.State2Sprite = v);
+        get => _model.State2Object;
+        set => RaiseAndSetIfChanged(_model.State2Object, value, v => _model.State2Object = v);
     }
 
     public MoveEffectId Effect

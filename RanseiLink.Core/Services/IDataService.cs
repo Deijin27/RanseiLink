@@ -26,4 +26,5 @@ public interface IDataService
     IBattleEnvironmentService BattleEnvironment { get; }
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
+    IGimmickObjectService GimmickObject { get; }
 }
