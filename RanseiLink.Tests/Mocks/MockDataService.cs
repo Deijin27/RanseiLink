@@ -44,4 +44,8 @@ internal class MockDataService : IDataService
     public IMapNameService MapName { get; set; }
 
     public IGimmickRangeService GimmickRange { get; set; }
+
+    public IMoveAnimationService MoveAnimation { get; set; }
+
+    public IGimmickObjectService GimmickObject { get; set; }
 }

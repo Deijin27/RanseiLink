@@ -9,7 +9,7 @@ using RanseiLink.Core.Map;
 
 namespace RanseiLink.Console.ModelCommands;
 
-[Command("map", Description = "Get data on a given map.")]
+[Command("map", Description = "Get data on a given map. If all sections toggles are false, the default is to output all sections.")]
 public class MapCommand : BaseCommand
 {
     public MapCommand(IServiceContainer container) : base(container) { }
@@ -20,6 +20,18 @@ public class MapCommand : BaseCommand
 
     [CommandParameter(1, Description = "Map Variant", Name = "variant")]
     public int? Variant { get; set; }
+
+    [CommandOption("header", 'i', Description = "Output the file header")]
+    public bool Header { get; set; }
+
+    [CommandOption("pokemon", 'p', Description = "Output the pokemon positions")]
+    public bool Pokemon { get; set; }
+
+    [CommandOption("terrain", 't', Description = "Output the terrain")]
+    public bool Terrain { get; set; }
+
+    [CommandOption("gimmick", 'g', Description = "Output the gimmicks")]
+    public bool Gimmick { get; set; }
 
     public override ValueTask ExecuteAsync(IConsole console)
     {
@@ -41,9 +53,35 @@ public class MapCommand : BaseCommand
         using var br = new BinaryReader(File.OpenRead(file));
         var map = new Map(br);
 
-        foreach (var mapGimmickItem in map.GimmickSection.Items)
+        var all = !(Header || Pokemon || Gimmick || Terrain);
+
+        if (all || Header)
         {
-            console.Output.WriteLine(mapGimmickItem);
+            console.Output.WriteLine(map.Header);
+        }
+
+        if (all || Pokemon)
+        {
+            console.Output.WriteLine("Pokemon Positions:");
+            foreach (var position in map.PositionSection.Positions.Reverse().SkipWhile(i => i.X == 0 && i.Y == 0).Reverse())
+            {
+                console.Output.WriteLine($"- {position}");
+            }
+        }
+
+        if (all || Terrain)
+        {
+            console.Output.WriteLine("\nTerrain:\n");
+            console.Output.WriteLine(map.TerrainSection);
+        }
+        
+        if (all || Gimmick)
+        {
+            console.Output.WriteLine("\nGimmicks:\n");
+            foreach (var mapGimmickItem in map.GimmickSection.Items)
+            {
+                console.Output.WriteLine(mapGimmickItem);
+            }
         }
 
         return default;

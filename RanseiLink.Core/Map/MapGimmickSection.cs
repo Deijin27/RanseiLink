@@ -17,20 +17,18 @@ public enum Orientation : byte
 public class MapGimmickItem
 {
     public GimmickId Gimmick { get; set; }
-    public byte X { get; set; }
-    public byte Y { get; set; }
+    public Position Position { get; set; }
     public Orientation Orientation { get; set; }
     public byte Unknown4 { get; set; }
     public byte Unknown5 { get; set; }
     public byte Unknown6 { get; set; }
     public byte Unknown7 { get; set; }
-    public List<(ushort, ushort)> Unknown8 { get; set; }
+    public List<(ushort, ushort)> Unknown8 { get; set; } // usage seems to depend on gimmick type
 
     public MapGimmickItem(BinaryReader br)
     {
         Gimmick = (GimmickId)br.ReadByte();
-        X = br.ReadByte();
-        Y = br.ReadByte();
+        Position = new Position(br);
         Orientation = (Orientation)br.ReadByte();
         Unknown4 = br.ReadByte();
         Unknown5 = br.ReadByte();
@@ -47,8 +45,7 @@ public class MapGimmickItem
     public void WriteTo(BinaryWriter bw)
     {
         bw.Write(((byte)Gimmick));
-        bw.Write(X);
-        bw.Write(Y);
+        Position.WriteTo(bw);
         bw.Write(((byte)Orientation));
         bw.Write(((byte)Unknown4));
         bw.Write(((byte)Unknown5));
@@ -67,7 +64,7 @@ public class MapGimmickItem
         var sb = new StringBuilder();
 
         sb.AppendLine($"Gimmick: {Gimmick}");
-        sb.AppendLine($"Position: X={X}, Y={Y}");
+        sb.AppendLine($"Position: {Position}");
         sb.AppendLine($"Orientation: {Orientation}");
         sb.AppendLine($"Unknowns: {Unknown4:X} {Unknown5:X} {Unknown6:X} {Unknown7:X}");
         if (Unknown8.Count > 0)
@@ -87,29 +84,23 @@ public class MapGimmickSection
 {
     public List<MapGimmickItem> Items { get; set; }
 
-    public MapGimmickSection(BinaryReader br)
+    public MapGimmickSection(BinaryReader br, ushort gimmickCount)
     {
-        // save init offset for later
-        long initOffset = br.BaseStream.Position;
+        Items = new List<MapGimmickItem>();
 
-        // Read allocation table
-        int firstItemStart = br.ReadInt32();
-        long firstItemPosition = initOffset + firstItemStart;
-        List<int> itemStarts = new();
-        itemStarts.Add(firstItemStart);
-        while (br.BaseStream.Position < firstItemPosition)
+        if (gimmickCount == 0)
         {
-            itemStarts.Add(br.ReadInt32());
+            return;
         }
+        // Read allocation table just to find start of items
+        int firstItemStart = br.ReadInt32();
+        br.BaseStream.Seek(firstItemStart - 4, SeekOrigin.Current);
 
         // Read items
-        Items = new List<MapGimmickItem>();
-        foreach (var start in itemStarts)
+        for (int i = 0; i < gimmickCount; i++)
         {
-            br.BaseStream.Position = initOffset + start;
             Items.Add(new MapGimmickItem(br));
         }
-
     }
 
     public void WriteTo(BinaryWriter bw)
