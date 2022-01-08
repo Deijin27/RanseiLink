@@ -1,14 +1,14 @@
 ﻿
 namespace RanseiLink.Core.Services;
 
-public record BattleEnvironment(uint Environment, uint Variant)
+public record MapName(uint Map, uint Variant)
 {
     public override string ToString()
     {
-        return $"map{Environment.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}.bin";
+        return $"map{Map.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}.bin";
     }
 
-    public static bool TryParse(string fileName, out BattleEnvironment result)
+    public static bool TryParse(string fileName, out MapName result)
     {
         result = null;
 
@@ -30,7 +30,7 @@ public record BattleEnvironment(uint Environment, uint Variant)
             return false;
         }
 
-        result =  new BattleEnvironment(env, variant);
+        result =  new MapName(env, variant);
         return true;
 
     }

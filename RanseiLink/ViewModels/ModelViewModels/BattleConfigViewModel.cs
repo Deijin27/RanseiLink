@@ -21,14 +21,14 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public BattleConfigId Id { get; }
 
-    public BattleEnvironment Environment
+    public MapName Environment
     {
         get => new(_model.Environment, _model.EnvironmentVariant);
         set
         {
             if (Environment != value)
             {
-                _model.Environment = value.Environment;
+                _model.Environment = value.Map;
                 _model.EnvironmentVariant = value.Variant;
                 RaisePropertyChanged();
             }
@@ -133,9 +133,9 @@ public class BattleConfigViewModel : BattleConfigViewModelBase
 {
     public BattleConfigViewModel(BattleConfigId id, IBattleConfig model, IEditorContext context) : base(id, model) 
     {
-        EnvironmentItems = context.DataService.BattleEnvironment.GetBattleEnvironments();
+        EnvironmentItems = context.DataService.MapName.GetMaps();
     }
 
-    public ICollection<BattleEnvironment> EnvironmentItems { get; }
+    public ICollection<MapName> EnvironmentItems { get; }
 
 }

@@ -23,7 +23,7 @@ public interface IDataService
     IMsgBlockService Msg { get; }
     IBattleConfigService BattleConfig { get; }
 
-    IBattleEnvironmentService BattleEnvironment { get; }
+    IMapNameService MapName { get; }
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
     IGimmickObjectService GimmickObject { get; }

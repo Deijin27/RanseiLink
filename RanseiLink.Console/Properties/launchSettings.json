@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "msg 0 0"
+      "commandLineArgs": "map 0 0"
     }
   }
 }

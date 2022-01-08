@@ -26,7 +26,7 @@ public class DataService : IDataService
         ScenarioKingdom = new ScenarioKingdomService(mod);
         Msg = new MsgBlockService(mod, msgService);
         BattleConfig = new BattleConfigService(mod);
-        BattleEnvironment = new BattleEnvironmentService(mod);
+        MapName = new MapNameService(mod);
         GimmickRange = new GimmickRangeService(mod);
         MoveAnimation = new MoveAnimationService(mod);
         GimmickObject = new GimmickObjectService(mod);
@@ -58,5 +58,5 @@ public class DataService : IDataService
     /// <summary>
     /// This is pretty different to the other things. it's here purely for convenience.
     /// </summary>
-    public IBattleEnvironmentService BattleEnvironment { get; }
+    public IMapNameService MapName { get; }
 }
