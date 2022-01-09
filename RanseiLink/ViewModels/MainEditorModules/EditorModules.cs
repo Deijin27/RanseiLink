@@ -241,3 +241,11 @@ public class MoveAnimationGridEditorModule : IEditorModule
     public string ListName => "Move Animation (Grid)";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveAnimationGridViewModel(container, context);
 }
+
+public class MapSelectorEditorModule : IEditorModule
+{
+    public const string Id = "map_selector";
+    public string UniqueId => Id;
+    public string ListName => "Map";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MapSelectorViewModel(container, context);
+}

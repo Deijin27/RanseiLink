@@ -9,7 +9,6 @@ using System.Windows.Input;
 namespace RanseiLink.ViewModels;
 
 public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModelBase, ISaveableRefreshable
-    where TModel : IDataWrapper
 { 
     private readonly IDialogService _dialogService;
 
@@ -26,8 +25,12 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
         DataService = dataService;
         Items = items;
 
-        CopyCommand = new RelayCommand(Copy);
-        PasteCommand = new RelayCommand(Paste);
+        if (typeof(IDataWrapper).IsAssignableFrom(typeof(TModel)))
+        {
+            CopyPasteVisible = true;
+            CopyCommand = new RelayCommand(Copy);
+            PasteCommand = new RelayCommand(Paste);
+        }
     }
 
     private readonly IModelDataService<TId, TModel> DataService;
@@ -47,7 +50,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
         get => _selected;
         set
         {
-            if (!_selected.Equals(value))
+            if (_selected?.Equals(value) != true)
             {
                 Save();
                 _selected = value;
@@ -101,29 +104,42 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
 
     public ICommand PasteCommand { get; }
 
+    private bool _copyPasteVisible = false;
+    public bool CopyPasteVisible
+    {
+        get => _copyPasteVisible;
+        set => RaiseAndSetIfChanged(ref _copyPasteVisible, value);
+    }
+
 
     private void Copy()
     {
-        Clipboard.SetText(_currentModel.Serialize());
+        if (_currentModel is IDataWrapper dw)
+        {
+            Clipboard.SetText(dw.Serialize());
+        }
     }
 
     private void Paste()
     {
-        string text = Clipboard.GetText();
+        if (_currentModel is IDataWrapper dw)
+        {
+            string text = Clipboard.GetText();
 
-        if (_currentModel.TryDeserialize(text))
-        {
-            // trigger visual update
-            NestedViewModel = NewViewModel(_currentModel);
-        }
-        else
-        {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                type: MessageBoxType.Warning,
-                title: "Invalid Paste Data",
-                message: "The data that you pasted is invalid. Make sure you have the right label and length." +
-                          $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{_currentModel.Serialize()}"
-            ));
+            if (dw.TryDeserialize(text))
+            {
+                // trigger visual update
+                NestedViewModel = NewViewModel(_currentModel);
+            }
+            else
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    type: MessageBoxType.Warning,
+                    title: "Invalid Paste Data",
+                    message: "The data that you pasted is invalid. Make sure you have the right label and length." +
+                              $"\n\nYou pasted:\n\n{text}\n\nWhat was expected was something like:\n\n{dw.Serialize()}"
+                ));
+            }
         }
     }
 }

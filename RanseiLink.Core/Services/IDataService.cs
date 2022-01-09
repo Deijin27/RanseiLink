@@ -22,6 +22,7 @@ public interface IDataService
     IScenarioKingdomService ScenarioKingdom { get; }
     IMsgBlockService Msg { get; }
     IBattleConfigService BattleConfig { get; }
+    IMapService Map { get; }
 
     IMapNameService MapName { get; }
     IGimmickRangeService GimmickRange { get; }

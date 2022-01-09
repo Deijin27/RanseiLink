@@ -6,7 +6,7 @@ namespace RanseiLink.Core.Map;
 public class MapHeader
 {
     public const int DataLength = 0x10;
-    public const string MagicNumber = "MLSP"; // Pokemon Shoubu Level Map?
+    public const string MagicNumber = "MLSP"; // PSL Map (PSL was the temporary name of the game)
     public ushort Length { get; set; }
     public ushort Width { get; set; }
     public ushort Height { get; set; }

@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:RanseiLink.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -13,9 +16,9 @@
         </Grid.RowDefinitions>
         <DockPanel Margin="10,10,10,0">
             <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5" DockPanel.Dock="Right" Height="30" Width="30" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    ToolTip="Paste" Command="{Binding PasteCommand}"/>
+                    ToolTip="Paste" Command="{Binding PasteCommand}" Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVis}}"/>
             <Button Style="{StaticResource RoundedGrayHoverButtonStyle}" Margin="5,5,0,5" DockPanel.Dock="Right" Height="30" Width="30" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    ToolTip="Copy" Command="{Binding CopyCommand}"/>
+                    ToolTip="Copy" Command="{Binding CopyCommand}" Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVis}}"/>
             <ComboBox Grid.Row="0" Height="20" ItemsSource="{Binding Items, Mode=OneTime}" SelectedItem="{Binding Selected, Mode=TwoWay}" />
         </DockPanel>
 

@@ -30,6 +30,7 @@ public class DataService : IDataService
         GimmickRange = new GimmickRangeService(mod);
         MoveAnimation = new MoveAnimationService(mod);
         GimmickObject = new GimmickObjectService(mod);
+        Map = new MapService(MapName);
     }
 
     public IPokemonService Pokemon { get; }
@@ -53,6 +54,7 @@ public class DataService : IDataService
     public IBattleConfigService BattleConfig { get; }
     public IMoveAnimationService MoveAnimation { get; }
     public IGimmickObjectService GimmickObject { get; }
+    public IMapService Map { get; }
 
 
     /// <summary>
