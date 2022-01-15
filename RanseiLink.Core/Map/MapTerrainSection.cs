@@ -38,19 +38,29 @@ public enum Terrain : byte
 
 public class MapTerrainEntry
 {
-    public int[] Unknown1 { get; }
+    /// <summary>
+    /// The elevation of each sub-cell in the grid. There is 9 sub cells
+    /// </summary>
+    public int[] SubCellZValues { get; }
     public Terrain Terrain { get; set; }
     public byte Unknown3 { get; set; }
     
     public byte Unknown4 { get; set; }
     public byte Unknown5 { get; set; }
 
+    public MapTerrainEntry()
+    {
+        SubCellZValues = new int[9];
+        Terrain = Terrain.Default;
+        Unknown4 = 0xFF;
+    }
+
     public MapTerrainEntry(BinaryReader br)
     {
-        Unknown1 = new int[9];
+        SubCellZValues = new int[9];
         for (int i = 0; i < 9; i++)
         {
-            Unknown1[i] = br.ReadInt32();
+            SubCellZValues[i] = br.ReadInt32() / 0x800; // they're all divisible by this, may as well scale down
         }
         Terrain = (Terrain)br.ReadByte();
         Unknown3 = br.ReadByte();
@@ -60,9 +70,9 @@ public class MapTerrainEntry
 
     public void WriteTo(BinaryWriter bw)
     {
-        foreach (var entry in Unknown1)
+        foreach (var entry in SubCellZValues)
         {
-            bw.Write(entry);
+            bw.Write(entry * 0x800);
         }
         bw.Write((byte)Terrain);
         bw.Write(Unknown3);
@@ -73,7 +83,7 @@ public class MapTerrainEntry
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (int b in Unknown1)
+        foreach (int b in SubCellZValues)
         {
             sb.Append(b.ToString("X").PadLeft(9, ' '));
         }

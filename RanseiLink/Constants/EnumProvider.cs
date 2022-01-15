@@ -1,5 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Map;
+using RanseiLink.ViewModels;
 using System.Linq;
 
 namespace RanseiLink.Constants;
@@ -33,4 +35,8 @@ public static class EnumProvider
     public static GimmickRangeId[] GimmickRangeItems { get; } = EnumUtil.GetValues<GimmickRangeId>().ToArray();
     public static GimmickImageId[] GimmickImageItems { get; } = EnumUtil.GetValues<GimmickImageId>().ToArray();
     public static GimmickObjectId[] GimmickSpriteItems { get; } = EnumUtil.GetValues<GimmickObjectId>().ToArray();
+    public static MapRenderMode[] RenderModeItems { get; } = EnumUtil.GetValues<MapRenderMode>().ToArray();
+    public static GimmickId[] GimmickItems { get; } = EnumUtil.GetValues<GimmickId>().ToArray();
+    public static Orientation[] OrientationItems { get; } = EnumUtil.GetValues<Orientation>().ToArray();
+    public static Terrain[] TerrainItems { get; } = EnumUtil.GetValues<Terrain>().ToArray();
 }

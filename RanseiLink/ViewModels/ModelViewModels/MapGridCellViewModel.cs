@@ -1,0 +1,100 @@
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Map;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
+
+namespace RanseiLink.ViewModels;
+
+
+public class MapGridCellViewModel : ViewModelBase
+{
+    public MapTerrainEntry TerrainEntry { get; }
+
+    private bool _isSelected;
+
+
+    public MapGridCellViewModel(MapTerrainEntry entry, uint x, uint y, MapRenderMode renderMode)
+    {
+        TerrainEntry = entry;
+
+        X = x;
+        Y = y;
+
+        SubCell0 = new(this, 0, renderMode);
+        SubCell1 = new(this, 1, renderMode);
+        SubCell2 = new(this, 2, renderMode);
+        SubCell3 = new(this, 3, renderMode);
+        SubCell4 = new(this, 4, renderMode);
+        SubCell5 = new(this, 5, renderMode);
+        SubCell6 = new(this, 6, renderMode);
+        SubCell7 = new(this, 7, renderMode);
+        SubCell8 = new(this, 8, renderMode);
+
+
+    }
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => RaiseAndSetIfChanged(ref _isSelected, value);
+    }
+
+    public uint X { get; }
+    public uint Y { get; }
+
+    public Terrain Terrain
+    {
+        get => TerrainEntry.Terrain;
+        set => RaiseAndSetIfChanged(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);
+    }
+
+    public string Unknown3
+    {
+        get => TerrainEntry.Unknown3 switch
+        {
+            0 => "In Bounds",
+            1 => "Out Of Bounds",
+            > 1 and < 14 => $"Pokemon {TerrainEntry.Unknown3 - 2}",
+            _ => $"{TerrainEntry.Unknown3}"
+        };
+    }
+
+    public uint Unknown3Numeric
+    {
+        get => TerrainEntry.Unknown3;
+        set => RaiseAndSetIfChanged(TerrainEntry.Unknown3, (byte)value, v => TerrainEntry.Unknown3 = v);
+    }
+
+    public uint Unknown4
+    {
+        get => TerrainEntry.Unknown4;
+        set => RaiseAndSetIfChanged(TerrainEntry.Unknown4, (byte)value, v => TerrainEntry.Unknown4 = v);
+    }
+
+    public uint Unknown5
+    {
+        get => TerrainEntry.Unknown5;
+        set => RaiseAndSetIfChanged(TerrainEntry.Unknown5, (byte)value, v => TerrainEntry.Unknown5 = v);
+    }
+
+    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
+
+    public ObservableCollection<MapPokemonPositionViewModel> Pokemon { get; } = new();
+
+    public string GimmicksString => string.Join(", ", Gimmicks.Select(i => i.Gimmick));
+
+    public MapGridSubCellViewModel SubCell0 { get; }
+    public MapGridSubCellViewModel SubCell1 { get; }
+    public MapGridSubCellViewModel SubCell2 { get; }
+    public MapGridSubCellViewModel SubCell3 { get; }
+    public MapGridSubCellViewModel SubCell4 { get; }
+    public MapGridSubCellViewModel SubCell5 { get; }
+    public MapGridSubCellViewModel SubCell6 { get; }
+    public MapGridSubCellViewModel SubCell7 { get; }
+    public MapGridSubCellViewModel SubCell8 { get; }
+
+}
+

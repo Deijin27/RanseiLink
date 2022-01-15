@@ -19,26 +19,24 @@ public class MapGimmickItem
     public GimmickId Gimmick { get; set; }
     public Position Position { get; set; }
     public Orientation Orientation { get; set; }
-    public byte Unknown4 { get; set; }
-    public byte Unknown5 { get; set; }
-    public byte Unknown6 { get; set; }
-    public byte Unknown7 { get; set; }
-    public List<(ushort, ushort)> Unknown8 { get; set; } // usage seems to depend on gimmick type
+    public uint UnknownValue { get; set; }
+    public List<(ushort, ushort)> UnknownList { get; set; } = new(); // usage seems to depend on gimmick type
+
+    public MapGimmickItem()
+    {
+        Position = new Position(0, 0);
+    }
 
     public MapGimmickItem(BinaryReader br)
     {
         Gimmick = (GimmickId)br.ReadByte();
         Position = new Position(br);
         Orientation = (Orientation)br.ReadByte();
-        Unknown4 = br.ReadByte();
-        Unknown5 = br.ReadByte();
-        Unknown6 = br.ReadByte();
-        Unknown7 = br.ReadByte();
+        UnknownValue = br.ReadUInt32();
         var count = br.ReadInt32();
-        Unknown8 = new List<(ushort, ushort)>(count);
         for (int i = 0; i < count; i++)
         {
-            Unknown8.Add((br.ReadUInt16(), br.ReadUInt16()));
+            UnknownList.Add((br.ReadUInt16(), br.ReadUInt16()));
         }
     }
 
@@ -47,12 +45,9 @@ public class MapGimmickItem
         bw.Write(((byte)Gimmick));
         Position.WriteTo(bw);
         bw.Write(((byte)Orientation));
-        bw.Write(((byte)Unknown4));
-        bw.Write(((byte)Unknown5));
-        bw.Write(((byte)Unknown6));
-        bw.Write(((byte)Unknown7));
-        bw.Write(Unknown8.Count);
-        foreach (var item in Unknown8)
+        bw.Write(UnknownValue);
+        bw.Write(UnknownList.Count);
+        foreach (var item in UnknownList)
         {
             bw.Write(item.Item1);
             bw.Write(item.Item2);
@@ -66,11 +61,11 @@ public class MapGimmickItem
         sb.AppendLine($"Gimmick: {Gimmick}");
         sb.AppendLine($"Position: {Position}");
         sb.AppendLine($"Orientation: {Orientation}");
-        sb.AppendLine($"Unknowns: {Unknown4:X} {Unknown5:X} {Unknown6:X} {Unknown7:X}");
-        if (Unknown8.Count > 0)
+        sb.AppendLine($"Unknown Value: {UnknownValue:X}");
+        if (UnknownList.Count > 0)
         {
-            sb.AppendLine($"Unknown8:");
-            foreach (var item in Unknown8)
+            sb.AppendLine($"Unknown List:");
+            foreach (var item in UnknownList)
             {
                 sb.AppendLine($"- {item.Item1}, {item.Item2}");
             }

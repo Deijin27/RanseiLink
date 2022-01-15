@@ -300,4 +300,24 @@ internal class DialogService : IDialogService
             return false;
         }
     }
+
+    public bool ModifyMapDimensions(ref ushort width, ref ushort height)
+    {
+        var dialog = new Dialogs.ModifyMapDimensionsDialog()
+        {
+            Owner = Application.Current.MainWindow
+        };
+        dialog.WidthNumberBox.Value = width;
+        dialog.HeightNumberBox.Value = height;
+
+        bool? proceed = dialog.ShowDialog();
+
+        if (proceed == true)
+        {
+            width = (ushort)dialog.WidthNumberBox.Value;
+            height = (ushort)dialog.HeightNumberBox.Value;
+            return true;
+        }
+        return false;
+    }
 }

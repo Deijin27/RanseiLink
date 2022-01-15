@@ -48,4 +48,6 @@ internal class MockDataService : IDataService
     public IMoveAnimationService MoveAnimation { get; set; }
 
     public IGimmickObjectService GimmickObject { get; set; }
+
+    public IMapService Map { get; set; }
 }

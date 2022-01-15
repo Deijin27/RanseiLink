@@ -114,5 +114,7 @@
 
     <PathGeometry x:Key="UpArrowGeometry" Figures="M 0 4.5 l 4.5 -4.5 4.5 4.5"/>
     <PathGeometry x:Key="DownArrowGeometry" Figures="M 0 0 l 4.5 4.5 4.5 -4.5"/>
+    <PathGeometry x:Key="RightArrowGeometry" Figures="M 0 9 l 4.5 -4.5 -4.5 -4.5"/>
+    <PathGeometry x:Key="LeftArrowGeometry" Figures="M 4.5 9 l -4.5 -4.5 4.5 -4.5"/>
 
 </ResourceDictionary>

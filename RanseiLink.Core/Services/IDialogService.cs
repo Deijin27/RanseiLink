@@ -19,4 +19,5 @@ public interface IDialogService
     bool RequestFolder(out string result);
     bool RequestModFile(out string result);
     void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null);
+    bool ModifyMapDimensions(ref ushort width, ref ushort height);
 }
