@@ -219,6 +219,12 @@ public class ModService : IModService
             }
 
             nds.InsertVariableLengthFile(Constants.MsgRomPath, msgTmpFile);
+
+            foreach (var mapFilePath in Directory.GetFiles(Path.Combine(currentModFolder, "data", "map")))
+            {
+                string mapRomPath = Path.Combine("data", "map", Path.GetFileName(mapFilePath));
+                nds.InsertVariableLengthFile(mapRomPath, mapFilePath);
+            }
         }
     }
 }
