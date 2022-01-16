@@ -80,7 +80,7 @@
             <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
 
             <TextBlock Text="Capacity" Grid.Row="11" />
-            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="15"/>
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="8"/>
 
             <TextBlock Text="Gender" Grid.Row="12"/>
             <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GenderItems}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
