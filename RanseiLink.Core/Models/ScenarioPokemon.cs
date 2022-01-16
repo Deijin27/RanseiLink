@@ -46,6 +46,12 @@ public class ScenarioPokemon : BaseDataWindow, IScenarioPokemon
         set => SetUInt32(1, 5, 15, value);
     }
 
+    public ushort Exp
+    {
+        get => GetUInt16(2);
+        set => SetUInt16(2, value);
+    }
+
     public IScenarioPokemon Clone()
     {
         return new ScenarioPokemon((byte[])Data.Clone());

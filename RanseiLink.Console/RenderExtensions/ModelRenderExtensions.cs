@@ -283,6 +283,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());
         console.WriteProperty("Ability", scenarioPokemon.Ability.ToString());
         console.WriteProperty("IVs", $"Hp {scenarioPokemon.HpIv} / Atk {scenarioPokemon.AtkIv} / Def {scenarioPokemon.DefIv} / Spe {scenarioPokemon.SpeIv}");
+        console.WriteProperty("Init Exp", $"{scenarioPokemon.Exp} (Approx. Link = {Math.Round(Core.Services.LinkCalculator.CalculateLink(scenarioPokemon.Exp))}%)");
     }
 
     public static void Render(this IConsole console, IScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)

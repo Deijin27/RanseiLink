@@ -11,7 +11,7 @@
              xmlns:views="clr-namespace:RanseiLink.Views"
              d:DataContext="{d:DesignInstance Type=vm:ScenarioWarriorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="650" d:DesignWidth="800">
     <UserControl.Resources>
         <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
         <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
@@ -86,8 +86,8 @@
 
             <GroupBox Grid.ColumnSpan="2">
                 <GroupBox.Header>
-                    <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to selected scenario pokemon"
-                    Command="{Binding JumpToScenarioPokemon}"/>
+                    <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Scenario Pokemon"
+                    Command="{Binding JumpToScenarioPokemon}" ToolTip="Jump to selected scenario pokemon"/>
                 </GroupBox.Header>
                 <DockPanel>
                     <CheckBox DockPanel.Dock="Top" x:Name="AllowEditing" Content="Allow editing of this list"/>
@@ -109,7 +109,7 @@
                 
             </GroupBox>
             
-            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonVm, Mode=OneWay, Converter={StaticResource Converter.NotNull}}">
+            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="8" Padding="5" IsEnabled="{Binding ScenarioPokemonVm, Mode=OneWay, Converter={StaticResource Converter.NotNull}}">
                 <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
             </GroupBox>
 

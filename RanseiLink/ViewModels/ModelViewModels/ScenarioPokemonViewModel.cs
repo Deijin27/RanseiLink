@@ -1,7 +1,9 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Services;
 using RanseiLink.Services;
+using System;
 using System.Linq;
 using System.Windows.Input;
 
@@ -82,4 +84,18 @@ public class ScenarioPokemonViewModel : ViewModelBase
         get => _model.SpeIv;
         set => RaiseAndSetIfChanged(_model.SpeIv, value, v => _model.SpeIv = v);
     }
+
+    public uint Exp
+    {
+        get => _model.Exp;
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Exp, value, v => _model.Exp = (ushort)v))
+            {
+                RaisePropertyChanged(nameof(ApproximateLink));
+            }
+        }
+    }
+
+    public double ApproximateLink => Math.Round(LinkCalculator.CalculateLink(_model.Exp));
 }

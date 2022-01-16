@@ -10,4 +10,5 @@ public interface IScenarioPokemon : IDataWrapper, ICloneable<IScenarioPokemon>
     uint AtkIv { get; set; }
     uint DefIv { get; set; }
     uint SpeIv { get; set; }
+    ushort Exp { get; set; }
 }

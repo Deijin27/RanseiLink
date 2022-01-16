@@ -21,6 +21,7 @@ public class ScenarioPokemonTests
         Assert.Equal(15u, p.AtkIv);
         Assert.Equal(15u, p.DefIv);
         Assert.Equal(15u, p.SpeIv);
+        Assert.Equal(1020, p.Exp);
     }
 
     [Fact]
@@ -28,21 +29,28 @@ public class ScenarioPokemonTests
     {
         IScenarioPokemon p = new ScenarioPokemon
         {
-            Pokemon = PokemonId.Pikachu,
-            Ability = AbilityId.Bodyguard,
-            HpIv = 5u,
-            AtkIv = 0u,
-            DefIv = 30u,
-            SpeIv = 16u,
+            Pokemon = PokemonId.Jigglypuff,
+            Ability = AbilityId.Lullaby,
+            HpIv = 15u,
+            AtkIv = 15u,
+            DefIv = 15u,
+            SpeIv = 15u,
+            Exp = 1020
         };
 
-        Assert.Equal(PokemonId.Pikachu, p.Pokemon);
-        Assert.Equal(AbilityId.Bodyguard, p.Ability);
-        Assert.Equal(5u, p.HpIv);
-        Assert.Equal(0u, p.AtkIv);
-        Assert.Equal(30u, p.DefIv);
-        Assert.Equal(16u, p.SpeIv);
+        var expected = new byte[]
+        {
+                0x14, 0x00, 0xFC, 0x03, 0xEF, 0xBD, 0x97, 0x04
+        };
 
-        // Add Array equal test when possible
+        Assert.Equal(PokemonId.Jigglypuff, p.Pokemon);
+        Assert.Equal(AbilityId.Lullaby, p.Ability);
+        Assert.Equal(15u, p.HpIv);
+        Assert.Equal(15u, p.AtkIv);
+        Assert.Equal(15u, p.DefIv);
+        Assert.Equal(15u, p.SpeIv);
+        Assert.Equal(1020, p.Exp);
+
+        Assert.Equal(expected, p.Data);
     }
 }

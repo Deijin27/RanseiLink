@@ -78,7 +78,12 @@
             <controls:NumberBox  Value="{Binding SpeIv}" Max="31"/>
         </DockPanel>
 
-        <Button Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
+        <TextBlock Text="Initial Exp" Grid.Row="6" />
+        <DockPanel Grid.Row="6" Grid.Column="1">
+            <TextBlock Padding="5,0,0,0" DockPanel.Dock="Right" Width="132" Text="{Binding ApproximateLink, StringFormat='Approx. Link = {0}%'}" d:Text="Approx. Link = 100%"/>
+            <controls:NumberBox  Value="{Binding Exp, UpdateSourceTrigger=PropertyChanged}" Max="65535"/>
+        </DockPanel>
+        <Button Grid.Row="7" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
                     Command="{Binding JumpToFirstWarriorCommand}" />
 
     </Grid>
