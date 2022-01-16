@@ -75,4 +75,9 @@ public class MockDialogService : IDialogService
     {
         throw new NotImplementedException();
     }
+
+    public bool ModifyMapDimensions(ref ushort width, ref ushort height)
+    {
+        throw new NotImplementedException();
+    }
 }

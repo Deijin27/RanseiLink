@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
         <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
+        <vc:NotNullConverter x:Key="Converter.NotNull"/>
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Height" Value="20"/>
@@ -38,6 +39,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -54,6 +56,9 @@
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
 
+            <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
+                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
+
         </Grid>
         
         <Grid Margin="10">
@@ -62,7 +67,7 @@
                 <ColumnDefinition Width="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="270"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -78,34 +83,36 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <CheckBox x:Name="AllowScenarioPokemonEdit" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" IsChecked="False" 
-                  Content="Allow Editing of Scenario Pokemon Selected Entry"
-                  ToolTip="Editing of selected entry is disabled by default because it's unlikely you'll need to edit it and the checkbox is a particularly annoying misclick"/>
 
-            <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" 
-                  IsChecked="{Binding ScenarioPokemonIsDefault, Mode=TwoWay, Converter={StaticResource invertBoolConverter}}"
-                  IsEnabled="{Binding ElementName=AllowScenarioPokemonEdit, Path=IsChecked, Mode=OneWay}">
-                <CheckBox.Content>
-                    <Button Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Scenario Pokemon"
-                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}" ToolTip="Jump to selected scenario pokemon"/>
-                </CheckBox.Content>
-            </CheckBox>
-
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ScenarioPokemon, Mode=TwoWay}" >
-                <controls:NumberBox.IsEnabled>
-                    <MultiBinding Mode="OneWay" Converter="{StaticResource boolAggregateAndConverter}">
-                        <Binding ElementName="AllowScenarioPokemonEdit" Path="IsChecked" Mode="OneWay"/>
-                        <Binding Path="ScenarioPokemonIsDefault" Mode="OneWay" Converter="{StaticResource invertBoolConverter}"/>
-                    </MultiBinding>
-                </controls:NumberBox.IsEnabled>
-            </controls:NumberBox>
-
-            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonIsDefault, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
+            <GroupBox Grid.ColumnSpan="2">
+                <GroupBox.Header>
+                    <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to selected scenario pokemon"
+                    Command="{Binding JumpToScenarioPokemon}"/>
+                </GroupBox.Header>
+                <DockPanel>
+                    <CheckBox DockPanel.Dock="Top" x:Name="AllowEditing" Content="Allow editing of this list"/>
+                    <ListView Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Stretch"
+                              Style="{StaticResource ListViewStyle1}" ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
+                              ItemsSource="{Binding Pokemon}" SelectedItem="{Binding SelectedPokemon, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ScenarioWarriorPokemonViewModel}">
+                                <DockPanel >
+                                    <TextBlock Margin="2,2,8,0" Text="{Binding Id}" Width="10" TextAlignment="Right"/>
+                                    <Button Margin="2" Width="90" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=AllowEditing, Path=IsChecked}" Command="{Binding SetToDefaultCommand}">Set To Default</Button>
+                                    <controls:NumberBox Margin="2" Grid.Row="1" Grid.Column="1" Value="{Binding ScenarioPokemonId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    IsEnabled="{Binding ElementName=AllowEditing, Path=IsChecked}"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </DockPanel>
+                
+            </GroupBox>
+            
+            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7" Padding="5" IsEnabled="{Binding ScenarioPokemonVm, Mode=OneWay, Converter={StaticResource Converter.NotNull}}">
                 <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
             </GroupBox>
 
-            <Button Grid.Column="0" Grid.Row="9" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
-                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
         </Grid>
     </WrapPanel>
     

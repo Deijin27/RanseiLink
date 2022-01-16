@@ -26,7 +26,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
             for (int i = 0; i < Core.Services.Constants.ScenarioWarriorCount; i++)
             {
                 var sw = warriorService.Retrieve(scenario, i);
-                if (!sw.ScenarioPokemonIsDefault && sw.ScenarioPokemon == id)
+                if (!sw.ScenarioPokemonIsDefault(0) && sw.ScenarioPokemon == id)
                 {
                     warriorService.Dispose();
                     jumpService.JumpToScenarioWarrior(scenario, (uint)i);

@@ -4,6 +4,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace RanseiLink.Console;
@@ -291,7 +292,10 @@ public static partial class RenderExtensions
         console.WriteProperty("Class", scenarioWarrior.Class);
         console.WriteProperty("Army", scenarioWarrior.Army);
         console.WriteProperty("Kingdom", scenarioWarrior.Kingdom);
-        console.WriteProperty("Scenario Pokemon Entry", scenarioWarrior.ScenarioPokemonIsDefault ? "<default>" : scenarioWarrior.ScenarioPokemon.ToString());
+        console.WriteProperty("Scenario Pokemon", string.Join(", ", 
+            Enumerable.Range(0, 8)
+            .Select(i => scenarioWarrior.ScenarioPokemonIsDefault(i) ? "<default>" : scenarioWarrior.GetScenarioPokemon(i).ToString()))
+            );
     }
 
     public static void Render(this IConsole console, IEvolutionTable model)

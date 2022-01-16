@@ -57,7 +57,7 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
             AbilityId initAbility;
             int initScenarioPokemon;
             
-            if (scenarioWarrior.ScenarioPokemonIsDefault)
+            if (scenarioWarrior.ScenarioPokemonIsDefault(0))
             {
                 initPokemon = PokemonId.Default;
                 initAbility = AbilityId.NoAbility;
@@ -65,10 +65,10 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
             }
             else
             {
-                var scenarioPokemon = scenarioPokemonService.Retrieve(_selectedScenario, (int)scenarioWarrior.ScenarioPokemon);
+                var scenarioPokemon = scenarioPokemonService.Retrieve(_selectedScenario, scenarioWarrior.GetScenarioPokemon(0));
                 initPokemon = scenarioPokemon.Pokemon;
                 initAbility = scenarioPokemon.Ability;
-                initScenarioPokemon = (int)scenarioWarrior.ScenarioPokemon;
+                initScenarioPokemon = scenarioWarrior.GetScenarioPokemon(0);
             }
 
             _scenarioWarriors.Add(scenarioWarrior);
@@ -124,12 +124,11 @@ public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefr
             var vm = Items[i];
             if (vm.Pokemon == PokemonId.Default || vm.ScenarioPokemonId == DefaultScenarioPokemonId)
             {
-                warrior.ScenarioPokemonIsDefault = true;
+                warrior.MakeScenarioPokemonDefault(0);
             }
             else
             {
-                warrior.ScenarioPokemonIsDefault = false;
-                warrior.ScenarioPokemon = (uint)vm.ScenarioPokemonId;
+                warrior.SetScenarioPokemon(0, (ushort)vm.ScenarioPokemonId);
                 var scenarioPokemon = scenarioPokemonService.Retrieve(_selectedScenario, vm.ScenarioPokemonId);
                 scenarioPokemon.Ability = vm.PokemonAbility;
                 scenarioPokemon.Pokemon = vm.Pokemon;

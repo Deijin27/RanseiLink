@@ -24,7 +24,7 @@ public class ScenarioWarriorTests
 
         Assert.Equal(WarriorId.Oichi_1, p.Warrior);
         Assert.Equal(1u, p.ScenarioPokemon);
-        Assert.False(p.ScenarioPokemonIsDefault);
+        Assert.False(p.ScenarioPokemonIsDefault(0));
         Assert.Equal(WarriorClassId.ArmyMember, p.Class);
         Assert.Equal(KingdomId.Default, p.Kingdom);
         Assert.Equal(17u, p.Army);
@@ -37,11 +37,11 @@ public class ScenarioWarriorTests
         IScenarioWarrior p = new ScenarioWarrior
         {
             Warrior = WarriorId.Nobuchika,
-            ScenarioPokemon = 57u,
             Class = WarriorClassId.FreeWarrior,
             Kingdom = KingdomId.Valora,
             Army = 5u
         };
+        p.ScenarioPokemon = 57;
 
         Assert.Equal(WarriorId.Nobuchika, p.Warrior);
         Assert.Equal(57u, p.ScenarioPokemon);

@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using System;
 
 namespace RanseiLink.Core.Models;
 
@@ -8,7 +9,8 @@ public class ScenarioWarrior : BaseDataWindow, IScenarioWarrior
     public const int DataLength = 0x20;
 
     public ScenarioWarrior(byte[] data) : base(data, DataLength) { }
-    public ScenarioWarrior() : base(new byte[DataLength], DataLength) { }
+
+    public ScenarioWarrior() : this(new byte[DataLength]) { }
 
     public WarriorId Warrior
     {
@@ -34,31 +36,38 @@ public class ScenarioWarrior : BaseDataWindow, IScenarioWarrior
         set => SetUInt32(0, 5, 17, value);
     }
 
-    public uint ScenarioPokemon
+    public ushort GetScenarioPokemon(int id)
     {
-        get => GetByte(0xE);
-        set => SetByte(0xE, (byte)value);
-    }
-    public bool ScenarioPokemonIsDefault
-    {
-        get => GetByte(0xF) == 4 && GetByte(0xE) == 76;
-        set
+        if (id > 7 || id < 0)
         {
-            if (value)
-            {
-                SetByte(0xE, 76);
-                SetByte(0xF, 4);
-            }
-            else
-            {
-                SetByte(0xE, 0);
-                SetByte(0xF, 0);
-            }
+            throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
         }
+        return GetUInt16(0xE + id * 2);
+    }
+
+    public void SetScenarioPokemon(int id, ushort value)
+    {
+        if (id > 7 || id < 0)
+        {
+            throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
+        }
+        SetUInt16(0xE + id * 2, value);
     }
 
     public IScenarioWarrior Clone()
     {
         return new ScenarioWarrior((byte[])Data.Clone());
     }
+
+    public void MakeScenarioPokemonDefault(int id)
+    {
+        SetScenarioPokemon(id, DefaultScenarioPokemon);
+    }
+
+    public bool ScenarioPokemonIsDefault(int id)
+    {
+        return GetScenarioPokemon(id) == DefaultScenarioPokemon; 
+    }
+
+    public const ushort DefaultScenarioPokemon = 1100;
 }
