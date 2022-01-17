@@ -4,6 +4,7 @@ using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Types;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
@@ -126,8 +127,14 @@ public class BattleConfigViewModel : BattleConfigViewModelBase
     public BattleConfigViewModel(BattleConfigId id, IBattleConfig model, IEditorContext context) : base(id, model) 
     {
         MapItems = context.DataService.MapName.GetMaps();
+
+        var jumpService = context.JumpService;
+
+        JumpToMapCommand = new RelayCommand<MapId>(jumpService.JumpToMap);
     }
 
     public ICollection<MapId> MapItems { get; }
+
+    public ICommand JumpToMapCommand { get; }
 
 }

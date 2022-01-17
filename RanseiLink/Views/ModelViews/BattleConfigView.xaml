@@ -38,8 +38,9 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
-            <TextBlock Text="Map File" Grid.Row="0"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Map File" Grid.Row="0" ToolTip="Jump to selected map" 
+                    Command="{Binding JumpToMapCommand}" CommandParameter="{Binding Map}"/>
             <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
 
             <TextBlock Text="Number of Turns" Grid.Row="1"/>

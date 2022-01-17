@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 
 namespace RanseiLink.Services;
 
@@ -22,4 +23,5 @@ public interface IJumpService
     void JumpToWarriorSkill(WarriorSkillId id);
     void JumpToBattleConfig(BattleConfigId id);
     void JumpToGimmickRange(GimmickRangeId id);
+    void JumpToMap(MapId id);
 }

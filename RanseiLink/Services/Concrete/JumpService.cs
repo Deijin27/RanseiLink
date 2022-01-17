@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.ViewModels;
 using System.Linq;
 
@@ -185,6 +186,16 @@ internal class JumpService : IJumpService
     {
         var moduleId = GimmickRangeSelectorEditorModule.Id;
         if (_mainEditor.ViewModels[moduleId] is GimmickRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        {
+            selectorVm.Selected = id;
+            _mainEditor.CurrentPage = moduleId;
+        }
+    }
+
+    public void JumpToMap(MapId id)
+    {
+        var moduleId = MapSelectorEditorModule.Id;
+        if (_mainEditor.ViewModels[moduleId] is MapSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
             _mainEditor.CurrentPage = moduleId;
