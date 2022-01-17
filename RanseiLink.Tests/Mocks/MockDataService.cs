@@ -41,7 +41,7 @@ internal class MockDataService : IDataService
 
     public IBattleConfigService BattleConfig { get; set; }
 
-    public IMapNameService MapName { get; set; }
+    public IMapIdService MapName { get; set; }
 
     public IGimmickRangeService GimmickRange { get; set; }
 

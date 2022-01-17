@@ -1,14 +1,14 @@
 ﻿
-namespace RanseiLink.Core.Services;
+namespace RanseiLink.Core.Maps;
 
-public record MapName(uint Map, uint Variant)
+public record MapId(uint Map, uint Variant)
 {
     public override string ToString()
     {
         return $"map{Map.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}.bin";
     }
 
-    public static bool TryParse(string fileName, out MapName result)
+    public static bool TryParse(string fileName, out MapId result)
     {
         result = null;
 
@@ -30,7 +30,7 @@ public record MapName(uint Map, uint Variant)
             return false;
         }
 
-        result =  new MapName(env, variant);
+        result =  new MapId(env, variant);
         return true;
 
     }

@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Types;
@@ -16,8 +17,7 @@ public class BattleConfigTests
             0x01, 0xB8, 0x68, 0x7C, 0x4D, 0x80, 0x33, 0x02, 0x00, 0x80, 0xA4, 0x14, 0x00, 0x00, 0x00, 0x00, 0x07, 0x00, 0x0E, 0x00, 0x0E, 0x00, 0x00, 0x00
         });
 
-        Assert.Equal(1u, a.Environment);
-        Assert.Equal(0u, a.EnvironmentVariant);
+        Assert.Equal(new MapId(1, 0), a.MapId);
         Assert.Equal(new Rgb555(23, 8, 3), a.UpperAtmosphereColor);
         Assert.Equal(new Rgb555(13, 2, 0), a.MiddleAtmosphereColor);
         Assert.Equal(new Rgb555(7, 3, 1), a.LowerAtmosphereColor);
@@ -31,8 +31,7 @@ public class BattleConfigTests
     {
         IBattleConfig a = new BattleConfig()
         {
-            Environment = 10,
-            EnvironmentVariant = 1,
+            MapId = new MapId(10, 1),
             UpperAtmosphereColor = new Rgb555(9, 7, 21),
             MiddleAtmosphereColor = new Rgb555(20, 19, 16),
             LowerAtmosphereColor = new Rgb555(12, 11, 1),
@@ -41,8 +40,7 @@ public class BattleConfigTests
             NumberOfTurns = 17
         };
 
-        Assert.Equal(10u, a.Environment);
-        Assert.Equal(1u, a.EnvironmentVariant);
+        Assert.Equal(new MapId(10, 1), a.MapId);
         Assert.Equal(new Rgb555(9, 7, 21), a.UpperAtmosphereColor);
         Assert.Equal(new Rgb555(20, 19, 16), a.MiddleAtmosphereColor);
         Assert.Equal(new Rgb555(12, 11, 1), a.LowerAtmosphereColor);

@@ -1,23 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using RanseiLink.Core.Maps;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-internal class MapNameService : IMapNameService
+internal class MapIdService : IMapIdService
 {
     private readonly ModInfo _mod;
-    public MapNameService(ModInfo mod)
+    public MapIdService(ModInfo mod)
     {
         _mod = mod;
     }
 
-    public ICollection<MapName> GetMaps()
+    public ICollection<MapId> GetMaps()
     {
         var files = Directory.GetFiles(MapFolderPath);
-        List<MapName> result = new();
+        List<MapId> result = new();
         foreach (var file in files)
         {
-            if (MapName.TryParse(Path.GetFileName(file), out var map))
+            if (MapId.TryParse(Path.GetFileName(file), out var map))
             {
                 result.Add(map);
             }

@@ -39,8 +39,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             
-            <TextBlock Text="Environment Map File" Grid.Row="0"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding EnvironmentItems}" SelectedItem="{Binding Environment, Mode=TwoWay}"/>
+            <TextBlock Text="Map File" Grid.Row="0"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
 
             <TextBlock Text="Number of Turns" Grid.Row="1"/>
             <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="31"/>

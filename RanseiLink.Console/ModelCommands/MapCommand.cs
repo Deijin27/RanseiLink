@@ -5,7 +5,7 @@ using RanseiLink.Console.Services;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
-using RanseiLink.Core.Map;
+using RanseiLink.Core.Maps;
 
 namespace RanseiLink.Console.ModelCommands;
 

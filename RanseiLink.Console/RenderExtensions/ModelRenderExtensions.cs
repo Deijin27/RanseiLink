@@ -366,7 +366,7 @@ public static partial class RenderExtensions
     public static void Render(this IConsole console, IBattleConfig model, BattleConfigId id)
     {
         console.WriteTitle($"{id}");
-        console.WriteProperty("Environment", $"{model.Environment} (Variant={model.EnvironmentVariant})");
+        console.WriteProperty("Map", model.MapId);
         console.WriteProperty("Number Of Turns", model.NumberOfTurns);
         console.WriteProperty("Victory Condition", model.VictoryCondition);
         console.WriteProperty("Defeat Condition", model.DefeatCondition);

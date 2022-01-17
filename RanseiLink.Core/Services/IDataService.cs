@@ -24,7 +24,7 @@ public interface IDataService
     IBattleConfigService BattleConfig { get; }
     IMapService Map { get; }
 
-    IMapNameService MapName { get; }
+    IMapIdService MapName { get; }
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
     IGimmickObjectService GimmickObject { get; }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace RanseiLink.Core.Map;
+namespace RanseiLink.Core.Maps;
 
 public enum Orientation : byte
 {

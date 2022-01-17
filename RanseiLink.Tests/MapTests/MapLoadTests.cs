@@ -1,4 +1,4 @@
-﻿using RanseiLink.Core.Map;
+﻿using RanseiLink.Core.Maps;
 using System.IO;
 using Xunit;
 

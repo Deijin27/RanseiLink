@@ -1,5 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Map;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using System;
 using System.Collections.Generic;

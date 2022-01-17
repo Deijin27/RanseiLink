@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Map;
+using RanseiLink.Core.Maps;
 using RanseiLink.ViewModels;
 using System.Linq;
 

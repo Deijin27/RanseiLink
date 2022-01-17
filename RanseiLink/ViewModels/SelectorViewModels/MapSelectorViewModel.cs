@@ -1,11 +1,11 @@
-﻿using RanseiLink.Core.Map;
+﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class MapSelectorViewModel : SelectorViewModelBase<MapName, Map, MapViewModel>
+public class MapSelectorViewModel : SelectorViewModelBase<MapId, Map, MapViewModel>
 {
     private IServiceContainer _container;
     public MapSelectorViewModel(IServiceContainer container, IEditorContext context)

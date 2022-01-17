@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Services;
 using RanseiLink.Core.Types;
 using RanseiLink.Services;
 using System.Collections.Generic;
@@ -21,18 +21,10 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     public BattleConfigId Id { get; }
 
-    public MapName Environment
+    public MapId Map
     {
-        get => new(_model.Environment, _model.EnvironmentVariant);
-        set
-        {
-            if (Environment != value)
-            {
-                _model.Environment = value.Map;
-                _model.EnvironmentVariant = value.Variant;
-                RaisePropertyChanged();
-            }
-        }
+        get => _model.MapId;
+        set => RaiseAndSetIfChanged(_model.MapId, value, v => _model.MapId = value);
     }
 
     public uint NumberOfTurns
@@ -133,9 +125,9 @@ public class BattleConfigViewModel : BattleConfigViewModelBase
 {
     public BattleConfigViewModel(BattleConfigId id, IBattleConfig model, IEditorContext context) : base(id, model) 
     {
-        EnvironmentItems = context.DataService.MapName.GetMaps();
+        MapItems = context.DataService.MapName.GetMaps();
     }
 
-    public ICollection<MapName> EnvironmentItems { get; }
+    public ICollection<MapId> MapItems { get; }
 
 }

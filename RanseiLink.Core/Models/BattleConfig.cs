@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Types;
 
@@ -20,6 +21,16 @@ public class BattleConfig : BaseDataWindow, IBattleConfig
     {
         get => GetUInt32(0, 5, 6);
         set => SetUInt32(0, 5, 6, value);
+    }
+
+    public MapId MapId
+    {
+        get => new(GetUInt32(0, 6, 0), GetUInt32(0, 5, 6));
+        set
+        {
+            SetUInt32(0, 6, 0, value.Map);
+            SetUInt32(0, 5, 6, value.Variant);
+        }
     }
 
     public Rgb555 UpperAtmosphereColor

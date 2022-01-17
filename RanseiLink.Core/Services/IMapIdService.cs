@@ -1,11 +1,12 @@
 ﻿
+using RanseiLink.Core.Maps;
 using System.Collections.Generic;
 
 namespace RanseiLink.Core.Services;
 
-public interface IMapNameService
+public interface IMapIdService
 {
     string MapFolderPath { get; }
 
-    public ICollection<MapName> GetMaps();
+    public ICollection<MapId> GetMaps();
 }
