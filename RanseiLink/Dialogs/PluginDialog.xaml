@@ -31,10 +31,10 @@
         <DataTemplate DataType="{x:Type vm:StringPluginFormItem}">
             <Grid Margin="0,5" ToolTip="{Binding Description}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="RowHeaderGroup"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding DisplayName}"/>
+                <TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
                 <TextBox Grid.Column="1" Text="{Binding Value}" MaxLength="{Binding MaxLength}"/>
             </Grid>
         </DataTemplate>
@@ -42,10 +42,10 @@
         <DataTemplate DataType="{x:Type vm:CollectionPluginFormItem}">
             <Grid Margin="0,5" ToolTip="{Binding Description}">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition SharedSizeGroup="RowHeaderGroup"/>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="{Binding DisplayName}"/>
+                <TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
                 <ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" />
             </Grid>
         </DataTemplate>
@@ -65,7 +65,7 @@
             </Grid>
             <TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18" FontWeight="DemiBold" Text="{Binding Form.Title}" d:Text="Randomization Options"/>
             <ScrollViewer Margin="20,0">
-                <StackPanel>
+                <StackPanel Grid.IsSharedSizeScope="True">
                     <ItemsControl ItemsSource="{Binding UngroupedItems}"/>
                     <ItemsControl ItemsSource="{Binding Groups}">
                         <ItemsControl.ItemTemplate>
