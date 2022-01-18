@@ -1,6 +1,7 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
@@ -34,7 +35,16 @@ public class CreateModCommand : BaseCommand
         ModInfo modInfo = modService.Create(RomPath, ModName, ModVersion, ModAuthor);
         if (SetAsCurrent)
         {
-            settingsService.CurrentConsoleModSlot = modService.GetAllModInfo().Count - 1;
+            var mods = modService.GetAllModInfo();
+            for (int i = 0; i < mods.Count; i++)
+            {
+                if (mods[i].FolderPath == modInfo.FolderPath)
+                {
+                    settingsService.CurrentConsoleModSlot = i;
+                    break;
+                }
+            }
+            
         }
         console.Output.WriteLine("Mod created successfully");
         console.Render(modInfo);

@@ -25,7 +25,15 @@ public class ImportModCommand : BaseCommand
         var info = modService.Import(Path);
         if (SetAsCurrent)
         {
-            settingsService.CurrentConsoleModSlot = modService.GetAllModInfo().Count - 1;
+            var mods = modService.GetAllModInfo();
+            for (int i = 0; i < mods.Count; i++)
+            {
+                if (mods[i].FolderPath == info.FolderPath)
+                {
+                    settingsService.CurrentConsoleModSlot = i;
+                    break;
+                }
+            }
         }
         console.Output.WriteLine("Mod imported successfully.");
         console.Render(info);
