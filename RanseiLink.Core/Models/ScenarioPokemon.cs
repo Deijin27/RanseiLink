@@ -12,8 +12,16 @@ public class ScenarioPokemon : BaseDataWindow, IScenarioPokemon
 
     public PokemonId Pokemon
     {
-        get => (PokemonId)GetByte(0);
-        set => SetByte(0, (byte)value);
+        get
+        {
+            byte value = GetByte(0);
+            return value == 200 ? PokemonId.Default : (PokemonId)value;
+        }
+        set
+        {
+            byte byteVal = value == PokemonId.Default ? (byte)200 : (byte)value;
+            SetByte(0, byteVal);
+        }
     }
 
     public AbilityId Ability

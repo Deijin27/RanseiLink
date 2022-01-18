@@ -46,9 +46,6 @@ public class ScenarioPokemonViewModel : ViewModelBase
     /// </summary>
     public ICommand JumpToFirstWarriorCommand { get; }
 
-    public PokemonId[] PokemonItems { get; } = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-    public AbilityId[] AbilityItems { get; } = EnumUtil.GetValues<AbilityId>().ToArray();
-
     public PokemonId Pokemon
     {
         get => _model.Pokemon;

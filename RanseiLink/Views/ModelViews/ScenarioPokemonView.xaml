@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:ScenarioPokemonViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -47,11 +48,11 @@
 
         <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Pokemon" Grid.Row="0" ToolTip="Jump to selected pokemon" 
                     Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding Pokemon}"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding PokemonItems, Mode=OneTime}" SelectedItem="{Binding Pokemon, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.PokemonItems}" SelectedItem="{Binding Pokemon, Mode=TwoWay}"/>
 
         <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability" Grid.Row="1" ToolTip="Jump to selected ability" 
                     Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability}"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AbilityItems, Mode=OneTime}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityItems}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
 
         <TextBlock Text="HP IV" Grid.Row="2" />
         <DockPanel Grid.Row="2" Grid.Column="1">
