@@ -42,6 +42,12 @@ public class Pokemon : BaseDataWindow, IPokemon
         set => SetUInt32(3, 4, 14, (uint)value);
     }
 
+    public IdleMotionId IdleMotion
+    {
+        get => (IdleMotionId)GetUInt32(3, 2, 29);
+        set => SetUInt32(3, 2, 29, (uint)value);
+    }
+
     public uint Atk
     {
         get => GetUInt32(4, 9, 0);

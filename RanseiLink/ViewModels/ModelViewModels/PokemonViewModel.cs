@@ -87,6 +87,12 @@ public abstract class PokemonViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.IsLegendary, value, v => _model.IsLegendary = v);
     }
 
+    public IdleMotionId IdleMotion
+    {
+        get => _model.IdleMotion;
+        set => RaiseAndSetIfChanged(_model.IdleMotion, value, v => _model.IdleMotion = v);
+    }
+
     public uint NameOrderIndex
     {
         get => _model.NameOrderIndex;

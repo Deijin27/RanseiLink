@@ -39,4 +39,5 @@ public static class EnumProvider
     public static GimmickId[] GimmickItems { get; } = EnumUtil.GetValues<GimmickId>().ToArray();
     public static Orientation[] OrientationItems { get; } = EnumUtil.GetValues<Orientation>().ToArray();
     public static Terrain[] TerrainItems { get; } = EnumUtil.GetValues<Terrain>().ToArray();
+    public static IdleMotionId[] IdleMotionItems { get; } = EnumUtil.GetValues<IdleMotionId>().ToArray();
 }

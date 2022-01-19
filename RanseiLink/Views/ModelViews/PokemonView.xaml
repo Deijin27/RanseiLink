@@ -11,7 +11,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="490" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:EvolutionConditionIdToQuantityNameConverter x:Key="evolutionConditionIdToQuantityNameConverter"/>
 
@@ -34,6 +34,7 @@
                 <ColumnDefinition MinWidth="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -97,6 +98,9 @@
             <TextBlock Text="Name Order Index" Grid.Row="13" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="511"/>
 
+            <TextBlock Text="Idle Motion" Grid.Row="14" Grid.Column="0"/>
+            <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
+            
         </Grid>
 
         <Grid Margin="10">

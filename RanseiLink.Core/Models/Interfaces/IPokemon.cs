@@ -25,6 +25,7 @@ public interface IPokemon : IDataWrapper, ICloneable<IPokemon>
     uint MovementRange { get; set; }
     PokemonEvolutionRange EvolutionRange { get; set; }
     uint UnknownValue { get; set; }
+    IdleMotionId IdleMotion { get; set; }
 
     bool GetEncounterable(KingdomId kingdom, bool requiresLevel2);
     void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value);
