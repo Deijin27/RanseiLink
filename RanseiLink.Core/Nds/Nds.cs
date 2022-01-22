@@ -4,20 +4,32 @@ using System.Text;
 
 namespace RanseiLink.Core.Nds;
 
+public record RomFsConfig(long NameTableStartOffsetPositon, long AllocationTableStartOffsetPosition);
+
 public class Nds : INds
 {
+    public static RomFsConfig NdsConfig { get; } = new RomFsConfig(0x40, 0x48);
+
     private readonly Stream _underlyingStream;
     private readonly BinaryReader _underlyingStreamReader;
     private readonly BinaryWriter _underlyingStreamWriter;
     private readonly long _nameTableStartOffset;
     private readonly long _fatStartOffset;
-    public Nds(string filePath)
+    public Nds(string filePath) : this(filePath, NdsConfig) { }
+
+    public Nds(string filePath, RomFsConfig config)
     {
         _underlyingStream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
         _underlyingStreamReader = new BinaryReader(_underlyingStream);
         _underlyingStreamWriter = new BinaryWriter(_underlyingStream);
-        _nameTableStartOffset = NdsNameTable.GetStartOffset(_underlyingStreamReader);
-        _fatStartOffset = NdsFileAllocationTable.GetStartOffset(_underlyingStreamReader);
+        _nameTableStartOffset = GetStartOffset(config.NameTableStartOffsetPositon);
+        _fatStartOffset = GetStartOffset(config.AllocationTableStartOffsetPosition);
+    }
+
+    private long GetStartOffset(long position)
+    {
+        _underlyingStream.Position = position;
+        return _underlyingStreamReader.ReadUInt32();
     }
 
     private Fat32.Entry GetEntryFromPath(string path)

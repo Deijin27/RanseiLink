@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "map 0 0"
+      "commandLineArgs": "nds extract folder \"C:\\Users\\Mia\\Desktop\\utility.bin\" -d \"C:\\Users\\Mia\\Desktop\\Out\" -n 0"
     }
   }
 }

@@ -15,12 +15,20 @@ public class NdsTreeCommand : ICommand
     [CommandParameter(0, Description = "Path to the nds file.", Name = "source", Converter = typeof(PathConverter))]
     public string Source { get; set; }
 
+    [CommandOption("startOffset", 'o', Description = "Optionally set the start offset of the name table in the file", IsRequired = false)]
+    public long? StartOffset { get; set; }
+
+    private static long GetStartOffset(BinaryReader stream, long position)
+    {
+        stream.BaseStream.Position = position;
+        return stream.ReadUInt32();
+    }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
         using var stream = new BinaryReader(new FileStream(Source, FileMode.Open, FileAccess.Read));
 
-        long startOffset = NdsNameTable.GetStartOffset(stream);
+        long startOffset = StartOffset ?? GetStartOffset(stream, Nds.NdsConfig.NameTableStartOffsetPositon);
 
         List<NdsNameTable.FileOrFolderName> contents = NdsNameTable.GetRootFolderContents(stream, startOffset);
 

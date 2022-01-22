@@ -124,13 +124,6 @@ public static class NdsNameTable
         }
     }
 
-    public static long GetStartOffset(BinaryReader nds)
-    {
-        nds.BaseStream.Position = 0x40;
-        return nds.ReadUInt32();
-    }
-
-
     public static FolderAllocation GetRootFolderAllocationData(BinaryReader stream, long startOffset)
     {
         return GetAllocationData(stream, startOffset, new FolderIndex(0x0000));
@@ -272,12 +265,6 @@ public static class NdsNameTable
         throw new Exception($"Unexpected point reached in {nameof(GetFolderAllocationFromPath)}");
     }
 
-    public static FolderAllocation GetFolderAllocationFromPath(BinaryReader stream, string directoryPath)
-    {
-        return GetFolderAllocationFromPath(stream, GetStartOffset(stream), directoryPath);
-    }
-
-
     public static uint GetFatEntryIndex(BinaryReader stream, long startOffset, string filePath)
     {
         filePath = NormalizePath(filePath);
@@ -301,10 +288,5 @@ public static class NdsNameTable
         }
 
         throw new FileNotFoundException($"In {nameof(GetFatEntryIndex)} '{fileName}' not found in '{directoryName}'");
-    }
-
-    public static uint GetFatEntryIndex(BinaryReader stream, string filePath)
-    {
-        return GetFatEntryIndex(stream, GetStartOffset(stream), filePath);
     }
 }
