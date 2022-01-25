@@ -5,10 +5,28 @@ public record MapId(uint Map, uint Variant)
 {
     public override string ToString()
     {
-        return $"map{Map.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}.bin";
+        return $"map{Map.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}";
     }
 
-    public static bool TryParse(string fileName, out MapId result)
+    /// <summary>
+    /// To file name used in game, i.e. ends in '.bin'
+    /// </summary>
+    /// <returns></returns>
+    public string ToInternalFileName()
+    {
+        return $"{this}.bin";
+    }
+
+    /// <summary>
+    /// To file name used for exporting, i.e. ends in '.pslm'
+    /// </summary>
+    /// <returns></returns>
+    public string ToExternalFileName()
+    {
+        return $"{this}{PSLM.ExternalFileExtension}";
+    }
+
+    public static bool TryParseInternalFileName(string fileName, out MapId result)
     {
         result = null;
 

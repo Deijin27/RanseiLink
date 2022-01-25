@@ -2,6 +2,7 @@
 using RanseiLink.DragDrop;
 using System.Windows.Input;
 using System;
+using RanseiLink.Core;
 
 namespace RanseiLink.ViewModels;
 
@@ -24,7 +25,7 @@ public class ModExportViewModel : ViewModelBase
 
         DesktopCommand = new RelayCommand(() =>
         {
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            var desktop = FileUtil.DesktopDirectory;
             if (System.IO.Directory.Exists(desktop))
             {
                 Folder = desktop;

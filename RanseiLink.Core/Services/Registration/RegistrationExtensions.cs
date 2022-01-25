@@ -20,6 +20,8 @@ public static class RegistrationExtensions
 
         container.RegisterLazySingleton<ISettingsService>(() => new SettingsService(rootFolder));
 
+        container.RegisterLazySingleton<ISpriteService>(() => new SpriteService());
+
         container.RegisterSingleton<DataServiceFactory>(m => new DataService(m, container));
     }
 }

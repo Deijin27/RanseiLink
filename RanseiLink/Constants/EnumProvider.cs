@@ -38,6 +38,6 @@ public static class EnumProvider
     public static MapRenderMode[] RenderModeItems { get; } = EnumUtil.GetValues<MapRenderMode>().ToArray();
     public static GimmickId[] GimmickItems { get; } = EnumUtil.GetValues<GimmickId>().ToArray();
     public static Orientation[] OrientationItems { get; } = EnumUtil.GetValues<Orientation>().ToArray();
-    public static Terrain[] TerrainItems { get; } = EnumUtil.GetValues<Terrain>().ToArray();
+    public static TerrainId[] TerrainItems { get; } = EnumUtil.GetValues<TerrainId>().ToArray();
     public static IdleMotionId[] IdleMotionItems { get; } = EnumUtil.GetValues<IdleMotionId>().ToArray();
 }

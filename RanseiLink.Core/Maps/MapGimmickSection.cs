@@ -112,12 +112,16 @@ public class MapGimmickSection
             item.WriteTo(bw);
         }
 
+        var endPosition = bw.BaseStream.Position;
+
         // write item offsets
         bw.BaseStream.Position = initOffset;
         foreach (var start in itemStarts)
         {
             bw.Write(start);
         }
+
+        bw.BaseStream.Position = endPosition;
     }
 
 }

@@ -13,10 +13,10 @@ public class MapLoadTests
         {
             var unchangedBytes = File.ReadAllBytes(file);
             string temp = Path.GetTempFileName();
-            Map map;
+            PSLM map;
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
-                map = new Map(br);
+                map = new PSLM(br);
             }
             using (var bw = new BinaryWriter(File.Create(temp)))
             {

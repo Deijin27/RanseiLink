@@ -3,7 +3,7 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMapService : IModelDataService<MapId, Map>
+public interface IMapService : IModelDataService<MapId, PSLM>
 {
 }
 
@@ -15,16 +15,16 @@ public class MapService : IMapService
         _mapIdService = mapNameService;
     }
 
-    public Map Retrieve(MapId id)
+    public PSLM Retrieve(MapId id)
     {
-        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToString());
+        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToExternalFileName());
         using var br = new BinaryReader(File.OpenRead(file));
-        return new Map(br);
+        return new PSLM(br);
     }
 
-    public void Save(MapId id, Map model)
+    public void Save(MapId id, PSLM model)
     {
-        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToString());
+        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToExternalFileName());
         using var bw = new BinaryWriter(File.Create(file));
         model.WriteTo(bw);
     }

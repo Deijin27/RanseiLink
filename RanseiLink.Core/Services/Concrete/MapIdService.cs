@@ -18,7 +18,7 @@ internal class MapIdService : IMapIdService
         List<MapId> result = new();
         foreach (var file in files)
         {
-            if (MapId.TryParse(Path.GetFileName(file), out var map))
+            if (MapId.TryParseInternalFileName(Path.GetFileName(file), out var map))
             {
                 result.Add(map);
             }

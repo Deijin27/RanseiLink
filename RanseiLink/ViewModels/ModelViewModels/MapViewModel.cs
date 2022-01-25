@@ -1,15 +1,17 @@
-﻿using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate MapViewModel MapViewModelFactory(Map model);
+public delegate MapViewModel MapViewModelFactory(PSLM model);
 
 public enum MapRenderMode
 {
@@ -20,17 +22,18 @@ public enum MapRenderMode
 public class MapViewModel : ViewModelBase
 {
     private static bool _terrainPaintingActive;
-    private static Terrain _terrainBrush;
+    private static TerrainId _terrainBrush;
     private static MapRenderMode _mapRenderMode; // static so it's preserved between pages
     private MapGimmickViewModel _selectedGimmick;
     private MapPokemonPositionViewModel _selectedPokemonPosition;
     private MapGridSubCellViewModel _mouseOverItem;
     private MapGridCellViewModel _selectedCell;
     private readonly IDialogService _dialogService;
+    private readonly MapId _id;
 
-    public Map Map { get; set; }
+    public PSLM Map { get; set; }
 
-    public MapViewModel(IServiceContainer container, Map model)
+    public MapViewModel(IServiceContainer container, PSLM model, MapId id)
     {
         _dialogService = container.Resolve<IDialogService>();
         Map = model;
@@ -42,77 +45,15 @@ public class MapViewModel : ViewModelBase
         }
         Draw();
 
-        RemoveSelectedGimmickCommand = new RelayCommand(() =>
-        {
-            Map.GimmickSection.Items.Remove(_selectedGimmick.GimmickItem);
-            Gimmicks.Remove(_selectedGimmick);
-            _selectedGimmick = null;
-        }, 
-        () => _selectedGimmick != null);
-
-        ModifyMapDimensionsCommand = new RelayCommand(() =>
-        {
-            var width = Width;
-            var height = Height;
-            if (_dialogService.ModifyMapDimensions(ref width, ref height))
-            {
-                Width = width;
-                Height = height;
-                var matrix = Map.TerrainSection.MapMatrix;
-                // modify column size
-                while (matrix.Count > height)
-                {
-                    matrix.RemoveAt(matrix.Count - 1);
-                }
-                while (matrix.Count < height)
-                {
-                    List<MapTerrainEntry> entries = new();
-                    for (int i = 0; i < width; i++)
-                    {
-                        entries.Add(new MapTerrainEntry());
-                    }
-                    matrix.Add(entries);
-                }
-                // modify row size
-                foreach (var row in matrix)
-                {
-                    while (row.Count > width)
-                    {
-                        row.RemoveAt(row.Count - 1);
-                    }
-                    while (row.Count < width)
-                    {
-                        row.Add(new MapTerrainEntry());
-                    }
-                }
-                // ensure all gimmicks are in range
-                foreach (var gimmick in Map.GimmickSection.Items)
-                {
-                    if (!GetInRange(gimmick.Position))
-                    {
-                        gimmick.Position = new Position(0, 0);
-                    }
-                }
-                // ensure all maps are in range
-                for (int i = 0; i < Map.PositionSection.Positions.Length; i++)
-                {
-                    if (!GetInRange(Map.PositionSection.Positions[i]))
-                    {
-                        Map.PositionSection.Positions[i] = new Position(0, 0);
-                    }
-                }
-                // reset selected cell in case it's out of range
-                SelectedCell = Matrix[0][0];
-                Draw();
-            }
-        });
+        RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
+        ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
     }
     public ICommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
     public ObservableCollection<MapGimmickViewModel> Gimmicks { get; }
     public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; }
 
-    public Terrain TerrainBrush
+    public TerrainId TerrainBrush
     {
         get => _terrainBrush;
         set => RaiseAndSetIfChanged(ref _terrainBrush, value);
@@ -136,17 +77,9 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    public ushort Width
-    {
-        get => Map.Header.Width;
-        set => RaiseAndSetIfChanged(Map.Header.Width, value, v => Map.Header.Width = v);
-    }
+    public ushort Width => (ushort)Map.TerrainSection.MapMatrix[0].Count;
 
-    public ushort Height
-    {
-        get => Map.Header.Height;
-        set => RaiseAndSetIfChanged(Map.Header.Height, value, v => Map.Header.Height = v);
-    }
+    public ushort Height => (ushort)Map.TerrainSection.MapMatrix.Count;
 
     public ObservableCollection<List<MapGridCellViewModel>> Matrix { get; } = new();
 
@@ -261,4 +194,75 @@ public class MapViewModel : ViewModelBase
         _selectedGimmick = SelectedCell.Gimmicks.FirstOrDefault();
         RaisePropertyChanged(nameof(SelectedGimmick));
     }
+
+    private void RemoveSelectedGimmick()
+    {
+        if (_selectedGimmick != null)
+        {
+            Map.GimmickSection.Items.Remove(_selectedGimmick.GimmickItem);
+            Gimmicks.Remove(_selectedGimmick);
+            _selectedGimmick = null;
+        }
+    }
+
+    private void ModifyMapDimensions()
+    {
+        var width = Width;
+        var height = Height;
+        if (!_dialogService.ModifyMapDimensions(ref width, ref height))
+        {
+            return;
+        }
+        var matrix = Map.TerrainSection.MapMatrix;
+        // modify column size
+        while (matrix.Count > height)
+        {
+            matrix.RemoveAt(matrix.Count - 1);
+        }
+        while (matrix.Count < height)
+        {
+            List<MapTerrainEntry> entries = new();
+            for (int i = 0; i < width; i++)
+            {
+                entries.Add(new MapTerrainEntry());
+            }
+            matrix.Add(entries);
+        }
+        // modify row size
+        foreach (var row in matrix)
+        {
+            while (row.Count > width)
+            {
+                row.RemoveAt(row.Count - 1);
+            }
+            while (row.Count < width)
+            {
+                row.Add(new MapTerrainEntry());
+            }
+        }
+        // ensure all gimmicks are in range
+        foreach (var gimmick in Map.GimmickSection.Items)
+        {
+            if (!GetInRange(gimmick.Position))
+            {
+                gimmick.Position = new Position(0, 0);
+            }
+        }
+        // ensure all maps are in range
+        for (int i = 0; i < Map.PositionSection.Positions.Length; i++)
+        {
+            if (!GetInRange(Map.PositionSection.Positions[i]))
+            {
+                Map.PositionSection.Positions[i] = new Position(0, 0);
+            }
+        }
+        // reset selected cell in case it's out of range
+        SelectedCell = Matrix[0][0];
+        Draw();
+        RaisePropertyChanged(nameof(Width));
+        RaisePropertyChanged(nameof(Height));
+        
+    }
+
+    
 }

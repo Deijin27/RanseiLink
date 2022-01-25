@@ -24,6 +24,24 @@ internal class DialogService : IDialogService
         return dialog.Result;
     }
 
+    public bool RequestFile(string title, string defaultExt, string filter, out string result)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = title,
+            DefaultExt = defaultExt,
+            Filter = filter,
+            CheckFileExists = true,
+            CheckPathExists = true,
+        };
+
+        // Show save file dialog box
+        bool? proceed = dialog.ShowDialog();
+        result = dialog.FileName;
+        // Process save file dialog box results
+        return proceed == true;
+    }
+
     public bool RequestRomFile(out string result)
     {
         var dialog = new Microsoft.Win32.OpenFileDialog

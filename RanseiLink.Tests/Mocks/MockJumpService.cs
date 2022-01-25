@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Services;
 using System;
 
@@ -42,6 +43,11 @@ internal class MockJumpService : IJumpService
     }
 
     public void JumpToItem(ItemId id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void JumpToMap(MapId id)
     {
         throw new NotImplementedException();
     }

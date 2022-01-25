@@ -4,45 +4,13 @@ using System.Text;
 
 namespace RanseiLink.Core.Maps;
 
-public enum Terrain : byte
-{
-    Normal,
-    Magma,
-    Water,
-    Electric,
-    Grass,
-    Ice,
-    Fighting,
-    Poison,
-    Ground,
-    Flying,
-    Psychic,
-    Bug,
-    Rock,
-    Ghost,
-    Dragon,
-    Dark,
-    Steel,
-    Sand,
-    Soil,
-    Snow,
-    Swamp,
-    Bog,
-    Scaffolding,
-    Hidden,
-    HiddenPoison,
-    Unused_1,
-    Void,
-    Default,
-}
-
 public class MapTerrainEntry
 {
     /// <summary>
     /// The elevation of each sub-cell in the grid. There is 9 sub cells
     /// </summary>
     public int[] SubCellZValues { get; }
-    public Terrain Terrain { get; set; }
+    public TerrainId Terrain { get; set; }
     public byte Unknown3 { get; set; }
     
     public byte Unknown4 { get; set; }
@@ -51,7 +19,7 @@ public class MapTerrainEntry
     public MapTerrainEntry()
     {
         SubCellZValues = new int[9];
-        Terrain = Terrain.Default;
+        Terrain = TerrainId.Default;
         Unknown4 = 0xFF;
     }
 
@@ -62,7 +30,7 @@ public class MapTerrainEntry
         {
             SubCellZValues[i] = br.ReadInt32() / 0x800; // they're all divisible by this, may as well scale down
         }
-        Terrain = (Terrain)br.ReadByte();
+        Terrain = (TerrainId)br.ReadByte();
         Unknown3 = br.ReadByte();
         Unknown4 = br.ReadByte();
         Unknown5 = br.ReadByte();
@@ -85,7 +53,7 @@ public class MapTerrainEntry
         var sb = new StringBuilder();
         foreach (int b in SubCellZValues)
         {
-            sb.Append(b.ToString("X").PadLeft(9, ' '));
+            sb.Append($"{b,9:X}");
         }
         sb.Append($"{Terrain,13}");
         sb.Append($"{Unknown3,4}");

@@ -45,7 +45,7 @@ public class MapGridCellViewModel : ViewModelBase
     public uint X { get; }
     public uint Y { get; }
 
-    public Terrain Terrain
+    public TerrainId Terrain
     {
         get => TerrainEntry.Terrain;
         set => RaiseAndSetIfChanged(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);

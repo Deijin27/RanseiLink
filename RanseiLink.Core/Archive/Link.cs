@@ -1,15 +1,22 @@
 ﻿using System;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace RanseiLink.Core.Archive;
 
 /// <summary>
-/// Archive format used in Pokemon Conquest used to group related graphic resources. Extension is ".G2GR"
+/// Archive format used in Pokemon Conquest used to group related graphic resources. 
+/// No consistent file extension. ".G2GR" or ".ALL"
 /// </summary>
 public static class Link
 {
-    public static void Unpack(string filePath, string destinationFolder = null)
+    /// <summary>
+    /// Unpack a link archive
+    /// </summary>
+    /// <param name="filePath">Link file to unpack</param>
+    /// <param name="destinationFolder">Files are placed in this folder</param>
+    /// <param name="detectExt">If true, tries to read magic number and sets it as the file extension of the exported file</param>
+    /// <param name="zeroPadLength">Length to padleft with zeros to. 4 -> 0001, 0234</param>
+    public static void Unpack(string filePath, string destinationFolder = null, bool detectExt = true, int zeroPadLength = 4)
     {
         using (var br = new BinaryReader(File.OpenRead(filePath)))
         {
@@ -48,28 +55,22 @@ public static class Link
 
                 // Detect file type if possible
                 string ext = "";
-                if (fileLength >= 4)
+                if (detectExt && fileLength >= 4)
                 {
                     br.BaseStream.Position = fileOffset;
                     var mag = br.ReadMagicNumber();
-                    if (IsExistentAndAlphaNumeric(mag))
+                    if (FileUtil.IsExistentAndAlphaNumeric(mag))
                     {
                         ext += "." + mag;
                     }
                 }
-
-                string fileDest = Path.Combine(destinationFolder, fileIndex.ToString().PadLeft(4, '0') + ext);
+                
+                string fileDest = Path.Combine(destinationFolder, fileIndex.ToString().PadLeft(zeroPadLength, '0') + ext);
 
                 br.BaseStream.Position = fileOffset;
                 byte[] fileBytes = br.ReadBytes(fileLength);
                 File.WriteAllBytes(fileDest, fileBytes);
             }
         }
-    }
-
-    static readonly Regex ExistentAlphanumericRegex = new Regex(@"^[a-zA-Z0-9]+$");
-    static bool IsExistentAndAlphaNumeric(string strToCheck)
-    {
-        return ExistentAlphanumericRegex.IsMatch(strToCheck);
     }
 }

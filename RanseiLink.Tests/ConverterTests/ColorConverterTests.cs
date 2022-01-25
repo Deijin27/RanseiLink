@@ -1,4 +1,4 @@
-﻿using RanseiLink.Core.Types;
+﻿using RanseiLink.Core.Graphics;
 using RanseiLink.ValueConverters;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -18,11 +18,11 @@ public class ColorConverterTests
     [Fact]
     public void IdenticalThroughConversionCycle()
     {
-        for (uint i = 0; i < 31; i++)
+        for (int i = 0; i < 31; i++)
         {
-            Rgb555 initial = new(i, 0, 0);
+            Rgb15 initial = new(i, 0, 0);
             Color midpoint = (Color)_converter.Convert(initial, typeof(Color), null, null);
-            Rgb555 final = (Rgb555)_converter.ConvertBack(midpoint, typeof(Rgb555), null, null);
+            Rgb15 final = (Rgb15)_converter.ConvertBack(midpoint, typeof(Rgb15), null, null);
             Assert.Equal(initial, final);
         }
     }

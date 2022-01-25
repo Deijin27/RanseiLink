@@ -14,7 +14,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
 
     protected abstract TViewModel NewViewModel(TModel model);
 
-    private TModel _currentModel;
+    protected TModel _currentModel;
 
     public SelectorViewModelBase(IServiceContainer container, IModelDataService<TId, TModel> dataService)
         : this(container, dataService, EnumUtil.GetValues<TId>().ToArray()) { }
@@ -30,6 +30,8 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
             CopyPasteVisible = true;
             CopyCommand = new RelayCommand(Copy);
             PasteCommand = new RelayCommand(Paste);
+            ImportFileCommand = new RelayCommand(ImportFile);
+            ExportFileCommand = new RelayCommand(ExportFile);
         }
     }
 
@@ -141,5 +143,18 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
                 ));
             }
         }
+    }
+
+    public bool SupportsImportExportFile { get; protected set; }
+    public ICommand ImportFileCommand { get; }
+    public ICommand ExportFileCommand { get; }
+    protected virtual void ExportFile()
+    {
+
+    }
+
+    protected virtual void ImportFile()
+    {
+
     }
 }

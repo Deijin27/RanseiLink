@@ -48,16 +48,22 @@ public class MapCommand : BaseCommand
             return default;
         }
 
-        string file = Path.Combine(dataService.MapName.MapFolderPath, mapName.ToString());
+        string file = Path.Combine(dataService.MapName.MapFolderPath, mapName.ToInternalFileName());
 
-        using var br = new BinaryReader(File.OpenRead(file));
-        var map = new Map(br);
+        PSLM.Header header;
+        PSLM map;
+        using (var br = new BinaryReader(File.OpenRead(file)))
+        {
+            header = new PSLM.Header(br);
+            br.BaseStream.Position = 0;
+            map = new PSLM(br);
+        }
 
         var all = !(Header || Pokemon || Gimmick || Terrain);
 
         if (all || Header)
         {
-            console.Output.WriteLine(map.Header);
+            console.Output.WriteLine(header);
         }
 
         if (all || Pokemon)
