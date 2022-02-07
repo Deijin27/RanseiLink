@@ -80,4 +80,9 @@ public class MockDialogService : IDialogService
     {
         throw new NotImplementedException();
     }
+
+    public bool RequestFile(string title, string defaultExt, string filter, out string result)
+    {
+        throw new NotImplementedException();
+    }
 }
