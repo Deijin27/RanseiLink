@@ -17,7 +17,7 @@ public class LinkUnpackCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        Link.Unpack(FilePath, DestinationFolder);
+        LINK.Unpack(FilePath, DestinationFolder);
 
         return default;
     }

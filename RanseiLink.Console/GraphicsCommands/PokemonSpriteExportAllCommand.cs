@@ -5,7 +5,7 @@ using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace RanseiLink.Console.Commands;
+namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("pokemon sprite export all", Description = "Export all pokemon sprites from the given rom")]
 public class PokemonSpriteExportAllCommand : BaseCommand

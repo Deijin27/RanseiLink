@@ -3,10 +3,15 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Nds;
 using SixLabors.ImageSharp.PixelFormats;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete;
+
+
 
 internal class SpriteService : ISpriteService
 {
@@ -27,10 +32,10 @@ internal class SpriteService : ISpriteService
         string dtxUnpacked = Path.Combine(modelPokemonDir, "POKEMON_DTX");
         string pacUnpacked = Path.Combine(modelPokemonDir, "POKEMON_PAC");
 
-        Link.Unpack(texLink, texUnpacked, false, 4);
-        Link.Unpack(atxLink, atxUnpacked, false, 4);
-        Link.Unpack(dtxLink, dtxUnpacked, false, 4);
-        Link.Unpack(pacLink, pacUnpacked, false, 4);
+        LINK.Unpack(texLink, texUnpacked, false, 4);
+        LINK.Unpack(atxLink, atxUnpacked, false, 4);
+        LINK.Unpack(dtxLink, dtxUnpacked, false, 4);
+        LINK.Unpack(pacLink, pacUnpacked, false, 4);
 
         int fileCount = Directory.GetFiles(texUnpacked).Length;
 
@@ -47,36 +52,102 @@ internal class SpriteService : ISpriteService
                 btx0 = new BTX0(br);
             }
 
-            Rgba32[] palette = PLTT.To32bitColors(btx0.Texture.Palette1);
+            Rgba32[] palette = RawPalette.To32bitColors(btx0.Texture.Palette1);
             if (options.HasFlag(SpriteExportOptions.IncludePaintNetPalette))
             {
-                using var streamWriter = new StreamWriter(Path.Combine(singlePokemonDir, "PaintNet-Palette.txt"));
-                streamWriter.WriteLine("; this palette is not necessary for importing a pokemon sprite back into ranseilink");
-                foreach (var col in palette)
-                {
-                    streamWriter.WriteLine($"{col.A.ToString("X").PadLeft(2, '0')}{col.R.ToString("X").PadLeft(2, '0')}{col.G.ToString("X").PadLeft(2, '0')}{col.B.ToString("X").PadLeft(2, '0')}");
-                }
+                RawPalette.SaveAsPaintNetPalette(palette, Path.Combine(singlePokemonDir, "PaintNet-Palette.txt"));
             }
 
             string texOutFile = Path.Combine(singlePokemonDir, "TEX.png");
             ImageUtil.SaveAsPng(texOutFile, btx0.Texture.PixelMap, palette, _pokemonSpriteWidth);
 
             string atxOutFile = Path.Combine(singlePokemonDir, "ATX.png");
-            byte[] atxPixelmap = CHAR.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
+            byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
             ImageUtil.SaveAsPng(atxOutFile, atxPixelmap, palette, _pokemonSpriteWidth);
 
             string dtxOutFile = Path.Combine(singlePokemonDir, "DTX.png");
-            byte[] dtxPixelmap = CHAR.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
+            byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
             ImageUtil.SaveAsPng(dtxOutFile, dtxPixelmap, palette, _pokemonSpriteWidth);
 
             string pacOutFile = Path.Combine(singlePokemonDir, "PAC.png");
             string pacFile = Path.Combine(pacUnpacked, fileName);
             string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
-            byte[] pacPixelmap = CHAR.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
+            byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
             ImageUtil.SaveAsPng(pacOutFile, pacPixelmap, palette, _pokemonSpriteWidth);
         });
 
         Directory.Delete(tempDirectory, true);
+    }
+
+    private class StlContext
+    {
+        public string Temp { get; init; }
+        public NCER Ncer { get; init; }
+        public string StlDataFile { get; init; }
+        public string StlInfoFile { get; init; }
+    }
+
+    private static StlContext BuildStlContext(INds rom, StlFile extractable)
+    {
+        string pathInRom = Path.Combine(Constants.GraphicsFolderPath, extractable.ToString());
+        string temp = FileUtil.GetTemporaryDirectory();
+        rom.ExtractCopyOfDirectory(pathInRom, temp);
+
+        // get the stl
+        string extractedDir = Path.Combine(temp, extractable.ToString());
+        string stlDataFile = Directory.EnumerateFiles(extractedDir, "*.dat").FirstOrDefault(i => i.StartsWith("Stl") && i.EndsWith("Tex.dat"));
+        if (stlDataFile == null)
+        {
+            throw new Exception("Tex.dat file not found");
+        }
+        string stlInfoFile = Directory.EnumerateFiles(extractedDir, "*.dat").FirstOrDefault(i => i.StartsWith("Stl") && i.EndsWith("TexInfo.dat"));
+        if (stlDataFile == null)
+        {
+            throw new Exception("Tex.dat file not found");
+        }
+
+        // get the ncer
+        string link = Path.Combine(extractedDir, $"{extractable}.G2GR");
+        string linkUnpacked = Path.Combine(extractedDir, extractable.ToString());
+        LINK.Unpack(link, linkUnpacked, detectExt: false, zeroPadLength: 1);
+        string ncerFile = Path.Combine(linkUnpacked, "2");
+        var ncer = NCER.Load(ncerFile);
+
+        return new StlContext
+        {
+            Temp = temp,
+            Ncer = ncer,
+            StlDataFile = stlDataFile,
+            StlInfoFile = stlInfoFile,
+        };
+    }
+
+    public void ExtractStl(INds rom, StlFile extractable, string extractDir)
+    {
+        var context = BuildStlContext(rom, extractable);
+        throw new NotImplementedException();
+        string exportDir = FileUtil.MakeUniquePath(Path.Combine(extractDir, extractable.ToString()));
+        STLCollection
+            .Load(context.StlDataFile, null)
+            .SaveAsPngs(exportDir, context.Ncer);
+
+        Directory.Delete(context.Temp, true);
+    }
+
+    public void ImportStl(INds rom, StlFile extractable, string dirToImport)
+    {
+        var context = BuildStlContext(rom, extractable);
+
+        STLCollection
+            .LoadPngs(dirToImport, context.Ncer)
+            .Save(context.StlDataFile, context.StlInfoFile);
+
+        Directory.Delete(context.Temp, true);
+    }
+
+    public void ExtractStl(string stlDataFile, NCER ncer, string outputFolder)
+    {
+        throw new NotImplementedException();
     }
 }

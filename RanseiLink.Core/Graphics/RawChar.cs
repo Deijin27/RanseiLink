@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Graphics;
 
-public static class CHAR
+public static class RawChar
 {
     public static byte[] Decompress(byte[] data)
     {

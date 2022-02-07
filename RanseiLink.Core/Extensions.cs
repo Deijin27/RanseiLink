@@ -16,6 +16,19 @@ public static class Extensions
         bw.Write(Encoding.UTF8.GetBytes(magicNumber));
     }
 
+    /// <summary>
+    /// Write zero padding
+    /// </summary>
+    internal static void Pad(this BinaryWriter bw, int count)
+    {
+        bw.Write(new byte[count]);
+    }
+
+    internal static void Skip(this BinaryReader br, int count)
+    {
+        br.BaseStream.Seek(count, SeekOrigin.Current);
+    }
+
     public static ushort[] ToUInt16Array(this byte[] arr)
     {
         ushort[] shorts = new ushort[arr.Length / 2];
@@ -28,5 +41,12 @@ public static class Extensions
         byte[] bytes = new byte[arr.Length * 2];
         Buffer.BlockCopy(arr, 0, bytes, 0, arr.Length * 2);
         return bytes;
+    }
+
+    public static string Reverse(this string str)
+    {
+        var chars = str.ToCharArray();
+        Array.Reverse(chars);
+        return new string(chars);
     }
 }

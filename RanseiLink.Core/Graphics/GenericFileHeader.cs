@@ -5,7 +5,7 @@ namespace RanseiLink.Core.Graphics;
 public struct GenericFileHeader
 {
     public string MagicNumber;
-    public ushort ByteOrderMarker = 0xFEFF;
+    public ushort ByteOrderMarker;
     public ushort Version;
     public uint FileLength;
     public ushort HeaderLength = 0x10;

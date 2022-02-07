@@ -3,11 +3,15 @@
 namespace RanseiLink.Core.Graphics;
 
 /// <summary>
-/// Texture data. The one chunk of <see cref="BTX0"/>. This is a very lazy implementation because it's all that's necessary for this game.
-/// It will not work for other games.
+/// Texture data. The one chunk of <see cref="BTX0"/>. This is just a bodge that only works for pokemon sprites atm
 /// </summary>
 public class TEX0
 {
+    public struct Header
+    {
+
+    }
+
     private static readonly byte[] _constantData = new byte[]
     { 
         0x54, 0x45, 0x58, 0x30, 0x6C, 0x33, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2C, 
@@ -54,9 +58,9 @@ public class TEX0
     public TEX0(BinaryReader br)
     {
         br.BaseStream.Seek(_constantData.Length, SeekOrigin.Current);
-        PixelMap = CHAR.Decompress(br.ReadBytes(0x3000));
-        Palette1 = PLTT.Decompress(br.ReadBytes(0x20));
-        Palette2 = PLTT.Decompress(br.ReadBytes(0x20));
+        PixelMap = RawChar.Decompress(br.ReadBytes(0x3000));
+        Palette1 = RawPalette.Decompress(br.ReadBytes(0x20));
+        Palette2 = RawPalette.Decompress(br.ReadBytes(0x20));
     }
 
     public byte[] PixelMap { get; set; }
@@ -67,8 +71,8 @@ public class TEX0
     public void WriteTo(BinaryWriter bw)
     {
         bw.Write(_constantData);
-        bw.Write(CHAR.Compress(PixelMap));
-        bw.Write(PLTT.Compress(Palette1));
-        bw.Write(PLTT.Compress(Palette2));
+        bw.Write(RawChar.Compress(PixelMap));
+        bw.Write(RawPalette.Compress(Palette1));
+        bw.Write(RawPalette.Compress(Palette2));
     }
 }

@@ -9,6 +9,7 @@ namespace RanseiLink.Core.Graphics;
 public class BTX0
 {
     public const string MagicNumber = "BTX0";
+    public static readonly string[] FileExtensions = new[] { ".btx0", ".btx" };
 
     public TEX0 Texture { get; set; }
 
