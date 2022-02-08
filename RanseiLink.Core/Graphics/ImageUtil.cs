@@ -47,6 +47,8 @@ public static class ImageUtil
     {
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
+        int minX = bank.Min(i => i.XOffset);
+        int xShift = minX < 0 ? -minX : 0;
 
         PointGetter pointGetter = tiled ? PointUtil.GetPointTiled8 : PointUtil.GetPoint;
 
@@ -82,7 +84,7 @@ public static class ImageUtil
             {
                 g.DrawImage(
                     image: cellImg,
-                    location: new Point(cell.XOffset, cell.YOffset + yShift),
+                    location: new Point(cell.XOffset + xShift, cell.YOffset + yShift),
                     opacity: 1);
             });
         }
@@ -94,8 +96,8 @@ public static class ImageUtil
                 for (int i = 0; i < bank.Length; i++)
                 {
                     var cell = bank[i];
-                    g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2, cell.YOffset + 2 + yShift));
-                    g.Draw(new Pen(Color.Red, 1), new RectangleF(cell.XOffset, cell.YOffset + yShift, cell.Width, cell.Height));
+                    g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + xShift, cell.YOffset + 2 + yShift));
+                    g.Draw(new Pen(Color.Red, 1), new RectangleF(cell.XOffset + xShift, cell.YOffset + yShift, cell.Width, cell.Height));
                 }
             });
         }
@@ -133,6 +135,8 @@ public static class ImageUtil
 
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
+        int minX = bank.Min(i => i.XOffset);
+        int xShift = minX < 0 ? -minX : 0;
 
         foreach (Cell cell in bank)
         {
@@ -149,7 +153,7 @@ public static class ImageUtil
 
             using var cellImg = image.Clone(g =>
             {
-                g.Crop(new Rectangle(cell.XOffset, cell.YOffset + yShift, cell.Width, cell.Height));
+                g.Crop(new Rectangle(cell.XOffset + xShift, cell.YOffset + yShift, cell.Width, cell.Height));
 
                 if (cell.FlipX)
                     g.Flip(FlipMode.Horizontal);
