@@ -11,14 +11,9 @@ namespace RanseiLink.Core.Graphics;
 
 public static class ImageUtil
 {
-    public static void SaveAsPngTiled(string file, byte[] pixelMap, Rgba32[] palette, int width, int tileSize)
+    public static void SaveAsPng(string file, byte[] pixelArray, Rgba32[] palette, int width, bool tiled = false)
     {
-        SaveAsPng(file, pixelMap, palette, width, (a, b) => PointUtil.GetPointTiled(a, b, tileSize));
-    }
-
-    public static void SaveAsPng(string file, byte[] pixelMap, Rgba32[] palette, int width)
-    {
-        SaveAsPng(file, pixelMap, palette, width, PointUtil.GetPoint);
+        SaveAsPng(file, pixelArray, palette, width, tiled ? PointUtil.GetPointTiled8 : PointUtil.GetPoint);
     }
 
     private static void SaveAsPng(string file, byte[] pixelArray, Rgba32[] palette, int width, PointGetter pointGetter)
@@ -42,7 +37,7 @@ public static class ImageUtil
         return img;
     }
 
-    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, byte[] pixelArray, Rgb15[] pal, int width, int height, bool tiled = false
+    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, byte[] pixelArray, Rgb15[] palette, int width, int height, bool tiled = false
                                        , bool debug = false)
     {
         int minY = bank.Min(i => i.YOffset);
@@ -52,8 +47,8 @@ public static class ImageUtil
 
         PointGetter pointGetter = tiled ? PointUtil.GetPointTiled8 : PointUtil.GetPoint;
 
-        Rgba32[] palette = RawPalette.To32bitColors(pal);
-        palette[0] = Color.Transparent;
+        Rgba32[] palette32 = RawPalette.To32bitColors(palette);
+        palette32[0] = Color.Transparent;
 
         using var graphic = new Image<Rgba32>(width, height);
 
@@ -70,7 +65,7 @@ public static class ImageUtil
             var endByte = startByte + cell.Width * cell.Height;
             byte[] cellPixels = pixelArray[startByte..endByte];
 
-            using var cellImg = ToImage(cellPixels, palette, cell.Width, pointGetter);
+            using var cellImg = ToImage(cellPixels, palette32, cell.Width, pointGetter);
 
             cellImg.Mutate(g =>
             {
@@ -105,7 +100,7 @@ public static class ImageUtil
         graphic.SaveAsPng(file);
     }
 
-    public static void LoadPng(string file, Cell[] bank, uint blockSize, out byte[] pixelArray, out Rgb15[] pal, out int width, out int height, bool tiled = false)
+    public static void LoadPng(string file, Cell[] bank, uint blockSize, out byte[] pixelArray, out Rgb15[] palette, out int width, out int height, bool tiled = false)
     {
         IndexGetter indexGetter = tiled ? PointUtil.GetIndexTiled8 : PointUtil.GetIndex;
 
@@ -126,7 +121,7 @@ public static class ImageUtil
         width = image.Width;
         height = image.Height;
 
-        var palette = new List<Rgba32>
+        var palette32 = new List<Rgba32>
         {
             Color.Transparent
         };
@@ -173,11 +168,11 @@ public static class ImageUtil
                     }
                     else
                     {
-                        pltIndex = palette.IndexOf(pixColor);
+                        pltIndex = palette32.IndexOf(pixColor);
                         if (pltIndex == -1)
                         {
-                            pltIndex = palette.Count;
-                            palette.Add(pixColor);
+                            pltIndex = palette32.Count;
+                            palette32.Add(pixColor);
                         }
                         if (pltIndex > byte.MaxValue)
                         {
@@ -191,8 +186,8 @@ public static class ImageUtil
         }
 
         pixelArray = pixels.ToArray();
-        pal = RawPalette.From32bitColors(palette);
-        pal[0] = Rgb15.From(0x3E0);
+        palette = RawPalette.From32bitColors(palette32);
+        palette[0] = Rgb15.From(0x3E0);
 
         image.Dispose();
     }

@@ -216,7 +216,7 @@ public class STL
             bank: ncer.CellBanks.Banks[0],
             blockSize: ncer.CellBanks.BlockSize,
             pixelArray: Pixels,
-            pal: Palette,
+            palette: Palette,
             width: Width,
             height: Height,
             debug: debug,
@@ -231,7 +231,7 @@ public class STL
             bank: ncer.CellBanks.Banks[0],
             blockSize: ncer.CellBanks.BlockSize,
             pixelArray: out byte[] pixels,
-            pal: out Rgb15[] palette,
+            palette: out Rgb15[] palette,
             out int width,
             out int height,
             tiled: tiled
