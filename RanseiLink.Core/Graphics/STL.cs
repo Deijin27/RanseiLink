@@ -215,10 +215,7 @@ public class STL
             file: saveFile,
             bank: ncer.CellBanks.Banks[0],
             blockSize: ncer.CellBanks.BlockSize,
-            pixelArray: Pixels,
-            palette: Palette,
-            width: Width,
-            height: Height,
+            new ImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
             debug: debug,
             tiled: tiled
             );
@@ -226,23 +223,19 @@ public class STL
 
     public static STL LoadPng(NCER ncer, string pngFile, bool tiled = false)
     {
-        ImageUtil.LoadPng(
+        var imageInfo = ImageUtil.LoadPng(
             file: pngFile,
             bank: ncer.CellBanks.Banks[0],
             blockSize: ncer.CellBanks.BlockSize,
-            pixelArray: out byte[] pixels,
-            palette: out Rgb15[] palette,
-            out int width,
-            out int height,
             tiled: tiled
             );
 
         return new STL()
         {
-            Width = width,
-            Height = height,
-            Pixels = pixels,
-            Palette = palette,
+            Width = imageInfo.Width,
+            Height = imageInfo.Height,
+            Pixels = imageInfo.Pixels,
+            Palette = RawPalette.From32bitColors(imageInfo.Palette),
         };
     }
 }

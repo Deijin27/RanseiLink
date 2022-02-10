@@ -16,6 +16,7 @@ namespace RanseiLink.Core.Services.Concrete;
 internal class SpriteService : ISpriteService
 {
     private const int _pokemonSpriteWidth = 32;
+    private const int _pokemonSpriteHeight = 32;
     public void ExportAllPokemonSprites(INds rom, string desinationFolder, SpriteExportOptions options = 0)
     {
         string tempDirectory = FileUtil.GetTemporaryDirectory();
@@ -59,22 +60,22 @@ internal class SpriteService : ISpriteService
             }
 
             string texOutFile = Path.Combine(singlePokemonDir, "TEX.png");
-            ImageUtil.SaveAsPng(texOutFile, btx0.Texture.PixelMap, palette, _pokemonSpriteWidth);
+            ImageUtil.SaveAsPng(texOutFile, new ImageInfo(btx0.Texture.PixelMap, palette, _pokemonSpriteWidth, _pokemonSpriteHeight));
 
             string atxOutFile = Path.Combine(singlePokemonDir, "ATX.png");
             byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
-            ImageUtil.SaveAsPng(atxOutFile, atxPixelmap, palette, _pokemonSpriteWidth);
+            ImageUtil.SaveAsPng(atxOutFile, new ImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, _pokemonSpriteHeight));
 
             string dtxOutFile = Path.Combine(singlePokemonDir, "DTX.png");
             byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
-            ImageUtil.SaveAsPng(dtxOutFile, dtxPixelmap, palette, _pokemonSpriteWidth);
+            ImageUtil.SaveAsPng(dtxOutFile, new ImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, _pokemonSpriteHeight));
 
             string pacOutFile = Path.Combine(singlePokemonDir, "PAC.png");
             string pacFile = Path.Combine(pacUnpacked, fileName);
             string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
             byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
-            ImageUtil.SaveAsPng(pacOutFile, pacPixelmap, palette, _pokemonSpriteWidth);
+            ImageUtil.SaveAsPng(pacOutFile, new ImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, _pokemonSpriteHeight));
         });
 
         Directory.Delete(tempDirectory, true);

@@ -7,17 +7,14 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("stl pack", Description = "Pack pngs into an stl file, creating both the data and the info file")]
-public class StlPackCommand : BaseCommand
+[Command("scbg pack", Description = "Pack pngs into an scbg file, creating both the data and the info file")]
+public class ScbgPackCommand : BaseCommand
 {
-    public StlPackCommand(IServiceContainer container) : base(container) { }
-    public StlPackCommand() : base() { }
+    public ScbgPackCommand(IServiceContainer container) : base(container) { }
+    public ScbgPackCommand() : base() { }
 
     [CommandParameter(0, Description = "Path of directory containing png files.", Name = "dirPath")]
     public string DirPath { get; set; }
-
-    [CommandParameter(1, Description = "Path of ncer.", Name = "ncerPath")]
-    public string NcerPath { get; set; }
 
     [CommandOption("destinationDataFile", 'd', Description = "Optional destination data file to pack to; default is a file in the same location as the folder.")]
     public string DestinationDataFile { get; set; }
@@ -39,11 +36,9 @@ public class StlPackCommand : BaseCommand
             DestinationInfoFile= Path.Combine(Path.GetDirectoryName(DirPath), Path.GetFileNameWithoutExtension(DirPath) + " - PackedInfo.dat");
         }
 
-        NCER ncer = NCER.Load(NcerPath);
-
-        STLCollection
-            .LoadPngs(DirPath, ncer, tiled:Tiled)
-            .Save(stlDataFile:DestinationDataFile, stlInfoFile:DestinationInfoFile);
+        SCBGCollection
+            .LoadPngs(DirPath, tiled:Tiled)
+            .Save(scbgDataFile:DestinationDataFile, scbgInfoFile:DestinationInfoFile);
         
         console.Output.WriteLine("Complete!");
 
