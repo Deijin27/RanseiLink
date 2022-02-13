@@ -12,6 +12,7 @@ public class ModSelectionViewModel : ViewModelBase
     private readonly IModService _modService;
     private readonly IDialogService _dialogService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
 
     public ModSelectionViewModel(IServiceContainer container)
     {
@@ -19,6 +20,7 @@ public class ModSelectionViewModel : ViewModelBase
         _modService = container.Resolve<IModService>();
         _dialogService = container.Resolve<IDialogService>();
         _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
+        _fallbackSpriteProvider = _container.Resolve<IFallbackSpriteProvider>();
 
         RefreshModItems();
         RefreshOutdatedModsExist();
@@ -26,6 +28,7 @@ public class ModSelectionViewModel : ViewModelBase
         CreateModCommand = new RelayCommand(CreateMod);
         ImportModCommand = new RelayCommand(ImportMod);
         UpgradeOutdatedModsCommand = new RelayCommand(UpgradeOutdatedMods);
+        PopulateGraphicsDefaultsCommand = new RelayCommand(PopulateGraphicsDefaults);
 
         ModItemClicked = new RelayCommand<ModInfo>(mi =>
         {
@@ -63,49 +66,60 @@ public class ModSelectionViewModel : ViewModelBase
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
     public ICommand UpgradeOutdatedModsCommand { get; }
+    public ICommand PopulateGraphicsDefaultsCommand { get; }
 
     private void CreateMod()
     {
         if (_dialogService.CreateMod(out ModInfo modInfo, out string romPath))
         {
-            ModInfo newMod;
-            try
+            _dialogService.ProgressDialog(progress =>
             {
-                newMod = _modService.Create(romPath, modInfo.Name, modInfo.Version, modInfo.Author);
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Creating Mod",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
-                return;
-            }
+                progress.Report(new ProgressInfo("Creating mod..."));
+                ModInfo newMod;
+                try
+                {
+                    newMod = _modService.Create(romPath, modInfo.Name, modInfo.Version, modInfo.Author);
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                        title: "Error Creating Mod",
+                        message: e.Message,
+                        type: MessageBoxType.Error
+                    ));
+                    return;
+                }
 
-            RefreshModItems();
+                RefreshModItems();
+                progress.Report(new ProgressInfo("Mod created successfully!"));
+            });
         }
     }
     private void ImportMod()
     {
         if (_dialogService.ImportMod(out string file))
         {
-            try
+            _dialogService.ProgressDialog(progress =>
             {
-                _modService.Import(file);
+                progress.Report(new ProgressInfo("Importing mod..."));
+                try
+                {
+                    _modService.Import(file);
 
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    title: "Error Importing Mod",
-                    message: e.Message,
-                    type: MessageBoxType.Error
-                ));
-                return;
-            }
-            RefreshModItems();
-            RefreshOutdatedModsExist();
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                        title: "Error Importing Mod",
+                        message: e.Message,
+                        type: MessageBoxType.Error
+                    ));
+                    return;
+                }
+                RefreshModItems();
+                RefreshOutdatedModsExist();
+                progress.Report(new ProgressInfo("Done!", 100));
+            });
         }
     }
 
@@ -113,21 +127,49 @@ public class ModSelectionViewModel : ViewModelBase
     {
         if (_dialogService.UpgradeMods(out string romPath))
         {
-            try
+            _dialogService.ProgressDialog(progress =>
             {
-                _modService.UpgradeModsToLatestVersion(_modService.GetModInfoPreviousVersions(), romPath);
-            }
-            catch (Exception e)
-            {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                        title: "Error Upgrading Mods",
-                        message: e.Message,
-                        type: MessageBoxType.Error
-                    ));
-                return;
-            }
+                progress.Report(new ProgressInfo("Upgrading mods..."));
+                try
+                {
+                    _modService.UpgradeModsToLatestVersion(_modService.GetModInfoPreviousVersions(), romPath);
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                            title: "Error Upgrading Mods",
+                            message: e.Message,
+                            type: MessageBoxType.Error
+                        ));
+                    return;
+                }
+                RefreshModItems();
+                RefreshOutdatedModsExist();
+                progress.Report(new ProgressInfo("Done!", 100));
+            });
         }
-        RefreshModItems();
-        RefreshOutdatedModsExist();
+    }
+
+    private void PopulateGraphicsDefaults()
+    {
+        if (_dialogService.PopulateDefaultSprites(out string romPath))
+        {
+            _dialogService.ProgressDialog(progress =>
+            {
+                try
+                {
+                    _fallbackSpriteProvider.Populate(romPath, progress);
+                }
+                catch (Exception e)
+                {
+                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                            title: "Error Populating Default Sprites",
+                            message: e.ToString(),
+                            type: MessageBoxType.Error
+                        ));
+                    return;
+                }
+            });
+        }
     }
 }

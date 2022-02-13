@@ -84,7 +84,6 @@ public class LuaCommand : BaseCommand
             AddEnumToState<WarriorSkillEffectId>();
             AddEnumToState<WarriorSkillId>();
             AddEnumToState<WarriorSkillTargetId>();
-            AddEnumToState<WarriorSpriteId>();
             AddEnumToState<WarriorSprite2Id>();
             AddEnumToState<BattleConfigId>();
             AddEnumToState<GimmickRangeId>();

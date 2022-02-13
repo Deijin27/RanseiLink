@@ -23,5 +23,9 @@ public static class RegistrationExtensions
         container.RegisterLazySingleton<ISpriteService>(() => new SpriteService());
 
         container.RegisterSingleton<DataServiceFactory>(m => new DataService(m, container));
+
+        container.RegisterLazySingleton<IFallbackSpriteProvider>(() => new FallbackSpriteProvider(rootFolder, container.Resolve<NdsFactory>()));
+
+        container.RegisterLazySingleton<ISpriteProvider>(() => container.Resolve<IFallbackSpriteProvider>());
     }
 }

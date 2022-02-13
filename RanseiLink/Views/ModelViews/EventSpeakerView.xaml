@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:const="clr-namespace:RanseiLink.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
+             xmlns:controls="clr-namespace:RanseiLink.Controls"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              d:DataContext="{d:DesignInstance Type=vm:EventSpeakerViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -28,6 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         
@@ -35,7 +37,9 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
         <TextBlock Text="Sprite" Grid.Row="1"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteItems}" SelectedItem="{Binding Sprite, Mode=TwoWay}"/>
+        <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Sprite}"/>
+
+        <Image Grid.Row="2" Grid.ColumnSpan="2" Source="{Binding SpritePath}" Height="208"/>
 
     </Grid>
 </UserControl>

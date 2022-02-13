@@ -111,12 +111,10 @@ public class CEBK
             }
             bankInfos[i] = bank;
         }
-        Console.WriteLine($"There are {header.NumberOfBanks} banks");
         Banks = new List<Cell[]>(header.NumberOfBanks);
         for (int i = 0; i < header.NumberOfBanks; i++)
         {
             var bankInfo = bankInfos[i];
-            Console.WriteLine($"Bank {i} has 0x{bankInfo.NumberOfCells:X} cells");
             var bank = new Cell[bankInfo.NumberOfCells];
 
             for (int j = 0; j < bankInfo.NumberOfCells; j++)

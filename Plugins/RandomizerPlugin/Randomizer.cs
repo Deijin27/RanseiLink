@@ -57,42 +57,35 @@ internal class Randomizer
         var dialogService = context.ServiceContainer.Resolve<IDialogService>();
         _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
 
-        dialogService.ProgressDialog(async (step, progress) =>
+        dialogService.ProgressDialog(progress =>
         {
-            step.Report("Initializing Randomizer...");
-            await Task.Run(Init);
-            progress.Report(15);
-            step.Report("Randomizing...");
+            progress.Report(new ProgressInfo("Initializing Randomizer..."));
+            Init();
+            progress.Report(new ProgressInfo(Progress:15, StatusText:"Randomizing..."));
 
-            await Task.Run(() =>
+            Randomize();
+
+            if (options.SoftlockMinimization)
             {
-                Randomize();
-
-                if (options.SoftlockMinimization)
+                while (!IsValid())
                 {
-                    while (!IsValid())
-                    {
-                        Randomize();
-                    }
+                    Randomize();
                 }
+            }
 
-                RandomizeNoValidationNeeded();
-            });
+            RandomizeNoValidationNeeded();
 
             if (options.AllMaxLinkValue > 0)
             {
-                progress.Report(70);
-                step.Report("Handling max link values...");
-                await Task.Run(HandleMaxLink);
+                progress.Report(new ProgressInfo(Progress: 70, StatusText: "Handling max link values..."));
+                HandleMaxLink();
             }
 
-            progress.Report(85);
-            step.Report("Saving randomized data...");
-            await Task.Run(Save);
+            progress.Report(new ProgressInfo(Progress: 85, StatusText: "Saving randomized data..."));
+            Save();
 
-            progress.Report(100);
-            step.Report("Randomization complete!");
-            await Task.Delay(500);
+
+            progress.Report(new ProgressInfo(Progress: 100, StatusText: "Randomization Complete!"));
 
         });
     }

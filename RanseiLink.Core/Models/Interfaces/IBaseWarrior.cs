@@ -12,7 +12,7 @@ public interface IBaseWarrior : IDataWrapper, ICloneable<IBaseWarrior>
     uint Charisma { get; set; }
     uint Capacity { get; set; }
     WarriorId RankUp { get; set; }
-    WarriorSpriteId Sprite { get; set; }
+    uint Sprite { get; set; }
     WarriorSkillId Skill { get; set; }
     WarriorSprite2Id Sprite_Unknown { get; set; }
     GenderId Gender { get; set; }

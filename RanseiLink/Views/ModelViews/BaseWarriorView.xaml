@@ -49,8 +49,11 @@
             <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
 
             <TextBlock Text="Sprite" Grid.Row="1"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteItems}" SelectedItem="{Binding Sprite, Mode=TwoWay}"/>
-
+            <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
+                <controls:NumberBox  Value="{Binding Sprite}"/>
+                <Image Source="{Binding SmallSpritePath}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </UniformGrid>
+            
             <TextBlock Text="Sprite Unknown" Grid.Row="2"/>
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteUnknownItems}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
 

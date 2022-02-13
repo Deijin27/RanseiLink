@@ -70,7 +70,10 @@
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
 
             <TextBlock Text="Top Screen Image" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
-            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickImageItems}" SelectedItem="{Binding Image, Mode=TwoWay}"/>
+            <UniformGrid Grid.Row="4" Grid.Column="1" Rows="1">
+                <controls:NumberBox Value="{Binding Image}" />
+                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding ImagePath}"/>
+            </UniformGrid>
 
             <TextBlock Text="State-1 Sprite" Grid.Row="5" ToolTip="The sprite that is on the bottom screen in battle"/>
             <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State1Sprite, Mode=TwoWay}"/>

@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Services\GraphicsInfo.xml" />
     <None Remove="Text\CharacterTable.tbl" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Services\GraphicsInfo.xml" />
     <EmbeddedResource Include="Text\CharacterTable.tbl" />
   </ItemGroup>
 

@@ -22,7 +22,7 @@
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Button Content="Create Mod" Margin="0,0,0,10" Command="{Binding CreateModCommand}"/>
+                    <Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
                     <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
                     <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVis}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
@@ -31,7 +31,14 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Some mods are outdated. Click here to upgrade them to the latest version and they will appear in the list. </Span>
                         </TextBlock>
                     </Button>
-                    <TextBlock FontSize="9" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
+                    <TextBlock FontSize="9" Margin="0,0,0,10" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
+                    <Button Height="Auto" Command="{Binding PopulateGraphicsDefaultsCommand}">
+                        <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
+                            Populate Graphics Defaults
+                            <LineBreak/>
+                            <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
+                        </TextBlock>
+                    </Button>
                 </StackPanel>
             </Grid>
             

@@ -84,7 +84,6 @@ public class STLCollection
             var (file, num) = stlFiles[i];
             if (new FileInfo(file).Length == 0)
             {
-                Console.WriteLine("File of len 0 hit");
                 stls[num] = null;
             }
             else
@@ -105,6 +104,8 @@ public class STLCollection
             if (stl == null)
             {
                 File.Create(saveFile).Dispose(); // create an empty file
+                // the empty file creation is just a precaution in case the number of files matters in some cases.
+                // need a way to know if there is empty files at the end of the list of numbers.
             }
             else
             {

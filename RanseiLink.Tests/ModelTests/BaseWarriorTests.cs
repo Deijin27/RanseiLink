@@ -19,7 +19,7 @@ public class BaseWarriorTests
                 0x18, 0x0E, 0xFC, 0x07
         });
 
-        Assert.Equal(WarriorSpriteId.Nene_1, a.Sprite);
+        Assert.Equal(23u, a.Sprite);
         Assert.Equal(GenderId.Female, a.Gender);
         Assert.Equal(118u, a.WarriorName);
         Assert.Equal(TypeId.Poison, a.Speciality1);
@@ -47,7 +47,7 @@ public class BaseWarriorTests
 
         IBaseWarrior a = new BaseWarrior
         {
-            Sprite = WarriorSpriteId.Naka,
+            Sprite = 128u,
             Gender = GenderId.Male,
             WarriorName = 4u,
             Speciality1 = TypeId.Fire,
@@ -69,7 +69,7 @@ public class BaseWarriorTests
             RankUpLink = 20u,
         };
 
-        Assert.Equal(WarriorSpriteId.Naka, a.Sprite);
+        Assert.Equal(128u, a.Sprite);
         Assert.Equal(GenderId.Male, a.Gender);
         Assert.Equal(4u, a.WarriorName);
         Assert.Equal(TypeId.Fire, a.Speciality1);

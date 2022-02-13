@@ -1,6 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
+[System.Obsolete]
 [DefaultValues(Default)]
 public enum GimmickImageId : uint
 {

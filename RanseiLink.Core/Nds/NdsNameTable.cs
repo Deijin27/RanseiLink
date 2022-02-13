@@ -194,8 +194,7 @@ public static class NdsNameTable
 
     static string NormalizePath(string path)
     {
-        path = path.Replace('/', Path.DirectorySeparatorChar)
-                   .Replace('\\', Path.DirectorySeparatorChar);
+        path = FileUtil.NormalizePath(path);
 
         // just to allow users to use the intuitive leading slash
         if (path.StartsWith($"{Path.DirectorySeparatorChar}"))

@@ -9,10 +9,10 @@ public class BaseWarrior : BaseDataWindow, IBaseWarrior
     public BaseWarrior(byte[] data) : base(data, DataLength) { }
     public BaseWarrior() : this(new byte[DataLength]) { }
 
-    public WarriorSpriteId Sprite
+    public uint Sprite
     {
-        get => (WarriorSpriteId)GetUInt32(0, 8, 0);
-        set => SetUInt32(0, 8, 0, (uint)value);
+        get => GetUInt32(0, 8, 0);
+        set => SetUInt32(0, 8, 0, value);
     }
 
     public WarriorSprite2Id Sprite_Unknown

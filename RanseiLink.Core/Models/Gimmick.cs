@@ -18,10 +18,10 @@ public class Gimmick : BaseDataWindow, IGimmick
     /// <summary>
     /// Top screen square image when you hover over the object
     /// </summary>
-    public GimmickImageId Image
+    public uint Image
     {
-        get => (GimmickImageId)GetUInt32(4, 8, 8);
-        set => SetUInt32(4, 8, 8, (uint)value);
+        get => GetUInt32(4, 8, 8);
+        set => SetUInt32(4, 8, 8, value);
     }
 
     /// <summary>

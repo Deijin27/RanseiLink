@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.ViewModels;
 
@@ -8,9 +9,11 @@ public delegate EventSpeakerViewModel EventSpeakerViewModelFactory(IEventSpeaker
 public class EventSpeakerViewModel : ViewModelBase
 {
     private readonly IEventSpeaker _model;
+    private readonly ISpriteProvider _spriteProvider;
 
-    public EventSpeakerViewModel(IEventSpeaker model)
+    public EventSpeakerViewModel(IEventSpeaker model, IServiceContainer container)
     {
+        _spriteProvider = container.Resolve<ISpriteProvider>();
         _model = model;
     }
 
@@ -20,10 +23,18 @@ public class EventSpeakerViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public WarriorSpriteId Sprite
+    public uint Sprite
     {
         get => _model.Sprite;
-        set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v))
+            {
+                RaisePropertyChanged(nameof(SpritePath));
+            }
+        }
     }
+
+    public string SpritePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlBushouLL, Sprite);
 
 }

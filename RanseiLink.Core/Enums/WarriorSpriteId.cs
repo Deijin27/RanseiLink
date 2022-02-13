@@ -1,6 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
+[System.Obsolete]
 public enum WarriorSpriteId : uint
 {
     PlayerMale_1, // 0

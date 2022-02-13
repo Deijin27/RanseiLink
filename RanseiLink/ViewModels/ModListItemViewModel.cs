@@ -54,21 +54,19 @@ public class ModListItemViewModel : ViewModelBase
         }
 
         Exception error = null;
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Patching rom...");
+            progress.Report(new ProgressInfo("Patching rom..."));
             try
             {
-                await Task.Run(() => _modService.Commit(mod, romPath));
+                _modService.Commit(mod, romPath);
             }
             catch (Exception e)
             {
                 error = e;
                 return;
             }
-            number.Report(100);
-            text.Report("Patching Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Patching Complete!", 100));
         });
 
         if (error != null)
@@ -87,21 +85,19 @@ public class ModListItemViewModel : ViewModelBase
             return;
         }
         Exception error = null;
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Exporting mod...");
+            progress.Report(new ProgressInfo("Exporting mod..."));
             try
             {
-                await Task.Run(() => _modService.Export(mod, folder));
+                _modService.Export(mod, folder);
             }
             catch (Exception e)
             {
                 error = e;
                 return;
             }
-            number.Report(100);
-            text.Report("Export Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Export Complete!", 100));
         });
 
         if (error != null)
@@ -120,16 +116,13 @@ public class ModListItemViewModel : ViewModelBase
         {
             return;
         }
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Editing mod info...");
-            await Task.Run(() => _modService.Update(mod));
-            number.Report(50);
-            text.Report("Updating mod list...");
+            progress.Report(new ProgressInfo("Editing mod info..."));
+            _modService.Update(mod);
+            progress.Report(new ProgressInfo("Updating mod list...", 50));
             _parentVm.RefreshModItems();
-            number.Report(100);
-            text.Report("Edit Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Edit Complete!", 100));
         });
     }
     private void CreateModBasedOn(ModInfo mod)
@@ -139,13 +132,13 @@ public class ModListItemViewModel : ViewModelBase
             return;
         }
         Exception error = null;
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Creating mod...");
+            progress.Report(new ProgressInfo("Creating mod..."));
             ModInfo newMod;
             try
             {
-                newMod = await Task.Run(() => _modService.CreateBasedOn(mod, newModInfo.Name, newModInfo.Version, newModInfo.Author));
+                newMod = _modService.CreateBasedOn(mod, newModInfo.Name, newModInfo.Version, newModInfo.Author);
             }
             catch (Exception e)
             {
@@ -153,12 +146,9 @@ public class ModListItemViewModel : ViewModelBase
                 return;
             }
 
-            number.Report(60);
-            text.Report("Updating mod list...");
+            progress.Report(new ProgressInfo("Updating mod list...", 60));
             _parentVm.RefreshModItems();
-            number.Report(100);
-            text.Report("Mod Creating Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Mod Creating Complete!", 100));
         });
 
         if (error != null)
@@ -177,16 +167,13 @@ public class ModListItemViewModel : ViewModelBase
         {
             return;
         }
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Deleting mod...");
-            await Task.Run(() => _modService.Delete(mod));
-            text.Report("Updating mod list");
-            number.Report(90);
+            progress.Report(new ProgressInfo("Deleting mod..."));
+            _modService.Delete(mod);
+            progress.Report(new ProgressInfo("Updating mod list", 90));
             _parentVm.ModItems.Remove(this);
-            text.Report("Mod Deleted!");
-            number.Report(100);
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Mod Deleted!", 100));
         });
     }
 

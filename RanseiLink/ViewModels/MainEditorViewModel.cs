@@ -169,23 +169,20 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
 
         Exception error = null;
-        _dialogService.ProgressDialog(async (text, number) =>
+        _dialogService.ProgressDialog(progress =>
         {
-            text.Report("Saving...");
+            progress.Report(new ProgressInfo("Saving..."));
             Save();
-            number.Report(20);
-            text.Report("Patching rom...");
+            progress.Report(new ProgressInfo("Patching Rom...", 20));
             try
             {
-                await Task.Run(() => _modService.Commit(Mod, romPath));
+                _modService.Commit(Mod, romPath);
             }
             catch (Exception e)
             {
                 error = e;
             }
-            number.Report(100);
-            text.Report("Patching Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo("Patching Complete...", 100));
         });
 
         if (error != null)

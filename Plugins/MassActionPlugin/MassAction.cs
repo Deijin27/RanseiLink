@@ -4,9 +4,7 @@ using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MassActionPlugin;
 
@@ -31,32 +29,31 @@ internal class MassAction
         var dialogService = context.ServiceContainer.Resolve<IDialogService>();
         _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
 
-        dialogService.ProgressDialog(async (step, progress) =>
+        dialogService.ProgressDialog(progress =>
         {
+            progress.Report(new ProgressInfo(IsIndeterminate:true));
             if (options.Target == ConstOptions.MaxLink)
             {
-                step.Report("Setting max link values...");
-                await Task.Run(() => HandleMaxLink(progress));
+                progress.Report(new ProgressInfo("Setting max link values..."));
+                HandleMaxLink();
             }
             else if (options.Target == ConstOptions.IVs)
             {
-                step.Report("Setting IV values...");
-                await Task.Run(() => HandleIVs(progress));
+                progress.Report(new ProgressInfo("Setting IV values..."));
+                HandleIVs();
             }
             else if (options.Target == ConstOptions.Capacity)
             {
-                step.Report("Setting capacity values...");
-                await Task.Run(() => HandleCapacity(progress));
+                progress.Report(new ProgressInfo("Setting capacity values..."));
+                HandleCapacity();
             }
 
-            progress.Report(100);
-            step.Report("Done!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo(Progress:100, IsIndeterminate:false, StatusText:"Done!"));
 
         });
     }
 
-    private void HandleMaxLink(IProgress<int> progress)
+    private void HandleMaxLink()
     {
         using IDisposableMaxLinkService maxLinkService = _dataService.MaxLink.Disposable();
 
@@ -81,7 +78,7 @@ internal class MassAction
         }
     }
 
-    private void HandleIVs(IProgress<int> progress)
+    private void HandleIVs()
     {
         using IDisposableScenarioPokemonService scenarioPokemonService = _dataService.ScenarioPokemon.Disposable();
 
@@ -121,7 +118,7 @@ internal class MassAction
         }
     }
 
-    private void HandleCapacity(IProgress<int> progress)
+    private void HandleCapacity()
     {
         using IDisposableBaseWarriorService service = _dataService.BaseWarrior.Disposable();
 

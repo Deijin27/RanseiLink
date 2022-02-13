@@ -17,14 +17,14 @@ public class MapService : IMapService
 
     public PSLM Retrieve(MapId id)
     {
-        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToExternalFileName());
+        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToInternalFileName());
         using var br = new BinaryReader(File.OpenRead(file));
         return new PSLM(br);
     }
 
     public void Save(MapId id, PSLM model)
     {
-        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToExternalFileName());
+        string file = Path.Combine(_mapIdService.MapFolderPath, id.ToInternalFileName());
         using var bw = new BinaryWriter(File.Create(file));
         model.WriteTo(bw);
     }

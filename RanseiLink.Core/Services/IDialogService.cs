@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services;
 
@@ -18,7 +17,10 @@ public interface IDialogService
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);
     bool RequestFolder(out string result);
     bool RequestModFile(out string result);
-    void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null);
+    void ProgressDialog(Action<IProgress<ProgressInfo>> work, string title = null);
     bool ModifyMapDimensions(ref ushort width, ref ushort height);
     bool RequestFile(string title, string defaultExt, string filter, out string result);
+    bool PopulateDefaultSprites(out string romPath);
 }
+
+public record ProgressInfo(string StatusText = null, int? Progress = null, int? MaxProgress = null, bool? IsIndeterminate = null);

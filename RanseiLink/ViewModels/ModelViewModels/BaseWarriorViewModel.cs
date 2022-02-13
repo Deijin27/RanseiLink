@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System;
 using System.Windows.Input;
@@ -17,7 +18,7 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
         _model = model;
     }
 
-    public WarriorSpriteId Sprite
+    public virtual uint Sprite
     {
         get => _model.Sprite;
         set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
@@ -123,8 +124,11 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
 
 public class BaseWarriorViewModel : BaseWarriorViewModelBase
 {
-    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context) : base(model)
+    private readonly ISpriteProvider _spriteProvider;
+
+    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context, IServiceContainer container) : base(model)
     {
+        _spriteProvider = container.Resolve<ISpriteProvider>();
         var jumpService = context.JumpService;
 
         JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);
@@ -160,6 +164,19 @@ public class BaseWarriorViewModel : BaseWarriorViewModelBase
         set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
     }
 
+    public override uint Sprite
+    {
+        get => _model.Sprite;
+        set
+        { 
+            if (RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v))
+            {
+                RaisePropertyChanged(nameof(SmallSpritePath));
+            }
+        }
+    }
+
+    public string SmallSpritePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlBushouM, Sprite);
 }
 
 public class BaseWarriorGridItemViewModel : BaseWarriorViewModelBase

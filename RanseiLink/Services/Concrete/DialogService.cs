@@ -272,22 +272,37 @@ internal class DialogService : IDialogService
         return proceed == true;
     }
 
-    public void ProgressDialog(Func<IProgress<string>, IProgress<int>, Task> workAsync, string title = null)
+    public void ProgressDialog(Action<IProgress<ProgressInfo>> work, string title = null)
     {
         var progressWindow = new Dialogs.LoadingDialog
         {
             Owner = Application.Current.MainWindow
         };
 
-        var progressText = new Progress<string>(text => progressWindow.HeaderTextBlock.Text = text);
-        var progressNumber = new Progress<int>(num => progressWindow.ProgressBar.Value = num);
-
-        var workingTask = workAsync(progressText, progressNumber);
+        var progressReporter = new Progress<ProgressInfo>(info =>
+        {
+            if (info.StatusText != null)
+            {
+                progressWindow.HeaderTextBlock.Text = info.StatusText;
+            }
+            if (info.MaxProgress != null)
+            {
+                progressWindow.ProgressBar.Maximum = (int)info.MaxProgress;
+            }
+            if (info.Progress != null)
+            {
+                progressWindow.ProgressBar.Value = (int)info.Progress;
+            }
+            if (info.IsIndeterminate != null)
+            {
+                progressWindow.ProgressBar.IsIndeterminate = (bool)info.IsIndeterminate;
+            }
+        });
 
         progressWindow.Loaded += async (s, e) =>
         {
-            await workingTask;
-
+            await Task.Run(() => work(progressReporter));
+            await Task.Delay(500);
             progressWindow.Close();
         };
 
@@ -337,5 +352,30 @@ internal class DialogService : IDialogService
             return true;
         }
         return false;
+    }
+
+    public bool PopulateDefaultSprites(out string romPath)
+    {
+        var vm = new PopulateDefaultSpriteViewModel(this, Settings.RecentLoadRom);
+
+        var dialog = new Dialogs.PopulateDefaultSpriteDialog
+        {
+            Owner = Application.Current.MainWindow,
+            DataContext = vm
+        };
+
+        bool? proceed = dialog.ShowDialog();
+
+        if (proceed == true)
+        {
+            romPath = vm.File;
+            Settings.RecentLoadRom = vm.File;
+            return true;
+        }
+        else
+        {
+            romPath = null;
+            return false;
+        }
     }
 }

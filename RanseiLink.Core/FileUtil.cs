@@ -17,6 +17,12 @@ public static class FileUtil
         return fileName;
     }
 
+    public static string NormalizePath(string path)
+    {
+        return path?.Replace('/', Path.DirectorySeparatorChar)
+                    .Replace('\\', Path.DirectorySeparatorChar);
+    }
+
     public static string MakeUniquePath(string path)
     {
         string testPath = path;

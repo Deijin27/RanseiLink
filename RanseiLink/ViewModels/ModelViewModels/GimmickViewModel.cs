@@ -32,7 +32,7 @@ public abstract class GimmickViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public GimmickImageId Image
+    public virtual uint Image
     {
         get => _model.Image;
         set => RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v);
@@ -108,10 +108,12 @@ public abstract class GimmickViewModelBase : ViewModelBase
 public class GimmickViewModel : GimmickViewModelBase
 {
     private readonly IExternalService _externalService;
+    private readonly ISpriteProvider _spriteProvider;
 
     public GimmickViewModel(GimmickId id, IServiceContainer container, IGimmick model, IEditorContext context) : base(id, model)
     {
         _externalService = container.Resolve<IExternalService>();
+        _spriteProvider = container.Resolve<ISpriteProvider>();
 
         JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(context.JumpService.JumpToGimmickRange);
 
@@ -170,6 +172,20 @@ public class GimmickViewModel : GimmickViewModelBase
     {
         return _externalService.GetMoveAnimationUri(id);
     }
+
+    public override uint Image
+    {
+        get => _model.Image;
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v))
+            {
+                RaisePropertyChanged(nameof(ImagePath));
+            }
+        }
+    }
+
+    public string ImagePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlStageObje, (uint)Image);
 }
 
 public class GimmickGridItemViewModel : GimmickViewModelBase 

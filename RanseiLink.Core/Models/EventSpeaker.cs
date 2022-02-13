@@ -15,9 +15,9 @@ public class EventSpeaker : BaseDataWindow, IEventSpeaker
         set => SetPaddedUtf8String(0, 16, value);
     }
 
-    public WarriorSpriteId Sprite
+    public uint Sprite
     {
-        get => (WarriorSpriteId)GetByte(0x11);
+        get => GetByte(0x11);
         set => SetByte(0x11, (byte)value);
     }
 

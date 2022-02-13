@@ -104,23 +104,21 @@ public class PartialTransferPlugin : IPlugin
             }
         }
         
-        dialogService.ProgressDialog(async (step, progress) =>
+        dialogService.ProgressDialog(progress =>
         {
-            step.Report("Transferring...");
+            progress.Report(new ProgressInfo(StatusText:"Transferring...", MaxProgress:filesToTransfer.Count));
 
             int count = 0;
             foreach (var file in filesToTransfer)
             {
                 string sourcePath = Path.Combine(sourceMod.FolderPath, file);
                 string destinationPath = Path.Combine(destinationMod.FolderPath, file);
-                await Task.Run(() => File.Copy(sourcePath, destinationPath, true));
+                File.Copy(sourcePath, destinationPath, true);
                 count++;
-                progress.Report((count * 100) / filesToTransfer.Count);
+                progress.Report(new ProgressInfo(Progress:count));
             }
 
-            progress.Report(100);
-            step.Report("Transfer Complete!");
-            await Task.Delay(500);
+            progress.Report(new ProgressInfo(StatusText:"Transfer Complete!"));
         });
     }
 }
