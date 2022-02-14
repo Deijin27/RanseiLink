@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="RanseiLink.Views.SpriteTypeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiLink.Views"
+             xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             d:DataContext="{d:DesignInstance vm:SpriteTypeViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <DockPanel Margin="10,10,10,0">
+            <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0">Export all of this type</Button>
+            <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0">Append new image</Button>
+            <ComboBox Grid.Row="0" Height="20" DisplayMemberPath="DisplayName" SelectedValuePath="Type" ItemsSource="{Binding SpriteTypeItems, Mode=OneTime}" SelectedValue="{Binding SelectedType, Mode=TwoWay}" />
+        </DockPanel>
+        <ScrollViewer Grid.Row="1" Margin="10">
+            <ItemsControl ItemsSource="{Binding Items}" Grid.IsSharedSizeScope="True">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="{DynamicResource WindowBackgroundBrush}">
+                            <Grid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Import Override" Command="{Binding SetOverrideCommand}"/>
+                                    <MenuItem Header="Revert to Default" Command="{Binding RevertCommand}"/>
+                                    <MenuItem Header="Export Image" Command="{Binding ExportCommand}"/>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" SharedSizeGroup="imgWidth"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" SharedSizeGroup="imgHeight"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding DisplayImage}" Stretch="None" />
+                            <TextBlock Grid.Row="1" Foreground="{DynamicResource ForegroundBrush}" Text="{Binding Id}" HorizontalAlignment="Center" TextAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

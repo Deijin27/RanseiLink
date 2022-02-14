@@ -37,7 +37,7 @@ public interface ISpriteProvider
     string GetSpriteFilePath(SpriteType type, uint id);
 }
 
-public record SpriteFile(SpriteType Type, uint Id, string File);
+public record SpriteFile(SpriteType Type, uint Id, string File, bool IsOverride);
 
 
 public interface IFallbackSpriteProvider : ISpriteProvider

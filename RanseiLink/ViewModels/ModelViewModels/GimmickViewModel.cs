@@ -113,7 +113,7 @@ public class GimmickViewModel : GimmickViewModelBase
     public GimmickViewModel(GimmickId id, IServiceContainer container, IGimmick model, IEditorContext context) : base(id, model)
     {
         _externalService = container.Resolve<IExternalService>();
-        _spriteProvider = container.Resolve<ISpriteProvider>();
+        _spriteProvider = context.DataService.OverrideSpriteProvider;
 
         JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(context.JumpService.JumpToGimmickRange);
 

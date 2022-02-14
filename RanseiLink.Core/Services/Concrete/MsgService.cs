@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Resources;
+using RanseiLink.Core.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -110,7 +111,7 @@ public class MsgService : IMsgService
             while (br.BaseStream.Position < endOffset)
             {
                 Message msg = pnaReader.ReadMessage();
-                foreach (var (key, value) in NameLoader.LoadTable)
+                foreach (var (key, value) in CharacterTableResource.LoadTable)
                 {
                     msg.Text = msg.Text.Replace(key, value);
                 }
@@ -154,7 +155,7 @@ public class MsgService : IMsgService
                     multiElements = true;
                 }
 
-                foreach (var (key, value) in NameLoader.SaveTable)
+                foreach (var (key, value) in CharacterTableResource.SaveTable)
                 {
                     msg.Text = msg.Text.Replace(key, value);
                 }

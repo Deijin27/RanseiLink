@@ -17,7 +17,7 @@ public class SCBGCollection
         using var infoBr = new BinaryReader(File.OpenRead(scbgInfoFile));
 
         int numItems = infoBr.ReadInt32();
-        int unused = infoBr.ReadInt32(); // length of one of the files, but then the individual files have lengths so it's not necessary
+        int _ = infoBr.ReadInt32(); // length of the largest file
         for (int i = 0; i < numItems; i++)
         {
             var offset = infoBr.ReadUInt32();
@@ -47,8 +47,10 @@ public class SCBGCollection
 
         // header
         infoBw.Write(Items.Count);
-        // this is very weird
-        infoBw.Write(SCBG.HeaderLength + SCBG.PaletteDataLength + (Items[0].Width * Items[0].Height) + Items[0].Height * (Items[0].Width - 0x10));
+        long maxLenPos = infoBw.BaseStream.Position;
+        infoBw.Pad(4);
+
+        int maxLen = 0;
 
         foreach (var item in Items)
         {
@@ -61,7 +63,14 @@ public class SCBGCollection
             int len = (int)dataBw.BaseStream.Position - initOffset;
             infoBw.Write(len);
             dataBw.Pad(0x10 - (len % 0x10));
+            if (len > maxLen)
+            {
+                maxLen = len;
+            }
         }
+
+        infoBw.BaseStream.Position = maxLenPos;
+        dataBw.Write(maxLen);
     }
 
     public static SCBGCollection LoadPngs(string inputFolder, bool tiled = false)

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RanseiLink.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace RanseiLink.Core.Services;
+namespace RanseiLink.Core.Resources;
 
 public class StlConstants : IGraphicsInfo
 {
@@ -40,10 +41,10 @@ public interface IGraphicsInfo
     public string PngFolder { get; }
 }
 
-public static class GraphicsInfo
+public static class GraphicsInfoResource
 {
-    private const string _graphicsInfoXml = "RanseiLink.Core.Services.GraphicsInfo.xml";
-    static GraphicsInfo()
+    private const string _graphicsInfoXml = "RanseiLink.Core.Resources.GraphicsInfo.xml";
+    static GraphicsInfoResource()
     {
         XDocument doc;
         using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(_graphicsInfoXml))
@@ -85,5 +86,12 @@ public static class GraphicsInfo
     public static IGraphicsInfo Get(SpriteType type)
     {
         return _all[type];
+    }
+
+    public static string GetRelativeSpritePath(SpriteType type, uint id)
+    {
+        string idString = id.ToString().PadLeft(4, '0');
+        string dir = GraphicsInfoResource.Get(type).PngFolder;
+        return Path.Combine(dir, idString + ".png");
     }
 }

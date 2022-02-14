@@ -28,4 +28,5 @@ public interface IDataService
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
     IGimmickObjectService GimmickObject { get; }
+    IOverrideSpriteProvider OverrideSpriteProvider { get; }
 }

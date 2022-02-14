@@ -21,7 +21,7 @@ public class STLCollection
         using var infoBr = new BinaryReader(File.OpenRead(stlInfoFile));
         
         int numItems = infoBr.ReadInt32();
-        int unused = infoBr.ReadInt32(); // length of one of the files, but then the individual files have lengths so it's not necessary
+        int _ = infoBr.ReadInt32(); // max file length
         for (int i = 0; i < numItems; i++)
         {
             var offset = infoBr.ReadUInt32();
@@ -52,7 +52,10 @@ public class STLCollection
         // header
         infoBw.Write(Items.Count);
         // size of an item. idk why this is here because the items also list individual sizes
-        infoBw.Write(STL.Header.Length + STL.PaletteDataLength + (Items[0].Width * Items[0].Height) + STL.PaddingLength);
+        long maxLenPos = infoBw.BaseStream.Position;
+        infoBw.Pad(4);
+
+        int maxLen = 0;
 
         foreach (var item in Items)
         {
@@ -64,7 +67,14 @@ public class STLCollection
             }
             int len = (int)dataBw.BaseStream.Position - initOffset;
             infoBw.Write(len);
+            if (len > maxLen)
+            {
+                maxLen = len;
+            }
         }
+
+        infoBw.BaseStream.Position = maxLenPos;
+        dataBw.Write(maxLen);
     }
 
     public static STLCollection LoadPngs(string inputFolder, NCER ncer, bool tiled = false)

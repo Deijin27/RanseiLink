@@ -1,7 +1,7 @@
 ﻿
 using RanseiLink.Services;
 
-namespace RanseiLink.ViewModels.ModelViewModels;
+namespace RanseiLink.ViewModels;
 
 public class MsgViewModel
 {

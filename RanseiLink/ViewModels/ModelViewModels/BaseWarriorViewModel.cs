@@ -128,7 +128,7 @@ public class BaseWarriorViewModel : BaseWarriorViewModelBase
 
     public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context, IServiceContainer container) : base(model)
     {
-        _spriteProvider = container.Resolve<ISpriteProvider>();
+        _spriteProvider = context.DataService.OverrideSpriteProvider;
         var jumpService = context.JumpService;
 
         JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);

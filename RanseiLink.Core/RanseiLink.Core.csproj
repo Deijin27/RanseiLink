@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Services\GraphicsInfo.xml" />
-    <EmbeddedResource Include="Text\CharacterTable.tbl" />
+    <EmbeddedResource Include="Resources\GraphicsInfo.xml" />
+    <EmbeddedResource Include="Resources\CharacterTable.tbl" />
   </ItemGroup>
 
   <ItemGroup>

@@ -232,6 +232,10 @@
                 <views:ModelGridView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:SpriteTypeViewModel}">
+                <views:SpriteTypeView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

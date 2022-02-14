@@ -17,10 +17,11 @@ public interface IDialogService
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);
     bool RequestFolder(out string result);
     bool RequestModFile(out string result);
-    void ProgressDialog(Action<IProgress<ProgressInfo>> work, string title = null);
+    void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
     bool ModifyMapDimensions(ref ushort width, ref ushort height);
     bool RequestFile(string title, string defaultExt, string filter, out string result);
     bool PopulateDefaultSprites(out string romPath);
+    bool SimplfyPalette(int maxColors, string original, string simplified);
 }
 
 public record ProgressInfo(string StatusText = null, int? Progress = null, int? MaxProgress = null, bool? IsIndeterminate = null);

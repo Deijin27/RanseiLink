@@ -31,6 +31,7 @@ public class DataService : IDataService
         MoveAnimation = new MoveAnimationService(mod);
         GimmickObject = new GimmickObjectService(mod);
         Map = new MapService(MapName);
+        OverrideSpriteProvider = new OverrideSpriteProvider(container.Resolve<IFallbackSpriteProvider>(), mod);
     }
 
     public IPokemonService Pokemon { get; }
@@ -55,10 +56,13 @@ public class DataService : IDataService
     public IMoveAnimationService MoveAnimation { get; }
     public IGimmickObjectService GimmickObject { get; }
     public IMapService Map { get; }
+    public IOverrideSpriteProvider OverrideSpriteProvider { get; }
 
 
     /// <summary>
     /// This is pretty different to the other things. it's here purely for convenience.
     /// </summary>
     public IMapIdService MapName { get; }
+
+    
 }

@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Nds;
+using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
         progress?.Report(new ProgressInfo(StatusText: "Extracting files from rom...", IsIndeterminate: true));
         using var nds = _ndsFactory(ndsFile);
         nds.ExtractCopyOfDirectory(Constants.GraphicsFolderPath, _graphicsProviderFolder);
-        var infos = GraphicsInfo.All;
+        var infos = GraphicsInfoResource.All;
         progress?.Report(new ProgressInfo(StatusText: "Converting Images...", IsIndeterminate: false, MaxProgress: infos.Count));
         int count = 0;
         foreach (var gfxInfo in infos)
@@ -59,11 +60,6 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
 
     private void UnpackStl(StlConstants stlInfo)
     {
-        if (stlInfo.Link == null)
-        {
-
-            System.Diagnostics.Debugger.Break();
-        }
         LINK.Unpack(Path.Combine(_graphicsProviderFolder, stlInfo.Link), Path.Combine(_graphicsProviderFolder, stlInfo.LinkFolder), true, 4);
         var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
         string data = Path.Combine(_graphicsProviderFolder, stlInfo.TexData ?? stlInfo.Data);
@@ -88,15 +84,13 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
 
     public string GetSpriteFilePath(SpriteType type, uint id)
     {
-        string idString = id.ToString().PadLeft(4, '0');
-        string dir = GraphicsInfo.Get(type).PngFolder;
-        return Path.Combine(dir, idString + ".png");
+        return Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id));
     }
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
-        return Directory.GetFiles(GraphicsInfo.Get(type).PngFolder)
-            .Select(i => new SpriteFile(type, uint.Parse(Path.GetFileNameWithoutExtension(i)), i))
+        return Directory.GetFiles(Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.Get(type).PngFolder))
+            .Select(i => new SpriteFile(type, uint.Parse(Path.GetFileNameWithoutExtension(i)), i, IsOverride:false))
             .ToList();
     }
 

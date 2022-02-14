@@ -71,7 +71,7 @@
 		<Link>graphics/still/stl_event/stl_common.G2DR</Link>
 	</STL>
     <SCBG Id="StlEventBg">
-		<DisplayName>Battle Terrain Icon</DisplayName>
+		<DisplayName>Event Background</DisplayName>
 		<Info>graphics/still/stl_event/StlEventBgInfo.dat</Info>
 		<Data>graphics/still/stl_event/StlEventBg.dat</Data>
 	</SCBG>

@@ -272,7 +272,7 @@ internal class DialogService : IDialogService
         return proceed == true;
     }
 
-    public void ProgressDialog(Action<IProgress<ProgressInfo>> work, string title = null)
+    public void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true)
     {
         var progressWindow = new Dialogs.LoadingDialog
         {
@@ -302,7 +302,10 @@ internal class DialogService : IDialogService
         progressWindow.Loaded += async (s, e) =>
         {
             await Task.Run(() => work(progressReporter));
-            await Task.Delay(500);
+            if (delayOnCompletion)
+            {
+                await Task.Delay(500);
+            }
             progressWindow.Close();
         };
 
@@ -377,5 +380,25 @@ internal class DialogService : IDialogService
             romPath = null;
             return false;
         }
+    }
+
+    public bool SimplfyPalette(int maxColors, string original, string simplified)
+    {
+        var vm = new PaletteSimplifierDialogViewModel
+        {
+            MaximumColors = maxColors,
+            Original = original,
+            Simplified = simplified
+        };
+
+        var dialog = new Dialogs.SimplifyPaletteDialog
+        {
+            Owner = Application.Current.MainWindow,
+            DataContext = vm
+        };
+
+        bool? proceed = dialog.ShowDialog();
+
+        return proceed == true;
     }
 }

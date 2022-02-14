@@ -249,3 +249,11 @@ public class MapSelectorEditorModule : IEditorModule
     public string ListName => "Map";
     public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MapSelectorViewModel(container, context);
 }
+
+public class SpriteEditorModule : IEditorModule
+{
+    public const string Id = "sprites";
+    public string UniqueId => Id;
+    public string ListName => "Sprites";
+    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new SpriteTypeViewModel(container, context);
+}
