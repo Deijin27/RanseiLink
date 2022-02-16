@@ -4,6 +4,7 @@ using RanseiLink.PluginModule.Services;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -48,7 +49,7 @@ public class ModListItemViewModel : ViewModelBase
 
     private void PatchRom(ModInfo mod)
     {
-        if (!_dialogService.CommitToRom(Mod, out string romPath))
+        if (!_dialogService.CommitToRom(Mod, out string romPath, out var patchOpt))
         {
             return;
         }
@@ -56,17 +57,15 @@ public class ModListItemViewModel : ViewModelBase
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo("Patching rom..."));
             try
             {
-                _modService.Commit(mod, romPath);
+                _modService.Commit(mod, romPath, patchOpt);
             }
             catch (Exception e)
             {
                 error = e;
                 return;
             }
-            progress.Report(new ProgressInfo("Patching Complete!", 100));
         });
 
         if (error != null)
@@ -172,7 +171,7 @@ public class ModListItemViewModel : ViewModelBase
             progress.Report(new ProgressInfo("Deleting mod..."));
             _modService.Delete(mod);
             progress.Report(new ProgressInfo("Updating mod list", 90));
-            _parentVm.ModItems.Remove(this);
+            Application.Current.Dispatcher.Invoke(() => _parentVm.ModItems.Remove(this));
             progress.Report(new ProgressInfo("Mod Deleted!", 100));
         });
     }

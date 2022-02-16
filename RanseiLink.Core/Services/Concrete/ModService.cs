@@ -6,25 +6,33 @@ using System;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Nds;
 using System.Linq;
+using RanseiLink.Core.Resources;
+using RanseiLink.Core.Graphics;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete;
 
 public class ModService : IModService
 {
-    private readonly string modFolder;
+    private readonly string _graphicsProviderFolder;
+    private readonly string _modFolder;
     public const string ModInfoFileName = "RanseiLinkModInfo.xml";
     public const string ExportModFileExtension = ".rlmod";
     private const uint CurrentModVersion = 2;
 
     private readonly NdsFactory _ndsFactory;
     private readonly IMsgService _msgService;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
 
-    public ModService(string rootFolder, NdsFactory ndsFactory, IMsgService msgService)
+    public ModService(string rootFolder, NdsFactory ndsFactory, IMsgService msgService, IFallbackSpriteProvider fallbackSpriteProvider)
     {
+        _fallbackSpriteProvider = fallbackSpriteProvider;
         _msgService = msgService;
         _ndsFactory = ndsFactory;
-        modFolder = modFolder = Path.Combine(rootFolder, "Mods");
-        Directory.CreateDirectory(modFolder);
+        _graphicsProviderFolder = Path.Combine(rootFolder, "DataProvider");
+        _modFolder = _modFolder = Path.Combine(rootFolder, "Mods");
+        Directory.CreateDirectory(_modFolder);
     }
 
     public string Export(ModInfo modInfo, string destinationFolder)
@@ -66,7 +74,7 @@ public class ModService : IModService
 
     private string GetNewModDirectory()
     {
-        return FileUtil.MakeUniquePath(Path.Combine(modFolder, "Mod"));
+        return FileUtil.MakeUniquePath(Path.Combine(_modFolder, "Mod"));
     }
 
     public IList<ModInfo> GetAllModInfo()
@@ -77,7 +85,7 @@ public class ModService : IModService
     private IList<ModInfo> GetAllModInfoIncludingPreviousVersions()
     {
         var modInfos = new List<ModInfo>();
-        foreach (string folder in Directory.GetDirectories(modFolder))
+        foreach (string folder in Directory.GetDirectories(_modFolder))
         {
             string modInfoPath = Path.Combine(folder, ModInfoFileName);
             if (File.Exists(modInfoPath) && ModInfo.TryLoadFrom(XDocument.Load(modInfoPath), out ModInfo info))
@@ -106,7 +114,16 @@ public class ModService : IModService
             RLModVersion = CurrentModVersion
         };
         Directory.CreateDirectory(modInfo.FolderPath);
-        LoadRom(baseRomPath, modInfo);
+
+        using (var nds = _ndsFactory(baseRomPath))
+        {
+            nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
+        }
+
+        var msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
+        _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
+        File.Delete(msgPath);
+
         Update(modInfo);
         return modInfo;
     }
@@ -142,7 +159,7 @@ public class ModService : IModService
             }
             Update(mod);
         }
-        
+
     }
 
     private void AdvanceVersion1To2(ModInfo modInfo, INds nds)
@@ -169,62 +186,184 @@ public class ModService : IModService
         Directory.Delete(modInfo.FolderPath, true);
     }
 
-    public void LoadRom(string path, ModInfo modInfo)
+    public void Commit(ModInfo modInfo, string path, PatchOptions patchOptions = 0, IProgress<ProgressInfo> progress = null)
     {
-        using (var nds = _ndsFactory(path))
+        progress?.Report(new ProgressInfo(StatusText: "Preparing to patch...", IsIndeterminate: true));
+
+        ConcurrentBag<FileToPatch> filesToPatch = new();
+        Exception exception = null;
+        try
         {
-            nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
+            GetFilesToPatch(modInfo, filesToPatch, patchOptions);
+
+            progress?.Report(new ProgressInfo(IsIndeterminate: false, MaxProgress: filesToPatch.Count, StatusText: "Patching..."));
+            int count = 0;
+            using var nds = _ndsFactory(path);
+            foreach (var file in filesToPatch)
+            {
+                if (file.Options.HasFlag(FilePatchOptions.VariableLength))
+                {
+                    nds.InsertVariableLengthFile(file.GamePath, file.FileSystemPath);
+                }
+                else
+                {
+                    nds.InsertFixedLengthFile(file.GamePath, file.FileSystemPath);
+                }
+                progress?.Report(new ProgressInfo(Progress: ++count));
+            }
+        }
+        catch (Exception e)
+        {
+            exception = e;
+        }
+        finally
+        {
+            progress?.Report(new ProgressInfo(StatusText: "Cleaning up temporary files...", IsIndeterminate: true));
+
+            foreach (var file in filesToPatch)
+            {
+                if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
+                {
+                    File.Delete(file.FileSystemPath);
+                }
+            }
+        }
+        
+        if (exception != null)
+        {
+            throw exception;
         }
 
-        var msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
-        _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
-        File.Delete(msgPath);
+        progress?.Report(new ProgressInfo(StatusText: "Done!", IsIndeterminate: false));
     }
 
-    public void Commit(ModInfo modInfo, string path)
+    private record FileToPatch(string GamePath, string FileSystemPath, FilePatchOptions Options);
+
+    [Flags]
+    private enum FilePatchOptions
     {
-        string currentModFolder = modInfo.FolderPath;
-        string msgTmpFile = Path.GetTempFileName();
-        _msgService.CreateMsgDat(Path.Combine(currentModFolder, Constants.MsgFolderPath), msgTmpFile);
+        None = 0,
+        DeleteSourceWhenDone = 1,
+        VariableLength = 2,
+    }
 
-        using (var nds = _ndsFactory(path))
+    private void GetFilesToPatch(ModInfo mod, ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
+    {
+        List<string> dataRomPaths = new()
         {
-            nds.InsertFixedLengthFile(Constants.PokemonRomPath, Path.Combine(currentModFolder, Constants.PokemonRomPath));
-            nds.InsertFixedLengthFile(Constants.MoveRomPath, Path.Combine(currentModFolder, Constants.MoveRomPath));
-            nds.InsertFixedLengthFile(Constants.AbilityRomPath, Path.Combine(currentModFolder, Constants.AbilityRomPath));
-            nds.InsertFixedLengthFile(Constants.WarriorSkillRomPath, Path.Combine(currentModFolder, Constants.WarriorSkillRomPath));
-            nds.InsertFixedLengthFile(Constants.GimmickRomPath, Path.Combine(currentModFolder, Constants.GimmickRomPath));
-            nds.InsertFixedLengthFile(Constants.BuildingRomPath, Path.Combine(currentModFolder, Constants.BuildingRomPath));
-            nds.InsertFixedLengthFile(Constants.ItemRomPath, Path.Combine(currentModFolder, Constants.ItemRomPath));
-            nds.InsertFixedLengthFile(Constants.KingdomRomPath, Path.Combine(currentModFolder, Constants.KingdomRomPath));
-            nds.InsertFixedLengthFile(Constants.MoveRangeRomPath, Path.Combine(currentModFolder, Constants.MoveRangeRomPath));
-            nds.InsertFixedLengthFile(Constants.EventSpeakerRomPath, Path.Combine(currentModFolder, Constants.EventSpeakerRomPath));
-            nds.InsertFixedLengthFile(Constants.BaseBushouMaxSyncTableRomPath, Path.Combine(currentModFolder, Constants.BaseBushouMaxSyncTableRomPath));
-            nds.InsertFixedLengthFile(Constants.BaseBushouRomPath, Path.Combine(currentModFolder, Constants.BaseBushouRomPath));
-            nds.InsertFixedLengthFile(Constants.MapRomPath, Path.Combine(currentModFolder, Constants.MapRomPath));
-            nds.InsertFixedLengthFile(Constants.GimmickRangeRomPath, Path.Combine(currentModFolder, Constants.GimmickRangeRomPath));
-            nds.InsertFixedLengthFile(Constants.MoveEffectRomPath, Path.Combine(currentModFolder, Constants.MoveEffectRomPath));
-            nds.InsertFixedLengthFile(Constants.GimmickObjectRomPath, Path.Combine(currentModFolder, Constants.GimmickObjectRomPath));
+            Constants.PokemonRomPath,
+            Constants.MoveRomPath,
+            Constants.AbilityRomPath,
+            Constants.WarriorSkillRomPath,
+            Constants.GimmickRomPath,
+            Constants.BuildingRomPath,
+            Constants.ItemRomPath,
+            Constants.KingdomRomPath,
+            Constants.MoveRangeRomPath,
+            Constants.EventSpeakerRomPath,
+            Constants.BaseBushouMaxSyncTableRomPath,
+            Constants.BaseBushouRomPath,
+            Constants.MapRomPath,
+            Constants.GimmickRangeRomPath,
+            Constants.MoveEffectRomPath,
+            Constants.GimmickObjectRomPath
+        };
 
-            foreach (var i in EnumUtil.GetValues<ScenarioId>())
-            {
-                var spPath = Constants.ScenarioPokemonPathFromId(i);
-                nds.InsertFixedLengthFile(spPath, Path.Combine(currentModFolder, spPath));
-                var swPath = Constants.ScenarioWarriorPathFromId(i);
-                nds.InsertFixedLengthFile(swPath, Path.Combine(currentModFolder, swPath));
-                var sapPath = Constants.ScenarioAppearPokemonPathFromId(i);
-                nds.InsertFixedLengthFile(sapPath, Path.Combine(currentModFolder, sapPath));
-                var skPath = Constants.ScenarioKingdomPathFromId(i);
-                nds.InsertFixedLengthFile(skPath, Path.Combine(currentModFolder, skPath));
-            }
-
-            nds.InsertVariableLengthFile(Constants.MsgRomPath, msgTmpFile);
-
-            foreach (var mapFilePath in Directory.GetFiles(Path.Combine(currentModFolder, "data", "map")))
-            {
-                string mapRomPath = Path.Combine("data", "map", Path.GetFileName(mapFilePath));
-                nds.InsertVariableLengthFile(mapRomPath, mapFilePath);
-            }
+        foreach (var i in EnumUtil.GetValues<ScenarioId>())
+        {
+            dataRomPaths.Add(Constants.ScenarioPokemonPathFromId(i));
+            dataRomPaths.Add(Constants.ScenarioWarriorPathFromId(i));
+            dataRomPaths.Add(Constants.ScenarioAppearPokemonPathFromId(i));
+            dataRomPaths.Add(Constants.ScenarioKingdomPathFromId(i));
         }
+
+        foreach (string drp in dataRomPaths)
+        {
+            filesToPatch.Add(new FileToPatch(drp, Path.Combine(mod.FolderPath, drp), FilePatchOptions.None));
+        }
+
+        foreach (var mapFilePath in Directory.GetFiles(Path.Combine(mod.FolderPath, Constants.DataFolderPath, "map")))
+        {
+            string mapRomPath = Path.Combine(Constants.DataFolderPath, "map", Path.GetFileName(mapFilePath));
+            filesToPatch.Add(new FileToPatch(mapRomPath, mapFilePath, FilePatchOptions.VariableLength));
+        }
+
+        string msgTmpFile = Path.GetTempFileName();
+        _msgService.CreateMsgDat(Path.Combine(mod.FolderPath, Constants.MsgFolderPath), msgTmpFile);
+        filesToPatch.Add(new FileToPatch(Constants.MsgRomPath, msgTmpFile, FilePatchOptions.VariableLength | FilePatchOptions.DeleteSourceWhenDone));
+
+        if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
+        {
+            IOverrideSpriteProvider spriteProvider = new OverrideSpriteProvider(_fallbackSpriteProvider, mod);
+
+            Parallel.ForEach(GraphicsInfoResource.All, gInfo =>
+            {
+                switch (gInfo)
+                {
+                    case StlConstants stlInfo:
+                        PackStl(stlInfo, filesToPatch, spriteProvider);
+                        break;
+                    case ScbgConstants scbgInfo:
+                        PackScbg(scbgInfo, filesToPatch, spriteProvider);
+                        break;
+                    default:
+                        throw new Exception($"Other types of {nameof(IGraphicsInfo)} not supported");
+                }
+            });
+        }
+    }
+
+    private void PackStl(StlConstants stlInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider)
+    {
+        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
+
+        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(stlInfo.Type);
+        if (!spriteFiles.Any(i => i.IsOverride))
+        {
+            return;
+        }
+        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
+
+        if (stlInfo.TexInfo != null)
+        {
+            string texData = Path.GetTempFileName();
+            string texInfo = Path.GetTempFileName();
+            STLCollection
+                .LoadPngs(filesToPack, ncer, tiled: false)
+                .Save(texData, texInfo);
+            filesToPatch.Add(new FileToPatch(stlInfo.TexInfo, texInfo, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+            filesToPatch.Add(new FileToPatch(stlInfo.TexData, texData, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        }
+
+        if (stlInfo.Info != null)
+        {
+            string info = Path.GetTempFileName();
+            string data = Path.GetTempFileName();
+            STLCollection
+                .LoadPngs(filesToPack, ncer, tiled: true)
+                .Save(data, info);
+            filesToPatch.Add(new FileToPatch(stlInfo.Info, info, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+            filesToPatch.Add(new FileToPatch(stlInfo.Data, data, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        }
+    }
+
+    private void PackScbg(ScbgConstants scbgInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider)
+    {
+        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(scbgInfo.Type);
+        if (!spriteFiles.Any(i => i.IsOverride))
+        {
+            return;
+        }
+
+        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
+        string data = Path.GetTempFileName();
+        string info = Path.GetTempFileName();
+
+        SCBGCollection
+            .LoadPngs(filesToPack, tiled:true)
+            .Save(data, info);
+
+        filesToPatch.Add(new FileToPatch(scbgInfo.Data, data, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        filesToPatch.Add(new FileToPatch(scbgInfo.Info, info, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
     }
 }

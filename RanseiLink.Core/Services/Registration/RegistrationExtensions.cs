@@ -16,13 +16,16 @@ public static class RegistrationExtensions
 
         container.RegisterLazySingleton<IMsgService>(() => new MsgService());
 
-        container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, container.Resolve<NdsFactory>(), container.Resolve<IMsgService>()));
+        container.RegisterLazySingleton<IFallbackSpriteProvider>(() => new FallbackSpriteProvider(rootFolder, container.Resolve<NdsFactory>()));
+
+        container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, container.Resolve<NdsFactory>(), 
+            container.Resolve<IMsgService>(), container.Resolve<IFallbackSpriteProvider>()));
 
         container.RegisterLazySingleton<ISettingsService>(() => new SettingsService(rootFolder));
 
         container.RegisterLazySingleton<ISpriteService>(() => new SpriteService());
 
-        container.RegisterLazySingleton<IFallbackSpriteProvider>(() => new FallbackSpriteProvider(rootFolder, container.Resolve<NdsFactory>()));
+        
 
         container.RegisterSingleton<DataServiceFactory>(m => new DataService(m, container));
     }

@@ -70,13 +70,18 @@ public class SCBGCollection
         }
 
         infoBw.BaseStream.Position = maxLenPos;
-        dataBw.Write(maxLen);
+        infoBw.Write(maxLen);
     }
 
-    public static SCBGCollection LoadPngs(string inputFolder, bool tiled = false)
+    public static SCBGCollection LoadPngs(string inputFolder, bool tiled = true)
+    {
+        return LoadPngs(Directory.GetFiles(inputFolder, "*.png"), tiled);
+    }
+
+    public static SCBGCollection LoadPngs(string[] files, bool tiled = true)
     {
         var scbgFiles = (
-            from filePath in Directory.GetFiles(inputFolder, "*.png")
+            from filePath in files
             let fileName = Path.GetFileNameWithoutExtension(filePath)
             where int.TryParse(fileName, out var _)
             let num = int.Parse(fileName)
@@ -101,7 +106,7 @@ public class SCBGCollection
         return new SCBGCollection { Items = scbg.ToList() };
     }
 
-    public void SaveAsPngs(string outputFolder, bool tiled = false)
+    public void SaveAsPngs(string outputFolder, bool tiled = true)
     {
         Directory.CreateDirectory(outputFolder);
         Parallel.For(0, Items.Count, i =>
@@ -175,7 +180,7 @@ public class SCBG
         bw.Write(Pixels);
     }
 
-    public void SaveAsPng(string saveFile, bool tiled = false)
+    public void SaveAsPng(string saveFile, bool tiled = true)
     {
         ImageUtil.SaveAsPng(
             file: saveFile,
@@ -184,7 +189,7 @@ public class SCBG
             );
     }
 
-    public static SCBG LoadPng(string file, bool tiled = false)
+    public static SCBG LoadPng(string file, bool tiled = true)
     {
         var imageInfo = ImageUtil.LoadPng(file, tiled);
 

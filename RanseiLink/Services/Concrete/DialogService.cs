@@ -232,7 +232,7 @@ internal class DialogService : IDialogService
         }
     }
 
-    public bool CommitToRom(ModInfo info, out string romPath)
+    public bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions)
     {
         var vm = new ModCommitViewModel(this, info, Settings.RecentCommitRom);
 
@@ -248,11 +248,20 @@ internal class DialogService : IDialogService
         {
             romPath = vm.File;
             Settings.RecentCommitRom = vm.File;
+
+            patchOptions = 0;
+
+            if (vm.IncludeSprites)
+            {
+                patchOptions |= PatchOptions.IncludeSprites;
+            }
+
             return true;
         }
         else
         {
             romPath = null;
+            patchOptions = 0;
             return false;
         }
     }
@@ -384,12 +393,11 @@ internal class DialogService : IDialogService
 
     public bool SimplfyPalette(int maxColors, string original, string simplified)
     {
-        var vm = new PaletteSimplifierDialogViewModel
-        {
-            MaximumColors = maxColors,
-            Original = original,
-            Simplified = simplified
-        };
+        var vm = new PaletteSimplifierDialogViewModel(
+            maxColors,
+            original,
+            simplified
+        );
 
         var dialog = new Dialogs.SimplifyPaletteDialog
         {

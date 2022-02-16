@@ -24,7 +24,7 @@
                 <StackPanel>
                     <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Palette Simplifier</TextBlock>
                     <TextBlock Margin="10" TextWrapping="Wrap">
-                        The image provided has more than the maximum <Run Text="{Binding MaximumColors}"/> colors. 
+                        The image provided has more than the maximum <Run Text="{Binding MaximumColors, Mode=OneWay}"/> colors. 
                         <LineBreak/>
                         On the right is a version of the image with fewer colors, 
                         <LineBreak/>
@@ -33,10 +33,10 @@
                     </TextBlock>
                     <StackPanel  Orientation="Horizontal">
                         <GroupBox Margin="5" Header="Image you provided">
-                            <Image Source="{Binding Original}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Image Source="{Binding Original, Mode=OneWay}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         </GroupBox>
                         <GroupBox Margin="5" Header="Simplified image">
-                            <Image Source="{Binding Simplified}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Image Source="{Binding Simplified, Mode=OneWay}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         </GroupBox>
                     </StackPanel>
                 </StackPanel>

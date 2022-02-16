@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Data;
 
 namespace RanseiLink.ViewModels;
 
@@ -21,6 +22,8 @@ public class ModSelectionViewModel : ViewModelBase
         _dialogService = container.Resolve<IDialogService>();
         _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
         _fallbackSpriteProvider = _container.Resolve<IFallbackSpriteProvider>();
+
+        BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 
         RefreshModItems();
         RefreshOutdatedModsExist();
@@ -48,6 +51,7 @@ public class ModSelectionViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
     }
 
+    private readonly object _modItemsLock = new();
     public ObservableCollection<ModListItemViewModel> ModItems { get; } = new ObservableCollection<ModListItemViewModel>();
 
     public ICommand ModItemClicked { get; }
@@ -56,10 +60,13 @@ public class ModSelectionViewModel : ViewModelBase
 
     public void RefreshModItems()
     {
-        ModItems.Clear();
-        foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
+        lock (_modItemsLock)
         {
-            ModItems.Add(_itemViewModelFactory(this, mi));
+            ModItems.Clear();
+            foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
+            {
+                ModItems.Add(_itemViewModelFactory(this, mi));
+            }
         }
     }
 

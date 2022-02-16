@@ -16,7 +16,20 @@ public interface INds : IDisposable
     /// </summary>
     /// <param name="path">path to file within Nds file system</param>
     /// <param name="destination">destination file on computer</param>
-    void ExtractCopyOfFile(string path, string destinationFolder);
+    void ExtractCopyOfFile(string path, string destination);
+
+    /// <summary>
+    /// Write the data of a file into the nds file system. 
+    /// Exception if the length of the provided file does not match the length of the current file in the file system.
+    /// </summary>
+    /// <param name="path">path to file within Nds file system</param>
+    /// <param name="source">source file on computer</param>
     void InsertFixedLengthFile(string path, string source);
+
+    /// <summary>
+    /// Write the data of a file into the nds file system.
+    /// </summary>
+    /// <param name="path">path to file within Nds file system</param>
+    /// <param name="source">source file on computer</param>
     void InsertVariableLengthFile(string path, string source);
 }

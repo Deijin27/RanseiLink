@@ -29,7 +29,6 @@ public class MapViewModel : ViewModelBase
     private MapGridSubCellViewModel _mouseOverItem;
     private MapGridCellViewModel _selectedCell;
     private readonly IDialogService _dialogService;
-    private readonly MapId _id;
 
     public PSLM Map { get; set; }
 

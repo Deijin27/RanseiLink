@@ -11,7 +11,7 @@ public interface IDialogService
     bool ExportMod(ModInfo info, out string folder);
     bool ImportMod(out string file);
     bool EditModInfo(ModInfo info);
-    bool CommitToRom(ModInfo info, out string romPath);
+    bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions);
     bool RequestRomFile(out string result);
     bool ConfirmDelete(ModInfo info);
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);

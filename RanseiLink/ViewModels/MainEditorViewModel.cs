@@ -163,7 +163,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             return;
         }
 
-        if (!_dialogService.CommitToRom(Mod, out string romPath))
+        if (!_dialogService.CommitToRom(Mod, out string romPath, out var patchOpt))
         {
             return;
         }
@@ -171,18 +171,16 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo("Saving..."));
+            progress.Report(new ProgressInfo("Saving...", IsIndeterminate:true));
             Save();
-            progress.Report(new ProgressInfo("Patching Rom...", 20));
             try
             {
-                _modService.Commit(Mod, romPath);
+                _modService.Commit(Mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {
                 error = e;
             }
-            progress.Report(new ProgressInfo("Patching Complete...", 100));
         });
 
         if (error != null)

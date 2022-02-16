@@ -50,5 +50,7 @@ public class ModCommitViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _okEnabled, value);
     }
 
+    public bool IncludeSprites { get; set; } = true;
+
     public ModInfo ModInfo { get; }
 }

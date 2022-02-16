@@ -36,6 +36,8 @@
                 <StackPanel>
                     <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Apply mod to rom</TextBlock>
                     <controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
+                    <CheckBox Margin="10" Content="Include sprites in patch" IsChecked="{Binding IncludeSprites}"
+                              ToolTip="If you change lots of sprites, you can speed up the patches by not including them every time."/>
                 </StackPanel>
                 
             </Border>

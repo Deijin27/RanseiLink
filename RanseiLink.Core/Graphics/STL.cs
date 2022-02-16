@@ -74,13 +74,18 @@ public class STLCollection
         }
 
         infoBw.BaseStream.Position = maxLenPos;
-        dataBw.Write(maxLen);
+        infoBw.Write(maxLen);
     }
 
     public static STLCollection LoadPngs(string inputFolder, NCER ncer, bool tiled = false)
     {
+        return LoadPngs(Directory.GetFiles(inputFolder, "*.png"), ncer, tiled);
+    }
+
+    public static STLCollection LoadPngs(string[] files, NCER ncer, bool tiled = false)
+    {
         var stlFiles = (
-            from filePath in Directory.GetFiles(inputFolder, "*.png")
+            from filePath in files
             let fileName = Path.GetFileNameWithoutExtension(filePath)
             where int.TryParse(fileName, out var _)
             let num = int.Parse(fileName)
