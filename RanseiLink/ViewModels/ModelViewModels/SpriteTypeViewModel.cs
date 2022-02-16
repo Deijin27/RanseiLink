@@ -2,6 +2,7 @@
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,6 +64,8 @@ public class SpriteItemViewModel : ViewModelBase
         
     }
 
+    public event Action<SpriteItemViewModel> RemoveRequest;
+
     public ICommand SetOverrideCommand { get; }
     public ICommand ExportCommand { get; }
     public ICommand RevertCommand { get; }
@@ -74,7 +77,14 @@ public class SpriteItemViewModel : ViewModelBase
             _spriteProvider.ClearOverride(_spriteType, Id);
             _isOverride = false;
             _displayFile = _spriteProvider.GetSpriteFilePath(_spriteType, Id);
-            UpdateDisplayImage();
+            if (File.Exists(_displayFile))
+            {
+                UpdateDisplayImage();
+            }
+            else
+            {
+                RemoveRequest?.Invoke(this);
+            }
         }
     }
 
@@ -82,6 +92,7 @@ public class SpriteItemViewModel : ViewModelBase
     {
         var dest = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, Path.GetFileName(_displayFile)));
         File.Copy(_displayFile, dest);
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }
 
     private void SetOverride()
@@ -123,6 +134,9 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
     {
         _spriteProvider = context.DataService.OverrideSpriteProvider;
         _dialogService = container.Resolve<IDialogService>();
+
+        AddNewCommand = new RelayCommand(AddNew);
+        ExportAllCommand = new RelayCommand(ExportAll);
     }
 
     private SpriteType _selectedType = SpriteType.StlBushouB;
@@ -158,7 +172,9 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
             int count = 0;
             foreach (var i in files)
             {
-                newItems.Add(new SpriteItemViewModel(i, _spriteProvider, _dialogService));
+                var item = new SpriteItemViewModel(i, _spriteProvider, _dialogService);
+                newItems.Add(item);
+                item.RemoveRequest += _ => Refresh();
                 progress.Report(new ProgressInfo(Progress: ++count));
             }
 
@@ -168,13 +184,47 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
     }
 
     public ICommand AddNewCommand { get; }
+    public ICommand ExportAllCommand { get; }
 
     private void AddNew()
     {
-        string file = "";
         var id = Items.Max(i => i.Id) + 1;
+        if (!_dialogService.RequestFile($"Pick a file to add in slot '{id}' ", ".png", "PNG Image (.png)|*.png", out string file))
+        {
+            return;
+        }
+
+        string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
+        bool usedTemp = false;
+        if (Core.Graphics.PaletteSimplifier.SimplifyPalette(file, 256, temp))
+        {
+            usedTemp = true;
+            if (!_dialogService.SimplfyPalette(256, file, temp))
+            {
+                return;
+            }
+            file = temp;
+        }
+
         _spriteProvider.SetOverride(SelectedType, id, file);
         UpdateList();
+
+        if (usedTemp)
+        {
+            File.Delete(temp);
+        }
+    }
+
+    private void ExportAll()
+    {
+        string dir = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, SelectedType.ToString()));
+        Directory.CreateDirectory(dir);
+        foreach (var spriteInfo in _spriteProvider.GetAllSpriteFiles(SelectedType))
+        {
+            string dest = Path.Combine(dir, Path.GetFileName(spriteInfo.File));
+            File.Copy(spriteInfo.File, dest);
+        }
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
     }
 
     public void Refresh()
