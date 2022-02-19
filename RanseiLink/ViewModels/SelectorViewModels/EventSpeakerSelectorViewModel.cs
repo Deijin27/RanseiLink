@@ -11,13 +11,15 @@ public delegate EventSpeakerSelectorViewModel EventSpeakerSelectorViewModelFacto
 public class EventSpeakerSelectorViewModel : SelectorViewModelBase<EventSpeakerId, IEventSpeaker, EventSpeakerViewModel>
 {
     private readonly EventSpeakerViewModelFactory _factory;
+    private readonly IEditorContext _editorContext;
 
     public EventSpeakerSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.EventSpeaker) 
     { 
         _factory = container.Resolve<EventSpeakerViewModelFactory>();
+        _editorContext = context;
         Selected = EventSpeakerId.Shopkeeper_0;
     }
 
-    protected override EventSpeakerViewModel NewViewModel(IEventSpeaker model) => _factory(model);
+    protected override EventSpeakerViewModel NewViewModel(IEventSpeaker model) => _factory(model, _editorContext);
 }

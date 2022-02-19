@@ -6,6 +6,7 @@
              xmlns:const="clr-namespace:RanseiLink.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
+             xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              d:DataContext="{d:DesignInstance Type=vm:EventSpeakerViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -20,6 +21,8 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Height" Value="20"/>
         </Style>
+
+        <conv:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
@@ -39,7 +42,7 @@
         <TextBlock Text="Sprite" Grid.Row="1"/>
         <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Sprite}"/>
 
-        <Image Grid.Row="2" Grid.ColumnSpan="2" Source="{Binding SpritePath}" Height="208"/>
+        <Image Grid.Row="2" Grid.ColumnSpan="2" Source="{Binding SpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="208"/>
 
     </Grid>
 </UserControl>

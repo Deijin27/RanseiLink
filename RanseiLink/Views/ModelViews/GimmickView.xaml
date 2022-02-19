@@ -33,7 +33,9 @@
             <Setter Property="FontFamily" Value="{StaticResource SegoeMDL2Assets}"/>
             <Setter Property="Command" Value="{Binding SetPreviewAnimationModeCommand}"/>
         </Style>
-        
+
+        <valueConverters:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
+
     </UserControl.Resources>
     <WrapPanel>
         <Grid Margin="10">
@@ -72,7 +74,7 @@
             <TextBlock Text="Top Screen Image" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
             <UniformGrid Grid.Row="4" Grid.Column="1" Rows="1">
                 <controls:NumberBox Value="{Binding Image}" />
-                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding ImagePath}"/>
+                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding ImagePath, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
             <TextBlock Text="State-1 Sprite" Grid.Row="5" ToolTip="The sprite that is on the bottom screen in battle"/>

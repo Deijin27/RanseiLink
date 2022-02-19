@@ -2,6 +2,7 @@
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
+using RanseiLink.ValueConverters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,20 +49,14 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void UpdateDisplayImage()
     {
-        using var fs = new FileStream(_displayFile, FileMode.Open, FileAccess.Read);
-        if (fs.Length == 0)
+        if (PathToImageSourceConverter.TryConvert(_displayFile, out var img))
         {
-            return;
+            DisplayImage = img;
         }
-        try
-        {
-            DisplayImage = BitmapFrame.Create(fs, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
-        }
-        catch
+        else
         {
             DisplayImage = null;
         }
-        
     }
 
     public event Action<SpriteItemViewModel> RemoveRequest;

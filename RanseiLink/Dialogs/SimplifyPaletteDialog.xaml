@@ -9,9 +9,13 @@
         SizeToContent="WidthAndHeight"
         mc:Ignorable="d"
         xmlns:controls="clr-namespace:RanseiLink.Controls"
+        xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
         d:DataContext="{d:DesignInstance vm:PaletteSimplifierDialogViewModel, IsDesignTimeCreatable=false}"
         Title="Patch rom" Background="{DynamicResource WindowBackgroundBrush}">
+    <Window.Resources>
+        <conv:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
+    </Window.Resources>
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
@@ -33,10 +37,10 @@
                     </TextBlock>
                     <StackPanel  Orientation="Horizontal">
                         <GroupBox Margin="5" Header="Image you provided">
-                            <Image Source="{Binding Original, Mode=OneWay}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Image Source="{Binding Original, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         </GroupBox>
                         <GroupBox Margin="5" Header="Simplified image">
-                            <Image Source="{Binding Simplified, Mode=OneWay}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Image Source="{Binding Simplified, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                         </GroupBox>
                     </StackPanel>
                 </StackPanel>
