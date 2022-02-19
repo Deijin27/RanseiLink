@@ -5,12 +5,16 @@
 		<TexInfo>graphics/still/stl_busho_b/StlBushouBTexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_busho_b/StlBushouBTex.dat</TexData>
 		<Link>graphics/still/stl_busho_b/stl_busho_b.G2DR</Link>
+		<Width>56</Width>
+		<Height>72</Height>
 	</STL>
 	<STL Id="StlBushouCI">
 		<DisplayName>Warrior Battle Intro</DisplayName>
 		<TexInfo>graphics/still/stl_busho_ci/StlBushouCITexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_busho_ci/StlBushouCITex.dat</TexData>
 		<Link>graphics/still/stl_busho_ci/stl_busho_ci.G2DR</Link>
+		<Width>256</Width>
+		<Height>80</Height>
 	</STL>
 	<STL Id="StlBushouF">
 		<DisplayName>Game Intro Player</DisplayName>
@@ -19,6 +23,8 @@
 		<Info>graphics/still/stl_busho_f/StlBushouFInfo.dat</Info>
 		<Data>graphics/still/stl_busho_f/StlBushouF.dat</Data>
 		<Link>graphics/still/stl_busho_f/stl_busho_f.G2DR</Link>
+		<Width>216</Width>
+		<Height>208</Height>
 	</STL>
     <STL Id="StlBushouLL">
 		<DisplayName>Warrior Overworld Interact</DisplayName>
@@ -27,6 +33,8 @@
 		<Info>graphics/still/stl_busho_ll/StlBushouLLInfo.dat</Info>
 		<Data>graphics/still/stl_busho_ll/StlBushouLL.dat</Data>
 		<Link>graphics/still/stl_busho_ll/stl_busho_ll.G2DR</Link>
+		<Width>144</Width>
+		<Height>208</Height>
 	</STL>
     <STL Id="StlBushouM">
 		<DisplayName>Warrior Battle Icon</DisplayName>
@@ -35,6 +43,8 @@
 		<Info>graphics/still/stl_busho_m/StlBushouMInfo.dat</Info>
 		<Data>graphics/still/stl_busho_m/StlBushouM.dat</Data>
 		<Link>graphics/still/stl_busho_m/stl_busho_m.G2DR</Link>
+		<Width>64</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlBushouS">
 		<DisplayName>Warrior Army Icon</DisplayName>
@@ -43,6 +53,8 @@
 		<Info>graphics/still/stl_busho_s/StlBushouSInfo.dat</Info>
 		<Data>graphics/still/stl_busho_s/StlBushouS.dat</Data>
 		<Link>graphics/still/stl_busho_s/stl_busho_s.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlBushouWu">
 		<DisplayName>Warrior Full</DisplayName>
@@ -51,29 +63,38 @@
 		<Info>graphics/still/stl_busho_wu/StlBushouWuInfo.dat</Info>
 		<Data>graphics/still/stl_busho_wu/StlBushouWu.dat</Data>
 		<Link>graphics/still/stl_busho_wu/stl_busho_wu.G2DR</Link>
+		<Width>176</Width>
+		<Height>168</Height>
 	</STL>
     <STL Id="StlCastleIcon">
 		<DisplayName>Kingdom Castle Icon</DisplayName>
 		<TexInfo>graphics/still/stl_castleicon/StlCastleIconTexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_castleicon/StlCastleIconTex.dat</TexData>
 		<Link>graphics/still/stl_castleicon/stl_castleicon.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlChikei">
 		<DisplayName>Battle Terrain Icon</DisplayName>
 		<Info>graphics/still/stl_chikei/StlChikeiInfo.dat</Info>
 		<Data>graphics/still/stl_chikei/StlChikei.dat</Data>
 		<Link>graphics/still/stl_chikei/still_chikei.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlEventCommon">
 		<DisplayName>Event Image</DisplayName>
 		<TexInfo>graphics/still/stl_event/StlCommonTexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_event/StlCommonTex.dat</TexData>
 		<Link>graphics/still/stl_event/stl_common.G2DR</Link>
+		<Width>160</Width>
+		<Height>120</Height>
 	</STL>
     <SCBG Id="StlEventBg">
 		<DisplayName>Event Background</DisplayName>
 		<Info>graphics/still/stl_event/StlEventBgInfo.dat</Info>
 		<Data>graphics/still/stl_event/StlEventBg.dat</Data>
+		<Height>208</Height>
 	</SCBG>
     <STL Id="StlPokemonB">
 		<DisplayName>Pokemon Unknown Left</DisplayName>
@@ -82,12 +103,16 @@
 		<Info>graphics/still/stl_pokemon_b/StlPokemonBInfo.dat</Info>
 		<Data>graphics/still/stl_pokemon_b/StlPokemonB.dat</Data>
 		<Link>graphics/still/stl_pokemon_b/stl_pokemon_b.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlPokemonCI">
 		<DisplayName>Pokemon Battle Intro</DisplayName>
 		<TexInfo>graphics/still/stl_pokemon_ci/StlPokemonCITexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_pokemon_ci/StlPokemonCITex.dat</TexData>
 		<Link>graphics/still/stl_pokemon_ci/stl_pokemon_ci.G2DR</Link>
+		<Width>256</Width>
+		<Height>80</Height>
 	</STL>
     <STL Id="StlPokemonL">
 		<DisplayName>Pokemon Full</DisplayName>
@@ -96,6 +121,8 @@
 		<Info>graphics/still/stl_pokemon_l/StlPokemonLInfo.dat</Info>
 		<Data>graphics/still/stl_pokemon_l/StlPokemonL.dat</Data>
 		<Link>graphics/still/stl_pokemon_l/stl_pokemon_l.G2DR</Link>
+		<Width>128</Width>
+		<Height>128</Height>
 	</STL>
     <STL Id="StlPokemonM">
 		<DisplayName>Pokemon Unknown Right</DisplayName>
@@ -104,6 +131,8 @@
 		<Info>graphics/still/stl_pokemon_m/StlPokemonMInfo.dat</Info>
 		<Data>graphics/still/stl_pokemon_m/StlPokemonM.dat</Data>
 		<Link>graphics/still/stl_pokemon_m/stl_pokemon_m.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlPokemonS">
 		<DisplayName>Pokemon List Icon Right</DisplayName>
@@ -112,6 +141,8 @@
 		<Info>graphics/still/stl_pokemon_s/StlPokemonSInfo.dat</Info>
 		<Data>graphics/still/stl_pokemon_s/StlPokemonS.dat</Data>
 		<Link>graphics/still/stl_pokemon_s/stl_pokemon_s.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlPokemonSR">
 		<DisplayName>Pokemon List Icon Left</DisplayName>
@@ -120,22 +151,30 @@
 		<Info>graphics/still/stl_pokemon_sr/StlPokemonSRInfo.dat</Info>
 		<Data>graphics/still/stl_pokemon_sr/StlPokemonSR.dat</Data>
 		<Link>graphics/still/stl_pokemon_sr/stl_pokemon_sr.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
     <STL Id="StlPokemonWu">
 		<DisplayName>Pokemon Conversation</DisplayName>
 		<TexInfo>graphics/still/stl_pokemon_wu/StlPokemonWuTexInfo.dat</TexInfo>
 		<TexData>graphics/still/stl_pokemon_wu/StlPokemonWuTex.dat</TexData>
 		<Link>graphics/still/stl_pokemon_wu/stl_pokemon_wu.G2DR</Link>
+		<Width>176</Width>
+		<Height>168</Height>
 	</STL>
     <SCBG Id="StlStaffRoll">
 		<DisplayName>Staff Roll</DisplayName>
 		<Info>graphics/still/stl_staffroll/StlStaffRollInfo.dat</Info>
 		<Data>graphics/still/stl_staffroll/StlStaffRoll.dat</Data>
+		<Width>272</Width>
+		<Height>208</Height>
 	</SCBG>
     <STL Id="StlStageObje">
 		<DisplayName>Gimmick Objects</DisplayName>
 		<Info>graphics/still/stl_stageobje/StlStageObjeInfo.dat</Info>
 		<Data>graphics/still/stl_stageobje/StlStageObje.dat</Data>
 		<Link>graphics/still/stl_stageobje/stl_stageobje.G2DR</Link>
+		<Width>32</Width>
+		<Height>32</Height>
 	</STL>
 </GraphicsInfo>

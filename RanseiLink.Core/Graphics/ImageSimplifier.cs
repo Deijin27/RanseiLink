@@ -2,14 +2,12 @@
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace RanseiLink.Core.Graphics;
 
-public static class PaletteSimplifier
+public static class ImageSimplifier
 {
     /// <summary>
     /// Simplify palette by grouping colors nearest to eachother
@@ -63,6 +61,34 @@ public static class PaletteSimplifier
 
         img.Save(saveFile);
 
+        img.Dispose();
+
         return true;
+    }
+
+    public static void ResizeImage(string imagePath, int width, int height, string saveFile)
+    {
+        Image<Rgba32> img;
+        try
+        {
+            img = Image.Load<Rgba32>(imagePath);
+        }
+        catch (UnknownImageFormatException e)
+        {
+            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+        }
+
+        img.Mutate(g =>
+        {
+            g.Resize(new ResizeOptions
+            {
+                Size = new Size(width, height),
+                Mode = ResizeMode.Max
+            });
+        });
+
+        img.Save(saveFile);
+
+        img.Dispose();
     }
 }

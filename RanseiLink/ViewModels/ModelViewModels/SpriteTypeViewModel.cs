@@ -99,7 +99,39 @@ public class SpriteItemViewModel : ViewModelBase
 
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
         bool usedTemp = false;
-        if (Core.Graphics.PaletteSimplifier.SimplifyPalette(file, 256, temp))
+
+        IGraphicsInfo gInfo = GraphicsInfoResource.Get(_spriteType);
+
+        if (gInfo.Width != null && gInfo.Height != null)
+        {
+            var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+                title: "Invalid dimensions",
+                message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",
+                buttons: new[] 
+                { 
+                    new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
+                    new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
+                    new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
+                },
+                defaultResult: MessageBoxResult.Cancel
+                ));
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Core.Graphics.ImageSimplifier.ResizeImage(file, (int)gInfo.Width, (int)gInfo.Height, temp);
+                    usedTemp = true;
+                    file = temp;
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                default:
+                    return;
+            }
+            
+        }
+
+        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, 256, temp))
         {
             usedTemp = true;
             if (!_dialogService.SimplfyPalette(256, file, temp))
@@ -124,6 +156,7 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
 {
     private readonly IOverrideSpriteProvider _spriteProvider;
     private readonly IDialogService _dialogService;
+    private string _dimensionInfo;
 
     public SpriteTypeViewModel(IServiceContainer container, IEditorContext context)
     {
@@ -143,8 +176,30 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
             if (RaiseAndSetIfChanged(ref _selectedType, value))
             {
                 UpdateList();
+                UpdateInfo(value);
             }
         } 
+    }
+
+    private void UpdateInfo(SpriteType type)
+    {
+        IGraphicsInfo info = GraphicsInfoResource.Get(type);
+        string dimensionInfo = "";
+        if (info.Width != null)
+        {
+            dimensionInfo += $"width={info.Width} ";
+        }
+        if (info.Height != null)
+        {
+            dimensionInfo += $"height={info.Height} ";
+        }
+        DimensionInfo = dimensionInfo;
+    }
+
+    public string DimensionInfo
+    {
+        get => _dimensionInfo;
+        set => RaiseAndSetIfChanged(ref _dimensionInfo, value);
     }
 
     public IReadOnlyCollection<IGraphicsInfo> SpriteTypeItems { get; } = GraphicsInfoResource.All;
@@ -191,7 +246,7 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
 
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
         bool usedTemp = false;
-        if (Core.Graphics.PaletteSimplifier.SimplifyPalette(file, 256, temp))
+        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, 256, temp))
         {
             usedTemp = true;
             if (!_dialogService.SimplfyPalette(256, file, temp))

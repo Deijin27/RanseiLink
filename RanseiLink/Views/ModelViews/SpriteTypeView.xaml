@@ -13,7 +13,8 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="20"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <DockPanel Margin="10,10,10,0">
@@ -21,7 +22,11 @@
             <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0" Command="{Binding AddNewCommand}">Append new image</Button>
             <ComboBox Grid.Row="0" Height="20" DisplayMemberPath="DisplayName" SelectedValuePath="Type" ItemsSource="{Binding SpriteTypeItems, Mode=OneTime}" SelectedValue="{Binding SelectedType, Mode=TwoWay}" />
         </DockPanel>
-        <ScrollViewer Grid.Row="1" Margin="10">
+        <DockPanel Grid.Row="1" Margin="10,0">
+            <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource AltForegroundBrush}" Text="{Binding DimensionInfo}"/>
+            <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource AltForegroundBrush}">Right click on an image for more options</TextBlock>
+        </DockPanel>
+        <ScrollViewer Grid.Row="2" Margin="10">
             <ItemsControl ItemsSource="{Binding Items}" Grid.IsSharedSizeScope="True">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>

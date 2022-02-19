@@ -11,6 +11,8 @@ public class StlConstants : IGraphicsInfo
 {
     public SpriteType Type { get; init; }
     public string DisplayName { get; init; }
+    public int? Width { get; init; }
+    public int? Height { get; init; }
     public string TexInfo { get; init; }
     public string TexData { get; init; }
     public string Info { get; init; }
@@ -27,6 +29,8 @@ public class ScbgConstants : IGraphicsInfo
 {
     public SpriteType Type { get; init; }
     public string DisplayName { get; init; }
+    public int? Width { get; init; }
+    public int? Height { get; init; }
     public string Info { get; init; }
     public string Data { get; init; }
     private string _pngFolder;
@@ -37,7 +41,8 @@ public interface IGraphicsInfo
 {
     public SpriteType Type { get; init; }
     public string DisplayName { get; init; }
-
+    public int? Width { get; init; }
+    public int? Height { get; init; }
     public string PngFolder { get; }
 }
 
@@ -66,6 +71,8 @@ public static class GraphicsInfoResource
                     Info = FileUtil.NormalizePath(element.Element("Info")?.Value),
                     Data = FileUtil.NormalizePath(element.Element("Data")?.Value),
                     Link = FileUtil.NormalizePath(element.Element("Link").Value),
+                    Width = int.TryParse(element.Element("Width")?.Value, out int resultWidth) ? resultWidth : null,
+                    Height = int.TryParse(element.Element("Height")?.Value, out int resultHeight) ? resultHeight : null
                 },
                 "SCBG" => new ScbgConstants()
                 {
@@ -73,6 +80,8 @@ public static class GraphicsInfoResource
                     DisplayName = element.Element("DisplayName").Value,
                     Info = FileUtil.NormalizePath(element.Element("Info").Value),
                     Data = FileUtil.NormalizePath(element.Element("Data").Value),
+                    Width = int.TryParse(element.Element("Width")?.Value, out int resultWidth) ? resultWidth : null,
+                    Height = int.TryParse(element.Element("Height")?.Value, out int resultHeight) ? resultHeight : null
                 },
                 _ => throw new Exception("Invalid element in GraphicsInfo.xml")
             };

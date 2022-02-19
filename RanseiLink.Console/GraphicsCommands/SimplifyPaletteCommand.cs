@@ -20,7 +20,7 @@ public class SimplifyPaletteCommand : BaseCommand
 
     public override ValueTask ExecuteAsync(IConsole console)
     {
-        if (PaletteSimplifier.SimplifyPalette(ImagePath, MaxColors))
+        if (ImageSimplifier.SimplifyPalette(ImagePath, MaxColors))
         {
             console.Output.WriteLine("Complete!");
         }
