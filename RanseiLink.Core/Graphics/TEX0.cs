@@ -3,11 +3,69 @@
 namespace RanseiLink.Core.Graphics;
 
 /// <summary>
-/// Texture data. The one chunk of <see cref="BTX0"/>. This is just a bodge that only works for pokemon sprites atm
+/// Texture data. The one chunk of <see cref="BTX0"/>.
 /// </summary>
 public class TEX0
 {
     public struct Header
+    {
+        public const string MagicNumber = "TEX0";
+        public uint TotalLength;
+
+        public uint Padding1;
+
+        public int TextureDataLength;
+        public ushort TextureInfoOffset;
+        public uint TextureDataOffset;
+
+        public int TextureCompressedDataLength;
+        public ushort TextureCompressedInfoOffset;
+        public uint TextureCompressedDataOffset;
+        public uint TextureCompressedInfoDataOffset;
+
+        public uint PaletteDataLength;
+        public uint PaletteInfoOffset;
+        public uint PaletteDataOffset;
+
+        public Header(BinaryReader br)
+        {
+            var magicNumber = br.ReadMagicNumber();
+            if (magicNumber != MagicNumber)
+            {
+                throw new InvalidDataException($"Unexpected magic number '{magicNumber}'. (expected: {MagicNumber})");
+            }
+            TotalLength = br.ReadUInt32();
+
+            Padding1 = br.ReadUInt32();
+
+            TextureDataLength = br.ReadUInt16() << 3;
+            TextureInfoOffset = br.ReadUInt16();
+            var padding = br.ReadUInt32();
+            TextureDataOffset = br.ReadUInt32();
+            padding +=  br.ReadUInt32();
+
+            TextureCompressedDataLength = br.ReadUInt16() << 3;
+            TextureCompressedInfoOffset = br.ReadUInt16();
+            padding += br.ReadUInt32();
+            TextureCompressedDataOffset = br.ReadUInt32();
+            TextureCompressedInfoDataOffset = br.ReadUInt32();
+
+            padding += br.ReadUInt32();
+
+
+            PaletteDataLength = br.ReadUInt32() << 3;
+            PaletteInfoOffset = br.ReadUInt32();
+            PaletteDataOffset = br.ReadUInt32();
+
+
+            if (padding != 0)
+            {
+                throw new InvalidDataException("In texture what was expected to be padding was not 0");
+            }
+        }
+    }
+
+    public struct TextureInfo
     {
 
     }

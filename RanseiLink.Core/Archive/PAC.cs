@@ -43,16 +43,16 @@ public static class PAC
         Directory.CreateDirectory(destinationFolder);
 
         // header
-        uint unknown1 = br.ReadUInt32();
-        if (unknown1 != MagicNumber)
+        uint magicNumber = br.ReadUInt32();
+        if (magicNumber != MagicNumber)
         {
-            throw new Exception($"Unexpected informatin in PAC file {filePath}");
+            throw new Exception($"Unexpected magic number in PAC file {filePath}");
         }
-        uint unknown2 = br.ReadUInt32();
-        if (unknown2 != Version)
-        {
-            throw new Exception($"Unexpected informatin in PAC file {filePath}");
-        }
+
+        // If not 0, this is a variant of another, with one of the files shared with that base
+        // i.e. a file is omitted from this because it would be the same as the base
+        uint sharedFileCount = br.ReadUInt32();
+
         uint numFiles = br.ReadUInt32();
 
         // file offsets
@@ -78,9 +78,11 @@ public static class PAC
             
             br.BaseStream.Position = offset;
             string fileDest = Path.Combine(destinationFolder, 
-                i.ToString().PadLeft(zeroPadLength, '0') 
-                + FileTypeNumberToExtension(fileTypes[i])
-                );
+                i.ToString().PadLeft(zeroPadLength, '0'));
+            if (detectExt)
+            {
+                fileDest += FileTypeNumberToExtension(fileTypes[i]);
+            }
             byte[] buffer = br.ReadBytes(length);
             File.WriteAllBytes(fileDest, buffer);
         }

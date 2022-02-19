@@ -85,4 +85,24 @@ public class MockDialogService : IDialogService
     {
         throw new NotImplementedException();
     }
+
+    public bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool PopulateDefaultSprites(out string romPath)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool SimplfyPalette(int maxColors, string original, string simplified)
+    {
+        throw new NotImplementedException();
+    }
 }

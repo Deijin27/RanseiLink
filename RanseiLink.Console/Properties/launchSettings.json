@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "pokemon sprite export all \"C:\\Users\\Mia\\Desktop\\Testing\\CqUnchanged.nds\""
+      "commandLineArgs": "pokemon sprite export all \"C:\\Users\\Mia\\Desktop\\CqUnchanged.nds\" -d \"C:\\Users\\Mia\\Desktop\\New folder\""
     }
   }
 }

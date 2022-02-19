@@ -47,7 +47,10 @@ public static class ImageUtil
 
         int width = image.Width;
         int height = image.Height;
-        var palette = new List<Rgba32>();
+        var palette = new List<Rgba32>
+        {
+            Color.Transparent
+        };
 
         byte[] pixels = FromImage(image, palette, tiled ? PointUtil.GetIndexTiled8 : PointUtil.GetIndex);
 

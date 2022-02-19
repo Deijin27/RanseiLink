@@ -42,10 +42,8 @@ public static class PaletteSimplifier
                 colors.Add(color);
             }
         }
-        var rgb15Colors = RawPalette.From32bitColors(colors).ToHashSet();
-
         // if not using too many colors, no need to simplify
-        if (rgb15Colors.Count + 1 <= maximumColors)
+        if (colors.Count + 1 <= maximumColors)
         {
             return false;
         }

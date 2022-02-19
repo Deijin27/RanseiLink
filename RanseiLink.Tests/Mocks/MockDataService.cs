@@ -50,4 +50,6 @@ internal class MockDataService : IDataService
     public IGimmickObjectService GimmickObject { get; set; }
 
     public IMapService Map { get; set; }
+
+    public IOverrideSpriteProvider OverrideSpriteProvider { get; set; }
 }
