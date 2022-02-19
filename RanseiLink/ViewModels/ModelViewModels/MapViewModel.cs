@@ -61,9 +61,16 @@ public class MapViewModel : ViewModelBase
     public TerrainId TerrainBrush
     {
         get => _terrainBrush;
-        set => RaiseAndSetIfChanged(ref _terrainBrush, value);
+        set 
+        { 
+            if (RaiseAndSetIfChanged(ref _terrainBrush, value)) 
+            {
+                RaisePropertyChanged(nameof(TerrainBrushImagePath));
+            } 
+        }
     }
 
+    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlChikei, (uint)TerrainBrush);
     public bool TerrainPaintingActive
     {
         get => _terrainPaintingActive;
