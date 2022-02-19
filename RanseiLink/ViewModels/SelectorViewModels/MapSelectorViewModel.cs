@@ -10,17 +10,19 @@ namespace RanseiLink.ViewModels;
 public class MapSelectorViewModel : SelectorViewModelBase<MapId, PSLM, MapViewModel>
 {
     private readonly IServiceContainer _container;
+    private readonly IEditorContext _editorContext;
     private readonly IDialogService _dialogService;
     public MapSelectorViewModel(IServiceContainer container, IEditorContext context)
         : base(container, context.DataService.Map, context.DataService.MapName.GetMaps().ToArray())
     {
         _container = container;
+        _editorContext = context;
         _dialogService = _container.Resolve<IDialogService>();
         Selected = Items.First();
         SupportsImportExportFile = true;
     }
 
-    protected override MapViewModel NewViewModel(PSLM model) => new(_container, model, Selected);
+    protected override MapViewModel NewViewModel(PSLM model) => new(_container, _editorContext, model, Selected);
 
     protected override void ExportFile()
     {

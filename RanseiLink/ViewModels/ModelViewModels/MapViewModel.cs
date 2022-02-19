@@ -2,6 +2,8 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,12 +31,16 @@ public class MapViewModel : ViewModelBase
     private MapGridSubCellViewModel _mouseOverItem;
     private MapGridCellViewModel _selectedCell;
     private readonly IDialogService _dialogService;
+    private readonly IGimmickService _gimmickService;
+    private readonly IOverrideSpriteProvider _spriteProvider;
 
     public PSLM Map { get; set; }
 
-    public MapViewModel(IServiceContainer container, PSLM model, MapId id)
+    public MapViewModel(IServiceContainer container, IEditorContext context, PSLM model, MapId id)
     {
         _dialogService = container.Resolve<IDialogService>();
+        _gimmickService = context.DataService.Gimmick;
+        _spriteProvider = context.DataService.OverrideSpriteProvider;
         Map = model;
         Gimmicks = new(Map.GimmickSection.Items.Select(i => new MapGimmickViewModel(this, i)));
         PokemonPositions = new();
@@ -144,7 +150,7 @@ public class MapViewModel : ViewModelBase
             var rowItems = new List<MapGridCellViewModel>();
             foreach (var col in row)
             {
-                var cellVm = new MapGridCellViewModel(col, x++, y, RenderMode);
+                var cellVm = new MapGridCellViewModel(col, x++, y, RenderMode, _gimmickService, _spriteProvider);
                 rowItems.Add(cellVm);
                 if (col == selectedTerrainEntry)
                 {

@@ -1,5 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
+using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,9 +17,12 @@ public class MapGridCellViewModel : ViewModelBase
 
     private bool _isSelected;
 
-
-    public MapGridCellViewModel(MapTerrainEntry entry, uint x, uint y, MapRenderMode renderMode)
+    private readonly IGimmickService _gimmickService;
+    private readonly IOverrideSpriteProvider _spriteProvider;
+    public MapGridCellViewModel(MapTerrainEntry entry, uint x, uint y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideSpriteProvider spriteProvider)
     {
+        _gimmickService = gimmickService;
+        _spriteProvider = spriteProvider;
         TerrainEntry = entry;
 
         X = x;
@@ -33,6 +38,18 @@ public class MapGridCellViewModel : ViewModelBase
         SubCell7 = new(this, 7, renderMode);
         SubCell8 = new(this, 8, renderMode);
 
+        Gimmicks.CollectionChanged += (s, e) =>
+        {
+            if (Gimmicks.Any())
+            {
+                var gimmick = Gimmicks.Last();
+                GimmickImagePath = _spriteProvider.GetSpriteFilePath(SpriteType.StlStageObje, _gimmickService.Retrieve(gimmick.Gimmick).Image);
+            }
+            else
+            {
+                GimmickImagePath = null;
+            }
+        };
 
     }
 
@@ -85,6 +102,13 @@ public class MapGridCellViewModel : ViewModelBase
     public ObservableCollection<MapPokemonPositionViewModel> Pokemon { get; } = new();
 
     public string GimmicksString => string.Join(", ", Gimmicks.Select(i => i.Gimmick));
+
+    private string _gimmickImagePath;
+    public string GimmickImagePath
+    {
+        get => _gimmickImagePath;
+        set => RaiseAndSetIfChanged(ref _gimmickImagePath, value);
+    }
 
     public MapGridSubCellViewModel SubCell0 { get; }
     public MapGridSubCellViewModel SubCell1 { get; }

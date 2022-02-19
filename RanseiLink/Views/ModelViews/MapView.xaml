@@ -17,6 +17,7 @@
         <vc:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis"/>
         <vc:SubCellToBrushConverter x:Key="Converter.SubCellToBrush"/>
         <vc:GreaterThanZeroToVisiblityConverter x:Key="Converter.GTZeroToVis"/>
+        <vc:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
     </UserControl.Resources>
     <DockPanel Margin="10">
         <DockPanel Margin="10" DockPanel.Dock="Left">
@@ -91,10 +92,13 @@
                                             <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding ., Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding ., Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <!-- Gimmick and pokemon markers -->
+                                            <Rectangle Grid.Column="1" Grid.Row="1" IsHitTestVisible="False" Fill="White" Margin="1" Width="6" Height="6"
+                                                   Visibility="{Binding Gimmicks.Count, Converter={StaticResource Converter.GTZeroToVis}}"/>
+                                            <Image Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" IsHitTestVisible="False" Width="20" Height="20" 
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"
+                                                   Source="{Binding GimmickImagePath, Converter={StaticResource Converter.PathToImage}}"/>
                                             <Rectangle Grid.Column="1" Grid.Row="1" IsHitTestVisible="False" Fill="Black" Margin="1" Width="5" Height="5" 
                                                    Visibility="{Binding Pokemon.Count, Converter={StaticResource Converter.GTZeroToVis}}"/>
-                                            <Rectangle Grid.Column="1" Grid.Row="1" IsHitTestVisible="False" Fill="White" Margin="1" Width="5" Height="5"
-                                                   Visibility="{Binding Gimmicks.Count, Converter={StaticResource Converter.GTZeroToVis}}"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
