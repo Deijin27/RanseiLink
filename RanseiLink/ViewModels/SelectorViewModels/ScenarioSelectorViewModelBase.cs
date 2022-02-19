@@ -42,7 +42,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 type: MessageBoxType.Error,
                 title: $"Error retrieving initial data in {GetType().Name}",
-                message: e.Message
+                message: e.ToString()
             ));
         }
     }
@@ -67,7 +67,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                         _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                             type: MessageBoxType.Error,
                             title: $"Error saving nested saveable {saveable.GetType().Name} in {GetType().Name}",
-                            message: e.Message
+                            message: e.ToString()
                         ));
                     }
 
@@ -105,7 +105,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     type: MessageBoxType.Error,
                     title: $"Error retrieving new selection data in {GetType().Name}",
-                    message: e.Message
+                    message: e.ToString()
             ));
             }
         }
@@ -136,7 +136,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     type: MessageBoxType.Error,
                     title: $"Error retrieving new selection data in {GetType().Name}",
-                    message: e.Message
+                    message: e.ToString()
                     ));
             }
         }
@@ -162,7 +162,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     type: MessageBoxType.Error,
                     title: $"Error saving data in {GetType().Name}",
-                    message: e.Message
+                    message: e.ToString()
                     ));
             }
         }
@@ -181,7 +181,7 @@ public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewMo
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                  type: MessageBoxType.Error,
                  title: $"Error retrieving data in {GetType().Name}",
-                 message: e.Message
+                 message: e.ToString()
              ));
         }
 

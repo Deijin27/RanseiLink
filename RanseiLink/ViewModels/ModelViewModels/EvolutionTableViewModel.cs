@@ -62,7 +62,7 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 type: MessageBoxType.Error,
                 title: $"Error saving data in {GetType().Name}",
-                message: e.Message
+                message: e.ToString()
             ));
         }
     }
@@ -84,7 +84,7 @@ public class EvolutionTableViewModel : ViewModelBase, ISaveableRefreshable
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 type: MessageBoxType.Error,
                 title: $"Error retrieving data in {GetType().Name}",
-                message: e.Message
+                message: e.ToString()
             ));
         }
     }

@@ -11,6 +11,11 @@ namespace RanseiLink.Core.Graphics;
 
 public record ImageInfo(byte[] Pixels, Rgba32[] Palette, int Width, int Height);
 
+public class InvalidPaletteException : Exception
+{
+    public InvalidPaletteException(string message) : base(message) { }
+}
+
 public static class ImageUtil
 {
     public static void SaveAsPng(string file, ImageInfo imageInfo, bool tiled = false)
@@ -52,8 +57,15 @@ public static class ImageUtil
             Color.Transparent
         };
 
-        byte[] pixels = FromImage(image, palette, tiled ? PointUtil.GetIndexTiled8 : PointUtil.GetIndex);
-
+        byte[] pixels;
+        try
+        {
+             pixels = FromImage(image, palette, tiled ? PointUtil.GetIndexTiled8 : PointUtil.GetIndex);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error converting image '{file}'", e);
+        }
         image.Dispose();
 
         return new ImageInfo(pixels, palette.ToArray(), width, height);
@@ -85,7 +97,7 @@ public static class ImageUtil
                     }
                     if (pltIndex > byte.MaxValue)
                     {
-                        throw new Exception($"There can not be more than {byte.MaxValue + 1} colors");
+                        throw new InvalidPaletteException($"There can not be more than {byte.MaxValue + 1} colors");
                     }
                 }
                 pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;

@@ -77,7 +77,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 type: MessageBoxType.Error,
                 title: $"Error saving data in {GetType().Name}",
-                message: e.Message
+                message: e.ToString()
             ));
         }
 
@@ -96,7 +96,7 @@ public abstract class SelectorViewModelBase<TId, TModel, TViewModel> : ViewModel
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     type: MessageBoxType.Error,
                     title: $"Error saving data in {GetType().Name}",
-                    message: e.Message
+                    message: e.ToString()
                 ));
             }
         }
