@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.DragDrop;
-using RanseiLink.Services;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -52,7 +51,6 @@ public class ModImportViewModel : ViewModelBase
 
             ModInfo = modInfo;
             File = file;
-            OkEnabled = true;
         }
         catch (Exception e)
         {
@@ -72,15 +70,16 @@ public class ModImportViewModel : ViewModelBase
     public string File
     {
         get => _file;
-        set => RaiseAndSetIfChanged(ref _file, value);
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _file, value))
+            {
+                RaisePropertyChanged(nameof(OkEnabled));
+            }
+        }
     }
 
-    private bool _okEnabled = false;
-    public bool OkEnabled
-    {
-        get => _okEnabled;
-        set => RaiseAndSetIfChanged(ref _okEnabled, value);
-    }
+    public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
     private ModInfo _modInfo;
     public ModInfo ModInfo

@@ -1,7 +1,9 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
+using RanseiLink.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +25,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     private readonly IDialogService _dialogService;
     private readonly IModService _modService;
     private readonly IEditorContext _editorContext;
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingService _settingService;
+    private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     public ICommand CommitRomCommand { get; }
 
@@ -69,7 +72,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         var editorContextFactory = container.Resolve<EditorContextFactory>();
         _dialogService = container.Resolve<IDialogService>();
         _modService = container.Resolve<IModService>();
-        _settingsService = container.Resolve<ISettingsService>();
+        _settingService = container.Resolve<ISettingService>();
+        _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
 
         PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
 
@@ -105,7 +109,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     public void LoadModuleOrderFromSetting()
     {
         var items = ListItems.ToList();
-        ICollection<string> order = _settingsService.EditorModuleOrder;
+        var order = _editorModuleOrderSetting.Value;
         ListItems.Clear();
         foreach (var item in order)
         {
@@ -150,7 +154,8 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     {
         if (_moduleOrderLoaded) // make sure default order isn't saved before saved order is loaded
         {
-            _settingsService.EditorModuleOrder = ListItems.Select(i => i.ItemValue).ToArray();
+            _editorModuleOrderSetting.Value = ListItems.Select(i => i.ItemValue).ToArray();
+            _settingService.Save();
         }
         _editorContext.CachedMsgBlockService.SaveChangedBlocks();
         CurrentVm?.Save();

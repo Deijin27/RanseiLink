@@ -1,4 +1,6 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
+using RanseiLink.Settings;
 using RanseiLink.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -8,10 +10,16 @@ namespace RanseiLink.Services.Concrete;
 
 internal class DialogService : IDialogService
 {
-    private readonly ISettingsService Settings;
-    public DialogService(ISettingsService settings)
+    private readonly ISettingService _settingService;
+    private readonly RecentLoadRomSetting _recentLoadRomSetting;
+    private readonly RecentCommitRomSetting _recentCommitRomSetting;
+    private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
+    public DialogService(ISettingService settings)
     {
-        Settings = settings;
+        _settingService = settings;
+        _recentLoadRomSetting = settings.Get<RecentLoadRomSetting>();
+        _recentCommitRomSetting = settings.Get<RecentCommitRomSetting>();
+        _recentExportModFolderSetting = settings.Get<RecentExportModFolderSetting>();
     }
 
     public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxArgs options)
@@ -109,7 +117,7 @@ internal class DialogService : IDialogService
 
     public bool CreateMod(out ModInfo modInfo, out string romPath)
     {
-        var vm = new ModCreationViewModel(this, Settings.RecentLoadRom);
+        var vm = new ModCreationViewModel(this, _recentLoadRomSetting.Value);
 
         var dialog = new Dialogs.ModCreationDialog
         {
@@ -123,7 +131,8 @@ internal class DialogService : IDialogService
         {
             modInfo = vm.ModInfo;
             romPath = vm.File;
-            Settings.RecentLoadRom = vm.File;
+            _recentLoadRomSetting.Value = vm.File;
+            _settingService.Save();
             return true;
         }
         else
@@ -160,7 +169,7 @@ internal class DialogService : IDialogService
 
     public bool ExportMod(ModInfo info, out string folder)
     {
-        var vm = new ModExportViewModel(info, Settings.RecentExportModFolder);
+        var vm = new ModExportViewModel(info, _recentExportModFolderSetting.Value);
 
         var dialog = new Dialogs.ModExportDialog
         {
@@ -173,7 +182,8 @@ internal class DialogService : IDialogService
         if (proceed == true)
         {
             folder = vm.Folder;
-            Settings.RecentExportModFolder = vm.Folder;
+            _recentExportModFolderSetting.Value = vm.Folder;
+            _settingService.Save();
             return true;
         }
         else
@@ -234,7 +244,7 @@ internal class DialogService : IDialogService
 
     public bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions)
     {
-        var vm = new ModCommitViewModel(this, info, Settings.RecentCommitRom);
+        var vm = new ModCommitViewModel(this, info, _recentCommitRomSetting.Value);
 
         var dialog = new Dialogs.ModCommitDialog
         {
@@ -247,8 +257,8 @@ internal class DialogService : IDialogService
         if (proceed == true)
         {
             romPath = vm.File;
-            Settings.RecentCommitRom = vm.File;
-
+            _recentCommitRomSetting.Value = vm.File;
+            _settingService.Save();
             patchOptions = 0;
 
             if (vm.IncludeSprites)
@@ -323,7 +333,7 @@ internal class DialogService : IDialogService
 
     public bool UpgradeMods(out string romPath)
     {
-        var vm = new ModUpgradeViewModel(this, Settings.RecentLoadRom);
+        var vm = new ModUpgradeViewModel(this, _recentLoadRomSetting.Value);
 
         var dialog = new Dialogs.ModUpgradeDialog
         {
@@ -336,7 +346,8 @@ internal class DialogService : IDialogService
         if (proceed == true)
         {
             romPath = vm.File;
-            Settings.RecentLoadRom = vm.File;
+            _recentLoadRomSetting.Value = vm.File;
+            _settingService.Save();
             return true;
         }
         else
@@ -368,7 +379,7 @@ internal class DialogService : IDialogService
 
     public bool PopulateDefaultSprites(out string romPath)
     {
-        var vm = new PopulateDefaultSpriteViewModel(this, Settings.RecentLoadRom);
+        var vm = new PopulateDefaultSpriteViewModel(this, _recentLoadRomSetting.Value);
 
         var dialog = new Dialogs.PopulateDefaultSpriteDialog
         {
@@ -381,7 +392,8 @@ internal class DialogService : IDialogService
         if (proceed == true)
         {
             romPath = vm.File;
-            Settings.RecentLoadRom = vm.File;
+            _recentLoadRomSetting.Value = vm.File;
+            _settingService.Save();
             return true;
         }
         else

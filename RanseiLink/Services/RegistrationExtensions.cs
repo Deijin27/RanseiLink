@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services.Concrete;
@@ -13,14 +14,14 @@ public static class RegistrationExtensions
 {
     public static void RegisterWpfServices(this IServiceContainer container)
     {
-        var settingsService = container.Resolve<ISettingsService>();
+        var settingService = container.Resolve<ISettingService>();
         var pluginFormLoader = container.Resolve<IPluginFormLoader>();
 
         // register services
 
-        container.RegisterLazySingleton<IDialogService>(() => new DialogService(settingsService));
+        container.RegisterLazySingleton<IDialogService>(() => new DialogService(settingService));
         container.RegisterLazySingleton<IPluginService>(() => new PluginService(pluginFormLoader));
-        container.RegisterLazySingleton<IThemeService>(() => new ThemeService(settingsService));
+        container.RegisterLazySingleton<IThemeService>(() => new ThemeService(settingService));
         container.RegisterLazySingleton<IExternalService>(() => new ExternalService());
 
         // register view models

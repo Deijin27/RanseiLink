@@ -1,6 +1,8 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,8 +32,7 @@ public class CreateModCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var modService = Container.Resolve<IModService>();
-        var settingsService = Container.Resolve<ISettingsService>();
-
+        
         ModInfo modInfo = modService.Create(RomPath, ModName, ModVersion, ModAuthor);
         if (SetAsCurrent)
         {
@@ -40,7 +41,9 @@ public class CreateModCommand : BaseCommand
             {
                 if (mods[i].FolderPath == modInfo.FolderPath)
                 {
-                    settingsService.CurrentConsoleModSlot = i;
+                    var settingService = Container.Resolve<ISettingService>();
+                    settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
+                    settingService.Save();
                     break;
                 }
             }

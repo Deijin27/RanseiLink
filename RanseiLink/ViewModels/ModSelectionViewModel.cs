@@ -98,7 +98,7 @@ public class ModSelectionViewModel : ViewModelBase
                 }
 
                 RefreshModItems();
-                progress.Report(new ProgressInfo("Mod created successfully!"));
+                progress.Report(new ProgressInfo("Mod created successfully!", 100));
             });
         }
     }

@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Nds;
 using RanseiLink.Core.Services.Concrete;
+using RanseiLink.Core.Settings;
 using System;
 using System.IO;
 
@@ -21,7 +22,7 @@ public static class RegistrationExtensions
         container.RegisterLazySingleton<IModService>(() => new ModService(rootFolder, container.Resolve<NdsFactory>(), 
             container.Resolve<IMsgService>(), container.Resolve<IFallbackSpriteProvider>()));
 
-        container.RegisterLazySingleton<ISettingsService>(() => new SettingsService(rootFolder));
+        container.RegisterLazySingleton<ISettingService>(() => new SettingService(Path.Combine(rootFolder, "RanseiLinkSettings.xml")));
 
         container.RegisterLazySingleton<ISpriteService>(() => new SpriteService());
 

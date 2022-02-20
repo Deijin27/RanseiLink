@@ -1,6 +1,8 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
@@ -20,7 +22,7 @@ public class ImportModCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var modService = Container.Resolve<IModService>();
-        var settingsService = Container.Resolve<ISettingsService>();
+        var settingService = Container.Resolve<ISettingService>();
 
         var info = modService.Import(Path);
         if (SetAsCurrent)
@@ -30,7 +32,8 @@ public class ImportModCommand : BaseCommand
             {
                 if (mods[i].FolderPath == info.FolderPath)
                 {
-                    settingsService.CurrentConsoleModSlot = i;
+                    settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
+                    settingService.Save();
                     break;
                 }
             }

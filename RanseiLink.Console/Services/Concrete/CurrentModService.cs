@@ -1,24 +1,27 @@
 ﻿using CliFx.Infrastructure;
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 
 namespace RanseiLink.Console.Services.Concrete;
 
 public class CurrentModService : ICurrentModService
 {
-    private readonly ISettingsService _settingsService;
+    private readonly CurrentConsoleModSlotSetting _currentConsoleModSlotSetting;
     private readonly IModService _modService;
     private readonly DataServiceFactory _dataServiceFactory;
 
     public CurrentModService(IServiceContainer container)
     {
         _modService = container.Resolve<IModService>();
-        _settingsService = container.Resolve<ISettingsService>();
+        var settingsService = container.Resolve<ISettingService>();
+        _currentConsoleModSlotSetting = settingsService.Get<CurrentConsoleModSlotSetting>();
         _dataServiceFactory = container.Resolve<DataServiceFactory>();
     }
 
     public bool TryGetCurrentMod(IConsole console, out ModInfo mod)
     {
-        var currentModSlot = _settingsService.CurrentConsoleModSlot;
+        var currentModSlot = _currentConsoleModSlotSetting.Value;
         var allModInfo = _modService.GetAllModInfo();
         if (currentModSlot < allModInfo.Count)
         {

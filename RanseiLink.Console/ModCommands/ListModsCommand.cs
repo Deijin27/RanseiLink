@@ -1,6 +1,8 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
@@ -14,7 +16,7 @@ public class ListModsCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var modService = Container.Resolve<IModService>();
-        var settingsService = Container.Resolve<ISettingsService>();
+        var settingService = Container.Resolve<ISettingService>();
 
         var mods = modService.GetAllModInfo();
         if (mods.Count == 0)
@@ -23,7 +25,7 @@ public class ListModsCommand : BaseCommand
         }
         else
         {
-            var current = settingsService.CurrentConsoleModSlot;
+            var current = settingService.Get<CurrentConsoleModSlotSetting>().Value;
             int count = 0;
             foreach (var mod in mods)
             {

@@ -59,12 +59,11 @@ public class ModListItemViewModel : ViewModelBase
         {
             try
             {
-                _modService.Commit(mod, romPath, patchOpt);
+                _modService.Commit(mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {
                 error = e;
-                return;
             }
         });
 

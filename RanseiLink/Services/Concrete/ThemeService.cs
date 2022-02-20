@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Settings;
+using RanseiLink.Settings;
 using System;
 using System.Windows;
 
@@ -6,21 +7,22 @@ namespace RanseiLink.Services.Concrete;
 
 internal class ThemeService : IThemeService
 {
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingService _settingsService;
+    private readonly ThemeSetting _themeSetting;
 
-    public ThemeService(ISettingsService settingService)
+    public ThemeService(ISettingService settingService)
     {
         _settingsService = settingService;
-        CurrentTheme = Enum.Parse<Theme>(_settingsService.Theme);
+        _themeSetting = settingService.Get<ThemeSetting>();
         UpdateTheme();
     }
 
-    public Theme CurrentTheme { get; set; }
+    public Theme CurrentTheme => _themeSetting.Value;
 
     public void SetTheme(Theme theme)
     {
-        _settingsService.Theme = theme.ToString();
-        CurrentTheme = theme;
+        _themeSetting.Value = theme;
+        _settingsService.Save();
         UpdateTheme();
     }
 

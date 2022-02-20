@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.DragDrop;
-using RanseiLink.Services;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -14,20 +13,15 @@ public class ModCommitViewModel : ViewModelBase
         RomDropHandler.FileDropped += f =>
         {
             File = f;
-            OkEnabled = true;
         };
-        if (initFile != null)
-        {
-            File = initFile;
-            OkEnabled = true;
-        }
+
+        File = initFile;
 
         FilePickerCommand = new RelayCommand(() =>
         {
             if (dialogService.RequestRomFile(out string file))
             {
                 File = file;
-                OkEnabled = true;
             }
         });
     }
@@ -40,15 +34,16 @@ public class ModCommitViewModel : ViewModelBase
     public string File
     {
         get => _file;
-        set => RaiseAndSetIfChanged(ref _file, value);
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _file, value))
+            {
+                RaisePropertyChanged(nameof(OkEnabled));
+            }
+        }
     }
 
-    private bool _okEnabled = false;
-    public bool OkEnabled
-    {
-        get => _okEnabled;
-        set => RaiseAndSetIfChanged(ref _okEnabled, value);
-    }
+    public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
     public bool IncludeSprites { get; set; } = true;
 

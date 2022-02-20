@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.DragDrop;
-using RanseiLink.Services;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -11,14 +10,9 @@ public class ModUpgradeViewModel : ViewModelBase
     {
         RomDropHandler = new RomDropHandler();
         File = initFile;
-        if (initFile != null)
-        {
-            OkEnabled = true;
-        }
         RomDropHandler.FileDropped += f =>
         {
             File = f;
-            OkEnabled = true;
         };
 
         FilePickerCommand = new RelayCommand(() =>
@@ -26,7 +20,6 @@ public class ModUpgradeViewModel : ViewModelBase
             if (dialogService.RequestRomFile(out string file))
             {
                 File = file;
-                OkEnabled = true;
             }
         });
     }
@@ -39,13 +32,14 @@ public class ModUpgradeViewModel : ViewModelBase
     public string File
     {
         get => _file;
-        set => RaiseAndSetIfChanged(ref _file, value);
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _file, value))
+            {
+                RaisePropertyChanged(nameof(OkEnabled));
+            }
+        }
     }
 
-    private bool _okEnabled = false;
-    public bool OkEnabled
-    {
-        get => _okEnabled;
-        set => RaiseAndSetIfChanged(ref _okEnabled, value);
-    }
+    public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 }

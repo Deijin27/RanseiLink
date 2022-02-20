@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.DragDrop;
 using System.Windows.Input;
-using System;
 using RanseiLink.Core;
 
 namespace RanseiLink.ViewModels;
@@ -15,13 +14,7 @@ public class ModExportViewModel : ViewModelBase
         RomDropHandler.FolderDropped += f =>
         {
             Folder = f;
-            OkEnabled = true;
         };
-        if (initFile != null)
-        {
-            Folder = initFile;
-            OkEnabled = true;
-        }
 
         DesktopCommand = new RelayCommand(() =>
         {
@@ -29,7 +22,6 @@ public class ModExportViewModel : ViewModelBase
             if (System.IO.Directory.Exists(desktop))
             {
                 Folder = desktop;
-                OkEnabled = true;
             }
         });
     }
@@ -42,15 +34,16 @@ public class ModExportViewModel : ViewModelBase
     public string Folder
     {
         get => _folder;
-        set => RaiseAndSetIfChanged(ref _folder, value);
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _folder, value))
+            {
+                RaisePropertyChanged(nameof(OkEnabled));
+            }
+        }
     }
 
-    private bool _okEnabled = false;
-    public bool OkEnabled
-    {
-        get => _okEnabled;
-        set => RaiseAndSetIfChanged(ref _okEnabled, value);
-    }
+    public bool OkEnabled => _folder != null && System.IO.Directory.Exists(_folder);
 
     public ModInfo ModInfo { get; }
 

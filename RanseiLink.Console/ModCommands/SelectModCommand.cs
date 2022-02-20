@@ -1,6 +1,8 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
@@ -17,7 +19,7 @@ public class SelectModCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var modService = Container.Resolve<IModService>();
-        var settingsService = Container.Resolve<ISettingsService>();
+        var settingsService = Container.Resolve<ISettingService>();
 
         var modInfos = modService.GetAllModInfo();
         if (modInfos.Count == 0)
@@ -31,7 +33,8 @@ public class SelectModCommand : BaseCommand
             return default;
         }
         var mod = modInfos[Slot];
-        settingsService.CurrentConsoleModSlot = Slot;
+        settingsService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
+        settingsService.Save();
         console.Output.WriteLine("Current mod changed to:");
         console.Render(mod);
 
