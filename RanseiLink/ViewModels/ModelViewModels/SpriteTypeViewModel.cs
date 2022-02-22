@@ -107,6 +107,15 @@ public class SpriteItemViewModel : ViewModelBase
 
             if (!Core.Graphics.ImageSimplifier.ImageMatchesSize(file, width, height))
             {
+                if (gInfo.StrictHeight || gInfo.StrictWidth)
+                {
+                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                        "Invalid dimensions",
+                        $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nFor this image type it is a strict requirement."
+                        ));
+                    return;
+                }
+
                 var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
                 title: "Invalid dimensions",
                 message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",

@@ -7,12 +7,8 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
 
-public class StlConstants : IGraphicsInfo
+public class StlConstants : BaseGraphicsInfo
 {
-    public SpriteType Type { get; init; }
-    public string DisplayName { get; init; }
-    public int? Width { get; init; }
-    public int? Height { get; init; }
     public string TexInfo { get; init; }
     public string TexData { get; init; }
     public string Info { get; init; }
@@ -22,31 +18,23 @@ public class StlConstants : IGraphicsInfo
     public string LinkFolder => Path.Combine(Path.GetDirectoryName(Link), "UnpackedLink");
     public string Ncer => Path.Combine(LinkFolder, "0002.ncer");
     private string _pngFolder;
-    public string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(TexData ?? Data), Path.GetFileNameWithoutExtension(TexData ?? Data) + "-Pngs");
+    public override string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(TexData ?? Data), Path.GetFileNameWithoutExtension(TexData ?? Data) + "-Pngs");
 
-    public int PaletteCapacity => 256;
+    public override int PaletteCapacity => 256;
 }
 
-public class ScbgConstants : IGraphicsInfo
+public class ScbgConstants : BaseGraphicsInfo
 {
-    public SpriteType Type { get; init; }
-    public string DisplayName { get; init; }
-    public int? Width { get; init; }
-    public int? Height { get; init; }
     public string Info { get; init; }
     public string Data { get; init; }
     private string _pngFolder;
-    public string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(Data), Path.GetFileNameWithoutExtension(Data) + "-Pngs");
+    public override string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(Data), Path.GetFileNameWithoutExtension(Data) + "-Pngs");
 
-    public int PaletteCapacity => 256;
+    public override int PaletteCapacity => 256;
 }
 
-public class PkmdlConstants : IGraphicsInfo
+public class PkmdlConstants : BaseGraphicsInfo
 {
-    public SpriteType Type { get; init; }
-    public string DisplayName { get; init; }
-    public int? Width { get; init; }
-    public int? Height { get; init; }
     public string TEXLink { get; init; }
     public string TEXLinkFolder => Path.Combine(Path.GetDirectoryName(TEXLink), $"TEXLink-Unpacked");
     public string ATXLink { get; init; }
@@ -57,19 +45,33 @@ public class PkmdlConstants : IGraphicsInfo
     public string PACLinkFolder => Path.Combine(Path.GetDirectoryName(PACLink), $"PACLink-Unpacked");
 
     private string _pngFolder;
-    public string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(TEXLink), "Pngs");
+    public override string PngFolder => _pngFolder ??= Path.Combine(Path.GetDirectoryName(TEXLink), "Pngs");
 
-    public int PaletteCapacity => 16;
+    public override int PaletteCapacity => 16;
 }
 
 public interface IGraphicsInfo
 {
-    public SpriteType Type { get; init; }
-    public string DisplayName { get; init; }
-    public int? Width { get; init; }
-    public int? Height { get; init; }
+    public SpriteType Type { get; set; }
+    public string DisplayName { get; set; }
+    public int? Width { get; set; }
+    public int? Height { get; set; }
+    public bool StrictWidth { get; set; }
+    public bool StrictHeight { get; set; }
     public string PngFolder { get; }
     public int PaletteCapacity { get; }
+}
+
+public abstract class BaseGraphicsInfo : IGraphicsInfo
+{
+    public SpriteType Type { get; set; }
+    public string DisplayName { get; set; }
+    public int? Width { get; set; }
+    public int? Height { get; set; }
+    public bool StrictWidth { get; set; }
+    public bool StrictHeight { get; set; }
+    public abstract string PngFolder { get; }
+    public abstract int PaletteCapacity { get; }
 }
 
 public static class GraphicsInfoResource
@@ -90,38 +92,43 @@ public static class GraphicsInfoResource
             {
                 "STL" => new StlConstants()
                 {
-                    Type = Enum.Parse<SpriteType>(element.Attribute("Id").Value),
-                    DisplayName = element.Element("DisplayName").Value,
                     TexInfo = FileUtil.NormalizePath(element.Element("TexInfo")?.Value),
                     TexData = FileUtil.NormalizePath(element.Element("TexData")?.Value),
                     Info = FileUtil.NormalizePath(element.Element("Info")?.Value),
                     Data = FileUtil.NormalizePath(element.Element("Data")?.Value),
                     Link = FileUtil.NormalizePath(element.Element("Link").Value),
-                    Width = int.TryParse(element.Element("Width")?.Value, out int resultWidth) ? resultWidth : null,
-                    Height = int.TryParse(element.Element("Height")?.Value, out int resultHeight) ? resultHeight : null
+                    
                 },
                 "SCBG" => new ScbgConstants()
                 {
-                    Type = Enum.Parse<SpriteType>(element.Attribute("Id").Value),
-                    DisplayName = element.Element("DisplayName").Value,
                     Info = FileUtil.NormalizePath(element.Element("Info").Value),
                     Data = FileUtil.NormalizePath(element.Element("Data").Value),
-                    Width = int.TryParse(element.Element("Width")?.Value, out int resultWidth) ? resultWidth : null,
-                    Height = int.TryParse(element.Element("Height")?.Value, out int resultHeight) ? resultHeight : null
                 },
                 "PKMDL" => new PkmdlConstants()
                 {
-                    Type = Enum.Parse<SpriteType>(element.Attribute("Id").Value),
-                    DisplayName = element.Element("DisplayName").Value,
                     TEXLink = FileUtil.NormalizePath(element.Element("TEXLink").Value),
                     ATXLink = FileUtil.NormalizePath(element.Element("ATXLink").Value),
                     DTXLink = FileUtil.NormalizePath(element.Element("DTXLink").Value),
                     PACLink = FileUtil.NormalizePath(element.Element("PACLink").Value),
-                    Width = int.TryParse(element.Element("Width")?.Value, out int resultWidth) ? resultWidth : null,
-                    Height = int.TryParse(element.Element("Height")?.Value, out int resultHeight) ? resultHeight : null
                 },
                 _ => throw new Exception("Invalid element in GraphicsInfo.xml")
             };
+            // Things in all image formats
+            info.Type = Enum.Parse<SpriteType>(element.Attribute("Id").Value);
+            info.DisplayName = element.Element("DisplayName").Value;
+            var widthElement = element.Element("Width");
+            if (widthElement != null)
+            {
+                info.Width = int.TryParse(widthElement.Value, out int resultWidth) ? resultWidth : null;
+                info.StrictWidth = widthElement.Attribute("Strict")?.Value == "true";
+            }
+            var heightElement = element.Element("Height");
+            if (heightElement != null)
+            {
+                info.Height = int.TryParse(heightElement.Value, out int resultHeight) ? resultHeight : null;
+                info.StrictHeight = heightElement.Attribute("Strict")?.Value == "true";
+            }
+            
             _all[info.Type] = info;
         }
     }
