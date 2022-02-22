@@ -15,8 +15,6 @@ public static class Constants
 
     public const string GraphicsFolderPath = "graphics";
 
-    public static readonly string PokemonSpriteFolderPath = Path.Combine(GraphicsFolderPath, "model_pokemon");
-
     public static readonly string AppearPokemonRomPath = Path.Combine(DataFolderPath, "AppearPokemon.dat");
     public static readonly string BaseBushouRomPath = Path.Combine(DataFolderPath, "BaseBushou.dat");
     public static readonly string BaseBushouMaxSyncTableRomPath = Path.Combine(DataFolderPath, "BaseBushouMaxSyncTable.dat");

@@ -13,9 +13,9 @@ public class BTX0
 
     public TEX0 Texture { get; set; }
 
-    public BTX0(BinaryReader br)
+    public BTX0(string file)
     {
-        long initOffset = br.BaseStream.Position;
+        using var br = new BinaryReader(File.OpenRead(file));
 
         // first a typical file header
         var header = new GenericFileHeader(br);
@@ -33,19 +33,25 @@ public class BTX0
         }
 
         // read TEX0
-        br.BaseStream.Position = initOffset + chunkOffsets[0];
+        br.BaseStream.Position = chunkOffsets[0];
         Texture = new TEX0(br);
     }
 
-    public void WriteTo(BinaryWriter bw)
+    /// <summary>
+    /// Only supports writing to an existing btx0 atm
+    /// </summary>
+    /// <param name="file"></param>
+    public void WriteTo(string file)
     {
-        long initOffset = bw.BaseStream.Position;
+        using var bw = new BinaryWriter(File.OpenWrite(file));
 
         var header = new GenericFileHeader
         {
             MagicNumber = MagicNumber,
+            ByteOrderMarker = 0xFEFF,
             Version = 1,
             ChunkCount = 1,
+            HeaderLength = 0x10
         };
 
         // skip header section, to be written later
@@ -54,21 +60,19 @@ public class BTX0
         uint[] chunkOffsets = new uint[header.ChunkCount];
 
         // write TEX0
-        chunkOffsets[0] = (uint)(bw.BaseStream.Position - initOffset);
+        chunkOffsets[0] = (uint)(bw.BaseStream.Position);
         Texture.WriteTo(bw);
 
         // return to start to write header
         var endOffset = bw.BaseStream.Position;
-        bw.BaseStream.Position = initOffset;
+        bw.BaseStream.Position = 0;
 
-        header.FileLength = (uint)(endOffset - initOffset);
+        header.FileLength = (uint)endOffset;
         header.WriteTo(bw);
         foreach (var chunkOffset in chunkOffsets)
         {
             bw.Write(chunkOffset);
         }
 
-        // return to end of file
-        bw.BaseStream.Position = endOffset;
     }
 }

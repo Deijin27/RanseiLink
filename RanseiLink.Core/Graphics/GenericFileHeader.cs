@@ -8,7 +8,7 @@ public struct GenericFileHeader
     public ushort ByteOrderMarker;
     public ushort Version;
     public uint FileLength;
-    public ushort HeaderLength = 0x10;
+    public ushort HeaderLength;
     public ushort ChunkCount;
 
     public GenericFileHeader(BinaryReader br)

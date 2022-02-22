@@ -24,6 +24,14 @@ public static class Extensions
         bw.Write(new byte[count]);
     }
 
+    internal static void Pad(this BinaryWriter bw, int count, byte padByte)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            bw.Write(padByte);
+        }
+    }
+
     internal static void Skip(this BinaryReader br, int count)
     {
         br.BaseStream.Seek(count, SeekOrigin.Current);

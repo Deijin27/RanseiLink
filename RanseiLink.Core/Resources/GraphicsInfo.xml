@@ -96,6 +96,15 @@
 		<Data>graphics/still/stl_event/StlEventBg.dat</Data>
 		<Height>208</Height>
 	</SCBG>
+	<PKMDL Id="ModelPokemon">
+		<DisplayName>Pokemon Battle Models</DisplayName>
+		<TEXLink>graphics/model_pokemon/POKEMON_TEX.ALL</TEXLink>
+		<ATXLink>graphics/model_pokemon/POKEMON_ATX.ALL</ATXLink>
+		<DTXLink>graphics/model_pokemon/POKEMON_DTX.ALL</DTXLink>
+		<PACLink>graphics/model_pokemon/POKEMON_PAC.ALL</PACLink>
+		<Width>128</Width>
+		<Height>1024</Height>
+	</PKMDL>
     <STL Id="StlPokemonB">
 		<DisplayName>Pokemon Unknown Left</DisplayName>
 		<TexInfo>graphics/still/stl_pokemon_b/StlPokemonBTexInfo.dat</TexInfo>

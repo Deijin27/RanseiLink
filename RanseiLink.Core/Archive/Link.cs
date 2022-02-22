@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace RanseiLink.Core.Archive;
 
@@ -89,6 +90,50 @@ public static class LINK
         }
     }
 
+    public static void Pack(string[] files, string destinationFile, int offsetScaler = 0x200)
+    {
+        using var bw = new BinaryWriter(File.Create(destinationFile));
+
+        bw.WriteMagicNumber(MagicNumber);
+        bw.Write(files.Length);
+        bw.Write(offsetScaler);
+        bw.Write(0);
+        var offsetStart = bw.BaseStream.Position;
+        bw.BaseStream.Seek(files.Length * 8, SeekOrigin.Current);
+        int headerPadding = (int)((bw.BaseStream.Position / offsetScaler + 1) * offsetScaler - bw.BaseStream.Position);
+        Console.WriteLine(headerPadding);
+        bw.Pad(headerPadding);
+
+        long[] offsets = new long[files.Length];
+        int[] lengths = new int[files.Length];
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            byte[] buffer = File.ReadAllBytes(files[i]);
+            int len = buffer.Length;
+            lengths[i] = len;
+            offsets[i] = bw.BaseStream.Position;
+            bw.Write(buffer);
+            int padding = (len / offsetScaler + 1) * offsetScaler - len;
+            // I haven't found a file yet that is a good example of what happens at the boundary.
+            if (padding > 3)
+            {
+                bw.Write(_weirdPaddingMarker);
+                padding -= 4;
+            }
+            bw.Pad(padding);
+        }
+
+        Console.WriteLine(offsets[0]);
+
+        bw.BaseStream.Position = offsetStart;
+        for (int i = 0; i < files.Length; i++)
+        {
+            bw.Write((uint)(offsets[i] / offsetScaler));
+            bw.Write(lengths[i]);
+        }
+    }
+
     public static void Pack(string folderPath, string destinationFile = null, int offsetScaler = 0x200)
     {
         if (!Directory.Exists(folderPath))
@@ -107,32 +152,9 @@ public static class LINK
             destinationFile = Path.Combine(Path.GetDirectoryName(folderPath), Path.GetFileNameWithoutExtension(folderPath) + FileExtension);
         }
 
-        using var bw = new BinaryWriter(File.Create(destinationFile));
         string[] files = Directory.GetFiles(folderPath);
+        Array.Sort(files);
 
-        bw.WriteMagicNumber(MagicNumber);
-        bw.Write(files.Length);
-        bw.Write(offsetScaler);
-        var offsetStart = bw.BaseStream.Position;
-        bw.BaseStream.Seek(files.Length * 8, SeekOrigin.Current);
-
-        int[] lengths = new int[files.Length];
-
-        for (int i = 0; i < files.Length; i++)
-        {
-            byte[] buffer = File.ReadAllBytes(files[i]);
-            int len = buffer.Length;
-            lengths[i] = len;
-            bw.Write(buffer);
-            int padding = (len / offsetScaler + 1) * offsetScaler;
-            // I haven't found a file yet that is a good example of what happens at the boundary.
-            if (padding > 3)
-            {
-                bw.Write(_weirdPaddingMarker);
-                padding -= 4;
-            }
-            bw.Pad(padding);
-
-        }
+        Pack(files, destinationFile, offsetScaler);
     }
 }

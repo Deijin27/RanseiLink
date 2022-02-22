@@ -7,7 +7,6 @@ public static class PAC
 {
     public const string FileExtension = ".pac";
     const uint MagicNumber = 0x0040E3C4;
-    const uint Version = 1;
 
     private static string FileTypeNumberToExtension(uint fileType)
     {
@@ -88,9 +87,41 @@ public static class PAC
         }
     }
 
-    public static void Pack(string folderPath, string destinationFile = null, int offsetScaler = 0x200)
+    public static void Pack(string[] files, int[] fileTypeNumbers, string destinationFile, uint sharedFileCount = 1)
     {
-        throw new NotImplementedException();
+        using var bw = new BinaryWriter(File.Create(destinationFile));
+        
+        bw.Pad(0x2C);
+        bw.Pad(0x20, 0xFF);
+
+        int[] fileOffsets = new int[files.Length];
+
+        for (int i = 0; i < files.Length; i++)
+        {
+            fileOffsets[i] = (int)bw.BaseStream.Position;
+            byte[] buffer = File.ReadAllBytes(files[i]);
+            bw.Write(buffer);
+        }
+
+        bw.BaseStream.Position = 0;
+        bw.Write(MagicNumber);
+        bw.Write(sharedFileCount);
+        bw.Write(files.Length);
+
+        foreach (var fileOffset in fileOffsets)
+        {
+            bw.Write(fileOffset);
+        }
+
+        bw.BaseStream.Position = 0x2C;
+        foreach (var fileType in fileTypeNumbers)
+        {
+            bw.Write(fileType);
+        }
+    }
+
+    public static void Pack(string folderPath, int[] fileTypeNumbers, string destinationFile = null, uint sharedFileCount = 1)
+    {
         if (!Directory.Exists(folderPath))
         {
             throw new DirectoryNotFoundException(folderPath);
@@ -98,7 +129,7 @@ public static class PAC
 
         if (Directory.GetDirectories(folderPath).Length != 0)
         {
-            throw new Exception($"Cannot create a link archive from a directory that contains sub directories ({folderPath})");
+            throw new Exception($"Cannot create a pac archive from a directory that contains sub directories ({folderPath})");
         }
 
         // Get destination folder
@@ -107,32 +138,9 @@ public static class PAC
             destinationFile = Path.Combine(Path.GetDirectoryName(folderPath), Path.GetFileNameWithoutExtension(folderPath) + FileExtension);
         }
 
-        using var bw = new BinaryWriter(File.Create(destinationFile));
         string[] files = Directory.GetFiles(folderPath);
+        Array.Sort(files);
 
-        bw.Write(MagicNumber);
-        bw.Write(Version);
-        bw.Write(files.Length);
-        bw.Write(offsetScaler);
-        var offsetStart = bw.BaseStream.Position;
-        bw.BaseStream.Seek(files.Length * 8, SeekOrigin.Current);
-
-        int[] lengths = new int[files.Length];
-
-        for (int i = 0; i < files.Length; i++)
-        {
-            byte[] buffer = File.ReadAllBytes(files[i]);
-            int len = buffer.Length;
-            lengths[i] = len;
-            bw.Write(buffer);
-            int padding = (len / offsetScaler + 1) * offsetScaler;
-            // I haven't found a file yet that is a good example of what happens at the boundary.
-            if (padding > 3)
-            {
-                padding -= 4;
-            }
-            bw.Pad(padding);
-
-        }
+        Pack(files, fileTypeNumbers, destinationFile, sharedFileCount);
     }
 }

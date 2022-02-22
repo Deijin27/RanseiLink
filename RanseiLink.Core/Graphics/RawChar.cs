@@ -23,7 +23,7 @@ public static class RawChar
 
         for (int i = 0; i < data.Length / 2; i++)
         {
-            res[i / 2] = (byte)((data[i] & 0b1111) | (data[i + 1] << 4));
+            res[i] = (byte)((data[i*2] & 0b1111) | (data[i*2 + 1] << 4));
         }
         return res;
     }

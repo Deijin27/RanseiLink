@@ -66,6 +66,25 @@ public static class ImageSimplifier
         return true;
     }
 
+    public static bool ImageMatchesSize(string imagePath, int width, int height)
+    {
+        Image<Rgba32> img;
+        try
+        {
+            img = Image.Load<Rgba32>(imagePath);
+        }
+        catch (UnknownImageFormatException e)
+        {
+            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+        }
+
+        bool result = img.Height == height && img.Width == width;
+
+        img.Dispose();
+
+        return result;
+    }
+
     public static void ResizeImage(string imagePath, int width, int height, string saveFile)
     {
         Image<Rgba32> img;

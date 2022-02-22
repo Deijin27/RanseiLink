@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace RanseiLink.ViewModels;
 
@@ -98,17 +97,21 @@ public class SpriteItemViewModel : ViewModelBase
         }
 
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
-        bool usedTemp = false;
 
         IGraphicsInfo gInfo = GraphicsInfoResource.Get(_spriteType);
 
         if (gInfo.Width != null && gInfo.Height != null)
         {
-            var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+            int width = (int)gInfo.Width;
+            int height = (int)gInfo.Height;
+
+            if (!Core.Graphics.ImageSimplifier.ImageMatchesSize(file, width, height))
+            {
+                var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
                 title: "Invalid dimensions",
                 message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",
-                buttons: new[] 
-                { 
+                buttons: new[]
+                {
                     new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
                     new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
                     new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
@@ -116,25 +119,23 @@ public class SpriteItemViewModel : ViewModelBase
                 defaultResult: MessageBoxResult.Cancel
                 ));
 
-            switch (result)
-            {
-                case MessageBoxResult.Yes:
-                    Core.Graphics.ImageSimplifier.ResizeImage(file, (int)gInfo.Width, (int)gInfo.Height, temp);
-                    usedTemp = true;
-                    file = temp;
-                    break;
-                case MessageBoxResult.No:
-                    break;
-                default:
-                    return;
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        Core.Graphics.ImageSimplifier.ResizeImage(file, width, height, temp);
+                        file = temp;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        return;
+                }
             }
-            
         }
 
-        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, 256, temp))
+        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, gInfo.PaletteCapacity, temp))
         {
-            usedTemp = true;
-            if (!_dialogService.SimplfyPalette(256, file, temp))
+            if (!_dialogService.SimplfyPalette(gInfo.PaletteCapacity, file, temp))
             {
                 return;
             }
@@ -145,7 +146,7 @@ public class SpriteItemViewModel : ViewModelBase
         _displayFile = _spriteProvider.GetSpriteFilePath(_spriteType, Id);
         UpdateDisplayImage();
         _isOverride = true;
-        if (usedTemp)
+        if (File.Exists(temp))
         {
             File.Delete(temp);
         }
@@ -165,6 +166,8 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
 
         AddNewCommand = new RelayCommand(AddNew);
         ExportAllCommand = new RelayCommand(ExportAll);
+
+        UpdateInfo(SelectedType);
     }
 
     private SpriteType _selectedType = SpriteType.StlBushouB;
@@ -193,6 +196,7 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
         {
             dimensionInfo += $"height={info.Height} ";
         }
+        dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
         DimensionInfo = dimensionInfo;
     }
 
@@ -215,10 +219,11 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
     {
         _dialogService.ProgressDialog(delayOnCompletion: true, work:progress =>
         {
+            progress.Report(new ProgressInfo("Loading..."));
             var newItems = new List<SpriteItemViewModel>();
 
             var files = _spriteProvider.GetAllSpriteFiles(SelectedType);
-            progress.Report(new ProgressInfo("Loading...", MaxProgress: files.Count));
+            progress.Report(new ProgressInfo(MaxProgress: files.Count));
             int count = 0;
             foreach (var i in files)
             {
@@ -243,13 +248,13 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
         {
             return;
         }
-
+        IGraphicsInfo gInfo = GraphicsInfoResource.Get(SelectedType);
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
         bool usedTemp = false;
-        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, 256, temp))
+        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, gInfo.PaletteCapacity, temp))
         {
             usedTemp = true;
-            if (!_dialogService.SimplfyPalette(256, file, temp))
+            if (!_dialogService.SimplfyPalette(gInfo.PaletteCapacity, file, temp))
             {
                 return;
             }

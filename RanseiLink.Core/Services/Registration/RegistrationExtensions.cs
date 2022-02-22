@@ -24,10 +24,6 @@ public static class RegistrationExtensions
 
         container.RegisterLazySingleton<ISettingService>(() => new SettingService(Path.Combine(rootFolder, "RanseiLinkSettings.xml")));
 
-        container.RegisterLazySingleton<ISpriteService>(() => new SpriteService());
-
-        
-
         container.RegisterSingleton<DataServiceFactory>(m => new DataService(m, container));
     }
 }

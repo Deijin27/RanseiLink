@@ -50,6 +50,9 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
                 case ScbgConstants scbgInfo:
                     UnpackScbg(scbgInfo);
                     break;
+                case PkmdlConstants pkmdlInfo:
+                    UnpackPkmdl(pkmdlInfo);
+                    break;
                 default:
                     throw new Exception($"Other types of {nameof(IGraphicsInfo)} not supported");
             }
@@ -78,6 +81,11 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
         SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
     }
 
+    private void UnpackPkmdl(PkmdlConstants pkmdlInfo)
+    {
+        PokemonModelManager.UnpackModels(pkmdlInfo, _graphicsProviderFolder);
+    }
+
     #endregion
 
     #region Provide
@@ -89,7 +97,12 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
-        return Directory.GetFiles(Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.Get(type).PngFolder))
+        string dir = Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.Get(type).PngFolder);
+        if (!Directory.Exists(dir))
+        {
+            return new List<SpriteFile>();
+        }
+        return Directory.GetFiles(dir)
             .Select(i => new SpriteFile(type, uint.Parse(Path.GetFileNameWithoutExtension(i)), i, IsOverride:false))
             .ToList();
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//#define PATCHER_BUG_FIXING
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using System.IO.Compression;
@@ -196,6 +197,25 @@ public class ModService : IModService
         {
             GetFilesToPatch(modInfo, filesToPatch, patchOptions);
 
+#if PATCHER_BUG_FIXING
+            string debugOut = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, "patch_debug_dump"));
+            Directory.CreateDirectory(debugOut);
+            foreach (var file in filesToPatch)
+            {
+                string dest = Path.Combine(debugOut, file.GamePath.Replace(Path.DirectorySeparatorChar, '~'));
+                if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
+                {
+                    File.Move(file.FileSystemPath, dest);
+                }
+                else
+                {
+                    File.Copy(file.FileSystemPath, dest);
+                }
+                
+            }
+            return;
+#endif
+
             progress?.Report(new ProgressInfo(IsIndeterminate: false, MaxProgress: filesToPatch.Count, StatusText: "Patching..."));
             int count = 0;
             using var nds = _ndsFactory(path);
@@ -235,16 +255,6 @@ public class ModService : IModService
         }
 
         progress?.Report(new ProgressInfo(StatusText: "Done!", IsIndeterminate: false));
-    }
-
-    private record FileToPatch(string GamePath, string FileSystemPath, FilePatchOptions Options);
-
-    [Flags]
-    private enum FilePatchOptions
-    {
-        None = 0,
-        DeleteSourceWhenDone = 1,
-        VariableLength = 2,
     }
 
     private void GetFilesToPatch(ModInfo mod, ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
@@ -306,6 +316,9 @@ public class ModService : IModService
                     case ScbgConstants scbgInfo:
                         PackScbg(scbgInfo, filesToPatch, spriteProvider);
                         break;
+                    case PkmdlConstants pkdmlInfo:
+                        PokemonModelManager.PackModels(pkdmlInfo, filesToPatch, spriteProvider, _graphicsProviderFolder);
+                        break;
                     default:
                         throw new Exception($"Other types of {nameof(IGraphicsInfo)} not supported");
                 }
@@ -315,15 +328,14 @@ public class ModService : IModService
 
     private void PackStl(StlConstants stlInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider)
     {
-        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
-
         var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(stlInfo.Type);
         if (!spriteFiles.Any(i => i.IsOverride))
         {
             return;
         }
-        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
 
+        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
+        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
         if (stlInfo.TexInfo != null)
         {
             string texData = Path.GetTempFileName();
@@ -367,3 +379,13 @@ public class ModService : IModService
         filesToPatch.Add(new FileToPatch(scbgInfo.Info, info, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
     }
 }
+
+[Flags]
+internal enum FilePatchOptions
+{
+    None = 0,
+    DeleteSourceWhenDone = 1,
+    VariableLength = 2,
+}
+
+internal record FileToPatch(string GamePath, string FileSystemPath, FilePatchOptions Options);

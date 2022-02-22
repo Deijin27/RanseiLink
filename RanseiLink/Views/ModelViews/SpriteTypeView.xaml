@@ -47,11 +47,12 @@
                                 <ColumnDefinition Width="auto" SharedSizeGroup="imgWidth"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto" SharedSizeGroup="imgHeight"/>
                                 <RowDefinition Height="20"/>
+                                <RowDefinition Height="auto" SharedSizeGroup="imgHeight"/>
                             </Grid.RowDefinitions>
-                            <Image Source="{Binding DisplayImage}" Stretch="None" />
-                            <TextBlock Grid.Row="1" Foreground="{DynamicResource ForegroundBrush}" Text="{Binding Id}" HorizontalAlignment="Center" TextAlignment="Center"/>
+                            <TextBlock Foreground="{DynamicResource ForegroundBrush}" Text="{Binding Id}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
+                            <Image Grid.Row="1" Source="{Binding DisplayImage}" Stretch="None" />
+                            
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

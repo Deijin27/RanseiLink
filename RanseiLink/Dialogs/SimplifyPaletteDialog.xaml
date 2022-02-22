@@ -7,6 +7,8 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         SizeToContent="WidthAndHeight"
+        MaxHeight="600"
+        MaxWidth="1000"
         mc:Ignorable="d"
         xmlns:controls="clr-namespace:RanseiLink.Controls"
         xmlns:conv="clr-namespace:RanseiLink.ValueConverters"

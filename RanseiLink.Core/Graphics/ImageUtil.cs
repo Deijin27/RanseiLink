@@ -24,7 +24,7 @@ public static class ImageUtil
         img.SaveAsPng(file);
     }
 
-    private static Image<Rgba32> ToImage(ImageInfo imageInfo, PointGetter pointGetter)
+    public static Image<Rgba32> ToImage(ImageInfo imageInfo, PointGetter pointGetter)
     {
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
@@ -71,7 +71,7 @@ public static class ImageUtil
         return new ImageInfo(pixels, palette.ToArray(), width, height);
     }
 
-    private static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter)
+    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter)
     {
         int width = image.Width;
         int height = image.Height;
