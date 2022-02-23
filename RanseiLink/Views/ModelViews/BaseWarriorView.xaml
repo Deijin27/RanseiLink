@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:vc="clr-namespace:RanseiLink.ValueConverters"
              xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:BaseWarriorViewModel, IsDesignTimeCreatable=False}"
@@ -20,6 +21,7 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Height" Value="20"/>
         </Style>
+        <vc:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
     </UserControl.Resources>
     <WrapPanel>
         <Grid Margin="10">
@@ -51,7 +53,7 @@
             <TextBlock Text="Sprite" Grid.Row="1"/>
             <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
                 <controls:NumberBox  Value="{Binding Sprite}"/>
-                <Image Source="{Binding SmallSpritePath}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </UniformGrid>
             
             <TextBlock Text="Sprite Unknown" Grid.Row="2"/>

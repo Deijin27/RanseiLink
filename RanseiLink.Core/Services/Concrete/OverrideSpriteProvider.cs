@@ -17,7 +17,7 @@ internal class OverrideSpriteProvider : IOverrideSpriteProvider
 
     public void ClearOverride(SpriteType type, uint id)
     {
-        File.Delete(GetSpriteFilePathWithoutFallback(type, id));
+        File.Delete(GetSpriteFilePathWithoutFallback(type, id).File);
     }
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
@@ -44,24 +44,24 @@ internal class OverrideSpriteProvider : IOverrideSpriteProvider
         return dict.Values.SelectMany(i => i.Values).ToList();
     }
 
-    private string GetSpriteFilePathWithoutFallback(SpriteType type, uint id)
+    private SpriteFile GetSpriteFilePathWithoutFallback(SpriteType type, uint id)
     {
-        return Path.Combine(_mod.FolderPath, GraphicsInfoResource.GetRelativeSpritePath(type, id));
+        return new SpriteFile(type, id, Path.Combine(_mod.FolderPath, GraphicsInfoResource.GetRelativeSpritePath(type, id)), true);
     }
 
-    public string GetSpriteFilePath(SpriteType type, uint id)
+    public SpriteFile GetSpriteFile(SpriteType type, uint id)
     {
-        string file = GetSpriteFilePathWithoutFallback(type, id);
-        if (!File.Exists(file))
+        var file = GetSpriteFilePathWithoutFallback(type, id);
+        if (!File.Exists(file.File))
         {
-            file = _fallbackSpriteProvider.GetSpriteFilePath(type, id);
+            file = _fallbackSpriteProvider.GetSpriteFile(type, id);
         }
         return file;
     }
 
     public void SetOverride(SpriteType type, uint id, string file)
     {
-        string targetFile = GetSpriteFilePathWithoutFallback(type, id);
+        string targetFile = GetSpriteFilePathWithoutFallback(type, id).File;
         Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
         File.Copy(file, targetFile, overwrite:true);
     }

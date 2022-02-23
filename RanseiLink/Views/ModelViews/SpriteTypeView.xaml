@@ -19,7 +19,9 @@
         </Grid.RowDefinitions>
         <DockPanel Margin="10,10,10,0">
             <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0" Command="{Binding ExportAllCommand}">Export all of this type</Button>
-            <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0" Command="{Binding AddNewCommand}">Append new image</Button>
+            <Button DockPanel.Dock="Right" Height="20" Padding="4,0" Margin="10,0,0,0" Command="{Binding AddNewCommand}">
+                <TextBlock Style="{x:Null}">Append new image</TextBlock>
+            </Button>
             <ComboBox Grid.Row="0" Height="20" DisplayMemberPath="DisplayName" SelectedValuePath="Type" ItemsSource="{Binding SpriteTypeItems, Mode=OneTime}" SelectedValue="{Binding SelectedType, Mode=TwoWay}" />
         </DockPanel>
         <DockPanel Grid.Row="1" Margin="10,0">

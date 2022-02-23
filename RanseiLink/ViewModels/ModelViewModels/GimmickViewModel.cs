@@ -185,7 +185,7 @@ public class GimmickViewModel : GimmickViewModelBase
         }
     }
 
-    public string ImagePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlStageObje, Image);
+    public string ImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image).File;
 }
 
 public class GimmickGridItemViewModel : GimmickViewModelBase 

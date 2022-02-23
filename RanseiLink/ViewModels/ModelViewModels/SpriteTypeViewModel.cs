@@ -2,103 +2,120 @@
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
-using RanseiLink.ValueConverters;
-using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
-public class SpriteItemViewModel : ViewModelBase
+public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
 {
-    private readonly IDialogService _dialogService;
     private readonly IOverrideSpriteProvider _spriteProvider;
-    private readonly SpriteType _spriteType;
-    public SpriteItemViewModel(SpriteFile sprite, IOverrideSpriteProvider spriteProvider, IDialogService dialogService)
+    private readonly IDialogService _dialogService;
+    private string _dimensionInfo;
+    private bool _canAddNew;
+
+    public SpriteTypeViewModel(IServiceContainer container, IEditorContext context)
     {
-        _dialogService = dialogService;
-        _spriteProvider = spriteProvider;
-        Id = sprite.Id;
-        _spriteType = sprite.Type;
-        _isOverride = sprite.IsOverride;
-        _displayFile = sprite.File;
+        _spriteProvider = context.DataService.OverrideSpriteProvider;
+        _dialogService = container.Resolve<IDialogService>();
+        AddNewCommand = new RelayCommand(AddNew, () => _canAddNew);
+        ExportAllCommand = new RelayCommand(ExportAll);
 
-        RevertCommand = new RelayCommand(Revert, () => _isOverride);
-        ExportCommand = new RelayCommand(Export);
-        SetOverrideCommand = new RelayCommand(SetOverride);
-
-        UpdateDisplayImage();
+        UpdateInfo(SelectedType);
     }
 
-    private bool _isOverride;
-
-    public uint Id { get; }
-
-    public string _displayFile;
-
-    private ImageSource _displayImage;
-    public ImageSource DisplayImage
+    private SpriteType _selectedType = SpriteType.StlBushouB;
+    public SpriteType SelectedType 
     {
-        get => _displayImage;
-        set => RaiseAndSetIfChanged(ref _displayImage, value);  
-    }
-
-    private void UpdateDisplayImage()
-    {
-        if (PathToImageSourceConverter.TryConvert(_displayFile, out var img))
+        get => _selectedType;
+        set
         {
-            DisplayImage = img;
-        }
-        else
-        {
-            DisplayImage = null;
-        }
-    }
-
-    public event Action<SpriteItemViewModel> RemoveRequest;
-
-    public ICommand SetOverrideCommand { get; }
-    public ICommand ExportCommand { get; }
-    public ICommand RevertCommand { get; }
-
-    private void Revert()
-    {
-        if (_isOverride)
-        {
-            _spriteProvider.ClearOverride(_spriteType, Id);
-            _isOverride = false;
-            _displayFile = _spriteProvider.GetSpriteFilePath(_spriteType, Id);
-            if (File.Exists(_displayFile))
+            if (RaiseAndSetIfChanged(ref _selectedType, value))
             {
-                UpdateDisplayImage();
+                UpdateList();
+                UpdateInfo(value);
             }
-            else
+        } 
+    }
+
+    public string DimensionInfo
+    {
+        get => _dimensionInfo;
+        set => RaiseAndSetIfChanged(ref _dimensionInfo, value);
+    }
+
+    public IReadOnlyCollection<IGraphicsInfo> SpriteTypeItems { get; } = GraphicsInfoResource.All;
+
+    public ObservableCollection<SpriteItemViewModel> Items { get; private set; } = new ObservableCollection<SpriteItemViewModel>();
+
+    public ICommand AddNewCommand { get; }
+    public ICommand ExportAllCommand { get; }
+
+    private void UpdateInfo(SpriteType type)
+    {
+        IGraphicsInfo info = GraphicsInfoResource.Get(type);
+        _canAddNew = !info.FixedAmount;
+        string dimensionInfo = "";
+        if (info.Width != null)
+        {
+            dimensionInfo += $"width={info.Width} ";
+        }
+        if (info.Height != null)
+        {
+            dimensionInfo += $"height={info.Height} ";
+        }
+        dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
+        DimensionInfo = dimensionInfo;
+    }
+
+    private void UpdateList()
+    {
+        _dialogService.ProgressDialog(delayOnCompletion: false, work:progress =>
+        {
+            progress.Report(new ProgressInfo("Loading..."));
+
+            var files = _spriteProvider.GetAllSpriteFiles(SelectedType);
+            progress.Report(new ProgressInfo(MaxProgress: files.Count));
+            int count = 0;
+            List<SpriteItemViewModel> newItems = new();
+            foreach (var i in files)
             {
-                RemoveRequest?.Invoke(this);
+                var item = new SpriteItemViewModel(i, _spriteProvider, _dialogService, this);
+                newItems.Add(item);
+                progress.Report(new ProgressInfo(Progress: ++count));
+            }
+            Items = new ObservableCollection<SpriteItemViewModel>(newItems);
+            RaisePropertyChanged(nameof(Items));
+        });
+    }
+
+    private void AddNew()
+    {
+        if (_canAddNew)
+        {
+            var id = Items.Max(i => i.Id) + 1;
+            if (SetOverride(id, $"Pick a file to add in slot '{id}' "))
+            {
+                var spriteFile = _spriteProvider.GetSpriteFile(SelectedType, id);
+                var item = new SpriteItemViewModel(spriteFile, _spriteProvider, _dialogService, this);
+                Items.Add(item);
             }
         }
     }
 
-    private void Export()
+    public bool SetOverride(uint id, string requestFileMsg)
     {
-        var dest = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, Path.GetFileName(_displayFile)));
-        File.Copy(_displayFile, dest);
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
-    }
-
-    private void SetOverride()
-    {
-        if (!_dialogService.RequestFile($"Pick a file to replace sprite '{Id}' with", ".png", "PNG Image (.png)|*.png", out string file))
+        if (!_dialogService.RequestFile(requestFileMsg, ".png", "PNG Image (.png)|*.png", out string file))
         {
-            return;
+            return false;
         }
 
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
 
-        IGraphicsInfo gInfo = GraphicsInfoResource.Get(_spriteType);
+        IGraphicsInfo gInfo = GraphicsInfoResource.Get(SelectedType);
 
         if (gInfo.Width != null && gInfo.Height != null)
         {
@@ -113,7 +130,7 @@ public class SpriteItemViewModel : ViewModelBase
                         "Invalid dimensions",
                         $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nFor this image type it is a strict requirement."
                         ));
-                    return;
+                    return false;
                 }
 
                 var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
@@ -137,7 +154,7 @@ public class SpriteItemViewModel : ViewModelBase
                     case MessageBoxResult.No:
                         break;
                     default:
-                        return;
+                        return false;
                 }
             }
         }
@@ -146,137 +163,19 @@ public class SpriteItemViewModel : ViewModelBase
         {
             if (!_dialogService.SimplfyPalette(gInfo.PaletteCapacity, file, temp))
             {
-                return;
-            }
-            file = temp;
-        }
-
-        _spriteProvider.SetOverride(_spriteType, Id, file);
-        _displayFile = _spriteProvider.GetSpriteFilePath(_spriteType, Id);
-        UpdateDisplayImage();
-        _isOverride = true;
-        if (File.Exists(temp))
-        {
-            File.Delete(temp);
-        }
-    }
-}
-
-public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
-{
-    private readonly IOverrideSpriteProvider _spriteProvider;
-    private readonly IDialogService _dialogService;
-    private string _dimensionInfo;
-
-    public SpriteTypeViewModel(IServiceContainer container, IEditorContext context)
-    {
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
-        _dialogService = container.Resolve<IDialogService>();
-
-        AddNewCommand = new RelayCommand(AddNew);
-        ExportAllCommand = new RelayCommand(ExportAll);
-
-        UpdateInfo(SelectedType);
-    }
-
-    private SpriteType _selectedType = SpriteType.StlBushouB;
-    public SpriteType SelectedType 
-    {
-        get => _selectedType;
-        set
-        {
-            if (RaiseAndSetIfChanged(ref _selectedType, value))
-            {
-                UpdateList();
-                UpdateInfo(value);
-            }
-        } 
-    }
-
-    private void UpdateInfo(SpriteType type)
-    {
-        IGraphicsInfo info = GraphicsInfoResource.Get(type);
-        string dimensionInfo = "";
-        if (info.Width != null)
-        {
-            dimensionInfo += $"width={info.Width} ";
-        }
-        if (info.Height != null)
-        {
-            dimensionInfo += $"height={info.Height} ";
-        }
-        dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
-        DimensionInfo = dimensionInfo;
-    }
-
-    public string DimensionInfo
-    {
-        get => _dimensionInfo;
-        set => RaiseAndSetIfChanged(ref _dimensionInfo, value);
-    }
-
-    public IReadOnlyCollection<IGraphicsInfo> SpriteTypeItems { get; } = GraphicsInfoResource.All;
-
-    private List<SpriteItemViewModel> _items;
-    public List<SpriteItemViewModel> Items
-    {
-        get => _items;
-        set => RaiseAndSetIfChanged(ref _items, value);
-    }
-
-    private void UpdateList()
-    {
-        _dialogService.ProgressDialog(delayOnCompletion: true, work:progress =>
-        {
-            progress.Report(new ProgressInfo("Loading..."));
-            var newItems = new List<SpriteItemViewModel>();
-
-            var files = _spriteProvider.GetAllSpriteFiles(SelectedType);
-            progress.Report(new ProgressInfo(MaxProgress: files.Count));
-            int count = 0;
-            foreach (var i in files)
-            {
-                var item = new SpriteItemViewModel(i, _spriteProvider, _dialogService);
-                newItems.Add(item);
-                item.RemoveRequest += _ => Refresh();
-                progress.Report(new ProgressInfo(Progress: ++count));
-            }
-
-            progress.Report(new ProgressInfo("Updating UI..."));
-            Items = newItems;
-        });
-    }
-
-    public ICommand AddNewCommand { get; }
-    public ICommand ExportAllCommand { get; }
-
-    private void AddNew()
-    {
-        var id = Items.Max(i => i.Id) + 1;
-        if (!_dialogService.RequestFile($"Pick a file to add in slot '{id}' ", ".png", "PNG Image (.png)|*.png", out string file))
-        {
-            return;
-        }
-        IGraphicsInfo gInfo = GraphicsInfoResource.Get(SelectedType);
-        string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
-        bool usedTemp = false;
-        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, gInfo.PaletteCapacity, temp))
-        {
-            usedTemp = true;
-            if (!_dialogService.SimplfyPalette(gInfo.PaletteCapacity, file, temp))
-            {
-                return;
+                return false;
             }
             file = temp;
         }
 
         _spriteProvider.SetOverride(SelectedType, id, file);
-        UpdateList();
 
-        if (usedTemp)
+        if (File.Exists(temp))
         {
             File.Delete(temp);
         }
+
+        return true;
     }
 
     private void ExportAll()

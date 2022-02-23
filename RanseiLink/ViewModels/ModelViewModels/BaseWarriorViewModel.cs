@@ -176,7 +176,7 @@ public class BaseWarriorViewModel : BaseWarriorViewModelBase
         }
     }
 
-    public string SmallSpritePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlBushouM, Sprite);
+    public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouM, Sprite).File;
 }
 
 public class BaseWarriorGridItemViewModel : BaseWarriorViewModelBase

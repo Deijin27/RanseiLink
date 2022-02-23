@@ -31,7 +31,7 @@ public enum SpriteType
 public interface ISpriteProvider
 {
     List<SpriteFile> GetAllSpriteFiles(SpriteType type);
-    string GetSpriteFilePath(SpriteType type, uint id);
+    SpriteFile GetSpriteFile(SpriteType type, uint id);
 }
 
 public record SpriteFile(SpriteType Type, uint Id, string File, bool IsOverride);

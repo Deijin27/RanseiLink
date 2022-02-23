@@ -70,7 +70,7 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlChikei, (uint)TerrainBrush);
+    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlChikei, (uint)TerrainBrush).File;
     public bool TerrainPaintingActive
     {
         get => _terrainPaintingActive;

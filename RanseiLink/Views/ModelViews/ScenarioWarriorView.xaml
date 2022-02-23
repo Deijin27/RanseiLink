@@ -98,7 +98,9 @@
                             <DataTemplate DataType="{x:Type vm:ScenarioWarriorPokemonViewModel}">
                                 <DockPanel >
                                     <TextBlock Margin="2,2,8,0" Text="{Binding Id}" Width="10" TextAlignment="Right"/>
-                                    <Button Margin="2" Width="90" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=AllowEditing, Path=IsChecked}" Command="{Binding SetToDefaultCommand}">Set To Default</Button>
+                                    <Button Margin="2" Width="90" DockPanel.Dock="Right" IsEnabled="{Binding ElementName=AllowEditing, Path=IsChecked}" Command="{Binding SetToDefaultCommand}">
+                                        <TextBlock Style="{x:Null}">Set to default</TextBlock>
+                                    </Button>
                                     <controls:NumberBox Margin="2" Grid.Row="1" Grid.Column="1" Value="{Binding ScenarioPokemonId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     IsEnabled="{Binding ElementName=AllowEditing, Path=IsChecked}"/>
                                 </DockPanel>

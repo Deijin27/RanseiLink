@@ -52,14 +52,15 @@ public class PkmdlConstants : BaseGraphicsInfo
 
 public interface IGraphicsInfo
 {
-    public SpriteType Type { get; set; }
-    public string DisplayName { get; set; }
-    public int? Width { get; set; }
-    public int? Height { get; set; }
-    public bool StrictWidth { get; set; }
-    public bool StrictHeight { get; set; }
+    public SpriteType Type { get; }
+    public string DisplayName { get; }
+    public int? Width { get; }
+    public int? Height { get; }
+    public bool StrictWidth { get; }
+    public bool StrictHeight { get; }
     public string PngFolder { get; }
     public int PaletteCapacity { get; }
+    public bool FixedAmount { get; }
 }
 
 public abstract class BaseGraphicsInfo : IGraphicsInfo
@@ -70,6 +71,7 @@ public abstract class BaseGraphicsInfo : IGraphicsInfo
     public int? Height { get; set; }
     public bool StrictWidth { get; set; }
     public bool StrictHeight { get; set; }
+    public bool FixedAmount { get; set; }
     public abstract string PngFolder { get; }
     public abstract int PaletteCapacity { get; }
 }
@@ -88,7 +90,7 @@ public static class GraphicsInfoResource
         var root = doc.Element("GraphicsInfo");
         foreach (var element in root.Elements())
         {
-            IGraphicsInfo info = element.Name.ToString() switch
+            BaseGraphicsInfo info = element.Name.ToString() switch
             {
                 "STL" => new StlConstants()
                 {
@@ -128,6 +130,7 @@ public static class GraphicsInfoResource
                 info.Height = int.TryParse(heightElement.Value, out int resultHeight) ? resultHeight : null;
                 info.StrictHeight = heightElement.Attribute("Strict")?.Value == "true";
             }
+            info.FixedAmount = element.Element("FixedAmount")?.Value == "true";
             
             _all[info.Type] = info;
         }

@@ -35,6 +35,6 @@ public class EventSpeakerViewModel : ViewModelBase
         }
     }
 
-    public string SpritePath => _spriteProvider.GetSpriteFilePath(SpriteType.StlBushouLL, Sprite);
+    public string SpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouLL, Sprite).File;
 
 }

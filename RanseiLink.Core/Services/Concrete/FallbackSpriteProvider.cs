@@ -90,11 +90,6 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
 
     #region Provide
 
-    public string GetSpriteFilePath(SpriteType type, uint id)
-    {
-        return Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id));
-    }
-
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
         string dir = Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.Get(type).PngFolder);
@@ -105,6 +100,11 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
         return Directory.GetFiles(dir)
             .Select(i => new SpriteFile(type, uint.Parse(Path.GetFileNameWithoutExtension(i)), i, IsOverride:false))
             .ToList();
+    }
+
+    public SpriteFile GetSpriteFile(SpriteType type, uint id)
+    {
+        return new SpriteFile(type, id, Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
     }
 
     #endregion

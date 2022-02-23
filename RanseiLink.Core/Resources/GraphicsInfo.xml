@@ -104,6 +104,7 @@
 		<PACLink>graphics/model_pokemon/POKEMON_PAC.ALL</PACLink>
 		<Width Strict="true">128</Width>
 		<Height Strict="true">1024</Height>
+		<FixedAmount>true</FixedAmount>
 	</PKMDL>
     <STL Id="StlPokemonB">
 		<DisplayName>Pokemon Unknown Left</DisplayName>
