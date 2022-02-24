@@ -14,12 +14,14 @@ internal class DialogService : IDialogService
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
     private readonly RecentCommitRomSetting _recentCommitRomSetting;
     private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
+    private readonly PatchSpritesSetting _patchSpritesSetting;
     public DialogService(ISettingService settings)
     {
         _settingService = settings;
         _recentLoadRomSetting = settings.Get<RecentLoadRomSetting>();
         _recentCommitRomSetting = settings.Get<RecentCommitRomSetting>();
         _recentExportModFolderSetting = settings.Get<RecentExportModFolderSetting>();
+        _patchSpritesSetting = settings.Get<PatchSpritesSetting>();
     }
 
     public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxArgs options)
@@ -244,12 +246,15 @@ internal class DialogService : IDialogService
 
     public bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions)
     {
-        var vm = new ModCommitViewModel(this, info, _recentCommitRomSetting.Value);
+        var vm = new ModCommitViewModel(this, info, _recentCommitRomSetting.Value)
+        {
+            IncludeSprites = _patchSpritesSetting.Value
+        };
 
         var dialog = new Dialogs.ModCommitDialog
         {
             Owner = Application.Current.MainWindow,
-            DataContext = vm
+            DataContext = vm,
         };
 
         bool? proceed = dialog.ShowDialog();
@@ -258,6 +263,7 @@ internal class DialogService : IDialogService
         {
             romPath = vm.File;
             _recentCommitRomSetting.Value = vm.File;
+            _patchSpritesSetting.Value = vm.IncludeSprites;
             _settingService.Save();
             patchOptions = 0;
 
