@@ -1,6 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ public class NdsExtractFileCommand : BaseCommand
 
     public override ValueTask ExecuteAsync(IConsole console)
     {
-        var ndsFactory = Container.Resolve<NdsFactory>();
+        var ndsFactory = Container.Resolve<RomFsFactory>();
 
         if (string.IsNullOrEmpty(DestinationFolder))
         {
@@ -35,7 +35,7 @@ public class NdsExtractFileCommand : BaseCommand
             Directory.CreateDirectory(DestinationFolder);
         }
 
-        using INds nds = ndsFactory(NdsPath);
+        using IRomFs nds = ndsFactory(NdsPath);
         nds.ExtractCopyOfFile(FilePath, DestinationFolder);
 
         return default;

@@ -2,9 +2,9 @@
 
 namespace RanseiLink.Core.Services.Concrete;
 
-public class DataService : IDataService
+public class ModServiceContainer : IModServiceContainer
 {
-    public DataService(ModInfo mod, IServiceContainer container)
+    public ModServiceContainer(ModInfo mod, IServiceContainer container)
     {
         var msgService = container.Resolve<IMsgService>();
 

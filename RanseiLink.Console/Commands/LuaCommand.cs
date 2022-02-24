@@ -26,7 +26,7 @@ public class LuaCommand : BaseCommand
     {
         var currentModService = Container.Resolve<ICurrentModService>();
 
-        if (!currentModService.TryGetDataService(console, out IDataService dataService))
+        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
         {
             return default;
         }

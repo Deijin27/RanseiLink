@@ -12,9 +12,9 @@ class MockCurrentModService : ICurrentModService
     }
 
 
-    public IDataService TryGetDataServiceReturn { get; set; }
+    public IModServiceContainer TryGetDataServiceReturn { get; set; }
     public bool TryGetDataServiceSucceed { get; set; }
-    public bool TryGetDataService(IConsole console, out IDataService dataService)
+    public bool TryGetDataService(IConsole console, out IModServiceContainer dataService)
     {
         dataService = TryGetDataServiceReturn;
         return TryGetDataServiceSucceed;

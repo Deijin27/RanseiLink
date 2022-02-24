@@ -14,7 +14,7 @@ public delegate ModListItemViewModel ModListItemViewModelFactory(ModSelectionVie
 public class ModListItemViewModel : ViewModelBase
 {
     private readonly ModSelectionViewModel _parentVm;
-    private readonly IModService _modService;
+    private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
     private readonly IServiceContainer _container;
 
@@ -22,7 +22,7 @@ public class ModListItemViewModel : ViewModelBase
     {
         _container = container;
         _parentVm = parent;
-        _modService = container.Resolve<IModService>();
+        _modService = container.Resolve<IModManager>();
         _dialogService = container.Resolve<IDialogService>();
         Mod = mod;
         PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);

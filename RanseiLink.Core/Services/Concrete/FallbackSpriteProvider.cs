@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Generic;
@@ -12,9 +12,9 @@ namespace RanseiLink.Core.Services.Concrete;
 internal class FallbackSpriteProvider : IFallbackSpriteProvider
 {
     private readonly string _graphicsProviderFolder;
-    private readonly NdsFactory _ndsFactory;
+    private readonly RomFsFactory _ndsFactory;
 
-    public FallbackSpriteProvider(string rootFolder, NdsFactory ndsFactory)
+    public FallbackSpriteProvider(string rootFolder, RomFsFactory ndsFactory)
     {
         _ndsFactory = ndsFactory;
         _graphicsProviderFolder = Path.Combine(rootFolder, "DataProvider");

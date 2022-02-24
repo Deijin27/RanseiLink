@@ -37,15 +37,15 @@
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
                   Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
                   ItemsSource="{Binding ListItems}"
-                  SelectedValue="{Binding CurrentPage, Delay=10}" 
-                  SelectedValuePath="ItemValue"
+                  SelectedValue="{Binding CurrentModuleId, Delay=10}" 
+                  SelectedValuePath="ModuleId"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.ShowAlwaysDropTargetAdorner="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Height="30">
-                        <TextBlock Text="{Binding ItemName}" Padding="10,0,0,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding DisplayName}" Padding="10,0,0,0" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

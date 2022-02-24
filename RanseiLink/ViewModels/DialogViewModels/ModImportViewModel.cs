@@ -35,7 +35,7 @@ public class ModImportViewModel : ViewModelBase
             ModInfo modInfo;
             using (ZipArchive zip = ZipFile.OpenRead(file))
             {
-                ZipArchiveEntry entry = zip.GetEntry(ModService.ModInfoFileName);
+                ZipArchiveEntry entry = zip.GetEntry(ModManager.ModInfoFileName);
                 if (entry == null)
                 {
                     throw new Exception("Failed to load mod because ModInfoFile not found.");

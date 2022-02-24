@@ -10,15 +10,33 @@ namespace RanseiLink.ViewModels;
 public class ModSelectionViewModel : ViewModelBase
 {
     private readonly IServiceContainer _container;
-    private readonly IModService _modService;
+    private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    private readonly object _modItemsLock = new();
+    private bool _outdatedModsExist;
+
+    public bool OutdatedModsExist
+    {
+        get => _outdatedModsExist;
+        set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
+    }
+
+    public ObservableCollection<ModListItemViewModel> ModItems { get; } = new ObservableCollection<ModListItemViewModel>();
+
+    public ICommand ModItemClicked { get; }
+    public ICommand CreateModCommand { get; }
+    public ICommand ImportModCommand { get; }
+    public ICommand UpgradeOutdatedModsCommand { get; }
+    public ICommand PopulateGraphicsDefaultsCommand { get; }
+
+    public event Action<ModInfo> ModSelected;
 
     public ModSelectionViewModel(IServiceContainer container)
     {
         _container = container;
-        _modService = container.Resolve<IModService>();
+        _modService = container.Resolve<IModManager>();
         _dialogService = container.Resolve<IDialogService>();
         _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
         _fallbackSpriteProvider = _container.Resolve<IFallbackSpriteProvider>();
@@ -44,20 +62,6 @@ public class ModSelectionViewModel : ViewModelBase
         OutdatedModsExist = _modService.GetModInfoPreviousVersions().Any();
     }
 
-    private bool _outdatedModsExist;
-    public bool OutdatedModsExist
-    {
-        get => _outdatedModsExist;
-        set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
-    }
-
-    private readonly object _modItemsLock = new();
-    public ObservableCollection<ModListItemViewModel> ModItems { get; } = new ObservableCollection<ModListItemViewModel>();
-
-    public ICommand ModItemClicked { get; }
-
-    public event Action<ModInfo> ModSelected;
-
     public void RefreshModItems()
     {
         lock (_modItemsLock)
@@ -69,11 +73,6 @@ public class ModSelectionViewModel : ViewModelBase
             }
         }
     }
-
-    public ICommand CreateModCommand { get; }
-    public ICommand ImportModCommand { get; }
-    public ICommand UpgradeOutdatedModsCommand { get; }
-    public ICommand PopulateGraphicsDefaultsCommand { get; }
 
     private void CreateMod()
     {

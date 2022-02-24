@@ -29,7 +29,7 @@ internal class SoftlockChecker
     private Dictionary<MoveId, IMove> _allMoves;
     private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
 
-    private IDataService _dataService;
+    private IModServiceContainer _dataService;
 
     private int PlayersScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][0].ScenarioPokemon;
     private int OichisScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][2].ScenarioPokemon;

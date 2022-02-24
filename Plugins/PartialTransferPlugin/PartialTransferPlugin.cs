@@ -15,7 +15,7 @@ public class PartialTransferPlugin : IPlugin
     public void Run(IPluginContext context)
     {
         Dictionary<string, ModInfo> modDict = new();
-        var modService = context.ServiceContainer.Resolve<IModService>();
+        var modService = context.ServiceContainer.Resolve<IModManager>();
         foreach (ModInfo mod in modService.GetAllModInfo())
         {
             string key = $"{mod.Name} v{mod.Version} by {mod.Author}";

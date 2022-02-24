@@ -5,7 +5,7 @@ namespace RanseiLink.Tests.Mocks;
 
 internal class MockEditorContext : IEditorContext
 {
-    public IDataService DataService { get; set; }
+    public IModServiceContainer DataService { get; set; }
 
     public IJumpService JumpService { get; set; }
 

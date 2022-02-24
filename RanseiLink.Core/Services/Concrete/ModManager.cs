@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using System.IO.Compression;
 using System;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 using System.Linq;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Graphics;
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-public class ModService : IModService
+public class ModManager : IModManager
 {
     private readonly string _graphicsProviderFolder;
     private readonly string _modFolder;
@@ -22,11 +22,11 @@ public class ModService : IModService
     public const string ExportModFileExtension = ".rlmod";
     private const uint CurrentModVersion = 2;
 
-    private readonly NdsFactory _ndsFactory;
+    private readonly RomFsFactory _ndsFactory;
     private readonly IMsgService _msgService;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
 
-    public ModService(string rootFolder, NdsFactory ndsFactory, IMsgService msgService, IFallbackSpriteProvider fallbackSpriteProvider)
+    public ModManager(string rootFolder, RomFsFactory ndsFactory, IMsgService msgService, IFallbackSpriteProvider fallbackSpriteProvider)
     {
         _fallbackSpriteProvider = fallbackSpriteProvider;
         _msgService = msgService;
@@ -146,7 +146,7 @@ public class ModService : IModService
 
     public void UpgradeModsToLatestVersion(IEnumerable<ModInfo> mods, string romPath)
     {
-        using INds nds = _ndsFactory(romPath);
+        using IRomFs nds = _ndsFactory(romPath);
         foreach (ModInfo mod in mods)
         {
             switch (mod.RLModVersion)
@@ -163,7 +163,7 @@ public class ModService : IModService
 
     }
 
-    private void AdvanceVersion1To2(ModInfo modInfo, INds nds)
+    private void AdvanceVersion1To2(ModInfo modInfo, IRomFs nds)
     {
         string msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
         nds.ExtractCopyOfFile(Constants.MsgRomPath, Path.GetDirectoryName(msgPath));

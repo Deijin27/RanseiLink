@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace RanseiLink.Core.Nds;
+namespace RanseiLink.Core.RomFs;
 
 public static class Fat32
 {

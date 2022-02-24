@@ -11,7 +11,7 @@ namespace RanseiLink.ViewModels;
 
 public class ScenarioWarriorGridSelectorViewModel : ViewModelBase, ISaveableRefreshable, IGridViewModel<ScenarioWarriorGridItemViewModel>
 {
-    private readonly IDataService _dataService;
+    private readonly IModServiceContainer _dataService;
     private readonly IDialogService _dialogService;
     public ScenarioWarriorGridSelectorViewModel(IServiceContainer container, IEditorContext context)
     {

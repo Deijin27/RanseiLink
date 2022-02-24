@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 
 namespace RanseiLink.Console.ArchiveCommands;
 
@@ -28,16 +28,16 @@ public class NdsTreeCommand : ICommand
     {
         using var stream = new BinaryReader(new FileStream(Source, FileMode.Open, FileAccess.Read));
 
-        long startOffset = StartOffset ?? GetStartOffset(stream, Nds.NdsConfig.NameTableStartOffsetPositon);
+        long startOffset = StartOffset ?? GetStartOffset(stream, RomFs.NdsConfig.NameTableStartOffsetPositon);
 
-        List<NdsNameTable.FileOrFolderName> contents = NdsNameTable.GetRootFolderContents(stream, startOffset);
+        List<RomFsNameTable.FileOrFolderName> contents = RomFsNameTable.GetRootFolderContents(stream, startOffset);
 
         PrintContents(contents, stream, "", console, startOffset);
 
         return default;
     }
 
-    void PrintContents(List<NdsNameTable.FileOrFolderName> contents, BinaryReader stream, string indent, IConsole console, long startOffset)
+    void PrintContents(List<RomFsNameTable.FileOrFolderName> contents, BinaryReader stream, string indent, IConsole console, long startOffset)
     {
         var count = 1;
         foreach (var cont in contents)
@@ -63,8 +63,8 @@ public class NdsTreeCommand : ICommand
 
             if (cont.IsFolder)
             {
-                var alloc = NdsNameTable.GetAllocationData(stream, startOffset, cont.ContentsIndexIfFolder);
-                var newCont = NdsNameTable.GetContents(stream, startOffset, alloc);
+                var alloc = RomFsNameTable.GetAllocationData(stream, startOffset, cont.ContentsIndexIfFolder);
+                var newCont = RomFsNameTable.GetContents(stream, startOffset, alloc);
                 PrintContents(newCont, stream, newIndent, console, startOffset);
             }
         }

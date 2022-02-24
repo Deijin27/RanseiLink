@@ -3,11 +3,11 @@ using RanseiLink.ViewModels;
 
 namespace RanseiLink.Services;
 
-public delegate IEditorContext EditorContextFactory(IDataService dataService, MainEditorViewModel mainEditorViewModel);
+public delegate IEditorContext EditorContextFactory(IModServiceContainer dataService, MainEditorViewModel mainEditorViewModel);
 
 public interface IEditorContext
 {
-    IDataService DataService { get; }
+    IModServiceContainer DataService { get; }
     IJumpService JumpService { get; }
     ICachedMsgBlockService CachedMsgBlockService { get; }
 }

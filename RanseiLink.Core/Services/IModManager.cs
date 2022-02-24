@@ -10,7 +10,7 @@ public enum PatchOptions
     IncludeSprites = 1
 }
 
-public interface IModService
+public interface IModManager
 {
     /// <summary>
     /// Delete mod

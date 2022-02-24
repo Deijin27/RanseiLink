@@ -31,7 +31,7 @@ public class CreateModCommand : BaseCommand
 
     public override ValueTask ExecuteAsync(IConsole console)
     {
-        var modService = Container.Resolve<IModService>();
+        var modService = Container.Resolve<IModManager>();
         
         ModInfo modInfo = modService.Create(RomPath, ModName, ModVersion, ModAuthor);
         if (SetAsCurrent)

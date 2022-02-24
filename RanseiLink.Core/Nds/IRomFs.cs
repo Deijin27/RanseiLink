@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace RanseiLink.Core.Nds;
+namespace RanseiLink.Core.RomFs;
 
-public interface INds : IDisposable
+public interface IRomFs : IDisposable
 {
     /// <summary>
     /// Extract from the NDS file system a copy of directory and contents to destination on computer

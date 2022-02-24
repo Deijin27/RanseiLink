@@ -103,7 +103,7 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
 public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
 {
     private readonly IEditorContext _context;
-    private readonly IDataService _dataService;
+    private readonly IModServiceContainer _dataService;
     private IScenarioPokemon _currentScenarioPokemon;
     private readonly ScenarioId _scenario;
     private readonly ScenarioPokemonViewModelFactory _scenarioPokemonVmFactory;

@@ -24,7 +24,7 @@ public class UpdateModCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var currentModService = Container.Resolve<ICurrentModService>();
-        var modService = Container.Resolve<IModService>();
+        var modService = Container.Resolve<IModManager>();
 
         if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
         {

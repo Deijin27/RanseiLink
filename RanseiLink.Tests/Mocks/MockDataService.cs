@@ -3,7 +3,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Tests.Mocks;
 
-internal class MockDataService : IDataService
+internal class MockDataService : IModServiceContainer
 {
     public IPokemonService Pokemon { get; set; }
 

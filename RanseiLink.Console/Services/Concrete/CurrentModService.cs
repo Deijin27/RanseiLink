@@ -8,12 +8,12 @@ namespace RanseiLink.Console.Services.Concrete;
 public class CurrentModService : ICurrentModService
 {
     private readonly CurrentConsoleModSlotSetting _currentConsoleModSlotSetting;
-    private readonly IModService _modService;
+    private readonly IModManager _modService;
     private readonly DataServiceFactory _dataServiceFactory;
 
     public CurrentModService(IServiceContainer container)
     {
-        _modService = container.Resolve<IModService>();
+        _modService = container.Resolve<IModManager>();
         var settingsService = container.Resolve<ISettingService>();
         _currentConsoleModSlotSetting = settingsService.Get<CurrentConsoleModSlotSetting>();
         _dataServiceFactory = container.Resolve<DataServiceFactory>();
@@ -33,7 +33,7 @@ public class CurrentModService : ICurrentModService
         return false;
     }
 
-    public bool TryGetDataService(IConsole console, out IDataService dataService)
+    public bool TryGetDataService(IConsole console, out IModServiceContainer dataService)
     {
         if (!TryGetCurrentMod(console, out ModInfo currentMod))
         {

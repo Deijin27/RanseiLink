@@ -3,7 +3,7 @@ using CliFx.Infrastructure;
 using System.Threading.Tasks;
 using System.IO;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 
 namespace RanseiLink.Console.ArchiveCommands;
 
@@ -41,11 +41,11 @@ public class NdsExtractFolderCommand : BaseCommand
 
         var romFsConfig = new RomFsConfig
         (
-            NameTableStartOffsetPositon: NtStartOffsetPosition ?? Nds.NdsConfig.NameTableStartOffsetPositon,
-            AllocationTableStartOffsetPosition: FatStartOffsetPosition ?? Nds.NdsConfig.AllocationTableStartOffsetPosition
+            NameTableStartOffsetPositon: NtStartOffsetPosition ?? RomFs.NdsConfig.NameTableStartOffsetPositon,
+            AllocationTableStartOffsetPosition: FatStartOffsetPosition ?? RomFs.NdsConfig.AllocationTableStartOffsetPosition
         );
 
-        using INds nds = new Nds(NdsPath, romFsConfig);
+        using IRomFs nds = new RomFs(NdsPath, romFsConfig);
         nds.ExtractCopyOfDirectory(FilePath, DestinationFolder);
 
         return default;

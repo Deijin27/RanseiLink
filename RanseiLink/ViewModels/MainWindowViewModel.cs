@@ -9,7 +9,9 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
 {
     private readonly IThemeService _themeService;
     private readonly MainEditorViewModelFactory _mainEditorViewModelFactory;
-    private readonly EditorModuleRegistrationFunction _editorModuleRegistrationFunction;
+    private readonly ModSelectionViewModel _modSelectionVm;
+    private object _currentVm;
+    private bool _backButtonVisible;
 
     public MainWindowViewModel(IServiceContainer container)
     {
@@ -17,7 +19,6 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
         var pluginLoader = container.Resolve<IPluginLoader>();
         _themeService = container.Resolve<IThemeService>();
         _mainEditorViewModelFactory = container.Resolve<MainEditorViewModelFactory>();
-        _editorModuleRegistrationFunction = container.Resolve<EditorModuleRegistrationFunction>();
 
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
@@ -30,53 +31,30 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
                 ));
         }
 
-        ModSelectionVm = container.Resolve<ModSelectionViewModel>();
-        CurrentVm = ModSelectionVm;
+        _modSelectionVm = container.Resolve<ModSelectionViewModel>();
+        CurrentVm = _modSelectionVm;
 
-        ModSelectionVm.ModSelected += mi =>
-        {
-            var mevm = _mainEditorViewModelFactory(mi);
-            _editorModuleRegistrationFunction(mevm);
-            CurrentVm = mevm;
-            BackButtonVisible = true;
-        };
+        _modSelectionVm.ModSelected += OnModSelected;
 
-        BackButtonCommand = new RelayCommand(() =>
-        {
-            CurrentVm = ModSelectionVm;
-            BackButtonVisible = false;
-        });
-
-        ToggleThemeCommand = new RelayCommand(() =>
-        {
-            var newTheme = _themeService.CurrentTheme switch
-            {
-                Theme.Dark => Theme.Light,
-                Theme.Light => Theme.Dark,
-                _ => throw new System.Exception("Invalid theme enum value"),
-            };
-            _themeService.SetTheme(newTheme);
-        });
+        BackButtonCommand = new RelayCommand(OnBackButtonPressed);
+        ToggleThemeCommand = new RelayCommand(ToggleTheme);
     }
 
-    private readonly ModSelectionViewModel ModSelectionVm;
-
-    private object currentVm;
     public object CurrentVm
     {
-        get => currentVm;
+        get => _currentVm;
         set
         {
-            if (currentVm != value)
+            if (_currentVm != value)
             {
                 Save();
-                currentVm = value;
+                _currentVm = value;
                 RaisePropertyChanged();
             }
         }
     }
 
-    private bool _backButtonVisible;
+    
     public bool BackButtonVisible
     {
         get => _backButtonVisible;
@@ -93,9 +71,33 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
 
     public void Save()
     {
-        if (currentVm is ISaveable saveable)
+        if (_currentVm is ISaveable saveable)
         {
             saveable.Save();
         }
+    }
+
+    private void ToggleTheme()
+    {
+        var newTheme = _themeService.CurrentTheme switch
+        {
+            Theme.Dark => Theme.Light,
+            Theme.Light => Theme.Dark,
+            _ => throw new System.Exception("Invalid theme enum value"),
+        };
+        _themeService.SetTheme(newTheme);
+    }
+
+    private void OnModSelected(ModInfo mod)
+    {
+        var mevm = _mainEditorViewModelFactory(mod);
+        CurrentVm = mevm;
+        BackButtonVisible = true;
+    }
+
+    private void OnBackButtonPressed()
+    {
+        CurrentVm = _modSelectionVm;
+        BackButtonVisible = false;
     }
 }

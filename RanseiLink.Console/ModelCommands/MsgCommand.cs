@@ -21,7 +21,7 @@ public class MsgCommand : BaseCommand
     public override ValueTask ExecuteAsync(IConsole console)
     {
         var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IDataService dataService))
+        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
         {
             return default;
         }

@@ -12,23 +12,23 @@ public class ServiceNotRegisteredException : Exception
 
 public class ServiceContainer : IServiceContainer
 {
-    private readonly Dictionary<Type, object> Singletons = new Dictionary<Type, object>();
-    private readonly Dictionary<Type, Func<object>> SingletonFactories = new Dictionary<Type, Func<object>>();
-    private readonly Dictionary<Type, Func<object>> TransientFactories = new Dictionary<Type, Func<object>>();
+    private readonly Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
+    private readonly Dictionary<Type, Func<object>> _singletonFactories = new Dictionary<Type, Func<object>>();
+    private readonly Dictionary<Type, Func<object>> _transientFactories = new Dictionary<Type, Func<object>>();
 
     public void RegisterSingleton<T>(T instance)
     {
-        Singletons[typeof(T)] = instance;
+        _singletons[typeof(T)] = instance;
     }
 
     public void RegisterLazySingleton<T>(Func<T> factory)
     {
-        SingletonFactories[typeof(T)] = () => factory();
+        _singletonFactories[typeof(T)] = () => factory();
     }
 
     public void RegisterTransient<T>(Func<T> factory)
     {
-        TransientFactories[typeof(T)] = () => factory();
+        _transientFactories[typeof(T)] = () => factory();
     }
 
     public T Resolve<T>()
@@ -42,18 +42,18 @@ public class ServiceContainer : IServiceContainer
 
     public bool TryResolve<T>(out T result)
     {
-        if (Singletons.TryGetValue(typeof(T), out object value))
+        if (_singletons.TryGetValue(typeof(T), out object value))
         {
             result = (T)value;
             return true;
         }
-        if (SingletonFactories.TryGetValue(typeof(T), out Func<object> singletonFactory))
+        if (_singletonFactories.TryGetValue(typeof(T), out Func<object> singletonFactory))
         {
             result = (T)singletonFactory();
-            Singletons[typeof(T)] = result;
+            _singletons[typeof(T)] = result;
             return true;
         }
-        if (TransientFactories.TryGetValue(typeof(T), out Func<object> factory))
+        if (_transientFactories.TryGetValue(typeof(T), out Func<object> factory))
         {
             result = (T)factory();
             return true;

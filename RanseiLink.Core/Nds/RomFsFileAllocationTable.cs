@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace RanseiLink.Core.Nds;
+namespace RanseiLink.Core.RomFs;
 
-public static class NdsFileAllocationTable
+public static class RomFsFileAllocationTable
 {
     public static Fat32.Entry GetEntry(BinaryReader stream, long fatStartOffset, uint entryIndex)
     {

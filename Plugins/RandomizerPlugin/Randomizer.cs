@@ -27,7 +27,7 @@ internal class Randomizer
     private Dictionary<MoveId, IMove> _allMoves;
     private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
 
-    private IDataService _dataService;
+    private IModServiceContainer _dataService;
 
     private RandomizationOptionForm options;
 

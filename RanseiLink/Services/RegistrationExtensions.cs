@@ -4,9 +4,6 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services.Concrete;
 using RanseiLink.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RanseiLink.Services;
 
@@ -49,21 +46,5 @@ public static class RegistrationExtensions
         container.RegisterSingleton<ScenarioPokemonViewModelFactory>((model, c, scenario, id) => new ScenarioPokemonViewModel(model, c, scenario, id));
         container.RegisterSingleton<GimmickViewModelFactory>((i, m, c) => new GimmickViewModel(i, container, m, c));
         container.RegisterSingleton<BattleConfigViewModelFactory>((i, m, c) => new BattleConfigViewModel(i, m, c));
-
-        container.RegisterSingleton<EditorModuleRegistrationFunction>(editor => 
-        {
-            var types = System.Reflection.Assembly
-                .GetExecutingAssembly()
-                .GetTypes();
-
-            IEnumerable<Type> modules = types.Where(i => typeof(IEditorModule).IsAssignableFrom(i) && !i.IsInterface);
-
-            foreach (Type t in modules)
-            {
-                editor.AddModule(t);
-            }
-
-            editor.LoadModuleOrderFromSetting();
-        });
     }
 }

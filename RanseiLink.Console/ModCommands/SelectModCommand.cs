@@ -18,7 +18,7 @@ public class SelectModCommand : BaseCommand
 
     public override ValueTask ExecuteAsync(IConsole console)
     {
-        var modService = Container.Resolve<IModService>();
+        var modService = Container.Resolve<IModManager>();
         var settingsService = Container.Resolve<ISettingService>();
 
         var modInfos = modService.GetAllModInfo();

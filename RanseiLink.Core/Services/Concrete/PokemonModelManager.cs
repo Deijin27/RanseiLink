@@ -110,7 +110,7 @@ internal static class PokemonModelManager
     }
 
     /// <summary>
-    /// Pack models. Only for use in <see cref="ModService"/>
+    /// Pack models. Only for use in <see cref="ModManager"/>
     /// </summary>
     public static void PackModels(PkmdlConstants pkmdlInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider, string graphicsProviderFolder)
     {

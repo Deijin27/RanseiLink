@@ -1,9 +1,9 @@
-﻿using RanseiLink.Core.Nds;
+﻿using RanseiLink.Core.RomFs;
 using System.Collections.Generic;
 
 namespace RanseiLink.Tests.Mocks;
 
-internal class MockNds : INds
+internal class MockNds : IRomFs
 {
     public int DisposeCallCount = 0;
     public void Dispose()

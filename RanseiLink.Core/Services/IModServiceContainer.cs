@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Core.Services;
 
-public interface IDataService
+public interface IModServiceContainer
 {
     IPokemonService Pokemon { get; }
     IMoveService Move { get; }

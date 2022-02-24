@@ -13,24 +13,48 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public record ListItem(string ItemName, string ItemValue);
+public record EditorModuleListItem(string DisplayName, string ModuleId);
 
 public delegate MainEditorViewModel MainEditorViewModelFactory(ModInfo mod);
-public delegate void EditorModuleRegistrationFunction(MainEditorViewModel editor);
 
 public class MainEditorViewModel : ViewModelBase, ISaveable
 {
     private readonly IServiceContainer _container;
-    private readonly IDataService _dataService;
+    private readonly IModServiceContainer _dataService;
     private readonly IDialogService _dialogService;
-    private readonly IModService _modService;
+    private readonly IModManager _modService;
     private readonly IEditorContext _editorContext;
     private readonly ISettingService _settingService;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
+    private bool _moduleOrderLoaded = false;
+    private bool _pluginPopupOpen = false;
+    private string _currentModuleId;
+    private ISaveableRefreshable _currentVm;
+
+    public MainEditorViewModel(IServiceContainer container, ModInfo mod)
+    {
+        _container = container;
+        var dataServiceFactory = container.Resolve<DataServiceFactory>();
+        var editorContextFactory = container.Resolve<EditorContextFactory>();
+        _dialogService = container.Resolve<IDialogService>();
+        _modService = container.Resolve<IModManager>();
+        _settingService = container.Resolve<ISettingService>();
+        _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
+
+        PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
+
+        Mod = mod;
+        _dataService = dataServiceFactory(Mod);
+        _editorContext = editorContextFactory(_dataService, this);
+
+        CommitRomCommand = new RelayCommand(CommitRom);
+
+        RegisterModules();
+    }
 
     public ICommand CommitRomCommand { get; }
 
-    private ISaveableRefreshable _currentVm;
+
     public ISaveableRefreshable CurrentVm
     {
         get => _currentVm;
@@ -43,10 +67,9 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
     }
 
-    private string _currentPage;
-    public string CurrentPage
+    public string CurrentModuleId
     {
-        get => _currentPage;
+        get => _currentModuleId;
         set
         {
             if (!CanSave())
@@ -54,7 +77,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 RaisePropertyChanged();
                 return;
             }
-            if (value != null && RaiseAndSetIfChanged(ref _currentPage, value))
+            if (value != null && RaiseAndSetIfChanged(ref _currentModuleId, value))
             {
                 CurrentVm = SelectViewModel(value);
             }
@@ -63,57 +86,68 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ModInfo Mod { get; }
-    public ObservableCollection<ListItem> ListItems { get; } = new();
+    public ObservableCollection<EditorModuleListItem> ListItems { get; } = new();
+    private Dictionary<string, IEditorModule> Modules { get; } = new();
+    public Dictionary<string, ISaveableRefreshable> ViewModels { get; } = new();
 
-    public MainEditorViewModel(IServiceContainer container, ModInfo mod)
+    public PluginInfo SelectedPlugin
     {
-        _container = container;
-        var dataServiceFactory = container.Resolve<DataServiceFactory>();
-        var editorContextFactory = container.Resolve<EditorContextFactory>();
-        _dialogService = container.Resolve<IDialogService>();
-        _modService = container.Resolve<IModService>();
-        _settingService = container.Resolve<ISettingService>();
-        _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
-
-        PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
-
-        Mod = mod;
-        _dataService = dataServiceFactory(Mod);
-        _editorContext = editorContextFactory(_dataService, this);
-
-        CommitRomCommand = new RelayCommand(CommitRom);
+        get => null;
+        set
+        {
+            // prevent weird double trigger
+            if (PluginPopupOpen)
+            {
+                PluginPopupOpen = false;
+                RunPlugin(value);
+            }
+        }
     }
 
-    /// <summary>
-    /// Add <see cref="IEditorModule"/>
-    /// </summary>
-    /// <param name="t"><see cref="IEditorModule"/> assignable type with blank constructor</param>
-    public void AddModule(Type t)
+    public bool PluginPopupOpen
     {
-        if (!typeof(IEditorModule).IsAssignableFrom(t))
-        {
-            return;
-        }
-        var module = (IEditorModule)Activator.CreateInstance(t);
+        get => _pluginPopupOpen;
+        set => RaiseAndSetIfChanged(ref _pluginPopupOpen, value);
+    }
+
+    private void AddModule(IEditorModule module)
+    {
         Modules.Add(module.UniqueId, module);
         ViewModels.Add(module.UniqueId, module.NewViewModel(_container, _editorContext));
         ListItems.Add(new(module.ListName, module.UniqueId));
         if (ViewModels.Count == 1)
         {
-            _currentPage = module.UniqueId;
-            CurrentVm = SelectViewModel(_currentPage);
+            _currentModuleId = module.UniqueId;
+            CurrentVm = SelectViewModel(_currentModuleId);
         }
     }
 
-    private bool _moduleOrderLoaded = false;
-    public void LoadModuleOrderFromSetting()
+    private void RegisterModules()
+    {
+        var types = System.Reflection.Assembly
+                .GetExecutingAssembly()
+                .GetTypes();
+
+        IEnumerable<Type> modules = types.Where(i => typeof(IEditorModule).IsAssignableFrom(i) && !i.IsInterface);
+
+        foreach (Type t in modules)
+        {
+            var module = (IEditorModule)Activator.CreateInstance(t);
+            AddModule(module);
+        }
+
+        LoadModuleOrderFromSetting();
+    }
+
+
+    private void LoadModuleOrderFromSetting()
     {
         var items = ListItems.ToList();
         var order = _editorModuleOrderSetting.Value;
         ListItems.Clear();
         foreach (var item in order)
         {
-            var firstItem = items.FirstOrDefault(i => i.ItemValue == item);
+            var firstItem = items.FirstOrDefault(i => i.ModuleId == item);
             if (firstItem != null)
             {
                 ListItems.Add(firstItem);
@@ -126,9 +160,6 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
         _moduleOrderLoaded = true;
     }
-
-    public Dictionary<string, IEditorModule> Modules { get; } = new();
-    public Dictionary<string, ISaveableRefreshable> ViewModels { get; } = new();
 
     private void ReloadViewModels()
     {
@@ -154,7 +185,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     {
         if (_moduleOrderLoaded) // make sure default order isn't saved before saved order is loaded
         {
-            _editorModuleOrderSetting.Value = ListItems.Select(i => i.ItemValue).ToArray();
+            _editorModuleOrderSetting.Value = ListItems.Select(i => i.ModuleId).ToArray();
             _settingService.Save();
         }
         _editorContext.CachedMsgBlockService.SaveChangedBlocks();
@@ -176,7 +207,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo("Saving...", IsIndeterminate:true));
+            progress.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
             Save();
             try
             {
@@ -200,7 +231,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
 
     private void RunPlugin(PluginInfo chosen)
     {
-        
+
         // first save
         if (!CanSave())
         {
@@ -223,28 +254,6 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
         ReloadViewModels();
         _currentVm = null;
-        CurrentVm = SelectViewModel(_currentPage);
-    }
-
-    public PluginInfo SelectedPlugin
-    {
-        get => null;
-        set
-        {
-            // prevent weird double trigger
-            if (PluginPopupOpen)
-            {
-                PluginPopupOpen = false;
-                RunPlugin(value);
-            }
-            
-        }
-    }
-
-    private bool _pulginPopupOpen = false;
-    public bool PluginPopupOpen
-    {
-        get => _pulginPopupOpen;
-        set => RaiseAndSetIfChanged(ref _pulginPopupOpen, value);
+        CurrentVm = SelectViewModel(_currentModuleId);
     }
 }

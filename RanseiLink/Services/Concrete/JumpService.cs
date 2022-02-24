@@ -20,7 +20,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is AbilitySelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -30,7 +30,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is BaseWarriorSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -40,7 +40,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is BuildingSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -50,13 +50,13 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is EventSpeakerSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
     public void JumpToEvolutionTable()
     {
-        _mainEditor.CurrentPage = EvolutionTableEditorModule.Id;
+        _mainEditor.CurrentModuleId = EvolutionTableEditorModule.Id;
     }
 
     public void JumpToItem(ItemId id)
@@ -65,7 +65,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is ItemSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -75,7 +75,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is MaxLinkSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -85,7 +85,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is MoveSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -95,7 +95,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is MoveRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -105,7 +105,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is PokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -115,7 +115,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is ScenarioAppearPokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -125,7 +125,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is ScenarioKingdomSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -139,7 +139,7 @@ internal class JumpService : IJumpService
         {
             selectorVm.SelectedScenario = scenario;
             selectorVm.SelectedItem = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -153,13 +153,13 @@ internal class JumpService : IJumpService
         {
             selectorVm.SelectedScenario = scenario;
             selectorVm.SelectedItem = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
     public void JumpToWarriorNameTable()
     {
-        _mainEditor.CurrentPage = WarriorNameTableEditorModule.Id;
+        _mainEditor.CurrentModuleId = WarriorNameTableEditorModule.Id;
     }
 
     public void JumpToWarriorSkill(WarriorSkillId id)
@@ -168,7 +168,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is WarriorSkillSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -178,7 +178,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is BattleConfigSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -188,7 +188,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is GimmickRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 
@@ -198,7 +198,7 @@ internal class JumpService : IJumpService
         if (_mainEditor.ViewModels[moduleId] is MapSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
         {
             selectorVm.Selected = id;
-            _mainEditor.CurrentPage = moduleId;
+            _mainEditor.CurrentModuleId = moduleId;
         }
     }
 }

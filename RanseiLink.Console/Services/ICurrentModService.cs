@@ -6,5 +6,5 @@ namespace RanseiLink.Console.Services;
 public interface ICurrentModService
 {
     bool TryGetCurrentMod(IConsole console, out ModInfo mod);
-    bool TryGetDataService(IConsole console, out IDataService dataService);
+    bool TryGetDataService(IConsole console, out IModServiceContainer dataService);
 }

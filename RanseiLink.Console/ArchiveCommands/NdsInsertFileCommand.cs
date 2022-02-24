@@ -1,6 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Nds;
+using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
@@ -29,9 +29,9 @@ public class NdsInsertFileCommand : BaseCommand
             console.Output.WriteLine($"File not found: {SourcePath}");
         }
 
-        var ndsFactory = Container.Resolve<NdsFactory>();
+        var ndsFactory = Container.Resolve<RomFsFactory>();
 
-        using INds nds = ndsFactory(NdsPath);
+        using IRomFs nds = ndsFactory(NdsPath);
         nds.InsertVariableLengthFile(FilePath, SourcePath);
 
         console.Output.WriteLine("File insertion complete!");

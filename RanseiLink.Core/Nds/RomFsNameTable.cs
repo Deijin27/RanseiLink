@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace RanseiLink.Core.Nds;
+namespace RanseiLink.Core.RomFs;
 
-public static class NdsNameTable
+public static class RomFsNameTable
 {
     public class FolderAllocation
     {
@@ -15,7 +15,7 @@ public static class NdsNameTable
         {
             if (data.Length != Length)
             {
-                throw new Exception($"{nameof(NdsNameTable)}.{nameof(FolderAllocation)} must have an array passed to its constructor of length {Length}");
+                throw new Exception($"{nameof(RomFsNameTable)}.{nameof(FolderAllocation)} must have an array passed to its constructor of length {Length}");
             }
             Data = data;
         }

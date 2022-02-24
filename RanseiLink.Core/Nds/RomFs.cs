@@ -2,11 +2,11 @@
 using System.IO;
 using System.Text;
 
-namespace RanseiLink.Core.Nds;
+namespace RanseiLink.Core.RomFs;
 
 public record RomFsConfig(long NameTableStartOffsetPositon, long AllocationTableStartOffsetPosition);
 
-public class Nds : INds
+public class RomFs : IRomFs
 {
     public static RomFsConfig NdsConfig { get; } = new RomFsConfig(0x40, 0x48);
 
@@ -15,9 +15,9 @@ public class Nds : INds
     private readonly BinaryWriter _underlyingStreamWriter;
     private readonly long _nameTableStartOffset;
     private readonly long _fatStartOffset;
-    public Nds(string filePath) : this(filePath, NdsConfig) { }
+    public RomFs(string filePath) : this(filePath, NdsConfig) { }
 
-    public Nds(string filePath, RomFsConfig config)
+    public RomFs(string filePath, RomFsConfig config)
     {
         _underlyingStream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
         _underlyingStreamReader = new BinaryReader(_underlyingStream);
@@ -34,36 +34,36 @@ public class Nds : INds
 
     private Fat32.Entry GetEntryFromPath(string path)
     {
-        uint entryIndex = NdsNameTable.GetFatEntryIndex(_underlyingStreamReader, _nameTableStartOffset, path);
-        return NdsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, entryIndex);
+        uint entryIndex = RomFsNameTable.GetFatEntryIndex(_underlyingStreamReader, _nameTableStartOffset, path);
+        return RomFsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, entryIndex);
     }
 
     
     public void ExtractCopyOfDirectory(string path, string destinationFolder)
     {
         destinationFolder = Path.Combine(destinationFolder, Path.GetFileName(path));
-        var alloc = NdsNameTable.GetFolderAllocationFromPath(_underlyingStreamReader, _nameTableStartOffset, path);
+        var alloc = RomFsNameTable.GetFolderAllocationFromPath(_underlyingStreamReader, _nameTableStartOffset, path);
         ExtractCopyOfDirectoryContentsUsingAllocation(alloc, destinationFolder);
     }
 
 
-    private void ExtractCopyOfDirectoryContentsUsingAllocation(NdsNameTable.FolderAllocation alloc, string destinationFolder)
+    private void ExtractCopyOfDirectoryContentsUsingAllocation(RomFsNameTable.FolderAllocation alloc, string destinationFolder)
     {
         Directory.CreateDirectory(destinationFolder);
         uint count = alloc.FatTopFileId;
-        foreach (var item in NdsNameTable.GetContents(_underlyingStreamReader, _nameTableStartOffset, alloc))
+        foreach (var item in RomFsNameTable.GetContents(_underlyingStreamReader, _nameTableStartOffset, alloc))
         {
             string itemName = Encoding.UTF8.GetString(item.Name);
             if (item.IsFolder)
             {
                 ExtractCopyOfDirectoryContentsUsingAllocation(
-                    NdsNameTable.GetAllocationData(_underlyingStreamReader, _nameTableStartOffset, item.ContentsIndexIfFolder),
+                    RomFsNameTable.GetAllocationData(_underlyingStreamReader, _nameTableStartOffset, item.ContentsIndexIfFolder),
                     Path.Combine(destinationFolder, itemName)
                     );
             }
             else
             {
-                var entry = NdsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, count);
+                var entry = RomFsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, count);
                 ExtractCopyOfFileFromEntry(entry, Path.Combine(destinationFolder, itemName));
             }
             count++;
@@ -100,8 +100,8 @@ public class Nds : INds
 
     public void InsertVariableLengthFile(string path, string source)
     {
-        uint entryIndex = NdsNameTable.GetFatEntryIndex(_underlyingStreamReader, _nameTableStartOffset, path);
-        var originalInsertDestinationEntry = NdsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, entryIndex);
+        uint entryIndex = RomFsNameTable.GetFatEntryIndex(_underlyingStreamReader, _nameTableStartOffset, path);
+        var originalInsertDestinationEntry = RomFsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, entryIndex);
         byte[] sourceData = File.ReadAllBytes(source);
         var oldEntryLength = originalInsertDestinationEntry.GetLength();
         if (oldEntryLength == sourceData.Length)
@@ -117,19 +117,19 @@ public class Nds : INds
         int change = newInsertDestinationEntry.GetLength() - oldEntryLength;
 
         // Update entry value
-        NdsFileAllocationTable.SetEntry(_underlyingStreamWriter, _fatStartOffset, entryIndex, newInsertDestinationEntry);
+        RomFsFileAllocationTable.SetEntry(_underlyingStreamWriter, _fatStartOffset, entryIndex, newInsertDestinationEntry);
 
         // Update entry values after changed one with change
         var currentEntryId = entryIndex + 1;
         var previousEntry = newInsertDestinationEntry;
-        var currentEntry = NdsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, currentEntryId);
+        var currentEntry = RomFsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, currentEntryId);
         while (!currentEntry.IsDefault)
         {
             uint newStart = (uint)(currentEntry.Start + change);
             uint newEnd = (uint)(currentEntry.End + change);
-            NdsFileAllocationTable.SetEntry(_underlyingStreamWriter, _fatStartOffset, currentEntryId++, new Fat32.Entry(newStart, newEnd));
+            RomFsFileAllocationTable.SetEntry(_underlyingStreamWriter, _fatStartOffset, currentEntryId++, new Fat32.Entry(newStart, newEnd));
             previousEntry = currentEntry;
-            currentEntry = NdsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, currentEntryId);
+            currentEntry = RomFsFileAllocationTable.GetEntry(_underlyingStreamReader, _fatStartOffset, currentEntryId);
         }
 
         // Shift data

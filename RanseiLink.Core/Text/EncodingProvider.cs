@@ -14,6 +14,6 @@ internal static class EncodingProvider
         ShiftJISExtended = Encoding.GetEncoding(932);
     }
 
-    public static Encoding ShiftJIS;
-    public static Encoding ShiftJISExtended;
+    public static Encoding ShiftJIS { get; }
+    public static Encoding ShiftJISExtended { get; }
 }

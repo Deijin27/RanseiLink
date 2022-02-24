@@ -15,7 +15,7 @@ internal class MassAction
     private readonly ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
 
     private MassActionOptionForm options;
-    private IDataService _dataService;
+    private IModServiceContainer _dataService;
 
     public void Run(IPluginContext context)
     {
