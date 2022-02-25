@@ -185,7 +185,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: $"Error running {chosen.Name}",
-                message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.Message,
+                message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.ToString(),
                 type: MessageBoxType.Error
                 ));
         }

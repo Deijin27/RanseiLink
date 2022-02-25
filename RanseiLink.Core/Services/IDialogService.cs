@@ -15,7 +15,7 @@ public interface IDialogService
     bool RequestRomFile(out string result);
     bool ConfirmDelete(ModInfo info);
     MessageBoxResult ShowMessageBox(MessageBoxArgs options);
-    bool RequestFolder(out string result);
+    bool RequestFolder(string title, out string result);
     bool RequestModFile(out string result);
     void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
     bool ModifyMapDimensions(ref ushort width, ref ushort height);

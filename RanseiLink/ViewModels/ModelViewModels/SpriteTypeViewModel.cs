@@ -180,8 +180,10 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
 
     private void ExportAll()
     {
-        string dir = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, SelectedType.ToString()));
-        Directory.CreateDirectory(dir);
+        if (!_dialogService.RequestFolder("Select folder to export sprites into", out string dir))
+        {
+            return;
+        }
         foreach (var spriteInfo in _spriteProvider.GetAllSpriteFiles(SelectedType))
         {
             string dest = Path.Combine(dir, Path.GetFileName(spriteInfo.File));

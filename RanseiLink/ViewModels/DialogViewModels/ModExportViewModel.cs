@@ -1,14 +1,14 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.DragDrop;
 using System.Windows.Input;
-using RanseiLink.Core;
 
 namespace RanseiLink.ViewModels;
 
 public class ModExportViewModel : ViewModelBase
 {
-    public ModExportViewModel(ModInfo modInfo, string initFile)
+    public ModExportViewModel(IDialogService dialogService, ModInfo modInfo, string initFolder)
     {
+        Folder = initFolder;
         ModInfo = modInfo;
         RomDropHandler = new FolderDropHandler();
         RomDropHandler.FolderDropped += f =>
@@ -16,17 +16,16 @@ public class ModExportViewModel : ViewModelBase
             Folder = f;
         };
 
-        DesktopCommand = new RelayCommand(() =>
+        FolderPickerCommand = new RelayCommand(() =>
         {
-            var desktop = FileUtil.DesktopDirectory;
-            if (System.IO.Directory.Exists(desktop))
+            if (dialogService.RequestFolder("Select a folder to export the mod into", out string folder))
             {
-                Folder = desktop;
+                Folder = folder;
             }
         });
     }
 
-    public ICommand DesktopCommand { get; }
+    public ICommand FolderPickerCommand { get; }
 
     public FolderDropHandler RomDropHandler { get; }
 

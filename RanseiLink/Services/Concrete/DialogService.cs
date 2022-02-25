@@ -3,6 +3,7 @@ using RanseiLink.Core.Settings;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -88,33 +89,21 @@ internal class DialogService : IDialogService
         return proceed == true;
     }
 
-    public bool RequestFolder(out string result)
+    public bool RequestFolder(string title, out string result)
     {
-        var dialog = new Microsoft.Win32.OpenFileDialog
+        using (var dialog = new System.Windows.Forms.FolderBrowserDialog() { UseDescriptionForTitle = true, Description = title })
         {
-            Title = "Navigate to a folder and click Open",
-            ValidateNames = false,
-            CheckFileExists = false,
-            CheckPathExists = true,
-        };
-
-        // Show save file dialog box
-        bool? proceed = dialog.ShowDialog();
-        result = dialog.FileName;
-        // Process save file dialog box results
-        if (proceed == true)
-        {
-            if (System.IO.Directory.Exists(result))
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
-                return true;
+                result = null;
+                return false;
             }
-            else if (System.IO.File.Exists(result))
+            else
             {
-                result = System.IO.Path.GetDirectoryName(result);
-                return true;
+                result = dialog.SelectedPath;
+                return Directory.Exists(result);
             }
         }
-        return false;
     }
 
     public bool CreateMod(out ModInfo modInfo, out string romPath)
@@ -171,7 +160,7 @@ internal class DialogService : IDialogService
 
     public bool ExportMod(ModInfo info, out string folder)
     {
-        var vm = new ModExportViewModel(info, _recentExportModFolderSetting.Value);
+        var vm = new ModExportViewModel(this, info, _recentExportModFolderSetting.Value);
 
         var dialog = new Dialogs.ModExportDialog
         {

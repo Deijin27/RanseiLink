@@ -78,7 +78,11 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void Export()
     {
-        var dest = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, Path.GetFileName(_displayFile)));
+        if (!_dialogService.RequestFolder("Select folder to export sprite into", out string dir))
+        {
+            return;
+        }
+        var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_displayFile)));
         File.Copy(_displayFile, dest);
         _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }

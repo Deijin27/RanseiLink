@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:RanseiLink.Dialogs"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
@@ -23,7 +22,7 @@
                     <TextBlock Text="Drop a folder to&#x0a; export to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     <TextBlock FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE197;" HorizontalAlignment="Center" FontSize="40" Height="60"/>
                     <TextBlock Text="{Binding Folder, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
-                    <Button Command="{Binding DesktopCommand}" Width="130" Margin="10,0,10,0">Desktop</Button>
+                    <Button Command="{Binding FolderPickerCommand}" Width="130" Margin="10,0,10,0">Or use folder picker</Button>
                 </StackPanel>
             </Grid>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">

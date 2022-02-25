@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PartialTransferPlugin", "Pl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{678695B1-243E-4053-8D94-D7C45260D25D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftlockCheckerPlugin", "Plugins\SoftlockCheckerPlugin\SoftlockCheckerPlugin.csproj", "{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftlockCheckerPlugin", "Plugins\SoftlockCheckerPlugin\SoftlockCheckerPlugin.csproj", "{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpriteSheetSplitterPlugin", "SpriteSheetSplitterPlugin\SpriteSheetSplitterPlugin.csproj", "{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,6 +80,7 @@ Global
 		{81E7A7DD-7B12-4AF3-A5E4-88CFBBA27A56} = {678695B1-243E-4053-8D94-D7C45260D25D}
 		{E47F4FF2-23D1-41E7-83EA-40270EA989C3} = {678695B1-243E-4053-8D94-D7C45260D25D}
 		{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2} = {678695B1-243E-4053-8D94-D7C45260D25D}
+		{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D} = {678695B1-243E-4053-8D94-D7C45260D25D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A0EAA867-9D8D-4241-851E-8701422504C7}
