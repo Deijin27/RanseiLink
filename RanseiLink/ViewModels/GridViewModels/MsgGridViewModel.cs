@@ -145,7 +145,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
             
             foreach (var item in _allItems)
             {
-                if (rx.IsMatch(item.Text))
+                if (rx.IsMatch(item.Text) || rx.IsMatch(item.BoxConfig) || rx.IsMatch(item.Context))
                 {
                     Items.Add(item);
                 }
@@ -156,7 +156,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
             StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
             foreach (var item in _allItems)
             {
-                if (item.Text.Contains(searchTerm, comparison))
+                if (item.Text.Contains(searchTerm, comparison) || item.Context.Contains(searchTerm, comparison) || item.BoxConfig.Contains(searchTerm, comparison))
                 {
                     Items.Add(item);
                 }
@@ -202,9 +202,11 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
             }
             foreach (var item in _allItems)
             {
-                if (rx.IsMatch(item.Text))
+                if (rx.IsMatch(item.Text) || rx.IsMatch(item.BoxConfig) || rx.IsMatch(item.Context))
                 {
                     rx.Replace(item.Text, replaceTerm);
+                    rx.Replace(item.BoxConfig, replaceTerm);
+                    rx.Replace(item.Context, replaceTerm);
                     Items.Add(item);
                 }
             }
@@ -214,9 +216,11 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
             StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
             foreach (var item in _allItems)
             {
-                if (item.Text.Contains(searchTerm, comparison))
+                if (item.Text.Contains(searchTerm, comparison) || item.Context.Contains(searchTerm, comparison) || item.BoxConfig.Contains(searchTerm, comparison))
                 {
                     item.Text = item.Text.Replace(searchTerm, replaceTerm, comparison);
+                    item.BoxConfig = item.BoxConfig.Replace(searchTerm, replaceTerm, comparison);
+                    item.Context = item.Context.Replace(searchTerm, replaceTerm, comparison);
                     Items.Add(item);
                 }
             }
