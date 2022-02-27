@@ -23,10 +23,12 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
 
     #region Populate
 
+    public bool IsDefaultsPopulated => Directory.Exists(Path.Combine(_graphicsProviderFolder, Constants.GraphicsFolderPath));
+
     public void Populate(string ndsFile, IProgress<ProgressInfo> progress = null)
     {
         // reset the graphics folder
-        if (Directory.Exists(_graphicsProviderFolder))
+        if (IsDefaultsPopulated)
         {
             progress?.Report(new ProgressInfo(StatusText:"Deleting Existing...", IsIndeterminate:true));
             Directory.Delete(_graphicsProviderFolder, true);

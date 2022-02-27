@@ -24,6 +24,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
     private readonly IDialogService _dialogService;
     private readonly IModManager _modService;
     private readonly IEditorContext _editorContext;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
     private readonly ISettingService _settingService;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
     private bool _moduleOrderLoaded = false;
@@ -39,6 +40,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         _dialogService = container.Resolve<IDialogService>();
         _modService = container.Resolve<IModManager>();
         _settingService = container.Resolve<ISettingService>();
+        _fallbackSpriteProvider = container.Resolve<IFallbackSpriteProvider>();
         _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
 
         PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
@@ -204,6 +206,12 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
             return;
         }
 
+        if (patchOpt.HasFlag(PatchOptions.IncludeSprites) && !_fallbackSpriteProvider.IsDefaultsPopulated)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", "In order to patch sprites you must first run 'Populate Graphics Defaults' on the home screen so it has the necessary files"));
+            return;
+        }
+
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
@@ -223,7 +231,7 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: "Error Writing To Rom",
-                message: error.Message,
+                message: error.ToString(),
                 type: MessageBoxType.Error
             ));
         }

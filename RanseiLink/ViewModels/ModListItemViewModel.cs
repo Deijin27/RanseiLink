@@ -17,6 +17,7 @@ public class ModListItemViewModel : ViewModelBase
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
     private readonly IServiceContainer _container;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
 
     public ModListItemViewModel(ModSelectionViewModel parent, ModInfo mod, IServiceContainer container)
     {
@@ -24,6 +25,7 @@ public class ModListItemViewModel : ViewModelBase
         _parentVm = parent;
         _modService = container.Resolve<IModManager>();
         _dialogService = container.Resolve<IDialogService>();
+        _fallbackSpriteProvider = container.Resolve<IFallbackSpriteProvider>();
         Mod = mod;
         PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
 
@@ -54,6 +56,12 @@ public class ModListItemViewModel : ViewModelBase
             return;
         }
 
+        if (patchOpt.HasFlag(PatchOptions.IncludeSprites) && !_fallbackSpriteProvider.IsDefaultsPopulated)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", "In order to patch sprites you must first run 'Populate Graphics Defaults' on the home screen so it has the necessary files"));
+            return;
+        }
+
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
@@ -71,7 +79,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: "Error Writing To Rom",
-                message: error.Message,
+                message: error.ToString(),
                 type: MessageBoxType.Error
             ));
         }
@@ -102,7 +110,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Exporting Mod",
-                    message: error.Message,
+                    message: error.ToString(),
                     type: MessageBoxType.Error
                 ));
         }
@@ -153,7 +161,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     title: "Error Creating Mod",
-                    message: error.Message,
+                    message: error.ToString(),
                     type: MessageBoxType.Error
                 ));
         }

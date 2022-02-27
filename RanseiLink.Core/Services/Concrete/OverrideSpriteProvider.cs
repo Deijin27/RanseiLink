@@ -15,6 +15,8 @@ internal class OverrideSpriteProvider : IOverrideSpriteProvider
         _fallbackSpriteProvider = fallbackSpriteProvider;
     }
 
+    public bool IsDefaultsPopulated => _fallbackSpriteProvider.IsDefaultsPopulated;
+
     public void ClearOverride(SpriteType type, uint id)
     {
         File.Delete(GetSpriteFilePathWithoutFallback(type, id).File);
@@ -22,6 +24,10 @@ internal class OverrideSpriteProvider : IOverrideSpriteProvider
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
+        if (!IsDefaultsPopulated)
+        {
+            return new List<SpriteFile>();
+        }
         var dict = new Dictionary<SpriteType, Dictionary<uint, SpriteFile>>();
         foreach (var i in _fallbackSpriteProvider.GetAllSpriteFiles(type))
         {

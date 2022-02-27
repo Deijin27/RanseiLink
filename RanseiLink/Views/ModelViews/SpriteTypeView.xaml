@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Views"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:vc="clr-namespace:RanseiLink.ValueConverters"
              d:DataContext="{d:DesignInstance vm:SpriteTypeViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
+        <vc:ZeroToVisiblityConverter x:Key="Converter.ZeroToVis"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,6 +30,7 @@
             <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource AltForegroundBrush}" Text="{Binding DimensionInfo}"/>
             <TextBlock VerticalAlignment="Center" FontSize="10" Foreground="{DynamicResource AltForegroundBrush}">Right click on an image for more options</TextBlock>
         </DockPanel>
+        
         <ScrollViewer Grid.Row="2" Margin="10">
             <ItemsControl ItemsSource="{Binding Items}" Grid.IsSharedSizeScope="True">
                 <ItemsControl.ItemsPanel>
@@ -60,5 +63,8 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
+        <TextBlock Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" Visibility="{Binding Items.Count, Converter={StaticResource Converter.ZeroToVis}}">
+            There is no sprites. Have you run 'Populate Graphics Defaults' on the home screen yet?
+        </TextBlock>
     </Grid>
 </UserControl>

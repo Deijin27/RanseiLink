@@ -30,6 +30,8 @@ public enum SpriteType
 
 public interface ISpriteProvider
 {
+    bool IsDefaultsPopulated { get; }
+
     List<SpriteFile> GetAllSpriteFiles(SpriteType type);
     SpriteFile GetSpriteFile(SpriteType type, uint id);
 }

@@ -304,6 +304,10 @@ public class ModManager : IModManager
 
         if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
         {
+            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
+            {
+                throw new Exception("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
+            }
             IOverrideSpriteProvider spriteProvider = new OverrideSpriteProvider(_fallbackSpriteProvider, mod);
 
             Parallel.ForEach(GraphicsInfoResource.All, gInfo =>
