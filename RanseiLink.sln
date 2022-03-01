@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{6786
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftlockCheckerPlugin", "Plugins\SoftlockCheckerPlugin\SoftlockCheckerPlugin.csproj", "{A3BA4564-EFB2-4602-B45A-1E49CD93BBB2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpriteSheetSplitterPlugin", "SpriteSheetSplitterPlugin\SpriteSheetSplitterPlugin.csproj", "{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpriteSheetSplitterPlugin", "Plugins\SpriteSheetSplitterPlugin\SpriteSheetSplitterPlugin.csproj", "{6BDE5373-EFC2-44D2-ACB1-F3F1103C104D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

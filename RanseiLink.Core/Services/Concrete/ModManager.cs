@@ -273,7 +273,7 @@ public class ModManager : IModManager
             Constants.EventSpeakerRomPath,
             Constants.BaseBushouMaxSyncTableRomPath,
             Constants.BaseBushouRomPath,
-            Constants.MapRomPath,
+            Constants.BattleConfigRomPath,
             Constants.GimmickRangeRomPath,
             Constants.MoveEffectRomPath,
             Constants.GimmickObjectRomPath
@@ -292,9 +292,9 @@ public class ModManager : IModManager
             filesToPatch.Add(new FileToPatch(drp, Path.Combine(mod.FolderPath, drp), FilePatchOptions.None));
         }
 
-        foreach (var mapFilePath in Directory.GetFiles(Path.Combine(mod.FolderPath, Constants.DataFolderPath, "map")))
+        foreach (var mapFilePath in Directory.GetFiles(Path.Combine(mod.FolderPath, Constants.MapFolderPath)))
         {
-            string mapRomPath = Path.Combine(Constants.DataFolderPath, "map", Path.GetFileName(mapFilePath));
+            string mapRomPath = Path.Combine(Constants.MapFolderPath, Path.GetFileName(mapFilePath));
             filesToPatch.Add(new FileToPatch(mapRomPath, mapFilePath, FilePatchOptions.VariableLength));
         }
 

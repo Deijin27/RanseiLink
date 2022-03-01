@@ -15,6 +15,8 @@ public static class Constants
 
     public const string GraphicsFolderPath = "graphics";
 
+    public static readonly string MapFolderPath = Path.Combine(DataFolderPath, "map");
+
     public static readonly string AppearPokemonRomPath = Path.Combine(DataFolderPath, "AppearPokemon.dat");
     public static readonly string BaseBushouRomPath = Path.Combine(DataFolderPath, "BaseBushou.dat");
     public static readonly string BaseBushouMaxSyncTableRomPath = Path.Combine(DataFolderPath, "BaseBushouMaxSyncTable.dat");
@@ -30,7 +32,7 @@ public static class Constants
     public static readonly string ItemRomPath = Path.Combine(DataFolderPath, "Item.dat");
     public static readonly string JinkeiRomPath = Path.Combine(DataFolderPath, "Jinkei.dat");
     public static readonly string KingdomRomPath = Path.Combine(DataFolderPath, "Kuni.dat");
-    public static readonly string MapRomPath = Path.Combine(DataFolderPath, "Map.dat");
+    public static readonly string BattleConfigRomPath = Path.Combine(DataFolderPath, "Map.dat");
     public static readonly string MapPointRomPath = Path.Combine(DataFolderPath, "MapPoint.dat");
     public static readonly string MsgRomPath = Path.Combine(DataFolderPath, "MSG.DAT");
     public static readonly string PasswordRomPath = Path.Combine(DataFolderPath, "password.tbl");

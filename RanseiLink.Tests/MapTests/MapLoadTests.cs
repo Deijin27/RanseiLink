@@ -9,7 +9,7 @@ public class MapLoadTests
     [Fact]
     public void IdenticalThroughLoadSaveCycle()
     {
-        foreach (var file in Directory.GetFiles(Path.Combine(TestConstants.TestModFolder, "data", "map")))
+        foreach (var file in Directory.GetFiles(Path.Combine(TestConstants.TestModFolder, RanseiLink.Core.Services.Constants.MapFolderPath)))
         {
             var unchangedBytes = File.ReadAllBytes(file);
             string temp = Path.GetTempFileName();

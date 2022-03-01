@@ -6,7 +6,6 @@ using RanseiLink.PluginModule.Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
@@ -15,6 +14,7 @@ internal class Randomizer
     private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
     private AbilityId[] abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
     private TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
+    private TypeId[] typeIdsExceptNoType = EnumUtil.GetValues<TypeId>().Where(i => i != TypeId.NoType).ToArray();
     private MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
     private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
@@ -216,7 +216,7 @@ internal class Randomizer
                 }
                 if (options.Types)
                 {
-                    poke.Type1 = random.Choice(typeIds);
+                    poke.Type1 = random.Choice(typeIdsExceptNoType);
                     poke.Type2 = options.PreventSameType
                         ? random.Choice(typeIds.Where(i => i != poke.Type1).ToArray())
                         : random.Choice(typeIds);

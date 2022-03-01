@@ -5,11 +5,10 @@ using RanseiLink.PluginModule.Api;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace PartialTransferPlugin;
 
-[Plugin("Partial Transfer", "Deijin", "1.0")]
+[Plugin("Partial Transfer", "Deijin", "2.0")]
 public class PartialTransferPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -62,17 +61,26 @@ public class PartialTransferPlugin : IPlugin
         var destinationMod = modDict[options.DestinationMod];
 
         List<string> filesToTransfer = new();
+        List<string> dirsToTransfer = new();
 
         if (options.Ability)
             filesToTransfer.Add(Constants.AbilityRomPath);
         if (options.BaseWarrior)
             filesToTransfer.Add(Constants.BaseBushouRomPath);
+        if (options.BattleConfigs)
+            filesToTransfer.Add(Constants.BattleConfigRomPath);
         if (options.Building)
             filesToTransfer.Add(Constants.BuildingRomPath);
         if (options.EventSpeaker)
             filesToTransfer.Add(Constants.EventSpeakerRomPath);
+        if (options.Gimmicks)
+            filesToTransfer.Add(Constants.GimmickRomPath);
         if (options.Item)
             filesToTransfer.Add(Constants.ItemRomPath);
+        if (options.Kingdoms)
+            filesToTransfer.Add(Constants.KingdomRomPath);
+        if (options.Maps)
+            dirsToTransfer.Add(Constants.MapFolderPath);
         if (options.MaxLink)
             filesToTransfer.Add(Constants.BaseBushouMaxSyncTableRomPath);
         if (options.MoveRange)
@@ -96,17 +104,15 @@ public class PartialTransferPlugin : IPlugin
                 filesToTransfer.Add(Constants.ScenarioKingdomPathFromId(i));
         }
 
+        if (options.Sprites)
+            dirsToTransfer.Add(Constants.GraphicsFolderPath);
         if (options.Text)
-        {
-            foreach (var file in Directory.GetFiles(Path.Combine(sourceMod.FolderPath, Constants.MsgFolderPath)))
-            {
-                filesToTransfer.Add(Path.Combine(Constants.MsgFolderPath, Path.GetFileName(file)));
-            }
-        }
+            dirsToTransfer.Add(Constants.MsgFolderPath);
+        
         
         dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo(StatusText:"Transferring...", MaxProgress:filesToTransfer.Count));
+            progress.Report(new ProgressInfo(StatusText:"Transferring...", MaxProgress:filesToTransfer.Count+dirsToTransfer.Count));
 
             int count = 0;
             foreach (var file in filesToTransfer)
@@ -116,6 +122,19 @@ public class PartialTransferPlugin : IPlugin
                 File.Copy(sourcePath, destinationPath, true);
                 count++;
                 progress.Report(new ProgressInfo(Progress:count));
+            }
+            foreach(var dir in dirsToTransfer)
+            {
+                string sourcePath = Path.Combine(sourceMod.FolderPath, dir);
+                string destinationPath = Path.Combine(destinationMod.FolderPath, dir);
+                if (Directory.Exists(destinationPath))
+                {
+                    Directory.Delete(destinationPath, true);
+                }
+                Directory.CreateDirectory(destinationPath);
+                FileUtil.CopyFilesRecursively(sourcePath, destinationPath);
+                count++;
+                progress.Report(new ProgressInfo(Progress: count));
             }
 
             progress.Report(new ProgressInfo(StatusText:"Transfer Complete!"));

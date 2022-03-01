@@ -105,4 +105,9 @@ public class MockDialogService : IDialogService
     {
         throw new NotImplementedException();
     }
+
+    public bool RequestFolder(string title, out string result)
+    {
+        throw new NotImplementedException();
+    }
 }

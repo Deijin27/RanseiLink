@@ -3,7 +3,7 @@ using RanseiLink.PluginModule.Api;
 
 namespace RandomizerPlugin;
 
-[Plugin("Randomizer", "Deijin", "1.7")]
+[Plugin("Randomizer", "Deijin", "2.0")]
 public class RandomizerPlugin : IPlugin
 {
     public void Run(IPluginContext context)

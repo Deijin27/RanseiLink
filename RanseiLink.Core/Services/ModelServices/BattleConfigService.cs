@@ -15,7 +15,7 @@ public interface IDisposableBattleConfigService : IDisposableModelDataService<Ba
 
 public class BattleConfigService : BaseModelService, IBattleConfigService
 {
-    public BattleConfigService(ModInfo mod) : base(mod, Constants.MapRomPath, BattleConfig.DataLength, 46) { }
+    public BattleConfigService(ModInfo mod) : base(mod, Constants.BattleConfigRomPath, BattleConfig.DataLength, 46) { }
 
     public IDisposableBattleConfigService Disposable()
     {
@@ -35,7 +35,7 @@ public class BattleConfigService : BaseModelService, IBattleConfigService
 
 public class DisposableBattleConfigService : BaseDisposableModelService, IDisposableBattleConfigService
 {
-    public DisposableBattleConfigService(ModInfo mod) : base(mod, Constants.MapRomPath, BattleConfig.DataLength, 46) { }
+    public DisposableBattleConfigService(ModInfo mod) : base(mod, Constants.BattleConfigRomPath, BattleConfig.DataLength, 46) { }
 
     public IBattleConfig Retrieve(BattleConfigId id)
     {

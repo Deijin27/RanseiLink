@@ -2,7 +2,7 @@
 
 namespace MassActionPlugin;
 
-[Plugin("Mass Action", "Deijin", "1.1")]
+[Plugin("Mass Action", "Deijin", "2.0")]
 public class MassActionPlugin : IPlugin
 {
     public void Run(IPluginContext context)

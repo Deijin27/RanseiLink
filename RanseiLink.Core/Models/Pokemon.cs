@@ -72,6 +72,18 @@ public class Pokemon : BaseDataWindow, IPokemon
         set => SetUInt32(4, 1, 30, value ? 1u : 0u);
     }
 
+    public bool AsymmetricBattleSprite
+    {
+        get => GetUInt32(4, 1, 31) == 1u;
+        set => SetUInt32(4, 1, 31, value ? 1u : 0u);
+    }
+
+    public bool LongAttackAnimation
+    {
+        get => GetUInt32(7, 1, 31) == 1u;
+        set => SetUInt32(7, 1, 31, value ? 1u : 0u);
+    }
+
     public TypeId Type1
     {
         get => (TypeId)GetUInt32(5, 5, 0);
@@ -187,8 +199,8 @@ public class Pokemon : BaseDataWindow, IPokemon
 
     public uint UnknownValue
     {
-        get => GetUInt32(3, 4, 18);
-        set => SetUInt32(3, 4, 18, value);
+        get => GetUInt32(2, 8, 24);
+        set => SetUInt32(2, 8, 24, value);
     }
 
     public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)

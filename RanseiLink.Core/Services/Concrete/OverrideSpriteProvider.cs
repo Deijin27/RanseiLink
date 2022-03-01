@@ -7,15 +7,13 @@ namespace RanseiLink.Core.Services.Concrete;
 
 internal class OverrideSpriteProvider : IOverrideSpriteProvider
 {
-    private readonly ISpriteProvider _fallbackSpriteProvider;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
     private readonly ModInfo _mod;
-    public OverrideSpriteProvider(ISpriteProvider fallbackSpriteProvider, ModInfo mod)
+    public OverrideSpriteProvider(IFallbackSpriteProvider fallbackSpriteProvider, ModInfo mod)
     {
         _mod = mod;
         _fallbackSpriteProvider = fallbackSpriteProvider;
     }
-
-    public bool IsDefaultsPopulated => _fallbackSpriteProvider.IsDefaultsPopulated;
 
     public void ClearOverride(SpriteType type, uint id)
     {
@@ -24,7 +22,7 @@ internal class OverrideSpriteProvider : IOverrideSpriteProvider
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
-        if (!IsDefaultsPopulated)
+        if (!_fallbackSpriteProvider.IsDefaultsPopulated)
         {
             return new List<SpriteFile>();
         }

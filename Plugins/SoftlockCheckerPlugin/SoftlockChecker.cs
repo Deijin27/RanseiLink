@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SoftlockCheckerPlugin;
 
@@ -147,7 +148,8 @@ internal class SoftlockChecker
         var tempFile = Path.GetTempFileName();
         File.WriteAllText(tempFile, result);
         var proc = Process.Start("notepad.exe", tempFile);
-        proc.WaitForInputIdle();
+        // Wait for idle stopped working after windows 11 notpad update, so have to do this hack
+        Thread.Sleep(1000);
         File.Delete(tempFile);
     }
 
@@ -221,6 +223,10 @@ internal class SoftlockChecker
         {
             foreach (var (id, scenarioWarrior) in scenarioWarriorDict)
             {
+                if (scenarioWarrior.ScenarioPokemonIsDefault(0))
+                {
+                    continue;
+                }
                 var scenarioPokemon = _allScenarioPokemon[scenario][(int)scenarioWarrior.ScenarioPokemon];
                 var pokemon = _allPokemon[scenarioPokemon.Pokemon];
                 var abilities = new[] { pokemon.Ability1, pokemon.Ability2, pokemon.Ability3 };

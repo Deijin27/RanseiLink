@@ -27,5 +27,5 @@ internal class MapIdService : IMapIdService
         return result;
     }
 
-    public string MapFolderPath => Path.Combine(_mod.FolderPath, Constants.DataFolderPath, "map");
+    public string MapFolderPath => Path.Combine(_mod.FolderPath, Constants.MapFolderPath);
 }

@@ -30,8 +30,6 @@ public enum SpriteType
 
 public interface ISpriteProvider
 {
-    bool IsDefaultsPopulated { get; }
-
     List<SpriteFile> GetAllSpriteFiles(SpriteType type);
     SpriteFile GetSpriteFile(SpriteType type, uint id);
 }
@@ -41,6 +39,7 @@ public record SpriteFile(SpriteType Type, uint Id, string File, bool IsOverride)
 
 public interface IFallbackSpriteProvider : ISpriteProvider
 {
+    bool IsDefaultsPopulated { get; }
     public void Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
 }
 

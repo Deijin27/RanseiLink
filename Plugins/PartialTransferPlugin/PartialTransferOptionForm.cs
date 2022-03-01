@@ -30,14 +30,26 @@ public class PartialTransferOptionForm : IPluginForm
     [BoolOption("Base Warriors", group: What)]
     public bool BaseWarrior { get; set; }
 
+    [BoolOption("Battle Configs", group: What)]
+    public bool BattleConfigs { get; set; }
+
     [BoolOption("Buildings", group: What)]
     public bool Building { get; set; }
 
     [BoolOption("Event Speakers", group: What)]
     public bool EventSpeaker { get; set; }
 
+    [BoolOption("Gimmicks", group: What)]
+    public bool Gimmicks { get; set; }
+
     [BoolOption("Items", group: What)]
     public bool Item { get; set; }
+
+    [BoolOption("Kingdoms", group: What)]
+    public bool Kingdoms { get; set; }
+
+    [BoolOption("Maps", group: What)]
+    public bool Maps { get; set; }
 
     [BoolOption("Max Links", group: What)]
     public bool MaxLink { get; set; }
@@ -62,6 +74,9 @@ public class PartialTransferOptionForm : IPluginForm
 
     [BoolOption("Scenario Warriors", group: What)]
     public bool ScenarioWarrior { get; set; }
+
+    [BoolOption("Sprites", group: What)]
+    public bool Sprites { get; set; }
 
     [BoolOption("Text", group: What)]
     public bool Text { get; set; }
