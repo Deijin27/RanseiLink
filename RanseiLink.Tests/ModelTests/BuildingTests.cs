@@ -25,6 +25,13 @@ public class BuildingTests
 
         Assert.Equal("Sacred Ruins", b.Name);
         Assert.Equal(KingdomId.Aurora, b.Kingdom);
+        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig1);
+        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig2);
+        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig3);
+        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite1);
+        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite2);
+        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite3);
+        Assert.Equal(BuildingFunctionId.Battle, b.Function);
 
     }
 
@@ -34,11 +41,25 @@ public class BuildingTests
         IBuilding b = new Building
         {
             Name = "Sacred Ruins",
-            Kingdom = KingdomId.Cragspur
+            Kingdom = KingdomId.Cragspur,
+            BattleConfig1 = BattleConfigId.Cragspur,
+            BattleConfig2 = BattleConfigId.SkyGarden_1,
+            BattleConfig3 = BattleConfigId.Terrera,
+            Sprite1 = BuildingSpriteId.SnowyMountain_1,
+            Sprite2 = BuildingSpriteId.UndergroundMine_1,
+            Sprite3 = BuildingSpriteId.Ravine_2,
+            Function = BuildingFunctionId.ObtainGold
         };
 
         Assert.Equal("Sacred Ruins", b.Name);
         Assert.Equal(KingdomId.Cragspur, b.Kingdom);
+        Assert.Equal(BattleConfigId.Cragspur, b.BattleConfig1);
+        Assert.Equal(BattleConfigId.SkyGarden_1, b.BattleConfig2);
+        Assert.Equal(BattleConfigId.Terrera, b.BattleConfig3);
+        Assert.Equal(BuildingSpriteId.SnowyMountain_1, b.Sprite1);
+        Assert.Equal(BuildingSpriteId.UndergroundMine_1, b.Sprite2);
+        Assert.Equal(BuildingSpriteId.Ravine_2, b.Sprite3);
+        Assert.Equal(BuildingFunctionId.ObtainGold, b.Function);
 
         // Add Array equal test when possible
     }
