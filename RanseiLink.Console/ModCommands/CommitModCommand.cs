@@ -22,6 +22,7 @@ public class CommitModCommand : BaseCommand
     {
         var currentModService = Container.Resolve<ICurrentModService>();
         var modService = Container.Resolve<IModManager>();
+        var fallbackSpriteProvider = Container.Resolve<IFallbackSpriteProvider>();
 
         if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
         {
@@ -33,6 +34,12 @@ public class CommitModCommand : BaseCommand
         if (IncludeSprites)
         {
             patchOpt |= PatchOptions.IncludeSprites;
+
+            if (!fallbackSpriteProvider.IsDefaultsPopulated)
+            {
+                console.Output.WriteLine("Cannot patch sprites until you run the command 'populate graphics defaults'");
+                return default;
+            }
         }
 
         modService.Commit(currentMod, Path, patchOpt);
