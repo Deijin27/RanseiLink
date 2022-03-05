@@ -1,5 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -8,31 +9,77 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-//[Command("test")]
-//public class TestCommand : BaseCommand
-//{
-//    public TestCommand(IServiceContainer container) : base(container) { }
-//    public TestCommand() : base() { }
+[Command("test")]
+public class TestCommand : BaseCommand
+{
+    public TestCommand(IServiceContainer container) : base(container) { }
+    public TestCommand() : base() { }
 
-//    public override ValueTask ExecuteAsync(IConsole console)
-//    {
-//        var eve = new EVE(@"C:\Users\Mia\Desktop\00000065.eve");
+    public override ValueTask ExecuteAsync(IConsole console)
+    {
+        var eve = new EVE(@"C:\Users\Mia\Desktop\00000064.eve");
 
-//        //var ncer = NCER.Load(@"C:\Users\Mia\Desktop\graphics\still\stl_busho_f\stl_busho_f-Unpacked\0002.ncer");
+        console.Output.WriteLine("Complete!");
 
-//        //for (int i = 0; i < ncer.CellBanks.Banks[0].Length; i++)
-//        //{
-//        //    var cell = ncer.CellBanks.Banks[0][i];
+        return default;
+    }
+}
 
-//        //    console.Output.WriteLine($"Cell {i}");
-//        //    console.Output.WriteLine($"  Y Offset: {cell.YOffset}");
-//        //    console.Output.WriteLine($"  X Offset: {cell.XOffset}");
-//        //    console.Output.WriteLine($"  Width   : {cell.Width}");
-//        //    console.Output.WriteLine($"  Height  : {cell.Height}");
-//        //}
+[Command("eve unpack")]
+public class EveUnpackCommand : BaseCommand
+{
+    public EveUnpackCommand(IServiceContainer container) : base(container) { }
+    public EveUnpackCommand() : base() { }
 
-//        console.Output.WriteLine("Complete!");
+    [CommandParameter(0, Description = "Path of eve file.", Name = "eveFile")]
+    public string FilePath { get; set; }
 
-//        return default;
-//    }
-//}
+    public override ValueTask ExecuteAsync(IConsole console)
+    {
+        var eve = new EVE(FilePath);
+
+        string outFolder = FileUtil.MakeUniquePath(Path.Combine(Path.GetDirectoryName(FilePath), Path.GetFileNameWithoutExtension(FilePath)));
+        Directory.CreateDirectory(outFolder);
+
+
+        {
+            string folderA = Path.Combine(outFolder, "A");
+            Directory.CreateDirectory(folderA);
+            int groupCount = 0;
+            foreach (var eventGroup in eve.EventGroupsA)
+            {
+                string eventGroupFolder = Path.Combine(folderA, groupCount++.ToString().PadLeft(4, '0'));
+                Directory.CreateDirectory(eventGroupFolder);
+                int eventCount = 0;
+                foreach (var e in eventGroup)
+                {
+                    string eventFile = Path.Combine(eventGroupFolder, eventCount++.ToString().PadLeft(4, '0'));
+                    File.WriteAllBytes(eventFile, e.AllData);
+                }
+            }
+        }
+
+        {
+            string folderB = Path.Combine(outFolder, "B");
+            Directory.CreateDirectory(folderB);
+            int groupCount = 0;
+            foreach (var eventGroup in eve.EventGroupsA)
+            {
+                string eventGroupFolder = Path.Combine(folderB, groupCount++.ToString().PadLeft(4, '0'));
+                Directory.CreateDirectory(eventGroupFolder);
+                int eventCount = 0;
+                foreach (var e in eventGroup)
+                {
+                    string eventFile = Path.Combine(eventGroupFolder, eventCount++.ToString().PadLeft(4, '0'));
+                    File.WriteAllBytes(eventFile, e.AllData);
+                }
+            }
+        }
+
+        console.Output.WriteLine("Complete!");
+
+        return default;
+    }
+
+
+}
