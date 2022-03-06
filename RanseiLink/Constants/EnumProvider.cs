@@ -38,4 +38,7 @@ public static class EnumProvider
     public static Orientation[] OrientationItems { get; } = EnumUtil.GetValues<Orientation>().ToArray();
     public static TerrainId[] TerrainItems { get; } = EnumUtil.GetValues<TerrainId>().ToArray();
     public static IdleMotionId[] IdleMotionItems { get; } = EnumUtil.GetValues<IdleMotionId>().ToArray();
+    public static ItemCategoryId[] ItemCategoryItems { get; } = EnumUtil.GetValues<ItemCategoryId>().ToArray();
+    public static ItemEffectId[] ItemEffectItems { get; } = EnumUtil.GetValues<ItemEffectId>().ToArray();
+    public static ItemId[] ItemItems { get; } = EnumUtil.GetValues<ItemId>().ToArray();
 }

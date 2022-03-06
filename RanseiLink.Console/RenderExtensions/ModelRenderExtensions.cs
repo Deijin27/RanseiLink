@@ -257,7 +257,20 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", item.Name);
+        console.WriteProperty("Building Level", item.BuildingLevel);
+        console.WriteProperty("Category", item.Category);
+        console.WriteProperty("Effect", item.Effect);
+        console.WriteProperty("Effect Duration", item.EffectDuration);
+        console.WriteProperty("Crafting Ingredient 1", $"{item.CraftingIngredient1} (amount: {item.CraftingIngredient1Amount})");
+        console.WriteProperty("Crafting Ingredient 2", $"{item.CraftingIngredient2} (amount: {item.CraftingIngredient2Amount})");
+        console.WriteProperty("Unknown Item", item.UnknownItem);
         console.WriteProperty("Shop Price Multiplier", item.ShopPriceMultiplier);
+        console.WriteProperty("Quantity For Effect", item.QuantityForEffect);
+        console.WriteProperty("Purchasable", "");
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(item.GetPurchasable))
+        {
+            console.Output.WriteLine($"      - {kingdom}");
+        }
     }
 
     public static void Render(this IConsole console, IKingdom kingdom, KingdomId id)

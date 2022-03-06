@@ -18,6 +18,60 @@ public class Item : BaseDataWindow, IItem
         set => SetPaddedUtf8String(0, 20, value);
     }
 
+    public uint BuildingLevel
+    {
+        get => GetUInt32(5, 2, 16);
+        set => SetUInt32(5, 2, 16, value);
+    }
+
+    public ItemCategoryId Category
+    {
+        get => (ItemCategoryId)GetUInt32(5, 2, 19);
+        set => SetUInt32(5, 2, 19, (uint)value);
+    }
+
+    public ItemEffectId Effect
+    {
+        get => (ItemEffectId)GetUInt32(5, 5, 21);
+        set => SetUInt32(5, 5, 21, (uint)value);
+    }
+
+    public uint EffectDuration
+    {
+        get => GetUInt32(5, 3, 26);
+        set => SetUInt32(5, 3, 26, value);
+    }
+
+    public ItemId CraftingIngredient1
+    {
+        get => (ItemId)GetUInt32(6, 9, 0);
+        set => SetUInt32(6, 9, 0, (uint)value);
+    }
+
+    public uint CraftingIngredient1Amount
+    {
+        get => GetUInt32(6, 7, 9);
+        set => SetUInt32(6, 7, 9, value);
+    }
+
+    public ItemId CraftingIngredient2
+    {
+        get => (ItemId)GetUInt32(6, 9, 16);
+        set => SetUInt32(6, 9, 16, (uint)value);
+    }
+
+    public uint CraftingIngredient2Amount
+    {
+        get => GetUInt32(6, 7, 25);
+        set => SetUInt32(6, 7, 25, value);
+    }
+
+    public ItemId UnknownItem
+    {
+        get => (ItemId)GetUInt32(7, 9, 0);
+        set => SetUInt32(7, 9, 0, (uint)value);
+    }
+
     /// <summary>
     /// Max shop price / 100
     /// </summary>

@@ -1,7 +1,9 @@
-﻿using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
+using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
@@ -12,7 +14,7 @@ public class ItemSelectorViewModel : SelectorViewModelBase<ItemId, IItem, ItemVi
     private readonly ItemViewModelFactory _factory;
     private readonly IEditorContext _context;
     public ItemSelectorViewModel(IServiceContainer container, IEditorContext context)
-        : base(container, context.DataService.Item) 
+        : base(container, context.DataService.Item, EnumUtil.GetValuesExceptDefaults<ItemId>().ToArray()) 
     {
         _context = context;
         _factory = container.Resolve<ItemViewModelFactory>();

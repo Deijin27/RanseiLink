@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              d:DataContext="{d:DesignInstance Type=vm:ItemViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -47,33 +48,61 @@
             <TextBlock Text="Name" Grid.Row="0" />
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="20"/>
 
-            <TextBlock Text="Shop Price Multiplier" Grid.Row="1" ToolTip="Max shop price / 100" />
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="511"/>
+            <TextBlock Text="Category" Grid.Row="1" />
+            <ComboBox Grid.Row="1" Grid.Column="1" SelectedItem="{Binding Category}" ItemsSource="{x:Static const:EnumProvider.ItemCategoryItems}"/>
 
-            <TextBlock Text="Quantity For Effect" Grid.Row="2"  />
-            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding QuantityForEffect}" Max="511"/>
-            
-            <GroupBox Header="Purchasable in Kingdom" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
-                <UniformGrid Columns="3">
-                    <CheckBox Content="Aurora" IsChecked="{Binding Purchasable_Aurora, Mode=TwoWay}"/>
-                    <CheckBox Content="Ignis" IsChecked="{Binding Purchasable_Ignis, Mode=TwoWay}"/>
-                    <CheckBox Content="Fontaine" IsChecked="{Binding Purchasable_Fontaine, Mode=TwoWay}"/>
-                    <CheckBox Content="Violight" IsChecked="{Binding Purchasable_Violight, Mode=TwoWay}"/>
-                    <CheckBox Content="Greenleaf" IsChecked="{Binding Purchasable_Greenleaf, Mode=TwoWay}"/>
-                    <CheckBox Content="Nixtorm" IsChecked="{Binding Purchasable_Nixtorm, Mode=TwoWay}"/>
-                    <CheckBox Content="Pugilis" IsChecked="{Binding Purchasable_Pugilis, Mode=TwoWay}"/>
-                    <CheckBox Content="Viperia" IsChecked="{Binding Purchasable_Viperia, Mode=TwoWay}"/>
-                    <CheckBox Content="Terrera" IsChecked="{Binding Purchasable_Terrera, Mode=TwoWay}"/>
-                    <CheckBox Content="Avia" IsChecked="{Binding Purchasable_Avia, Mode=TwoWay}"/>
-                    <CheckBox Content="Illusio" IsChecked="{Binding Purchasable_Illusio, Mode=TwoWay}"/>
-                    <CheckBox Content="Chrysalia" IsChecked="{Binding Purchasable_Chrysalia, Mode=TwoWay}"/>
-                    <CheckBox Content="Cragspur" IsChecked="{Binding Purchasable_Cragspur, Mode=TwoWay}"/>
-                    <CheckBox Content="Spectra" IsChecked="{Binding Purchasable_Spectra, Mode=TwoWay}"/>
-                    <CheckBox Content="Dragnor" IsChecked="{Binding Purchasable_Dragnor, Mode=TwoWay}"/>
-                    <CheckBox Content="Yakasha" IsChecked="{Binding Purchasable_Yakasha, Mode=TwoWay}"/>
-                    <CheckBox Content="Valora" IsChecked="{Binding Purchasable_Valora, Mode=TwoWay}"/>
-                </UniformGrid>
+            <TextBlock Text="Effect" Grid.Row="2"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding Effect}" ItemsSource="{x:Static const:EnumProvider.ItemEffectItems}"/>
+
+            <TextBlock Text="Effect Duration" Grid.Row="3"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding EffectDuration}" Max="7"/>
+
+            <TextBlock Text="Quantity For Effect" Grid.Row="4"  />
+            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding QuantityForEffect}" Max="511"/>
+
+            <GroupBox Grid.Row="6" Header="Crafting" Grid.ColumnSpan="2" Grid.RowSpan="6">
+                <Grid Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="145"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ingredient 1" Grid.Row="0" ToolTip="Jump to selected item" 
+                            Command="{Binding JumpToItemCommand}" CommandParameter="{Binding CraftingIngredient1}"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" SelectedItem="{Binding CraftingIngredient1}" ItemsSource="{x:Static const:EnumProvider.ItemItems}"/>
+                    
+                    <TextBlock Grid.Row="1" Text="Ingredient 1 Amount"/>
+                    <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding CraftingIngredient1Amount}" Max="127"/>
+                    
+                    <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ingredient 2" Grid.Row="2" ToolTip="Jump to selected item" 
+                            Command="{Binding JumpToItemCommand}" CommandParameter="{Binding CraftingIngredient2}"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding CraftingIngredient2}" ItemsSource="{x:Static const:EnumProvider.ItemItems}"/>
+                    
+                    <TextBlock Grid.Row="3" Text="Ingredient 2 Amount"/>
+                    <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding CraftingIngredient2Amount}" Max="127"/>
+
+                    <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Unknown Item" Grid.Row="4" ToolTip="Jump to selected item" 
+                            Command="{Binding JumpToItemCommand}" CommandParameter="{Binding UnknownItem}"/>
+                    <ComboBox Grid.Row="4" Grid.Column="1" SelectedItem="{Binding UnknownItem}" ItemsSource="{x:Static const:EnumProvider.ItemItems}"/>
+                </Grid>
             </GroupBox>
+
+            <TextBlock Text="Building Level" Grid.Row="12" ToolTip="The level the building must be for this item to be craftable / purchasable"/>
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding BuildingLevel}" Max="4"/>
+
+            <TextBlock Text="Shop Price Multiplier" Grid.Row="13" ToolTip="Max shop price / 100" />
+            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="511"/>
+
+            
+            
+            
             
         </Grid>
         <Grid Margin="10">
@@ -99,11 +128,33 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <GroupBox Header="Description" Grid.Row="0" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <GroupBox Header="Purchasable in Kingdom" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
+                <UniformGrid Columns="3">
+                    <CheckBox Content="Aurora" IsChecked="{Binding Purchasable_Aurora, Mode=TwoWay}"/>
+                    <CheckBox Content="Ignis" IsChecked="{Binding Purchasable_Ignis, Mode=TwoWay}"/>
+                    <CheckBox Content="Fontaine" IsChecked="{Binding Purchasable_Fontaine, Mode=TwoWay}"/>
+                    <CheckBox Content="Violight" IsChecked="{Binding Purchasable_Violight, Mode=TwoWay}"/>
+                    <CheckBox Content="Greenleaf" IsChecked="{Binding Purchasable_Greenleaf, Mode=TwoWay}"/>
+                    <CheckBox Content="Nixtorm" IsChecked="{Binding Purchasable_Nixtorm, Mode=TwoWay}"/>
+                    <CheckBox Content="Pugilis" IsChecked="{Binding Purchasable_Pugilis, Mode=TwoWay}"/>
+                    <CheckBox Content="Viperia" IsChecked="{Binding Purchasable_Viperia, Mode=TwoWay}"/>
+                    <CheckBox Content="Terrera" IsChecked="{Binding Purchasable_Terrera, Mode=TwoWay}"/>
+                    <CheckBox Content="Avia" IsChecked="{Binding Purchasable_Avia, Mode=TwoWay}"/>
+                    <CheckBox Content="Illusio" IsChecked="{Binding Purchasable_Illusio, Mode=TwoWay}"/>
+                    <CheckBox Content="Chrysalia" IsChecked="{Binding Purchasable_Chrysalia, Mode=TwoWay}"/>
+                    <CheckBox Content="Cragspur" IsChecked="{Binding Purchasable_Cragspur, Mode=TwoWay}"/>
+                    <CheckBox Content="Spectra" IsChecked="{Binding Purchasable_Spectra, Mode=TwoWay}"/>
+                    <CheckBox Content="Dragnor" IsChecked="{Binding Purchasable_Dragnor, Mode=TwoWay}"/>
+                    <CheckBox Content="Yakasha" IsChecked="{Binding Purchasable_Yakasha, Mode=TwoWay}"/>
+                    <CheckBox Content="Valora" IsChecked="{Binding Purchasable_Valora, Mode=TwoWay}"/>
+                </UniformGrid>
+            </GroupBox>
+
+            <GroupBox Header="Description" Grid.Row="6" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
             </GroupBox>
 
-            <GroupBox Header="Description 2" Grid.Row="4" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <GroupBox Header="Description 2" Grid.Row="10" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description2}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
             </GroupBox>
         </Grid>

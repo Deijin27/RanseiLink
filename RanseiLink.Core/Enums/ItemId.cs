@@ -1,6 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
+[DefaultValues(Default)]
 public enum ItemId : uint
 {
     Potion,
@@ -137,4 +138,5 @@ public enum ItemId : uint
     dummy_9,
     dummy_10,
     dummy_11,
+    Default = 134
 }

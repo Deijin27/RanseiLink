@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Services;
+using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
@@ -15,7 +16,12 @@ public class ItemViewModel : ViewModelBase
         Id = id;
         _msgService = context.CachedMsgBlockService;
         _model = model;
+
+        var jumpService = context.JumpService;
+        JumpToItemCommand = new RelayCommand<ItemId>(jumpService.JumpToItem);
     }
+
+    public ICommand JumpToItemCommand { get; }
 
     public ItemId Id { get; }
 
@@ -23,6 +29,60 @@ public class ItemViewModel : ViewModelBase
     {
         get => _model.Name;
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+    }
+
+    public uint BuildingLevel
+    {
+        get => _model.BuildingLevel;
+        set => RaiseAndSetIfChanged(_model.BuildingLevel, value, v => _model.BuildingLevel = v);
+    }
+
+    public ItemCategoryId Category
+    {
+        get => _model.Category;
+        set => RaiseAndSetIfChanged(_model.Category, value, v => _model.Category = v);
+    }
+
+    public ItemEffectId Effect
+    {
+        get => _model.Effect;
+        set => RaiseAndSetIfChanged(_model.Effect, value, v => _model.Effect = v);
+    }
+
+    public uint EffectDuration
+    {
+        get => _model.EffectDuration;
+        set => RaiseAndSetIfChanged(_model.EffectDuration, value, v => _model.EffectDuration = v);
+    }
+
+    public ItemId CraftingIngredient1
+    {
+        get => _model.CraftingIngredient1;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient1, value, v => _model.CraftingIngredient1 = v);
+    }
+
+    public uint CraftingIngredient1Amount
+    {
+        get => _model.CraftingIngredient1Amount;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
+    }
+
+    public ItemId CraftingIngredient2
+    {
+        get => _model.CraftingIngredient2;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient2, value, v => _model.CraftingIngredient2 = v);
+    }
+
+    public uint CraftingIngredient2Amount
+    {
+        get => _model.CraftingIngredient2Amount;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
+    }
+
+    public ItemId UnknownItem
+    {
+        get => _model.UnknownItem;
+        set => RaiseAndSetIfChanged(_model.UnknownItem, value, v => _model.UnknownItem = v);
     }
 
     public uint ShopPriceMultiplier // max = 511
