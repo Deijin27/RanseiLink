@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Threading;
 
 namespace TextChangelistPlugin;
 
-[Plugin("Text Changelist", "Deijin", "1.0")]
+[Plugin("Text Changelist", "Deijin", "1.1")]
 public class TextChangelistPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -67,12 +68,12 @@ public class TextChangelistPlugin : IPlugin
         var unchangedService = serviceFactory(unchangedMod).Msg;
         var changedService = serviceFactory(changedMod).Msg;
 
-        for (int i = 0; i < unchangedService.BlockCount; i++)
+        for (int i = 0; i < Math.Min(unchangedService.BlockCount, changedService.BlockCount); i++)
         {
             var unchangedBlock = unchangedService.Retrieve(i);
             var changedBlock = changedService.Retrieve(i);
 
-            for (int j = 0; j < unchangedBlock.Count; j++)
+            for (int j = 0; j < Math.Min(unchangedBlock.Count, changedBlock.Count); j++)
             {
                 var unchangedMsg = unchangedBlock[j];
                 var changedMsg = changedBlock[j];
