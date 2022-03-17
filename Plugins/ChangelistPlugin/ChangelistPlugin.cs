@@ -242,7 +242,7 @@ public class ChangelistPlugin : IPlugin
         PropertyInfo[] props = typeof(IScenarioPokemon).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
 
         using var beforeService = unchangedServiceContainer.ScenarioPokemon.Disposable();
-        using var afterService = unchangedServiceContainer.ScenarioPokemon.Disposable();
+        using var afterService = changedServiceContainer.ScenarioPokemon.Disposable();
 
         foreach (var scenario in EnumUtil.GetValues<ScenarioId>())
         {
@@ -273,7 +273,7 @@ public class ChangelistPlugin : IPlugin
         PropertyInfo[] props = typeof(IScenarioWarrior).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
 
         using var beforeService = unchangedServiceContainer.ScenarioWarrior.Disposable();
-        using var afterService = unchangedServiceContainer.ScenarioWarrior.Disposable();
+        using var afterService = changedServiceContainer.ScenarioWarrior.Disposable();
 
         foreach (var scenario in EnumUtil.GetValues<ScenarioId>())
         {
