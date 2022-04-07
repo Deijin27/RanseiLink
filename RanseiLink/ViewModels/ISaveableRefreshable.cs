@@ -3,7 +3,7 @@
 public interface ISaveable
 {
     bool CanSave() => true;
-    void Save();
+    void Deactivate();
 }
 
 public interface IRefreshable
@@ -11,6 +11,14 @@ public interface IRefreshable
     void Refresh();
 }
 
-public interface ISaveableRefreshable : ISaveable, IRefreshable
+public interface ISaveableRefreshable
 {
+    bool CanModuleClose() => true;
+    void OnModuleClosing();
+    void OnModuleOpening();
+    bool CanPluginStart() => true;
+    void OnPluginStarting();
+    void OnPluginCompletedSuccessfully();
+    bool CanApplicationClose() => true;
+    void OnApplicationClosing();
 }

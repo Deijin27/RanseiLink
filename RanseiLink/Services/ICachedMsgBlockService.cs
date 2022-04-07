@@ -1,6 +1,4 @@
-﻿
-using RanseiLink.Core.Enums;
-using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Text;
 using System.Collections.Generic;
 
 namespace RanseiLink.Services;
@@ -28,28 +26,18 @@ public interface ICachedMsgBlockService
 
     public void RebuildCache();
 
-    #region Utility methods
+    string GetMsgOfType(MsgShortcut type, int id);
+    void SetMsgOfType(MsgShortcut type, int id, string value);
 
-    public string GetAbilityDescription(AbilityId id);
-    public void SetAbilityDescription(AbilityId id, string description);
+}
 
-    public string GetAbilityHotSpringsDescription(AbilityId id);
-    public void SetAbilityHotSpringsDescription(AbilityId id, string description);
-
-    string GetMoveDescription(MoveId id);
-    void SetMoveDescription(MoveId id, string description);
-
-    string GetWarriorSkillDescription(WarriorSkillId id);
-    void SetWarriorSkillDescription(WarriorSkillId id, string description);
-
-    string GetItemDescription(ItemId id);
-    void SetItemDescription(ItemId id, string description);
-
-    string GetItemDescription2(ItemId id);
-    void SetItemDescription2(ItemId id, string description);
-    string GetAbilityHotSpringsDescription2(AbilityId id);
-    void SetAbilityHotSpringsDescription2(AbilityId id, string description);
-
-    #endregion
-
+public enum MsgShortcut
+{
+    AbilityDescription,
+    AbilityHotSpringsDescription,
+    AbilityHotSpringsDescription2,
+    MoveDescription,
+    WarriorSkillDescription,
+    ItemDescription,
+    ItemDescription2,
 }

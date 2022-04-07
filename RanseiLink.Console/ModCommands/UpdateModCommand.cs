@@ -3,14 +3,20 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("update mod", Description = "Update current mod with new info.")]
-public class UpdateModCommand : BaseCommand
+public class UpdateModCommand : ICommand
 {
-    public UpdateModCommand(IServiceContainer container) : base(container) { }
-    public UpdateModCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    private readonly IModManager _modManager;
+    public UpdateModCommand(ICurrentModService currentModService, IModManager modManager)
+    {
+        _currentModService = currentModService;
+        _modManager = modManager;
+    }
 
     [CommandOption("name", 'n', Description = "Name of mod")]
     public string ModName { get; set; }
@@ -21,13 +27,11 @@ public class UpdateModCommand : BaseCommand
     [CommandOption("author", 'a', Description = "Author of mod")]
     public string ModAuthor { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        var modService = Container.Resolve<IModManager>();
-
-        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
+        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
         if (ModName != null)
@@ -42,7 +46,7 @@ public class UpdateModCommand : BaseCommand
         {
             currentMod.Author = ModAuthor;
         }
-        modService.Update(currentMod);
+        _modManager.Update(currentMod);
         console.Output.WriteLine("Mod update successfully with new info:");
         console.Render(currentMod);
         return default;

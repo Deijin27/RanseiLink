@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IBattleConfigService : IModelDataService<BattleConfigId, IBattleConfig>
-{
-    IDisposableBattleConfigService Disposable();
-}
-
-public interface IDisposableBattleConfigService : IDisposableModelDataService<BattleConfigId, IBattleConfig>
+public interface IBattleConfigService : IModelService<BattleConfig>
 {
 }
 
-public class BattleConfigService : BaseModelService, IBattleConfigService
+public class BattleConfigService : BaseModelService<BattleConfig>, IBattleConfigService
 {
-    public BattleConfigService(ModInfo mod) : base(mod, Constants.BattleConfigRomPath, BattleConfig.DataLength, 46) { }
+    public BattleConfigService(string BattleConfigDatFile) : base(BattleConfigDatFile, 0, 46, 47) { }
 
-    public IDisposableBattleConfigService Disposable()
+    public BattleConfigService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BattleConfigRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableBattleConfigService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new BattleConfig(br.ReadBytes(BattleConfig.DataLength)));
+        }
     }
 
-    public IBattleConfig Retrieve(BattleConfigId id)
+    public override void Save()
     {
-        return new BattleConfig(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(BattleConfigId id, IBattleConfig model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableBattleConfigService : BaseDisposableModelService, IDisposableBattleConfigService
-{
-    public DisposableBattleConfigService(ModInfo mod) : base(mod, Constants.BattleConfigRomPath, BattleConfig.DataLength, 46) { }
-
-    public IBattleConfig Retrieve(BattleConfigId id)
-    {
-        return new BattleConfig(RetrieveData((int)id));
-    }
-
-    public void Save(BattleConfigId id, IBattleConfig model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((BattleConfigId)id).ToString();
     }
 }

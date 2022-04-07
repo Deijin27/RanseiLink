@@ -2,6 +2,9 @@
 
 namespace RanseiLink.Core.Services;
 
+/// <summary>
+/// Use for lua scripts only
+/// </summary>
 public interface IModServiceContainer
 {
     IPokemonService Pokemon { get; }
@@ -23,8 +26,6 @@ public interface IModServiceContainer
     IMsgBlockService Msg { get; }
     IBattleConfigService BattleConfig { get; }
     IMapService Map { get; }
-
-    IMapIdService MapName { get; }
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
     IGimmickObjectService GimmickObject { get; }

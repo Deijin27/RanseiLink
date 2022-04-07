@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Services;
+using RanseiLink.Core.Models;
 using RanseiLink.Services;
 using System.Windows.Input;
 
@@ -14,19 +13,41 @@ public enum MoveAnimationPreviewMode
     Movement,
 }
 
-public delegate MoveViewModel MoveViewModelFactory(MoveId id, IMove model, IEditorContext context);
-
-public abstract class MoveViewModelBase : ViewModelBase
+public interface IMoveViewModel 
 {
-    protected readonly IMove _model;
+    void SetModel(MoveId id, Move model);
+}
 
-    public MoveViewModelBase(MoveId id, IMove model)
+public class MoveViewModel : ViewModelBase, IMoveViewModel
+{
+    private Move _model;
+    private readonly ICachedMsgBlockService _msgService;
+    private readonly IExternalService _externalService;
+    public MoveViewModel(ICachedMsgBlockService msgService, IExternalService externalService, IJumpService jumpService)
     {
-        Id = id;
-        _model = model;
+        _msgService = msgService;
+        _externalService = externalService;
+        _model = new Move();
+        SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
+        {
+            PreviewAnimationMode = mode;
+            UpdatePreviewAnimation();
+        });
+
+        UpdatePreviewAnimation();
+
+        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
     }
 
-    public MoveId Id { get; }
+    public void SetModel(MoveId id, Move model)
+    {
+        Id = (int)id;
+        _model = model;
+        UpdatePreviewAnimation(true);
+        RaiseAllPropertiesChanged();
+    }
+
+    public int Id { get; private set; }
 
     public string Name
     {
@@ -148,43 +169,15 @@ public abstract class MoveViewModelBase : ViewModelBase
         }
     }
 
-    protected virtual void OnAnimationChanged()
-    {
-
-    }
-}
-
-public class MoveViewModel : MoveViewModelBase
-{
-    private readonly ICachedMsgBlockService _msgService;
-    private readonly IExternalService _externalService;
-
-    public MoveViewModel(MoveId id, IServiceContainer container, IMove model, IEditorContext context) : base(id, model)
-    {
-        _msgService = context.CachedMsgBlockService;
-        _externalService = container.Resolve<IExternalService>();
-
-        SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
-        {
-            PreviewAnimationMode = mode;
-            UpdatePreviewAnimation();
-        });
-
-        UpdatePreviewAnimation();
-
-        var jumpService = context.JumpService;
-        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(jumpService.JumpToMoveRange);
-    }
-
     public string Description
     {
-        get => _msgService.GetMoveDescription(Id);
-        set => _msgService.SetMoveDescription(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.MoveDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.MoveDescription, Id, value);
     }
 
     public ICommand JumpToMoveRangeCommand { get; }
 
-    
+
 
     private string _currentPreviewAnimationUri;
     public string CurrentPreviewAnimationUri
@@ -204,12 +197,12 @@ public class MoveViewModel : MoveViewModelBase
 
     public ICommand SetPreviewAnimationModeCommand { get; }
 
-    protected override void OnAnimationChanged()
+    protected void OnAnimationChanged()
     {
         UpdatePreviewAnimation();
     }
 
-    private void UpdatePreviewAnimation()
+    private void UpdatePreviewAnimation(bool suppressPropertyChanged = false)
     {
         switch (PreviewAnimationMode)
         {
@@ -230,18 +223,15 @@ public class MoveViewModel : MoveViewModelBase
                 CurrentPreviewAnimationName = MovementAnimation.ToString();
                 break;
         };
+        if (!suppressPropertyChanged)
+        {
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationUri));
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationName));
+        }
     }
 
     private string GetAnimationUri(MoveAnimationId id)
     {
         return _externalService.GetMoveAnimationUri(id);
     }
-}
-
-public class MoveGridItemViewModel : MoveViewModelBase 
-{
-    public MoveGridItemViewModel(MoveId id, IMove model) : base(id, model)
-    {
-    }
-
 }

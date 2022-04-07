@@ -18,8 +18,8 @@ public class SpriteSheetSplitterPlugin : IPlugin
     private IPluginService _pluginService;
     public void Run(IPluginContext context)
     {
-        _dialogService ??= context.ServiceContainer.Resolve<IDialogService>();
-        _pluginService ??= context.ServiceContainer.Resolve<IPluginService>();
+        _dialogService ??= context.Services.Get<IDialogService>();
+        _pluginService ??= context.Services.Get<IPluginService>();
 
         var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
             "Split or Create?",

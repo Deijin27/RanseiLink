@@ -1,13 +1,11 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using System;
 
 namespace RanseiLink.Core.Models;
 
 /// <summary>
 /// Tokusei
 /// </summary>
-public class Ability : BaseDataWindow, IAbility
+public class Ability : BaseDataWindow
 {
     public const int DataLength = 0x14;
     public Ability(byte[] data) : base(data, DataLength) { }
@@ -41,10 +39,5 @@ public class Ability : BaseDataWindow, IAbility
     {
         get => GetUInt32(4, 2, 10);
         set => SetUInt32(4, 2, 10, value);
-    }
-
-    public IAbility Clone()
-    {
-        return new Ability((byte[])Data.Clone());
     }
 }

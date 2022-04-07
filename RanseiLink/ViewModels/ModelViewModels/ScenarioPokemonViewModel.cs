@@ -1,41 +1,59 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioPokemonViewModel ScenarioPokemonViewModelFactory(IScenarioPokemon model, IEditorContext context, ScenarioId scenario, uint id);
-
-public class ScenarioPokemonViewModel : ViewModelBase
+public interface IScenarioPokemonViewModel
 {
-    private readonly IScenarioPokemon _model;
+    void SetModel(ScenarioId scenario, int id, ScenarioPokemon model);
+}
 
-    public ScenarioPokemonViewModel(IScenarioPokemon model, IEditorContext context, ScenarioId scenario, uint id)
+public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
+{
+    private ScenarioPokemon _model;
+    private int _id;
+    private ScenarioId _scenario;
+
+    public ScenarioPokemonViewModel(
+        IJumpService jumpService, 
+        IScenarioWarriorService scenarioWarriorService, 
+        IIdToNameService idToNameService)
     {
-        _model = model;
+        _model = new ScenarioPokemon(); ;
 
-        var jumpService = context.JumpService;
-        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
-        JumpToAbilityCommand = new RelayCommand<AbilityId>(jumpService.JumpToAbility);
+        JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
+        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
         JumpToFirstWarriorCommand = new RelayCommand(() =>
         {
-            var warriorService = context.DataService.ScenarioWarrior.Disposable();
-            for (int i = 0; i < Core.Services.Constants.ScenarioWarriorCount; i++)
+            int i = 0;
+            foreach (var sw in scenarioWarriorService.Retrieve((int)_scenario).Enumerate())
             {
-                var sw = warriorService.Retrieve(scenario, i);
-                if (!sw.ScenarioPokemonIsDefault(0) && sw.ScenarioPokemon == id)
+                if (!sw.ScenarioPokemonIsDefault(0) && sw.GetScenarioPokemon(0) == _id)
                 {
-                    warriorService.Dispose();
-                    jumpService.JumpToScenarioWarrior(scenario, (uint)i);
+                    jumpService.JumpToScenarioWarrior(_scenario, (uint)i);
                     return;
                 }
+                i++;
             }
         });
+
+        PokemonItems = idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
+        PokemonItems.Add(new SelectorComboBoxItem(511, "Default"));
+        AbilityItems = idToNameService.GetComboBoxItemsPlusDefault<IAbilityService>();
+    }
+
+    public void SetModel(ScenarioId scenario, int id, ScenarioPokemon model)
+    {
+        _model = model;
+        _scenario = scenario;
+        _id = id;
+        RaiseAllPropertiesChanged();
     }
 
     public ICommand JumpToPokemonCommand { get; }
@@ -46,16 +64,19 @@ public class ScenarioPokemonViewModel : ViewModelBase
     /// </summary>
     public ICommand JumpToFirstWarriorCommand { get; }
 
-    public PokemonId Pokemon
+    public List<SelectorComboBoxItem> PokemonItems { get; }
+    public List<SelectorComboBoxItem> AbilityItems { get; }
+
+    public int Pokemon
     {
-        get => _model.Pokemon;
-        set => RaiseAndSetIfChanged(_model.Pokemon, value, v => _model.Pokemon = v);
+        get => (int)_model.Pokemon;
+        set => RaiseAndSetIfChanged(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v);
     }
 
-    public AbilityId Ability
+    public int Ability
     {
-        get => _model.Ability;
-        set => RaiseAndSetIfChanged(_model.Ability, value, v => _model.Ability = v);
+        get => (int)_model.Ability;
+        set => RaiseAndSetIfChanged(_model.Ability, (AbilityId)value, v => _model.Ability = v);
     }
 
     public uint HpIv

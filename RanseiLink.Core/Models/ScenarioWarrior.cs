@@ -1,10 +1,9 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using System;
 
 namespace RanseiLink.Core.Models;
 
-public class ScenarioWarrior : BaseDataWindow, IScenarioWarrior
+public class ScenarioWarrior : BaseDataWindow
 {
     public const int DataLength = 0x20;
 
@@ -54,10 +53,6 @@ public class ScenarioWarrior : BaseDataWindow, IScenarioWarrior
         SetUInt16(0xE + id * 2, value);
     }
 
-    public IScenarioWarrior Clone()
-    {
-        return new ScenarioWarrior((byte[])Data.Clone());
-    }
 
     public void MakeScenarioPokemonDefault(int id)
     {

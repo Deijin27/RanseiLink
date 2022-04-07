@@ -1,30 +1,36 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("scenariokingdom", Description = "Get evolution table data.")]
-public class ScenarioKingdomCommand : BaseCommand
+public class ScenarioKingdomCommand : ICommand
 {
-    public ScenarioKingdomCommand(IServiceContainer container) : base(container) { }
-    public ScenarioKingdomCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public ScenarioKingdomCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Scenario ID.", Name = "scenarioid")]
     public ScenarioId ScenarioId { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        var model = dataService.ScenarioKingdom.Retrieve(ScenarioId);
+        var service = services.Get<IScenarioKingdomService>();
+
+        var model = service.Retrieve((int)ScenarioId);
 
         console.Render(model, ScenarioId);
 

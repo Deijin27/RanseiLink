@@ -1,10 +1,24 @@
 ﻿using RanseiLink.Core.Enums;
+using System;
 using System.IO;
 
 namespace RanseiLink.Core.Services;
 
 public static class Constants
 {
+    static Constants()
+    {
+        RootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RanseiLink");
+        Directory.CreateDirectory(RootFolder);
+    }
+
+    /// <summary>
+    /// Root folder for application files in local app data
+    /// </summary>
+    public static readonly string RootFolder;
+
+    public static string DefaultDataProviderFolder => Path.Combine(RootFolder, "DataProvider");
+
     /// <summary>
     /// folder that decrypted blocks are stored in relative to .rlmod file. not in rom.
     /// </summary>
@@ -19,7 +33,7 @@ public static class Constants
 
     public static readonly string AppearPokemonRomPath = Path.Combine(DataFolderPath, "AppearPokemon.dat");
     public static readonly string BaseBushouRomPath = Path.Combine(DataFolderPath, "BaseBushou.dat");
-    public static readonly string BaseBushouMaxSyncTableRomPath = Path.Combine(DataFolderPath, "BaseBushouMaxSyncTable.dat");
+    public static readonly string MaxLinkRomPath = Path.Combine(DataFolderPath, "BaseBushouMaxSyncTable.dat");
     public static readonly string BaseBushouScoutRomPath = Path.Combine(DataFolderPath, "BaseBushouScout.dat");
     public static readonly string BuildingRomPath = Path.Combine(DataFolderPath, "Building.dat");
     public static readonly string BushouRomPath = Path.Combine(DataFolderPath, "Bushou.dat");
@@ -47,18 +61,18 @@ public static class Constants
     public static readonly string TrainerRomPath = Path.Combine(DataFolderPath, "Trainer.dat");
     public static readonly string TrSkillRomPath = Path.Combine(DataFolderPath, "TrSkill.dat");
     public static readonly string MoveRomPath = Path.Combine(DataFolderPath, "Waza.dat");
-    public static readonly string MoveEffectRomPath = Path.Combine(DataFolderPath, "WazaEffect.dat");
+    public static readonly string MoveAnimationRomPath = Path.Combine(DataFolderPath, "WazaEffect.dat");
     public static readonly string MoveRangeRomPath = Path.Combine(DataFolderPath, "WazaRange.dat");
 
     #region Scenario Folder
     public const int ScenarioCount = 11;
     public const int ScenarioPokemonCount = 200;
     public const int ScenarioWarriorCount = 210;
-    public static string ScenarioPathFromId(ScenarioId id) => Path.Combine(DataFolderPath, "Scenario", $"Scenario{((int)id).ToString().PadLeft(2, '0')}");
-    public static string ScenarioPokemonPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioPokemon.dat");
-    public static string ScenarioWarriorPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBushou.dat");
-    public static string ScenarioAppearPokemonPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioAppearPokemon.dat");
-    public static string ScenarioKingdomPathFromId(ScenarioId scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioKuni.dat");
+    public static string ScenarioPathFromId(int id) => Path.Combine(DataFolderPath, "Scenario", $"Scenario{(id).ToString().PadLeft(2, '0')}");
+    public static string ScenarioPokemonPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioPokemon.dat");
+    public static string ScenarioWarriorPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBushou.dat");
+    public static string ScenarioAppearPokemonPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioAppearPokemon.dat");
+    public static string ScenarioKingdomPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioKuni.dat");
     #endregion
 
 }

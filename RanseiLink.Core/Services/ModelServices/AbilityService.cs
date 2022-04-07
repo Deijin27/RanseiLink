@@ -1,49 +1,45 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Models;
+﻿using RanseiLink.Core.Models;
+using System.IO;
+using System;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IAbilityService : IModelDataService<AbilityId, IAbility>
-{
-    IDisposableAbilityService Disposable();
-}
-
-public interface IDisposableAbilityService : IDisposableModelDataService<AbilityId, IAbility>
+public interface IAbilityService : IModelService<Ability>
 {
 }
 
-public class AbilityService : BaseModelService, IAbilityService
+public class AbilityService : BaseModelService<Ability>, IAbilityService
 {
-    public AbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
+    public AbilityService(string abilityDatFile) : base(abilityDatFile, 0, 127, 128) { }
 
-    public IDisposableAbilityService Disposable()
+    public AbilityService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.AbilityRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableAbilityService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new Ability(br.ReadBytes(Ability.DataLength)));
+        }
     }
 
-    public IAbility Retrieve(AbilityId id)
+    public override void Save()
     {
-        return new Ability(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(AbilityId id, IAbility model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableAbilityService : BaseDisposableModelService, IDisposableAbilityService
-{
-    public DisposableAbilityService(ModInfo mod) : base(mod, Constants.AbilityRomPath, Ability.DataLength, 127) { }
-
-    public IAbility Retrieve(AbilityId id)
-    {
-        return new Ability(RetrieveData((int)id));
-    }
-
-    public void Save(AbilityId id, IAbility model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _cache[id].Name;
     }
 }

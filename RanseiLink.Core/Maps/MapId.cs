@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Maps;
 
-public record MapId(uint Map, uint Variant)
+public record MapId(int Map, int Variant)
 {
     public override string ToString()
     {
@@ -38,12 +38,12 @@ public record MapId(uint Map, uint Variant)
         string envString = fileName.Substring(3, 2);
         string variantString = fileName.Substring(6, 2);
 
-        if (!uint.TryParse(envString, out uint env))
+        if (!int.TryParse(envString, out int env))
         {
             return false;
         }
 
-        if (!uint.TryParse(variantString, out uint variant))
+        if (!int.TryParse(variantString, out int variant))
         {
             return false;
         }
@@ -52,4 +52,7 @@ public record MapId(uint Map, uint Variant)
         return true;
 
     }
+
+    public static explicit operator int(MapId value) => value.Map << 8 | value.Variant;
+    public static explicit operator MapId(int value) => new MapId(value >> 8, value & 0xFF);
 }

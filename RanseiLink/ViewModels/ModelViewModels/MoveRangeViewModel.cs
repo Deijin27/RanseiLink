@@ -1,16 +1,25 @@
-﻿using RanseiLink.Core.Models.Interfaces;
+﻿using RanseiLink.Core.Models;
 
 namespace RanseiLink.ViewModels;
 
-public delegate MoveRangeViewModel MoveRangeViewModelFactory(IMoveRange model);
-
-public class MoveRangeViewModel : ViewModelBase
+public interface IMoveRangeViewModel 
 {
-    private readonly IMoveRange _model;
+    void SetModel(MoveRange model);
+}
 
-    public MoveRangeViewModel(IMoveRange model)
+public class MoveRangeViewModel : ViewModelBase, IMoveRangeViewModel
+{
+    private MoveRange _model;
+
+    public MoveRangeViewModel()
+    {
+        _model = new MoveRange();
+    }
+
+    public void SetModel(MoveRange model)
     {
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
     #region Row0

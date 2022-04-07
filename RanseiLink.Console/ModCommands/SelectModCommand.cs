@@ -1,4 +1,5 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
@@ -8,20 +9,22 @@ using System.Threading.Tasks;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("select mod", Description = "Change current mod to specific slot. View slots with 'list mods' command")]
-public class SelectModCommand : BaseCommand
+public class SelectModCommand : ICommand
 {
-    public SelectModCommand(IServiceContainer container) : base(container) { }
-    public SelectModCommand() : base() { }
+    private readonly IModManager _modManager;
+    private readonly ISettingService _settingService;
+    public SelectModCommand(IModManager modManager, ISettingService settingService)
+    {
+        _modManager = modManager;
+        _settingService = settingService;
+    }
 
     [CommandParameter(0, Description = "Slot to switch to.", Name = "modSlot")]
     public int Slot { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var modService = Container.Resolve<IModManager>();
-        var settingsService = Container.Resolve<ISettingService>();
-
-        var modInfos = modService.GetAllModInfo();
+        var modInfos = _modManager.GetAllModInfo();
         if (modInfos.Count == 0)
         {
             console.Output.WriteLine("No mods currently exist");
@@ -33,8 +36,8 @@ public class SelectModCommand : BaseCommand
             return default;
         }
         var mod = modInfos[Slot];
-        settingsService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
-        settingsService.Save();
+        _settingService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
+        _settingService.Save();
         console.Output.WriteLine("Current mod changed to:");
         console.Render(mod);
 

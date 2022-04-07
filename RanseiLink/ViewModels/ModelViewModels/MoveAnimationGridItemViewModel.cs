@@ -1,15 +1,15 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
 public abstract class MoveAnimationViewModelBase : ViewModelBase
 {
-    protected readonly IMoveAnimation _model;
+    protected readonly MoveAnimation _model;
     protected MoveAnimationId _id;
 
-    public MoveAnimationViewModelBase(MoveAnimationId id, IMoveAnimation model)
+    public MoveAnimationViewModelBase(MoveAnimationId id, MoveAnimation model)
     {
         _id = id;
         _model = model;
@@ -18,7 +18,7 @@ public abstract class MoveAnimationViewModelBase : ViewModelBase
 
 public class MoveAnimationGridItemViewModel : MoveAnimationViewModelBase
 {
-    public MoveAnimationGridItemViewModel(MoveAnimationId id, IMoveAnimation model) : base(id, model)
+    public MoveAnimationGridItemViewModel(MoveAnimationId id, MoveAnimation model) : base(id, model)
     {
         Id = (uint)id;
         Name = id.ToString();

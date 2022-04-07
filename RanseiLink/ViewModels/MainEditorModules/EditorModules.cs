@@ -1,259 +1,387 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.Services;
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
+using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
+using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class PokemonSelectorEditorModule : IEditorModule
+public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonService>
 {
     public const string Id = "pokemon_selector";
-    public string UniqueId => Id;
-    public string ListName => "Pokemon";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new PokemonSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Pokemon";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IPokemonViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class PokemonGridEditorModule : IEditorModule
-{
-    public const string Id = "pokemon_grid";
-    public string UniqueId => Id;
-    public string ListName => "Pokemon (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new PokemonGridViewModel(container, context);
-}
+//public class PokemonGridEditorModule : IEditorModule
+//{
+//    public const string Id = "pokemon_grid";
+//    public string UniqueId => Id;
+//    public string ListName => "Pokemon (Grid)";
+//    public override void Initialise(IServiceGetter modServices)
+//    {
+//        base.Initialise(modServices);
+//        var _service = context.DataService.Pokemon;
+//        object vmFactory(int id, object model) => new PokemonGridItemViewModel((PokemonId)id, (Pokemon)model);
+//        _viewModel = new GridViewModel(container, _service, vmFactory);
+//    }
+//}
 
-public class AbilitySelectorEditorModule : IEditorModule
+public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
 {
     public const string Id = "ability_selector";
-    public string UniqueId => Id;
-    public string ListName => "Ability";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new AbilitySelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Ability";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IAbilityViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+    }
 }
 
-public class AbilityGridEditorModule : IEditorModule
-{
-    public const string Id = "ability_grid";
-    public string UniqueId => Id;
-    public string ListName => "Ability (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new AbilityGridViewModel(container, context);
-}
-
-public class WarriorSkillSelectorEditorModule : IEditorModule
+public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarriorSkillService>
 {
     public const string Id = "warrior_skill_selector";
-    public string UniqueId => Id;
-    public string ListName => "Warrior Skill";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new WarriorSkillSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Warrior Skill";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IWarriorSkillViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
+    }
 }
 
-public class WarriorSkillGridEditorModule : IEditorModule
-{
-    public const string Id = "warrior_skill_grid";
-    public string UniqueId => Id;
-    public string ListName => "Warrior Skill (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new WarriorSkillGridViewModel(container, context);
-}
-
-public class MoveRangeSelectorEditorModule : IEditorModule
+public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRangeService>
 {
     public const string Id = "move_range_selector";
-    public string UniqueId => Id;
-    public string ListName => "Move Range";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveRangeSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Move Range";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IMoveRangeViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class MoveSelectorEditorModule : IEditorModule
+public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
 {
     public const string Id = "move_selector";
-    public string UniqueId => Id;
-    public string ListName => "Move";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Move";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IMoveViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((MoveId)id, _service.Retrieve(id)));
+    }
 }
 
-public class MoveGridEditorModule : IEditorModule
-{
-    public const string Id = "move_grid";
-    public string UniqueId => Id;
-    public string ListName => "Move (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveGridViewModel(container, context);
-}
-
-public class EvolutionTableEditorModule : IEditorModule
-{
-    public const string Id = "evolution_table";
-    public string UniqueId => Id;
-    public string ListName => "Evolution Table";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new EvolutionTableViewModel(container, context);
-}
-
-public class WarriorNameTableEditorModule : IEditorModule
+public class WarriorNameTableEditorModule : EditorModule
 {
     public const string Id = "warrior_name_table";
-    public string UniqueId => Id;
-    public string ListName => "Warrior Name Table";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new WarriorNameTableViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Warrior Name Table";
+    public override object ViewModel => _viewModel;
+
+    private WarriorNameTableViewModel _viewModel;
+    private IBaseWarriorService _service;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<IBaseWarriorService>();
+        _viewModel = new WarriorNameTableViewModel();
+        _viewModel.SetModel(_service.NameTable);
+    }
+    public override void Deactivate() => _service.Save();
+    public override void OnPatchingRom() => _service.Save();
+    public override void OnPluginComplete() => _viewModel.SetModel(_service.NameTable);
 }
 
-public class BaseWarriorSelectorEditorModule : IEditorModule
+public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWarriorService>
 {
     public const string Id = "base_warrior_selector";
-    public string UniqueId => Id;
-    public string ListName => "Base Warrior";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BaseWarriorSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Base Warrior";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IBaseWarriorViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class BaseWarriorGridEditorModule : IEditorModule
-{
-    public const string Id = "base_warrior_grid";
-    public string UniqueId => Id;
-    public string ListName => "Base Warrior (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BaseWarriorGridViewModel(container, context);
-}
-public class MaxLinkSelectorEditorModule : IEditorModule
+public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkService>
 {
     public const string Id = "max_link_selector";
-    public string UniqueId => Id;
-    public string ListName => "Max Link";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MaxLinkSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Max Link";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IMaxLinkViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class ScenarioWarriorSelectorEditorModule : IEditorModule
+public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
 {
     public const string Id = "scenario_warrior_selector";
-    public string UniqueId => Id;
-    public string ListName => "Scenario Warrior";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ScenarioWarriorSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Warrior";
+    private IChildScenarioWarriorService _childScenarioWarriorService;
+    private int _scenario;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IScenarioWarriorViewModel>();
+        _childScenarioWarriorService = _service.Retrieve(0);
+        var innerSelector = new SelectorViewModel(_childScenarioWarriorService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioWarriorService.Retrieve(id)));
+        _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
+        {
+            _scenario = id;
+            _childScenarioWarriorService = _service.Retrieve(id);
+            innerSelector.DisplayItems = _childScenarioWarriorService.GetComboBoxItemsExceptDefault();
+            vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioWarriorService.Retrieve(innerSelector.Selected));
+        });
+    }
 }
 
-public class ScenarioWarriorGridEditorModule : IEditorModule
-{
-    public const string Id = "scenario_warrior_grid";
-    public string UniqueId => Id;
-    public string ListName => "Scenario Warrior (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ScenarioWarriorGridSelectorViewModel(container, context);
-}
-
-public class ScenarioPokemonSelectorEditorModule : IEditorModule
+public class ScenarioPokemonSelectorEditorModule : BaseSelectorEditorModule<IScenarioPokemonService>
 {
     public const string Id = "scenario_pokemon_selector";
-    public string UniqueId => Id;
-    public string ListName => "Scenario Pokemon";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ScenarioPokemonSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Pokemon";
+    private IChildScenarioPokemonService _childScenarioPokemonService;
+    private int _scenario;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IScenarioPokemonViewModel>();
+        _childScenarioPokemonService = _service.Retrieve(0);
+        var innerSelector = new SelectorViewModel(_childScenarioPokemonService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioPokemonService.Retrieve(id)));
+        _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
+        {
+            _scenario = id;
+            _childScenarioPokemonService = _service.Retrieve(id);
+            innerSelector.DisplayItems = _childScenarioPokemonService.GetComboBoxItemsExceptDefault();
+            vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioPokemonService.Retrieve(innerSelector.Selected));
+        });
+    }
 }
 
-public class ScenarioAppearPokemonSelectorEditorModule : IEditorModule
+public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModule<IScenarioAppearPokemonService>
 {
     public const string Id = "scenario_appear_pokemon_selector";
-    public string UniqueId => Id;
-    public string ListName => "Scenario Appear Pokemon";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ScenarioAppearPokemonSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Appear Pokemon";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IScenarioAppearPokemonViewModel>();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class ScenarioKingdomSelectorEditorModule : IEditorModule
+public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<IScenarioKingdomService>
 {
     public const string Id = "scenario_kingdom_selector";
-    public string UniqueId => Id;
-    public string ListName => "Scenario Kingdom";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ScenarioKingdomSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Kingdom";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IScenarioKingdomViewModel>();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class EventSpeakerSelectorEditorModule : IEditorModule
+public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventSpeakerService>
 {
     public const string Id = "event_speaker_selector";
-    public string UniqueId => Id;
-    public string ListName => "Event Speaker";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new EventSpeakerSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Event Speaker";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IEventSpeakerViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class ItemSelectorEditorModule : IEditorModule
+public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
 {
     public const string Id = "item_selector";
-    public string UniqueId => Id;
-    public string ListName => "Item";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new ItemSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Item";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IItemViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
+    }
 }
 
-public class BuildingSelectorEditorModule : IEditorModule
+public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingService>
 {
     public const string Id = "building_selector";
-    public string UniqueId => Id;
-    public string ListName => "Building";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BuildingSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Building";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IBuildingViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BuildingId)id, _service.Retrieve(id)));
+    }
 }
 
-public class BuildingGridEditorModule : IEditorModule
-{
-    public const string Id = "building_grid";
-    public string UniqueId => Id;
-    public string ListName => "Building (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BuildingGridViewModel(container, context);
-}
-
-public class MsgGridEditorModule : IEditorModule
+public class MsgGridEditorModule : EditorModule
 {
     public const string Id = "msg_grid";
-    public string UniqueId => Id;
-    public string ListName => "Text";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MsgGridViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Text";
+    public override object ViewModel => _viewModel;
+    private MsgGridViewModel _viewModel;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _viewModel = modServices.Get<MsgGridViewModel>();
+    }
+    public override void OnPluginComplete() => _viewModel.SearchCommand.Execute(null);
 }
 
-public class GimmickSelectorEditorModule : IEditorModule
+public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickService>
 {
     public const string Id = "gimmick_selector";
-    public string UniqueId => Id;
-    public string ListName => "Gimmick";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Gimmick";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IGimmickViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
+    }
 }
 
-public class GimmickGridEditorModule : IEditorModule
-{
-    public const string Id = "gimmick_grid";
-    public string UniqueId => Id;
-    public string ListName => "Gimmick (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickGridViewModel(container, context);
-}
-
-public class KingdomSelectorEditorModule : IEditorModule
+public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomService>
 {
     public const string Id = "kingdom_selector";
-    public string UniqueId => Id;
-    public string ListName => "Kingdom";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new KingdomSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Kingdom";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IKingdomViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((KingdomId)id, _service.Retrieve(id)));
+    }
 }
 
-public class BattleConfigSelectorEditorModule : IEditorModule
+public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattleConfigService>
 {
     public const string Id = "battle_config_selector";
-    public string UniqueId => Id;
-    public string ListName => "Battle Config";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new BattleConfigSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Battle Config";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IBattleConfigViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
+    }
 }
 
-public class GimmickRangeSelectorEditorModule : IEditorModule
+public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmickRangeService>
 {
     public const string Id = "gimmick_range_selector";
-    public string UniqueId => Id;
-    public string ListName => "Gimmick Range";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new GimmickRangeSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Gimmick Range";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IMoveRangeViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+    }
 }
 
-public class MoveAnimationGridEditorModule : IEditorModule
+public class MoveAnimationGridEditorModule : BaseSelectorEditorModule<IAbilityService>
 {
     public const string Id = "move_animation_grid";
-    public string UniqueId => Id;
-    public string ListName => "Move Animation (Grid)";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MoveAnimationGridViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Move Animation (Grid)";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IAbilityViewModel>();
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+    }
 }
 
-public class MapSelectorEditorModule : IEditorModule
+public class MapSelectorEditorModule : EditorModule
 {
     public const string Id = "map_selector";
-    public string UniqueId => Id;
-    public string ListName => "Map";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new MapSelectorViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Map";
+    private SelectorViewModel _viewModel;
+    public override object ViewModel => _viewModel;
+    private IMapService _service;
+    private PSLM _currentMap;
+    private IMapViewModel _nestedVm;
+
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<IMapService>();
+        _nestedVm = modServices.Get<IMapViewModel>();
+        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
+        _viewModel = new SelectorViewModelWithoutScroll(mapComboItems, _nestedVm, id =>
+        {
+            _currentMap = _service.Retrieve((MapId)id);
+            _nestedVm.SetModel(_currentMap);
+        });
+    }
+
+    public override void OnPageClosing()
+    {
+        if (_currentMap != null)
+        {
+            _service.Save((MapId)_viewModel.Selected, _currentMap);
+        }
+    }
+
+    public override void OnPatchingRom()
+    {
+        if (_currentMap != null)
+        {
+            _service.Save((MapId)_viewModel.Selected, _currentMap);
+        }
+    }
+    public override void OnPluginComplete()
+    {
+        if (_currentMap != null)
+        {
+            _nestedVm.SetModel(_currentMap);
+        }
+    }
 }
 
-public class SpriteEditorModule : IEditorModule
+public class SpriteEditorModule : EditorModule
 {
     public const string Id = "sprites";
-    public string UniqueId => Id;
-    public string ListName => "Sprites";
-    public ISaveableRefreshable NewViewModel(IServiceContainer container, IEditorContext context) => new SpriteTypeViewModel(container, context);
+    public override string UniqueId => Id;
+    public override string ListName => "Sprites";
+    public override object ViewModel => _viewModel;
+
+    private SpriteTypeViewModel _viewModel;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _viewModel = modServices.Get<SpriteTypeViewModel>();
+    }
 }

@@ -5,21 +5,22 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public class MainWindowViewModel : ViewModelBase, ISaveable
+public class MainWindowViewModel : ViewModelBase
 {
     private readonly IThemeService _themeService;
-    private readonly MainEditorViewModelFactory _mainEditorViewModelFactory;
     private readonly ModSelectionViewModel _modSelectionVm;
+    private readonly MainEditorViewModel _mainEditorViewModel;
     private object _currentVm;
     private bool _backButtonVisible;
 
-    public MainWindowViewModel(IServiceContainer container)
+    public MainWindowViewModel(
+        IDialogService dialogService, 
+        IPluginLoader pluginLoader, 
+        IThemeService themeService,
+        ModSelectionViewModel modSelectionViewModel,
+        MainEditorViewModel mainEditorViewModel)
     {
-        var dialogService = container.Resolve<IDialogService>();
-        var pluginLoader = container.Resolve<IPluginLoader>();
-        _themeService = container.Resolve<IThemeService>();
-        _mainEditorViewModelFactory = container.Resolve<MainEditorViewModelFactory>();
-
+        _themeService = themeService;
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
         if (failures.AnyFailures)
@@ -31,7 +32,8 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
                 ));
         }
 
-        _modSelectionVm = container.Resolve<ModSelectionViewModel>();
+        _modSelectionVm = modSelectionViewModel;
+        _mainEditorViewModel = mainEditorViewModel;
         CurrentVm = _modSelectionVm;
 
         _modSelectionVm.ModSelected += OnModSelected;
@@ -47,7 +49,6 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
         {
             if (_currentVm != value)
             {
-                Save();
                 _currentVm = value;
                 RaisePropertyChanged();
             }
@@ -66,14 +67,9 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
 
     public void OnShutdown()
     {
-        Save();
-    }
-
-    public void Save()
-    {
-        if (_currentVm is ISaveable saveable)
+        if (_currentVm is MainEditorViewModel mainEditor)
         {
-            saveable.Save();
+            mainEditor.Deactivate();
         }
     }
 
@@ -90,13 +86,17 @@ public class MainWindowViewModel : ViewModelBase, ISaveable
 
     private void OnModSelected(ModInfo mod)
     {
-        var mevm = _mainEditorViewModelFactory(mod);
-        CurrentVm = mevm;
+        _mainEditorViewModel.SetMod(mod);
+        CurrentVm = _mainEditorViewModel;
         BackButtonVisible = true;
     }
 
     private void OnBackButtonPressed()
     {
+        if (_currentVm is MainEditorViewModel mainEditor)
+        {
+            mainEditor.Deactivate();
+        }
         CurrentVm = _modSelectionVm;
         BackButtonVisible = false;
     }

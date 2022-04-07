@@ -14,191 +14,54 @@ internal class JumpService : IJumpService
         _mainEditor = mainEditorViewModel;
     }
 
-    public void JumpToAbility(AbilityId id)
+    public void JumpTo(string moduleId, int selectId)
     {
-        var moduleId = AbilitySelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is AbilitySelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        if (!_mainEditor.TryGetModule(moduleId, out var module))
         {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
+            return;
         }
+        if (module.ViewModel is not SelectorViewModel selectorViewModel)
+        {
+            return;
+        }
+        selectorViewModel.Selected = selectId;
+        _mainEditor.CurrentModuleId = moduleId;
     }
 
-    public void JumpToBaseWarrior(WarriorId id)
+    public void JumpTo(string moduleId)
     {
-        var moduleId = BaseWarriorSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is BaseWarriorSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
+        if (!_mainEditor.TryGetModule(moduleId, out _))
         {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
+            return;
         }
-    }
-
-    public void JumpToBuilding(BuildingId id)
-    {
-        var moduleId = BuildingSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is BuildingSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToEventSpeaker(EventSpeakerId id)
-    {
-        var moduleId = EventSpeakerSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is EventSpeakerSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToEvolutionTable()
-    {
-        _mainEditor.CurrentModuleId = EvolutionTableEditorModule.Id;
-    }
-
-    public void JumpToItem(ItemId id)
-    {
-        var moduleId = ItemSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is ItemSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToMaxLink(WarriorId id)
-    {
-        var moduleId = MaxLinkSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is MaxLinkSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToMove(MoveId id)
-    {
-        var moduleId = MoveSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is MoveSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToMoveRange(MoveRangeId id)
-    {
-        var moduleId = MoveRangeSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is MoveRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToPokemon(PokemonId id)
-    {
-        var moduleId = PokemonSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is PokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToScenarioAppearPokemon(ScenarioId id)
-    {
-        var moduleId = ScenarioAppearPokemonSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is ScenarioAppearPokemonSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToScenarioKingdom(ScenarioId id)
-    {
-        var moduleId = ScenarioKingdomSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is ScenarioKingdomSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
+        _mainEditor.CurrentModuleId = moduleId;
     }
 
     public void JumpToScenarioPokemon(ScenarioId scenario, uint id)
     {
-        var moduleId = ScenarioPokemonSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is ScenarioPokemonSelectorViewModel selectorVm 
-            && selectorVm.ScenarioItems.Contains(scenario)
-            && selectorVm.MinIndex <= id
-            && selectorVm.MaxIndex >= id)
-        {
-            selectorVm.SelectedScenario = scenario;
-            selectorVm.SelectedItem = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
+        //var moduleId = ScenarioPokemonSelectorEditorModule.Id;
+        //if (_mainEditor.ViewModels[moduleId] is ScenarioPokemonSelectorViewModel selectorVm 
+        //    && selectorVm.ScenarioItems.Contains(scenario)
+        //    && selectorVm.MinIndex <= id
+        //    && selectorVm.MaxIndex >= id)
+        //{
+        //    selectorVm.SelectedScenario = scenario;
+        //    selectorVm.SelectedItem = id;
+        //    _mainEditor.CurrentModuleId = moduleId;
+        //}
     }
 
     public void JumpToScenarioWarrior(ScenarioId scenario, uint id)
     {
-        var moduleId = ScenarioWarriorSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is ScenarioWarriorSelectorViewModel selectorVm
-            && selectorVm.ScenarioItems.Contains(scenario)
-            && selectorVm.MinIndex <= id
-            && selectorVm.MaxIndex >= id)
-        {
-            selectorVm.SelectedScenario = scenario;
-            selectorVm.SelectedItem = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToWarriorNameTable()
-    {
-        _mainEditor.CurrentModuleId = WarriorNameTableEditorModule.Id;
-    }
-
-    public void JumpToWarriorSkill(WarriorSkillId id)
-    {
-        var moduleId = WarriorSkillSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is WarriorSkillSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToBattleConfig(BattleConfigId id)
-    {
-        var moduleId = BattleConfigSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is BattleConfigSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToGimmickRange(GimmickRangeId id)
-    {
-        var moduleId = GimmickRangeSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is GimmickRangeSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
-    }
-
-    public void JumpToMap(MapId id)
-    {
-        var moduleId = MapSelectorEditorModule.Id;
-        if (_mainEditor.ViewModels[moduleId] is MapSelectorViewModel selectorVm && selectorVm.Items.Contains(id))
-        {
-            selectorVm.Selected = id;
-            _mainEditor.CurrentModuleId = moduleId;
-        }
+        //var moduleId = ScenarioWarriorSelectorEditorModule.Id;
+        //if (_mainEditor.ViewModels[moduleId] is ScenarioWarriorSelectorViewModel selectorVm
+        //    && selectorVm.ScenarioItems.Contains(scenario)
+        //    && selectorVm.MinIndex <= id
+        //    && selectorVm.MaxIndex >= id)
+        //{
+        //    selectorVm.SelectedScenario = scenario;
+        //    selectorVm.SelectedItem = id;
+        //    _mainEditor.CurrentModuleId = moduleId;
+        //}
     }
 }

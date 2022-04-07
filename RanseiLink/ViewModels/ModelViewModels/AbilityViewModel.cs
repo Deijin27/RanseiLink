@@ -1,22 +1,33 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate AbilityViewModel AbilityViewModelFactory(AbilityId id, IAbility model, IEditorContext context);
-
-public abstract class AbilityViewModelBase : ViewModelBase
+public interface IAbilityViewModel
 {
-    private readonly IAbility _model;
+    void SetModel(AbilityId id, Ability model);
+}
 
-    public AbilityViewModelBase(AbilityId id, IAbility model)
+public class AbilityViewModel : ViewModelBase, IAbilityViewModel
+{
+    private Ability _model;
+    private readonly ICachedMsgBlockService _msgService;
+
+    public AbilityViewModel(ICachedMsgBlockService msgService)
     {
-        Id = id;
-        _model = model;
+        _msgService = msgService;
+        _model = new Ability();
     }
 
-    public AbilityId Id { get; }
+    public void SetModel(AbilityId id, Ability model)
+    {
+        Id = (int)id;
+        _model = model;
+        RaiseAllPropertiesChanged();
+    }
+
+    public int Id { get; private set; }
 
     public string Name
     {
@@ -47,39 +58,22 @@ public abstract class AbilityViewModelBase : ViewModelBase
         get => _model.Effect2Amount;
         set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
     }
-}
-
-public class AbilityViewModel : AbilityViewModelBase
-{
-    private readonly ICachedMsgBlockService _msgService;
-    public AbilityViewModel(AbilityId id, IAbility model, IEditorContext context) : base(id, model) 
-    {
-        _msgService = context.CachedMsgBlockService;
-    }
 
     public string Description
     {
-        get => _msgService.GetAbilityDescription(Id);
-        set => _msgService.SetAbilityDescription(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityDescription, Id, value);
     }
 
     public string HotSpringsDescription
     {
-        get => _msgService.GetAbilityHotSpringsDescription(Id);
-        set => _msgService.SetAbilityHotSpringsDescription(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id, value);
     }
 
     public string HotSpringsDescription2
     {
-        get => _msgService.GetAbilityHotSpringsDescription2(Id);
-        set => _msgService.SetAbilityHotSpringsDescription2(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
     }
-}
-
-public class AbilityGridItemViewModel : AbilityViewModelBase
-{
-    public AbilityGridItemViewModel(AbilityId id, IAbility model) : base(id, model)
-    {
-    }
-    
 }

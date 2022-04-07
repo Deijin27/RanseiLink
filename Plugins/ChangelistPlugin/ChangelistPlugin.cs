@@ -1,7 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ public class ChangelistPlugin : IPlugin
     public void Run(IPluginContext context)
     {
         Dictionary<string, ModInfo> modDict = new();
-        var modService = context.ServiceContainer.Resolve<IModManager>();
+        var modService = context.Services.Get<IModManager>();
         foreach (ModInfo mod in modService.GetAllModInfo())
         {
             string key = $"{mod.Name} v{mod.Version} by {mod.Author}";
@@ -31,7 +32,9 @@ public class ChangelistPlugin : IPlugin
             }
             modDict.Add(finalKey, mod);
         }
-        string currentKey = modDict.First(i => i.Value.FolderPath == context.ActiveMod.FolderPath).Key;
+
+        var activeMod = context.Services.Get<ModInfo>();
+        string currentKey = modDict.First(i => i.Value.FolderPath == activeMod.FolderPath).Key;
 
         var options = new ChangelistOptionForm()
         {
@@ -40,10 +43,10 @@ public class ChangelistPlugin : IPlugin
             ChangedMod = currentKey
         };
 
-        var dialogService = context.ServiceContainer.Resolve<IDialogService>();
+        var dialogService = context.Services.Get<IDialogService>();
 
 
-        var optionService = context.ServiceContainer.Resolve<IPluginService>();
+        var optionService = context.Services.Get<IPluginService>();
         do
         {
             if (!optionService.RequestOptions(options))
@@ -64,10 +67,10 @@ public class ChangelistPlugin : IPlugin
         var unchangedMod = modDict[options.UnchangedMod];
         var changedMod = modDict[options.ChangedMod];
 
-        var serviceFactory = context.ServiceContainer.Resolve<DataServiceFactory>();
+        var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
 
-        var unchangedServices = serviceFactory(unchangedMod);
-        var changedServices = serviceFactory(changedMod);
+        var unchangedServices = unchangedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(unchangedMod);
+        var changedServices = changedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(changedMod);
 
         var changelist = BuildChangelist(options, unchangedServices, changedServices);
 
@@ -143,113 +146,106 @@ public class ChangelistPlugin : IPlugin
         }
     }
 
-    private static IEnumerable<ChangeInfo> BuildChangelist(ChangelistOptionForm options, IModServiceContainer unchangedServices, IModServiceContainer changedServices)
+    private static IEnumerable<ChangeInfo> BuildChangelist(ChangelistOptionForm options, IServiceGetter unchangedServices, IServiceGetter changedServices)
     {
         List<ChangeInfo> changelist = new();
 
         if (options.Ability)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Ability.Disposable(), changedServices.Ability.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IAbilityService>(), changedServices.Get<IAbilityService>()));
         }
         if (options.BaseWarrior)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.BaseWarrior.Disposable(), changedServices.BaseWarrior.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IBaseWarriorService>(), changedServices.Get<IBaseWarriorService>()));
         }
         if (options.BattleConfigs)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.BattleConfig.Disposable(), changedServices.BattleConfig.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IBattleConfigService>(), changedServices.Get<IBattleConfigService>()));
         }
         if (options.Building)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Building.Disposable(), changedServices.Building.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IBuildingService>(), changedServices.Get<IBuildingService>()));
         }
         if (options.EventSpeaker)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.EventSpeaker.Disposable(), changedServices.EventSpeaker.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IEventSpeakerService>(), changedServices.Get<IEventSpeakerService>()));
         }
         if (options.Gimmicks)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Gimmick.Disposable(), changedServices.Gimmick.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IGimmickService>(), changedServices.Get<IGimmickService>()));
         }
         if (options.Item)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Item.Disposable(), changedServices.Item.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IItemService>(), changedServices.Get<IItemService>()));
         }
         if (options.Kingdoms)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Kingdom.Disposable(), changedServices.Kingdom.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IKingdomService>(), changedServices.Get<IKingdomService>()));
         }
         if (options.Move)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Move.Disposable(), changedServices.Move.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IMoveService>(), changedServices.Get<IMoveService>()));
         }
         if (options.Pokemon)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.Pokemon.Disposable(), changedServices.Pokemon.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IPokemonService>(), changedServices.Get<IPokemonService>()));
         }
         if (options.ScenarioPokemon)
         {
-            changelist.AddRange(GetScenarioPokemonChangelist(unchangedServices, changedServices));
+            changelist.AddRange(GetScenarioPokemonChangelist(unchangedServices.Get<IScenarioPokemonService>(), changedServices.Get<IScenarioPokemonService>()));
         }
         if (options.ScenarioWarrior)
         {
-            changelist.AddRange(GetScenarioWarriorChangelist(unchangedServices, changedServices));
+            changelist.AddRange(GetScenarioWarriorChangelist(unchangedServices.Get<IScenarioWarriorService>(), changedServices.Get<IScenarioWarriorService>()));
         }
         if (options.Text)
         {
-            changelist.AddRange(GetTextChangelist(unchangedServices, changedServices));
+            changelist.AddRange(GetTextChangelist(unchangedServices.Get<IMsgBlockService>(), changedServices.Get<IMsgBlockService>()));
         }
         if (options.WarriorSkill)
         {
-            changelist.AddRange(GenericGetChangelist(unchangedServices.WarriorSkill.Disposable(), changedServices.WarriorSkill.Disposable()));
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IWarriorSkillService>(), changedServices.Get<IWarriorSkillService>()));
         }
 
         return changelist;
     }
 
-    private static IEnumerable<ChangeInfo> GenericGetChangelist<TId, TModel>(
-        IDisposableModelDataService<TId, TModel> beforeService, 
-        IDisposableModelDataService<TId, TModel> afterService)
+    private static IEnumerable<ChangeInfo> GenericGetChangelist<TModel>(
+        IModelService<TModel> beforeService,
+        IModelService<TModel> afterService)
     {
         List<ChangeInfo> changelist = new();
 
         // get only value types, because they can usually implement value equality, and can be converted to string
         PropertyInfo[] props = typeof(TModel).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
-        foreach (var objId in EnumUtil.GetValuesExceptDefaultsWithFallback<TId>())
+        int id = 0;
+        foreach (var (beforeObj, afterObj) in beforeService.Enumerate().Zip(afterService.Enumerate()))
         {
-            var beforeObj = beforeService.Retrieve(objId);
-            var afterObj = afterService.Retrieve(objId);
-
             foreach (var prop in props)
             {
                 var beforeVal = prop.GetValue(beforeObj);
                 var afterVal = prop.GetValue(afterObj);
                 if (!beforeVal.Equals(afterVal))
                 {
-                    changelist.Add(new(typeof(TModel).Name, objId.ToString(), prop.Name, beforeVal.ToString(), afterVal.ToString()));
+                    changelist.Add(new(typeof(TModel).Name, afterService.IdToName(id++), prop.Name, beforeVal.ToString(), afterVal.ToString()));
                 }
             }
         }
-        beforeService.Dispose();
-        afterService.Dispose();
         return changelist;
     }
 
-    private static IEnumerable<ChangeInfo> GetScenarioPokemonChangelist(IModServiceContainer unchangedServiceContainer, IModServiceContainer changedServiceContainer)
+    private static IEnumerable<ChangeInfo> GetScenarioPokemonChangelist(IScenarioPokemonService beforeService, IScenarioPokemonService afterService)
     {
         List<ChangeInfo> changelist = new();
 
-        PropertyInfo[] props = typeof(IScenarioPokemon).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
-
-        using var beforeService = unchangedServiceContainer.ScenarioPokemon.Disposable();
-        using var afterService = changedServiceContainer.ScenarioPokemon.Disposable();
+        PropertyInfo[] props = typeof(ScenarioPokemon).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
 
         foreach (var scenario in EnumUtil.GetValues<ScenarioId>())
         {
-            for (int i = 0; i < Constants.ScenarioPokemonCount; i++)
+            foreach (int i in beforeService.Retrieve((int)scenario).ValidIds())
             {
-                var beforeObj = beforeService.Retrieve(scenario, i);
-                var afterObj = afterService.Retrieve(scenario, i);
+                var beforeObj = beforeService.Retrieve((int)scenario).Retrieve(i);
+                var afterObj = afterService.Retrieve((int)scenario).Retrieve(i);
 
                 foreach (var prop in props)
                 {
@@ -266,21 +262,18 @@ public class ChangelistPlugin : IPlugin
         return changelist;
     }
 
-    private static IEnumerable<ChangeInfo> GetScenarioWarriorChangelist(IModServiceContainer unchangedServiceContainer, IModServiceContainer changedServiceContainer)
+    private static IEnumerable<ChangeInfo> GetScenarioWarriorChangelist(IScenarioWarriorService beforeService, IScenarioWarriorService afterService)
     {
         List<ChangeInfo> changelist = new();
 
-        PropertyInfo[] props = typeof(IScenarioWarrior).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
-
-        using var beforeService = unchangedServiceContainer.ScenarioWarrior.Disposable();
-        using var afterService = changedServiceContainer.ScenarioWarrior.Disposable();
+        PropertyInfo[] props = typeof(ScenarioWarrior).GetProperties().Where(i => i.PropertyType.IsValueType).ToArray();
 
         foreach (var scenario in EnumUtil.GetValues<ScenarioId>())
         {
-            for (int i = 0; i < Constants.ScenarioWarriorCount; i++)
+            foreach (int i in beforeService.Retrieve((int)scenario).ValidIds())
             {
-                var beforeObj = beforeService.Retrieve(scenario, i);
-                var afterObj = afterService.Retrieve(scenario, i);
+                var beforeObj = beforeService.Retrieve((int)scenario).Retrieve(i);
+                var afterObj = afterService.Retrieve((int)scenario).Retrieve(i);
 
                 foreach (var prop in props)
                 {
@@ -297,12 +290,9 @@ public class ChangelistPlugin : IPlugin
         return changelist;
     }
 
-    private static IEnumerable<ChangeInfo> GetTextChangelist(IModServiceContainer unchangedServiceContainer, IModServiceContainer changedServiceContainer)
+    private static IEnumerable<ChangeInfo> GetTextChangelist(IMsgBlockService unchangedService, IMsgBlockService changedService)
     {
         var changelist = new List<ChangeInfo>();
-
-        var unchangedService = unchangedServiceContainer.Msg;
-        var changedService = changedServiceContainer.Msg;
 
         for (int i = 0; i < Math.Min(unchangedService.BlockCount, changedService.BlockCount); i++)
         {

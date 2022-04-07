@@ -1,19 +1,12 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
-using RanseiLink.Core.Maps;
+﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
-
-public delegate MapViewModel MapViewModelFactory(PSLM model);
 
 public enum MapRenderMode
 {
@@ -21,7 +14,12 @@ public enum MapRenderMode
     Elevation
 }
 
-public class MapViewModel : ViewModelBase
+public interface IMapViewModel
+{
+    void SetModel(PSLM model);
+}
+
+public class MapViewModel : ViewModelBase, IMapViewModel
 {
     private static bool _terrainPaintingActive;
     private static TerrainId _terrainBrush;
@@ -36,27 +34,36 @@ public class MapViewModel : ViewModelBase
 
     public PSLM Map { get; set; }
 
-    public MapViewModel(IServiceContainer container, IEditorContext context, PSLM model, MapId id)
+    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideSpriteProvider overrideSpriteProvider)
     {
-        _dialogService = container.Resolve<IDialogService>();
-        _gimmickService = context.DataService.Gimmick;
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
+        _dialogService = dialogService;
+        _gimmickService = gimmickService;
+        _spriteProvider = overrideSpriteProvider;
+        
+        RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
+        ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
+    }
+
+    public void SetModel(PSLM model)
+    {
         Map = model;
-        Gimmicks = new(Map.GimmickSection.Items.Select(i => new MapGimmickViewModel(this, i)));
-        PokemonPositions = new();
+        Gimmicks.Clear();
+        PokemonPositions.Clear();
+        foreach (var gimmick in Map.GimmickSection.Items.Select(i => new MapGimmickViewModel(this, i)))
+        {
+            Gimmicks.Add(gimmick);
+        }
         for (int i = 0; i < Map.PositionSection.Positions.Length; i++)
         {
             PokemonPositions.Add(new MapPokemonPositionViewModel(this, Map.PositionSection.Positions, i));
         }
         Draw();
-
-        RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
-        ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
     }
+
     public ICommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
-    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; }
-    public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; }
+    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
+    public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; } = new();
 
     public TerrainId TerrainBrush
     {

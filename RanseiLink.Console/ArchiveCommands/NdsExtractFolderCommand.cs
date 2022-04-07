@@ -2,17 +2,14 @@
 using CliFx.Infrastructure;
 using System.Threading.Tasks;
 using System.IO;
-using RanseiLink.Core.Services;
 using RanseiLink.Core.RomFs;
+using CliFx;
 
 namespace RanseiLink.Console.ArchiveCommands;
 
 [Command("nds extract folder", Description = "Extract a copy of a folder and all contents including sub-folders from an nds file system.")]
-public class NdsExtractFolderCommand : BaseCommand
+public class NdsExtractFolderCommand : ICommand
 {
-    public NdsExtractFolderCommand(IServiceContainer container) : base(container) { }
-    public NdsExtractFolderCommand() : base() { }
-
     [CommandParameter(0, Description = "Path of nds file.", Name = "NdsPath")]
     public string NdsPath { get; set; }
 
@@ -28,7 +25,7 @@ public class NdsExtractFolderCommand : BaseCommand
     [CommandOption("fatStartPos", 'a', Description = "Postion in file of file allocation table start offset. Defaults to nds value")]
     public long? FatStartOffsetPosition { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         if (string.IsNullOrEmpty(DestinationFolder))
         {

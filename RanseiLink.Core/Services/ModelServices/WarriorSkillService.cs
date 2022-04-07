@@ -1,49 +1,44 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Models;
+﻿using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IWarriorSkillService : IModelDataService<WarriorSkillId, IWarriorSkill>
-{
-    IDisposableWarriorSkillService Disposable();
-}
-
-public interface IDisposableWarriorSkillService : IDisposableModelDataService<WarriorSkillId, IWarriorSkill>
+public interface IWarriorSkillService : IModelService<WarriorSkill>
 {
 }
 
-public class WarriorSkillService : BaseModelService, IWarriorSkillService
+public class WarriorSkillService : BaseModelService<WarriorSkill>, IWarriorSkillService
 {
-    public WarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength, 72) { }
+    public WarriorSkillService(string WarriorSkillDatFile) : base(WarriorSkillDatFile, 0, 72) { }
 
-    public IDisposableWarriorSkillService Disposable()
+    public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableWarriorSkillService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new WarriorSkill(br.ReadBytes(WarriorSkill.DataLength)));
+        }
     }
 
-    public IWarriorSkill Retrieve(WarriorSkillId id)
+    public override void Save()
     {
-        return new WarriorSkill(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(WarriorSkillId id, IWarriorSkill model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableWarriorSkillService : BaseDisposableModelService, IDisposableWarriorSkillService
-{
-    public DisposableWarriorSkillService(ModInfo mod) : base(mod, Constants.WarriorSkillRomPath, WarriorSkill.DataLength, 72) { }
-
-    public IWarriorSkill Retrieve(WarriorSkillId id)
-    {
-        return new WarriorSkill(RetrieveData((int)id));
-    }
-
-    public void Save(WarriorSkillId id, IWarriorSkill model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _cache[id].Name;
     }
 }

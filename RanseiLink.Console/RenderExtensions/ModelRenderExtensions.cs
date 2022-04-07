@@ -2,7 +2,6 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
 using System;
 using System.Linq;
 using System.Text;
@@ -75,7 +74,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IPokemon pokemon, PokemonId id)
+    public static void Render(this IConsole console, Pokemon pokemon, PokemonId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", pokemon.Name);
@@ -90,11 +89,10 @@ public static partial class RenderExtensions
             RenderQuantityForEvolutionCondition(pokemon.EvolutionCondition2, pokemon.QuantityForEvolutionCondition2)
             ));
 
-        var evolutionRange = pokemon.EvolutionRange;
-        console.WriteProperty("Evolution Table Range",
-            evolutionRange.CanEvolve
-                ? $"{evolutionRange.MinEntry} - {evolutionRange.MaxEntry}"
-                : "does not evolve");
+        foreach (var evo in pokemon.Evolutions)
+        {
+            console.Output.WriteLine($"      - {evo}");
+        }
 
         console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
         console.WriteProperty("Movement Range", pokemon.MovementRange.ToString());
@@ -199,7 +197,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IMove move, MoveId id)
+    public static void Render(this IConsole console, Move move, MoveId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", move.Name);
@@ -212,7 +210,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Unused Effect Duplicates", $"{move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}/ {move.Effect4} {RenderQuantityForMoveEffect(move.Effect4, move.Effect4Chance)}");
     }
 
-    public static void Render(this IConsole console, IAbility ability, AbilityId id)
+    public static void Render(this IConsole console, Ability ability, AbilityId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", ability.Name);
@@ -220,7 +218,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
     }
 
-    public static void Render(this IConsole console, IWarriorSkill saihai, WarriorSkillId id)
+    public static void Render(this IConsole console, WarriorSkill saihai, WarriorSkillId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", saihai.Name);
@@ -231,7 +229,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Duration", saihai.Duration.ToString());
     }
 
-    public static void Render(this IConsole console, IGimmick gimmick, GimmickId id)
+    public static void Render(this IConsole console, Gimmick gimmick, GimmickId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", gimmick.Name);
@@ -246,14 +244,14 @@ public static partial class RenderExtensions
         console.WriteProperty("Effect", gimmick.Effect);
     }
 
-    public static void Render(this IConsole console, IBuilding building, BuildingId id)
+    public static void Render(this IConsole console, Building building, BuildingId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", building.Name);
         console.WriteProperty("Kingdom", building.Kingdom.ToString());
     }
 
-    public static void Render(this IConsole console, IItem item, ItemId id)
+    public static void Render(this IConsole console, Item item, ItemId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", item.Name);
@@ -273,7 +271,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IKingdom kingdom, KingdomId id)
+    public static void Render(this IConsole console, Kingdom kingdom, KingdomId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", kingdom.Name);
@@ -281,7 +279,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Can Battle", "\n    - " + string.Join("\n    - ", kingdom.MapConnections));
     }
 
-    public static void Render(this IConsole console, IMaxLink maxSync, WarriorId id)
+    public static void Render(this IConsole console, MaxLink maxSync, WarriorId id)
     {
         console.WriteTitle($"{id}");
         foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
@@ -290,7 +288,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
+    public static void Render(this IConsole console, ScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
     {
         console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioPokemonId}");
         console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());
@@ -299,7 +297,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Init Exp", $"{scenarioPokemon.Exp} (Approx. Link = {Math.Round(Core.Services.LinkCalculator.CalculateLink(scenarioPokemon.Exp))}%)");
     }
 
-    public static void Render(this IConsole console, IScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)
+    public static void Render(this IConsole console, ScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)
     {
         console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioWarriorId}");
         console.WriteProperty("Warrior", scenarioWarrior.Warrior);
@@ -312,15 +310,7 @@ public static partial class RenderExtensions
             );
     }
 
-    public static void Render(this IConsole console, IEvolutionTable model)
-    {
-        console.WriteTitle($"Evolution Table");
-        for (int i = 0; i < EvolutionTable.DataLength; i++)
-        {
-            console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry(i));
-        }
-    }
-    public static void Render(this IConsole console, IWarriorNameTable model)
+    public static void Render(this IConsole console, WarriorNameTable model)
     {
         console.WriteTitle($"Warrior Name Table");
         for (int i = 0; i < WarriorNameTable.EntryCount; i++)
@@ -329,7 +319,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IBaseWarrior model, WarriorId id)
+    public static void Render(this IConsole console, BaseWarrior model, WarriorId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Sprite", model.Sprite);
@@ -348,7 +338,7 @@ public static partial class RenderExtensions
             $"{model.RankUpCondition2} ({RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity1ForRankUpCondition)}, {RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity2ForRankUpCondition)})");
     }
 
-    public static void Render(this IConsole console, IScenarioAppearPokemon model, ScenarioId id)
+    public static void Render(this IConsole console, ScenarioAppearPokemon model, ScenarioId id)
     {
         console.WriteTitle($"{id}");
         foreach (var pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
@@ -360,14 +350,14 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IEventSpeaker model, EventSpeakerId id)
+    public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Sprite", model.Sprite);
     }
 
-    public static void Render(this IConsole console, IScenarioKingdom model, ScenarioId id)
+    public static void Render(this IConsole console, ScenarioKingdom model, ScenarioId id)
     {
         console.WriteTitle($"{id} (Army Assignment)");
         foreach (var k in EnumUtil.GetValuesExceptDefaults<KingdomId>())
@@ -376,7 +366,7 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, IBattleConfig model, BattleConfigId id)
+    public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Map", model.MapId);

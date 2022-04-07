@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class ScenarioPokemon : BaseDataWindow, IScenarioPokemon
+public class ScenarioPokemon : BaseDataWindow
 {
     public const int DataLength = 8;
 
@@ -60,8 +59,4 @@ public class ScenarioPokemon : BaseDataWindow, IScenarioPokemon
         set => SetUInt16(2, value);
     }
 
-    public IScenarioPokemon Clone()
-    {
-        return new ScenarioPokemon((byte[])Data.Clone());
-    }
 }

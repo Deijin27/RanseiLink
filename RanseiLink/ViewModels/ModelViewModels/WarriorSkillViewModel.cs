@@ -1,22 +1,34 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate WarriorSkillViewModel WarriorSkillViewModelFactory(WarriorSkillId id, IWarriorSkill model, IEditorContext context);
-
-public class WarriorSkillViewModelBase : ViewModelBase
+public interface IWarriorSkillViewModel
 {
-    public IWarriorSkill _model;
+    void SetModel(WarriorSkillId id, WarriorSkill model);
+}
 
-    public WarriorSkillViewModelBase(WarriorSkillId id, IWarriorSkill model)
+public class WarriorSkillViewModel : ViewModelBase, IWarriorSkillViewModel
+{
+    public WarriorSkill _model;
+
+    private readonly ICachedMsgBlockService _msgService;
+
+    public WarriorSkillViewModel(ICachedMsgBlockService msgService)
     {
-        Id = id;
-        _model = model;
+        _msgService = msgService;
+        _model = new WarriorSkill();
     }
 
-    public WarriorSkillId Id { get; }
+    public void SetModel(WarriorSkillId id, WarriorSkill model)
+    {
+        Id = (int)id;
+        _model = model;
+        RaiseAllPropertiesChanged();
+    }
+
+    public int Id { get; private set; }
 
     public string Name
     {
@@ -78,26 +90,10 @@ public class WarriorSkillViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Animation, value, v => _model.Animation = v);
     }
 
-}
-
-public class WarriorSkillViewModel : WarriorSkillViewModelBase
-{
-    private readonly ICachedMsgBlockService _msgService;
-    public WarriorSkillViewModel(WarriorSkillId id, IWarriorSkill model, IEditorContext context) : base(id, model)
-    {
-        _msgService = context.CachedMsgBlockService;
-    }
     public string Description
     {
-        get => _msgService.GetWarriorSkillDescription(Id);
-        set => _msgService.SetWarriorSkillDescription(Id, value);
-    }
-}
-
-public class WarriorSkillGridItemViewModel : WarriorSkillViewModelBase 
-{
-    public WarriorSkillGridItemViewModel(WarriorSkillId id, IWarriorSkill model) : base(id, model)
-    {
+        get => _msgService.GetMsgOfType(MsgShortcut.WarriorSkillDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.WarriorSkillDescription, Id, value);
     }
 
 }

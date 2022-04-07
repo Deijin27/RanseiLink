@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IKingdomService : IModelDataService<KingdomId, IKingdom>
-{
-    IDisposableKingdomService Disposable();
-}
-
-public interface IDisposableKingdomService : IDisposableModelDataService<KingdomId, IKingdom>
+public interface IKingdomService : IModelService<Kingdom>
 {
 }
 
-public class KingdomService : BaseModelService, IKingdomService
+public class KingdomService : BaseModelService<Kingdom>, IKingdomService
 {
-    public KingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
+    public KingdomService(string KingdomDatFile) : base(KingdomDatFile, 0, 16, 17) { }
 
-    public IDisposableKingdomService Disposable()
+    public KingdomService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.KingdomRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableKingdomService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new Kingdom(br.ReadBytes(Kingdom.DataLength)));
+        }
     }
 
-    public IKingdom Retrieve(KingdomId id)
+    public override void Save()
     {
-        return new Kingdom(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(KingdomId id, IKingdom model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableKingdomService : BaseDisposableModelService, IDisposableKingdomService
-{
-    public DisposableKingdomService(ModInfo mod) : base(mod, Constants.KingdomRomPath, Kingdom.DataLength, 16) { }
-
-    public IKingdom Retrieve(KingdomId id)
-    {
-        return new Kingdom(RetrieveData((int)id));
-    }
-
-    public void Save(KingdomId id, IKingdom model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _cache[id].Name;
     }
 }

@@ -1,12 +1,11 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
 /// <summary>
 /// Move
 /// </summary>
-public class Move : BaseDataWindow, IMove
+public class Move : BaseDataWindow
 {
     public const int DataLength = 0x24;
     public Move(byte[] data) : base(data, DataLength) { }
@@ -137,8 +136,4 @@ public class Move : BaseDataWindow, IMove
         set => SetUInt32(7, 5, 14, (uint)value);
     }
 
-    public IMove Clone()
-    {
-        return new Move((byte[])Data.Clone());
-    }
 }

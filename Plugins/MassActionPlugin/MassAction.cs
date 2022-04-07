@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
@@ -11,23 +10,21 @@ namespace MassActionPlugin;
 internal class MassAction
 {
     private readonly PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-    private readonly WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
-    private readonly ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
 
     private MassActionOptionForm options;
-    private IModServiceContainer _dataService;
+    private IServiceGetter _services;
 
     public void Run(IPluginContext context)
     {
-        var optionService = context.ServiceContainer.Resolve<IPluginService>();
+        _services = context.Services;
+        var optionService = context.Services.Get<IPluginService>();
         options = new();
         if (!optionService.RequestOptions(options))
         {
             return;
         }
 
-        var dialogService = context.ServiceContainer.Resolve<IDialogService>();
-        _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
+        var dialogService = context.Services.Get<IDialogService>();
 
         dialogService.ProgressDialog(progress =>
         {
@@ -55,11 +52,10 @@ internal class MassAction
 
     private void HandleMaxLink()
     {
-        using IDisposableMaxLinkService maxLinkService = _dataService.MaxLink.Disposable();
+        var maxLinkService = _services.Get<IMaxLinkService>();
 
-        foreach (WarriorId wid in warriorIds)
+        foreach (var maxLinkTable in maxLinkService.Enumerate())
         {
-            IMaxLink maxLinkTable = maxLinkService.Retrieve(wid);
             foreach (PokemonId pid in pokemonIds)
             {
                 if (options.Mode == ConstOptions.AtLeast)
@@ -74,19 +70,19 @@ internal class MassAction
                     maxLinkTable.SetMaxLink(pid, options.Value);
                 }
             }
-            maxLinkService.Save(wid, maxLinkTable);
         }
+
+        maxLinkService.Save();
     }
 
     private void HandleIVs()
     {
-        using IDisposableScenarioPokemonService scenarioPokemonService = _dataService.ScenarioPokemon.Disposable();
+        var scenarioPokemonService = _services.Get<IScenarioPokemonService>();
 
-        foreach (ScenarioId scenario in scenarioIds)
+        foreach (var childService in scenarioPokemonService.Enumerate())
         {
-            for (int i = 0; i < Constants.ScenarioPokemonCount; i++)
+            foreach (var sp in childService.Enumerate())
             {
-                IScenarioPokemon sp = scenarioPokemonService.Retrieve(scenario, i);
                 if (options.Mode == ConstOptions.AtLeast)
                 {
                     if (sp.HpIv < options.Value)
@@ -113,39 +109,38 @@ internal class MassAction
                     sp.DefIv = options.Value;
                     sp.SpeIv = options.Value;
                 }
-                scenarioPokemonService.Save(scenario, i, sp);
             }
         }
+
+        scenarioPokemonService.Save();
     }
 
     private void HandleCapacity()
     {
-        using IDisposableBaseWarriorService service = _dataService.BaseWarrior.Disposable();
+        var baseWarriorService = _services.Get<IBaseWarriorService>();
 
         if (options.Mode == ConstOptions.AtLeast)
         {
-            foreach (WarriorId id in warriorIds)
+            foreach (var warrior in baseWarriorService.Enumerate())
             {
-                var warrior = service.Retrieve(id);
                 if (warrior.Capacity < options.Value)
                 {
                     warrior.Capacity = options.Value;
-                    service.Save(id, warrior);
                 }
             }
         }
         else if (options.Mode == ConstOptions.Exact)
         {
-            foreach (WarriorId id in warriorIds)
+            foreach (var warrior in baseWarriorService.Enumerate())
             {
-                var warrior = service.Retrieve(id);
                 if (warrior.Capacity != options.Value)
                 {
                     warrior.Capacity = options.Value;
-                    service.Save(id, warrior);
                 }
             }
         }
+
+        baseWarriorService.Save();
     }
 }
 

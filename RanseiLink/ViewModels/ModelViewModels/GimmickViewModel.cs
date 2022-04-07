@@ -1,5 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using System.Windows.Input;
@@ -12,30 +12,49 @@ public enum GimmickAnimationPreviewMode
     Two
 }
 
-public delegate GimmickViewModel GimmickViewModelFactory(GimmickId id, IGimmick model, IEditorContext context);
-
-public abstract class GimmickViewModelBase : ViewModelBase
+public interface IGimmickViewModel
 {
-    protected readonly IGimmick _model;
+    void SetModel(GimmickId id, Gimmick model);
+}
 
-    public GimmickViewModelBase(GimmickId id, IGimmick model)
+public class GimmickViewModel : ViewModelBase, IGimmickViewModel
+{
+    private Gimmick _model;
+    private readonly IExternalService _externalService;
+    private readonly IOverrideSpriteProvider _spriteProvider;
+
+    public GimmickViewModel(IExternalService externalService, IOverrideSpriteProvider overrideSpriteProvider, IJumpService jumpService)
+    {
+        _model = new Gimmick();
+
+        _externalService = externalService;
+        _spriteProvider = overrideSpriteProvider;
+
+        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeSelectorEditorModule.Id, (int)id));
+
+        SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
+        {
+            PreviewAnimationMode = mode;
+            UpdatePreviewAnimation(false);
+        });
+
+        UpdatePreviewAnimation(false);
+    }
+
+    public void SetModel(GimmickId id, Gimmick model)
     {
         Id = id;
         _model = model;
+        UpdatePreviewAnimation(true);
+        RaiseAllPropertiesChanged();
     }
 
-    public GimmickId Id { get; }
+    public GimmickId Id { get; private set; }
 
     public string Name
     {
         get => _model.Name;
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
-    }
-
-    public virtual uint Image
-    {
-        get => _model.Image;
-        set => RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v);
     }
 
     public GimmickObjectId State1Sprite
@@ -99,36 +118,9 @@ public abstract class GimmickViewModelBase : ViewModelBase
     }
 
 
-    protected virtual void OnAnimationChanged()
-    {
-
-    }
-}
-
-public class GimmickViewModel : GimmickViewModelBase
-{
-    private readonly IExternalService _externalService;
-    private readonly ISpriteProvider _spriteProvider;
-
-    public GimmickViewModel(GimmickId id, IServiceContainer container, IGimmick model, IEditorContext context) : base(id, model)
-    {
-        _externalService = container.Resolve<IExternalService>();
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
-
-        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(context.JumpService.JumpToGimmickRange);
-
-        SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
-        {
-            PreviewAnimationMode = mode;
-            UpdatePreviewAnimation();
-        });
-
-        UpdatePreviewAnimation();
-    }
-
     public ICommand JumpToGimmickRangeCommand { get; }
 
-    
+
 
     private string _currentPreviewAnimationUri;
     public string CurrentPreviewAnimationUri
@@ -148,24 +140,29 @@ public class GimmickViewModel : GimmickViewModelBase
 
     public ICommand SetPreviewAnimationModeCommand { get; }
 
-    protected override void OnAnimationChanged()
+    protected void OnAnimationChanged()
     {
-        UpdatePreviewAnimation();
+        UpdatePreviewAnimation(false);
     }
 
-    private void UpdatePreviewAnimation()
+    private void UpdatePreviewAnimation(bool suppressPropertyChanged)
     {
         switch (PreviewAnimationMode)
         {
             case GimmickAnimationPreviewMode.One:
-                CurrentPreviewAnimationUri = GetAnimationUri(Animation1);
-                CurrentPreviewAnimationName = Animation1.ToString();
+                _currentPreviewAnimationUri = GetAnimationUri(Animation1);
+                _currentPreviewAnimationName = Animation1.ToString();
                 break;
             case GimmickAnimationPreviewMode.Two:
-                CurrentPreviewAnimationUri = GetAnimationUri(Animation2);
-                CurrentPreviewAnimationName = Animation2.ToString();
+                _currentPreviewAnimationUri = GetAnimationUri(Animation2);
+                _currentPreviewAnimationName = Animation2.ToString();
                 break;
         };
+        if (!suppressPropertyChanged)
+        {
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationUri));
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationName));
+        }
     }
 
     private string GetAnimationUri(MoveAnimationId id)
@@ -173,7 +170,7 @@ public class GimmickViewModel : GimmickViewModelBase
         return _externalService.GetMoveAnimationUri(id);
     }
 
-    public override uint Image
+    public uint Image
     {
         get => _model.Image;
         set
@@ -188,10 +185,3 @@ public class GimmickViewModel : GimmickViewModelBase
     public string ImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image).File;
 }
 
-public class GimmickGridItemViewModel : GimmickViewModelBase 
-{
-    public GimmickGridItemViewModel(GimmickId id, IGimmick model) : base(id, model)
-    {
-    }
-
-}

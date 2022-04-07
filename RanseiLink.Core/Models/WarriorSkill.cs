@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class WarriorSkill : BaseDataWindow, IWarriorSkill
+public class WarriorSkill : BaseDataWindow
 {
     public const int DataLength = 0x1C;
     public WarriorSkill(byte[] data) : base(data, DataLength) { }
@@ -72,8 +71,4 @@ public class WarriorSkill : BaseDataWindow, IWarriorSkill
         set => SetUInt32(6, 9, 11, (uint)value);
     }
 
-    public IWarriorSkill Clone()
-    {
-        return new WarriorSkill((byte[])Data.Clone());
-    }
 }

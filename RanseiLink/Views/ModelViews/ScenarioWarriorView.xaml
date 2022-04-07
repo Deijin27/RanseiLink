@@ -45,13 +45,13 @@
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
                     Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
-            <ComboBox ItemsSource="{x:Static const:EnumProvider.WarriorItems}" SelectedItem="{Binding Warrior, Mode=TwoWay}" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedValue="{Binding Warrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Kingdom"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}" />
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding Kingdom, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />

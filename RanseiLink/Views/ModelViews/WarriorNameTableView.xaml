@@ -10,10 +10,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Margin="5">
-            <Button DockPanel.Dock="Right" Style="{StaticResource RoundedGrayHoverButtonStyle}" Height="30" Width="30" Content="&#xE8C8;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    ToolTip="Copy" Command="{Binding CopyCommand}"/>
-            <Button DockPanel.Dock="Right" Style="{StaticResource RoundedGrayHoverButtonStyle}" Height="30" Width="30" Content="&#xE77F;" FontFamily="{StaticResource SegoeMDL2Assets}"
-                    ToolTip="Paste" Command="{Binding PasteCommand}"/>
             <TextBlock DockPanel.Dock="Left" Text="Search" Margin="10,0" TextAlignment="Right" VerticalAlignment="Center"/>
             <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
         </DockPanel>

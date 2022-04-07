@@ -14,7 +14,7 @@ public class PartialTransferPlugin : IPlugin
     public void Run(IPluginContext context)
     {
         Dictionary<string, ModInfo> modDict = new();
-        var modService = context.ServiceContainer.Resolve<IModManager>();
+        var modService = context.Services.Get<IModManager>();
         foreach (ModInfo mod in modService.GetAllModInfo())
         {
             string key = $"{mod.Name} v{mod.Version} by {mod.Author}";
@@ -26,7 +26,8 @@ public class PartialTransferPlugin : IPlugin
             }
             modDict.Add(finalKey, mod);
         }
-        string currentKey = modDict.First(i => i.Value.FolderPath == context.ActiveMod.FolderPath).Key;
+        var activeMod = context.Services.Get<ModInfo>();
+        string currentKey = modDict.First(i => i.Value.FolderPath == activeMod.FolderPath).Key;
 
         var options = new PartialTransferOptionForm()
         {
@@ -35,10 +36,10 @@ public class PartialTransferPlugin : IPlugin
             DestinationMod = currentKey
         };
 
-        var dialogService = context.ServiceContainer.Resolve<IDialogService>();
+        var dialogService = context.Services.Get<IDialogService>();
 
 
-        var optionService = context.ServiceContainer.Resolve<IPluginService>();
+        var optionService = context.Services.Get<IPluginService>();
         do
         {
             if (!optionService.RequestOptions(options))
@@ -82,7 +83,7 @@ public class PartialTransferPlugin : IPlugin
         if (options.Maps)
             dirsToTransfer.Add(Constants.MapFolderPath);
         if (options.MaxLink)
-            filesToTransfer.Add(Constants.BaseBushouMaxSyncTableRomPath);
+            filesToTransfer.Add(Constants.MaxLinkRomPath);
         if (options.MoveRange)
             filesToTransfer.Add(Constants.MoveRangeRomPath);
         if (options.Move)
@@ -95,13 +96,13 @@ public class PartialTransferPlugin : IPlugin
         foreach (var i in EnumUtil.GetValues<ScenarioId>())
         {
             if (options.ScenarioPokemon)
-                filesToTransfer.Add(Constants.ScenarioPokemonPathFromId(i));
+                filesToTransfer.Add(Constants.ScenarioPokemonPathFromId((int)i));
             if (options.ScenarioWarrior)
-                filesToTransfer.Add(Constants.ScenarioWarriorPathFromId(i));
+                filesToTransfer.Add(Constants.ScenarioWarriorPathFromId((int)i));
             if (options.ScenarioAppearPokemon)
-                filesToTransfer.Add(Constants.ScenarioAppearPokemonPathFromId(i));
+                filesToTransfer.Add(Constants.ScenarioAppearPokemonPathFromId((int)i));
             if (options.ScenarioKingdom)
-                filesToTransfer.Add(Constants.ScenarioKingdomPathFromId(i));
+                filesToTransfer.Add(Constants.ScenarioKingdomPathFromId((int)i));
         }
 
         if (options.Sprites)

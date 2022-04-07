@@ -1,18 +1,15 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("stl pack", Description = "Pack pngs into an stl file, creating both the data and the info file")]
-public class StlPackCommand : BaseCommand
+public class StlPackCommand : ICommand
 {
-    public StlPackCommand(IServiceContainer container) : base(container) { }
-    public StlPackCommand() : base() { }
-
     [CommandParameter(0, Description = "Path of directory containing png files.", Name = "dirPath")]
     public string DirPath { get; set; }
 
@@ -28,7 +25,7 @@ public class StlPackCommand : BaseCommand
     [CommandOption("tiled", 't', Description = "Whether the images are tiled")]
     public bool Tiled { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationDataFile == null)
         {

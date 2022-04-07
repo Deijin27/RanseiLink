@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class BaseWarrior : BaseDataWindow, IBaseWarrior
+public class BaseWarrior : BaseDataWindow
 {
     public const int DataLength = 0x14;
     public BaseWarrior(byte[] data) : base(data, DataLength) { }
@@ -135,8 +134,4 @@ public class BaseWarrior : BaseDataWindow, IBaseWarrior
         set => SetUInt32(0, 7, 25, value);
     }
 
-    public IBaseWarrior Clone()
-    {
-        return new BaseWarrior((byte[])Data.Clone());
-    }
 }

@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class MaxLink : BaseDataWindow, IMaxLink
+public class MaxLink : BaseDataWindow
 {
     public const int DataLength = 200;
     public MaxLink(byte[] data) : base(data, DataLength) { }

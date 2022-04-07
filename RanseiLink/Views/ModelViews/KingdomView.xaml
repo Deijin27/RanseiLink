@@ -56,19 +56,19 @@
 
         <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
             <StackPanel>
-                <ComboBox Margin="4,4,4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection0}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection1}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection2}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection3}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection4}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection5}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection6}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection7}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection8}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection9}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection10}"/>
-                <ComboBox Margin="4,2" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection11}"/>
-                <ComboBox Margin="4,2,4,4" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding MapConnection12}"/>
+                <ComboBox Margin="4,4,4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection0}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection1}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection2}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection3}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection4}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection5}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection6}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection7}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection8}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection9}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection10}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection11}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                <ComboBox Margin="4,2,4,4" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection12}" Style="{StaticResource SelectorComboBoxStyle}"/>
             </StackPanel>
         </GroupBox>
 

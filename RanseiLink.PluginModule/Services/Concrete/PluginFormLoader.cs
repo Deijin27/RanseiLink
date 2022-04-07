@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RanseiLink.PluginModule.Services.Concrete;
 
-internal class PluginFormLoader : IPluginFormLoader
+public class PluginFormLoader : IPluginFormLoader
 {
     private static PluginFormGroup GetOrAdd(Dictionary<string, PluginFormGroup> dict, string key)
     {

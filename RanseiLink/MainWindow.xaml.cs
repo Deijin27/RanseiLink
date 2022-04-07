@@ -15,7 +15,7 @@ public partial class MainWindow : Window
         // Ensure maximized window doesn't cover taskbar
         MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
 
-        DataContext = ((App)Application.Current).ServiceContainer.Resolve<MainWindowViewModel>();
+        DataContext = ((App)Application.Current).GetMainWindowViewModel();
     }
 
     private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;

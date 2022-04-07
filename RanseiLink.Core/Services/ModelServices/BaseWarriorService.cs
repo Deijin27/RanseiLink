@@ -1,86 +1,58 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Models;
+﻿using RanseiLink.Core.Models;
 using System.IO;
+using System;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IBaseWarriorService : IModelDataService<WarriorId, IBaseWarrior>
+public interface IBaseWarriorService : IModelService<BaseWarrior>
 {
-    IDisposableBaseWarriorService Disposable();
-    IWarriorNameTable RetrieveNameTable();
-    void SaveNameTable(IWarriorNameTable model);
+    WarriorNameTable NameTable { get; }
 }
 
-public interface IDisposableBaseWarriorService : IDisposableModelDataService<WarriorId, IBaseWarrior>
+public class BaseWarriorService : BaseModelService<BaseWarrior>, IBaseWarriorService
 {
-    IWarriorNameTable RetrieveNameTable();
-    void SaveNameTable(IWarriorNameTable model);
-}
+    public BaseWarriorService(string BaseWarriorServiceDatFile) : base(BaseWarriorServiceDatFile, 0, 251, 252) { }
 
-public class BaseWarriorService : BaseModelService, IBaseWarriorService
-{
-    public BaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength, 251) { }
+    public BaseWarriorService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BaseBushouRomPath)) { }
 
-    public IDisposableBaseWarriorService Disposable()
+    public override void Reload()
     {
-        return new DisposableBaseWarriorService(Mod);
-    }
-
-    public IBaseWarrior Retrieve(WarriorId id)
-    {
-        return new BaseWarrior(RetrieveData((int)id));
-    }
-
-    public void Save(WarriorId id, IBaseWarrior model)
-    {
-        SaveData((int)id, model.Data);
-    }
-
-    public IWarriorNameTable RetrieveNameTable()
-    {
-        using (var file = new BinaryReader(File.OpenRead(Path.Combine(Mod.FolderPath, Constants.BaseBushouRomPath))))
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
         {
-            file.BaseStream.Position = 0x13B0;
-            return new WarriorNameTable(file.ReadBytes(WarriorNameTable.DataLength));
+            _cache.Add(new BaseWarrior(br.ReadBytes(BaseWarrior.DataLength)));
         }
+        br.BaseStream.Position = 0x13B0;
+        NameTable = new WarriorNameTable(br.ReadBytes(WarriorNameTable.DataLength));
     }
 
-    public void SaveNameTable(IWarriorNameTable model)
+    public override void Save()
     {
-        using (var file = new BinaryWriter(File.OpenWrite(Path.Combine(Mod.FolderPath, Constants.BaseBushouRomPath))))
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
         {
-            file.BaseStream.Position = 0x13B0;
-            file.Write(model.Data);
+            bw.Write(_cache[id].Data);
         }
-    }
-}
-
-public class DisposableBaseWarriorService : BaseDisposableModelService, IDisposableBaseWarriorService
-{
-    public DisposableBaseWarriorService(ModInfo mod) : base(mod, Constants.BaseBushouRomPath, BaseWarrior.DataLength, 251) { }
-
-    public IBaseWarrior Retrieve(WarriorId id)
-    {
-        return new BaseWarrior(RetrieveData((int)id));
+        bw.BaseStream.Position = 0x13B0;
+        bw.Write(NameTable.Data);
     }
 
-    public void Save(WarriorId id, IBaseWarrior model)
-    {
-        SaveData((int)id, model.Data);
-    }
+    public WarriorNameTable NameTable { get; private set; }
 
-    public IWarriorNameTable RetrieveNameTable()
-    {
-        stream.Position = 0x13B0;
-        byte[] buffer = new byte[WarriorNameTable.DataLength];
-        stream.Read(buffer, 0, WarriorNameTable.DataLength);
-        return new WarriorNameTable(buffer);
-    }
 
-    public void SaveNameTable(IWarriorNameTable model)
+    public override string IdToName(int id)
     {
-        stream.Position = 0x13B0;
-        stream.Write(model.Data, 0, WarriorNameTable.DataLength);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        var warriorNameId = Retrieve(id).WarriorName;
+        if (!NameTable.ValidateId(warriorNameId))
+        {
+            return "";
+        }
+        return NameTable.GetEntry(warriorNameId);
     }
 }

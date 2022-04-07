@@ -1,21 +1,17 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core;
-using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("test")]
-public class TestCommand : BaseCommand
+public class TestCommand : ICommand
 {
-    public TestCommand(IServiceContainer container) : base(container) { }
-    public TestCommand() : base() { }
-
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         var eve = new EVE(@"C:\Users\Mia\Desktop\00000064.eve");
 
@@ -26,15 +22,13 @@ public class TestCommand : BaseCommand
 }
 
 [Command("eve unpack")]
-public class EveUnpackCommand : BaseCommand
+public class EveUnpackCommand : ICommand
 {
-    public EveUnpackCommand(IServiceContainer container) : base(container) { }
-    public EveUnpackCommand() : base() { }
 
     [CommandParameter(0, Description = "Path of eve file.", Name = "eveFile")]
     public string FilePath { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         var eve = new EVE(FilePath);
 

@@ -1,27 +1,22 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Maps;
 
 namespace RanseiLink.Services;
 
 public interface IJumpService
 {
-    void JumpToAbility(AbilityId id);
-    void JumpToBaseWarrior(WarriorId id);
-    void JumpToBuilding(BuildingId id);
-    void JumpToEventSpeaker(EventSpeakerId id);
-    void JumpToEvolutionTable();
-    void JumpToItem(ItemId id);
-    void JumpToMaxLink(WarriorId id);
-    void JumpToMoveRange(MoveRangeId id);
-    void JumpToMove(MoveId id);
-    void JumpToPokemon(PokemonId id);
-    void JumpToScenarioAppearPokemon(ScenarioId scenario);
-    void JumpToScenarioKingdom(ScenarioId id);
+    /// <summary>
+    /// Jump to selector view model
+    /// </summary>
+    /// <param name="moduleId">Id of the editor module to choose</param>
+    /// <param name="selectId">Id of the item within the selector view to select</param>
+    void JumpTo(string moduleId, int selectId);
+
+    /// <summary>
+    /// Jump to module
+    /// </summary>
+    /// <param name="moduleId">Id of the editor module to choose</param>
+    void JumpTo(string moduleId);
+
     void JumpToScenarioWarrior(ScenarioId scenario, uint id);
     void JumpToScenarioPokemon(ScenarioId scenario, uint id);
-    void JumpToWarriorNameTable();
-    void JumpToWarriorSkill(WarriorSkillId id);
-    void JumpToBattleConfig(BattleConfigId id);
-    void JumpToGimmickRange(GimmickRangeId id);
-    void JumpToMap(MapId id);
 }

@@ -1,26 +1,40 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Windows.Input;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BattleConfigViewModel BattleConfigViewModelFactory(BattleConfigId id, IBattleConfig model, IEditorContext context);
-
-public abstract class BattleConfigViewModelBase : ViewModelBase
+public interface IBattleConfigViewModel
 {
-    private readonly IBattleConfig _model;
+    void SetModel(BattleConfigId id, BattleConfig model);
+}
 
-    public BattleConfigViewModelBase(BattleConfigId id, IBattleConfig model)
+public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
+{
+    private BattleConfig _model;
+
+    public BattleConfigViewModel(IMapService mapService, IJumpService jumpService)
+    {
+        _model = new BattleConfig();
+        
+        MapItems = mapService.GetMapIds();
+
+        JumpToMapCommand = new RelayCommand<MapId>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, (int)id));
+    }
+
+    public void SetModel(BattleConfigId id, BattleConfig model)
     {
         Id = id;
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
-    public BattleConfigId Id { get; }
+    public BattleConfigId Id { get; private set; }
 
     public MapId Map
     {
@@ -120,21 +134,8 @@ public abstract class BattleConfigViewModelBase : ViewModelBase
 
     #endregion
 
-}
-
-public class BattleConfigViewModel : BattleConfigViewModelBase
-{
-    public BattleConfigViewModel(BattleConfigId id, IBattleConfig model, IEditorContext context) : base(id, model) 
-    {
-        MapItems = context.DataService.MapName.GetMaps();
-
-        var jumpService = context.JumpService;
-
-        JumpToMapCommand = new RelayCommand<MapId>(jumpService.JumpToMap);
-    }
 
     public ICollection<MapId> MapItems { get; }
 
     public ICommand JumpToMapCommand { get; }
-
 }

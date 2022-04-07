@@ -1,5 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using System.Collections.Generic;
 
 namespace SoftlockCheckerPlugin;
@@ -27,7 +27,7 @@ internal static class TypeChart
         }
     }
 
-    public static bool IsImmuneTo(this IPokemon defendingPokemon, TypeId attackingType)
+    public static bool IsImmuneTo(this Pokemon defendingPokemon, TypeId attackingType)
     {
         return defendingPokemon.Type1.IsImmuneTo(attackingType) || defendingPokemon.Type2.IsImmuneTo(attackingType);
     }
@@ -42,7 +42,7 @@ internal static class TypeChart
         return Weakness[defendingType].Contains(attackingType);
     }
 
-    public static bool Resists(this IPokemon defendingPokemon, TypeId attackingType)
+    public static bool Resists(this Pokemon defendingPokemon, TypeId attackingType)
     {
         if (defendingPokemon.Type1.Resists(attackingType) && !defendingPokemon.Type2.IsWeakTo(attackingType))
         {

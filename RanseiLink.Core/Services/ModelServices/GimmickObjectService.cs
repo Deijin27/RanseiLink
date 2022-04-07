@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IGimmickObjectService : IModelDataService<GimmickObjectId, IGimmickObject>
-{
-    IDisposableGimmickObjectService Disposable();
-}
-
-public interface IDisposableGimmickObjectService : IDisposableModelDataService<GimmickObjectId, IGimmickObject>
+public interface IGimmickObjectService : IModelService<GimmickObject>
 {
 }
 
-public class GimmickObjectService : BaseModelService, IGimmickObjectService
+public class GimmickObjectService : BaseModelService<GimmickObject>, IGimmickObjectService
 {
-    public GimmickObjectService(ModInfo mod) : base(mod, Constants.GimmickObjectRomPath, GimmickObject.DataLength, 99) { }
+    public GimmickObjectService(string GimmickObjectDatFile) : base(GimmickObjectDatFile, 0, 99) { }
 
-    public IDisposableGimmickObjectService Disposable()
+    public GimmickObjectService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickObjectRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableGimmickObjectService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new GimmickObject(br.ReadBytes(GimmickObject.DataLength)));
+        }
     }
 
-    public IGimmickObject Retrieve(GimmickObjectId id)
+    public override void Save()
     {
-        return new GimmickObject(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(GimmickObjectId id, IGimmickObject model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableGimmickObjectService : BaseDisposableModelService, IDisposableGimmickObjectService
-{
-    public DisposableGimmickObjectService(ModInfo mod) : base(mod, Constants.GimmickObjectRomPath, GimmickObject.DataLength, 99) { }
-
-    public IGimmickObject Retrieve(GimmickObjectId id)
-    {
-        return new GimmickObject(RetrieveData((int)id));
-    }
-
-    public void Save(GimmickObjectId id, IGimmickObject model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((GimmickObjectId)id).ToString();
     }
 }

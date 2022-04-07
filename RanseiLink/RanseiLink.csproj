@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="gong-wpf-dragdrop" Version="2.4.3" />
-    <PackageReference Include="PixiEditor.ColorPicker" Version="3.1.0" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.1.1" />
+    <PackageReference Include="PixiEditor.ColorPicker" Version="3.3.1" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
@@ -125,6 +125,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\GridViews\ScenarioWarriorGridSelectorView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\SelectorViews\SelectorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SelectorViews\SelectorViewWithoutScroll.xaml.cs">
@@ -282,6 +285,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\GridViews\ScenarioWarriorGridSelectorView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SelectorViews\SelectorView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

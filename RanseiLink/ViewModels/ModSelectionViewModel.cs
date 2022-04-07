@@ -9,10 +9,9 @@ namespace RanseiLink.ViewModels;
 
 public class ModSelectionViewModel : ViewModelBase
 {
-    private readonly IServiceContainer _container;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
-    private readonly ModListItemViewModelFactory _itemViewModelFactory;
+    private readonly IModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
@@ -33,13 +32,16 @@ public class ModSelectionViewModel : ViewModelBase
 
     public event Action<ModInfo> ModSelected;
 
-    public ModSelectionViewModel(IServiceContainer container)
+    public ModSelectionViewModel(
+        IModManager modManager, 
+        IDialogService dialogService, 
+        IModListItemViewModelFactory modListItemViewModelFactory, 
+        IFallbackSpriteProvider fallbackSpriteProvider)
     {
-        _container = container;
-        _modService = container.Resolve<IModManager>();
-        _dialogService = container.Resolve<IDialogService>();
-        _itemViewModelFactory = _container.Resolve<ModListItemViewModelFactory>();
-        _fallbackSpriteProvider = _container.Resolve<IFallbackSpriteProvider>();
+        _modService = modManager;
+        _dialogService = dialogService;
+        _itemViewModelFactory = modListItemViewModelFactory;
+        _fallbackSpriteProvider = fallbackSpriteProvider;
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 
@@ -69,7 +71,7 @@ public class ModSelectionViewModel : ViewModelBase
             ModItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
-                ModItems.Add(_itemViewModelFactory(this, mi));
+                ModItems.Add(_itemViewModelFactory.CreateViewModel(this, mi));
             }
         }
     }

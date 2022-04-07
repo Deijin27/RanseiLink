@@ -3,29 +3,33 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("export mod", Description = "Export currently selected mod to destination folder.")]
-public class ExportModCommand : BaseCommand
+public class ExportModCommand : ICommand
 {
-    public ExportModCommand(IServiceContainer container) : base(container) { }
-    public ExportModCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    private readonly IModManager _modManager;
+    public ExportModCommand(ICurrentModService currentModService, IModManager modManager)
+    {
+        _currentModService = currentModService;
+        _modManager = modManager;
+    }
 
     [CommandParameter(0, Description = "Folder to export to.", Name = "destinationFolder", Converter = typeof(PathConverter))]
     public string DestinationFolder { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        var modService = Container.Resolve<IModManager>();
-
-        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
+        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        string exportedTo = modService.Export(currentMod, DestinationFolder);
+        string exportedTo = _modManager.Export(currentMod, DestinationFolder);
 
         console.Output.WriteLine($"Mod \"{currentMod.Name}\" exported to \"{exportedTo}\"");
         return default;

@@ -1,16 +1,24 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
+using System.Threading.Tasks;
+using CliFx;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
-using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("commit mod", Description = "Commit current mod to rom.")]
-public class CommitModCommand : BaseCommand
+public class CommitModCommand : ICommand
 {
-    public CommitModCommand(IServiceContainer container) : base(container) { }
-    public CommitModCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    private readonly IModManager _modManager;
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    public CommitModCommand(ICurrentModService currentModService, IModManager modManager, IFallbackSpriteProvider fallbackSpriteProvider)
+    {
+        _currentModService = currentModService;
+        _modManager = modManager;
+        _fallbackSpriteProvider = fallbackSpriteProvider;
+    }
 
     [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
     public string Path { get; set; }
@@ -18,14 +26,11 @@ public class CommitModCommand : BaseCommand
     [CommandOption("includeSprites", 's', Description = "Include sprites in patch")]
     public bool IncludeSprites { get; set; } = true;
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        var modService = Container.Resolve<IModManager>();
-        var fallbackSpriteProvider = Container.Resolve<IFallbackSpriteProvider>();
-
-        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
+        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
@@ -35,14 +40,14 @@ public class CommitModCommand : BaseCommand
         {
             patchOpt |= PatchOptions.IncludeSprites;
 
-            if (!fallbackSpriteProvider.IsDefaultsPopulated)
+            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
             {
                 console.Output.WriteLine("Cannot patch sprites until you run the command 'populate graphics defaults'");
                 return default;
             }
         }
 
-        modService.Commit(currentMod, Path, patchOpt);
+        _modManager.Patch(currentMod, Path, patchOpt);
         console.Output.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
         console.Render(currentMod);
         return default;

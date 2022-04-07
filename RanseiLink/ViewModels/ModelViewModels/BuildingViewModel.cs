@@ -1,23 +1,38 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BuildingViewModel BuildingViewModelFactory(BuildingId id, IBuilding model, IEditorContext context);
-
-public abstract class BuildingViewModelBase : ViewModelBase
+public interface IBuildingViewModel
 {
-    private readonly IBuilding _model;
+    void SetModel(BuildingId id, Building model);
+}
 
-    public BuildingViewModelBase(BuildingId id, IBuilding model)
+public class BuildingViewModel : ViewModelBase, IBuildingViewModel
+{
+    private Building _model;
+
+    public BuildingViewModel(IJumpService jumpService, IIdToNameService idToNameService)
+    {
+        _model = new Building();
+
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+
+        KingdomItems = idToNameService.GetComboBoxItemsExceptDefault<IKingdomService>();
+    }
+
+    public void SetModel(BuildingId id, Building model)
     {
         Id = id;
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
-    public BuildingId Id { get; }
+    public BuildingId Id { get; private set; }
 
     public string Name
     {
@@ -25,10 +40,12 @@ public abstract class BuildingViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public KingdomId Kingdom
+    public List<SelectorComboBoxItem> KingdomItems { get; }
+
+    public int Kingdom
     {
-        get => _model.Kingdom;
-        set => RaiseAndSetIfChanged(_model.Kingdom, value, v => _model.Kingdom = v);
+        get => (int)_model.Kingdom;
+        set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
     }
 
     public BattleConfigId BattleConfig1
@@ -72,21 +89,6 @@ public abstract class BuildingViewModelBase : ViewModelBase
         get => _model.Function;
         set => RaiseAndSetIfChanged(_model.Function, value, v => _model.Function = v);
     }
-}
-
-public class BuildingViewModel : BuildingViewModelBase
-{
-    public BuildingViewModel(BuildingId id, IBuilding model, IEditorContext context) : base(id, model) 
-    {
-        var jumpService = context.JumpService;
-
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(jumpService.JumpToBattleConfig);
-    }
 
     public ICommand JumpToBattleConfigCommand { get; }
-}
-
-public class BuildingGridItemViewModel : BuildingViewModelBase
-{
-    public BuildingGridItemViewModel(BuildingId id, IBuilding model) : base(id, model) { }
 }

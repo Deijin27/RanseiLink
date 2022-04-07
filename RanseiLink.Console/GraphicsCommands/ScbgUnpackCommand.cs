@@ -1,18 +1,15 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("scbg unpack", Description = "Unpack an SCBG collection into it's constituent images")]
-public class ScbgUnpackCommand : BaseCommand
+public class ScbgUnpackCommand : ICommand
 {
-    public ScbgUnpackCommand(IServiceContainer container) : base(container) { }
-    public ScbgUnpackCommand() : base() { }
-
     [CommandParameter(0, Description = "Path of scbg data file.", Name = "scbgDataFile")]
     public string FilePath { get; set; }
 
@@ -25,7 +22,7 @@ public class ScbgUnpackCommand : BaseCommand
     [CommandOption("tiled", 't', Description = "Whether the images are tiled")]
     public bool Tiled { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationFolder == null)
         {

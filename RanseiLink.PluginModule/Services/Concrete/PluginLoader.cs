@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace RanseiLink.PluginModule.Services.Concrete;
 
-internal class PluginLoader : IPluginLoader
+public class PluginLoader : IPluginLoader
 {
     public List<Assembly> LoadAssemblies(DirectoryInfo directory, out List<AssemblyLoadFailureInfo> failedToLoad)
     {

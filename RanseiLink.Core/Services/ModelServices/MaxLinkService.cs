@@ -1,51 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMaxLinkService : IModelDataService<WarriorId, IMaxLink>
-{
-    IDisposableMaxLinkService Disposable();
-}
-
-public interface IDisposableMaxLinkService : IDisposableModelDataService<WarriorId, IMaxLink>
+public interface IMaxLinkService : IModelService<MaxLink>
 {
 }
 
-public class MaxLinkService : BaseModelService, IMaxLinkService
+public class MaxLinkService : BaseModelService<MaxLink>, IMaxLinkService
 {
-    public MaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251) { }
+    public MaxLinkService(string MaxLinkDatFile) : base(MaxLinkDatFile, 0, 251) { }
 
-    public IDisposableMaxLinkService Disposable()
+    public MaxLinkService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MaxLinkRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableMaxLinkService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new MaxLink(br.ReadBytes(MaxLink.DataLength)));
+        }
     }
 
-    public IMaxLink Retrieve(WarriorId id)
+    public override void Save()
     {
-        return new MaxLink(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(WarriorId id, IMaxLink model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableMaxLinkService : BaseDisposableModelService, IDisposableMaxLinkService
-{
-    public DisposableMaxLinkService(ModInfo mod) : base(mod, Constants.BaseBushouMaxSyncTableRomPath, MaxLink.DataLength, 251)
-    {
-    }
-
-    public IMaxLink Retrieve(WarriorId id)
-    {
-        return new MaxLink(RetrieveData((int)id));
-    }
-
-    public void Save(WarriorId id, IMaxLink model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((WarriorId)id).ToString();
     }
 }

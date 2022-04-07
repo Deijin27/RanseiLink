@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class ScenarioAppearPokemon : BaseDataWindow, IScenarioAppearPokemon
+public class ScenarioAppearPokemon : BaseDataWindow
 {
     public const int DataLength = 0xC8;
     public ScenarioAppearPokemon(byte[] data) : base(data, DataLength) { }
@@ -21,8 +20,4 @@ public class ScenarioAppearPokemon : BaseDataWindow, IScenarioAppearPokemon
         SetByte((int)id, (byte)(canAppear ? AppearsValue : DoesNotAppearValue));
     }
 
-    public IScenarioAppearPokemon Clone()
-    {
-        return new ScenarioAppearPokemon((byte[])Data.Clone());
-    }
 }

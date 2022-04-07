@@ -1,8 +1,8 @@
-﻿using RanseiLink.Core.Models.Interfaces;
+﻿
 
 namespace RanseiLink.Core.Models;
 
-public class MoveRange : BaseDataWindow, IMoveRange
+public class MoveRange : BaseDataWindow
 {
     public const int DataLength = 4;
     public MoveRange(byte[] data) : base(data, DataLength) { }
@@ -19,8 +19,4 @@ public class MoveRange : BaseDataWindow, IMoveRange
         SetUInt32(0, 1, position, isInRange ? 1u : 0u);
     }
 
-    public IMoveRange Clone()
-    {
-        return new MoveRange((byte[])Data.Clone());
-    }
 }

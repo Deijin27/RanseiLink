@@ -1,56 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
 using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IScenarioKingdomService : IModelDataService<ScenarioId, IScenarioKingdom>
-{
-    IDisposableScenarioKingdomService Disposable();
-}
-
-public interface IDisposableScenarioKingdomService : IDisposableModelDataService<ScenarioId, IScenarioKingdom>
+public interface IScenarioKingdomService : IModelService<ScenarioKingdom>
 {
 }
 
-public class ScenarioKingdomService : BaseScenarioService, IScenarioKingdomService
+public class ScenarioKingdomService : BaseModelService<ScenarioKingdom>, IScenarioKingdomService
 {
-    public ScenarioKingdomService(ModInfo mod) : base(mod, ScenarioKingdom.DataLength, 0, Constants.ScenarioKingdomPathFromId)
+    public ScenarioKingdomService(ModInfo mod) : base(mod.FolderPath, 0, 10) 
     {
-
     }
 
-    public IDisposableScenarioKingdomService Disposable()
+    public override void Reload()
     {
-        return new DisposableScenarioKingdomService(Mod);
+        _cache.Clear();
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            using var br = new BinaryReader(File.OpenRead(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id))));
+            _cache.Add(new ScenarioKingdom(br.ReadBytes(ScenarioKingdom.DataLength)));
+        }
     }
 
-    public IScenarioKingdom Retrieve(ScenarioId scenario)
+    public override void Save()
     {
-        return new ScenarioKingdom(RetrieveData(scenario, 0));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            using var bw = new BinaryWriter(File.OpenWrite(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id))));
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(ScenarioId scenario, IScenarioKingdom model)
+    public override string IdToName(int id)
     {
-        SaveData(scenario, 0, model.Data);
-    }
-}
-
-public class DisposableScenarioKingdomService : BaseDisposableScenarioService, IDisposableScenarioKingdomService
-{
-    public DisposableScenarioKingdomService(ModInfo mod) : base(mod, ScenarioKingdom.DataLength, 0, Constants.ScenarioKingdomPathFromId)
-    {
-
-    }
-
-    public IScenarioKingdom Retrieve(ScenarioId scenario)
-    {
-        return new ScenarioKingdom(RetrieveData(scenario, 0));
-    }
-
-    public void Save(ScenarioId scenario, IScenarioKingdom model)
-    {
-        SaveData(scenario, 0, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((ScenarioId)id).ToString();
     }
 }

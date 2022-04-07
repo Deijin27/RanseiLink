@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class ScenarioKingdom : BaseDataWindow, IScenarioKingdom
+public class ScenarioKingdom : BaseDataWindow
 {
     public const int DataLength = 0x11;
     public ScenarioKingdom(byte[] data) : base(data, DataLength) { }
@@ -19,8 +18,4 @@ public class ScenarioKingdom : BaseDataWindow, IScenarioKingdom
         SetByte((int)kingdom, (byte)armyId);
     }
 
-    public IScenarioKingdom Clone()
-    {
-        return new ScenarioKingdom((byte[])Data.Clone());
-    }
 }

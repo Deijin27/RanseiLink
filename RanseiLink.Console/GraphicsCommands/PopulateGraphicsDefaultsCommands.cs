@@ -1,4 +1,5 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 using System.Threading.Tasks;
@@ -6,21 +7,22 @@ using System.Threading.Tasks;
 namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("populate graphics defaults", Description = "Populate the default graphics, providing files to patch sprites, and use OverrideSpriteProvider in lua scripts.")]
-public class PopulateGraphicsDefaultsCommand : BaseCommand
+public class PopulateGraphicsDefaultsCommand : ICommand
 {
-    public PopulateGraphicsDefaultsCommand(IServiceContainer container) : base(container) { }
-    public PopulateGraphicsDefaultsCommand() : base() { }
+    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    public PopulateGraphicsDefaultsCommand(IFallbackSpriteProvider fallbackSpriteProvider)
+    {
+        _fallbackSpriteProvider = fallbackSpriteProvider;
+    }
 
     [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
     public string Path { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var fallbackSpriteProvider = Container.Resolve<IFallbackSpriteProvider>();
-
         console.Output.WriteLine("Populating...");
 
-        fallbackSpriteProvider.Populate(Path);
+        _fallbackSpriteProvider.Populate(Path);
 
         console.Output.WriteLine("Done!");
         return default;

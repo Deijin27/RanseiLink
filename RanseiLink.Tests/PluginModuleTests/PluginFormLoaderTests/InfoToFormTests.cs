@@ -1,6 +1,5 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.PluginModule.Services;
-using RanseiLink.PluginModule.Services.Registration;
+﻿using RanseiLink.PluginModule.Services;
+using RanseiLink.PluginModule.Services.Concrete;
 using System.Linq;
 using Xunit;
 
@@ -13,9 +12,7 @@ public class InfoToFormTests
     private readonly IPluginFormLoader _formLoader;
     public InfoToFormTests()
     {
-        IServiceContainer container = new ServiceContainer();
-        container.RegisterPluginServices();
-        _formLoader = container.Resolve<IPluginFormLoader>();
+        _formLoader = new PluginFormLoader();
         _form = new TestPluginForm();
         _loadedInfo = _formLoader.FormToInfo(_form);
     }

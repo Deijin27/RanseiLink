@@ -3,21 +3,23 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("current mod", Description = "Current Mod.")]
-public class CurrentModCommand : BaseCommand
+public class CurrentModCommand : ICommand
 {
-    public CurrentModCommand(IServiceContainer container) : base(container) { }
-    public CurrentModCommand() : base() { }
-
-    public override ValueTask ExecuteAsync(IConsole console)
+    private readonly ICurrentModService _currentModService;
+    public CurrentModCommand(ICurrentModService currentModService)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-
-        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
+        _currentModService = currentModService;
+    }
+    public ValueTask ExecuteAsync(IConsole console)
+    {
+        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 

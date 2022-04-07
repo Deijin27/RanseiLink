@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMoveAnimationService : IModelDataService<MoveAnimationId, IMoveAnimation>
-{
-    IDisposableMoveAnimationService Disposable();
-}
-
-public interface IDisposableMoveAnimationService : IDisposableModelDataService<MoveAnimationId, IMoveAnimation>
+public interface IMoveAnimationService : IModelService<MoveAnimation>
 {
 }
 
-public class MoveAnimationService : BaseModelService, IMoveAnimationService
+public class MoveAnimationService : BaseModelService<MoveAnimation>, IMoveAnimationService
 {
-    public MoveAnimationService(ModInfo mod) : base(mod, Constants.MoveEffectRomPath, MoveAnimation.DataLength, 254) { }
+    public MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
 
-    public IDisposableMoveAnimationService Disposable()
+    public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableMoveAnimationService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new MoveAnimation(br.ReadBytes(MoveAnimation.DataLength)));
+        }
     }
 
-    public IMoveAnimation Retrieve(MoveAnimationId id)
+    public override void Save()
     {
-        return new MoveAnimation(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(MoveAnimationId id, IMoveAnimation model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableMoveAnimationService : BaseDisposableModelService, IDisposableMoveAnimationService
-{
-    public DisposableMoveAnimationService(ModInfo mod) : base(mod, Constants.MoveEffectRomPath, MoveAnimation.DataLength, 254) { }
-
-    public IMoveAnimation Retrieve(MoveAnimationId id)
-    {
-        return new MoveAnimation(RetrieveData((int)id));
-    }
-
-    public void Save(MoveAnimationId id, IMoveAnimation model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((MoveAnimationId)id).ToString();
     }
 }

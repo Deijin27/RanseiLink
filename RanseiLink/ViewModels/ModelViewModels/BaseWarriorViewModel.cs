@@ -1,29 +1,53 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
-using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate BaseWarriorViewModel BaseWarriorViewModelFactory(IBaseWarrior model, IEditorContext context);
-
-public abstract class BaseWarriorViewModelBase : ViewModelBase
+public interface IBaseWarriorViewModel
 {
-    protected readonly IBaseWarrior _model;
+    void SetModel(BaseWarrior model);
+}
 
-    public BaseWarriorViewModelBase(IBaseWarrior model)
+public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
+{
+    private readonly IOverrideSpriteProvider _spriteProvider;
+    private BaseWarrior _model;
+    private WarriorNameTable _nameTable;
+    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, IBaseWarriorService baseWarriorService)
+    {
+        _model = new BaseWarrior();
+        _nameTable = baseWarriorService.NameTable;
+        _spriteProvider = overrideSpriteProvider;
+
+        JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
+        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
+        JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
+
+        WarriorSkillItems = idToNameService.GetComboBoxItemsPlusDefault<IWarriorSkillService>();
+        BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
+        PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
+    }
+
+    public void SetModel(BaseWarrior model)
     {
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
-    public virtual uint Sprite
-    {
-        get => _model.Sprite;
-        set => RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v);
-    }
-    
+    public List<SelectorComboBoxItem> WarriorSkillItems { get; }
+    public List<SelectorComboBoxItem> BaseWarriorItems { get; }
+    public List<SelectorComboBoxItem> PokemonItems { get; }
+
+    public ICommand JumpToWarriorSkillCommand { get; }
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToPokemonCommand { get; }
+
+
     public WarriorSprite2Id Sprite_Unknown
     {
         get => _model.Sprite_Unknown;
@@ -39,8 +63,16 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
     public uint WarriorName
     {
         get => _model.WarriorName;
-        set => RaiseAndSetIfChanged(_model.WarriorName, value, v => _model.WarriorName = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.WarriorName, value, v => _model.WarriorName = v))
+            {
+                RaisePropertyChanged(nameof(WarriorNameValue));
+            }
+        }
     }
+
+    public string WarriorNameValue => _nameTable.GetEntry(WarriorName);
 
     public TypeId Speciality1
     {
@@ -66,16 +98,16 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Weakness2, value, v => _model.Weakness2 = v);
     }
 
-    public WarriorSkillId Skill
+    public int Skill
     {
-        get => _model.Skill;
-        set => RaiseAndSetIfChanged(_model.Skill, value, v => _model.Skill = v);
+        get => (int)_model.Skill;
+        set => RaiseAndSetIfChanged(_model.Skill, (WarriorSkillId)value, v => _model.Skill = v);
     }
 
-    public WarriorId RankUp
+    public int RankUp
     {
-        get => _model.RankUp;
-        set => RaiseAndSetIfChanged(_model.RankUp, value, v => _model.RankUp = v);
+        get => (int)_model.RankUp;
+        set => RaiseAndSetIfChanged(_model.RankUp, (WarriorId)value, v => _model.RankUp = v);
     }
 
     public uint Power
@@ -102,16 +134,16 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Capacity, value, v => _model.Capacity = v);
     }
 
-    public PokemonId RankUpPokemon1
+    public int RankUpPokemon1
     {
-        get => _model.RankUpPokemon1;
-        set => RaiseAndSetIfChanged(_model.RankUpPokemon1, value, v => _model.RankUpPokemon1 = value);
+        get => (int)_model.RankUpPokemon1;
+        set => RaiseAndSetIfChanged(_model.RankUpPokemon1, (PokemonId)value, v => _model.RankUpPokemon1 = v);
     }
 
-    public PokemonId RankUpPokemon2
+    public int RankUpPokemon2
     {
-        get => _model.RankUpPokemon2;
-        set => RaiseAndSetIfChanged(_model.RankUpPokemon2, value, v => _model.RankUpPokemon2 = value);
+        get => (int)_model.RankUpPokemon2;
+        set => RaiseAndSetIfChanged(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
     }
 
     public uint RankUpLink
@@ -119,26 +151,6 @@ public abstract class BaseWarriorViewModelBase : ViewModelBase
         get => _model.RankUpLink;
         set => RaiseAndSetIfChanged(_model.RankUpLink, value, v => _model.RankUpLink = value);
     }
-
-}
-
-public class BaseWarriorViewModel : BaseWarriorViewModelBase
-{
-    private readonly ISpriteProvider _spriteProvider;
-
-    public BaseWarriorViewModel(IBaseWarrior model, IEditorContext context, IServiceContainer container) : base(model)
-    {
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
-        var jumpService = context.JumpService;
-
-        JumpToWarriorSkillCommand = new RelayCommand<WarriorSkillId>(jumpService.JumpToWarriorSkill);
-        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
-        JumpToPokemonCommand = new RelayCommand<PokemonId>(jumpService.JumpToPokemon);
-    }
-
-    public ICommand JumpToWarriorSkillCommand { get; }
-    public ICommand JumpToBaseWarriorCommand { get; }
-    public ICommand JumpToPokemonCommand { get; }
 
     public RankUpConditionId RankUpCondition1
     {
@@ -164,7 +176,7 @@ public class BaseWarriorViewModel : BaseWarriorViewModelBase
         set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
     }
 
-    public override uint Sprite
+    public uint Sprite
     {
         get => _model.Sprite;
         set
@@ -177,62 +189,4 @@ public class BaseWarriorViewModel : BaseWarriorViewModelBase
     }
 
     public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouM, Sprite).File;
-}
-
-public class BaseWarriorGridItemViewModel : BaseWarriorViewModelBase
-{
-    public BaseWarriorGridItemViewModel(WarriorId id, IBaseWarrior model) : base(model)
-    {
-        Id = id;
-    }
-
-    public WarriorId Id { get; }
-
-    public RankUpConditionId RankUpCondition
-    {
-        get => _model.RankUpCondition2;
-    }
-
-    public string Quantity1ForRankUpCondition
-    {
-        get => FormatQuantity(RankUpCondition, _model.Quantity1ForRankUpCondition);
-    }
-
-    public string Quantity2ForRankUpCondition
-    {
-        get => FormatQuantity(RankUpCondition, _model.Quantity2ForRankUpCondition);
-    }
-
-    private string FormatQuantity(RankUpConditionId id, uint quantity)
-    {
-        switch (id)
-        {
-            case RankUpConditionId.Unknown:
-            case RankUpConditionId.NoCondition:
-            case RankUpConditionId.Unused_1:
-            case RankUpConditionId.Unused_2:
-            case RankUpConditionId.Unused_3:
-            case RankUpConditionId.Unused_4:
-                return $"{quantity}";
-
-            case RankUpConditionId.AtLeastNFemaleWarlordsInSameKingdom:
-            case RankUpConditionId.AtLeastNGalleryPokemon:
-            case RankUpConditionId.AtLeastNGalleryWarriors:
-                return $"{quantity}";
-
-            case RankUpConditionId.AfterCompletingEpisode:
-            case RankUpConditionId.DuringEpisode:
-                return $"{(EpisodeId)quantity}";
-
-            case RankUpConditionId.MonotypeGallery:
-                return $"{(TypeId)quantity}";
-
-            case RankUpConditionId.WarriorInSameArmyNotNearby:
-            case RankUpConditionId.WarriorInSameKingdom:
-                return $"{(WarriorLineId)quantity}";
-
-            default:
-                throw new ArgumentException($"Unexpeted {nameof(RankUpConditionId)}");
-        }
-    }
 }

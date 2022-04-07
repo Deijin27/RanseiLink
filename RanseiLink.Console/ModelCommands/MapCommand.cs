@@ -1,19 +1,23 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 using RanseiLink.Core.Maps;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("map", Description = "Get data on a given map. If all sections toggles are false, the default is to output all sections.")]
-public class MapCommand : BaseCommand
+public class MapCommand : ICommand
 {
-    public MapCommand(IServiceContainer container) : base(container) { }
-    public MapCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public MapCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Map ID", Name = "map")]
     public int? Map { get; set; }
@@ -33,22 +37,24 @@ public class MapCommand : BaseCommand
     [CommandOption("gimmick", 'g', Description = "Output the gimmicks")]
     public bool Gimmick { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
+
+        var mapService = services.Get<IMapService>();
         
-        var mapName = dataService.MapName.GetMaps().FirstOrDefault(i => i.Map == Map && i.Variant == Variant);
+        var mapName = mapService.GetMapIds().FirstOrDefault(i => i.Map == Map && i.Variant == Variant);
         if (mapName == null)
         {
             console.Output.WriteLine("No such map exists :(");
             return default;
         }
 
-        string file = Path.Combine(dataService.MapName.MapFolderPath, mapName.ToInternalFileName());
+        string file = Path.Combine(mapService.MapFolderPath, mapName.ToInternalFileName());
 
         PSLM.Header header;
         PSLM map;

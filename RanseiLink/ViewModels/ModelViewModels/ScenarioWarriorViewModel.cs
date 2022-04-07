@@ -1,52 +1,23 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ScenarioWarriorViewModel ScenarioWarriorViewModelFactory(ScenarioId scenarioId, IEditorContext context, IScenarioWarrior model);
-
-public abstract class ScenarioWarriorViewModelBase : ViewModelBase
+public interface IScenarioWarriorViewModel
 {
-    protected readonly IScenarioWarrior _model;
-    
-    public ScenarioWarriorViewModelBase(IScenarioWarrior model)
-    {
-        _model = model;
-    }
-
-    public WarriorId Warrior
-    {
-        get => _model.Warrior;
-        set => RaiseAndSetIfChanged(_model.Warrior, value, v => _model.Warrior = v);
-    }
-
-    public WarriorClassId Class
-    {
-        get => _model.Class;
-        set => RaiseAndSetIfChanged(_model.Class, value, v => _model.Class = v);
-    }
-
-    public KingdomId Kingdom
-    {
-        get => _model.Kingdom;
-        set => RaiseAndSetIfChanged(_model.Kingdom, value, v => _model.Kingdom = v);
-    }
-
-    public uint Army
-    {
-        get => _model.Army;
-        set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);
-    }
+    void SetModel(ScenarioId scenario, int id, ScenarioWarrior model);
 }
 
 public class ScenarioWarriorPokemonViewModel : ViewModelBase
 {
-    private readonly IScenarioWarrior _model;
+    private readonly ScenarioWarrior _model;
     private readonly ScenarioWarriorViewModel _parent;
-    public ScenarioWarriorPokemonViewModel(int id, IScenarioWarrior model, ScenarioWarriorViewModel parent)
+    public ScenarioWarriorPokemonViewModel(int id, ScenarioWarrior model, ScenarioWarriorViewModel parent)
     {
         Id = id;
         _parent = parent;
@@ -68,7 +39,6 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
                 value = CoerceValue(value);
                 if (_parent.SelectedPokemon == this)
                 {
-                    _parent.Save();
                     _model.SetScenarioPokemon(Id, (ushort)value);
                     _parent.UpdateEmbedded(Id);
                 }
@@ -100,24 +70,38 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
     public ICommand SetToDefaultCommand { get; }
 }
 
-public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
+public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
 {
-    private readonly IEditorContext _context;
-    private readonly IModServiceContainer _dataService;
-    private IScenarioPokemon _currentScenarioPokemon;
-    private readonly ScenarioId _scenario;
-    private readonly ScenarioPokemonViewModelFactory _scenarioPokemonVmFactory;
-    private ScenarioPokemonViewModel _scenarioPokemonVm;
+    private ScenarioWarrior _model;
+    private ScenarioPokemon _currentScenarioPokemon;
+    private ScenarioId _scenario;
+    private readonly IScenarioPokemonViewModel _scenarioPokemonVm;
+    private readonly IScenarioPokemonService _scenarioPokemonService;
     private ScenarioWarriorPokemonViewModel _selectedPokemon;
 
-    public ScenarioWarriorViewModel(IServiceContainer container, IEditorContext context, ScenarioId scenario, IScenarioWarrior model)
-        : base(model)
+    public ScenarioWarriorViewModel(IJumpService jumpService, IScenarioPokemonViewModel newScenarioPokemonViewModel, IScenarioPokemonService scenarioPokemonService, IIdToNameService idToNameService)
+    {
+        _scenarioPokemonService = scenarioPokemonService;
+        _scenarioPokemonVm = newScenarioPokemonViewModel;
+
+        WarriorItems = idToNameService.GetComboBoxItemsExceptDefault<IBaseWarriorService>();
+        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+
+        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
+        JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
+        JumpToScenarioPokemon = new RelayCommand(() =>
+        {
+            if (ScenarioPokemonVm != null)
+            {
+                jumpService.JumpToScenarioPokemon(_scenario, SelectedPokemon.ScenarioPokemonId);
+            }
+        });
+    }
+
+    public void SetModel(ScenarioId scenario, int id, ScenarioWarrior model)
     {
         _scenario = scenario;
-        _context = context;
-        _dataService = context.DataService;
-        _scenarioPokemonVmFactory = container.Resolve<ScenarioPokemonViewModelFactory>();
-
+        _model = model;
         for (int i = 0; i < 8; i++)
         {
             var swp = new ScenarioWarriorPokemonViewModel(i, _model, this);
@@ -127,21 +111,39 @@ public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
         SelectedPokemon = Pokemon[0];
         UpdateEmbedded(0);
 
-        var jumpService = context.JumpService;
-        JumpToBaseWarriorCommand = new RelayCommand<WarriorId>(jumpService.JumpToBaseWarrior);
-        JumpToMaxLinkCommand = new RelayCommand<WarriorId>(jumpService.JumpToMaxLink);
-        JumpToScenarioPokemon = new RelayCommand(() =>
-        {
-            if (ScenarioPokemonVm != null)
-            {
-                jumpService.JumpToScenarioPokemon(scenario, SelectedPokemon.ScenarioPokemonId);
-            }
-        });
+        RaiseAllPropertiesChanged();
     }
 
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToMaxLinkCommand { get; }
     public ICommand JumpToScenarioPokemon { get; }
+
+    public List<SelectorComboBoxItem> WarriorItems { get; }
+    public List<SelectorComboBoxItem> KingdomItems { get; }
+
+    public int Warrior
+    {
+        get => (int)_model.Warrior;
+        set => RaiseAndSetIfChanged(_model.Warrior, (WarriorId)value, v => _model.Warrior = v);
+    }
+
+    public WarriorClassId Class
+    {
+        get => _model.Class;
+        set => RaiseAndSetIfChanged(_model.Class, value, v => _model.Class = v);
+    }
+
+    public int Kingdom
+    {
+        get => (int)_model.Kingdom;
+        set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
+    }
+
+    public uint Army
+    {
+        get => _model.Army;
+        set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);
+    }
 
     public ScenarioWarriorPokemonViewModel[] Pokemon { get; } = new ScenarioWarriorPokemonViewModel[8];
 
@@ -152,7 +154,6 @@ public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
         {
             if (_selectedPokemon != value)
             {
-                Save();
                 _selectedPokemon = value;
                 RaisePropertyChanged();
                 UpdateEmbedded(value.Id);
@@ -164,63 +165,15 @@ public class ScenarioWarriorViewModel : ScenarioWarriorViewModelBase, ISaveable
     {
         if (_model.ScenarioPokemonIsDefault(warriorPokemonId))
         {
-            ScenarioPokemonVm = null;
+            ScenarioPokemonVm.SetModel(_scenario, 0, new ScenarioPokemon());
         }
         else
         {
             var spid = _model.GetScenarioPokemon(warriorPokemonId);
-            _currentScenarioPokemon = _dataService.ScenarioPokemon.Retrieve(_scenario, spid);
-            ScenarioPokemonVm = _scenarioPokemonVmFactory(_currentScenarioPokemon, _context, _scenario, spid);
+            _currentScenarioPokemon = _scenarioPokemonService.Retrieve((int)_scenario).Retrieve(spid);
+            ScenarioPokemonVm.SetModel(_scenario, spid, _currentScenarioPokemon);
         }
     }
 
-    public ScenarioPokemonViewModel ScenarioPokemonVm
-    {
-        get => _scenarioPokemonVm;
-        set => RaiseAndSetIfChanged(ref _scenarioPokemonVm, value);
-    }
-
-    public void Save()
-    {
-        if (_scenarioPokemonVm != null)
-        {
-            _dataService.ScenarioPokemon.Save(_scenario, (int)SelectedPokemon.ScenarioPokemonId, _currentScenarioPokemon);
-        }
-    }
-}
-
-public class ScenarioWarriorGridItemViewModel : ScenarioWarriorViewModelBase
-{
-    public ScenarioWarriorGridItemViewModel(int id, IScenarioWarrior model)
-        : base(model)
-    {
-        Id = id;
-    }
-
-    public int Id { get; }
-
-    public new WarriorId Warrior
-    {
-        get => _model.Warrior;
-        set => RaiseAndSetIfChanged(_model.Warrior, value, v => _model.Warrior = v);
-    }
-
-    private int _scenarioPokemonId;
-    public int ScenarioPokemonId 
-    {
-        get => _scenarioPokemonId;
-        set
-        {
-            if (value >= -1  && value < 200)
-            {
-                _scenarioPokemonId = value;
-                RaisePropertyChanged();
-            }
-        }
-    }
-
-    public PokemonId Pokemon { get; set; }
-
-    public AbilityId PokemonAbility { get; set; }
-
+    public IScenarioPokemonViewModel ScenarioPokemonVm => _scenarioPokemonVm;
 }

@@ -1,27 +1,26 @@
-﻿using RanseiLink.Core.Archive;
-using RanseiLink.Core.Graphics;
-using RanseiLink.Core.RomFs;
+﻿using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using RanseiLink.Core.Services.DefaultPopulaters;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-internal class FallbackSpriteProvider : IFallbackSpriteProvider
+public class FallbackSpriteProvider : IFallbackSpriteProvider
 {
-    private readonly string _graphicsProviderFolder;
     private readonly RomFsFactory _ndsFactory;
+    private readonly IGraphicTypeDefaultPopulater[] _populaters;
+    private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
 
-    public FallbackSpriteProvider(string rootFolder, RomFsFactory ndsFactory)
+    public FallbackSpriteProvider(RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
     {
+        _populaters = populaters;
         _ndsFactory = ndsFactory;
-        _graphicsProviderFolder = Path.Combine(rootFolder, "DataProvider");
         Directory.CreateDirectory(_graphicsProviderFolder);
     }
-
-    #region Populate
 
     public bool IsDefaultsPopulated => Directory.Exists(Path.Combine(_graphicsProviderFolder, Constants.GraphicsFolderPath));
 
@@ -42,55 +41,16 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
         var infos = GraphicsInfoResource.All;
         progress?.Report(new ProgressInfo(StatusText: "Converting Images...", IsIndeterminate: false, MaxProgress: infos.Count));
         int count = 0;
-        foreach (var gfxInfo in infos)
+        Parallel.ForEach(infos, gfxInfo =>
         {
-            switch (gfxInfo)
+            foreach (var populater in _populaters)
             {
-                case StlConstants stlInfo:
-                    UnpackStl(stlInfo);
-                    break;
-                case ScbgConstants scbgInfo:
-                    UnpackScbg(scbgInfo);
-                    break;
-                case PkmdlConstants pkmdlInfo:
-                    UnpackPkmdl(pkmdlInfo);
-                    break;
-                default:
-                    throw new Exception($"Other types of {nameof(IGraphicsInfo)} not supported");
+                populater.ProcessExportedFiles(gfxInfo);
             }
             progress?.Report(new ProgressInfo(Progress: ++count));
-        }
+        });
         progress?.Report(new ProgressInfo(StatusText: "Done!"));
     }
-
-    private void UnpackStl(StlConstants stlInfo)
-    {
-        LINK.Unpack(Path.Combine(_graphicsProviderFolder, stlInfo.Link), Path.Combine(_graphicsProviderFolder, stlInfo.LinkFolder), true, 4);
-        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
-        string data = Path.Combine(_graphicsProviderFolder, stlInfo.TexData ?? stlInfo.Data);
-        string info = Path.Combine(_graphicsProviderFolder, stlInfo.TexInfo ?? stlInfo.Info);
-        bool tiled = stlInfo.TexData == null;
-        string pngDir = Path.Combine(_graphicsProviderFolder, stlInfo.PngFolder);
-        STLCollection.Load(data, info).SaveAsPngs(pngDir, ncer, tiled);
-    }
-
-    private void UnpackScbg(ScbgConstants scbgInfo)
-    {
-        string data = Path.Combine(_graphicsProviderFolder, scbgInfo.Data);
-        string info = Path.Combine(_graphicsProviderFolder, scbgInfo.Info);
-        bool tiled = true;
-        string pngDir = Path.Combine(_graphicsProviderFolder, scbgInfo.PngFolder);
-        SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
-    }
-
-    private void UnpackPkmdl(PkmdlConstants pkmdlInfo)
-    {
-        PokemonModelManager.UnpackModels(pkmdlInfo, _graphicsProviderFolder);
-    }
-
-    #endregion
-
-    #region Provide
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
@@ -108,6 +68,4 @@ internal class FallbackSpriteProvider : IFallbackSpriteProvider
     {
         return new SpriteFile(type, id, Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
     }
-
-    #endregion
 }

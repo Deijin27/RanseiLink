@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMoveRangeService : IModelDataService<MoveRangeId, IMoveRange>
-{
-    IDisposableMoveRangeService Disposable();
-}
-
-public interface IDisposableMoveRangeService : IDisposableModelDataService<MoveRangeId, IMoveRange>
+public interface IMoveRangeService : IModelService<MoveRange>
 {
 }
 
-public class MoveRangeService : BaseModelService, IMoveRangeService
+public class MoveRangeService : BaseModelService<MoveRange>, IMoveRangeService
 {
-    public MoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
+    public MoveRangeService(string MoveRangeDatFile) : base(MoveRangeDatFile, 0, 29) { }
 
-    public IDisposableMoveRangeService Disposable()
+    public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableMoveRangeService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
+        }
     }
 
-    public IMoveRange Retrieve(MoveRangeId id)
+    public override void Save()
     {
-        return new MoveRange(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(MoveRangeId id, IMoveRange model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableMoveRangeService : BaseDisposableModelService, IDisposableMoveRangeService
-{
-    public DisposableMoveRangeService(ModInfo mod) : base(mod, Constants.MoveRangeRomPath, MoveRange.DataLength, 29) { }
-
-    public IMoveRange Retrieve(MoveRangeId id)
-    {
-        return new MoveRange(RetrieveData((int)id));
-    }
-
-    public void Save(MoveRangeId id, IMoveRange model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((MoveRangeId)id).ToString();
     }
 }

@@ -3,14 +3,19 @@ using CliFx.Infrastructure;
 using RanseiLink.Console.Services;
 using RanseiLink.Core.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("msg", Description = "Get MSG.DAT text.")]
-public class MsgCommand : BaseCommand
+public class MsgCommand : ICommand
 {
-    public MsgCommand(IServiceContainer container) : base(container) { }
-    public MsgCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public MsgCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Block ID.", Name = "block")]
     public int BlockId { get; set; }
@@ -18,14 +23,16 @@ public class MsgCommand : BaseCommand
     [CommandParameter(1, Description = "Entry ID.", Name = "entry")]
     public int EntryId { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
-        var block = dataService.Msg.Retrieve(BlockId);
+
+        var service = services.Get<IMsgBlockService>();
+        var block = service.Retrieve(BlockId);
         console.Render(block[EntryId]);
         
 

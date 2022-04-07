@@ -48,11 +48,11 @@
 
         <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Pokemon" Grid.Row="0" ToolTip="Jump to selected pokemon" 
                     Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding Pokemon}"/>
-        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.PokemonItems}" SelectedItem="{Binding Pokemon, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding Pokemon, Mode=TwoWay}"  Style="{StaticResource SelectorComboBoxStyle}"/>
 
         <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ability" Grid.Row="1" ToolTip="Jump to selected ability" 
                     Command="{Binding JumpToAbilityCommand}" CommandParameter="{Binding Ability}"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityItems}" SelectedItem="{Binding Ability, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AbilityItems}" SelectedValue="{Binding Ability, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
         <TextBlock Text="HP IV" Grid.Row="2" />
         <DockPanel Grid.Row="2" Grid.Column="1">

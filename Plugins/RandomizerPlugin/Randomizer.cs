@@ -1,7 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
 using System;
 using System.Collections.Generic;
@@ -11,32 +12,28 @@ namespace RandomizerPlugin;
 
 internal class Randomizer
 {
-    private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-    private AbilityId[] abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
-    private TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
-    private TypeId[] typeIdsExceptNoType = EnumUtil.GetValues<TypeId>().Where(i => i != TypeId.NoType).ToArray();
-    private MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
-    private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
-    private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
-    private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
-    private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
+    private readonly PokemonId[] _pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
+    private AbilityId[] _abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
+    private readonly TypeId[] _typeIds = EnumUtil.GetValues<TypeId>().ToArray();
+    private readonly TypeId[] _typeIdsExceptNoType = EnumUtil.GetValues<TypeId>().Where(i => i != TypeId.NoType).ToArray();
+    private MoveId[] _moveIds = EnumUtil.GetValues<MoveId>().ToArray();
+    private readonly WarriorId[] _warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
+    private readonly MoveAnimationId[] _moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
 
-    private Dictionary<PokemonId, IPokemon> _allPokemon;
-    private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
-    private Dictionary<ScenarioId, Dictionary<int, IScenarioWarrior>> _allScenarioWarriors;
-    private Dictionary<MoveId, IMove> _allMoves;
-    private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
-
-    private IModServiceContainer _dataService;
+    private IScenarioPokemonService _scenarioPokemonService;
+    private IScenarioWarriorService _scenarioWarriorService;
+    private IPokemonService _pokemonService;
+    private IMoveService _moveService;
+    private IMoveRangeService _moveRangeService;
 
     private RandomizationOptionForm options;
 
     private Random random;
 
-    private IScenarioPokemon PlayersScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][0].ScenarioPokemon];
-    private IScenarioPokemon OichisScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][2].ScenarioPokemon];
-    private IScenarioPokemon KorokusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][58].ScenarioPokemon];
-    private IScenarioPokemon NagayasusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][(int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][66].ScenarioPokemon];
+    private ScenarioPokemon PlayersScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(_scenarioWarriorService.Retrieve(0).Retrieve(0).GetScenarioPokemon(0));
+    private ScenarioPokemon OichisScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(_scenarioWarriorService.Retrieve(0).Retrieve(2).GetScenarioPokemon(0));
+    private ScenarioPokemon KorokusScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(_scenarioWarriorService.Retrieve(0).Retrieve(58).GetScenarioPokemon(0));
+    private ScenarioPokemon NagayasusScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(_scenarioWarriorService.Retrieve(0).Retrieve(66).GetScenarioPokemon(0));
 
     private readonly HashSet<MoveEffectId> invalidEffects = new()
     {
@@ -47,20 +44,19 @@ internal class Randomizer
 
     public void Run(IPluginContext context)
     {
-        var optionService = context.ServiceContainer.Resolve<IPluginService>();
+        var optionService = context.Services.Get<IPluginService>();
         options = new RandomizationOptionForm();
         if (!optionService.RequestOptions(options))
         {
             return;
         }
 
-        var dialogService = context.ServiceContainer.Resolve<IDialogService>();
-        _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
+        var dialogService = context.Services.Get<IDialogService>();
 
         dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Initializing Randomizer..."));
-            Init();
+            Init(context.Services);
             progress.Report(new ProgressInfo(Progress:15, StatusText:"Randomizing..."));
 
             Randomize();
@@ -78,7 +74,7 @@ internal class Randomizer
             if (options.AllMaxLinkValue > 0)
             {
                 progress.Report(new ProgressInfo(Progress: 70, StatusText: "Handling max link values..."));
-                HandleMaxLink();
+                HandleMaxLink(context.Services.Get<IMaxLinkService>());
             }
 
             progress.Report(new ProgressInfo(Progress: 85, StatusText: "Saving randomized data..."));
@@ -93,70 +89,23 @@ internal class Randomizer
     /// <summary>
     /// Load all the required stuff into memory
     /// </summary>
-    private void Init()
+    private void Init(IServiceGetter services)
     {
-        _allPokemon = new();
-        using (var pokemonService = _dataService.Pokemon.Disposable())
-        {
-            foreach (PokemonId pokemonId in pokemonIds)
-            {
-                _allPokemon[pokemonId] = pokemonService.Retrieve(pokemonId);
-            }
-        }
+        _moveService = services.Get<IMoveService>();
+        _moveRangeService = services.Get<IMoveRangeService>();
+        _pokemonService = services.Get<IPokemonService>();
+        _scenarioPokemonService = services.Get<IScenarioPokemonService>();
+        _scenarioWarriorService = services.Get<IScenarioWarriorService>();
 
-        _allMoves = new();
-        using (var moveService = _dataService.Move.Disposable())
-        {
-            foreach (MoveId moveId in moveIds)
-            {
-                _allMoves[moveId] = moveService.Retrieve(moveId);
-            }
-        }
-
-        _allMoveRanges = new();
-        using (var moveRangeService = _dataService.MoveRange.Disposable())
-        {
-            foreach (MoveRangeId moveRangeId in moveRangeIds)
-            {
-                _allMoveRanges[moveRangeId] = moveRangeService.Retrieve(moveRangeId);
-            }
-        }
-
-        _allScenarioPokemon = new();
-        using (var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable())
-        {
-            foreach (ScenarioId scenarioId in scenarioIds)
-            {
-                Dictionary<int, IScenarioPokemon> dict = new();
-                for (int j = 0; j < Constants.ScenarioPokemonCount; j++)
-                {
-                    dict[j] = scenarioPokemonService.Retrieve(scenarioId, j);
-                }
-                _allScenarioPokemon[scenarioId] = dict;
-            }
-        }
-
-        _allScenarioWarriors = new();
-        using (var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable())
-        {
-            foreach (ScenarioId scenarioId in scenarioIds)
-            {
-                Dictionary<int, IScenarioWarrior> dict = new();
-                for (int j = 0; j < Constants.ScenarioWarriorCount; j++)
-                {
-                    dict[j] = scenarioWarriorService.Retrieve(scenarioId, j);
-                }
-                _allScenarioWarriors[scenarioId] = dict;
-            }
-        }
+        _moveRangeService = services.Get<IMoveRangeService>();
 
         if (options.AvoidDummyAbilities)
         {
-            abilityIds = abilityIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
+            _abilityIds = _abilityIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
         if (options.AvoidDummyMoves)
         {
-            moveIds = moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
+            _moveIds = _moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
         random = new Random(options.Seed.GetHashCode());
@@ -167,36 +116,10 @@ internal class Randomizer
     /// </summary>
     private void Save()
     {
-        using var pokemonService = _dataService.Pokemon.Disposable();
-        using var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable();
-        using var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable();
-        using var moveService = _dataService.Move.Disposable();
-
-        foreach (var (id, pokemon) in _allPokemon)
-        {
-            pokemonService.Save(id, pokemon);
-        }
-
-        foreach (var (scenarioId, dict) in _allScenarioPokemon)
-        {
-            foreach (var (scenarioPokemonId, scenarioPokemon) in dict)
-            {
-                scenarioPokemonService.Save(scenarioId, scenarioPokemonId, scenarioPokemon);
-            }
-        }
-
-        foreach (var (scenarioId, dict) in _allScenarioWarriors)
-        {
-            foreach (var (scenarioWarriorId, scenarioWarrior) in dict)
-            {
-                scenarioWarriorService.Save(scenarioId, scenarioWarriorId, scenarioWarrior);
-            }
-        }
-
-        foreach (var (id, move) in _allMoves)
-        {
-            moveService.Save(id, move);
-        }
+        _pokemonService.Save();
+        _moveService.Save();
+        _scenarioPokemonService.Save();
+        _scenarioWarriorService.Save();
     }
 
     /// <summary>
@@ -206,35 +129,35 @@ internal class Randomizer
     {
         if (options.Abilities || options.Types || options.Moves)
         {
-            foreach (IPokemon poke in _allPokemon.Values)
+            foreach (Pokemon poke in _pokemonService.Enumerate())
             {
                 if (options.Abilities)
                 {
-                    poke.Ability1 = random.Choice(abilityIds);
-                    poke.Ability2 = random.Choice(abilityIds);
-                    poke.Ability3 = random.Choice(abilityIds);
+                    poke.Ability1 = random.Choice(_abilityIds);
+                    poke.Ability2 = random.Choice(_abilityIds);
+                    poke.Ability3 = random.Choice(_abilityIds);
                 }
                 if (options.Types)
                 {
-                    poke.Type1 = random.Choice(typeIdsExceptNoType);
+                    poke.Type1 = random.Choice(_typeIdsExceptNoType);
                     poke.Type2 = options.PreventSameType
-                        ? random.Choice(typeIds.Where(i => i != poke.Type1).ToArray())
-                        : random.Choice(typeIds);
+                        ? random.Choice(_typeIds.Where(i => i != poke.Type1).ToArray())
+                        : random.Choice(_typeIds);
 
                 }
                 if (options.Moves)
                 {
-                    poke.Move = random.Choice(moveIds);
+                    poke.Move = random.Choice(_moveIds);
                 }
             }
         }
 
         if (options.ScenarioPokemon)
         {
-            foreach (IScenarioPokemon sp in _allScenarioPokemon.Values.SelectMany(i => i.Values))
+            foreach (ScenarioPokemon sp in _scenarioPokemonService.Enumerate().SelectMany(i => i.Enumerate()))
             {
-                sp.Pokemon = random.Choice(pokemonIds);
-                var pk = _allPokemon[sp.Pokemon];
+                sp.Pokemon = random.Choice(_pokemonIds);
+                var pk = _pokemonService.Retrieve((int)sp.Pokemon);
                 var abilities = new[] { pk.Ability1, pk.Ability2, pk.Ability3 }.Where(i => i != AbilityId.NoAbility).ToArray();
                 sp.Ability = abilities.Any() ? random.Choice(abilities) : AbilityId.NoAbility;
             }
@@ -248,19 +171,19 @@ internal class Randomizer
     {
         if (options.Warriors)
         {
-            foreach (IScenarioWarrior sw in _allScenarioWarriors.Values.SelectMany(i => i.Values))
+            foreach (ScenarioWarrior sw in _scenarioWarriorService.Enumerate().SelectMany(i => i.Enumerate()))
             {
-                sw.Warrior = random.Choice(warriorIds);
+                sw.Warrior = random.Choice(_warriorIds);
             }
         }
 
         if (options.MoveAnimations)
         {
-            foreach (var move in _allMoves.Values)
+            foreach (var move in _moveService.Enumerate())
             {
-                move.StartupAnimation = random.Choice(moveAnimationIds);
-                move.ProjectileAnimation = random.Choice(moveAnimationIds);
-                move.ImpactAnimation = random.Choice(moveAnimationIds);
+                move.StartupAnimation = random.Choice(_moveAnimationIds);
+                move.ProjectileAnimation = random.Choice(_moveAnimationIds);
+                move.ImpactAnimation = random.Choice(_moveAnimationIds);
             }
         }
     }
@@ -281,22 +204,22 @@ internal class Randomizer
 
     private bool ValidateTutorial()
     {
-        if (_allPokemon[PlayersScenarioPokemon.Pokemon].MovementRange < 3)
+        if (_pokemonService.Retrieve((int)PlayersScenarioPokemon.Pokemon).MovementRange < 3)
         {
             return false;
         }
 
-        if (_allPokemon[OichisScenarioPokemon.Pokemon].MovementRange < 2)
+        if (_pokemonService.Retrieve((int)OichisScenarioPokemon.Pokemon).MovementRange < 2)
         {
             return false;
         }
 
-        if (_allPokemon[KorokusScenarioPokemon.Pokemon].MovementRange < 2)
+        if (_pokemonService.Retrieve((int)KorokusScenarioPokemon.Pokemon).MovementRange < 2)
         {
             return false;
         }
 
-        if (_allPokemon[NagayasusScenarioPokemon.Pokemon].MovementRange < 2)
+        if (_pokemonService.Retrieve((int)NagayasusScenarioPokemon.Pokemon).MovementRange < 2)
         {
             return false;
         }
@@ -314,11 +237,11 @@ internal class Randomizer
         return true;
     }
 
-    private bool ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
+    private bool ValidateTutorialMatchup(ScenarioPokemon attackingScenarioPokemon, ScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
     {
-        var attackingPokemon = _allPokemon[attackingScenarioPokemon.Pokemon];
-        var targetPokemon = _allPokemon[targetScenarioPokemon.Pokemon];
-        var move = _allMoves[attackingPokemon.Move];
+        var attackingPokemon = _pokemonService.Retrieve((int)attackingScenarioPokemon.Pokemon);
+        var targetPokemon = _pokemonService.Retrieve((int)targetScenarioPokemon.Pokemon);
+        var move = _moveService.Retrieve((int)attackingPokemon.Move);
 
         // Moves always hit during the tutorial, so this doesn't matter
         //if (move.Accuracy != 100)
@@ -333,11 +256,11 @@ internal class Randomizer
         {
             return false;
         }
-        if (!_allMoveRanges[move.Range].GetInRange(1))
+        if (!_moveRangeService.Retrieve((int)move.Range).GetInRange(1))
         {
             return false;
         }
-        if (oichisPokemon && _allMoveRanges[move.Range].GetInRange(24))
+        if (oichisPokemon && _moveRangeService.Retrieve((int)move.Range).GetInRange(24))
         {
             return false;
         }
@@ -383,21 +306,19 @@ internal class Randomizer
 
     private readonly AbilityId[] MoldBreakerAbilitys = new[] { AbilityId.MoldBreaker, AbilityId.Teravolt, AbilityId.Turboblaze };
 
-    private void HandleMaxLink()
+    private void HandleMaxLink(IMaxLinkService maxLinkService)
     {
-        using var maxLinkService = _dataService.MaxLink.Disposable();
-
-        foreach (WarriorId wid in warriorIds)
+        foreach (var maxLinkTable in maxLinkService.Enumerate())
         {
-            var maxLinkTable = maxLinkService.Retrieve(wid);
-            foreach (PokemonId pid in pokemonIds)
+            foreach (PokemonId pid in _pokemonIds)
             {
                 if (maxLinkTable.GetMaxLink(pid) < options.AllMaxLinkValue)
                 {
                     maxLinkTable.SetMaxLink(pid, options.AllMaxLinkValue);
                 }
             }
-            maxLinkService.Save(wid, maxLinkTable);
         }
+
+        maxLinkService.Save();
     }
 }

@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IItemService : IModelDataService<ItemId, IItem>
-{
-    IDisposableItemService Disposable();
-}
-
-public interface IDisposableItemService : IDisposableModelDataService<ItemId, IItem>
+public interface IItemService : IModelService<Item>
 {
 }
 
-public class ItemService : BaseModelService, IItemService
+public class ItemService : BaseModelService<Item>, IItemService
 {
-    public ItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
+    public ItemService(string ItemDatFile) : base(ItemDatFile, 0, 133, 134) { }
 
-    public IDisposableItemService Disposable()
+    public ItemService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.ItemRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableItemService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new Item(br.ReadBytes(Item.DataLength)));
+        }
     }
 
-    public IItem Retrieve(ItemId id)
+    public override void Save()
     {
-        return new Item(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(ItemId id, IItem model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableItemService : BaseDisposableModelService, IDisposableItemService
-{
-    public DisposableItemService(ModInfo mod) : base(mod, Constants.ItemRomPath, Item.DataLength, 133) { }
-
-    public IItem Retrieve(ItemId id)
-    {
-        return new Item(RetrieveData((int)id));
-    }
-
-    public void Save(ItemId id, IItem model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _cache[id].Name;
     }
 }

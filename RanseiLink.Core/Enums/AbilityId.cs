@@ -5,7 +5,7 @@ namespace RanseiLink.Core.Enums;
 [DefaultValues(NoAbility)]
 public enum AbilityId : uint
 {
-    NoAbility = 0b_1000_0000,
+    NoAbility = 128,
 
     Levitate = 0,
     Mountaineer,

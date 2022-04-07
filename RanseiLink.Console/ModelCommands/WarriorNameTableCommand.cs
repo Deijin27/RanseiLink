@@ -1,26 +1,32 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("warriornametable", Description = "Get warrior name table data.")]
-public class WarriorNameTableCommand : BaseCommand
+public class WarriorNameTableCommand : ICommand
 {
-    public WarriorNameTableCommand(IServiceContainer container) : base(container) { }
-    public WarriorNameTableCommand() : base() { }
-
-    public override ValueTask ExecuteAsync(IConsole console)
+    private readonly ICurrentModService _currentModService;
+    public WarriorNameTableCommand(ICurrentModService currentModService)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        _currentModService = currentModService;
+    }
+
+    public ValueTask ExecuteAsync(IConsole console)
+    {
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        var model = dataService.BaseWarrior.RetrieveNameTable();
+        var service = services.Get<IBaseWarriorService>();
+
+        var model = service.NameTable;
 
         console.Render(model);
 

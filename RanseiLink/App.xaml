@@ -34,82 +34,22 @@
 
             <!-- Register Selector View Models -->
             
-            <DataTemplate DataType="{x:Type vm:PokemonSelectorViewModel}">
+            <DataTemplate DataType="{x:Type vm:SelectorViewModel}">
                 <views:SelectorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MoveSelectorViewModel}">
-                <views:SelectorView/>
+            <DataTemplate DataType="{x:Type vm:SelectorViewModelWithoutScroll}">
+                <views:SelectorViewWithoutScroll/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:GimmickSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:AbilitySelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:WarriorSkillSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:MoveRangeSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:GimmickRangeSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
+            <!--<DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
                 <views:ScenarioSelectorView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ScenarioWarriorSelectorViewModel}">
                 <views:ScenarioSelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:MaxLinkSelectorViewModel}">
-                <views:SelectorViewWithoutScroll/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:BaseWarriorSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonSelectorViewModel}">
-                <views:SelectorViewWithoutScroll/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:EventSpeakerSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ScenarioKingdomSelectorViewModel}">
-                <views:SelectorViewWithoutScroll/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ItemSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:BuildingSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:KingdomSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:BattleConfigSelectorViewModel}">
-                <views:SelectorView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:MapSelectorViewModel}">
-                <views:SelectorViewWithoutScroll/>
-            </DataTemplate>
-
+            </DataTemplate>-->
+            
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:MapViewModel}">
@@ -142,10 +82,6 @@
 
             <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
                 <views:MoveRangeView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:EvolutionTableViewModel}">
-                <views:EvolutionTableView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ScenarioPokemonViewModel}">
@@ -187,54 +123,29 @@
             <DataTemplate DataType="{x:Type vm:ItemViewModel}">
                 <views:ItemView/>
             </DataTemplate>
-            
+
             <DataTemplate DataType="{x:Type vm:BuildingViewModel}">
                 <views:BuildingView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:AbilityGridViewModel}">
+            <!--<DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
                 <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:BaseWarriorGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:MoveGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:WarriorSkillGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ScenarioWarriorGridSelectorViewModel}">
-                <views:ScenarioWarriorGridSelectorView/>
-            </DataTemplate>
+            </DataTemplate>-->
 
             <DataTemplate DataType="{x:Type vm:MsgGridViewModel}">
                 <views:MsgGridView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:GimmickGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:BuildingGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:MoveAnimationGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type vm:SpriteTypeViewModel}">
                 <views:SpriteTypeView/>
             </DataTemplate>
+
+            <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="IdAndName"/>
+                <Setter Property="TextSearch.TextPath" Value="Name"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>

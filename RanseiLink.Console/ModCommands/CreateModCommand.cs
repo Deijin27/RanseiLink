@@ -1,18 +1,23 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("create mod", Description = "Create a new mod (and by default set the current mod to it).")]
-public class CreateModCommand : BaseCommand
+public class CreateModCommand : ICommand
 {
-    public CreateModCommand(IServiceContainer container) : base(container) { }
-    public CreateModCommand() : base() { }
+    private readonly IModManager _modManager;
+    private readonly ISettingService _settingService;
+    public CreateModCommand(IModManager modManager, ISettingService settingService)
+    {
+        _modManager = modManager;
+        _settingService = settingService;
+    }
 
     [CommandParameter(0, Description = "Path to unchanged rom file to serve as a base.", Name = "romPath", Converter = typeof(PathConverter))]
     public string RomPath { get; set; }
@@ -29,21 +34,18 @@ public class CreateModCommand : BaseCommand
     [CommandOption("setAsCurrent", 's', Description = "Set the current mod to the created after creation.")]
     public bool SetAsCurrent { get; set; } = true;
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var modService = Container.Resolve<IModManager>();
-        
-        ModInfo modInfo = modService.Create(RomPath, ModName, ModVersion, ModAuthor);
+        ModInfo modInfo = _modManager.Create(RomPath, ModName, ModVersion, ModAuthor);
         if (SetAsCurrent)
         {
-            var mods = modService.GetAllModInfo();
+            var mods = _modManager.GetAllModInfo();
             for (int i = 0; i < mods.Count; i++)
             {
                 if (mods[i].FolderPath == modInfo.FolderPath)
                 {
-                    var settingService = Container.Resolve<ISettingService>();
-                    settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
-                    settingService.Save();
+                    _settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
+                    _settingService.Save();
                     break;
                 }
             }

@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class Gimmick : BaseDataWindow, IGimmick
+public class Gimmick : BaseDataWindow
 {
     public const int DataLength = 0x28;
     public Gimmick(byte[] data) : base(data, DataLength) { }
@@ -90,8 +89,4 @@ public class Gimmick : BaseDataWindow, IGimmick
         set => SetUInt32(8, 5, 19, (uint)value);
     }
 
-    public IGimmick Clone()
-    {
-        return new Gimmick((byte[])Data.Clone());
-    }
 }

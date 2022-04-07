@@ -48,7 +48,11 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Warrior Name Entry" Grid.Row="0" />
-            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
+            <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1">
+                <controls:NumberBox Width="80"  Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
+                <TextBlock Text="{Binding WarriorNameValue}"/>
+            </UniformGrid>
+            
 
             <TextBlock Text="Sprite" Grid.Row="1"/>
             <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
@@ -73,7 +77,7 @@
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Skill" Grid.Row="7" ToolTip="Jump to selected warrior skill" 
                     Command="{Binding JumpToWarriorSkillCommand}" CommandParameter="{Binding Skill}"/>
-            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSkillItems}" SelectedItem="{Binding Skill, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems}" SelectedValue="{Binding Skill, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Power" Grid.Row="8" />
             <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
@@ -116,15 +120,15 @@
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Into" ToolTip="Jump to selected warrior" 
                     Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding RankUp}"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorItems}" SelectedItem="{Binding RankUp, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BaseWarriorItems}" SelectedValue="{Binding RankUp, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 1" Grid.Row="1" ToolTip="Jump to selected pokemon" 
                     Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon1}"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.PokemonItems}" SelectedItem="{Binding RankUpPokemon1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon1, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 2" Grid.Row="2" ToolTip="Jump to selected pokemon" 
                     Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon2}"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.PokemonItems}" SelectedItem="{Binding RankUpPokemon2, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="100"/>

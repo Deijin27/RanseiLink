@@ -8,65 +8,69 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
 public record EditorModuleListItem(string DisplayName, string ModuleId);
 
-public delegate MainEditorViewModel MainEditorViewModelFactory(ModInfo mod);
-
-public class MainEditorViewModel : ViewModelBase, ISaveable
+public class MainEditorViewModel : ViewModelBase
 {
-    private readonly IServiceContainer _container;
-    private readonly IModServiceContainer _dataService;
     private readonly IDialogService _dialogService;
     private readonly IModManager _modService;
-    private readonly IEditorContext _editorContext;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
     private readonly ISettingService _settingService;
+    private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
-    private bool _moduleOrderLoaded = false;
+
     private bool _pluginPopupOpen = false;
     private string _currentModuleId;
-    private ISaveableRefreshable _currentVm;
+    private object _currentVm;
+    private ModInfo _mod;
+    private IServiceGetter _modServiceGetter;
+    private EditorModule _currentModule;
 
-    public MainEditorViewModel(IServiceContainer container, ModInfo mod)
+    public MainEditorViewModel(
+        IDialogService dialogService, 
+        IModManager modManager, 
+        ISettingService settingService, 
+        IFallbackSpriteProvider fallbackSpriteProvider, 
+        IPluginLoader pluginLoader,
+        IModServiceGetterFactory modKernelFactory)
     {
-        _container = container;
-        var dataServiceFactory = container.Resolve<DataServiceFactory>();
-        var editorContextFactory = container.Resolve<EditorContextFactory>();
-        _dialogService = container.Resolve<IDialogService>();
-        _modService = container.Resolve<IModManager>();
-        _settingService = container.Resolve<ISettingService>();
-        _fallbackSpriteProvider = container.Resolve<IFallbackSpriteProvider>();
+        _modKernelFactory = modKernelFactory;
+        _dialogService = dialogService;
+        _modService = modManager;
+        _settingService = settingService;
+        _fallbackSpriteProvider = fallbackSpriteProvider;
         _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
 
-        PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
-
-        Mod = mod;
-        _dataService = dataServiceFactory(Mod);
-        _editorContext = editorContextFactory(_dataService, this);
-
+        PluginItems = pluginLoader.LoadPlugins(out var loadFailures);
+        if (loadFailures.AnyFailures)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Failed to load some plugins", loadFailures.ToString()));
+        }
+        
         CommitRomCommand = new RelayCommand(CommitRom);
 
         RegisterModules();
     }
 
-    public ICommand CommitRomCommand { get; }
+    private ICachedMsgBlockService _cachedMsgBlockService;
+    public void SetMod(ModInfo mod)
+    {
+        Mod = mod;
+        _modServiceGetter = _modKernelFactory.Create(mod);
+        _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
+        _cachedMsgBlockService.RebuildCache();
+        SetCurrentModule(ListItems[0].ModuleId, true);
+        RaiseAllPropertiesChanged();
+    }
 
-
-    public ISaveableRefreshable CurrentVm
+    public object CurrentVm
     {
         get => _currentVm;
-        private set
-        {
-            Save();
-            _currentVm = value;
-            _currentVm?.Refresh();
-            RaisePropertyChanged();
-        }
+        private set => RaiseAndSetIfChanged(ref _currentVm, value);
     }
 
     public string CurrentModuleId
@@ -74,54 +78,66 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         get => _currentModuleId;
         set
         {
-            if (!CanSave())
+            if (RaiseAndSetIfChanged(ref _currentModuleId, value))
             {
-                RaisePropertyChanged();
-                return;
-            }
-            if (value != null && RaiseAndSetIfChanged(ref _currentModuleId, value))
-            {
-                CurrentVm = SelectViewModel(value);
+                SetCurrentModule(value);
             }
         }
     }
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
-    public ModInfo Mod { get; }
+
+    public ModInfo Mod
+    {
+        get => _mod;
+        private set => RaiseAndSetIfChanged(ref _mod, value);
+    }
     public ObservableCollection<EditorModuleListItem> ListItems { get; } = new();
-    private Dictionary<string, IEditorModule> Modules { get; } = new();
-    public Dictionary<string, ISaveableRefreshable> ViewModels { get; } = new();
+    private Dictionary<string, EditorModule> UninitialisedModules { get; } = new();
+    private Dictionary<string, EditorModule> InitialisedModules { get; } = new();
 
-    public PluginInfo SelectedPlugin
+
+    public bool TryGetModule(string moduleId, out EditorModule module)
     {
-        get => null;
-        set
+        if (!InitialisedModules.TryGetValue(moduleId, out module))
         {
-            // prevent weird double trigger
-            if (PluginPopupOpen)
+            if (!UninitialisedModules.TryGetValue(moduleId, out module))
             {
-                PluginPopupOpen = false;
-                RunPlugin(value);
+                return false;
             }
+            module.Initialise(_modServiceGetter);
+            InitialisedModules.Add(moduleId, module);
+            UninitialisedModules.Remove(moduleId);
         }
+        return true;
     }
 
-    public bool PluginPopupOpen
+    private void SetCurrentModule(string moduleId, bool forceUpdate = false)
     {
-        get => _pluginPopupOpen;
-        set => RaiseAndSetIfChanged(ref _pluginPopupOpen, value);
-    }
-
-    private void AddModule(IEditorModule module)
-    {
-        Modules.Add(module.UniqueId, module);
-        ViewModels.Add(module.UniqueId, module.NewViewModel(_container, _editorContext));
-        ListItems.Add(new(module.ListName, module.UniqueId));
-        if (ViewModels.Count == 1)
+        if (_currentModule?.UniqueId == moduleId && !forceUpdate)
         {
-            _currentModuleId = module.UniqueId;
-            CurrentVm = SelectViewModel(_currentModuleId);
+            return;
         }
+        if (!TryGetModule(moduleId, out var module))
+        {
+            return;
+        }
+        _currentModule?.OnPageClosing();
+        _currentModule = module;
+        CurrentVm = _currentModule.ViewModel;
+        _currentModule?.OnPageOpening();
+    }
+
+    #region Module Initialisation
+
+    private void AddModule(EditorModule module)
+    {
+        if (InitialisedModules.ContainsKey(module.UniqueId) || UninitialisedModules.ContainsKey(module.UniqueId))
+        {
+            throw new Exception($"Module with ID '{module.UniqueId}' already added to main editor");
+        }
+        UninitialisedModules.Add(module.UniqueId, module);
+        ListItems.Add(new EditorModuleListItem(module.ListName, module.UniqueId));
     }
 
     private void RegisterModules()
@@ -130,11 +146,11 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 .GetExecutingAssembly()
                 .GetTypes();
 
-        IEnumerable<Type> modules = types.Where(i => typeof(IEditorModule).IsAssignableFrom(i) && !i.IsInterface);
+        IEnumerable<Type> modules = types.Where(i => typeof(EditorModule).IsAssignableFrom(i) && !i.IsAbstract);
 
         foreach (Type t in modules)
         {
-            var module = (IEditorModule)Activator.CreateInstance(t);
+            var module = (EditorModule)Activator.CreateInstance(t);
             AddModule(module);
         }
 
@@ -160,47 +176,30 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         {
             ListItems.Add(item);
         }
-        _moduleOrderLoaded = true;
     }
 
-    private void ReloadViewModels()
+    #endregion
+
+    public void Deactivate()
     {
-        ViewModels.Clear();
-        _editorContext.CachedMsgBlockService.RebuildCache();
-        foreach (var (key, module) in Modules)
+        foreach (var module in InitialisedModules.Values.ToArray())
         {
-            ViewModels[key] = module.NewViewModel(_container, _editorContext);
+            InitialisedModules.Remove(module.UniqueId);
+            module.Deactivate();
+            UninitialisedModules.Add(module.UniqueId, module);
         }
+        CurrentVm = null;
+
+        _editorModuleOrderSetting.Value = ListItems.Select(i => i.ModuleId).ToArray();
+        _settingService.Save();
     }
 
-    private ISaveableRefreshable SelectViewModel(string id)
-    {
-        return ViewModels[id];
-    }
+    #region Rom
 
-    public bool CanSave()
-    {
-        return CurrentVm?.CanSave() != false;
-    }
-
-    public void Save()
-    {
-        if (_moduleOrderLoaded) // make sure default order isn't saved before saved order is loaded
-        {
-            _editorModuleOrderSetting.Value = ListItems.Select(i => i.ModuleId).ToArray();
-            _settingService.Save();
-        }
-        _editorContext.CachedMsgBlockService.SaveChangedBlocks();
-        CurrentVm?.Save();
-    }
+    public ICommand CommitRomCommand { get; }
 
     private void CommitRom()
     {
-        if (!CanSave())
-        {
-            return;
-        }
-
         if (!_dialogService.CommitToRom(Mod, out string romPath, out var patchOpt))
         {
             return;
@@ -216,10 +215,13 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
-            Save();
+            foreach (var module in InitialisedModules.Values)
+            {
+                module.OnPatchingRom();
+            }
             try
             {
-                _modService.Commit(Mod, romPath, patchOpt, progress);
+                _modService.Patch(Mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {
@@ -237,20 +239,35 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
         }
     }
 
+    #endregion
+
+    #region Plugins
+
+    public PluginInfo SelectedPlugin
+    {
+        get => null;
+        set
+        {
+            // prevent weird double trigger
+            if (PluginPopupOpen)
+            {
+                PluginPopupOpen = false;
+                RunPlugin(value);
+            }
+        }
+    }
+
+    public bool PluginPopupOpen
+    {
+        get => _pluginPopupOpen;
+        set => RaiseAndSetIfChanged(ref _pluginPopupOpen, value);
+    }
+
     private void RunPlugin(PluginInfo chosen)
     {
-
-        // first save
-        if (!CanSave())
-        {
-            return;
-        }
-        Save();
-
-        // then run plugin
         try
         {
-            chosen.Plugin.Run(new PluginContext(_container, Mod));
+            chosen.Plugin.Run(new PluginContext(_modServiceGetter));
         }
         catch (Exception e)
         {
@@ -260,8 +277,11 @@ public class MainEditorViewModel : ViewModelBase, ISaveable
                 type: MessageBoxType.Error
                 ));
         }
-        ReloadViewModels();
-        _currentVm = null;
-        CurrentVm = SelectViewModel(_currentModuleId);
+        foreach (var module in InitialisedModules.Values)
+        {
+            module.OnPluginComplete();
+        }
     }
+
+    #endregion
 }

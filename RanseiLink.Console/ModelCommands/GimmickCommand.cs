@@ -1,30 +1,36 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("gimmick", Description = "Get data on a given gimmick object.")]
-public class GimmickCommand : BaseCommand
+public class GimmickCommand : ICommand
 {
-    public GimmickCommand(IServiceContainer container) : base(container) { }
-    public GimmickCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public GimmickCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Gimmick ID.", Name = "id")]
     public GimmickId Id { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        var model = dataService.Gimmick.Retrieve(Id);
+        var service = services.Get<IGimmickService>();
+
+        var model = service.Retrieve((int)Id);
 
         console.Render(model, Id);
 

@@ -1,20 +1,28 @@
-﻿using RanseiLink.Core.Models.Interfaces;
+﻿using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public delegate EventSpeakerViewModel EventSpeakerViewModelFactory(IEventSpeaker model, IEditorContext context);
-
-public class EventSpeakerViewModel : ViewModelBase
+public interface IEventSpeakerViewModel
 {
-    private readonly IEventSpeaker _model;
+    void SetModel(EventSpeaker model);
+}
+
+public class EventSpeakerViewModel : ViewModelBase, IEventSpeakerViewModel
+{
+    private EventSpeaker _model;
     private readonly IOverrideSpriteProvider _spriteProvider;
 
-    public EventSpeakerViewModel(IEventSpeaker model, IServiceContainer container, IEditorContext context)
+    public EventSpeakerViewModel(IOverrideSpriteProvider overrideSpriteProvider)
     {
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
+        _spriteProvider = overrideSpriteProvider;
+        _model = new EventSpeaker();
+    }
+
+    public void SetModel(EventSpeaker model)
+    {
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
     public string Name

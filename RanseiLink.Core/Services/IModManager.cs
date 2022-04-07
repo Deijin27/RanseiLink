@@ -52,7 +52,7 @@ public interface IModManager
     /// Commit current mod to rom
     /// </summary>
     /// <param name="romPath">Path of rom to commit mod to</param>
-    void Commit(ModInfo modInfo, string romPath, PatchOptions patchOptions = 0, IProgress<ProgressInfo> progress = null);
+    void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions = 0, IProgress<ProgressInfo> progress = null);
 
     /// <summary>
     /// Update the mod with folder stored in <paramref name="modInfo"/> to have the info stored in <paramref name="modInfo"/>

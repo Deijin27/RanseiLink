@@ -1,18 +1,15 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
 [Command("stl unpack", Description = "Unpack an STL collection into it's constituent images")]
-public class StlUnpackCommand : BaseCommand
+public class StlUnpackCommand : ICommand
 {
-    public StlUnpackCommand(IServiceContainer container) : base(container) { }
-    public StlUnpackCommand() : base() { }
-
     [CommandParameter(0, Description = "Path of stl data file.", Name = "stlDataFile")]
     public string FilePath { get; set; }
 
@@ -28,7 +25,7 @@ public class StlUnpackCommand : BaseCommand
     [CommandOption("tiled", 't', Description = "Whether the images are tiled")]
     public bool Tiled { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationFolder == null)
         {

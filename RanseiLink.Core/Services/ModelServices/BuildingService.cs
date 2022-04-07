@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IBuildingService : IModelDataService<BuildingId, IBuilding>
-{
-    IDisposableBuildingService Disposable();
-}
-
-public interface IDisposableBuildingService : IDisposableModelDataService<BuildingId, IBuilding>
+public interface IBuildingService : IModelService<Building>
 {
 }
 
-public class BuildingService : BaseModelService, IBuildingService
+public class BuildingService : BaseModelService<Building>, IBuildingService
 {
-    public BuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength, 118) { }
+    public BuildingService(string BuildingDatFile) : base(BuildingDatFile, 0, 118) { }
 
-    public IDisposableBuildingService Disposable()
+    public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableBuildingService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new Building(br.ReadBytes(Building.DataLength)));
+        }
     }
 
-    public IBuilding Retrieve(BuildingId id)
+    public override void Save()
     {
-        return new Building(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(BuildingId id, IBuilding model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableBuildingService : BaseDisposableModelService, IDisposableBuildingService
-{
-    public DisposableBuildingService(ModInfo mod) : base(mod, Constants.BuildingRomPath, Building.DataLength, 118) { }
-
-    public IBuilding Retrieve(BuildingId id)
-    {
-        return new Building(RetrieveData((int)id));
-    }
-
-    public void Save(BuildingId id, IBuilding model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((BuildingId)id).ToString();
     }
 }

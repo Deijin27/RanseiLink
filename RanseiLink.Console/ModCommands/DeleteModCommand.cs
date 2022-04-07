@@ -3,26 +3,30 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
 
 namespace RanseiLink.Console.ModCommands;
 
 [Command("delete mod", Description = "Delete current mod.")]
-public class DeleteModCommand : BaseCommand
+public class DeleteModCommand : ICommand
 {
-    public DeleteModCommand(IServiceContainer container) : base(container) { }
-    public DeleteModCommand() : base() { }
-
-    public override ValueTask ExecuteAsync(IConsole console)
+    private readonly ICurrentModService _currentModService;
+    private readonly IModManager _modManager;
+    public DeleteModCommand(ICurrentModService currentModService, IModManager modManager)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        var modService = Container.Resolve<IModManager>();
+        _currentModService = currentModService;
+        _modManager = modManager;
+    }
 
-        if (!currentModService.TryGetCurrentMod(console, out ModInfo currentMod))
+    public ValueTask ExecuteAsync(IConsole console)
+    {
+        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        modService.Delete(currentMod);
+        _modManager.Delete(currentMod);
         console.Output.WriteLine("Current mod deleted. Info of deleted mod:");
         console.Render(currentMod);
         return default;

@@ -50,7 +50,7 @@
         <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="18"/>
 
         <TextBlock Text="Kingdom" Grid.Row="1" />
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.KingdomItems}" SelectedItem="{Binding Kingdom, Mode=TwoWay}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding Kingdom, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
         <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>

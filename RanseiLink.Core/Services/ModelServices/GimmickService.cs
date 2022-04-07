@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IGimmickService : IModelDataService<GimmickId, IGimmick>
-{
-    IDisposableGimmickService Disposable();
-}
-
-public interface IDisposableGimmickService : IDisposableModelDataService<GimmickId, IGimmick>
+public interface IGimmickService : IModelService<Gimmick>
 {
 }
 
-public class GimmickService : BaseModelService, IGimmickService
+public class GimmickService : BaseModelService<Gimmick>, IGimmickService
 {
-    public GimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
+    public GimmickService(string GimmickDatFile) : base(GimmickDatFile, 0, 99) { }
 
-    public IDisposableGimmickService Disposable()
+    public GimmickService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableGimmickService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new Gimmick(br.ReadBytes(Gimmick.DataLength)));
+        }
     }
 
-    public IGimmick Retrieve(GimmickId id)
+    public override void Save()
     {
-        return new Gimmick(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(GimmickId id, IGimmick model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableGimmickService : BaseDisposableModelService, IDisposableGimmickService
-{
-    public DisposableGimmickService(ModInfo mod) : base(mod, Constants.GimmickRomPath, Gimmick.DataLength, 147) { }
-
-    public IGimmick Retrieve(GimmickId id)
-    {
-        return new Gimmick(RetrieveData((int)id));
-    }
-
-    public void Save(GimmickId id, IGimmick model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((GimmickId)id).ToString();
     }
 }

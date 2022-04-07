@@ -1,68 +1,82 @@
 ﻿using RanseiLink.Core.Services.ModelServices;
+using System;
 
 namespace RanseiLink.Core.Services.Concrete;
 
 public class ModServiceContainer : IModServiceContainer
 {
-    public ModServiceContainer(ModInfo mod, IServiceContainer container)
-    {
-        var msgService = container.Resolve<IMsgService>();
+    private readonly Lazy<IPokemonService> _pokemon;
+    private readonly Lazy<IMoveService> _move;
+    private readonly Lazy<IAbilityService> _ability;
+    private readonly Lazy<IWarriorSkillService> _warriorSkill;
+    private readonly Lazy<IGimmickService> _gimmick;
+    private readonly Lazy<IBuildingService> _building;
+    private readonly Lazy<IItemService> _item;
+    private readonly Lazy<IKingdomService> _kingdom;
+    private readonly Lazy<IMoveRangeService> _moveRange;
+    private readonly Lazy<IGimmickRangeService> _gimmickRange;
+    private readonly Lazy<IEventSpeakerService> _eventSpeaker;
+    private readonly Lazy<IScenarioPokemonService> _scenarioPokemon;
+    private readonly Lazy<IScenarioWarriorService> _scenarioWarrior;
+    private readonly Lazy<IMaxLinkService> _maxLink;
+    private readonly Lazy<IBaseWarriorService> _baseWarrior;
+    private readonly Lazy<IScenarioAppearPokemonService> _scenarioAppearPokemon;
+    private readonly Lazy<IScenarioKingdomService> _scenarioKingdom;
+    private readonly Lazy<IMsgBlockService> _msg;
+    private readonly Lazy<IBattleConfigService> _battleConfig;
+    private readonly Lazy<IMoveAnimationService> _moveAnimation;
+    private readonly Lazy<IGimmickObjectService> _gimmickObject;
+    private readonly Lazy<IMapService> _map;
+    private readonly Lazy<IOverrideSpriteProvider> _overrideSpriteProvider;
 
-        Pokemon = new PokemonService(mod);
-        Move = new MoveService(mod);
-        Ability = new AbilityService(mod);
-        WarriorSkill = new WarriorSkillService(mod);
-        Gimmick = new GimmickService(mod);
-        Building = new BuildingService(mod);
-        Item = new ItemService(mod);
-        Kingdom = new KingdomService(mod);
-        MoveRange = new MoveRangeService(mod);
-        EventSpeaker = new EventSpeakerService(mod);
-        ScenarioPokemon = new ScenarioPokemonService(mod);
-        ScenarioWarrior = new ScenarioWarriorService(mod);
-        MaxLink = new MaxLinkService(mod);
-        BaseWarrior = new BaseWarriorService(mod);
-        ScenarioAppearPokemon = new ScenarioAppearPokemonService(mod);
-        ScenarioKingdom = new ScenarioKingdomService(mod);
-        Msg = new MsgBlockService(mod, msgService);
-        BattleConfig = new BattleConfigService(mod);
-        MapName = new MapIdService(mod);
-        GimmickRange = new GimmickRangeService(mod);
-        MoveAnimation = new MoveAnimationService(mod);
-        GimmickObject = new GimmickObjectService(mod);
-        Map = new MapService(MapName);
-        OverrideSpriteProvider = new OverrideSpriteProvider(container.Resolve<IFallbackSpriteProvider>(), mod);
+    public ModServiceContainer(IServiceGetter modServices)
+    {
+        _pokemon = new(() => modServices.Get<IPokemonService>());
+        _move = new(() => modServices.Get<IMoveService>());
+        _ability = new(() => modServices.Get<IAbilityService>());
+        _warriorSkill = new(() => modServices.Get<IWarriorSkillService>());
+        _gimmick = new(() => modServices.Get<IGimmickService>());
+        _building = new(() => modServices.Get<IBuildingService>());
+        _item = new(() => modServices.Get<IItemService>());
+        _kingdom = new(() => modServices.Get<IKingdomService>());
+        _moveRange = new(() => modServices.Get<IMoveRangeService>());
+        _gimmickRange = new(() => modServices.Get<IGimmickRangeService>());
+        _eventSpeaker = new(() => modServices.Get<IEventSpeakerService>());
+        _scenarioPokemon = new(() => modServices.Get<IScenarioPokemonService>());
+        _scenarioWarrior = new(() => modServices.Get<IScenarioWarriorService>());
+        _maxLink = new(() => modServices.Get<IMaxLinkService>());
+        _baseWarrior = new(() => modServices.Get<IBaseWarriorService>());
+        _scenarioAppearPokemon = new(() => modServices.Get<IScenarioAppearPokemonService>());
+        _scenarioKingdom = new(() => modServices.Get<IScenarioKingdomService>());
+        _msg = new(() => modServices.Get<IMsgBlockService>());
+        _battleConfig = new(() => modServices.Get<IBattleConfigService>());
+        _moveAnimation = new(() => modServices.Get<IMoveAnimationService>());
+        _gimmickObject = new(() => modServices.Get<IGimmickObjectService>());
+        _map = new(() => modServices.Get<IMapService>());
+        _overrideSpriteProvider = new(() => modServices.Get<IOverrideSpriteProvider>());
     }
 
-    public IPokemonService Pokemon { get; }
-    public IMoveService Move { get; }
-    public IAbilityService Ability { get; }
-    public IWarriorSkillService WarriorSkill { get; }
-    public IGimmickService Gimmick { get; }
-    public IBuildingService Building { get; }
-    public IItemService Item { get; }
-    public IKingdomService Kingdom { get; }
-    public IMoveRangeService MoveRange { get; }
-    public IGimmickRangeService GimmickRange { get; }
-    public IEventSpeakerService EventSpeaker { get; }
-    public IScenarioPokemonService ScenarioPokemon { get; }
-    public IScenarioWarriorService ScenarioWarrior { get; }
-    public IMaxLinkService MaxLink { get; }
-    public IBaseWarriorService BaseWarrior { get; }
-    public IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
-    public IScenarioKingdomService ScenarioKingdom { get; }
-    public IMsgBlockService Msg { get; }
-    public IBattleConfigService BattleConfig { get; }
-    public IMoveAnimationService MoveAnimation { get; }
-    public IGimmickObjectService GimmickObject { get; }
-    public IMapService Map { get; }
-    public IOverrideSpriteProvider OverrideSpriteProvider { get; }
-
-
-    /// <summary>
-    /// This is pretty different to the other things. it's here purely for convenience.
-    /// </summary>
-    public IMapIdService MapName { get; }
-
-    
+    public IPokemonService Pokemon => _pokemon.Value;
+    public IMoveService Move => _move.Value;
+    public IAbilityService Ability => _ability.Value;
+    public IWarriorSkillService WarriorSkill => _warriorSkill.Value;
+    public IGimmickService Gimmick => _gimmick.Value;
+    public IBuildingService Building => _building.Value;
+    public IItemService Item => _item.Value;
+    public IKingdomService Kingdom => _kingdom.Value;
+    public IMoveRangeService MoveRange => _moveRange.Value;
+    public IGimmickRangeService GimmickRange => _gimmickRange.Value;
+    public IEventSpeakerService EventSpeaker => _eventSpeaker.Value;
+    public IScenarioPokemonService ScenarioPokemon => _scenarioPokemon.Value;
+    public IScenarioWarriorService ScenarioWarrior => _scenarioWarrior.Value;
+    public IMaxLinkService MaxLink => _maxLink.Value;
+    public IBaseWarriorService BaseWarrior => _baseWarrior.Value;
+    public IScenarioAppearPokemonService ScenarioAppearPokemon => _scenarioAppearPokemon.Value;
+    public IScenarioKingdomService ScenarioKingdom => _scenarioKingdom.Value;
+    public IMsgBlockService Msg => _msg.Value;
+    public IBattleConfigService BattleConfig => _battleConfig.Value;
+    public IMoveAnimationService MoveAnimation => _moveAnimation.Value;
+    public IGimmickObjectService GimmickObject => _gimmickObject.Value;
+    public IMapService Map => _map.Value;
+    public IOverrideSpriteProvider OverrideSpriteProvider => _overrideSpriteProvider.Value;
 }

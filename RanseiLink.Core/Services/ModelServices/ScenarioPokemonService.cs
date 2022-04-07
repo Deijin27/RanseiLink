@@ -1,55 +1,93 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
+using System;
+using System.IO;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IScenarioPokemonService : IModelDataService<ScenarioId, int, IScenarioPokemon>
-{
-    IDisposableScenarioPokemonService Disposable();
-}
-
-public interface IDisposableScenarioPokemonService : IDisposableModelDataService<ScenarioId, int, IScenarioPokemon>
+public interface IChildScenarioPokemonService : IModelService<ScenarioPokemon>
 {
 }
 
-public class ScenarioPokemonService : BaseScenarioService, IScenarioPokemonService
+public interface IScenarioPokemonService : IModelService<IChildScenarioPokemonService>
 {
-    public ScenarioPokemonService(ModInfo mod) : base(mod, ScenarioPokemon.DataLength, Constants.ScenarioPokemonCount - 1, Constants.ScenarioPokemonPathFromId)
-    {
 
+}
+
+public class ScenarioPokemonService : BaseModelService<IChildScenarioPokemonService>, IScenarioPokemonService
+{
+    public ScenarioPokemonService(ModInfo mod, IPokemonService pokemonService) : base(null, 0, 10)
+    {
+        for (int i = _minId; i <= _maxId; i++)
+        {
+            _cache.Add(new ChildScenarioPokemonService(Path.Combine(mod.FolderPath, Constants.ScenarioPokemonPathFromId(i)), pokemonService));
+        }
     }
 
-    public IDisposableScenarioPokemonService Disposable()
+    public override string IdToName(int id)
     {
-        return new DisposableScenarioPokemonService(Mod);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((ScenarioId)id).ToString();
     }
 
-    public IScenarioPokemon Retrieve(ScenarioId scenario, int id)
+    public override void Reload()
     {
-        return new ScenarioPokemon(RetrieveData(scenario, id));
+        foreach (var childService in Enumerate())
+        {
+            childService.Reload();
+        }
     }
 
-    public void Save(ScenarioId scenario, int id, IScenarioPokemon model)
+    public override void Save()
     {
-        SaveData(scenario, id, model.Data);
+        foreach (var childService in Enumerate())
+        {
+            childService.Save();
+        }
     }
 }
 
-public class DisposableScenarioPokemonService : BaseDisposableScenarioService, IDisposableScenarioPokemonService
+public class ChildScenarioPokemonService : BaseModelService<ScenarioPokemon>, IChildScenarioPokemonService
 {
-    public DisposableScenarioPokemonService(ModInfo mod) : base(mod, ScenarioPokemon.DataLength, Constants.ScenarioPokemonCount - 1, Constants.ScenarioPokemonPathFromId)
+    private readonly IPokemonService _pokemonService;
+    public ChildScenarioPokemonService(string scenarioPokemonDatFile, IPokemonService pokemonService) : base(scenarioPokemonDatFile, 0, 199)
     {
-
+        _pokemonService = pokemonService;
     }
 
-    public IScenarioPokemon Retrieve(ScenarioId scenario, int id)
+    public override void Reload()
     {
-        return new ScenarioPokemon(RetrieveData(scenario, id));
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new ScenarioPokemon(br.ReadBytes(ScenarioPokemon.DataLength)));
+        }
     }
 
-    public void Save(ScenarioId scenario, int id, IScenarioPokemon model)
+    public override void Save()
     {
-        SaveData(scenario, id, model.Data);
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
+    }
+
+    public override string IdToName(int id)
+    {
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        var pokemon = (int)_cache[id].Pokemon;
+        if (!_pokemonService.ValidateId(pokemon))
+        {
+            return "Default";
+        }
+        return _pokemonService.IdToName(pokemon);
     }
 }

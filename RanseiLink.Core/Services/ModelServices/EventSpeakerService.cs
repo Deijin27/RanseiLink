@@ -1,50 +1,44 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
-using RanseiLink.Core.Models;
+﻿using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IEventSpeakerService : IModelDataService<EventSpeakerId, IEventSpeaker>
-{
-    IDisposableEventSpeakerService Disposable();
-}
-
-public interface IDisposableEventSpeakerService : IDisposableModelDataService<EventSpeakerId, IEventSpeaker>
+public interface IEventSpeakerService : IModelService<EventSpeaker>
 {
 }
 
-
-public class EventSpeakerService : BaseModelService, IEventSpeakerService
+public class EventSpeakerService : BaseModelService<EventSpeaker>, IEventSpeakerService
 {
-    public EventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength, 59) { }
+    public EventSpeakerService(string EventSpeakerDatFile) : base(EventSpeakerDatFile, 0, 59) { }
 
-    public IDisposableEventSpeakerService Disposable()
+    public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableEventSpeakerService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new EventSpeaker(br.ReadBytes(EventSpeaker.DataLength)));
+        }
     }
 
-    public IEventSpeaker Retrieve(EventSpeakerId id)
+    public override void Save()
     {
-        return new EventSpeaker(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(EventSpeakerId id, IEventSpeaker model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableEventSpeakerService : BaseDisposableModelService, IDisposableEventSpeakerService
-{
-    public DisposableEventSpeakerService(ModInfo mod) : base(mod, Constants.EventSpeakerRomPath, EventSpeaker.DataLength, 59) { }
-
-    public IEventSpeaker Retrieve(EventSpeakerId id)
-    {
-        return new EventSpeaker(RetrieveData((int)id));
-    }
-
-    public void Save(EventSpeakerId id, IEventSpeaker model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _cache[id].Name;
     }
 }

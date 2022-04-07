@@ -1,22 +1,15 @@
-﻿//#define PATCHER_BUG_FIXING
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using System.IO.Compression;
 using System;
-using RanseiLink.Core.Enums;
 using RanseiLink.Core.RomFs;
 using System.Linq;
-using RanseiLink.Core.Resources;
-using RanseiLink.Core.Graphics;
-using System.Collections.Concurrent;
-using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete;
 
 public class ModManager : IModManager
 {
-    private readonly string _graphicsProviderFolder;
     private readonly string _modFolder;
     public const string ModInfoFileName = "RanseiLinkModInfo.xml";
     public const string ExportModFileExtension = ".rlmod";
@@ -24,15 +17,14 @@ public class ModManager : IModManager
 
     private readonly RomFsFactory _ndsFactory;
     private readonly IMsgService _msgService;
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    private readonly IModPatchingService _modPatchingService;
 
-    public ModManager(string rootFolder, RomFsFactory ndsFactory, IMsgService msgService, IFallbackSpriteProvider fallbackSpriteProvider)
+    public ModManager(RomFsFactory ndsFactory, IMsgService msgService, IModPatchingService modPatchingService)
     {
-        _fallbackSpriteProvider = fallbackSpriteProvider;
+        _modPatchingService = modPatchingService;
         _msgService = msgService;
         _ndsFactory = ndsFactory;
-        _graphicsProviderFolder = Path.Combine(rootFolder, "DataProvider");
-        _modFolder = _modFolder = Path.Combine(rootFolder, "Mods");
+        _modFolder = _modFolder = Path.Combine(Constants.RootFolder, "Mods");
         Directory.CreateDirectory(_modFolder);
     }
 
@@ -160,7 +152,6 @@ public class ModManager : IModManager
             }
             Update(mod);
         }
-
     }
 
     private void AdvanceVersion1To2(ModInfo modInfo, IRomFs nds)
@@ -187,209 +178,8 @@ public class ModManager : IModManager
         Directory.Delete(modInfo.FolderPath, true);
     }
 
-    public void Commit(ModInfo modInfo, string path, PatchOptions patchOptions = 0, IProgress<ProgressInfo> progress = null)
+    public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions = PatchOptions.None, IProgress<ProgressInfo> progress = null)
     {
-        progress?.Report(new ProgressInfo(StatusText: "Preparing to patch...", IsIndeterminate: true));
-
-        ConcurrentBag<FileToPatch> filesToPatch = new();
-        Exception exception = null;
-        try
-        {
-            GetFilesToPatch(modInfo, filesToPatch, patchOptions);
-
-#if PATCHER_BUG_FIXING
-            string debugOut = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, "patch_debug_dump"));
-            Directory.CreateDirectory(debugOut);
-            foreach (var file in filesToPatch)
-            {
-                string dest = Path.Combine(debugOut, file.GamePath.Replace(Path.DirectorySeparatorChar, '~'));
-                if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
-                {
-                    File.Move(file.FileSystemPath, dest);
-                }
-                else
-                {
-                    File.Copy(file.FileSystemPath, dest);
-                }
-                
-            }
-            return;
-#endif
-
-            progress?.Report(new ProgressInfo(IsIndeterminate: false, MaxProgress: filesToPatch.Count, StatusText: "Patching..."));
-            int count = 0;
-            using var nds = _ndsFactory(path);
-            foreach (var file in filesToPatch)
-            {
-                if (file.Options.HasFlag(FilePatchOptions.VariableLength))
-                {
-                    nds.InsertVariableLengthFile(file.GamePath, file.FileSystemPath);
-                }
-                else
-                {
-                    nds.InsertFixedLengthFile(file.GamePath, file.FileSystemPath);
-                }
-                progress?.Report(new ProgressInfo(Progress: ++count));
-            }
-        }
-        catch (Exception e)
-        {
-            exception = e;
-        }
-        finally
-        {
-            progress?.Report(new ProgressInfo(StatusText: "Cleaning up temporary files...", IsIndeterminate: true));
-
-            foreach (var file in filesToPatch)
-            {
-                if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
-                {
-                    File.Delete(file.FileSystemPath);
-                }
-            }
-        }
-        
-        if (exception != null)
-        {
-            throw exception;
-        }
-
-        progress?.Report(new ProgressInfo(StatusText: "Done!", IsIndeterminate: false));
-    }
-
-    private void GetFilesToPatch(ModInfo mod, ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
-    {
-        List<string> dataRomPaths = new()
-        {
-            Constants.PokemonRomPath,
-            Constants.MoveRomPath,
-            Constants.AbilityRomPath,
-            Constants.WarriorSkillRomPath,
-            Constants.GimmickRomPath,
-            Constants.BuildingRomPath,
-            Constants.ItemRomPath,
-            Constants.KingdomRomPath,
-            Constants.MoveRangeRomPath,
-            Constants.EventSpeakerRomPath,
-            Constants.BaseBushouMaxSyncTableRomPath,
-            Constants.BaseBushouRomPath,
-            Constants.BattleConfigRomPath,
-            Constants.GimmickRangeRomPath,
-            Constants.MoveEffectRomPath,
-            Constants.GimmickObjectRomPath
-        };
-
-        foreach (var i in EnumUtil.GetValues<ScenarioId>())
-        {
-            dataRomPaths.Add(Constants.ScenarioPokemonPathFromId(i));
-            dataRomPaths.Add(Constants.ScenarioWarriorPathFromId(i));
-            dataRomPaths.Add(Constants.ScenarioAppearPokemonPathFromId(i));
-            dataRomPaths.Add(Constants.ScenarioKingdomPathFromId(i));
-        }
-
-        foreach (string drp in dataRomPaths)
-        {
-            filesToPatch.Add(new FileToPatch(drp, Path.Combine(mod.FolderPath, drp), FilePatchOptions.None));
-        }
-
-        foreach (var mapFilePath in Directory.GetFiles(Path.Combine(mod.FolderPath, Constants.MapFolderPath)))
-        {
-            string mapRomPath = Path.Combine(Constants.MapFolderPath, Path.GetFileName(mapFilePath));
-            filesToPatch.Add(new FileToPatch(mapRomPath, mapFilePath, FilePatchOptions.VariableLength));
-        }
-
-        string msgTmpFile = Path.GetTempFileName();
-        _msgService.CreateMsgDat(Path.Combine(mod.FolderPath, Constants.MsgFolderPath), msgTmpFile);
-        filesToPatch.Add(new FileToPatch(Constants.MsgRomPath, msgTmpFile, FilePatchOptions.VariableLength | FilePatchOptions.DeleteSourceWhenDone));
-
-        if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
-        {
-            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
-            {
-                throw new Exception("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
-            }
-            IOverrideSpriteProvider spriteProvider = new OverrideSpriteProvider(_fallbackSpriteProvider, mod);
-
-            Parallel.ForEach(GraphicsInfoResource.All, gInfo =>
-            {
-                switch (gInfo)
-                {
-                    case StlConstants stlInfo:
-                        PackStl(stlInfo, filesToPatch, spriteProvider);
-                        break;
-                    case ScbgConstants scbgInfo:
-                        PackScbg(scbgInfo, filesToPatch, spriteProvider);
-                        break;
-                    case PkmdlConstants pkdmlInfo:
-                        PokemonModelManager.PackModels(pkdmlInfo, filesToPatch, spriteProvider, _graphicsProviderFolder);
-                        break;
-                    default:
-                        throw new Exception($"Other types of {nameof(IGraphicsInfo)} not supported");
-                }
-            });
-        }
-    }
-
-    private void PackStl(StlConstants stlInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider)
-    {
-        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(stlInfo.Type);
-        if (!spriteFiles.Any(i => i.IsOverride))
-        {
-            return;
-        }
-
-        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
-        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
-        if (stlInfo.TexInfo != null)
-        {
-            string texData = Path.GetTempFileName();
-            string texInfo = Path.GetTempFileName();
-            STLCollection
-                .LoadPngs(filesToPack, ncer, tiled: false)
-                .Save(texData, texInfo);
-            filesToPatch.Add(new FileToPatch(stlInfo.TexInfo, texInfo, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-            filesToPatch.Add(new FileToPatch(stlInfo.TexData, texData, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        }
-
-        if (stlInfo.Info != null)
-        {
-            string info = Path.GetTempFileName();
-            string data = Path.GetTempFileName();
-            STLCollection
-                .LoadPngs(filesToPack, ncer, tiled: true)
-                .Save(data, info);
-            filesToPatch.Add(new FileToPatch(stlInfo.Info, info, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-            filesToPatch.Add(new FileToPatch(stlInfo.Data, data, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        }
-    }
-
-    private void PackScbg(ScbgConstants scbgInfo, ConcurrentBag<FileToPatch> filesToPatch, IOverrideSpriteProvider overrideSpriteProvider)
-    {
-        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(scbgInfo.Type);
-        if (!spriteFiles.Any(i => i.IsOverride))
-        {
-            return;
-        }
-
-        string[] filesToPack = spriteFiles.Select(i => i.File).ToArray();
-        string data = Path.GetTempFileName();
-        string info = Path.GetTempFileName();
-
-        SCBGCollection
-            .LoadPngs(filesToPack, tiled:true)
-            .Save(data, info);
-
-        filesToPatch.Add(new FileToPatch(scbgInfo.Data, data, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        filesToPatch.Add(new FileToPatch(scbgInfo.Info, info, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        _modPatchingService.Patch(modInfo, romPath, patchOptions, progress);
     }
 }
-
-[Flags]
-internal enum FilePatchOptions
-{
-    None = 0,
-    DeleteSourceWhenDone = 1,
-    VariableLength = 2,
-}
-
-internal record FileToPatch(string GamePath, string FileSystemPath, FilePatchOptions Options);

@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
@@ -12,7 +11,7 @@ public class PokemonEvolutionRange
     public bool CanEvolve { get; set; }
 }
 
-public class Pokemon : BaseDataWindow, IPokemon
+public class Pokemon : BaseDataWindow
 {
     public const int DataLength = 0x30;
     public Pokemon(byte[] data) : base(data, DataLength) { }
@@ -138,52 +137,19 @@ public class Pokemon : BaseDataWindow, IPokemon
         set => SetUInt32(7, 3, 27, value);
     }
 
-    private static uint CoerceEvolutionEntry(uint entry)
+    public uint MinEvolutionTableEntry
     {
-        if (entry > 115)
-        {
-            return 115;
-        }
-        if (entry < 0)
-        {
-            return 0;
-        }
-        return entry;
+        get => GetUInt32(8, 11, 0);
+        set => SetUInt32(8, 11, 0, value);
     }
 
-    public PokemonEvolutionRange EvolutionRange
+    public uint MaxEvolutionTableEntry
     {
-        get
-        {
-            return new PokemonEvolutionRange()
-            {
-                MinEntry = GetUInt32(8, 7, 0),
-                MaxEntry = GetUInt32(8, 7, 11),
-                CanEvolve = GetUInt32(8, 4, 7) == 0 || GetUInt32(8, 4, 18) == 0
-            };
-        }
-        set
-        {
-            if (value.CanEvolve)
-            {
-                uint min = CoerceEvolutionEntry(value.MinEntry);
-                uint max = CoerceEvolutionEntry(value.MaxEntry);
-                max = Math.Max(min, max);
-                min = Math.Min(min, max);
-                SetUInt32(8, 7, 0, min);
-                SetUInt32(8, 4, 7, 0);
-                SetUInt32(8, 7, 11, max);
-                SetUInt32(8, 4, 18, 0);
-            }
-            else
-            {
-                SetUInt32(8, 7, 0, 120u);
-                SetUInt32(8, 4, 7, 10u);
-                SetUInt32(8, 7, 11, 120u);
-                SetUInt32(8, 4, 18, 10u);
-            }
-        }
+        get => GetUInt32(8, 11, 11);
+        set => SetUInt32(8, 11, 11, value);
     }
+
+    public List<PokemonId> Evolutions { get; set; } = new();
 
     public uint NationalPokedexNumber
     {
@@ -218,11 +184,6 @@ public class Pokemon : BaseDataWindow, IPokemon
             num |= 1UL << shift;
         }
         BitConverter.GetBytes(num).CopyTo(Data, 9 * 4);
-    }
-
-    public IPokemon Clone()
-    {
-        return new Pokemon((byte[])Data.Clone());
     }
 
 }

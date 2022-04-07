@@ -1,7 +1,5 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Resources;
+﻿using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
-using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -10,21 +8,23 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
+public class SpriteTypeViewModel : ViewModelBase
 {
     private readonly IOverrideSpriteProvider _spriteProvider;
     private readonly IDialogService _dialogService;
     private string _dimensionInfo;
     private bool _canAddNew;
 
-    public SpriteTypeViewModel(IServiceContainer container, IEditorContext context)
+    public SpriteTypeViewModel(IOverrideSpriteProvider overrideSpriteProvider, IDialogService dialogService)
     {
-        _spriteProvider = context.DataService.OverrideSpriteProvider;
-        _dialogService = container.Resolve<IDialogService>();
+        _spriteProvider = overrideSpriteProvider;
+        _dialogService = dialogService;
+
         AddNewCommand = new RelayCommand(AddNew, () => _canAddNew);
         ExportAllCommand = new RelayCommand(ExportAll);
 
         UpdateInfo(SelectedType);
+        UpdateList();
     }
 
     private SpriteType _selectedType = SpriteType.StlBushouB;
@@ -190,14 +190,5 @@ public class SpriteTypeViewModel : ViewModelBase, ISaveableRefreshable
             File.Copy(spriteInfo.File, dest);
         }
         _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
-    }
-
-    public void Refresh()
-    {
-        UpdateList();
-    }
-
-    public void Save()
-    {
     }
 }

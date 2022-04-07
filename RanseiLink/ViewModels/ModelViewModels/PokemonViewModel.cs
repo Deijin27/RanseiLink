@@ -1,22 +1,62 @@
-﻿using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
-using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate PokemonViewModel PokemonViewModelFactory(IPokemon model, IEditorContext context);
-
-public abstract class PokemonViewModelBase : ViewModelBase
+public interface IPokemonViewModel 
 {
-    protected readonly IPokemon _model;
-    public PokemonViewModelBase(IPokemon model)
+    void SetModel(Pokemon model);
+}
+
+public class PokemonViewModel : ViewModelBase, IPokemonViewModel
+{
+    private Pokemon _model;
+    private readonly List<SelectorComboBoxItem> _evolutionEntryOptions;
+    private readonly IIdToNameService _idToNameService;
+    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService)
+    {
+        _idToNameService = idToNameService;
+        _model = new Pokemon();
+
+        MoveItems = _idToNameService.GetComboBoxItemsExceptDefault<IMoveService>();
+        AbilityItems = _idToNameService.GetComboBoxItemsPlusDefault<IAbilityService>();
+
+        _evolutionEntryOptions = _idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
+
+        JumpToMoveCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveSelectorEditorModule.Id, id));
+        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
+        AddEvolutionCommand = new RelayCommand(AddEvolution);
+        RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
+    }
+
+    public void SetModel(Pokemon model)
     {
         _model = model;
-        UpdateEvolution();
+        Evolutions.Clear();
+        for (int i = 0; i < _model.Evolutions.Count; i++)
+        {
+            var newItem = new EvolutionComboBoxItem(_model.Evolutions, i, _evolutionEntryOptions);
+            Evolutions.Add(newItem);
+        }
+        HabitatItems.Clear();
+        foreach (KingdomId kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+        {
+            HabitatItems.Add(new HabitatItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
+        }
+        RaiseAllPropertiesChanged();
     }
+
+    public ICommand JumpToMoveCommand { get; }
+    public ICommand JumpToAbilityCommand { get; }
+
+    public List<SelectorComboBoxItem> MoveItems { get; }
+    public List<SelectorComboBoxItem> AbilityItems { get; }
 
     public string Name
     {
@@ -35,26 +75,26 @@ public abstract class PokemonViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Type2, value, v => _model.Type2 = v);
     }
 
-    public MoveId Move
+    public int Move
     {
-        get => _model.Move;
-        set => RaiseAndSetIfChanged(_model.Move, value, v => _model.Move = v);
+        get => (int)_model.Move;
+        set => RaiseAndSetIfChanged(_model.Move, (MoveId)value, v => _model.Move = v);
     }
 
-    public AbilityId Ability1
+    public int Ability1
     {
-        get => _model.Ability1;
-        set => RaiseAndSetIfChanged(_model.Ability1, value, v => _model.Ability1 = v);
+        get => (int)_model.Ability1;
+        set => RaiseAndSetIfChanged(_model.Ability1, (AbilityId)value, v => _model.Ability1 = v);
     }
-    public AbilityId Ability2
+    public int Ability2
     {
-        get => _model.Ability2;
-        set => RaiseAndSetIfChanged(_model.Ability2, value, v => _model.Ability2 = v);
+        get => (int)_model.Ability2;
+        set => RaiseAndSetIfChanged(_model.Ability2, (AbilityId)value, v => _model.Ability2 = v);
     }
-    public AbilityId Ability3
+    public int Ability3
     {
-        get => _model.Ability3;
-        set => RaiseAndSetIfChanged(_model.Ability3, value, v => _model.Ability3 = v);
+        get => (int)_model.Ability3;
+        set => RaiseAndSetIfChanged(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
     public uint Hp
@@ -111,84 +151,11 @@ public abstract class PokemonViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
-    private uint _minEvolutionEntry;
-    public uint MinEvolutionEntry
-    {
-        get => _minEvolutionEntry;
-        set
-        {
-            _model.EvolutionRange = new PokemonEvolutionRange()
-            {
-                CanEvolve = _canEvolve,
-                MaxEntry = _maxEvolutionEntry,
-                MinEntry = value
-            };
-            UpdateEvolution();
-        }
-    }
-
-    private uint _maxEvolutionEntry;
-    public uint MaxEvolutionEntry
-    {
-        get => _maxEvolutionEntry;
-        set
-        {
-            _model.EvolutionRange = new PokemonEvolutionRange()
-            {
-                CanEvolve = _canEvolve,
-                MaxEntry = value,
-                MinEntry = _minEvolutionEntry
-            };
-            UpdateEvolution();
-        }
-    }
-
-    private bool _canEvolve;
-    public bool CanEvolve
-    {
-        get => _canEvolve;
-        set
-        {
-            _model.EvolutionRange = new PokemonEvolutionRange()
-            {
-                CanEvolve = value,
-                MaxEntry = _maxEvolutionEntry,
-                MinEntry = _minEvolutionEntry
-            };
-            UpdateEvolution();
-        }
-    }
-
-    private void UpdateEvolution()
-    {
-        var newVal = _model.EvolutionRange;
-        _canEvolve = newVal.CanEvolve;
-        _minEvolutionEntry = newVal.MinEntry;
-        _maxEvolutionEntry = newVal.MaxEntry;
-        RaisePropertyChanged(nameof(CanEvolve));
-        RaisePropertyChanged(nameof(MinEvolutionEntry));
-        RaisePropertyChanged(nameof(MaxEvolutionEntry));
-    }
-
     public uint UnknownValue
     {
         get => _model.UnknownValue;
         set => RaiseAndSetIfChanged(_model.UnknownValue, value, v => _model.UnknownValue = v);
     }
-}
-
-public class PokemonViewModel : PokemonViewModelBase
-{
-    public PokemonViewModel(IPokemon model, IEditorContext context) : base(model)
-    {
-        var jumpService = context.JumpService;
-
-        JumpToMoveCommand = new RelayCommand<MoveId>(jumpService.JumpToMove);
-        JumpToAbilityCommand = new RelayCommand<AbilityId>(jumpService.JumpToAbility);
-    }
-
-    public ICommand JumpToMoveCommand { get; }
-    public ICommand JumpToAbilityCommand { get; }
 
     public EvolutionConditionId EvolutionCondition1
     {
@@ -213,99 +180,68 @@ public class PokemonViewModel : PokemonViewModelBase
         set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
     }
 
-    KingdomId _selectedEncounterKingdom;
-    public KingdomId SelectedEncounterKingdom
-    {
-        get => _selectedEncounterKingdom;
-        set
-        {
-            if (value != _selectedEncounterKingdom)
-            {
-                _selectedEncounterKingdom = value;
-                RaisePropertyChanged();
-                RaisePropertyChanged(nameof(EncounterableAtDefaultArea));
-                RaisePropertyChanged(nameof(EncounterableWithLevel2Area));
-            }
+    public ObservableCollection<HabitatItem> HabitatItems { get; } = new();
 
+    public class HabitatItem : ViewModelBase
+    {
+        private readonly KingdomId _kingdom;
+        private readonly Pokemon _model;
+        public string KingdomName { get; }
+
+        public HabitatItem(Pokemon pokemon, KingdomId kingdom, string kingdomName)
+        {
+            _kingdom = kingdom;
+            _model = pokemon;
+            KingdomName = kingdomName;
+        }
+
+        public bool EncounterableAtDefaultArea
+        {
+            get => _model.GetEncounterable(_kingdom, false);
+            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => _model.SetEncounterable(_kingdom, false, v));
+        }
+
+        public bool EncounterableWithLevel2Area
+        {
+            get => _model.GetEncounterable(_kingdom, true);
+            set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(_kingdom, true, v));
         }
     }
 
-    public bool EncounterableAtDefaultArea
+    public class EvolutionComboBoxItem : ViewModelBase
     {
-        get => _model.GetEncounterable(SelectedEncounterKingdom, false);
-        set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => _model.SetEncounterable(SelectedEncounterKingdom, false, v));
-    }
-
-    public bool EncounterableWithLevel2Area
-    {
-        get => _model.GetEncounterable(SelectedEncounterKingdom, true);
-        set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(SelectedEncounterKingdom, true, v));
-    }
-}
-
-public class PokemonGridItemViewModel : PokemonViewModelBase
-{
-    public PokemonGridItemViewModel(PokemonId id, IPokemon model) : base(model)
-    {
-        Id = id;
-    }
-
-    public PokemonId Id { get; }
-
-    public new string Name
-    {
-        get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
-    }
-
-    public EvolutionConditionId EvolutionCondition1
-    {
-        get => _model.EvolutionCondition1;
-    }
-
-    public string QuantityForEvolutionCondition1
-    {
-        get => FormatQuantity(EvolutionCondition1, _model.QuantityForEvolutionCondition1);
-    }
-
-    public EvolutionConditionId EvolutionCondition2
-    {
-        get => _model.EvolutionCondition2;
-    }
-
-    public string QuantityForEvolutionCondition2
-    {
-        get => FormatQuantity(EvolutionCondition2, _model.QuantityForEvolutionCondition2);
-    }
-
-    private static string FormatQuantity(EvolutionConditionId id, uint quantity)
-    {
-        switch (id)
+        private readonly List<PokemonId> _evolutionTable;
+        private readonly int _id;
+        public EvolutionComboBoxItem(List<PokemonId> evolutionTable, int id, List<SelectorComboBoxItem> options)
         {
-            case EvolutionConditionId.Hp:
-            case EvolutionConditionId.Attack:
-            case EvolutionConditionId.Defence:
-            case EvolutionConditionId.Speed:
-                return $"{quantity}";
-
-            case EvolutionConditionId.Link:
-                return $"{quantity}";
-
-            case EvolutionConditionId.Kingdom:
-                return $"{(KingdomId)quantity}";
-
-            case EvolutionConditionId.WarriorGender:
-                return $"{(GenderId)quantity}";
-
-            case EvolutionConditionId.Item:
-                return $"{(ItemId)quantity}";
-
-            case EvolutionConditionId.JoinOffer:
-            case EvolutionConditionId.NoCondition:
-                return "";
-
-            default:
-                throw new ArgumentException("Unexpected enum value");
+            _id = id;
+            _evolutionTable = evolutionTable;
+            Options = options;
         }
+        public int Id
+        {
+            get => (int)_evolutionTable[_id];
+            set => RaiseAndSetIfChanged(Id, value, v => _evolutionTable[_id] = (PokemonId)v);
+        }
+        public List<SelectorComboBoxItem> Options { get; }
+    }
+
+    public ObservableCollection<EvolutionComboBoxItem> Evolutions { get; } = new();
+
+    public ICommand AddEvolutionCommand { get; }
+    public ICommand RemoveEvolutionCommand { get; }
+
+    private void AddEvolution()
+    {
+        _model.Evolutions.Add(PokemonId.Eevee);
+        var newItem = new EvolutionComboBoxItem(_model.Evolutions, _model.Evolutions.Count - 1, _evolutionEntryOptions);
+        Evolutions.Add(newItem);
+    }
+
+    private void RemoveEvolution()
+    {
+        _model.Evolutions.RemoveAt(_model.Evolutions.Count - 1);
+        Evolutions.RemoveAt(Evolutions.Count - 1);
     }
 }
+

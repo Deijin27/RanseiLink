@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class Building : BaseDataWindow, IBuilding
+public class Building : BaseDataWindow
 {
     public const int DataLength = 0x24;
     public Building(byte[] data) : base(data, DataLength) { }
@@ -63,8 +62,4 @@ public class Building : BaseDataWindow, IBuilding
         set => SetUInt32(8, 4, 28, (uint)value);
     }
 
-    public IBuilding Clone()
-    {
-        return new Building((byte[])Data.Clone());
-    }
 }

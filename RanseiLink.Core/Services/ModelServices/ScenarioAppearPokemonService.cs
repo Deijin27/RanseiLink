@@ -1,55 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IScenarioAppearPokemonService : IModelDataService<ScenarioId, IScenarioAppearPokemon>
-{
-    IDisposableScenarioAppearPokemonService Disposable();
-}
-
-public interface IDisposableScenarioAppearPokemonService : IDisposableModelDataService<ScenarioId, IScenarioAppearPokemon>
+public interface IScenarioAppearPokemonService : IModelService<ScenarioAppearPokemon>
 {
 }
 
-public class ScenarioAppearPokemonService : BaseScenarioService, IScenarioAppearPokemonService
+public class ScenarioAppearPokemonService : BaseModelService<ScenarioAppearPokemon>, IScenarioAppearPokemonService
 {
-    public ScenarioAppearPokemonService(ModInfo mod) : base(mod, ScenarioAppearPokemon.DataLength, 0, Constants.ScenarioAppearPokemonPathFromId)
+    public ScenarioAppearPokemonService(ModInfo mod) : base(mod.FolderPath, 0, 10)
     {
-
     }
 
-    public IDisposableScenarioAppearPokemonService Disposable()
+    public override void Reload()
     {
-        return new DisposableScenarioAppearPokemonService(Mod);
+        _cache.Clear();
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            using var br = new BinaryReader(File.OpenRead(Path.Combine(_dataFile, Constants.ScenarioAppearPokemonPathFromId(id))));
+            _cache.Add(new ScenarioAppearPokemon(br.ReadBytes(ScenarioAppearPokemon.DataLength)));
+        }
     }
 
-    public IScenarioAppearPokemon Retrieve(ScenarioId scenario)
+    public override void Save()
     {
-        return new ScenarioAppearPokemon(RetrieveData(scenario, 0));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            using var bw = new BinaryWriter(File.OpenWrite(Path.Combine(_dataFile, Constants.ScenarioAppearPokemonPathFromId(id))));
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(ScenarioId scenario, IScenarioAppearPokemon model)
+    public override string IdToName(int id)
     {
-        SaveData(scenario, 0, model.Data);
-    }
-}
-
-public class DisposableScenarioAppearPokemonService : BaseDisposableScenarioService, IDisposableScenarioAppearPokemonService
-{
-    public DisposableScenarioAppearPokemonService(ModInfo mod) : base(mod, ScenarioAppearPokemon.DataLength, 0, Constants.ScenarioAppearPokemonPathFromId)
-    {
-
-    }
-
-    public IScenarioAppearPokemon Retrieve(ScenarioId scenario)
-    {
-        return new ScenarioAppearPokemon(RetrieveData(scenario, 0));
-    }
-
-    public void Save(ScenarioId scenario, IScenarioAppearPokemon model)
-    {
-        SaveData(scenario, 0, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((ScenarioId)id).ToString();
     }
 }

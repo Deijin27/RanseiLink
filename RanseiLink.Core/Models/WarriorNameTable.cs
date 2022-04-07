@@ -1,9 +1,8 @@
-﻿using RanseiLink.Core.Models.Interfaces;
-using System;
+﻿using System;
 
 namespace RanseiLink.Core.Models;
 
-public class WarriorNameTable : BaseDataWindow, IWarriorNameTable
+public class WarriorNameTable : BaseDataWindow
 {
     public const int DataLength = 0x9D8;
     public const int EntryLength = 0xC;
@@ -13,17 +12,17 @@ public class WarriorNameTable : BaseDataWindow, IWarriorNameTable
 
     public string GetEntry(uint id)
     {
-        ValidateId(id);
+        ValidateIdWithThrow(id);
         return GetPaddedUtf8String(EntryLength * (int)id, 10);
     }
 
     public void SetEntry(uint id, string value)
     {
-        ValidateId(id);
+        ValidateIdWithThrow(id);
         SetPaddedUtf8String(EntryLength * (int)id, 10, value);
     }
 
-    private void ValidateId(uint id)
+    private void ValidateIdWithThrow(uint id)
     {
         if (id >= EntryCount)
         {
@@ -31,8 +30,9 @@ public class WarriorNameTable : BaseDataWindow, IWarriorNameTable
         }
     }
 
-    public IWarriorNameTable Clone()
+    public bool ValidateId(uint id)
     {
-        return new WarriorNameTable((byte[])Data.Clone());
+        return id < EntryCount;
     }
+
 }

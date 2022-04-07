@@ -34,6 +34,14 @@ public enum EpisodeId : uint
     Unknown_27,
     Unknown_28,
     TheDragonsDream,
+    Unknown_30,
+    Unknown_31,
+    Unknown_32,
+    Unknown_33,
+    Unknown_34,
+    Unknown_35,
+    Unknown_36,
+    Unknown_37,
     // probably 38 in total
 
     Default = 511

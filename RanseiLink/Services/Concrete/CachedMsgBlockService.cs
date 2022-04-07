@@ -1,7 +1,7 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services.ModelServices;
+﻿using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Text;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Services.Concrete;
 
@@ -14,10 +14,10 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
         RebuildCache();
     }
 
-    private readonly List<List<Message>> _blocks = new();
-    private readonly List<ChangeTrackedBlock> _changeTrackedBlocks = new();
+    private List<Message>[] _blocks;
+    private ChangeTrackedBlock[] _changeTrackedBlocks;
 
-    public int BlockCount => _blocks.Count;
+    public int BlockCount => _blocks.Length;
 
     public ChangeTrackedBlock Retrieve(int id)
     {
@@ -26,26 +26,102 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
 
     public void SaveChangedBlocks()
     {
-        for (int i = 0; i < _blocks.Count; i++)
+        Parallel.For(0, _msgBlockService.BlockCount, i =>
         {
             if (_changeTrackedBlocks[i].IsChanged)
             {
                 _msgBlockService.Save(i, _blocks[i]);
                 _changeTrackedBlocks[i].IsChanged = false;
             }
-        }
+        });
     }
 
     public void RebuildCache()
     {
-        _blocks.Clear();
-        _changeTrackedBlocks.Clear();
-        for (int i = 0; i < _msgBlockService.BlockCount; i++)
+        _blocks = new List<Message>[_msgBlockService.BlockCount];
+        _changeTrackedBlocks = new ChangeTrackedBlock[_msgBlockService.BlockCount];
+        Parallel.For(0, _msgBlockService.BlockCount, i =>
         {
             var block = _msgBlockService.Retrieve(i);
-            _blocks.Add(block);
-            _changeTrackedBlocks.Add(new ChangeTrackedBlock(block));
+            _blocks[i] = block;
+            _changeTrackedBlocks[i] = new ChangeTrackedBlock(block);
+        });
+    }
+
+    
+
+    private const string NotEditableMessage = "Not Editable";
+
+    private static (int block, int offsetWithinBlock, int maxValidId) GetInfoForType(MsgShortcut type)
+    {
+        int block;
+        int offsetWithinBlock;
+        int maxValidId;
+        switch (type)
+        {
+            case MsgShortcut.AbilityDescription:
+                block = 2;
+                offsetWithinBlock = 171;
+                maxValidId = 105;
+                break;
+            case MsgShortcut.AbilityHotSpringsDescription:
+                block = 7;
+                offsetWithinBlock = 109;
+                maxValidId = 105;
+                break;
+            case MsgShortcut.AbilityHotSpringsDescription2:
+                block = 8;
+                offsetWithinBlock = 15;
+                maxValidId = 105;
+                break;
+            case MsgShortcut.MoveDescription:
+                block = 3;
+                offsetWithinBlock = 32;
+                maxValidId = 122;
+                break;
+            case MsgShortcut.WarriorSkillDescription:
+                block = 3;
+                offsetWithinBlock = 155;
+                maxValidId = 62;
+                break;
+            case MsgShortcut.ItemDescription:
+                block = 3;
+                offsetWithinBlock = 218;
+                maxValidId = 125;
+                break;
+            case MsgShortcut.ItemDescription2:
+                block = 4;
+                offsetWithinBlock = 94;
+                maxValidId = 125;
+                break;
+            default:
+                throw new System.Exception($"Invalid msg type '{type}'");
         }
+        return (block, offsetWithinBlock, maxValidId);
+    }
+
+    public string GetMsgOfType(MsgShortcut type, int id)
+    {
+        var (block, offsetWithinBlock, maxValidId) = GetInfoForType(type);
+
+        if (id > maxValidId)
+        {
+            return NotEditableMessage;
+        }
+
+        return GetWithOverflow(block, offsetWithinBlock + id);
+    }
+
+    public void SetMsgOfType(MsgShortcut type, int id, string value)
+    {
+        var (block, offsetWithinBlock, maxValidId) = GetInfoForType(type);
+
+        if (id > maxValidId)
+        {
+            return;
+        }
+
+        SetWithOverflow(block, offsetWithinBlock + id, value);
     }
 
     private string GetWithOverflow(int blockId, int id)
@@ -69,76 +145,4 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
         _changeTrackedBlocks[blockId].IsChanged = true;
     }
 
-    private const string DescriptionNotSupportedMessage = "Description not supported";
-
-
-    public string GetAbilityDescription(AbilityId id) 
-    { 
-        return id <= AbilityId.dummy7 ? GetWithOverflow(2, 171 + (int)id) : DescriptionNotSupportedMessage; 
-    }
-    public void SetAbilityDescription(AbilityId id, string description) 
-    { 
-        if (id <= AbilityId.dummy7) SetWithOverflow(2, 171 + (int)id, description); 
-    }
-
-
-    public string GetAbilityHotSpringsDescription(AbilityId id)
-    {
-        return id <= AbilityId.dummy7 ? GetWithOverflow(7, 109 + (int)id) : DescriptionNotSupportedMessage;
-    }
-    public void SetAbilityHotSpringsDescription(AbilityId id, string description)
-    {
-        if (id <= AbilityId.dummy7) SetWithOverflow(7, 109 + (int)id, description);
-    }
-
-
-    public string GetAbilityHotSpringsDescription2(AbilityId id)
-    {
-        return id <= AbilityId.dummy7 ? GetWithOverflow(8, 15 + (int)id) : DescriptionNotSupportedMessage;
-    }
-    public void SetAbilityHotSpringsDescription2(AbilityId id, string description)
-    {
-        if (id <= AbilityId.dummy7) SetWithOverflow(8, 15 + (int)id, description);
-    }
-
-
-    public string GetMoveDescription(MoveId id)
-    {
-        return id <= MoveId.LowKick ? GetWithOverflow(3, 32 + (int)id) : DescriptionNotSupportedMessage;
-    }
-    public void SetMoveDescription(MoveId id, string description)
-    {
-        if (id <= MoveId.LowKick) SetWithOverflow(3, 32 + (int)id, description);
-    }
-
-
-    public string GetWarriorSkillDescription(WarriorSkillId id)
-    {
-        return id <= WarriorSkillId.Sacrifice ? GetWithOverflow(3, 155 + (int)id) : DescriptionNotSupportedMessage;
-    }
-    public void SetWarriorSkillDescription(WarriorSkillId id, string description)
-    { 
-        if (id <= WarriorSkillId.Sacrifice) SetWithOverflow(3, 155 + (int)id, description); 
-    }
-
-
-    public string GetItemDescription(ItemId id)
-    {
-        return id <= ItemId.JigglypuffCharm ? GetWithOverflow(3, 218 + (int)id) : DescriptionNotSupportedMessage;
-    }
-    public void SetItemDescription(ItemId id, string description)
-    { 
-        if (id <= ItemId.JigglypuffCharm) SetWithOverflow(3, 218 + (int)id, description); 
-    }
-
-
-    public string GetItemDescription2(ItemId id)
-    {
-        return id <= ItemId.JigglypuffCharm ? GetWithOverflow(4, 94 + (int)id) : DescriptionNotSupportedMessage;
-    }
-
-    public void SetItemDescription2(ItemId id, string description)
-    {
-        if (id <= ItemId.JigglypuffCharm) SetWithOverflow(4, 94 + (int)id, description);
-    }
 }

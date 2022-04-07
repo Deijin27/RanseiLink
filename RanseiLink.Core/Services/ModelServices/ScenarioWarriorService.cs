@@ -1,55 +1,88 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Models.Interfaces;
+using System;
+using System.IO;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IScenarioWarriorService : IModelDataService<ScenarioId, int, IScenarioWarrior>
-{
-    IDisposableScenarioWarriorService Disposable();
-}
-
-public interface IDisposableScenarioWarriorService : IDisposableModelDataService<ScenarioId, int, IScenarioWarrior>
+public interface IChildScenarioWarriorService : IModelService<ScenarioWarrior>
 {
 }
 
-public class ScenarioWarriorService : BaseScenarioService, IScenarioWarriorService
+public interface IScenarioWarriorService : IModelService<IChildScenarioWarriorService>
 {
-    public ScenarioWarriorService(ModInfo mod) : base(mod, ScenarioWarrior.DataLength, Constants.ScenarioWarriorCount - 1, Constants.ScenarioWarriorPathFromId)
-    {
 
+}
+
+public class ScenarioWarriorService : BaseModelService<IChildScenarioWarriorService>, IScenarioWarriorService
+{
+    public ScenarioWarriorService(ModInfo mod, IBaseWarriorService baseWarriorService) : base(null, 0, 10)
+    {
+        for (int i = _minId; i <= _maxId; i++)
+        {
+            _cache.Add(new ChildScenarioWarriorService(Path.Combine(mod.FolderPath, Constants.ScenarioWarriorPathFromId(i)), baseWarriorService));
+        }
     }
 
-    public IDisposableScenarioWarriorService Disposable()
+    public override string IdToName(int id)
     {
-        return new DisposableScenarioWarriorService(Mod);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((ScenarioId)id).ToString();
     }
 
-    public IScenarioWarrior Retrieve(ScenarioId scenario, int id)
+    public override void Reload()
     {
-        return new ScenarioWarrior(RetrieveData(scenario, id));
+        foreach (var childService in Enumerate())
+        {
+            childService.Reload();
+        }
     }
 
-    public void Save(ScenarioId scenario, int id, IScenarioWarrior model)
+    public override void Save()
     {
-        SaveData(scenario, id, model.Data);
+        foreach (var childService in Enumerate())
+        {
+            childService.Save();
+        }
     }
 }
 
-public class DisposableScenarioWarriorService : BaseDisposableScenarioService, IDisposableScenarioWarriorService
+public class ChildScenarioWarriorService : BaseModelService<ScenarioWarrior>, IChildScenarioWarriorService
 {
-    public DisposableScenarioWarriorService(ModInfo mod) : base(mod, ScenarioWarrior.DataLength, Constants.ScenarioWarriorCount - 1, Constants.ScenarioWarriorPathFromId)
+    private readonly IBaseWarriorService _WarriorService;
+    public ChildScenarioWarriorService(string scenarioWarriorDatFile, IBaseWarriorService WarriorService) : base(scenarioWarriorDatFile, 0, 209)
     {
-
+        _WarriorService = WarriorService;
     }
 
-    public IScenarioWarrior Retrieve(ScenarioId scenario, int id)
+    public override void Reload()
     {
-        return new ScenarioWarrior(RetrieveData(scenario, id));
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new ScenarioWarrior(br.ReadBytes(ScenarioWarrior.DataLength)));
+        }
     }
 
-    public void Save(ScenarioId scenario, int id, IScenarioWarrior model)
+    public override void Save()
     {
-        SaveData(scenario, id, model.Data);
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
+    }
+
+    public override string IdToName(int id)
+    {
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return _WarriorService.IdToName((int)_cache[id].Warrior);
     }
 }

@@ -1,7 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
 using System;
 using System.Collections.Generic;
@@ -24,83 +25,34 @@ internal class SoftlockChecker
     private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
     private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
 
-    private Dictionary<PokemonId, IPokemon> _allPokemon;
-    private Dictionary<ScenarioId, Dictionary<int, IScenarioPokemon>> _allScenarioPokemon;
-    private Dictionary<ScenarioId, Dictionary<int, IScenarioWarrior>> _allScenarioWarriors;
-    private Dictionary<MoveId, IMove> _allMoves;
-    private Dictionary<MoveRangeId, IMoveRange> _allMoveRanges;
+    private IScenarioPokemonService _scenarioPokemonService;
+    private IScenarioWarriorService _scenarioWarriorService;
+    private IPokemonService _pokemonService;
+    private IMoveService _moveService;
+    private IMoveRangeService _moveRangeService;
 
-    private IModServiceContainer _dataService;
+    private int PlayersScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(0).GetScenarioPokemon(0);
+    private int OichisScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(2).GetScenarioPokemon(0);
+    private int KorokusScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(58).GetScenarioPokemon(0);
+    private int NagayasusScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(66).GetScenarioPokemon(0);
 
-    private int PlayersScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][0].ScenarioPokemon;
-    private int OichisScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][2].ScenarioPokemon;
-    private int KorokusScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][58].ScenarioPokemon;
-    private int NagayasusScenarioPokemonId => (int)_allScenarioWarriors[ScenarioId.TheLegendOfRansei][66].ScenarioPokemon;
-
-    private IScenarioPokemon PlayersScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][PlayersScenarioPokemonId];
-    private IScenarioPokemon OichisScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][OichisScenarioPokemonId];
-    private IScenarioPokemon KorokusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][KorokusScenarioPokemonId];
-    private IScenarioPokemon NagayasusScenarioPokemon => _allScenarioPokemon[ScenarioId.TheLegendOfRansei][NagayasusScenarioPokemonId];
+    private ScenarioPokemon PlayersScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(PlayersScenarioPokemonId);
+    private ScenarioPokemon OichisScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(OichisScenarioPokemonId);
+    private ScenarioPokemon KorokusScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(KorokusScenarioPokemonId);
+    private ScenarioPokemon NagayasusScenarioPokemon => _scenarioPokemonService.Retrieve(0).Retrieve(NagayasusScenarioPokemonId);
 
     /// <summary>
     /// Load all the required stuff into memory
     /// </summary>
-    private void Init()
+    private void Init(IServiceGetter services)
     {
-        _allPokemon = new();
-        using (var pokemonService = _dataService.Pokemon.Disposable())
-        {
-            foreach (PokemonId pokemonId in pokemonIds)
-            {
-                _allPokemon[pokemonId] = pokemonService.Retrieve(pokemonId);
-            }
-        }
+        _moveService = services.Get<IMoveService>();
+        _moveRangeService = services.Get<IMoveRangeService>();
+        _pokemonService = services.Get<IPokemonService>();
+        _scenarioPokemonService = services.Get<IScenarioPokemonService>();
+        _scenarioWarriorService = services.Get<IScenarioWarriorService>();
 
-        _allMoves = new();
-        using (var moveService = _dataService.Move.Disposable())
-        {
-            foreach (MoveId moveId in moveIds)
-            {
-                _allMoves[moveId] = moveService.Retrieve(moveId);
-            }
-        }
-
-        _allMoveRanges = new();
-        using (var moveRangeService = _dataService.MoveRange.Disposable())
-        {
-            foreach (MoveRangeId moveRangeId in moveRangeIds)
-            {
-                _allMoveRanges[moveRangeId] = moveRangeService.Retrieve(moveRangeId);
-            }
-        }
-
-        _allScenarioPokemon = new();
-        using (var scenarioPokemonService = _dataService.ScenarioPokemon.Disposable())
-        {
-            foreach (ScenarioId scenarioId in scenarioIds)
-            {
-                Dictionary<int, IScenarioPokemon> dict = new();
-                for (int j = 0; j < Constants.ScenarioPokemonCount; j++)
-                {
-                    dict[j] = scenarioPokemonService.Retrieve(scenarioId, j);
-                }
-                _allScenarioPokemon[scenarioId] = dict;
-            }
-        }
-
-        _allScenarioWarriors = new();
-        using (var scenarioWarriorService = _dataService.ScenarioWarrior.Disposable())
-        {
-            foreach (ScenarioId scenarioId in scenarioIds)
-            {
-                Dictionary<int, IScenarioWarrior> dict = new();
-                for (int j = 0; j < Constants.ScenarioWarriorCount; j++)
-                {
-                    dict[j] = scenarioWarriorService.Retrieve(scenarioId, j);
-                }
-                _allScenarioWarriors[scenarioId] = dict;
-            }
-        }
+        _moveRangeService = services.Get<IMoveRangeService>();
     }
 
     private IDialogService _dialogService;
@@ -112,10 +64,9 @@ internal class SoftlockChecker
         conditionalCount = 0;
         probableCount = 0;
         probableConditionalCount = 0;
-        _dataService = context.ServiceContainer.Resolve<DataServiceFactory>()(context.ActiveMod);
-        Init();
+        Init(context.Services);
         Validate();
-        _dialogService = context.ServiceContainer.Resolve<IDialogService>();
+        _dialogService = context.Services.Get<IDialogService>();
         NotifyUserIfNecessary();
     }
 
@@ -219,65 +170,68 @@ internal class SoftlockChecker
 
     private void ValidateAbilities()
     {
-        foreach (var (scenario, scenarioWarriorDict) in _allScenarioWarriors)
+        foreach (ScenarioId scenario in EnumUtil.GetValues<ScenarioId>())
         {
-            foreach (var (id, scenarioWarrior) in scenarioWarriorDict)
+            int id = 0;
+            foreach (var scenarioWarrior in _scenarioWarriorService.Retrieve((int)scenario).Enumerate())
             {
                 if (scenarioWarrior.ScenarioPokemonIsDefault(0))
                 {
                     continue;
                 }
-                var scenarioPokemon = _allScenarioPokemon[scenario][(int)scenarioWarrior.ScenarioPokemon];
-                var pokemon = _allPokemon[scenarioPokemon.Pokemon];
+                var scenarioPokemon = _scenarioPokemonService.Retrieve((int)scenario).Retrieve(scenarioWarrior.GetScenarioPokemon(0));
+                var pokemon = _pokemonService.Retrieve((int)scenarioPokemon.Pokemon);
                 var abilities = new[] { pokemon.Ability1, pokemon.Ability2, pokemon.Ability3 };
                 if (!abilities.Contains(scenarioPokemon.Ability))
                 {
-                    ReportConditional($"Scenario={scenario}, ScenarioWarrior={id}, ScenarioPokemon={scenarioWarrior.ScenarioPokemon}, Pokemon={scenarioPokemon.Pokemon}: has ability {scenarioPokemon.Ability} which is not on of {scenarioPokemon.Pokemon}'s abilities "
+                    ReportConditional($"Scenario={scenario}, ScenarioWarrior={id}, ScenarioPokemon={scenarioWarrior.GetScenarioPokemon(0)}, Pokemon={pokemon.Name}: has ability {scenarioPokemon.Ability} which is not on of {scenarioPokemon.Pokemon}'s abilities "
                         + $"({pokemon.Ability1}, {pokemon.Ability2}, {pokemon.Ability3})");
                 }
+                id++;
             }
         }
     }
 
     private void ValidateMoves()
     {
-        foreach (var (id, move) in _allMoves)
+        foreach (var move in _moveService.Enumerate())
         {
-            ValidateMoveAnimation(id, move.StartupAnimation);
-            ValidateMoveAnimation(id, move.ProjectileAnimation);
-            ValidateMoveAnimation(id, move.ImpactAnimation);
+            ValidateMoveAnimation(move, move.StartupAnimation);
+            ValidateMoveAnimation(move, move.ProjectileAnimation);
+            ValidateMoveAnimation(move, move.ImpactAnimation);
         }
     }
 
-    private void ValidateMoveAnimation(MoveId move, MoveAnimationId id)
+    private void ValidateMoveAnimation(Move move, MoveAnimationId id)
     {
         if (id == MoveAnimationId.CausesASoftlock_DontUse)
         {
-            ReportConditional($"The move {move} has animation {id}. Although this animation looks cool, it causes a softlock :(");
+            ReportConditional($"The move {move.Name} has animation {id}. Although this animation looks cool, it causes a softlock :(");
         }
     }
 
     private void ValidateTutorial()
     {
         var playerPoke = PlayersScenarioPokemon.Pokemon;
-        var playerPokeRange = _allPokemon[playerPoke].MovementRange;
+        var playerPokeRange = _pokemonService.Retrieve((int)playerPoke).MovementRange;
         if (playerPokeRange < 3)
         {
             ReportGuaranteed($"The player's pokemon ({PlayersScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
         }
-        if (_allPokemon[OichisScenarioPokemon.Pokemon].MovementRange < 2)
+        var oichiPokeRange = _pokemonService.Retrieve((int)OichisScenarioPokemon.Pokemon).MovementRange;
+        if (oichiPokeRange < 2)
         {
-            ReportGuaranteed($"Oichi's pokemon pokemon ({OichisScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+            ReportGuaranteed($"Oichi's pokemon pokemon ({OichisScenarioPokemon.Pokemon}) has a movement range of {oichiPokeRange}. A range of at least is necessary in the tutorial.");
         }
-
-        if (_allPokemon[KorokusScenarioPokemon.Pokemon].MovementRange < 2)
+        var korokuPokeRange = _pokemonService.Retrieve((int)KorokusScenarioPokemon.Pokemon).MovementRange;
+        if (korokuPokeRange < 2)
         {
-            ReportGuaranteed($"Koroku's pokemon ({KorokusScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+            ReportGuaranteed($"Koroku's pokemon ({KorokusScenarioPokemon.Pokemon}) has a movement range of {korokuPokeRange}. A range of at least is necessary in the tutorial.");
         }
-
-        if (_allPokemon[NagayasusScenarioPokemon.Pokemon].MovementRange < 2)
+        var nagayasuPokeRange = _pokemonService.Retrieve((int)NagayasusScenarioPokemon.Pokemon).MovementRange;
+        if (nagayasuPokeRange < 2)
         {
-            ReportGuaranteed($"Nagayasus's pokemon ({NagayasusScenarioPokemon.Pokemon}) has a movement range of {playerPokeRange}. A range of at least is necessary in the tutorial.");
+            ReportGuaranteed($"Nagayasus's pokemon ({NagayasusScenarioPokemon.Pokemon}) has a movement range of {nagayasuPokeRange}. A range of at least is necessary in the tutorial.");
         }
 
         ValidateTutorialMatchup(PlayersScenarioPokemon, KorokusScenarioPokemon);
@@ -285,11 +239,11 @@ internal class SoftlockChecker
         ValidateTutorialMatchup(OichisScenarioPokemon, NagayasusScenarioPokemon);
     }
 
-    private void ValidateTutorialMatchup(IScenarioPokemon attackingScenarioPokemon, IScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
+    private void ValidateTutorialMatchup(ScenarioPokemon attackingScenarioPokemon, ScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
     {
-        var attackingPokemon = _allPokemon[attackingScenarioPokemon.Pokemon];
-        var targetPokemon = _allPokemon[targetScenarioPokemon.Pokemon];
-        var move = _allMoves[attackingPokemon.Move];
+        Pokemon attackingPokemon = _pokemonService.Retrieve((int)attackingScenarioPokemon.Pokemon);
+        Pokemon targetPokemon = _pokemonService.Retrieve((int)targetScenarioPokemon.Pokemon);
+        Move move = _moveService.Retrieve((int)attackingPokemon.Move);
 
         // moves always hit during the tutorial, so  this isn't necessary
         //if (move.Accuracy != 100)
@@ -304,11 +258,11 @@ internal class SoftlockChecker
         {
             ReportProbable($"The defending pokemon {targetScenarioPokemon.Pokemon} resists move {attackingPokemon.Move} used by {attackingScenarioPokemon.Pokemon}, thus there's a risk it doesn't one shot the opponent in the tutorial");
         }
-        if (!_allMoveRanges[move.Range].GetInRange(1))
+        if (!_moveRangeService.Retrieve((int)move.Range).GetInRange(1))
         {
             ReportGuaranteed($"The move {attackingPokemon.Move} used by pokemon {attackingScenarioPokemon.Pokemon} has range {move.Range} which does not hit the square immediately ahead of the user. This causes a tutorial softlock.");
         }
-        if (oichisPokemon && _allMoveRanges[move.Range].GetInRange(24))
+        if (oichisPokemon && _moveRangeService.Retrieve((int)move.Range).GetInRange(24))
         {
             ReportProbable($"The move {attackingPokemon.Move} used by pokemon {attackingScenarioPokemon.Pokemon} has range {move.Range} thus may take out Koroku, skipping the player's turn. This causes the 'Back' button to be not work in battles.");
         }

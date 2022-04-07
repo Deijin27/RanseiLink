@@ -1,49 +1,45 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 using RanseiLink.Core.Models;
+using System.IO;
+using System;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IGimmickRangeService : IModelDataService<GimmickRangeId, IMoveRange>
-{
-    IDisposableGimmickRangeService Disposable();
-}
-
-public interface IDisposableGimmickRangeService : IDisposableModelDataService<GimmickRangeId, IMoveRange>
+public interface IGimmickRangeService : IModelService<MoveRange>
 {
 }
 
-public class GimmickRangeService : BaseModelService, IGimmickRangeService
+public class GimmickRangeService : BaseModelService<MoveRange>, IGimmickRangeService
 {
-    public GimmickRangeService(ModInfo mod) : base(mod, Constants.GimmickRangeRomPath, MoveRange.DataLength, 29) { }
+    public GimmickRangeService(string GimmickRangeDatFile) : base(GimmickRangeDatFile, 0, 29) { }
 
-    public IDisposableGimmickRangeService Disposable()
+    public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) { }
+
+    public override void Reload()
     {
-        return new DisposableGimmickRangeService(Mod);
+        _cache.Clear();
+        using var br = new BinaryReader(File.OpenRead(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
+        }
     }
 
-    public IMoveRange Retrieve(GimmickRangeId id)
+    public override void Save()
     {
-        return new MoveRange(RetrieveData((int)id));
+        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
+        for (int id = _minId; id <= _maxId; id++)
+        {
+            bw.Write(_cache[id].Data);
+        }
     }
 
-    public void Save(GimmickRangeId id, IMoveRange model)
+    public override string IdToName(int id)
     {
-        SaveData((int)id, model.Data);
-    }
-}
-
-public class DisposableGimmickRangeService : BaseDisposableModelService, IDisposableGimmickRangeService
-{
-    public DisposableGimmickRangeService(ModInfo mod) : base(mod, Constants.GimmickRangeRomPath, MoveRange.DataLength, 29) { }
-
-    public IMoveRange Retrieve(GimmickRangeId id)
-    {
-        return new MoveRange(RetrieveData((int)id));
-    }
-
-    public void Save(GimmickRangeId id, IMoveRange model)
-    {
-        SaveData((int)id, model.Data);
+        if (!ValidateId(id))
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        return ((GimmickRangeId)id).ToString();
     }
 }

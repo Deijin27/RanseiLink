@@ -1,29 +1,43 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ItemViewModel ItemViewModelFactory(ItemId id, IItem model, IEditorContext context);
-
-public class ItemViewModel : ViewModelBase
+public interface IItemViewModel 
 {
-    private readonly IItem _model;
-    private readonly ICachedMsgBlockService _msgService;
-    public ItemViewModel(ItemId id, IItem model, IEditorContext context)
-    {
-        Id = id;
-        _msgService = context.CachedMsgBlockService;
-        _model = model;
+    void SetModel(ItemId id, Item model);
+}
 
-        var jumpService = context.JumpService;
-        JumpToItemCommand = new RelayCommand<ItemId>(jumpService.JumpToItem);
+public class ItemViewModel : ViewModelBase, IItemViewModel
+{
+    private Item _model;
+    private readonly ICachedMsgBlockService _msgService;
+    public ItemViewModel(ICachedMsgBlockService msgService, IJumpService jumpService, IIdToNameService idToNameService)
+    {
+        _msgService = msgService;
+        _model = new Item();
+
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
+
+        ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
     }
+
+    public void SetModel(ItemId id, Item model)
+    {
+        Id = (int)id;
+        _model = model;
+        RaiseAllPropertiesChanged();
+    }
+
+    public List<SelectorComboBoxItem> ItemItems { get; }
 
     public ICommand JumpToItemCommand { get; }
 
-    public ItemId Id { get; }
+    public int Id { get; private set; }
 
     public string Name
     {
@@ -55,10 +69,10 @@ public class ItemViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.EffectDuration, value, v => _model.EffectDuration = v);
     }
 
-    public ItemId CraftingIngredient1
+    public int CraftingIngredient1
     {
-        get => _model.CraftingIngredient1;
-        set => RaiseAndSetIfChanged(_model.CraftingIngredient1, value, v => _model.CraftingIngredient1 = v);
+        get => (int)_model.CraftingIngredient1;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
     }
 
     public uint CraftingIngredient1Amount
@@ -67,10 +81,10 @@ public class ItemViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
     }
 
-    public ItemId CraftingIngredient2
+    public int CraftingIngredient2
     {
-        get => _model.CraftingIngredient2;
-        set => RaiseAndSetIfChanged(_model.CraftingIngredient2, value, v => _model.CraftingIngredient2 = v);
+        get => (int)_model.CraftingIngredient2;
+        set => RaiseAndSetIfChanged(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
     }
 
     public uint CraftingIngredient2Amount
@@ -79,10 +93,10 @@ public class ItemViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
     }
 
-    public ItemId UnknownItem
+    public int UnknownItem
     {
-        get => _model.UnknownItem;
-        set => RaiseAndSetIfChanged(_model.UnknownItem, value, v => _model.UnknownItem = v);
+        get => (int)_model.UnknownItem;
+        set => RaiseAndSetIfChanged(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
     }
 
     public uint ShopPriceMultiplier // max = 511
@@ -98,13 +112,13 @@ public class ItemViewModel : ViewModelBase
     }
     public string Description
     {
-        get => _msgService.GetItemDescription(Id);
-        set => _msgService.SetItemDescription(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription, Id, value);
     }
     public string Description2
     {
-        get => _msgService.GetItemDescription2(Id);
-        set => _msgService.SetItemDescription2(Id, value);
+        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription2, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
     }
 
     #region Purchasable

@@ -1,9 +1,8 @@
 ﻿
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class MoveAnimation : BaseDataWindow, IMoveAnimation
+public class MoveAnimation : BaseDataWindow
 {
     public const int DataLength = 4;
     public MoveAnimation(byte[] data) : base(data, DataLength) { }
@@ -21,8 +20,4 @@ public class MoveAnimation : BaseDataWindow, IMoveAnimation
         set => SetUInt16(2, (ushort)value);
     }
 
-    public IMoveAnimation Clone()
-    {
-        return new MoveAnimation((byte[])Data.Clone());
-    }
 }

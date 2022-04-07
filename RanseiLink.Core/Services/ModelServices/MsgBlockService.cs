@@ -4,9 +4,11 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IMsgBlockService : IModelDataService<int, List<Message>>
+public interface IMsgBlockService
 {
-    public int BlockCount { get; }
+    int BlockCount { get; }
+    List<Message> Retrieve(int id);
+    void Save(int id, List<Message> block);
 }
 
 internal class MsgBlockService : IMsgBlockService

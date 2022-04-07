@@ -1,23 +1,38 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate KingdomViewModel KingdomViewModelFactory(KingdomId id, IKingdom model, IEditorContext context);
-
-public abstract class KingdomViewModelBase : ViewModelBase
+public interface IKingdomViewModel 
 {
-    private readonly IKingdom _model;
+    void SetModel(KingdomId id, Kingdom model);
+}
 
-    public KingdomViewModelBase(KingdomId id, IKingdom model)
+
+public class KingdomViewModel : ViewModelBase, IKingdomViewModel
+{
+    private Kingdom _model;
+
+    public KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService)
+    {
+        _model = new Kingdom();
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+
+        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+    }
+
+    public void SetModel(KingdomId id, Kingdom model)
     {
         Id = id;
         _model = model;
+        RaiseAllPropertiesChanged();
     }
 
-    public KingdomId Id { get; }
+    public KingdomId Id { get; private set; }
 
     public string Name
     {
@@ -25,70 +40,72 @@ public abstract class KingdomViewModelBase : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public KingdomId MapConnection0
+    public List<SelectorComboBoxItem> KingdomItems { get; }
+
+    public int MapConnection0
     {
-        get => _model.MapConnection0;
-        set => RaiseAndSetIfChanged(_model.MapConnection0, value, v => _model.MapConnection0 = v);
+        get => (int)_model.MapConnection0;
+        set => RaiseAndSetIfChanged(_model.MapConnection0, (KingdomId)value, v => _model.MapConnection0 = v);
     }
-    public KingdomId MapConnection1
+    public int MapConnection1
     {
-        get => _model.MapConnection1;
-        set => RaiseAndSetIfChanged(_model.MapConnection1, value, v => _model.MapConnection1 = v);
+        get => (int)_model.MapConnection1;
+        set => RaiseAndSetIfChanged(_model.MapConnection1, (KingdomId)value, v => _model.MapConnection1 = v);
     }
-    public KingdomId MapConnection2
+    public int MapConnection2
     {
-        get => _model.MapConnection2;
-        set => RaiseAndSetIfChanged(_model.MapConnection2, value, v => _model.MapConnection2 = v);
+        get => (int)_model.MapConnection2;
+        set => RaiseAndSetIfChanged(_model.MapConnection2, (KingdomId)value, v => _model.MapConnection2 = v);
     }
-    public KingdomId MapConnection3
+    public int MapConnection3
     {
-        get => _model.MapConnection3;
-        set => RaiseAndSetIfChanged(_model.MapConnection3, value, v => _model.MapConnection3 = v);
+        get => (int)_model.MapConnection3;
+        set => RaiseAndSetIfChanged(_model.MapConnection3, (KingdomId)value, v => _model.MapConnection3 = v);
     }
-    public KingdomId MapConnection4
+    public int MapConnection4
     {
-        get => _model.MapConnection4;
-        set => RaiseAndSetIfChanged(_model.MapConnection4, value, v => _model.MapConnection4 = v);
+        get => (int)_model.MapConnection4;
+        set => RaiseAndSetIfChanged(_model.MapConnection4, (KingdomId)value, v => _model.MapConnection4 = v);
     }
-    public KingdomId MapConnection5
+    public int MapConnection5
     {
-        get => _model.MapConnection5;
-        set => RaiseAndSetIfChanged(_model.MapConnection5, value, v => _model.MapConnection5 = v);
+        get => (int)_model.MapConnection5;
+        set => RaiseAndSetIfChanged(_model.MapConnection5, (KingdomId)value, v => _model.MapConnection5 = v);
     }
-    public KingdomId MapConnection6
+    public int MapConnection6
     {
-        get => _model.MapConnection6;
-        set => RaiseAndSetIfChanged(_model.MapConnection6, value, v => _model.MapConnection6 = v);
+        get => (int)_model.MapConnection6;
+        set => RaiseAndSetIfChanged(_model.MapConnection6, (KingdomId)value, v => _model.MapConnection6 = v);
     }
-    public KingdomId MapConnection7
+    public int MapConnection7
     {
-        get => _model.MapConnection7;
-        set => RaiseAndSetIfChanged(_model.MapConnection7, value, v => _model.MapConnection7 = v);
+        get => (int)_model.MapConnection7;
+        set => RaiseAndSetIfChanged(_model.MapConnection7, (KingdomId)value, v => _model.MapConnection7 = v);
     }
-    public KingdomId MapConnection8
+    public int MapConnection8
     {
-        get => _model.MapConnection8;
-        set => RaiseAndSetIfChanged(_model.MapConnection8, value, v => _model.MapConnection8 = v);
+        get => (int)_model.MapConnection8;
+        set => RaiseAndSetIfChanged(_model.MapConnection8, (KingdomId)value, v => _model.MapConnection8 = v);
     }
-    public KingdomId MapConnection9
+    public int MapConnection9
     {
-        get => _model.MapConnection9;
-        set => RaiseAndSetIfChanged(_model.MapConnection9, value, v => _model.MapConnection9 = v);
+        get => (int)_model.MapConnection9;
+        set => RaiseAndSetIfChanged(_model.MapConnection9, (KingdomId)value, v => _model.MapConnection9 = v);
     }
-    public KingdomId MapConnection10
+    public int MapConnection10
     {
-        get => _model.MapConnection10;
-        set => RaiseAndSetIfChanged(_model.MapConnection10, value, v => _model.MapConnection10 = v);
+        get => (int)_model.MapConnection10;
+        set => RaiseAndSetIfChanged(_model.MapConnection10, (KingdomId)value, v => _model.MapConnection10 = v);
     }
-    public KingdomId MapConnection11
+    public int MapConnection11
     {
-        get => _model.MapConnection11;
-        set => RaiseAndSetIfChanged(_model.MapConnection11, value, v => _model.MapConnection11 = v);
+        get => (int)_model.MapConnection11;
+        set => RaiseAndSetIfChanged(_model.MapConnection11, (KingdomId)value, v => _model.MapConnection11 = v);
     }
-    public KingdomId MapConnection12
+    public int MapConnection12
     {
-        get => _model.MapConnection12;
-        set => RaiseAndSetIfChanged(_model.MapConnection12, value, v => _model.MapConnection12 = v);
+        get => (int)_model.MapConnection12;
+        set => RaiseAndSetIfChanged(_model.MapConnection12, (KingdomId)value, v => _model.MapConnection12 = v);
     }
     public BattleConfigId BattleConfig
     {
@@ -113,17 +130,6 @@ public abstract class KingdomViewModelBase : ViewModelBase
         get => _model.Unknown_R5_C26_L4;
         set => RaiseAndSetIfChanged(_model.Unknown_R5_C26_L4, value, v => _model.Unknown_R5_C26_L4 = v);
     }
-}
-
-public class KingdomViewModel : KingdomViewModelBase
-{
-    public KingdomViewModel(KingdomId id, IKingdom model, IEditorContext context) : base(id, model) 
-    {
-        var jumpService = context.JumpService;
-
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(jumpService.JumpToBattleConfig);
-    }
 
     public ICommand JumpToBattleConfigCommand { get; }
-
 }

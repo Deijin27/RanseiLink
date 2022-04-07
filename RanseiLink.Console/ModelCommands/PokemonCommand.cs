@@ -1,30 +1,36 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("pokemon", Description = "Get data on a given pokemon.")]
-public class PokemonCommand : BaseCommand
+public class PokemonCommand : ICommand
 {
-    public PokemonCommand(IServiceContainer container) : base(container) { }
-    public PokemonCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public PokemonCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Pokemon ID.", Name = "id")]
     public PokemonId Id { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        var model = dataService.Pokemon.Retrieve(Id);
+        var service = services.Get<IPokemonService>();
+
+        var model = service.Retrieve((int)Id);
 
         console.Render(model, Id);
 

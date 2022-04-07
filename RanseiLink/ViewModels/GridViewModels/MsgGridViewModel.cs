@@ -1,5 +1,4 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.Services;
+﻿using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,14 +7,13 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-// This doesn't actually need to be saveable refreshable but whatever
-public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISaveableRefreshable
+public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 {
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
 
-    public MsgGridViewModel(IServiceContainer container, IEditorContext context)
+    public MsgGridViewModel(ICachedMsgBlockService cachedMsgBlockService)
     {
-        _cachedMsgBlockService = context.CachedMsgBlockService;
+        _cachedMsgBlockService = cachedMsgBlockService;
         for (int i = 0; i < _cachedMsgBlockService.BlockCount; i++)
         {
             var block = _cachedMsgBlockService.Retrieve(i);
@@ -100,17 +98,6 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>, ISa
     public ObservableCollection<MsgViewModel> Items { get; }
 
     private readonly List<MsgViewModel> _allItems = new();
-
-    public void Refresh()
-    {
-        // refresh isn't necessary because this is cached.
-        // The cache is cleared and refreshed properly where necessary in MainEditorViewModel
-    }
-
-    public void Save()
-    {
-        // save is done outside because the cache is used in multiple places and it's quick anyway
-    }
 
     public ICommand SearchCommand { get; }
     public ICommand ClearCommand { get; }

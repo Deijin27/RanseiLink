@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models.Interfaces;
 
 namespace RanseiLink.Core.Models;
 
-public class Kingdom : BaseDataWindow, IKingdom
+public class Kingdom : BaseDataWindow
 {
     public const int DataLength = 0x18;
     public Kingdom(byte[] data) : base(data, DataLength) { }
@@ -143,8 +142,5 @@ public class Kingdom : BaseDataWindow, IKingdom
         get => GetUInt32(5, 4, 26);
         set => SetUInt32(5, 4, 26, value);
     }
-    public IKingdom Clone()
-    {
-        return new Kingdom((byte[])Data.Clone());
-    }
+    
 }

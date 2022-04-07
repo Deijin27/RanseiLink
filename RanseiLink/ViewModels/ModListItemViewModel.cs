@@ -3,31 +3,54 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public delegate ModListItemViewModel ModListItemViewModelFactory(ModSelectionViewModel parent, ModInfo mod);
+public interface IModListItemViewModelFactory
+{
+    ModListItemViewModel CreateViewModel(ModSelectionViewModel parent, ModInfo mod);
+}
+
+public class ModListItemViewModelFactory : IModListItemViewModelFactory
+{
+    private readonly Func<ModSelectionViewModel, ModInfo, ModListItemViewModel> _factory;
+    public ModListItemViewModelFactory(Func<ModSelectionViewModel, ModInfo, ModListItemViewModel> factory)
+    {
+        _factory = factory;
+    }
+
+    public ModListItemViewModel CreateViewModel(ModSelectionViewModel parent, ModInfo mod)
+    {
+        return _factory(parent, mod);
+    }
+}
 
 public class ModListItemViewModel : ViewModelBase
 {
     private readonly ModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
-    private readonly IServiceContainer _container;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    private readonly IModServiceGetterFactory _modKernelFactory;
 
-    public ModListItemViewModel(ModSelectionViewModel parent, ModInfo mod, IServiceContainer container)
+    public ModListItemViewModel(
+        ModSelectionViewModel parent, 
+        ModInfo mod, 
+        IModManager modManager, 
+        IDialogService dialogService, 
+        IFallbackSpriteProvider fallbackSpriteProvider,
+        IPluginLoader pluginLoader,
+        IModServiceGetterFactory modKernelFactory)
     {
-        _container = container;
+        _modKernelFactory = modKernelFactory;
         _parentVm = parent;
-        _modService = container.Resolve<IModManager>();
-        _dialogService = container.Resolve<IDialogService>();
-        _fallbackSpriteProvider = container.Resolve<IFallbackSpriteProvider>();
+        _modService = modManager;
+        _dialogService = dialogService;
+        _fallbackSpriteProvider = fallbackSpriteProvider;
         Mod = mod;
-        PluginItems = container.Resolve<IPluginLoader>().LoadPlugins(out var _);
+        PluginItems = pluginLoader.LoadPlugins(out var _);
 
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
@@ -67,7 +90,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             try
             {
-                _modService.Commit(mod, romPath, patchOpt, progress);
+                _modService.Patch(mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {
@@ -187,7 +210,7 @@ public class ModListItemViewModel : ViewModelBase
     {
         try
         {
-            chosen.Plugin.Run(new PluginContext(_container, mod));
+            chosen.Plugin.Run(new PluginContext(_modKernelFactory.Create(mod)));
         }
         catch (Exception e)
         {

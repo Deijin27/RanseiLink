@@ -1,30 +1,36 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
+using CliFx;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("basewarrior", Description = "Get data on a given base warrior.")]
-public class BaseWarriorCommand : BaseCommand
+public class BaseWarriorCommand : ICommand
 {
-    public BaseWarriorCommand(IServiceContainer container) : base(container) { }
-    public BaseWarriorCommand() : base() { }
+    private readonly ICurrentModService _currentModService;
+    public BaseWarriorCommand(ICurrentModService currentModService)
+    {
+        _currentModService = currentModService;
+    }
 
     [CommandParameter(0, Description = "Warrior ID.", Name = "id")]
     public WarriorId Id { get; set; }
 
-    public override ValueTask ExecuteAsync(IConsole console)
+    public ValueTask ExecuteAsync(IConsole console)
     {
-        var currentModService = Container.Resolve<ICurrentModService>();
-        if (!currentModService.TryGetDataService(console, out IModServiceContainer dataService))
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
+            console.Output.WriteLine("No mod selected");
             return default;
         }
 
-        var model = dataService.BaseWarrior.Retrieve(Id);
+        var service = services.Get<IBaseWarriorService>();
+
+        var model = service.Retrieve((int)Id);
 
         console.Render(model, Id);
 
