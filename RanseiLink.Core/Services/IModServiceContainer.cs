@@ -29,5 +29,6 @@ public interface IModServiceContainer
     IGimmickRangeService GimmickRange { get; }
     IMoveAnimationService MoveAnimation { get; }
     IGimmickObjectService GimmickObject { get; }
+    IEpisodeService Episode { get; }
     IOverrideSpriteProvider OverrideSpriteProvider { get; }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
@@ -99,10 +100,7 @@ public abstract class BaseModelService<TModel> : IModelService<TModel>
 
     public IEnumerable<int> ValidIds()
     {
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            yield return id;
-        }
+        return Enumerable.Range(_minId, _maxId - _minId + 1);
     }
 
     public IEnumerable<TModel> Enumerate() => _cache;

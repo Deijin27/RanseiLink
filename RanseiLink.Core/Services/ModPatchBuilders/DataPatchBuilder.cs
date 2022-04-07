@@ -31,7 +31,8 @@ public class DataPatchBuilder : IPatchBuilder
             Constants.BattleConfigRomPath,
             Constants.GimmickRangeRomPath,
             Constants.MoveAnimationRomPath,
-            Constants.GimmickObjectRomPath
+            Constants.GimmickObjectRomPath,
+            Constants.EpisodeRomPath
         };
 
         foreach (var i in EnumUtil.GetValues<ScenarioId>())

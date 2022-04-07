@@ -218,6 +218,15 @@ public static partial class RenderExtensions
         console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
     }
 
+    public static void Render(this IConsole console, Episode model, EpisodeId id)
+    {
+        console.WriteTitle($"{id}");
+        console.WriteProperty("Order", model.Order);
+        console.WriteProperty("Unlock Condition", model.UnlockCondition);
+        console.WriteProperty("Difficulty", model.Difficulty);
+        console.WriteProperty("Scenario", model.Scenario);
+    }
+
     public static void Render(this IConsole console, WarriorSkill saihai, WarriorSkillId id)
     {
         console.WriteTitle($"{id}");

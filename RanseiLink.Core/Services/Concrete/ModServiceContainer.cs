@@ -28,6 +28,7 @@ public class ModServiceContainer : IModServiceContainer
     private readonly Lazy<IGimmickObjectService> _gimmickObject;
     private readonly Lazy<IMapService> _map;
     private readonly Lazy<IOverrideSpriteProvider> _overrideSpriteProvider;
+    private readonly Lazy<IEpisodeService> _episode;
 
     public ModServiceContainer(IServiceGetter modServices)
     {
@@ -54,6 +55,7 @@ public class ModServiceContainer : IModServiceContainer
         _gimmickObject = new(() => modServices.Get<IGimmickObjectService>());
         _map = new(() => modServices.Get<IMapService>());
         _overrideSpriteProvider = new(() => modServices.Get<IOverrideSpriteProvider>());
+        _episode = new(() => modServices.Get<IEpisodeService>());
     }
 
     public IPokemonService Pokemon => _pokemon.Value;
@@ -79,4 +81,5 @@ public class ModServiceContainer : IModServiceContainer
     public IGimmickObjectService GimmickObject => _gimmickObject.Value;
     public IMapService Map => _map.Value;
     public IOverrideSpriteProvider OverrideSpriteProvider => _overrideSpriteProvider.Value;
+    public IEpisodeService Episode => _episode.Value;
 }

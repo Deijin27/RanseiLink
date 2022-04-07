@@ -76,6 +76,9 @@
     <Compile Update="Views\GridViews\MsgGridView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\EpisodeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\MapView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -217,6 +220,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\GridViews\MsgGridView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\EpisodeView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

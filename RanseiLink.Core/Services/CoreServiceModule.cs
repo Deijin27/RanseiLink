@@ -46,6 +46,7 @@ public class CoreModServiceModule : Module
         builder.RegisterType<BaseWarriorService>().As<IBaseWarriorService>().SingleInstance();
         builder.RegisterType<BattleConfigService>().As<IBattleConfigService>().SingleInstance();
         builder.RegisterType<BuildingService>().As<IBuildingService>().SingleInstance();
+        builder.RegisterType<EpisodeService>().As<IEpisodeService>().SingleInstance();
         builder.RegisterType<EventSpeakerService>().As<IEventSpeakerService>().SingleInstance();
         builder.RegisterType<GimmickObjectService>().As<IGimmickObjectService>().SingleInstance();
         builder.RegisterType<GimmickRangeService>().As<IGimmickRangeService>().SingleInstance();

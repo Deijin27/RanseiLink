@@ -2,6 +2,7 @@
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -268,6 +269,25 @@ public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickServ
         base.Initialise(modServices);
         var vm = modServices.Get<IGimmickViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
+    }
+}
+
+public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeService>
+{
+    public const string Id = "episode_selector";
+    public override string UniqueId => Id;
+    public override string ListName => "Episode";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IEpisodeViewModel>();
+        var msgService = modServices.Get<ICachedMsgBlockService>();
+        var episodeComboItems = _service
+            .ValidIds()
+            .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
+            .ToList();
+        
+        _viewModel = new SelectorViewModel(episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)));
     }
 }
 

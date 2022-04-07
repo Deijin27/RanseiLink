@@ -4,6 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -43,9 +44,12 @@ public class ScenarioAppearPokemonViewModel : ViewModelBase, IScenarioAppearPoke
 
     public void SetModel(ScenarioAppearPokemon model)
     {
-        AppearItems = EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(model, i, _idToNameService.IdToName<IPokemonService>((int)i))).ToList();
-        RaiseAllPropertiesChanged();
+        AppearItems.Clear();
+        foreach (var item in EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(model, i, _idToNameService.IdToName<IPokemonService>((int)i))))
+        {
+            AppearItems.Add(item);  
+        }
     }
 
-    public List<AppearItem> AppearItems { get; private set; }
+    public ObservableCollection<AppearItem> AppearItems { get; } = new();
 }

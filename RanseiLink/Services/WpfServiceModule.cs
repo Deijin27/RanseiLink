@@ -39,6 +39,7 @@ public class WpfModServiceModule : Module
         builder.RegisterType<BaseWarriorViewModel>().As<IBaseWarriorViewModel>();
         builder.RegisterType<BattleConfigViewModel>().As<IBattleConfigViewModel>();
         builder.RegisterType<BuildingViewModel>().As<IBuildingViewModel>();
+        builder.RegisterType<EpisodeViewModel>().As<IEpisodeViewModel>();
         builder.RegisterType<EventSpeakerViewModel>().As<IEventSpeakerViewModel>();
         builder.RegisterType<GimmickViewModel>().As<IGimmickViewModel>();
         builder.RegisterType<ItemViewModel>().As<IItemViewModel>();

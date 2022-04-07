@@ -4,6 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -41,9 +42,12 @@ public class ScenarioKingdomViewModel : ViewModelBase, IScenarioKingdomViewModel
 
     public void SetModel(ScenarioKingdom model)
     {
-        KingdomItems = EnumUtil.GetValuesExceptDefaults<KingdomId>().Select(i => new ScenarioKingdomItem(model, i, _idToNameService.IdToName<IKingdomService>((int)i))).ToList();
-        RaiseAllPropertiesChanged();
+        KingdomItems.Clear();
+        foreach (var item in EnumUtil.GetValuesExceptDefaults<KingdomId>().Select(i => new ScenarioKingdomItem(model, i, _idToNameService.IdToName<IKingdomService>((int)i))))
+        {
+            KingdomItems.Add(item);
+        }
     }
 
-    public List<ScenarioKingdomItem> KingdomItems { get; private set; }
+    public ObservableCollection<ScenarioKingdomItem> KingdomItems { get; } = new();
 }

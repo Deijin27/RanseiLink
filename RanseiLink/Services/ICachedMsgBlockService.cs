@@ -40,4 +40,6 @@ public enum MsgShortcut
     WarriorSkillDescription,
     ItemDescription,
     ItemDescription2,
+    EpisodeName,
+    EpisodeDescription,
 }

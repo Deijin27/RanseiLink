@@ -94,6 +94,16 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
                 offsetWithinBlock = 94;
                 maxValidId = 125;
                 break;
+            case MsgShortcut.EpisodeName:
+                block = 5;
+                offsetWithinBlock = 9;
+                maxValidId = 37;
+                break;
+            case MsgShortcut.EpisodeDescription:
+                block = 4;
+                offsetWithinBlock = 221;
+                maxValidId = 37;
+                break;
             default:
                 throw new System.Exception($"Invalid msg type '{type}'");
         }

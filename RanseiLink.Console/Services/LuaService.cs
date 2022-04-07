@@ -79,6 +79,7 @@ public class LuaService : ILuaService
             AddEnumToState<BattleConfigId>();
             AddEnumToState<GimmickRangeId>();
             AddEnumToState<GimmickObjectId>();
+            AddEnumToState<EpisodeId>();
 
             lua.DoFile(fileName);
         }
