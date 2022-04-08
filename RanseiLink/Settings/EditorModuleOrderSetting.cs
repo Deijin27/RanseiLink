@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Settings;
 
-internal class EditorModuleOrderSetting : Setting<IReadOnlyCollection<string>>
+public class EditorModuleOrderSetting : Setting<IReadOnlyCollection<string>>
 {
     public EditorModuleOrderSetting() : base("EditorModuleOrder") 
     {

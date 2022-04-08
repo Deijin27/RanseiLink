@@ -28,8 +28,4 @@
     <ProjectReference Include="..\RanseiLink\RanseiLink.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModelTests\" />
-  </ItemGroup>
-
 </Project>

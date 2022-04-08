@@ -36,7 +36,8 @@ public class MainEditorViewModel : ViewModelBase
         ISettingService settingService, 
         IFallbackSpriteProvider fallbackSpriteProvider, 
         IPluginLoader pluginLoader,
-        IModServiceGetterFactory modKernelFactory)
+        IModServiceGetterFactory modKernelFactory,
+        IEnumerable<EditorModule> modules)
     {
         _modKernelFactory = modKernelFactory;
         _dialogService = dialogService;
@@ -46,14 +47,14 @@ public class MainEditorViewModel : ViewModelBase
         _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
 
         PluginItems = pluginLoader.LoadPlugins(out var loadFailures);
-        if (loadFailures.AnyFailures)
+        if (loadFailures?.AnyFailures == true)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Failed to load some plugins", loadFailures.ToString()));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Failed to load some plugins", loadFailures?.ToString()));
         }
         
         CommitRomCommand = new RelayCommand(CommitRom);
 
-        RegisterModules();
+        RegisterModules(modules);
     }
 
     private ICachedMsgBlockService _cachedMsgBlockService;
@@ -99,6 +100,10 @@ public class MainEditorViewModel : ViewModelBase
 
     public bool TryGetModule(string moduleId, out EditorModule module)
     {
+        if (moduleId == null)
+        {
+            throw new ArgumentNullException(nameof(moduleId));
+        }
         if (!InitialisedModules.TryGetValue(moduleId, out module))
         {
             if (!UninitialisedModules.TryGetValue(moduleId, out module))
@@ -114,6 +119,10 @@ public class MainEditorViewModel : ViewModelBase
 
     private void SetCurrentModule(string moduleId, bool forceUpdate = false)
     {
+        if (moduleId == null)
+        {
+            throw new ArgumentNullException(nameof(moduleId));
+        }
         if (_currentModule?.UniqueId == moduleId && !forceUpdate)
         {
             return;
@@ -140,17 +149,14 @@ public class MainEditorViewModel : ViewModelBase
         ListItems.Add(new EditorModuleListItem(module.ListName, module.UniqueId));
     }
 
-    private void RegisterModules()
+    private void RegisterModules(IEnumerable<EditorModule> modules)
     {
-        var types = System.Reflection.Assembly
-                .GetExecutingAssembly()
-                .GetTypes();
-
-        IEnumerable<Type> modules = types.Where(i => typeof(EditorModule).IsAssignableFrom(i) && !i.IsAbstract);
-
-        foreach (Type t in modules)
+        foreach (var module in modules)
         {
-            var module = (EditorModule)Activator.CreateInstance(t);
+            if (module.UniqueId == null)
+            {
+                throw new Exception("A Module ID is null");
+            }
             AddModule(module);
         }
 

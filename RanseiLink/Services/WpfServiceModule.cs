@@ -3,6 +3,9 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.Services.Concrete;
 using RanseiLink.ViewModels;
 using Autofac;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace RanseiLink.Services;
 
@@ -25,6 +28,15 @@ public class WpfServiceModule : Module
         builder.RegisterType<ModListItemViewModelFactory>().As<IModListItemViewModelFactory>().SingleInstance();
 
         builder.RegisterType<JumpService>().As<IJumpService>().SingleInstance();
+
+        // editor modules
+        IEnumerable<Type> types = ThisAssembly
+                .GetTypes()
+                .Where(i => typeof(EditorModule).IsAssignableFrom(i) && !i.IsAbstract);
+        foreach (Type t in types)
+        {
+            builder.RegisterType(t).As<EditorModule>();
+        }
     }
 }
 
