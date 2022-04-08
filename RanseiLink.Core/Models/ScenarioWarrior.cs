@@ -19,20 +19,20 @@ public class ScenarioWarrior : BaseDataWindow
 
     public WarriorClassId Class
     {
-        get => (WarriorClassId)GetUInt32(0, 3, 9);
-        set => SetUInt32(0, 3, 9, (uint)value);
+        get => (WarriorClassId)GetUInt32(0, 9, 3);
+        set => SetUInt32(0, 9, 3, (uint)value);
     }
 
     public KingdomId Kingdom
     {
-        get => (KingdomId)GetUInt32(0, 5, 12);
-        set => SetUInt32(0, 5, 12, (uint)value);
+        get => (KingdomId)GetUInt32(0, 12, 5);
+        set => SetUInt32(0, 12, 5, (uint)value);
     }
 
     public uint Army
     {
-        get => GetUInt32(0, 5, 17);
-        set => SetUInt32(0, 5, 17, value);
+        get => GetUInt32(0, 17, 5);
+        set => SetUInt32(0, 17, 5, value);
     }
 
     public ushort GetScenarioPokemon(int id)

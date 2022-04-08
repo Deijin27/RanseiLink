@@ -5,8 +5,8 @@ public interface IDataWindow
 {
     byte GetByte(int offset);
     void SetByte(int offset, byte value);
-    uint GetUInt32(int index, int bitCount, int offset);
-    void SetUInt32(int index, int bitCount, int offset, uint value);
+    uint GetUInt32(int index, int offset, int bitCount);
+    void SetUInt32(int index, int offset, int bitCount, uint value);
     string GetUtf8String(int index, int length);
 
     string GetPaddedUtf8String(int index, int maxLength);

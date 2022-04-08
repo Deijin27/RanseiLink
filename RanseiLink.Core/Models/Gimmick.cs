@@ -28,8 +28,8 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public TypeId AttackType
     {
-        get => (TypeId)GetUInt32(5, 5, 0);
-        set => SetUInt32(5, 5, 0, (uint)value);
+        get => (TypeId)GetUInt32(5, 0, 5);
+        set => SetUInt32(5, 0, 5, (uint)value);
     }
 
     /// <summary>
@@ -46,20 +46,20 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public GimmickObjectId State1Object
     {
-        get => (GimmickObjectId)GetUInt32(5, 7, 11);
-        set => SetUInt32(5, 7, 11, (uint)value);
+        get => (GimmickObjectId)GetUInt32(5, 11, 7);
+        set => SetUInt32(5, 11, 7, (uint)value);
     }
 
     public GimmickObjectId State2Object
     {
-        get => (GimmickObjectId)GetUInt32(5, 7, 18);
-        set => SetUInt32(5, 7, 18, (uint)value);
+        get => (GimmickObjectId)GetUInt32(5, 18, 7);
+        set => SetUInt32(5, 18, 7, (uint)value);
     }
 
     public MoveEffectId Effect
     {
-        get => (MoveEffectId)GetUInt32(5, 7, 25);
-        set => SetUInt32(5, 7, 25, (uint)value);
+        get => (MoveEffectId)GetUInt32(5, 25, 7);
+        set => SetUInt32(5, 25, 7, (uint)value);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public uint UnknownQuantity1
     {
-        get => GetUInt32(6, 8, 0);
-        set => SetUInt32(6, 8, 0, value);
+        get => GetUInt32(6, 0, 8);
+        set => SetUInt32(6, 0, 8, value);
     }
 
     public MoveAnimationId Animation1
@@ -79,14 +79,14 @@ public class Gimmick : BaseDataWindow
 
     public MoveAnimationId Animation2
     {
-        get => (MoveAnimationId)GetUInt32(6, 8, 16);
-        set => SetUInt32(6, 8, 16, (uint)value);
+        get => (MoveAnimationId)GetUInt32(6, 16, 8);
+        set => SetUInt32(6, 16, 8, (uint)value);
     }
 
     public GimmickRangeId Range
     {
-        get => (GimmickRangeId)GetUInt32(8, 5, 19);
-        set => SetUInt32(8, 5, 19, (uint)value);
+        get => (GimmickRangeId)GetUInt32(8, 19, 5);
+        set => SetUInt32(8, 19, 5, (uint)value);
     }
 
 }

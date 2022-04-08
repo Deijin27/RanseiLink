@@ -12,36 +12,36 @@ public class BattleConfig : BaseDataWindow
 
     public uint Environment
     {
-        get => GetUInt32(0, 6, 0);
-        set => SetUInt32(0, 6, 0, value);
+        get => GetUInt32(0, 0, 6);
+        set => SetUInt32(0, 0, 6, value);
     }
 
     public uint EnvironmentVariant
     {
-        get => GetUInt32(0, 5, 6);
-        set => SetUInt32(0, 5, 6, value);
+        get => GetUInt32(0, 6, 5);
+        set => SetUInt32(0, 6, 5, value);
     }
 
     public MapId MapId
     {
-        get => new((int)GetUInt32(0, 6, 0), (int)GetUInt32(0, 5, 6));
+        get => new((int)GetUInt32(0, 0, 6), (int)GetUInt32(0, 6, 5));
         set
         {
-            SetUInt32(0, 6, 0, (uint)value.Map);
-            SetUInt32(0, 5, 6, (uint)value.Variant);
+            SetUInt32(0, 0, 6, (uint)value.Map);
+            SetUInt32(0, 6, 5, (uint)value.Variant);
         }
     }
 
     public Rgb15 UpperAtmosphereColor
     {
-        get => Rgb15.From((ushort)GetUInt32(0, 15, 11));
-        set => SetUInt32(0, 15, 11, value.ToUInt16());
+        get => Rgb15.From((ushort)GetUInt32(0, 11, 15));
+        set => SetUInt32(0, 11, 15, value.ToUInt16());
     }
 
     public Rgb15 MiddleAtmosphereColor
     {
-        get => Rgb15.From((ushort)GetUInt32(1, 15, 0));
-        set => SetUInt32(1, 15, 0, value.ToUInt16());
+        get => Rgb15.From((ushort)GetUInt32(1, 0, 15));
+        set => SetUInt32(1, 0, 15, value.ToUInt16());
     }
 
     public Rgb15 LowerAtmosphereColor
@@ -52,8 +52,8 @@ public class BattleConfig : BaseDataWindow
 
     public BattleVictoryConditionFlags VictoryCondition
     {
-        get => (BattleVictoryConditionFlags)GetUInt32(2, 5, 0);
-        set => SetUInt32(2, 5, 0, (uint)value);
+        get => (BattleVictoryConditionFlags)GetUInt32(2, 0, 5);
+        set => SetUInt32(2, 0, 5, (uint)value);
     }
 
     public BattleVictoryConditionFlags DefeatCondition
@@ -64,8 +64,8 @@ public class BattleConfig : BaseDataWindow
 
     public uint NumberOfTurns
     {
-        get => GetUInt32(2, 5, 24);
-        set => SetUInt32(2, 5, 24, value);
+        get => GetUInt32(2, 24, 5);
+        set => SetUInt32(2, 24, 5, value);
     }
 
 }

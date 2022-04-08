@@ -19,56 +19,56 @@ public class Item : BaseDataWindow
 
     public uint BuildingLevel
     {
-        get => GetUInt32(5, 2, 16);
-        set => SetUInt32(5, 2, 16, value);
+        get => GetUInt32(5, 16, 2);
+        set => SetUInt32(5, 16, 2, value);
     }
 
     public ItemCategoryId Category
     {
-        get => (ItemCategoryId)GetUInt32(5, 2, 19);
-        set => SetUInt32(5, 2, 19, (uint)value);
+        get => (ItemCategoryId)GetUInt32(5, 19, 2);
+        set => SetUInt32(5, 19, 2, (uint)value);
     }
 
     public ItemEffectId Effect
     {
-        get => (ItemEffectId)GetUInt32(5, 5, 21);
-        set => SetUInt32(5, 5, 21, (uint)value);
+        get => (ItemEffectId)GetUInt32(5, 21, 5);
+        set => SetUInt32(5, 21, 5, (uint)value);
     }
 
     public uint EffectDuration
     {
-        get => GetUInt32(5, 3, 26);
-        set => SetUInt32(5, 3, 26, value);
+        get => GetUInt32(5, 26, 3);
+        set => SetUInt32(5, 26, 3, value);
     }
 
     public ItemId CraftingIngredient1
     {
-        get => (ItemId)GetUInt32(6, 9, 0);
-        set => SetUInt32(6, 9, 0, (uint)value);
+        get => (ItemId)GetUInt32(6, 0, 9);
+        set => SetUInt32(6, 0, 9, (uint)value);
     }
 
     public uint CraftingIngredient1Amount
     {
-        get => GetUInt32(6, 7, 9);
-        set => SetUInt32(6, 7, 9, value);
+        get => GetUInt32(6, 9, 7);
+        set => SetUInt32(6, 9, 7, value);
     }
 
     public ItemId CraftingIngredient2
     {
-        get => (ItemId)GetUInt32(6, 9, 16);
-        set => SetUInt32(6, 9, 16, (uint)value);
+        get => (ItemId)GetUInt32(6, 16, 9);
+        set => SetUInt32(6, 16, 9, (uint)value);
     }
 
     public uint CraftingIngredient2Amount
     {
-        get => GetUInt32(6, 7, 25);
-        set => SetUInt32(6, 7, 25, value);
+        get => GetUInt32(6, 25, 7);
+        set => SetUInt32(6, 25, 7, value);
     }
 
     public ItemId UnknownItem
     {
-        get => (ItemId)GetUInt32(7, 9, 0);
-        set => SetUInt32(7, 9, 0, (uint)value);
+        get => (ItemId)GetUInt32(7, 0, 9);
+        set => SetUInt32(7, 0, 9, (uint)value);
     }
 
     /// <summary>
@@ -82,18 +82,18 @@ public class Item : BaseDataWindow
 
     public uint QuantityForEffect
     {
-        get => GetUInt32(7, 9, 18);
-        set => SetUInt32(7, 9, 18, value);
+        get => GetUInt32(7, 18, 9);
+        set => SetUInt32(7, 18, 9, value);
     }
 
     public bool GetPurchasable(KingdomId kingdom)
     {
-        return GetUInt32(8, 1, (int)kingdom) == 1u;
+        return GetUInt32(8, (int)kingdom, 1) == 1u;
     }
 
     public void SetPurchasable(KingdomId kingdom, bool value)
     {
-        SetUInt32(8, 1, (int)kingdom, value ? 1u : 0u);
+        SetUInt32(8, (int)kingdom, 1, value ? 1u : 0u);
     }
 
 }

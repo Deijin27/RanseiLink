@@ -13,25 +13,25 @@ public class Episode : BaseDataWindow
 
     public uint Order
     {
-        get => GetUInt32(0, 9, 0);
-        set => SetUInt32(0, 9, 0, value);
+        get => GetUInt32(0, 0, 9);
+        set => SetUInt32(0, 0, 9, value);
     }
 
     public ScenarioId Scenario
     {
-        get => (ScenarioId)GetUInt32(0, 4, 9);
-        set => SetUInt32(0, 4, 9, (uint)value);
+        get => (ScenarioId)GetUInt32(0, 9, 4);
+        set => SetUInt32(0, 9, 4, (uint)value);
     }
 
     public EpisodeId UnlockCondition
     {
-        get => (EpisodeId)GetUInt32(1, 6, 0);
-        set => SetUInt32(1, 6, 0, (uint)value);
+        get => (EpisodeId)GetUInt32(1, 0, 6);
+        set => SetUInt32(1, 0, 6, (uint)value);
     }
 
     public uint Difficulty
     {
-        get => GetUInt32(1, 3, 6);
-        set => SetUInt32(1, 3, 6, value);
+        get => GetUInt32(1, 6, 3);
+        set => SetUInt32(1, 6, 3, value);
     }
 }

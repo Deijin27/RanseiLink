@@ -17,22 +17,22 @@ public class Kingdom : BaseDataWindow
 
     public uint Unknown_R2_C24_L3
     {
-        get => GetUInt32(2, 3, 24);
-        set => SetUInt32(2, 3, 24, value);
+        get => GetUInt32(2, 24, 3);
+        set => SetUInt32(2, 24, 3, value);
     }
 
     #region Kingdoms you can battle using warriors in this kingdom
 
     public KingdomId MapConnection0
     {
-        get => (KingdomId)GetUInt32(2, 5, 27);
-        set => SetUInt32(2, 5, 27, (uint)value);
+        get => (KingdomId)GetUInt32(2, 27, 5);
+        set => SetUInt32(2, 27, 5, (uint)value);
     }
 
     public KingdomId MapConnection1
     {
-        get => (KingdomId)GetUInt32(3, 5, 0);
-        set => SetUInt32(3, 5, 0, (uint)value);
+        get => (KingdomId)GetUInt32(3, 0, 5);
+        set => SetUInt32(3, 0, 5, (uint)value);
     }
 
     public KingdomId MapConnection2
@@ -43,14 +43,14 @@ public class Kingdom : BaseDataWindow
 
     public KingdomId MapConnection3
     {
-        get => (KingdomId)GetUInt32(3, 5, 10);
-        set => SetUInt32(3, 5, 10, (uint)value);
+        get => (KingdomId)GetUInt32(3, 10, 5);
+        set => SetUInt32(3, 10, 5, (uint)value);
     }
 
     public KingdomId MapConnection4
     {
-        get => (KingdomId)GetUInt32(4, 5, 0);
-        set => SetUInt32(4, 5, 0, (uint)value);
+        get => (KingdomId)GetUInt32(4, 0, 5);
+        set => SetUInt32(4, 0, 5, (uint)value);
     }
 
     public KingdomId MapConnection5
@@ -61,32 +61,32 @@ public class Kingdom : BaseDataWindow
 
     public KingdomId MapConnection6
     {
-        get => (KingdomId)GetUInt32(4, 5, 10);
-        set => SetUInt32(4, 5, 10, (uint)value);
+        get => (KingdomId)GetUInt32(4, 10, 5);
+        set => SetUInt32(4, 10, 5, (uint)value);
     }
 
     public KingdomId MapConnection7
     {
-        get => (KingdomId)GetUInt32(4, 5, 15);
-        set => SetUInt32(4, 5, 15, (uint)value);
+        get => (KingdomId)GetUInt32(4, 15, 5);
+        set => SetUInt32(4, 15, 5, (uint)value);
     }
 
     public KingdomId MapConnection8
     {
-        get => (KingdomId)GetUInt32(4, 5, 20);
-        set => SetUInt32(4, 5, 20, (uint)value);
+        get => (KingdomId)GetUInt32(4, 20, 5);
+        set => SetUInt32(4, 20, 5, (uint)value);
     }
 
     public KingdomId MapConnection9
     {
-        get => (KingdomId)GetUInt32(4, 5, 25);
-        set => SetUInt32(4, 5, 25, (uint)value);
+        get => (KingdomId)GetUInt32(4, 25, 5);
+        set => SetUInt32(4, 25, 5, (uint)value);
     }
 
     public KingdomId MapConnection10
     {
-        get => (KingdomId)GetUInt32(5, 5, 0);
-        set => SetUInt32(5, 5, 0, (uint)value);
+        get => (KingdomId)GetUInt32(5, 0, 5);
+        set => SetUInt32(5, 0, 5, (uint)value);
     }
 
     public KingdomId MapConnection11
@@ -97,8 +97,8 @@ public class Kingdom : BaseDataWindow
 
     public KingdomId MapConnection12
     {
-        get => (KingdomId)GetUInt32(5, 5, 10);
-        set => SetUInt32(5, 5, 10, (uint)value);
+        get => (KingdomId)GetUInt32(5, 10, 5);
+        set => SetUInt32(5, 10, 5, (uint)value);
     }
 
     public KingdomId[] MapConnections
@@ -126,21 +126,21 @@ public class Kingdom : BaseDataWindow
 
     public BattleConfigId BattleConfig
     {
-        get => (BattleConfigId)GetUInt32(5, 7, 15);
-        set => SetUInt32(5, 7, 15, (uint)value);
+        get => (BattleConfigId)GetUInt32(5, 15, 7);
+        set => SetUInt32(5, 15, 7, (uint)value);
     }
 
     public uint Unknown_R5_C22_L4
     {
-        get => GetUInt32(5, 4, 22);
-        set => SetUInt32(5, 4, 22, value);
+        get => GetUInt32(5, 22, 4);
+        set => SetUInt32(5, 22, 4, value);
     }
 
 
     public uint Unknown_R5_C26_L4
     {
-        get => GetUInt32(5, 4, 26);
-        set => SetUInt32(5, 4, 26, value);
+        get => GetUInt32(5, 26, 4);
+        set => SetUInt32(5, 26, 4, value);
     }
     
 }

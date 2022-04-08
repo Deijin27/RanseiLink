@@ -31,12 +31,12 @@ public class SubDataWindow : IDataWindow
         throw new NotImplementedException();
     }
 
-    public uint GetUInt32(int index, int bitCount, int offset)
+    public uint GetUInt32(int index, int offset, int bitCount)
     {
         throw new NotImplementedException();
     }
 
-    public void SetUInt32(int index, int bitCount, int offset, uint value)
+    public void SetUInt32(int index, int offset, int bitCount, uint value)
     {
         throw new NotImplementedException();
     }

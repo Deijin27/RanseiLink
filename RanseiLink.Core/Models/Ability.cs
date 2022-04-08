@@ -19,14 +19,14 @@ public class Ability : BaseDataWindow
 
     public uint Effect1Amount
     {
-        get => GetUInt32(3, 2, 24);
-        set => SetUInt32(3, 2, 24, value);
+        get => GetUInt32(3, 24, 2);
+        set => SetUInt32(3, 24, 2, value);
     }
 
     public AbilityEffectId Effect1
     {
-        get => (AbilityEffectId)GetUInt32(4, 5, 0);
-        set => SetUInt32(4, 5, 0, (uint)value);
+        get => (AbilityEffectId)GetUInt32(4, 0, 5);
+        set => SetUInt32(4, 0, 5, (uint)value);
     }
 
     public AbilityEffectId Effect2
@@ -37,7 +37,7 @@ public class Ability : BaseDataWindow
 
     public uint Effect2Amount
     {
-        get => GetUInt32(4, 2, 10);
-        set => SetUInt32(4, 2, 10, value);
+        get => GetUInt32(4, 10, 2);
+        set => SetUInt32(4, 10, 2, value);
     }
 }

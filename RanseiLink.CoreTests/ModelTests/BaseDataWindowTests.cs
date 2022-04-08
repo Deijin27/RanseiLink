@@ -36,7 +36,7 @@ public class BaseDataWindowTests
 
         var bdw = new BaseDataWindow(bytes, 8);
 
-        Assert.Equal(result, bdw.GetUInt32(index, bitCount, offset));
+        Assert.Equal(result, bdw.GetUInt32(index, offset, bitCount));
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public class BaseDataWindowTests
 
         var bdw = new BaseDataWindow(bytes, 8);
 
-        bdw.SetUInt32(index, bitCount, offset, value);
+        bdw.SetUInt32(index, offset, bitCount, value);
 
         Assert.Equal(resultingArray, bdw.Data);
     }

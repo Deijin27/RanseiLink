@@ -16,14 +16,14 @@ public class WarriorSkill : BaseDataWindow
 
     public uint Effect1Amount
     {
-        get => GetUInt32(4, 8, 24);
-        set => SetUInt32(4, 8, 24, value);
+        get => GetUInt32(4, 24, 8);
+        set => SetUInt32(4, 24, 8, value);
     }
 
     public WarriorSkillEffectId Effect1
     {
-        get => (WarriorSkillEffectId)GetUInt32(5, 7, 0);
-        set => SetUInt32(5, 7, 0, (uint)value);
+        get => (WarriorSkillEffectId)GetUInt32(5, 0, 7);
+        set => SetUInt32(5, 0, 7, (uint)value);
     }
 
     public WarriorSkillEffectId Effect2
@@ -34,32 +34,32 @@ public class WarriorSkill : BaseDataWindow
 
     public uint Effect2Amount
     {
-        get => GetUInt32(5, 8, 14);
-        set => SetUInt32(5, 8, 14, value);
+        get => GetUInt32(5, 14, 8);
+        set => SetUInt32(5, 14, 8, value);
     }
 
     public WarriorSkillEffectId Effect3
     {
-        get => (WarriorSkillEffectId)GetUInt32(5, 7, 22);
-        set => SetUInt32(5, 7, 22, (uint)value);
+        get => (WarriorSkillEffectId)GetUInt32(5, 22, 7);
+        set => SetUInt32(5, 22, 7, (uint)value);
     }
 
     public uint Duration
     {
-        get => GetUInt32(5, 3, 29);
-        set => SetUInt32(5, 3, 29, value);
+        get => GetUInt32(5, 29, 3);
+        set => SetUInt32(5, 29, 3, value);
     }
 
     public uint Effect3Amount
     {
-        get => GetUInt32(6, 8, 0);
-        set => SetUInt32(6, 8, 0, value);
+        get => GetUInt32(6, 0, 8);
+        set => SetUInt32(6, 0, 8, value);
     }
 
     public WarriorSkillTargetId Target
     {
-        get => (WarriorSkillTargetId)GetUInt32(6, 3, 8);
-        set => SetUInt32(6, 3, 8, (uint)value);
+        get => (WarriorSkillTargetId)GetUInt32(6, 8, 3);
+        set => SetUInt32(6, 8, 3, (uint)value);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class WarriorSkill : BaseDataWindow
     /// </summary>
     public MoveAnimationId Animation
     {
-        get => (MoveAnimationId)GetUInt32(6, 9, 11);
-        set => SetUInt32(6, 9, 11, (uint)value);
+        get => (MoveAnimationId)GetUInt32(6, 11, 9);
+        set => SetUInt32(6, 11, 9, (uint)value);
     }
 
 }
