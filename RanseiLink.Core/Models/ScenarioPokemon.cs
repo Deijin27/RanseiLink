@@ -25,32 +25,32 @@ public class ScenarioPokemon : BaseDataWindow
 
     public AbilityId Ability
     {
-        get => (AbilityId)GetUInt32(1, 20, 8);
-        set => SetUInt32(1, 20, 8, (uint)value);
+        get => (AbilityId)GetInt(1, 20, 8);
+        set => SetInt(1, 20, 8, (int)value);
     }
 
-    public uint HpIv
+    public int HpIv
     {
-        get => GetUInt32(1, 0, 5);
-        set => SetUInt32(1, 0, 5, value);
+        get => GetInt(1, 0, 5);
+        set => SetInt(1, 0, 5, value);
     }
 
-    public uint AtkIv
+    public int AtkIv
     {
-        get => GetUInt32(1, 5, 5);
-        set => SetUInt32(1, 5, 5, value);
+        get => GetInt(1, 5, 5);
+        set => SetInt(1, 5, 5, value);
     }
 
-    public uint DefIv
+    public int DefIv
     {
-        get => GetUInt32(1, 10, 5);
-        set => SetUInt32(1, 10, 5, value);
+        get => GetInt(1, 10, 5);
+        set => SetInt(1, 10, 5, value);
     }
 
-    public uint SpeIv
+    public int SpeIv
     {
-        get => GetUInt32(1, 15, 5);
-        set => SetUInt32(1, 15, 5, value);
+        get => GetInt(1, 15, 5);
+        set => SetInt(1, 15, 5, value);
     }
 
     public ushort Exp

@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum BattleConfigId : uint
+public enum BattleConfigId
 {
     Aurora,
     Ignis,

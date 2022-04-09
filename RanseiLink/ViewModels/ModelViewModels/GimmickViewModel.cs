@@ -170,7 +170,7 @@ public class GimmickViewModel : ViewModelBase, IGimmickViewModel
         return _externalService.GetMoveAnimationUri(id);
     }
 
-    public uint Image
+    public int Image
     {
         get => _model.Image;
         set

@@ -26,11 +26,11 @@ public class InfoToFormTests
     }
 
     [Fact]
-    public void UIntOptionsLoadCorrectly()
+    public void IntOptionsLoadCorrectly()
     {
-        _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<UIntPluginFormItem>().Single().Value = 9;
+        _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().Single().Value = 9;
         _formLoader.InfoToForm(_loadedInfo);
-        Assert.Equal(9u, _form.TestUIntOption);
+        Assert.Equal(9, _form.TestIntOption);
     }
 
     [Fact]

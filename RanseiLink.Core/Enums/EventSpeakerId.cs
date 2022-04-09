@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum EventSpeakerId : uint
+public enum EventSpeakerId
 {
     Shopkeeper_0,
     Shopkeeper_1,

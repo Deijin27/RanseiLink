@@ -77,7 +77,7 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         }
     }
 
-    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlChikei, (uint)TerrainBrush).File;
+    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlChikei, (int)TerrainBrush).File;
     public bool TerrainPaintingActive
     {
         get => _terrainPaintingActive;
@@ -157,10 +157,10 @@ public class MapViewModel : ViewModelBase, IMapViewModel
     {
         var selectedTerrainEntry = SelectedCell?.TerrainEntry ?? Map.TerrainSection.MapMatrix[0][0];
         Matrix.Clear();
-        uint y = 0;
+        int y = 0;
         foreach (var row in Map.TerrainSection.MapMatrix)
         {
-            uint x = 0;
+            int x = 0;
             var rowItems = new List<MapGridCellViewModel>();
             foreach (var col in row)
             {

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum ItemCategoryId : uint
+public enum ItemCategoryId
 {
     Consumable,
     Equipment,

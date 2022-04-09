@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum GimmickObjectId : uint
+public enum GimmickObjectId
 {
     Unknown_0,
     Tree_0,

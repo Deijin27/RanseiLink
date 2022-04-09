@@ -15,6 +15,25 @@ public class SubDataWindow : IDataWindow
     readonly IDataWindow Parent;
     readonly int Offset;
 
+    public byte GetByte(int offset)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetByte(int offset, byte value)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int GetInt(int index, int offset, int bitCount)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetInt(int index, int offset, int bitCount, int value)
+    {
+        throw new NotImplementedException();
+    }
 
     public string GetUtf8String(int index, int length)
     {
@@ -30,35 +49,4 @@ public class SubDataWindow : IDataWindow
     {
         throw new NotImplementedException();
     }
-
-    public uint GetUInt32(int index, int offset, int bitCount)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetUInt32(int index, int offset, int bitCount, uint value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public byte GetByte(int offset)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetByte(int offset, byte value)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    //public byte GetOverflowByte(int startByte, int bitInStartByte)
-    //{
-    //    throw new NotImplementedException();
-    //}
-
-    //public void SetOverflowByte(int startByte, int bitInStartByte, byte value)
-    //{
-    //    throw new NotImplementedException();
-    //}
 }

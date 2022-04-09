@@ -4,7 +4,7 @@ namespace RanseiLink.Core.Enums;
 /// <summary>
 /// 
 /// </summary>
-public enum MoveEffectId : uint
+public enum MoveEffectId
 {
     /// <summary>
     /// Has no secondary effect

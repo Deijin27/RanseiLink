@@ -11,27 +11,27 @@ public class Episode : BaseDataWindow
     public Episode(byte[] data) : base(data, DataLength) { }
     public Episode() : this(new byte[DataLength]) { }
 
-    public uint Order
+    public int Order
     {
-        get => GetUInt32(0, 0, 9);
-        set => SetUInt32(0, 0, 9, value);
+        get => GetInt(0, 0, 9);
+        set => SetInt(0, 0, 9, value);
     }
 
     public ScenarioId Scenario
     {
-        get => (ScenarioId)GetUInt32(0, 9, 4);
-        set => SetUInt32(0, 9, 4, (uint)value);
+        get => (ScenarioId)GetInt(0, 9, 4);
+        set => SetInt(0, 9, 4, (int)value);
     }
 
     public EpisodeId UnlockCondition
     {
-        get => (EpisodeId)GetUInt32(1, 0, 6);
-        set => SetUInt32(1, 0, 6, (uint)value);
+        get => (EpisodeId)GetInt(1, 0, 6);
+        set => SetInt(1, 0, 6, (int)value);
     }
 
-    public uint Difficulty
+    public int Difficulty
     {
-        get => GetUInt32(1, 6, 3);
-        set => SetUInt32(1, 6, 3, value);
+        get => GetInt(1, 6, 3);
+        set => SetInt(1, 6, 3, value);
     }
 }

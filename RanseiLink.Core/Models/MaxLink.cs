@@ -8,12 +8,12 @@ public class MaxLink : BaseDataWindow
     public MaxLink(byte[] data) : base(data, DataLength) { }
     public MaxLink() : this(new byte[DataLength]) { }
 
-    public uint GetMaxLink(PokemonId pokemon)
+    public int GetMaxLink(PokemonId pokemon)
     {
         return GetByte((int)pokemon);
     }
 
-    public void SetMaxLink(PokemonId pokemon, uint value)
+    public void SetMaxLink(PokemonId pokemon, int value)
     {
         SetByte((int)pokemon, (byte)value);
     }

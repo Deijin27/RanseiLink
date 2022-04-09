@@ -13,12 +13,12 @@ public interface IWarriorNameTableViewModel
 public class WarriorNameTableItem : ViewModelBase
 {
     private readonly WarriorNameTable _table;
-    public WarriorNameTableItem(uint index, WarriorNameTable table)
+    public WarriorNameTableItem(int index, WarriorNameTable table)
     {
         Index = index;
         _table = table;
     }
-    public uint Index { get; }
+    public int Index { get; }
 
     public string Name
     {
@@ -35,7 +35,7 @@ public class WarriorNameTableViewModel : ViewModelBase, IWarriorNameTableViewMod
     public void SetModel(WarriorNameTable model)
     {
         var lst = new List<WarriorNameTableItem>();
-        for (uint i = 0; i < WarriorNameTable.EntryCount; i++)
+        for (int i = 0; i < WarriorNameTable.EntryCount; i++)
         {
             lst.Add(new WarriorNameTableItem(i, model));
         }

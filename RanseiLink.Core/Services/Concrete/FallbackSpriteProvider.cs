@@ -60,11 +60,11 @@ public class FallbackSpriteProvider : IFallbackSpriteProvider
             return new List<SpriteFile>();
         }
         return Directory.GetFiles(dir)
-            .Select(i => new SpriteFile(type, uint.Parse(Path.GetFileNameWithoutExtension(i)), i, IsOverride:false))
+            .Select(i => new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), i, IsOverride:false))
             .ToList();
     }
 
-    public SpriteFile GetSpriteFile(SpriteType type, uint id)
+    public SpriteFile GetSpriteFile(SpriteType type, int id)
     {
         return new SpriteFile(type, id, Path.Combine(_graphicsProviderFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
     }

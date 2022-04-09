@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum GimmickId : uint
+public enum GimmickId
 {
     dummy_0,
     Banner,

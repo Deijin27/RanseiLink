@@ -21,12 +21,12 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
         _doCompressionWhenSerializing = doCompressionWhenSerializing;
     }
 
-    public static uint GetMask(int bitCount)
+    public static int GetMask(int bitCount)
     {
-        uint mask = 0;
+        int mask = 0;
         for (int i = 0; i < bitCount; i++)
         {
-            mask = (mask << 1) | 1u;
+            mask = (mask << 1) | 1;
         }
         return mask;
     }
@@ -37,16 +37,16 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
     public ushort GetUInt16(int offset) => BitConverter.ToUInt16(Data, offset);
     public void SetUInt16(int offset, ushort newValue) => BitConverter.GetBytes(newValue).CopyTo(Data, offset);
 
-    public uint GetUInt32(int intIndex, int shift, int bitCount)
+    public int GetInt(int intIndex, int shift, int bitCount)
     {
-        return (BitConverter.ToUInt32(Data, intIndex * 4) >> shift) & GetMask(bitCount);
+        return (BitConverter.ToInt32(Data, intIndex * 4) >> shift) & GetMask(bitCount);
     }
-    public void SetUInt32(int intIndex, int shift, int bitCount, uint value)
+    public void SetInt(int intIndex, int shift, int bitCount, int value)
     {
         // Maybe throw exception / warning when value is too big
-        uint mask = GetMask(bitCount);
-        uint current = BitConverter.ToUInt32(Data, intIndex * 4);
-        uint newValue = (current & ~(mask << shift)) | ((value & mask) << shift);
+        int mask = GetMask(bitCount);
+        int current = BitConverter.ToInt32(Data, intIndex * 4);
+        int newValue = (current & ~(mask << shift)) | ((value & mask) << shift);
         BitConverter.GetBytes(newValue).CopyTo(Data, intIndex * 4);
     }
 

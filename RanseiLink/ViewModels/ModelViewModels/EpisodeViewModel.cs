@@ -40,7 +40,7 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
 
     public int Id { get; private set; }
 
-    public uint Order
+    public int Order
     {
         get => _model.Order;
         set => RaiseAndSetIfChanged(_model.Order, value, v => _model.Order = value);
@@ -62,7 +62,7 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
         set => RaiseAndSetIfChanged(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
     }
 
-    public uint Difficulty
+    public int Difficulty
     {
         get => _model.Difficulty;
         set => RaiseAndSetIfChanged(_model.Difficulty, value, v => _model.Difficulty = value);

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum BuildingId : uint
+public enum BuildingId
 {
     Shop_0,
     PonigiriShop_0,

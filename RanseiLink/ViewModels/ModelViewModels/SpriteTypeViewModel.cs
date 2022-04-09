@@ -106,7 +106,7 @@ public class SpriteTypeViewModel : ViewModelBase
         }
     }
 
-    public bool SetOverride(uint id, string requestFileMsg)
+    public bool SetOverride(int id, string requestFileMsg)
     {
         if (!_dialogService.RequestFile(requestFileMsg, ".png", "PNG Image (.png)|*.png", out string file))
         {

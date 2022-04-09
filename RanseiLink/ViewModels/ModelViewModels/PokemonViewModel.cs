@@ -97,25 +97,25 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         set => RaiseAndSetIfChanged(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
-    public uint Hp
+    public int Hp
     {
         get => _model.Hp;
         set => RaiseAndSetIfChanged(_model.Hp, value, v => _model.Hp = v);
     }
 
-    public uint Atk
+    public int Atk
     {
         get => _model.Atk;
         set => RaiseAndSetIfChanged(_model.Atk, value, v => _model.Atk = v);
     }
 
-    public uint Def
+    public int Def
     {
         get => _model.Def;
         set => RaiseAndSetIfChanged(_model.Def, value, v => _model.Def = v);
     }
 
-    public uint Spe
+    public int Spe
     {
         get => _model.Spe;
         set => RaiseAndSetIfChanged(_model.Spe, value, v => _model.Spe = v);
@@ -133,25 +133,25 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         set => RaiseAndSetIfChanged(_model.IdleMotion, value, v => _model.IdleMotion = v);
     }
 
-    public uint NameOrderIndex
+    public int NameOrderIndex
     {
         get => _model.NameOrderIndex;
         set => RaiseAndSetIfChanged(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
     }
 
-    public uint NationalPokedexNumber
+    public int NationalPokedexNumber
     {
         get => _model.NationalPokedexNumber;
         set => RaiseAndSetIfChanged(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
     }
 
-    public uint MovementRange
+    public int MovementRange
     {
         get => _model.MovementRange;
         set => RaiseAndSetIfChanged(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
-    public uint UnknownValue
+    public int UnknownValue
     {
         get => _model.UnknownValue;
         set => RaiseAndSetIfChanged(_model.UnknownValue, value, v => _model.UnknownValue = v);
@@ -163,7 +163,7 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         set => RaiseAndSetIfChanged(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
     }
 
-    public uint QuantityForEvolutionCondition1
+    public int QuantityForEvolutionCondition1
     {
         get => _model.QuantityForEvolutionCondition1;
         set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
@@ -174,7 +174,7 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         get => _model.EvolutionCondition2;
         set => RaiseAndSetIfChanged(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
     }
-    public uint QuantityForEvolutionCondition2
+    public int QuantityForEvolutionCondition2
     {
         get => _model.QuantityForEvolutionCondition2;
         set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum IdleMotionId : uint
+public enum IdleMotionId
 {
     Float,
     FloatyBounce,

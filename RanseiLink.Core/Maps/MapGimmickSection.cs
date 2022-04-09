@@ -19,7 +19,7 @@ public class MapGimmickItem
     public GimmickId Gimmick { get; set; }
     public Position Position { get; set; }
     public Orientation Orientation { get; set; }
-    public uint UnknownValue { get; set; }
+    public int UnknownValue { get; set; }
     public List<(ushort, ushort)> UnknownList { get; set; } = new(); // usage seems to depend on gimmick type
 
     public MapGimmickItem()
@@ -32,7 +32,7 @@ public class MapGimmickItem
         Gimmick = (GimmickId)br.ReadByte();
         Position = new Position(br);
         Orientation = (Orientation)br.ReadByte();
-        UnknownValue = br.ReadUInt32();
+        UnknownValue = br.ReadInt32();
         var count = br.ReadInt32();
         for (int i = 0; i < count; i++)
         {

@@ -19,7 +19,7 @@ public class MapGridCellViewModel : ViewModelBase
 
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideSpriteProvider _spriteProvider;
-    public MapGridCellViewModel(MapTerrainEntry entry, uint x, uint y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideSpriteProvider spriteProvider)
+    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideSpriteProvider spriteProvider)
     {
         _gimmickService = gimmickService;
         _spriteProvider = spriteProvider;
@@ -59,8 +59,8 @@ public class MapGridCellViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _isSelected, value);
     }
 
-    public uint X { get; }
-    public uint Y { get; }
+    public int X { get; }
+    public int Y { get; }
 
     public TerrainId Terrain
     {
@@ -79,19 +79,19 @@ public class MapGridCellViewModel : ViewModelBase
         };
     }
 
-    public uint Unknown3Numeric
+    public int Unknown3Numeric
     {
         get => TerrainEntry.Unknown3;
         set => RaiseAndSetIfChanged(TerrainEntry.Unknown3, (byte)value, v => TerrainEntry.Unknown3 = v);
     }
 
-    public uint Unknown4
+    public int Unknown4
     {
         get => TerrainEntry.Unknown4;
         set => RaiseAndSetIfChanged(TerrainEntry.Unknown4, (byte)value, v => TerrainEntry.Unknown4 = v);
     }
 
-    public uint Unknown5
+    public int Unknown5
     {
         get => TerrainEntry.Unknown5;
         set => RaiseAndSetIfChanged(TerrainEntry.Unknown5, (byte)value, v => TerrainEntry.Unknown5 = v);

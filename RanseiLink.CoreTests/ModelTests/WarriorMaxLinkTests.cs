@@ -26,8 +26,8 @@ public class WarriorMaxLinkTests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00
         });
 
-        Assert.Equal(100u, model.GetMaxLink(PokemonId.Eevee));
-        Assert.Equal(90u, model.GetMaxLink(PokemonId.Jolteon));
+        Assert.Equal(100, model.GetMaxLink(PokemonId.Eevee));
+        Assert.Equal(90, model.GetMaxLink(PokemonId.Jolteon));
     }
 
     [Fact]

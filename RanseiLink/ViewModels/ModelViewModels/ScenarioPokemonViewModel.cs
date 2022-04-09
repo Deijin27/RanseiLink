@@ -36,7 +36,7 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
             {
                 if (!sw.ScenarioPokemonIsDefault(0) && sw.GetScenarioPokemon(0) == _id)
                 {
-                    jumpService.JumpToScenarioWarrior(_scenario, (uint)i);
+                    jumpService.JumpToScenarioWarrior(_scenario, i);
                     return;
                 }
                 i++;
@@ -79,31 +79,31 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
         set => RaiseAndSetIfChanged(_model.Ability, (AbilityId)value, v => _model.Ability = v);
     }
 
-    public uint HpIv
+    public int HpIv
     {
         get => _model.HpIv;
         set => RaiseAndSetIfChanged(_model.HpIv, value, v => _model.HpIv = v);
     }
 
-    public uint AtkIv
+    public int AtkIv
     {
         get => _model.AtkIv;
         set => RaiseAndSetIfChanged(_model.AtkIv, value, v => _model.AtkIv = v);
     }
 
-    public uint DefIv
+    public int DefIv
     {
         get => _model.DefIv;
         set => RaiseAndSetIfChanged(_model.DefIv, value, v => _model.DefIv = v);
     }
 
-    public uint SpeIv
+    public int SpeIv
     {
         get => _model.SpeIv;
         set => RaiseAndSetIfChanged(_model.SpeIv, value, v => _model.SpeIv = v);
     }
 
-    public uint Exp
+    public int Exp
     {
         get => _model.Exp;
         set

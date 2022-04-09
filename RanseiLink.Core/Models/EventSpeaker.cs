@@ -14,7 +14,7 @@ public class EventSpeaker : BaseDataWindow
         set => SetPaddedUtf8String(0, 16, value);
     }
 
-    public uint Sprite
+    public int Sprite
     {
         get => GetByte(0x11);
         set => SetByte(0x11, (byte)value);

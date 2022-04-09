@@ -17,10 +17,10 @@ public class Gimmick : BaseDataWindow
     /// <summary>
     /// Top screen square image when you hover over the object
     /// </summary>
-    public uint Image
+    public int Image
     {
-        get => GetUInt32(4, 8, 8);
-        set => SetUInt32(4, 8, 8, value);
+        get => GetInt(4, 8, 8);
+        set => SetInt(4, 8, 8, value);
     }
 
     /// <summary>
@@ -28,8 +28,8 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public TypeId AttackType
     {
-        get => (TypeId)GetUInt32(5, 0, 5);
-        set => SetUInt32(5, 0, 5, (uint)value);
+        get => (TypeId)GetInt(5, 0, 5);
+        set => SetInt(5, 0, 5, (int)value);
     }
 
     /// <summary>
@@ -37,8 +37,8 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public TypeId DestroyType
     {
-        get => (TypeId)GetUInt32(5, 5, 5);
-        set => SetUInt32(5, 5, 5, (uint)value);
+        get => (TypeId)GetInt(5, 5, 5);
+        set => SetInt(5, 5, 5, (int)value);
     }
 
     /// <summary>
@@ -46,47 +46,47 @@ public class Gimmick : BaseDataWindow
     /// </summary>
     public GimmickObjectId State1Object
     {
-        get => (GimmickObjectId)GetUInt32(5, 11, 7);
-        set => SetUInt32(5, 11, 7, (uint)value);
+        get => (GimmickObjectId)GetInt(5, 11, 7);
+        set => SetInt(5, 11, 7, (int)value);
     }
 
     public GimmickObjectId State2Object
     {
-        get => (GimmickObjectId)GetUInt32(5, 18, 7);
-        set => SetUInt32(5, 18, 7, (uint)value);
+        get => (GimmickObjectId)GetInt(5, 18, 7);
+        set => SetInt(5, 18, 7, (int)value);
     }
 
     public MoveEffectId Effect
     {
-        get => (MoveEffectId)GetUInt32(5, 25, 7);
-        set => SetUInt32(5, 25, 7, (uint)value);
+        get => (MoveEffectId)GetInt(5, 25, 7);
+        set => SetInt(5, 25, 7, (int)value);
     }
 
     /// <summary>
     /// Seems like a multipurpose quantity. For some, this is probably attack power, others something else
     /// </summary>
-    public uint UnknownQuantity1
+    public int UnknownQuantity1
     {
-        get => GetUInt32(6, 0, 8);
-        set => SetUInt32(6, 0, 8, value);
+        get => GetInt(6, 0, 8);
+        set => SetInt(6, 0, 8, value);
     }
 
     public MoveAnimationId Animation1
     {
-        get => (MoveAnimationId)GetUInt32(6, 8, 8);
-        set => SetUInt32(6, 8, 8, (uint)value);
+        get => (MoveAnimationId)GetInt(6, 8, 8);
+        set => SetInt(6, 8, 8, (int)value);
     }
 
     public MoveAnimationId Animation2
     {
-        get => (MoveAnimationId)GetUInt32(6, 16, 8);
-        set => SetUInt32(6, 16, 8, (uint)value);
+        get => (MoveAnimationId)GetInt(6, 16, 8);
+        set => SetInt(6, 16, 8, (int)value);
     }
 
     public GimmickRangeId Range
     {
-        get => (GimmickRangeId)GetUInt32(8, 19, 5);
-        set => SetUInt32(8, 19, 5, (uint)value);
+        get => (GimmickRangeId)GetInt(8, 19, 5);
+        set => SetInt(8, 19, 5, (int)value);
     }
 
 }

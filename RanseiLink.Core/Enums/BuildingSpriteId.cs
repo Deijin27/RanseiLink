@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum BuildingSpriteId : uint
+public enum BuildingSpriteId
 {
     Blacksmith_1,
     Blacksmith_2,

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum MoveAnimationTargetId : uint
+public enum MoveAnimationTargetId
 {
     Unknown0,
     Unknown1,

@@ -42,7 +42,7 @@ public class WarriorSkillViewModel : ViewModelBase, IWarriorSkillViewModel
         set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
-    public uint Effect1Amount
+    public int Effect1Amount
     {
         get => _model.Effect1Amount;
         set => RaiseAndSetIfChanged(_model.Effect1Amount, value, v => _model.Effect1Amount = v);
@@ -54,7 +54,7 @@ public class WarriorSkillViewModel : ViewModelBase, IWarriorSkillViewModel
         set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public uint Effect2Amount
+    public int Effect2Amount
     {
         get => _model.Effect2Amount;
         set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
@@ -66,13 +66,13 @@ public class WarriorSkillViewModel : ViewModelBase, IWarriorSkillViewModel
         set => RaiseAndSetIfChanged(_model.Effect3, value, v => _model.Effect3 = v);
     }
 
-    public uint Effect3Amount
+    public int Effect3Amount
     {
         get => _model.Effect3Amount;
         set => RaiseAndSetIfChanged(_model.Effect3Amount, value, v => _model.Effect3Amount = v);
     }
 
-    public uint Duration
+    public int Duration
     {
         get => _model.Duration;
         set => RaiseAndSetIfChanged(_model.Duration, value, v => _model.Duration = v);

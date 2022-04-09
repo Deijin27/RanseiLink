@@ -17,27 +17,27 @@ public class Ability : BaseDataWindow
         set => SetPaddedUtf8String(0, 14, value);
     }
 
-    public uint Effect1Amount
+    public int Effect1Amount
     {
-        get => GetUInt32(3, 24, 2);
-        set => SetUInt32(3, 24, 2, value);
+        get => GetInt(3, 24, 2);
+        set => SetInt(3, 24, 2, value);
     }
 
     public AbilityEffectId Effect1
     {
-        get => (AbilityEffectId)GetUInt32(4, 0, 5);
-        set => SetUInt32(4, 0, 5, (uint)value);
+        get => (AbilityEffectId)GetInt(4, 0, 5);
+        set => SetInt(4, 0, 5, (int)value);
     }
 
     public AbilityEffectId Effect2
     {
-        get => (AbilityEffectId)GetUInt32(4, 5, 5);
-        set => SetUInt32(4, 5, 5, (uint)value);
+        get => (AbilityEffectId)GetInt(4, 5, 5);
+        set => SetInt(4, 5, 5, (int)value);
     }
 
-    public uint Effect2Amount
+    public int Effect2Amount
     {
-        get => GetUInt32(4, 10, 2);
-        set => SetUInt32(4, 10, 2, value);
+        get => GetInt(4, 10, 2);
+        set => SetInt(4, 10, 2, value);
     }
 }

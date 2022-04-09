@@ -1,6 +1,6 @@
 ﻿namespace RanseiLink.Core.Enums;
 
-public enum GimmickRangeId : uint
+public enum GimmickRangeId
 {
     NoRange,
     DiamondAdjacent,

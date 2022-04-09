@@ -26,8 +26,8 @@ public class MassActionOptionForm : IPluginForm
     [CollectionOption("To", new[] { ConstOptions.AtLeast, ConstOptions.Exact })]
     public string Mode { get; set; } = ConstOptions.AtLeast;
 
-    [UIntOption("The Value")]
-    public uint Value { get; set; } = 0;
+    [IntOption("The Value")]
+    public int Value { get; set; } = 0;
 
     
 }

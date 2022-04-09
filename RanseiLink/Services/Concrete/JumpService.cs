@@ -37,7 +37,7 @@ internal class JumpService : IJumpService
         _mainEditor.CurrentModuleId = moduleId;
     }
 
-    public void JumpToScenarioPokemon(ScenarioId scenario, uint id)
+    public void JumpToScenarioPokemon(ScenarioId scenario, int id)
     {
         //var moduleId = ScenarioPokemonSelectorEditorModule.Id;
         //if (_mainEditor.ViewModels[moduleId] is ScenarioPokemonSelectorViewModel selectorVm 
@@ -51,7 +51,7 @@ internal class JumpService : IJumpService
         //}
     }
 
-    public void JumpToScenarioWarrior(ScenarioId scenario, uint id)
+    public void JumpToScenarioWarrior(ScenarioId scenario, int id)
     {
         //var moduleId = ScenarioWarriorSelectorEditorModule.Id;
         //if (_mainEditor.ViewModels[moduleId] is ScenarioWarriorSelectorViewModel selectorVm

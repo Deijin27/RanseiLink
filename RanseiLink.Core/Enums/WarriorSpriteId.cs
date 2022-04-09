@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [System.Obsolete]
-public enum WarriorSpriteId : uint
+public enum WarriorSpriteId
 {
     PlayerMale_1, // 0
     PlayerMale_2, // 1

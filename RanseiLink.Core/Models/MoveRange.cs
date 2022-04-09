@@ -11,12 +11,12 @@ public class MoveRange : BaseDataWindow
 
     public bool GetInRange(int position)
     {
-        return GetUInt32(0, position, 1) == 1;
+        return GetInt(0, position, 1) == 1;
     }
 
     public void SetInRange(int position, bool isInRange)
     {
-        SetUInt32(0, position, 1, isInRange ? 1u : 0u);
+        SetInt(0, position, 1, isInRange ? 1 : 0);
     }
 
 }

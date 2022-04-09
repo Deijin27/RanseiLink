@@ -8,12 +8,12 @@ public class ScenarioKingdom : BaseDataWindow
     public ScenarioKingdom(byte[] data) : base(data, DataLength) { }
     public ScenarioKingdom() : this(new byte[DataLength]) { }
 
-    public uint GetArmy(KingdomId kingdom)
+    public int GetArmy(KingdomId kingdom)
     {
         return GetByte((int)kingdom);
     }
 
-    public void SetArmy(KingdomId kingdom, uint armyId)
+    public void SetArmy(KingdomId kingdom, int armyId)
     {
         SetByte((int)kingdom, (byte)armyId);
     }

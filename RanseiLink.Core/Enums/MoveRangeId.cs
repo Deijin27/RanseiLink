@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Enums;
 /// This determines where the attack affects.
 /// The movement of user or target happens *afterwards*.
 /// </summary>
-public enum MoveRangeId : uint
+public enum MoveRangeId
 {
     NoRange,
     Ahead1Tile,

@@ -27,16 +27,16 @@ public class FormToInfoTests
     }
 
     [Fact]
-    public void UIntOptionsLoadCorrectly()
+    public void IntOptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<UIntPluginFormItem>().ToList();
+        var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().ToList();
         Assert.Single(options);
         var option = options.Single();
-        Assert.Equal("Test uint display name", option.DisplayName);
-        Assert.Equal("Test uint description", option.Description);
-        Assert.Equal(4u, option.Value);
-        Assert.Equal(3u, option.MinValue);
-        Assert.Equal(10u, option.MaxValue);
+        Assert.Equal("Test int display name", option.DisplayName);
+        Assert.Equal("Test int description", option.Description);
+        Assert.Equal(4, option.Value);
+        Assert.Equal(3, option.MinValue);
+        Assert.Equal(10, option.MaxValue);
     }
 
     [Fact]

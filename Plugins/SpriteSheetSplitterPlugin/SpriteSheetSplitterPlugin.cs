@@ -62,8 +62,8 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
         using var spriteSheet = Image.Load<Rgba32>(file);
 
-        int spriteWidth = (int)options.SpriteWidth;
-        int spriteHeight = (int)options.SpriteHeight;
+        int spriteWidth = options.SpriteWidth;
+        int spriteHeight = options.SpriteHeight;
 
         string outFolder = FileUtil.MakeUniquePath($"{file}.split");
         Directory.CreateDirectory(outFolder);
@@ -153,7 +153,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
             return;
         }
 
-        int spriteSheetWidth = (int)options.SheetWidth;
+        int spriteSheetWidth = options.SheetWidth;
 
         if (spriteSheetWidth % first.Width != 0)
         {
@@ -161,7 +161,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
             return;
         }
 
-        int spriteSheetHeight = (int)options.SheetHeight;
+        int spriteSheetHeight = options.SheetHeight;
         if (spriteSheetHeight % first.Height != 0)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid images", $"The height you provided is not divisible by the height of the sprites"));

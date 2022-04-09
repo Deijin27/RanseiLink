@@ -8,130 +8,130 @@ public class BaseWarrior : BaseDataWindow
     public BaseWarrior(byte[] data) : base(data, DataLength) { }
     public BaseWarrior() : this(new byte[DataLength]) { }
 
-    public uint Sprite
+    public int Sprite
     {
-        get => GetUInt32(0, 0, 8);
-        set => SetUInt32(0, 0, 8, value);
+        get => GetInt(0, 0, 8);
+        set => SetInt(0, 0, 8, value);
     }
 
     public WarriorSprite2Id Sprite_Unknown
     {
-        get => (WarriorSprite2Id)GetUInt32(0, 8, 8);
-        set => SetUInt32(0, 8, 8, (uint)value);
+        get => (WarriorSprite2Id)GetInt(0, 8, 8);
+        set => SetInt(0, 8, 8, (int)value);
     }
 
     public GenderId Gender
     {
-        get => (GenderId)GetUInt32(0, 16, 1);
-        set => SetUInt32(0, 16, 1, (uint)value);
+        get => (GenderId)GetInt(0, 16, 1);
+        set => SetInt(0, 16, 1, (int)value);
     }
 
-    public uint WarriorName
+    public int WarriorName
     {
-        get => GetUInt32(0, 17, 8);
-        set => SetUInt32(0, 17, 8, value);
+        get => GetInt(0, 17, 8);
+        set => SetInt(0, 17, 8, value);
     }
 
     public TypeId Speciality1
     {
-        get => (TypeId)GetUInt32(1, 0, 5);
-        set => SetUInt32(1, 0, 5, (uint)value);
+        get => (TypeId)GetInt(1, 0, 5);
+        set => SetInt(1, 0, 5, (int)value);
     }
 
     public TypeId Speciality2
     {
-        get => (TypeId)GetUInt32(1, 5, 5);
-        set => SetUInt32(1, 5, 5, (uint)value);
+        get => (TypeId)GetInt(1, 5, 5);
+        set => SetInt(1, 5, 5, (int)value);
     }
 
     public TypeId Weakness1
     {
-        get => (TypeId)GetUInt32(1, 10, 5);
-        set => SetUInt32(1, 10, 5, (uint)value);
+        get => (TypeId)GetInt(1, 10, 5);
+        set => SetInt(1, 10, 5, (int)value);
     }
 
     public TypeId Weakness2
     {
-        get => (TypeId)GetUInt32(1, 15, 5);
-        set => SetUInt32(1, 15, 5, (uint)value);
+        get => (TypeId)GetInt(1, 15, 5);
+        set => SetInt(1, 15, 5, (int)value);
     }
 
     public WarriorSkillId Skill
     {
-        get => (WarriorSkillId)GetUInt32(2, 0, 7);
-        set => SetUInt32(2, 0, 7, (uint)value);
+        get => (WarriorSkillId)GetInt(2, 0, 7);
+        set => SetInt(2, 0, 7, (int)value);
     }
 
-    public uint Power
+    public int Power
     {
-        get => GetUInt32(3, 0, 7);
-        set => SetUInt32(3, 0, 7, value);
+        get => GetInt(3, 0, 7);
+        set => SetInt(3, 0, 7, value);
     }
 
-    public uint Wisdom
+    public int Wisdom
     {
-        get => GetUInt32(3, 7, 7);
-        set => SetUInt32(3, 7, 7, value);
+        get => GetInt(3, 7, 7);
+        set => SetInt(3, 7, 7, value);
     }
 
-    public uint Charisma
+    public int Charisma
     {
-        get => GetUInt32(3, 14, 7);
-        set => SetUInt32(3, 14, 7, value);
+        get => GetInt(3, 14, 7);
+        set => SetInt(3, 14, 7, value);
     }
 
-    public uint Capacity
+    public int Capacity
     {
-        get => GetUInt32(3, 21, 4);
-        set => SetUInt32(3, 21, 4, value);
+        get => GetInt(3, 21, 4);
+        set => SetInt(3, 21, 4, value);
     }
 
     public RankUpConditionId RankUpCondition1
     {
-        get => (RankUpConditionId)GetUInt32(2, 24, 4);
-        set => SetUInt32(2, 24, 4, (uint)value);
+        get => (RankUpConditionId)GetInt(2, 24, 4);
+        set => SetInt(2, 24, 4, (int)value);
     }
 
     public RankUpConditionId RankUpCondition2
     {
-        get => (RankUpConditionId)GetUInt32(2, 28, 4);
-        set => SetUInt32(2, 28, 4, (uint)value);
+        get => (RankUpConditionId)GetInt(2, 28, 4);
+        set => SetInt(2, 28, 4, (int)value);
     }
 
-    public uint Quantity1ForRankUpCondition
+    public int Quantity1ForRankUpCondition
     {
-        get => GetUInt32(4, 9, 9);
-        set => SetUInt32(4, 9, 9, value);
+        get => GetInt(4, 9, 9);
+        set => SetInt(4, 9, 9, value);
     }
 
-    public uint Quantity2ForRankUpCondition
+    public int Quantity2ForRankUpCondition
     {
-        get => GetUInt32(4, 18, 9);
-        set => SetUInt32(4, 18, 9, value);
+        get => GetInt(4, 18, 9);
+        set => SetInt(4, 18, 9, value);
     }
 
     public WarriorId RankUp
     {
-        get => (WarriorId)GetUInt32(2, 15, 9);
-        set => SetUInt32(2, 15, 9, (uint)value);
+        get => (WarriorId)GetInt(2, 15, 9);
+        set => SetInt(2, 15, 9, (int)value);
     }
 
     public PokemonId RankUpPokemon1
     {
-        get => (PokemonId)GetUInt32(1, 20, 9);
-        set => SetUInt32(1, 20, 9, (uint)value);
+        get => (PokemonId)GetInt(1, 20, 9);
+        set => SetInt(1, 20, 9, (int)value);
     }
 
     public PokemonId RankUpPokemon2
     {
-        get => (PokemonId)GetUInt32(4, 0, 9);
-        set => SetUInt32(4, 0, 9, (uint)value);
+        get => (PokemonId)GetInt(4, 0, 9);
+        set => SetInt(4, 0, 9, (int)value);
     }
 
-    public uint RankUpLink
+    public int RankUpLink
     {
-        get => GetUInt32(0, 25, 7);
-        set => SetUInt32(0, 25, 7, value);
+        get => GetInt(0, 25, 7);
+        set => SetInt(0, 25, 7, value);
     }
 
 }

@@ -110,23 +110,23 @@ public partial class RankUpConditionControl : UserControl
         target.QuantityName2.Text = text;
     }
 
-    public static DependencyProperty Quantity1Property = UserControlUtil.RegisterDependencyProperty<RankUpConditionControl, uint>(v => v.Quantity1, default, OnQuantity1PropertyChanged);
+    public static DependencyProperty Quantity1Property = UserControlUtil.RegisterDependencyProperty<RankUpConditionControl, int>(v => v.Quantity1, default, OnQuantity1PropertyChanged);
 
-    public uint Quantity1
+    public int Quantity1
     {
-        get => (uint)GetValue(Quantity1Property);
+        get => (int)GetValue(Quantity1Property);
         set => SetValue(Quantity1Property, value);
     }
 
-    public static DependencyProperty Quantity2Property = UserControlUtil.RegisterDependencyProperty<RankUpConditionControl, uint>(v => v.Quantity2, default, OnQuantity2PropertyChanged);
+    public static DependencyProperty Quantity2Property = UserControlUtil.RegisterDependencyProperty<RankUpConditionControl, int>(v => v.Quantity2, default, OnQuantity2PropertyChanged);
 
-    public uint Quantity2
+    public int Quantity2
     {
-        get => (uint)GetValue(Quantity2Property);
+        get => (int)GetValue(Quantity2Property);
         set => SetValue(Quantity2Property, value);
     }
 
-    private static void OnQuantity1PropertyChanged(RankUpConditionControl target, DependencyPropertyChangedEventArgs<uint> e)
+    private static void OnQuantity1PropertyChanged(RankUpConditionControl target, DependencyPropertyChangedEventArgs<int> e)
     {
         switch (target.Condition)
         {
@@ -163,7 +163,7 @@ public partial class RankUpConditionControl : UserControl
         }
     }
 
-    private static void OnQuantity2PropertyChanged(RankUpConditionControl target, DependencyPropertyChangedEventArgs<uint> e)
+    private static void OnQuantity2PropertyChanged(RankUpConditionControl target, DependencyPropertyChangedEventArgs<int> e)
     {
         switch (target.Condition)
         {
@@ -304,15 +304,15 @@ public partial class RankUpConditionControl : UserControl
                 throw new Exception("Should not be accessible");
 
             case RankUpConditionId.MonotypeGallery:
-                var val = (uint)((ComboBox)sender).SelectedItem;
-                Quantity1 = val == (uint)TypeId.NoType ? 511u : val;
+                var val = (int)((ComboBox)sender).SelectedItem;
+                Quantity1 = val == (int)TypeId.NoType ? 511 : val;
                 break;
 
             case RankUpConditionId.AfterCompletingEpisode:
             case RankUpConditionId.DuringEpisode:
             case RankUpConditionId.WarriorInSameArmyNotNearby:
             case RankUpConditionId.WarriorInSameKingdom:
-                Quantity1 = (uint)((ComboBox)sender).SelectedItem;
+                Quantity1 = (int)((ComboBox)sender).SelectedItem;
                 break;
             default:
                 throw new Exception($"Invalid Enum Value of {Condition} in {nameof(EvolutionConditionControl)} {nameof(QuantityComboBox1_SelectionChanged)}");
@@ -335,15 +335,15 @@ public partial class RankUpConditionControl : UserControl
                 throw new Exception("Should not be accessible");
 
             case RankUpConditionId.MonotypeGallery:
-                var val = (uint)((ComboBox)sender).SelectedItem;
-                Quantity2 = val == (uint)TypeId.NoType ? 511u : val;
+                var val = (int)((ComboBox)sender).SelectedItem;
+                Quantity2 = val == (int)TypeId.NoType ? 511 : val;
                 break;
 
             case RankUpConditionId.AfterCompletingEpisode:
             case RankUpConditionId.DuringEpisode:
             case RankUpConditionId.WarriorInSameArmyNotNearby:
             case RankUpConditionId.WarriorInSameKingdom:
-                Quantity2 = (uint)((ComboBox)sender).SelectedItem;
+                Quantity2 = (int)((ComboBox)sender).SelectedItem;
                 break;
             default:
                 throw new Exception($"Invalid Enum Value of {Condition} in {nameof(EvolutionConditionControl)} {nameof(QuantityComboBox2_SelectionChanged)}");

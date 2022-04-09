@@ -13,11 +13,11 @@ public partial class NumberButtonPanel : UserControl
         InitializeComponent();
     }
 
-    public static readonly DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberButtonPanel, uint>(v => v.Value, default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault);
+    public static readonly DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberButtonPanel, int>(v => v.Value, default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault);
 
-    public uint Value
+    public int Value
     {
-        get => (uint)GetValue(ValueProperty);
+        get => (int)GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
     }
 
@@ -31,10 +31,10 @@ public partial class NumberButtonPanel : UserControl
 
     private static void OnItemsPropertyChanged(NumberButtonPanel target, DependencyPropertyChangedEventArgs<string> e)
     {
-        List<uint> values = new();
+        List<int> values = new();
         foreach (var item in e.NewValue.ToString().Split(','))
         {
-            if (uint.TryParse(item, out uint value))
+            if (int.TryParse(item, out int value))
             {
                 values.Add(value);
             }
@@ -45,7 +45,7 @@ public partial class NumberButtonPanel : UserControl
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         var btn = (Button)sender;
-        if (btn.DataContext is uint value)
+        if (btn.DataContext is int value)
         {
             Value = value;
         }

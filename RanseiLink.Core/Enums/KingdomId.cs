@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum KingdomId : uint
+public enum KingdomId
 {
     Aurora,
     Ignis,

@@ -4,13 +4,6 @@ using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Models;
 
-public class PokemonEvolutionRange
-{
-    public uint MinEntry { get; set; }
-    public uint MaxEntry { get; set; }
-    public bool CanEvolve { get; set; }
-}
-
 public class Pokemon : BaseDataWindow
 {
     public const int DataLength = 0x30;
@@ -24,149 +17,149 @@ public class Pokemon : BaseDataWindow
         set => SetPaddedUtf8String(0, 10, value);
     }
 
-    public uint Hp
+    public int Hp
     {
-        get => GetUInt32(3, 0, 9);
-        set => SetUInt32(3, 0, 9, value);
+        get => GetInt(3, 0, 9);
+        set => SetInt(3, 0, 9, value);
     }
 
     public EvolutionConditionId EvolutionCondition1
     {
-        get => (EvolutionConditionId)GetUInt32(3, 10, 4);
-        set => SetUInt32(3, 10, 4, (uint)value);
+        get => (EvolutionConditionId)GetInt(3, 10, 4);
+        set => SetInt(3, 10, 4, (int)value);
     }
     public EvolutionConditionId EvolutionCondition2
     {
-        get => (EvolutionConditionId)GetUInt32(3, 14, 4);
-        set => SetUInt32(3, 14, 4, (uint)value);
+        get => (EvolutionConditionId)GetInt(3, 14, 4);
+        set => SetInt(3, 14, 4, (int)value);
     }
 
     public IdleMotionId IdleMotion
     {
-        get => (IdleMotionId)GetUInt32(3, 29, 2);
-        set => SetUInt32(3, 29, 2, (uint)value);
+        get => (IdleMotionId)GetInt(3, 29, 2);
+        set => SetInt(3, 29, 2, (int)value);
     }
 
-    public uint Atk
+    public int Atk
     {
-        get => GetUInt32(4, 0, 9);
-        set => SetUInt32(4, 0, 9, value);
+        get => GetInt(4, 0, 9);
+        set => SetInt(4, 0, 9, value);
     }
 
-    public uint Def
+    public int Def
     {
-        get => GetUInt32(4, 10, 9);
-        set => SetUInt32(4, 10, 9, value);
+        get => GetInt(4, 10, 9);
+        set => SetInt(4, 10, 9, value);
     }
 
-    public uint Spe
+    public int Spe
     {
-        get => GetUInt32(4, 20, 9);
-        set => SetUInt32(4, 20, 9, value);
+        get => GetInt(4, 20, 9);
+        set => SetInt(4, 20, 9, value);
     }
 
     public bool IsLegendary
     {
-        get => GetUInt32(4, 30, 1) == 1u;
-        set => SetUInt32(4, 30, 1, value ? 1u : 0u);
+        get => GetInt(4, 30, 1) == 1;
+        set => SetInt(4, 30, 1, value ? 1 : 0);
     }
 
     public bool AsymmetricBattleSprite
     {
-        get => GetUInt32(4, 31, 1) == 1u;
-        set => SetUInt32(4, 31, 1, value ? 1u : 0u);
+        get => GetInt(4, 31, 1) == 1;
+        set => SetInt(4, 31, 1, value ? 1 : 0);
     }
 
     public bool LongAttackAnimation
     {
-        get => GetUInt32(7, 31, 1) == 1u;
-        set => SetUInt32(7, 31, 1, value ? 1u : 0u);
+        get => GetInt(7, 31, 1) == 1;
+        set => SetInt(7, 31, 1, value ? 1 : 0);
     }
 
     public TypeId Type1
     {
-        get => (TypeId)GetUInt32(5, 0, 5);
-        set => SetUInt32(5, 0, 5, (uint)value);
+        get => (TypeId)GetInt(5, 0, 5);
+        set => SetInt(5, 0, 5, (int)value);
     }
 
     public TypeId Type2
     {
-        get => (TypeId)GetUInt32(5, 5, 5);
-        set => SetUInt32(5, 5, 5, (uint)value);
+        get => (TypeId)GetInt(5, 5, 5);
+        set => SetInt(5, 5, 5, (int)value);
     }
 
     public MoveId Move
     {
-        get => (MoveId)GetUInt32(5, 10, 8);
-        set => SetUInt32(5, 10, 8, (uint)value);
+        get => (MoveId)GetInt(5, 10, 8);
+        set => SetInt(5, 10, 8, (int)value);
     }
 
-    public AbilityId Ability1 // uint8 but their compression treats it as uint9 for no apparent reason
+    public AbilityId Ability1
     {
-        get => (AbilityId)GetUInt32(6, 0, 8);
-        set => SetUInt32(6, 0, 8, (uint)value);
+        get => (AbilityId)GetInt(6, 0, 8);
+        set => SetInt(6, 0, 8, (int)value);
     }
 
-    public AbilityId Ability2 // uint8, but their compression treats it as uint9 for no apparent reason
+    public AbilityId Ability2
     {
-        get => (AbilityId)GetUInt32(6, 9, 8);
-        set => SetUInt32(6, 9, 8, (uint)value);
+        get => (AbilityId)GetInt(6, 9, 8);
+        set => SetInt(6, 9, 8, (int)value);
     }
 
-    public AbilityId Ability3 // uint8, but their compression treats it as uint9 for no apparent reason
+    public AbilityId Ability3
     {
-        get => (AbilityId)GetUInt32(6, 18, 8);
-        set => SetUInt32(6, 18, 8, (uint)value);
+        get => (AbilityId)GetInt(6, 18, 8);
+        set => SetInt(6, 18, 8, (int)value);
     }
 
-    public uint QuantityForEvolutionCondition1
+    public int QuantityForEvolutionCondition1
     {
-        get => GetUInt32(7, 0, 9);
-        set => SetUInt32(7, 0, 9, value);
+        get => GetInt(7, 0, 9);
+        set => SetInt(7, 0, 9, value);
     }
 
-    public uint QuantityForEvolutionCondition2
+    public int QuantityForEvolutionCondition2
     {
-        get => GetUInt32(7, 18, 9);
-        set => SetUInt32(7, 18, 9, value);
+        get => GetInt(7, 18, 9);
+        set => SetInt(7, 18, 9, value);
     }
 
-    public uint MovementRange
+    public int MovementRange
     {
-        get => GetUInt32(7, 27, 3);
-        set => SetUInt32(7, 27, 3, value);
+        get => GetInt(7, 27, 3);
+        set => SetInt(7, 27, 3, value);
     }
 
-    public uint MinEvolutionTableEntry
+    public int MinEvolutionTableEntry
     {
-        get => GetUInt32(8, 0, 11);
-        set => SetUInt32(8, 0, 11, value);
+        get => GetInt(8, 0, 11);
+        set => SetInt(8, 0, 11, value);
     }
 
-    public uint MaxEvolutionTableEntry
+    public int MaxEvolutionTableEntry
     {
-        get => GetUInt32(8, 11, 11);
-        set => SetUInt32(8, 11, 11, value);
+        get => GetInt(8, 11, 11);
+        set => SetInt(8, 11, 11, value);
     }
 
     public List<PokemonId> Evolutions { get; set; } = new();
 
-    public uint NationalPokedexNumber
+    public int NationalPokedexNumber
     {
-        get => GetUInt32(8, 22, 10);
-        set => SetUInt32(8, 22, 10, value);
+        get => GetInt(8, 22, 10);
+        set => SetInt(8, 22, 10, value);
     }
 
-    public uint NameOrderIndex
+    public int NameOrderIndex
     {
-        get => GetUInt32(11, 0, 8);
-        set => SetUInt32(11, 0, 8, value);
+        get => GetInt(11, 0, 8);
+        set => SetInt(11, 0, 8, value);
     }
 
-    public uint UnknownValue
+    public int UnknownValue
     {
-        get => GetUInt32(2, 24, 8);
-        set => SetUInt32(2, 24, 8, value);
+        get => GetInt(2, 24, 8);
+        set => SetInt(2, 24, 8, value);
     }
 
     public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)

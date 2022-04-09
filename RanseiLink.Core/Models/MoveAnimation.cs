@@ -8,13 +8,13 @@ public class MoveAnimation : BaseDataWindow
     public MoveAnimation(byte[] data) : base(data, DataLength) { }
     public MoveAnimation() : this(new byte[DataLength]) { }
 
-    public uint UnknownA
+    public int UnknownA
     {
         get => GetUInt16(0);
         set => SetUInt16(0, (ushort)value);
     }
 
-    public uint UnknownB
+    public int UnknownB
     {
         get => GetUInt16(2);
         set => SetUInt16(2, (ushort)value);

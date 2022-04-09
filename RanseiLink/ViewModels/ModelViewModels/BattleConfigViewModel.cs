@@ -42,7 +42,7 @@ public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
         set => RaiseAndSetIfChanged(_model.MapId, value, v => _model.MapId = value);
     }
 
-    public uint NumberOfTurns
+    public int NumberOfTurns
     {
         get => _model.NumberOfTurns;
         set => RaiseAndSetIfChanged(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);

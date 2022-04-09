@@ -17,7 +17,7 @@ public class ScenarioAppearPokemon : BaseDataWindow
 
     public void SetCanAppear(PokemonId id, bool canAppear)
     {
-        SetByte((int)id, (byte)(canAppear ? AppearsValue : DoesNotAppearValue));
+        SetByte((int)id, canAppear ? AppearsValue : DoesNotAppearValue);
     }
 
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum AbilityEffectId : uint
+public enum AbilityEffectId
 {
     Unused_1,
     IncreaseUserAttack,

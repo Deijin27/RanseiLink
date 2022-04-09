@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum PokemonId : uint
+public enum PokemonId
 {
     Eevee,
     Vaporeon,

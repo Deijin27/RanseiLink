@@ -22,44 +22,44 @@ public class Building : BaseDataWindow
 
     public BattleConfigId BattleConfig1
     {
-        get => (BattleConfigId)GetUInt32(7, 0, 7);
-        set => SetUInt32(7, 0, 7, (uint)value);
+        get => (BattleConfigId)GetInt(7, 0, 7);
+        set => SetInt(7, 0, 7, (int)value);
     }
 
     public BattleConfigId BattleConfig2
     {
-        get => (BattleConfigId)GetUInt32(7, 7, 7);
-        set => SetUInt32(7, 7, 7, (uint)value);
+        get => (BattleConfigId)GetInt(7, 7, 7);
+        set => SetInt(7, 7, 7, (int)value);
     }
 
     public BattleConfigId BattleConfig3
     {
-        get => (BattleConfigId)GetUInt32(8, 0, 7);
-        set => SetUInt32(8, 0, 7, (uint)value);
+        get => (BattleConfigId)GetInt(8, 0, 7);
+        set => SetInt(8, 0, 7, (int)value);
     }
 
     public BuildingSpriteId Sprite1
     {
-        get => (BuildingSpriteId)GetUInt32(8, 7, 7);
-        set => SetUInt32(8, 7, 7, (uint)value);
+        get => (BuildingSpriteId)GetInt(8, 7, 7);
+        set => SetInt(8, 7, 7, (int)value);
     }
 
     public BuildingSpriteId Sprite2
     {
-        get => (BuildingSpriteId)GetUInt32(8, 14, 7);
-        set => SetUInt32(8, 14, 7, (uint)value);
+        get => (BuildingSpriteId)GetInt(8, 14, 7);
+        set => SetInt(8, 14, 7, (int)value);
     }
 
     public BuildingSpriteId Sprite3
     {
-        get => (BuildingSpriteId)GetUInt32(8, 21, 7);
-        set => SetUInt32(8, 21, 7, (uint)value);
+        get => (BuildingSpriteId)GetInt(8, 21, 7);
+        set => SetInt(8, 21, 7, (int)value);
     }
 
     public BuildingFunctionId Function
     {
-        get => (BuildingFunctionId)GetUInt32(8, 28, 4);
-        set => SetUInt32(8, 28, 4, (uint)value);
+        get => (BuildingFunctionId)GetInt(8, 28, 4);
+        set => SetInt(8, 28, 4, (int)value);
     }
 
 }

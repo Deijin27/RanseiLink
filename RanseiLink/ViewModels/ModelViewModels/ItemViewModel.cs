@@ -45,7 +45,7 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public uint BuildingLevel
+    public int BuildingLevel
     {
         get => _model.BuildingLevel;
         set => RaiseAndSetIfChanged(_model.BuildingLevel, value, v => _model.BuildingLevel = v);
@@ -63,7 +63,7 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         set => RaiseAndSetIfChanged(_model.Effect, value, v => _model.Effect = v);
     }
 
-    public uint EffectDuration
+    public int EffectDuration
     {
         get => _model.EffectDuration;
         set => RaiseAndSetIfChanged(_model.EffectDuration, value, v => _model.EffectDuration = v);
@@ -75,7 +75,7 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         set => RaiseAndSetIfChanged(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
     }
 
-    public uint CraftingIngredient1Amount
+    public int CraftingIngredient1Amount
     {
         get => _model.CraftingIngredient1Amount;
         set => RaiseAndSetIfChanged(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
@@ -87,7 +87,7 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         set => RaiseAndSetIfChanged(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
     }
 
-    public uint CraftingIngredient2Amount
+    public int CraftingIngredient2Amount
     {
         get => _model.CraftingIngredient2Amount;
         set => RaiseAndSetIfChanged(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
@@ -99,13 +99,13 @@ public class ItemViewModel : ViewModelBase, IItemViewModel
         set => RaiseAndSetIfChanged(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
     }
 
-    public uint ShopPriceMultiplier // max = 511
+    public int ShopPriceMultiplier // max = 511
     {
         get => _model.ShopPriceMultiplier;
         set => RaiseAndSetIfChanged(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
     }
 
-    public uint QuantityForEffect
+    public int QuantityForEffect
     {
         get => _model.QuantityForEffect;
         set => RaiseAndSetIfChanged(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);

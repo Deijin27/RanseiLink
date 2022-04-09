@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum WarriorClassId : uint
+public enum WarriorClassId
 {
     ArmyLeader,
     ArmyMember,

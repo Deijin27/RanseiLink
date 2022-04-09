@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum ScenarioId : uint
+public enum ScenarioId
 {
     TheLegendOfRansei,
     Ninja,

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum ItemEffectId : uint
+public enum ItemEffectId
 {
     /// <summary>
     /// Unknown

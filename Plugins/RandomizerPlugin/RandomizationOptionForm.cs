@@ -36,8 +36,8 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Warriors", "Randomize which warriors are where")]
     public bool Warriors { get; set; }
 
-    [UIntOption("Minimum max link value", "Set max link to at least this value", maximumValue: 100)]
-    public uint AllMaxLinkValue { get; set; } = 98;
+    [IntOption("Minimum max link value", "Set max link to at least this value", maximumValue: 100)]
+    public int AllMaxLinkValue { get; set; } = 98;
 
     [BoolOption("Avoid Dummy Moves", "Avoid dummy moves when randomizing")]
     public bool AvoidDummyMoves { get; set; } = true;

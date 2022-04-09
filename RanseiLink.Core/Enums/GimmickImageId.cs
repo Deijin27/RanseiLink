@@ -3,7 +3,7 @@ namespace RanseiLink.Core.Enums;
 
 [System.Obsolete]
 [DefaultValues(Default)]
-public enum GimmickImageId : uint
+public enum GimmickImageId
 {
     Unknown_0,
     Unknown_1,

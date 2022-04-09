@@ -22,7 +22,7 @@ public class BattleConfigTests
         Assert.Equal(new Rgb15(7, 3, 1), a.LowerAtmosphereColor);
         Assert.Equal(BattleVictoryConditionFlags.DefeatAllEnemies, a.VictoryCondition);
         Assert.Equal(BattleVictoryConditionFlags.DefeatAllEnemies, a.DefeatCondition);
-        Assert.Equal(20u, a.NumberOfTurns);
+        Assert.Equal(20, a.NumberOfTurns);
     }
 
     [Fact]
@@ -45,6 +45,6 @@ public class BattleConfigTests
         Assert.Equal(new Rgb15(12, 11, 1), a.LowerAtmosphereColor);
         Assert.Equal(BattleVictoryConditionFlags.ClaimAllBanners | BattleVictoryConditionFlags.HoldAllBannersFor5Turns, a.VictoryCondition);
         Assert.Equal(BattleVictoryConditionFlags.ClaimAllBanners, a.DefeatCondition);
-        Assert.Equal(17u, a.NumberOfTurns);
+        Assert.Equal(17, a.NumberOfTurns);
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum EpisodeClearConditionId : uint
+public enum EpisodeClearConditionId
 {
     MainCampaign,
     UnifyNations,

@@ -36,16 +36,16 @@ public class PluginFormLoader : IPluginFormLoader
                 continue;
             }
 
-            var uintAttribute = property.GetCustomAttribute<UIntOptionAttribute>();
-            if (uintAttribute != null && property.PropertyType == typeof(uint))
+            var intAttribute = property.GetCustomAttribute<IntOptionAttribute>();
+            if (intAttribute != null && property.PropertyType == typeof(int))
             {
-                GetOrAdd(groups, uintAttribute.Group).Items.Add(new UIntPluginFormItem(
+                GetOrAdd(groups, intAttribute.Group).Items.Add(new IntPluginFormItem(
                     member: property,
-                    displayName: uintAttribute.DisplayName,
-                    description: uintAttribute.Description,
-                    value: (uint)property.GetValue(form),
-                    minValue: uintAttribute.MinimumValue,
-                    maxValue: uintAttribute.MaximumValue
+                    displayName: intAttribute.DisplayName,
+                    description: intAttribute.Description,
+                    value: (int)property.GetValue(form),
+                    minValue: intAttribute.MinimumValue,
+                    maxValue: intAttribute.MaximumValue
                     ));
                 continue;
             }
@@ -108,7 +108,7 @@ public class PluginFormLoader : IPluginFormLoader
                 case BoolPluginFormItem i:
                     item.Member.SetValue(form, i.Value);
                     break;
-                case UIntPluginFormItem i:
+                case IntPluginFormItem i:
                     item.Member.SetValue(form, i.Value);
                     break;
                 case StringPluginFormItem i:

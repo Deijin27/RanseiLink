@@ -19,17 +19,17 @@ public class MoveTests
         Assert.Equal("Cross Poison", m.Name);
         Assert.Equal((MoveMovementFlags)0, m.MovementFlags);
         Assert.Equal(TypeId.Poison, m.Type);
-        Assert.Equal(38u, m.Power);
-        Assert.Equal(100u, m.Accuracy);
+        Assert.Equal(38, m.Power);
+        Assert.Equal(100, m.Accuracy);
         Assert.Equal(MoveRangeId.Cross, m.Range);
         Assert.Equal(MoveEffectId.ChanceToPoisonTarget, m.Effect1);
-        Assert.Equal(10u, m.Effect1Chance);
+        Assert.Equal(10, m.Effect1Chance);
         Assert.Equal(MoveEffectId.HighCriticalHitChance, m.Effect2);
-        Assert.Equal(0u, m.Effect2Chance);
+        Assert.Equal(0, m.Effect2Chance);
         Assert.Equal(MoveEffectId.ChanceToPoisonTarget, m.Effect3);
-        Assert.Equal(10u, m.Effect3Chance);
+        Assert.Equal(10, m.Effect3Chance);
         Assert.Equal(MoveEffectId.HighCriticalHitChance, m.Effect4);
-        Assert.Equal(0u, m.Effect4Chance);
+        Assert.Equal(0, m.Effect4Chance);
         Assert.Equal(MoveMovementAnimationId.Default, m.MovementAnimation);
         Assert.Equal(MoveAnimationId.Default, m.StartupAnimation);
         Assert.Equal(MoveAnimationId.Default, m.ProjectileAnimation);
@@ -44,17 +44,17 @@ public class MoveTests
             Name = "Cross Poison",
             MovementFlags = (MoveMovementFlags)0,
             Type = TypeId.Poison,
-            Power = 38u,
-            Accuracy = 100u,
+            Power = 38,
+            Accuracy = 100,
             Range = MoveRangeId.Cross,
             Effect1 = MoveEffectId.ChanceToPoisonTarget,
-            Effect1Chance = 10u,
+            Effect1Chance = 10,
             Effect2 = MoveEffectId.HighCriticalHitChance,
-            Effect2Chance = 5u,
+            Effect2Chance = 5,
             Effect3 = MoveEffectId.ChanceToPoisonTarget,
-            Effect3Chance = 10u,
+            Effect3Chance = 10,
             Effect4 = MoveEffectId.HighCriticalHitChance,
-            Effect4Chance = 8u,
+            Effect4Chance = 8,
             MovementAnimation = MoveMovementAnimationId.FieryDance,
             StartupAnimation = MoveAnimationId.OrangeOrbBurst,
             ProjectileAnimation = MoveAnimationId.OrbBlackHole,
@@ -64,17 +64,17 @@ public class MoveTests
         Assert.Equal("Cross Poison", m.Name);
         Assert.Equal((MoveMovementFlags)0, m.MovementFlags);
         Assert.Equal(TypeId.Poison, m.Type);
-        Assert.Equal(38u, m.Power);
-        Assert.Equal(100u, m.Accuracy);
+        Assert.Equal(38, m.Power);
+        Assert.Equal(100, m.Accuracy);
         Assert.Equal(MoveRangeId.Cross, m.Range);
         Assert.Equal(MoveEffectId.ChanceToPoisonTarget, m.Effect1);
-        Assert.Equal(10u, m.Effect1Chance);
+        Assert.Equal(10, m.Effect1Chance);
         Assert.Equal(MoveEffectId.HighCriticalHitChance, m.Effect2);
-        Assert.Equal(5u, m.Effect2Chance);
+        Assert.Equal(5, m.Effect2Chance);
         Assert.Equal(MoveEffectId.ChanceToPoisonTarget, m.Effect3);
-        Assert.Equal(10u, m.Effect3Chance);
+        Assert.Equal(10, m.Effect3Chance);
         Assert.Equal(MoveEffectId.HighCriticalHitChance, m.Effect4);
-        Assert.Equal(8u, m.Effect4Chance);
+        Assert.Equal(8, m.Effect4Chance);
         Assert.Equal(MoveMovementAnimationId.FieryDance, m.MovementAnimation);
         Assert.Equal(MoveAnimationId.OrangeOrbBurst, m.StartupAnimation);
         Assert.Equal(MoveAnimationId.OrbBlackHole, m.ProjectileAnimation);

@@ -17,8 +17,8 @@ public class EpisodeTests
         });
 
         Assert.Equal(EpisodeId.TheLegendOfRansei, a.UnlockCondition);
-        Assert.Equal(1u, a.Difficulty);
-        Assert.Equal(12u, a.Order);
+        Assert.Equal(1, a.Difficulty);
+        Assert.Equal(12, a.Order);
         Assert.Equal(ScenarioId.ShingenVsKenshin, a.Scenario);
     }
 
@@ -28,14 +28,14 @@ public class EpisodeTests
         Episode a = new Episode
         {
             UnlockCondition = EpisodeId.ADateWithDestiny,
-            Difficulty = 4u,
-            Order = 10u,
+            Difficulty = 4,
+            Order = 10,
             Scenario = ScenarioId.UniteRansei
         };
 
         Assert.Equal(EpisodeId.ADateWithDestiny, a.UnlockCondition);
-        Assert.Equal(4u, a.Difficulty);
-        Assert.Equal(10u, a.Order);
+        Assert.Equal(4, a.Difficulty);
+        Assert.Equal(10, a.Order);
         Assert.Equal(ScenarioId.UniteRansei, a.Scenario);
     }
 }

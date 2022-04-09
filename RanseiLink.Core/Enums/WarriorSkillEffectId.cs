@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum WarriorSkillEffectId : uint
+public enum WarriorSkillEffectId
 {
     RaiseAttack,
     RaiseDefence,

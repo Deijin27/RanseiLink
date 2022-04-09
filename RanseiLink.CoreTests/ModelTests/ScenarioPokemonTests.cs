@@ -16,10 +16,10 @@ public class ScenarioPokemonTests
 
         Assert.Equal(PokemonId.Jigglypuff, p.Pokemon);
         Assert.Equal(AbilityId.Lullaby, p.Ability);
-        Assert.Equal(15u, p.HpIv);
-        Assert.Equal(15u, p.AtkIv);
-        Assert.Equal(15u, p.DefIv);
-        Assert.Equal(15u, p.SpeIv);
+        Assert.Equal(15, p.HpIv);
+        Assert.Equal(15, p.AtkIv);
+        Assert.Equal(15, p.DefIv);
+        Assert.Equal(15, p.SpeIv);
         Assert.Equal(1020, p.Exp);
     }
 
@@ -30,10 +30,10 @@ public class ScenarioPokemonTests
         {
             Pokemon = PokemonId.Jigglypuff,
             Ability = AbilityId.Lullaby,
-            HpIv = 15u,
-            AtkIv = 15u,
-            DefIv = 15u,
-            SpeIv = 15u,
+            HpIv = 15,
+            AtkIv = 15,
+            DefIv = 15,
+            SpeIv = 15,
             Exp = 1020
         };
 
@@ -44,10 +44,10 @@ public class ScenarioPokemonTests
 
         Assert.Equal(PokemonId.Jigglypuff, p.Pokemon);
         Assert.Equal(AbilityId.Lullaby, p.Ability);
-        Assert.Equal(15u, p.HpIv);
-        Assert.Equal(15u, p.AtkIv);
-        Assert.Equal(15u, p.DefIv);
-        Assert.Equal(15u, p.SpeIv);
+        Assert.Equal(15, p.HpIv);
+        Assert.Equal(15, p.AtkIv);
+        Assert.Equal(15, p.DefIv);
+        Assert.Equal(15, p.SpeIv);
         Assert.Equal(1020, p.Exp);
 
         Assert.Equal(expected, p.Data);

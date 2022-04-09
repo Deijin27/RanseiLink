@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum MoveMovementAnimationId : uint
+public enum MoveMovementAnimationId
 {
     Splash,
     Blank_0,

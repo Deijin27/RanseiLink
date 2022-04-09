@@ -95,7 +95,7 @@ public class MapGimmickViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(Orientation, value, v => GimmickItem.Orientation = value);
     }
 
-    public uint UnknownValue
+    public int UnknownValue
     {
         get => GimmickItem.UnknownValue;
         set => RaiseAndSetIfChanged(UnknownValue, value, v => GimmickItem.UnknownValue = value);

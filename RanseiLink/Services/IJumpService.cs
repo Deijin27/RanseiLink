@@ -17,6 +17,6 @@ public interface IJumpService
     /// <param name="moduleId">Id of the editor module to choose</param>
     void JumpTo(string moduleId);
 
-    void JumpToScenarioWarrior(ScenarioId scenario, uint id);
-    void JumpToScenarioPokemon(ScenarioId scenario, uint id);
+    void JumpToScenarioWarrior(ScenarioId scenario, int id);
+    void JumpToScenarioPokemon(ScenarioId scenario, int id);
 }

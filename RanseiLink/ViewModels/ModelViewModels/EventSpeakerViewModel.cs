@@ -31,7 +31,7 @@ public class EventSpeakerViewModel : ViewModelBase, IEventSpeakerViewModel
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public uint Sprite
+    public int Sprite
     {
         get => _model.Sprite;
         set

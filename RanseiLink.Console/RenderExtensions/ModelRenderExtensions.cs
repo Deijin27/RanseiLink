@@ -10,7 +10,7 @@ namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {
-    private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, uint quantity)
+    private static string RenderQuantityForEvolutionCondition(EvolutionConditionId id, int quantity)
     {
         switch (id)
         {
@@ -24,13 +24,13 @@ public static partial class RenderExtensions
                 return $"({quantity}%) ";
 
             case EvolutionConditionId.Kingdom:
-                return $"({(KingdomId)(int)quantity}) ";
+                return $"({(KingdomId)quantity}) ";
 
             case EvolutionConditionId.WarriorGender:
-                return $"({(GenderId)(int)quantity}) ";
+                return $"({(GenderId)quantity}) ";
 
             case EvolutionConditionId.Item:
-                return $"({(ItemId)(int)quantity}) ";
+                return $"({(ItemId)quantity}) ";
 
             case EvolutionConditionId.JoinOffer:
             case EvolutionConditionId.NoCondition:
@@ -41,7 +41,7 @@ public static partial class RenderExtensions
         }
     }
 
-    private static string RenderQuantityForRankUpCondition(RankUpConditionId id, uint quantity)
+    private static string RenderQuantityForRankUpCondition(RankUpConditionId id, int quantity)
     {
         switch (id)
         {
@@ -120,7 +120,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Lv2 Encounterable", sb2.ToString().TrimEnd(',', ' '));
     }
 
-    private static string RenderQuantityForMoveEffect(MoveEffectId id, uint value)
+    private static string RenderQuantityForMoveEffect(MoveEffectId id, int value)
     {
         switch (id)
         {
@@ -324,7 +324,7 @@ public static partial class RenderExtensions
         console.WriteTitle($"Warrior Name Table");
         for (int i = 0; i < WarriorNameTable.EntryCount; i++)
         {
-            console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry((uint)i));
+            console.WriteProperty(i.ToString().PadLeft(3, '0'), model.GetEntry(i));
         }
     }
 

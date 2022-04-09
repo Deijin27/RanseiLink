@@ -4,7 +4,7 @@ using System.Text;
 
 namespace RanseiLink.Core.Enums;
 
-public enum MoveId : uint
+public enum MoveId
 {
     Splash,
     Pound,

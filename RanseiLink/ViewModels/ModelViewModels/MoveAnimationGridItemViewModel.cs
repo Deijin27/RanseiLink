@@ -20,20 +20,20 @@ public class MoveAnimationGridItemViewModel : MoveAnimationViewModelBase
 {
     public MoveAnimationGridItemViewModel(MoveAnimationId id, MoveAnimation model) : base(id, model)
     {
-        Id = (uint)id;
+        Id = (int)id;
         Name = id.ToString();
     }
 
-    public uint Id { get; }
+    public int Id { get; }
     public string Name { get; }
 
-    public uint UnknownA
+    public int UnknownA
     {
         get => _model.UnknownA;
         set => RaiseAndSetIfChanged(_model.UnknownA, value, v => _model.UnknownA = value);
     }
 
-    public uint UnknownB
+    public int UnknownB
     {
         get => _model.UnknownB;
         set => RaiseAndSetIfChanged(_model.UnknownB, value, v => _model.UnknownB = value);

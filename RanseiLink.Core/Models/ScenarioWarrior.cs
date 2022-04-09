@@ -19,23 +19,23 @@ public class ScenarioWarrior : BaseDataWindow
 
     public WarriorClassId Class
     {
-        get => (WarriorClassId)GetUInt32(0, 9, 3);
-        set => SetUInt32(0, 9, 3, (uint)value);
+        get => (WarriorClassId)GetInt(0, 9, 3);
+        set => SetInt(0, 9, 3, (int)value);
     }
 
     public KingdomId Kingdom
     {
-        get => (KingdomId)GetUInt32(0, 12, 5);
-        set => SetUInt32(0, 12, 5, (uint)value);
+        get => (KingdomId)GetInt(0, 12, 5);
+        set => SetInt(0, 12, 5, (int)value);
     }
 
-    public uint Army
+    public int Army
     {
-        get => GetUInt32(0, 17, 5);
-        set => SetUInt32(0, 17, 5, value);
+        get => GetInt(0, 17, 5);
+        set => SetInt(0, 17, 5, value);
     }
 
-    public ushort GetScenarioPokemon(int id)
+    public int GetScenarioPokemon(int id)
     {
         if (id > 7 || id < 0)
         {
@@ -44,13 +44,13 @@ public class ScenarioWarrior : BaseDataWindow
         return GetUInt16(0xE + id * 2);
     }
 
-    public void SetScenarioPokemon(int id, ushort value)
+    public void SetScenarioPokemon(int id, int value)
     {
         if (id > 7 || id < 0)
         {
             throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
         }
-        SetUInt16(0xE + id * 2, value);
+        SetUInt16(0xE + id * 2, (ushort)value);
     }
 
 

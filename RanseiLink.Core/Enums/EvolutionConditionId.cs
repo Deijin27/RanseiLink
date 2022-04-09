@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum EvolutionConditionId : uint
+public enum EvolutionConditionId
 {
     /// <summary>
     /// Perform any action, with at least ___ HP afterwards

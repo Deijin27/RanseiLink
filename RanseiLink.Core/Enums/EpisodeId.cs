@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum EpisodeId : uint
+public enum EpisodeId
 {
     TheLegendOfRansei,
     TheRoadToConquest,

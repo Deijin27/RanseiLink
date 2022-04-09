@@ -13,7 +13,7 @@ public interface IPokemonService : IModelService<Pokemon>
 
 public class PokemonService : BaseModelService<Pokemon>, IPokemonService
 {
-    private const uint _defaultEvoId = 1400;
+    private const int _defaultEvoId = 1400;
     private const long _evoTableOffset = 0x25C0;
 
     public PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
@@ -62,12 +62,12 @@ public class PokemonService : BaseModelService<Pokemon>, IPokemonService
             }
             else
             {
-                pokemon.MinEvolutionTableEntry = (uint)evoTable.Count;
+                pokemon.MinEvolutionTableEntry = evoTable.Count;
                 foreach (var evo in pokemon.Evolutions)
                 {
                     evoTable.Add(evo);
                 }
-                pokemon.MaxEvolutionTableEntry = (uint)(evoTable.Count - 1);
+                pokemon.MaxEvolutionTableEntry = evoTable.Count - 1;
             }
             bw.Write(pokemon.Data);
         }

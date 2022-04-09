@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum WarriorSkillId : uint
+public enum WarriorSkillId
 {
     Adrenaline,
     Fortify,

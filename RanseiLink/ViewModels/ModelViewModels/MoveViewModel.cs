@@ -79,13 +79,13 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         set => RaiseAndSetIfChanged(_model.Type, value, v => _model.Type = v);
     }
 
-    public uint Power
+    public int Power
     {
         get => _model.Power;
         set => RaiseAndSetIfChanged(_model.Power, value, v => _model.Power = v);
     }
 
-    public uint Accuracy
+    public int Accuracy
     {
         get => _model.Accuracy;
         set => RaiseAndSetIfChanged(_model.Accuracy, value, v => _model.Accuracy = v);
@@ -103,7 +103,7 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
-    public uint Effect1Chance
+    public int Effect1Chance
     {
         get => _model.Effect1Chance;
         set => RaiseAndSetIfChanged(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
@@ -115,7 +115,7 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public uint Effect2Chance
+    public int Effect2Chance
     {
         get => _model.Effect2Chance;
         set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);

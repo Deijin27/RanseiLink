@@ -1,7 +1,7 @@
 ﻿namespace RanseiLink.Core.Enums;
 
 [DefaultValues(NoWarrior)]
-public enum WarriorId : uint
+public enum WarriorId
 {
     PlayerMale_1,
     PlayerMale_2,

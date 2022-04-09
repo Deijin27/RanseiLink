@@ -8,11 +8,11 @@ internal class SpriteSheetSplitterOptionForm : IPluginForm
     public string ProceedButtonText => "Go!";
     public string CancelButtonText => "Cancel";
 
-    [UIntOption("Sprite Width")]
-    public uint SpriteWidth { get; set; } = 32;
+    [IntOption("Sprite Width")]
+    public int SpriteWidth { get; set; } = 32;
 
-    [UIntOption("Sprite Width")]
-    public uint SpriteHeight { get; set; } = 32;
+    [IntOption("Sprite Width")]
+    public int SpriteHeight { get; set; } = 32;
 
     [CollectionOption("Split Direction", new[] { SplitDirection.ColumnsThenRows, SplitDirection.RowsThenColumns })]
     public SplitDirection SplitDirection { get; set; } = SplitDirection.ColumnsThenRows;

@@ -29,20 +29,20 @@ public class BoolOptionAttribute : BasePluginOptionAttribute
 }
 
 /// <summary>
-/// Valid on a <see cref="uint"/> property. Option to be displayed as a number picker.
+/// Valid on a <see cref="int"/> property. Option to be displayed as a number picker.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class UIntOptionAttribute : BasePluginOptionAttribute
+public class IntOptionAttribute : BasePluginOptionAttribute
 {
-    public UIntOptionAttribute(string displayName, string description = "", string group = "", uint minimumValue = uint.MinValue, uint maximumValue = uint.MaxValue)
+    public IntOptionAttribute(string displayName, string description = "", string group = "", int minimumValue = 0, int maximumValue = int.MaxValue)
         : base(displayName, description, group)
     {
         MinimumValue = minimumValue;
         MaximumValue = maximumValue;
     }
 
-    public uint MinimumValue { get; }
-    public uint MaximumValue { get; }
+    public int MinimumValue { get; }
+    public int MaximumValue { get; }
 }
 
 /// <summary>

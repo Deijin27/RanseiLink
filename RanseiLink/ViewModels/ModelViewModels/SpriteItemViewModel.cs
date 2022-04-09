@@ -38,7 +38,7 @@ public class SpriteItemViewModel : ViewModelBase
     public ICommand ExportCommand { get; }
     public ICommand RevertCommand { get; }
 
-    public uint Id { get; }
+    public int Id { get; }
 
     public ImageSource DisplayImage
     {

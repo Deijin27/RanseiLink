@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum WarriorLineId : uint
+public enum WarriorLineId
 {
     Player,
     Nobunaga,

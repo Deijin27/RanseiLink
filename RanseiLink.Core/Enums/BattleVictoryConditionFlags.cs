@@ -3,7 +3,7 @@
 namespace RanseiLink.Core.Enums;
 
 [Flags]
-public enum BattleVictoryConditionFlags : uint
+public enum BattleVictoryConditionFlags
 {
     DefeatAllEnemies        = 0b_00000,
     Unknown_AuroraDragnor   = 0b_00001,

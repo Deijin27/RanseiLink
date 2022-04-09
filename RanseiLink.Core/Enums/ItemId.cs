@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum ItemId : uint
+public enum ItemId
 {
     Potion,
     SuperPotion,

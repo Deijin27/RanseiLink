@@ -28,14 +28,14 @@ public class PokemonTests
         Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
         Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
         Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
-        Assert.Equal(3u, p.MovementRange);
-        Assert.Equal(246u, p.Hp);
-        Assert.Equal(255u, p.Atk);
-        Assert.Equal(185u, p.Def);
-        Assert.Equal(165u, p.Spe);
+        Assert.Equal(3, p.MovementRange);
+        Assert.Equal(246, p.Hp);
+        Assert.Equal(255, p.Atk);
+        Assert.Equal(185, p.Def);
+        Assert.Equal(165, p.Spe);
         Assert.False(p.IsLegendary);
-        Assert.Equal(0x40u, p.NameOrderIndex);
-        Assert.Equal(475u, p.NationalPokedexNumber);
+        Assert.Equal(0x40, p.NameOrderIndex);
+        Assert.Equal(475, p.NationalPokedexNumber);
         foreach (KingdomId location in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
             Assert.False(p.GetEncounterable(location, false));
@@ -55,14 +55,14 @@ public class PokemonTests
             Ability3 = AbilityId.Justified,
             Move = MoveId.PsychoCut,
             EvolutionCondition1 = EvolutionConditionId.Item,
-            QuantityForEvolutionCondition1 = (uint)ItemId.DawnStone,
+            QuantityForEvolutionCondition1 = (int)ItemId.DawnStone,
             EvolutionCondition2 = EvolutionConditionId.WarriorGender,
-            QuantityForEvolutionCondition2 = (uint)GenderId.Male,
-            MovementRange = 3u,
-            Hp = 246u,
-            Atk = 255u,
-            Def = 185u,
-            Spe = 165u,
+            QuantityForEvolutionCondition2 = (int)GenderId.Male,
+            MovementRange = 3,
+            Hp = 246,
+            Atk = 255,
+            Def = 185,
+            Spe = 165,
             IsLegendary = true,
             NameOrderIndex = 0x40,
             NationalPokedexNumber = 475,
@@ -83,14 +83,14 @@ public class PokemonTests
         Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
         Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
         Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
-        Assert.Equal(3u, p.MovementRange);
-        Assert.Equal(246u, p.Hp);
-        Assert.Equal(255u, p.Atk);
-        Assert.Equal(185u, p.Def);
-        Assert.Equal(165u, p.Spe);
+        Assert.Equal(3, p.MovementRange);
+        Assert.Equal(246, p.Hp);
+        Assert.Equal(255, p.Atk);
+        Assert.Equal(185, p.Def);
+        Assert.Equal(165, p.Spe);
         Assert.True(p.IsLegendary);
-        Assert.Equal(0x40u, p.NameOrderIndex);
-        Assert.Equal(475u, p.NationalPokedexNumber);
+        Assert.Equal(0x40, p.NameOrderIndex);
+        Assert.Equal(475, p.NationalPokedexNumber);
 
         Assert.True(p.GetEncounterable(KingdomId.Aurora, true));
         Assert.True(p.GetEncounterable(KingdomId.Cragspur, false));

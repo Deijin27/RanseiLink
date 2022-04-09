@@ -29,7 +29,7 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
     }
     public int Id { get; }
     
-    public uint ScenarioPokemonId
+    public int ScenarioPokemonId
     {
         get => _model.GetScenarioPokemon(Id);
         set 
@@ -51,8 +51,12 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
         }
     }
 
-    private uint CoerceValue(uint value)
+    private int CoerceValue(int value)
     {
+        if (value < 0)
+        {
+            return 0;
+        }
         if (value >= Core.Services.Constants.ScenarioPokemonCount)
         {
             if (value > ScenarioPokemonId)
@@ -139,7 +143,7 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
         set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
     }
 
-    public uint Army
+    public int Army
     {
         get => _model.Army;
         set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);

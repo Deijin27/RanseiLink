@@ -60,7 +60,7 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         set => RaiseAndSetIfChanged(_model.Gender, value, v => _model.Gender = v);
     }
 
-    public uint WarriorName
+    public int WarriorName
     {
         get => _model.WarriorName;
         set
@@ -110,25 +110,25 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         set => RaiseAndSetIfChanged(_model.RankUp, (WarriorId)value, v => _model.RankUp = v);
     }
 
-    public uint Power
+    public int Power
     {
         get => _model.Power;
         set => RaiseAndSetIfChanged(_model.Power, value, v => _model.Power = v);
     }
 
-    public uint Wisdom
+    public int Wisdom
     {
         get => _model.Wisdom;
         set => RaiseAndSetIfChanged(_model.Wisdom, value, v => _model.Wisdom = v);
     }
 
-    public uint Charisma
+    public int Charisma
     {
         get => _model.Charisma;
         set => RaiseAndSetIfChanged(_model.Charisma, value, v => _model.Charisma = v);
     }
 
-    public uint Capacity
+    public int Capacity
     {
         get => _model.Capacity;
         set => RaiseAndSetIfChanged(_model.Capacity, value, v => _model.Capacity = v);
@@ -146,7 +146,7 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         set => RaiseAndSetIfChanged(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
     }
 
-    public uint RankUpLink
+    public int RankUpLink
     {
         get => _model.RankUpLink;
         set => RaiseAndSetIfChanged(_model.RankUpLink, value, v => _model.RankUpLink = value);
@@ -164,19 +164,19 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         set => RaiseAndSetIfChanged(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value);
     }
 
-    public uint Quantity1ForRankUpCondition
+    public int Quantity1ForRankUpCondition
     {
         get => _model.Quantity1ForRankUpCondition;
         set => RaiseAndSetIfChanged(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value);
     }
 
-    public uint Quantity2ForRankUpCondition
+    public int Quantity2ForRankUpCondition
     {
         get => _model.Quantity2ForRankUpCondition;
         set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
     }
 
-    public uint Sprite
+    public int Sprite
     {
         get => _model.Sprite;
         set

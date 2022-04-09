@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum BuildingFunctionId : uint
+public enum BuildingFunctionId
 {
     Shop,
     RaiseEnergy,

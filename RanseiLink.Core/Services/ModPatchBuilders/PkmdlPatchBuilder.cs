@@ -59,7 +59,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
         Parallel.For(0, 200, i =>
         {
             string fileName = i.ToString().PadLeft(4, '0');
-            var spriteFile = spriteFileDict[(uint)i];
+            var spriteFile = spriteFileDict[i];
             if (spriteFile.IsOverride)
             {
                 using var combinedImage = Image.Load<Rgba32>(spriteFile.File);

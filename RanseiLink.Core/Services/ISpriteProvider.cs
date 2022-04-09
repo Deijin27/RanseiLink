@@ -31,10 +31,10 @@ public enum SpriteType
 public interface ISpriteProvider
 {
     List<SpriteFile> GetAllSpriteFiles(SpriteType type);
-    SpriteFile GetSpriteFile(SpriteType type, uint id);
+    SpriteFile GetSpriteFile(SpriteType type, int id);
 }
 
-public record SpriteFile(SpriteType Type, uint Id, string File, bool IsOverride);
+public record SpriteFile(SpriteType Type, int Id, string File, bool IsOverride);
 
 
 public interface IFallbackSpriteProvider : ISpriteProvider
@@ -45,6 +45,6 @@ public interface IFallbackSpriteProvider : ISpriteProvider
 
 public interface IOverrideSpriteProvider : ISpriteProvider
 {
-    public void SetOverride(SpriteType type, uint id, string file);
-    public void ClearOverride(SpriteType type, uint id);
+    public void SetOverride(SpriteType type, int id, string file);
+    public void ClearOverride(SpriteType type, int id);
 }

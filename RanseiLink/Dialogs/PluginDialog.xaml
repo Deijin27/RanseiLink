@@ -17,7 +17,7 @@
             <CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding Value, Mode=TwoWay}" ToolTip="{Binding Description}"/>
         </DataTemplate>
         
-        <DataTemplate DataType="{x:Type vm:UIntPluginFormItem}">
+        <DataTemplate DataType="{x:Type vm:IntPluginFormItem}">
             <Grid Margin="0,5" ToolTip="{Binding Description}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>

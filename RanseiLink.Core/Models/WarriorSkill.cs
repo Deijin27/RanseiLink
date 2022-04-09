@@ -14,52 +14,52 @@ public class WarriorSkill : BaseDataWindow
         set => SetPaddedUtf8String(0, 15, value);
     }
 
-    public uint Effect1Amount
+    public int Effect1Amount
     {
-        get => GetUInt32(4, 24, 8);
-        set => SetUInt32(4, 24, 8, value);
+        get => GetInt(4, 24, 8);
+        set => SetInt(4, 24, 8, value);
     }
 
     public WarriorSkillEffectId Effect1
     {
-        get => (WarriorSkillEffectId)GetUInt32(5, 0, 7);
-        set => SetUInt32(5, 0, 7, (uint)value);
+        get => (WarriorSkillEffectId)GetInt(5, 0, 7);
+        set => SetInt(5, 0, 7, (int)value);
     }
 
     public WarriorSkillEffectId Effect2
     {
-        get => (WarriorSkillEffectId)GetUInt32(5, 7, 7);
-        set => SetUInt32(5, 7, 7, (uint)value);
+        get => (WarriorSkillEffectId)GetInt(5, 7, 7);
+        set => SetInt(5, 7, 7, (int)value);
     }
 
-    public uint Effect2Amount
+    public int Effect2Amount
     {
-        get => GetUInt32(5, 14, 8);
-        set => SetUInt32(5, 14, 8, value);
+        get => GetInt(5, 14, 8);
+        set => SetInt(5, 14, 8, value);
     }
 
     public WarriorSkillEffectId Effect3
     {
-        get => (WarriorSkillEffectId)GetUInt32(5, 22, 7);
-        set => SetUInt32(5, 22, 7, (uint)value);
+        get => (WarriorSkillEffectId)GetInt(5, 22, 7);
+        set => SetInt(5, 22, 7, (int)value);
     }
 
-    public uint Duration
+    public int Duration
     {
-        get => GetUInt32(5, 29, 3);
-        set => SetUInt32(5, 29, 3, value);
+        get => GetInt(5, 29, 3);
+        set => SetInt(5, 29, 3, value);
     }
 
-    public uint Effect3Amount
+    public int Effect3Amount
     {
-        get => GetUInt32(6, 0, 8);
-        set => SetUInt32(6, 0, 8, value);
+        get => GetInt(6, 0, 8);
+        set => SetInt(6, 0, 8, value);
     }
 
     public WarriorSkillTargetId Target
     {
-        get => (WarriorSkillTargetId)GetUInt32(6, 8, 3);
-        set => SetUInt32(6, 8, 3, (uint)value);
+        get => (WarriorSkillTargetId)GetInt(6, 8, 3);
+        set => SetInt(6, 8, 3, (int)value);
     }
 
     /// <summary>
@@ -67,8 +67,8 @@ public class WarriorSkill : BaseDataWindow
     /// </summary>
     public MoveAnimationId Animation
     {
-        get => (MoveAnimationId)GetUInt32(6, 11, 9);
-        set => SetUInt32(6, 11, 9, (uint)value);
+        get => (MoveAnimationId)GetInt(6, 11, 9);
+        set => SetInt(6, 11, 9, (int)value);
     }
 
 }

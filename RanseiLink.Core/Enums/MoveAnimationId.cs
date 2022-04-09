@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(Default)]
-public enum MoveAnimationId : uint
+public enum MoveAnimationId
 {
     WaterDropletSplash,
     OrangeOrbBurst,

@@ -41,7 +41,7 @@ public class AbilityViewModel : ViewModelBase, IAbilityViewModel
         set => RaiseAndSetIfChanged(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
-    public uint Effect1Amount
+    public int Effect1Amount
     {
         get => _model.Effect1Amount;
         set => RaiseAndSetIfChanged(_model.Effect1Amount, value, v => _model.Effect1Amount = value);
@@ -53,7 +53,7 @@ public class AbilityViewModel : ViewModelBase, IAbilityViewModel
         set => RaiseAndSetIfChanged(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public uint Effect2Amount
+    public int Effect2Amount
     {
         get => _model.Effect2Amount;
         set => RaiseAndSetIfChanged(_model.Effect2Amount, value, v => _model.Effect2Amount = value);

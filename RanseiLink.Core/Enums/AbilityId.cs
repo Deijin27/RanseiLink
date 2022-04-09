@@ -3,7 +3,7 @@
 namespace RanseiLink.Core.Enums;
 
 [DefaultValues(NoAbility)]
-public enum AbilityId : uint
+public enum AbilityId
 {
     NoAbility = 128,
 

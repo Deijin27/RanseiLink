@@ -18,26 +18,26 @@ public class BaseWarriorTests
                 0x18, 0x0E, 0xFC, 0x07
         });
 
-        Assert.Equal(23u, a.Sprite);
+        Assert.Equal(23, a.Sprite);
         Assert.Equal(GenderId.Female, a.Gender);
-        Assert.Equal(118u, a.WarriorName);
+        Assert.Equal(118, a.WarriorName);
         Assert.Equal(TypeId.Poison, a.Speciality1);
         Assert.Equal(TypeId.Flying, a.Speciality2);
         Assert.Equal(TypeId.Psychic, a.Weakness1);
         Assert.Equal(TypeId.Rock, a.Weakness2);
         Assert.Equal(WarriorSkillId.Rally, a.Skill);
-        Assert.Equal(65u, a.Power);
-        Assert.Equal(78u, a.Wisdom);
-        Assert.Equal(75u, a.Charisma);
-        Assert.Equal(5u, a.Capacity);
+        Assert.Equal(65, a.Power);
+        Assert.Equal(78, a.Wisdom);
+        Assert.Equal(75, a.Charisma);
+        Assert.Equal(5, a.Capacity);
         Assert.Equal(WarriorId.Nene_2, a.RankUp);
         Assert.Equal(RankUpConditionId.Unknown, a.RankUpCondition1);
         Assert.Equal(RankUpConditionId.MonotypeGallery, a.RankUpCondition2);
         Assert.Equal(TypeId.Poison, (TypeId)a.Quantity1ForRankUpCondition);
-        Assert.Equal(511u, a.Quantity2ForRankUpCondition);
+        Assert.Equal(511, a.Quantity2ForRankUpCondition);
         Assert.Equal(PokemonId.Golbat, a.RankUpPokemon1);
         Assert.Equal(PokemonId.Crobat, a.RankUpPokemon2);
-        Assert.Equal(60u, a.RankUpLink);
+        Assert.Equal(60, a.RankUpLink);
     }
 
     [Fact]
@@ -46,47 +46,47 @@ public class BaseWarriorTests
 
         BaseWarrior a = new BaseWarrior
         {
-            Sprite = 128u,
+            Sprite = 128,
             Gender = GenderId.Male,
-            WarriorName = 4u,
+            WarriorName = 4,
             Speciality1 = TypeId.Fire,
             Speciality2 = TypeId.Water,
             Weakness1 = TypeId.Dark,
             Weakness2 = TypeId.Fighting,
             Skill = WarriorSkillId.Bewilder,
-            Power = 3u,
-            Wisdom = 24u,
-            Charisma = 68u,
-            Capacity = 2u,
+            Power = 3,
+            Wisdom = 24,
+            Charisma = 68,
+            Capacity = 2,
             RankUp = WarriorId.Nobunaga_1,
             RankUpCondition1 = RankUpConditionId.AtLeastNGalleryPokemon,
             RankUpCondition2 = RankUpConditionId.WarriorInSameKingdom,
-            Quantity1ForRankUpCondition = 34u,
-            Quantity2ForRankUpCondition = 17u,
+            Quantity1ForRankUpCondition = 34,
+            Quantity2ForRankUpCondition = 17,
             RankUpPokemon1 = PokemonId.Beedrill,
             RankUpPokemon2 = PokemonId.Blitzle,
-            RankUpLink = 20u,
+            RankUpLink = 20,
         };
 
-        Assert.Equal(128u, a.Sprite);
+        Assert.Equal(128, a.Sprite);
         Assert.Equal(GenderId.Male, a.Gender);
-        Assert.Equal(4u, a.WarriorName);
+        Assert.Equal(4, a.WarriorName);
         Assert.Equal(TypeId.Fire, a.Speciality1);
         Assert.Equal(TypeId.Water, a.Speciality2);
         Assert.Equal(TypeId.Dark, a.Weakness1);
         Assert.Equal(TypeId.Fighting, a.Weakness2);
         Assert.Equal(WarriorSkillId.Bewilder, a.Skill);
-        Assert.Equal(3u, a.Power);
-        Assert.Equal(24u, a.Wisdom);
-        Assert.Equal(68u, a.Charisma);
-        Assert.Equal(2u, a.Capacity);
+        Assert.Equal(3, a.Power);
+        Assert.Equal(24, a.Wisdom);
+        Assert.Equal(68, a.Charisma);
+        Assert.Equal(2, a.Capacity);
         Assert.Equal(WarriorId.Nobunaga_1, a.RankUp);
         Assert.Equal(RankUpConditionId.AtLeastNGalleryPokemon, a.RankUpCondition1);
         Assert.Equal(RankUpConditionId.WarriorInSameKingdom, a.RankUpCondition2);
-        Assert.Equal(34u, a.Quantity1ForRankUpCondition);
-        Assert.Equal(17u, a.Quantity2ForRankUpCondition);
+        Assert.Equal(34, a.Quantity1ForRankUpCondition);
+        Assert.Equal(17, a.Quantity2ForRankUpCondition);
         Assert.Equal(PokemonId.Beedrill, a.RankUpPokemon1);
         Assert.Equal(PokemonId.Blitzle, a.RankUpPokemon2);
-        Assert.Equal(20u, a.RankUpLink);
+        Assert.Equal(20, a.RankUpLink);
     }
 }

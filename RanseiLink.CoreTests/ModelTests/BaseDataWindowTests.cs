@@ -12,7 +12,7 @@ public class BaseDataWindowTests
     [InlineData(3, 0b111)]
     [InlineData(4, 0b1111)]
     [InlineData(5, 0b11111)]
-    public void GetMaskGivesCorrectResult(int bitCount, uint result)
+    public void GetMaskGivesCorrectResult(int bitCount, int result)
     {
         Assert.Equal(result, BaseDataWindow.GetMask(bitCount));
     }
@@ -26,7 +26,7 @@ public class BaseDataWindowTests
 
     [Theory]
     [InlineData(1, 5, 1, 0x19u)]
-    public void GetUInt32GivesCorrectResult(int index, int bitCount, int offset, uint result)
+    public void GetIntGivesCorrectResult(int index, int bitCount, int offset, int result)
     {
         byte[] bytes = new byte[]
         {
@@ -36,12 +36,12 @@ public class BaseDataWindowTests
 
         var bdw = new BaseDataWindow(bytes, 8);
 
-        Assert.Equal(result, bdw.GetUInt32(index, offset, bitCount));
+        Assert.Equal(result, bdw.GetInt(index, offset, bitCount));
     }
 
     [Theory]
     [InlineData(0, 8, 2, 0x82, new byte[] { 0x0B, 0x36, 0xA8, 0x4E, 0xF2, 0x0A, 0xD7, 0xFE })]
-    public void SetUInt32SetsCorrectValue(int index, int bitCount, int offset, uint value, byte[] resultingArray)
+    public void SetIntSetsCorrectValue(int index, int bitCount, int offset, int value, byte[] resultingArray)
     {
         byte[] bytes = new byte[]
         {
@@ -51,7 +51,7 @@ public class BaseDataWindowTests
 
         var bdw = new BaseDataWindow(bytes, 8);
 
-        bdw.SetUInt32(index, offset, bitCount, value);
+        bdw.SetInt(index, offset, bitCount, value);
 
         Assert.Equal(resultingArray, bdw.Data);
     }

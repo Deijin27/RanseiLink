@@ -4,7 +4,7 @@ namespace RanseiLink.Core.Enums;
 /// <summary>
 /// UInt5
 /// </summary>
-public enum TypeId : uint
+public enum TypeId
 {
     Normal,
     Fire,

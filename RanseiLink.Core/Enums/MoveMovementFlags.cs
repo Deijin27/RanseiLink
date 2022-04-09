@@ -3,7 +3,7 @@
 namespace RanseiLink.Core.Enums;
 
 [Flags]
-public enum MoveMovementFlags : uint
+public enum MoveMovementFlags
 {
     MovementOrKnockback = 0b_0000_0001,
     InvertMovementDirection = 0b_0000_0100,

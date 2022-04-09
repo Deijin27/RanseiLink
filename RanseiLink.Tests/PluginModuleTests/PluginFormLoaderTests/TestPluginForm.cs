@@ -13,8 +13,8 @@ internal class TestPluginForm : IPluginForm
     [BoolOption("Test display name", "Test description")]
     public bool TestBoolOption1 { get; set; } = true;
 
-    [UIntOption("Test uint display name", "Test uint description", "Test group 1", 3, 10)]
-    public uint TestUIntOption { get; set; } = 4;
+    [IntOption("Test int display name", "Test int description", "Test group 1", 3, 10)]
+    public int TestIntOption { get; set; } = 4;
 
     [StringOption("Test string display name", "Test string description", "Test group 1", 12)]
     public string TestStringOption { get; set; } = "test initial text";

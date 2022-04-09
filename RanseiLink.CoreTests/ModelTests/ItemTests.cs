@@ -23,8 +23,8 @@ public class ItemTests
         });
 
         Assert.Equal("Potion", a.Name);
-        Assert.Equal(3u, a.ShopPriceMultiplier);
-        Assert.Equal(20u, a.QuantityForEffect);
+        Assert.Equal(3, a.ShopPriceMultiplier);
+        Assert.Equal(20, a.QuantityForEffect);
 
         Assert.True(a.GetPurchasable(KingdomId.Fontaine));
         Assert.False(a.GetPurchasable(KingdomId.Greenleaf));
@@ -45,8 +45,8 @@ public class ItemTests
         a.SetPurchasable(KingdomId.Dragnor, false);
 
         Assert.Equal("Potion", a.Name);
-        Assert.Equal(12u, a.ShopPriceMultiplier);
-        Assert.Equal(8u, a.QuantityForEffect);
+        Assert.Equal(12, a.ShopPriceMultiplier);
+        Assert.Equal(8, a.QuantityForEffect);
         Assert.True(a.GetPurchasable(KingdomId.Chrysalia));
         Assert.False(a.GetPurchasable(KingdomId.Dragnor));
     }

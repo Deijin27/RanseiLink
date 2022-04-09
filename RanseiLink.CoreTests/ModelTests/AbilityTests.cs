@@ -19,10 +19,10 @@ public class AbilityTests
         });
 
         Assert.Equal("Last Bastion", a.Name);
-        Assert.Equal(2u, a.Effect1Amount);
+        Assert.Equal(2, a.Effect1Amount);
         Assert.Equal(AbilityEffectId.IncreaseUserAttack, a.Effect1);
         Assert.Equal(AbilityEffectId.IncreaseUserDefence, a.Effect2);
-        Assert.Equal(2u, a.Effect2Amount);
+        Assert.Equal(2, a.Effect2Amount);
     }
 
     [Fact]
@@ -40,17 +40,17 @@ public class AbilityTests
         Ability a = new Ability
         {
             Name = "Last Bastion",
-            Effect1Amount = 2u,
+            Effect1Amount = 2,
             Effect1 = AbilityEffectId.IncreaseUserAttack,
             Effect2 = AbilityEffectId.IncreaseUserDefence,
-            Effect2Amount = 2u
+            Effect2Amount = 2
         };
 
         Assert.Equal("Last Bastion", a.Name);
-        Assert.Equal(2u, a.Effect1Amount);
+        Assert.Equal(2, a.Effect1Amount);
         Assert.Equal(AbilityEffectId.IncreaseUserAttack, a.Effect1);
         Assert.Equal(AbilityEffectId.IncreaseUserDefence, a.Effect2);
-        Assert.Equal(2u, a.Effect2Amount);
+        Assert.Equal(2, a.Effect2Amount);
 
         Assert.Equal(lastBastionData, a.Data);
     }

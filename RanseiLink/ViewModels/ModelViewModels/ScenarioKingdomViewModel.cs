@@ -26,7 +26,7 @@ public class ScenarioKingdomItem : ViewModelBase
     }
     public string Kingdom { get; }
 
-    public uint Army
+    public int Army
     {
         get => _model.GetArmy(_kingdomId);
         set => RaiseAndSetIfChanged(Army, value, v => _model.SetArmy(_kingdomId, v));

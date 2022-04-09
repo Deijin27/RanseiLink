@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum RankUpConditionId : uint
+public enum RankUpConditionId
 {
     Unknown,
     AfterCompletingEpisode,

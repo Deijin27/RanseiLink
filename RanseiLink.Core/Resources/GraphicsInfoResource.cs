@@ -144,7 +144,7 @@ public static class GraphicsInfoResource
         return _all[type];
     }
 
-    public static string GetRelativeSpritePath(SpriteType type, uint id)
+    public static string GetRelativeSpritePath(SpriteType type, int id)
     {
         string idString = id.ToString().PadLeft(4, '0');
         string dir = GraphicsInfoResource.Get(type).PngFolder;

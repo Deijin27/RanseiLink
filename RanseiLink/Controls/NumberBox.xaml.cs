@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace RanseiLink.Controls;
 
@@ -24,46 +16,46 @@ public partial class NumberBox : UserControl
         NumberTextBox.Text = "0";
     }
 
-    public static DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Value, default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValuePropertyChanged);
+    public static DependencyProperty ValueProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, int>(v => v.Value, default, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValuePropertyChanged);
 
-    public uint Value
+    public int Value
     {
-        get => (uint)GetValue(ValueProperty);
+        get => (int)GetValue(ValueProperty);
         set => SetValue(ValueProperty, value);
     }
 
-    private static void OnValuePropertyChanged(NumberBox target, DependencyPropertyChangedEventArgs<uint> e)
+    private static void OnValuePropertyChanged(NumberBox target, DependencyPropertyChangedEventArgs<int> e)
     {
         target.NumberTextBox.Text = e.NewValue.ToString();
     }
 
-    public static DependencyProperty MinProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Min, uint.MinValue);
+    public static DependencyProperty MinProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, int>(v => v.Min, 0);
 
-    public uint Min
+    public int Min
     {
-        get => (uint)GetValue(MinProperty);
+        get => (int)GetValue(MinProperty);
         set => SetValue(MinProperty, value);
     }
 
-    public static DependencyProperty MaxProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Max, uint.MaxValue);
+    public static DependencyProperty MaxProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, int>(v => v.Max, int.MaxValue);
 
-    public uint Max
+    public int Max
     {
-        get => (uint)GetValue(MaxProperty);
+        get => (int)GetValue(MaxProperty);
         set => SetValue(MaxProperty, value);
     }
 
-    public static DependencyProperty IncrementProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, uint>(v => v.Increment, 1u);
+    public static DependencyProperty IncrementProperty = UserControlUtil.RegisterDependencyProperty<NumberBox, int>(v => v.Increment, 1);
 
-    public uint Increment
+    public int Increment
     {
-        get => (uint)GetValue(IncrementProperty);
+        get => (int)GetValue(IncrementProperty);
         set => SetValue(IncrementProperty, value);
     }
 
     private void IncrementButton_Click(object sender, RoutedEventArgs e)
     {
-        uint newVal = Value + Increment;
+        int newVal = Value + Increment;
         if (newVal <= Max && newVal > Value)
         {
             Value = newVal;
@@ -73,7 +65,7 @@ public partial class NumberBox : UserControl
 
     private void DecrementButton_Click(object sender, RoutedEventArgs e)
     {
-        uint newVal = Value - Increment;
+        int newVal = Value - Increment;
         if (newVal >= Min && newVal < Value)
         {
             Value = newVal;
@@ -85,7 +77,7 @@ public partial class NumberBox : UserControl
     {
         var senderTextBox = (TextBox)sender;
         string text = senderTextBox.Text;
-        var newVal = uint.TryParse(text, out uint i) ? i : Min;
+        var newVal = int.TryParse(text, out int i) ? i : Min;
         if (Value != newVal)
         {
             Value = newVal;
@@ -101,7 +93,7 @@ public partial class NumberBox : UserControl
     {
         // If it's invlaid, mark as handled so it doesn't proceed, else mark as not handled.
         string newText = ((TextBox)sender).Text + e.Text;
-        e.Handled = !(uint.TryParse(newText, out uint i) && i >= Min && i <= Max);
+        e.Handled = !(int.TryParse(newText, out int i) && i >= Min && i <= Max);
     }
 
     private void RaiseValueChanged()

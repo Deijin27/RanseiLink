@@ -113,19 +113,19 @@ public class KingdomViewModel : ViewModelBase, IKingdomViewModel
         set => RaiseAndSetIfChanged(_model.BattleConfig, value, v => _model.BattleConfig = v);
     }
 
-    public uint Unknown1
+    public int Unknown1
     {
         get => _model.Unknown_R2_C24_L3;
         set => RaiseAndSetIfChanged(_model.Unknown_R2_C24_L3, value, v => _model.Unknown_R2_C24_L3 = v);
     }
 
-    public uint Unknown2
+    public int Unknown2
     {
         get => _model.Unknown_R5_C22_L4;
         set => RaiseAndSetIfChanged(_model.Unknown_R5_C22_L4, value, v => _model.Unknown_R5_C22_L4 = v);
     }
 
-    public uint Unknown3
+    public int Unknown3
     {
         get => _model.Unknown_R5_C26_L4;
         set => RaiseAndSetIfChanged(_model.Unknown_R5_C26_L4, value, v => _model.Unknown_R5_C26_L4 = v);

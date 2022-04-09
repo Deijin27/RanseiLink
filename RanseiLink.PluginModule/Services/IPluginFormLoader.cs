@@ -38,17 +38,17 @@ public class BoolPluginFormItem : PluginFormOptionItem
     public bool Value { get; set; } 
 }
 
-public class UIntPluginFormItem : PluginFormOptionItem
+public class IntPluginFormItem : PluginFormOptionItem
 {
-    public UIntPluginFormItem(PropertyInfo member, string displayName, string description, uint value, uint minValue, uint maxValue) : base(member, displayName, description)
+    public IntPluginFormItem(PropertyInfo member, string displayName, string description, int value, int minValue, int maxValue) : base(member, displayName, description)
     {
         Value = value;
         MinValue = minValue;
         MaxValue = maxValue;
     }
-    public uint Value { get; set; }
-    public uint MinValue { get; }
-    public uint MaxValue { get; }
+    public int Value { get; set; }
+    public int MinValue { get; }
+    public int MaxValue { get; }
 }
 
 public class StringPluginFormItem : PluginFormOptionItem

@@ -81,15 +81,15 @@ public partial class EvolutionConditionControl : UserControl
         };
     }
 
-    public static DependencyProperty QuantityProperty = UserControlUtil.RegisterDependencyProperty<EvolutionConditionControl, uint>(v => v.Quantity, default, OnQuantityPropertyChanged);
+    public static DependencyProperty QuantityProperty = UserControlUtil.RegisterDependencyProperty<EvolutionConditionControl, int>(v => v.Quantity, default, OnQuantityPropertyChanged);
 
-    public uint Quantity
+    public int Quantity
     {
-        get => (uint)GetValue(QuantityProperty);
+        get => (int)GetValue(QuantityProperty);
         set => SetValue(QuantityProperty, value);
     }
 
-    private static void OnQuantityPropertyChanged(EvolutionConditionControl target, DependencyPropertyChangedEventArgs<uint> e)
+    private static void OnQuantityPropertyChanged(EvolutionConditionControl target, DependencyPropertyChangedEventArgs<int> e)
     {
         switch (target.Condition)
         {
@@ -185,7 +185,7 @@ public partial class EvolutionConditionControl : UserControl
             case EvolutionConditionId.Kingdom:
             case EvolutionConditionId.WarriorGender:
             case EvolutionConditionId.Item:
-                Quantity = (uint)((ComboBox)sender).SelectedItem;
+                Quantity = (int)((ComboBox)sender).SelectedItem;
                 break;
             default:
                 throw new Exception($"Invalid Enum Value of {Condition} in {nameof(EvolutionConditionControl)} {nameof(QuantityComboBox_SelectionChanged)}");

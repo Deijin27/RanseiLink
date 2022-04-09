@@ -19,98 +19,98 @@ public class Move : BaseDataWindow
 
     public MoveMovementFlags MovementFlags
     {
-        get => (MoveMovementFlags)GetUInt32(3, 24, 8);
-        set => SetUInt32(3, 24, 8, (uint)value);
+        get => (MoveMovementFlags)GetInt(3, 24, 8);
+        set => SetInt(3, 24, 8, (int)value);
     }
 
     public TypeId Type
     {
-        get => (TypeId)GetUInt32(4, 0, 5);
-        set => SetUInt32(4, 0, 5, (uint)value);
+        get => (TypeId)GetInt(4, 0, 5);
+        set => SetInt(4, 0, 5, (int)value);
     }
 
-    public uint Power
+    public int Power
     {
-        get => GetUInt32(4, 5, 8);
-        set => SetUInt32(4, 5, 8, value);
+        get => GetInt(4, 5, 8);
+        set => SetInt(4, 5, 8, value);
     }
 
     public MoveEffectId Effect1
     {
-        get => (MoveEffectId)GetUInt32(4, 13, 7);
-        set => SetUInt32(4, 13, 7, (uint)value);
+        get => (MoveEffectId)GetInt(4, 13, 7);
+        set => SetInt(4, 13, 7, (int)value);
     }
 
-    public uint Effect1Chance
+    public int Effect1Chance
     {
-        get => GetUInt32(4, 20, 7);
-        set => SetUInt32(4, 20, 7, value);
+        get => GetInt(4, 20, 7);
+        set => SetInt(4, 20, 7, value);
     }
 
     public MoveRangeId Range
     {
-        get => (MoveRangeId)GetUInt32(4, 27, 5);
-        set => SetUInt32(4, 27, 5, (uint)value);
+        get => (MoveRangeId)GetInt(4, 27, 5);
+        set => SetInt(4, 27, 5, (int)value);
     }
 
     public MoveEffectId Effect2
     {
-        get => (MoveEffectId)GetUInt32(6, 0, 7);
-        set => SetUInt32(6, 0, 7, (uint)value);
+        get => (MoveEffectId)GetInt(6, 0, 7);
+        set => SetInt(6, 0, 7, (int)value);
     }
 
-    public uint Effect2Chance
+    public int Effect2Chance
     {
-        get => GetUInt32(6, 7, 7);
-        set => SetUInt32(6, 7, 7, value);
+        get => GetInt(6, 7, 7);
+        set => SetInt(6, 7, 7, value);
     }
 
     public MoveEffectId Effect3
     {
-        get => (MoveEffectId)GetUInt32(6, 14, 7);
-        set => SetUInt32(6, 14, 7, (uint)value);
+        get => (MoveEffectId)GetInt(6, 14, 7);
+        set => SetInt(6, 14, 7, (int)value);
     }
 
-    public uint Effect3Chance
+    public int Effect3Chance
     {
-        get => GetUInt32(6, 21, 7);
-        set => SetUInt32(6, 21, 7, value);
+        get => GetInt(6, 21, 7);
+        set => SetInt(6, 21, 7, value);
     }
 
     public MoveEffectId Effect4
     {
-        get => (MoveEffectId)GetUInt32(7, 0, 7);
-        set => SetUInt32(7, 0, 7, (uint)value);
+        get => (MoveEffectId)GetInt(7, 0, 7);
+        set => SetInt(7, 0, 7, (int)value);
     }
 
-    public uint Effect4Chance
+    public int Effect4Chance
     {
-        get => GetUInt32(7, 7, 7);
-        set => SetUInt32(7, 7, 7, value);
+        get => GetInt(7, 7, 7);
+        set => SetInt(7, 7, 7, value);
     }
 
-    public uint Accuracy
+    public int Accuracy
     {
-        get => GetUInt32(7, 19, 7);
-        set => SetUInt32(7, 19, 7, value);
+        get => GetInt(7, 19, 7);
+        set => SetInt(7, 19, 7, value);
     }
 
     public MoveAnimationId StartupAnimation
     {
-        get => (MoveAnimationId)GetUInt32(5, 0, 9);
-        set => SetUInt32(5, 0, 9, (uint)value);
+        get => (MoveAnimationId)GetInt(5, 0, 9);
+        set => SetInt(5, 0, 9, (int)value);
     }
 
     public MoveAnimationId ProjectileAnimation
     {
-        get => (MoveAnimationId)GetUInt32(5, 9, 9);
-        set => SetUInt32(5, 9, 9, (uint)value);
+        get => (MoveAnimationId)GetInt(5, 9, 9);
+        set => SetInt(5, 9, 9, (int)value);
     }
 
     public MoveAnimationId ImpactAnimation
     {
-        get => (MoveAnimationId)GetUInt32(5, 18, 9);
-        set => SetUInt32(5, 18, 9, (uint)value);
+        get => (MoveAnimationId)GetInt(5, 18, 9);
+        set => SetInt(5, 18, 9, (int)value);
     }
 
     /// <summary>
@@ -118,22 +118,22 @@ public class Move : BaseDataWindow
     /// </summary>
     public MoveAnimationTargetId AnimationTarget1
     {
-        get => (MoveAnimationTargetId)GetUInt32(7, 26, 3);
-        set => SetUInt32(7, 26, 3, (uint)value);
+        get => (MoveAnimationTargetId)GetInt(7, 26, 3);
+        set => SetInt(7, 26, 3, (int)value);
     }
     /// <summary>
     /// This is either wrong or i don't understand it yet
     /// </summary>
     public MoveAnimationTargetId AnimationTarget2
     {
-        get => (MoveAnimationTargetId)GetUInt32(7, 29, 3);
-        set => SetUInt32(7, 29, 3, (uint)value);
+        get => (MoveAnimationTargetId)GetInt(7, 29, 3);
+        set => SetInt(7, 29, 3, (int)value);
     }
 
     public MoveMovementAnimationId MovementAnimation
     {
-        get => (MoveMovementAnimationId)GetUInt32(7, 14, 5);
-        set => SetUInt32(7, 14, 5, (uint)value);
+        get => (MoveMovementAnimationId)GetInt(7, 14, 5);
+        set => SetInt(7, 14, 5, (int)value);
     }
 
 }
