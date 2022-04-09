@@ -7,23 +7,18 @@ namespace RanseiLink.Core.Services.DefaultPopulaters;
 
 public class StlDefaultPopulater : IGraphicTypeDefaultPopulater
 {
-    private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
-    public StlDefaultPopulater()
-    {
-    }
-
-    public void ProcessExportedFiles(IGraphicsInfo gInfo)
+    public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
     {
         if (gInfo is not StlConstants stlInfo)
         {
             return;
         }
-        LINK.Unpack(Path.Combine(_graphicsProviderFolder, stlInfo.Link), Path.Combine(_graphicsProviderFolder, stlInfo.LinkFolder), true, 4);
-        var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, stlInfo.Ncer));
-        string data = Path.Combine(_graphicsProviderFolder, stlInfo.TexData ?? stlInfo.Data);
-        string info = Path.Combine(_graphicsProviderFolder, stlInfo.TexInfo ?? stlInfo.Info);
+        LINK.Unpack(Path.Combine(defaultDataFolder, stlInfo.Link), Path.Combine(defaultDataFolder, stlInfo.LinkFolder), true, 4);
+        var ncer = NCER.Load(Path.Combine(defaultDataFolder, stlInfo.Ncer));
+        string data = Path.Combine(defaultDataFolder, stlInfo.TexData ?? stlInfo.Data);
+        string info = Path.Combine(defaultDataFolder, stlInfo.TexInfo ?? stlInfo.Info);
         bool tiled = stlInfo.TexData == null;
-        string pngDir = Path.Combine(_graphicsProviderFolder, stlInfo.PngFolder);
+        string pngDir = Path.Combine(defaultDataFolder, stlInfo.PngFolder);
         STLCollection.Load(data, info).SaveAsPngs(pngDir, ncer, tiled);
     }
 }

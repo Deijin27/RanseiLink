@@ -19,12 +19,12 @@ public class ModManager : IModManager
     private readonly IMsgService _msgService;
     private readonly IModPatchingService _modPatchingService;
 
-    public ModManager(RomFsFactory ndsFactory, IMsgService msgService, IModPatchingService modPatchingService)
+    public ModManager(string modFolder, RomFsFactory ndsFactory, IMsgService msgService, IModPatchingService modPatchingService)
     {
         _modPatchingService = modPatchingService;
         _msgService = msgService;
         _ndsFactory = ndsFactory;
-        _modFolder = _modFolder = Path.Combine(Constants.RootFolder, "Mods");
+        _modFolder = modFolder;
         Directory.CreateDirectory(_modFolder);
     }
 

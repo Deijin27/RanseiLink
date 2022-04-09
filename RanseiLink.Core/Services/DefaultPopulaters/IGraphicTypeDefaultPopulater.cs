@@ -4,5 +4,5 @@ namespace RanseiLink.Core.Services.DefaultPopulaters;
 
 public interface IGraphicTypeDefaultPopulater
 {
-    void ProcessExportedFiles(IGraphicsInfo gInfo);
+    void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo);
 }

@@ -1,5 +1,4 @@
-﻿using RanseiLink.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
@@ -12,10 +11,6 @@ public class SettingService : ISettingService
     private readonly XElement _docRoot;
     private readonly Dictionary<Type, ISetting> _settingCache = new Dictionary<Type, ISetting>();
     private readonly string _settingsFilePath;
-
-    public SettingService() : this(Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml"))
-    {
-    }
 
     public SettingService(string settingsFilePath)
     {

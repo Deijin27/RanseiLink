@@ -6,21 +6,16 @@ namespace RanseiLink.Core.Services.DefaultPopulaters;
 
 public class ScbgDefaultPopulater : IGraphicTypeDefaultPopulater
 {
-    private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
-    public ScbgDefaultPopulater()
-    {
-    }
-
-    public void ProcessExportedFiles(IGraphicsInfo gInfo)
+    public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
     {
         if (gInfo is not ScbgConstants scbgInfo)
         {
             return;
         }
-        string data = Path.Combine(_graphicsProviderFolder, scbgInfo.Data);
-        string info = Path.Combine(_graphicsProviderFolder, scbgInfo.Info);
+        string data = Path.Combine(defaultDataFolder, scbgInfo.Data);
+        string info = Path.Combine(defaultDataFolder, scbgInfo.Info);
         bool tiled = true;
-        string pngDir = Path.Combine(_graphicsProviderFolder, scbgInfo.PngFolder);
+        string pngDir = Path.Combine(defaultDataFolder, scbgInfo.PngFolder);
         SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
         
     }

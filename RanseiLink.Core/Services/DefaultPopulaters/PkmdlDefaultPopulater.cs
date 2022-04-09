@@ -11,30 +11,26 @@ namespace RanseiLink.Core.Services.DefaultPopulaters;
 
 public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
 {
-    private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
     private const int _pokemonSpriteWidth = 32;
-    public PkmdlDefaultPopulater()
-    {
-    }
 
-    public void ProcessExportedFiles(IGraphicsInfo gInfo)
+    public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
     {
         if (gInfo is not PkmdlConstants pkmdlInfo)
         {
             return;
         }
 
-        string texLink = Path.Combine(_graphicsProviderFolder, pkmdlInfo.TEXLink);
-        string atxLink = Path.Combine(_graphicsProviderFolder, pkmdlInfo.ATXLink);
-        string dtxLink = Path.Combine(_graphicsProviderFolder, pkmdlInfo.DTXLink);
-        string pacLink = Path.Combine(_graphicsProviderFolder, pkmdlInfo.PACLink);
+        string texLink = Path.Combine(defaultDataFolder, pkmdlInfo.TEXLink);
+        string atxLink = Path.Combine(defaultDataFolder, pkmdlInfo.ATXLink);
+        string dtxLink = Path.Combine(defaultDataFolder, pkmdlInfo.DTXLink);
+        string pacLink = Path.Combine(defaultDataFolder, pkmdlInfo.PACLink);
 
-        string texUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.TEXLinkFolder);
-        string atxUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.ATXLinkFolder);
-        string dtxUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.DTXLinkFolder);
-        string pacUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.PACLinkFolder);
+        string texUnpacked = Path.Combine(defaultDataFolder, pkmdlInfo.TEXLinkFolder);
+        string atxUnpacked = Path.Combine(defaultDataFolder, pkmdlInfo.ATXLinkFolder);
+        string dtxUnpacked = Path.Combine(defaultDataFolder, pkmdlInfo.DTXLinkFolder);
+        string pacUnpacked = Path.Combine(defaultDataFolder, pkmdlInfo.PACLinkFolder);
 
-        string outFolderPath = Path.Combine(_graphicsProviderFolder, pkmdlInfo.PngFolder);
+        string outFolderPath = Path.Combine(defaultDataFolder, pkmdlInfo.PngFolder);
         Directory.CreateDirectory(outFolderPath);
 
         LINK.Unpack(texLink, texUnpacked, false, 4);

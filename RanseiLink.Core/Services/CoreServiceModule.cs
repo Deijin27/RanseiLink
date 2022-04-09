@@ -5,6 +5,7 @@ using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services.ModPatchBuilders;
 using RanseiLink.Core.Settings;
+using System.IO;
 
 namespace RanseiLink.Core.Services;
 
@@ -22,11 +23,11 @@ public class CoreServiceModule : Module
         builder.RegisterInstance(romFsFactory).As<RomFsFactory>();
 
         builder.RegisterType<MsgService>().As<IMsgService>().SingleInstance();
-        builder.RegisterType<FallbackSpriteProvider>().As<IFallbackSpriteProvider>().SingleInstance();
+        builder.RegisterType<FallbackSpriteProvider>().As<IFallbackSpriteProvider>().SingleInstance().WithParameter("defaultDataFolder", Constants.DefaultDataProviderFolder);
         builder.RegisterType<ModPatchingService>().As<IModPatchingService>().SingleInstance();
-        builder.RegisterType<ModManager>().As<IModManager>().SingleInstance();
-        builder.RegisterType<SettingService>().As<ISettingService>().SingleInstance();
-        
+        builder.RegisterType<ModManager>().As<IModManager>().SingleInstance().WithParameter("modFolder", Path.Combine(Constants.RootFolder, "Mods"));
+        builder.RegisterType<SettingService>().As<ISettingService>().SingleInstance().WithParameter("settingsFilePath", Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml"));
+
         builder.RegisterType<PkmdlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
         builder.RegisterType<ScbgDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
         builder.RegisterType<StlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
