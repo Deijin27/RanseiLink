@@ -7,10 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ScriptTests\EnumerateByIdTest.lua" />
+    <None Remove="ScriptTests\EnumerateWarriorsTest.lua" />
     <None Remove="ScriptTests\SetPropertyAndSaveTest.lua" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ScriptTests\EnumerateByIdTest.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ScriptTests\EnumerateWarriorsTest.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ScriptTests\SetPropertyAndSaveTest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

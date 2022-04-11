@@ -4,6 +4,8 @@ using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace RanseiLink.Tests.ViewModelTests.MainEditorViewModelTests;
@@ -19,6 +21,8 @@ public class EditorModuleTests
         return mock;
     }
 
+    private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
+    private readonly Mock<ISettingService> _settingService;
     private readonly MainEditorViewModel _mainEditorVm;
     private readonly Mock<EditorModule> _moduleA;
     private readonly Mock<EditorModule> _moduleB;
@@ -26,12 +30,12 @@ public class EditorModuleTests
     private readonly Mock<EditorModule> _moduleD;
     public EditorModuleTests()
     {
-        var editorModuleOrderSetting = new EditorModuleOrderSetting()
+        _editorModuleOrderSetting = new EditorModuleOrderSetting()
         {
             Value = new string[] { "test_module_b", "test_module_c", "test_module_a" }
         };
-        var settingService = new Mock<ISettingService>();
-        settingService.Setup(i => i.Get<EditorModuleOrderSetting>()).Returns(editorModuleOrderSetting);
+        _settingService = new Mock<ISettingService>();
+        _settingService.Setup(i => i.Get<EditorModuleOrderSetting>()).Returns(_editorModuleOrderSetting);
 
         _moduleA = SetupTestModule("a");
         _moduleB = SetupTestModule("b");
@@ -41,7 +45,7 @@ public class EditorModuleTests
         _mainEditorVm = new MainEditorViewModel(
             new Mock<IDialogService>().Object,
             new Mock<IModManager>().Object,
-            settingService.Object,
+            _settingService.Object,
             new Mock<IFallbackSpriteProvider>().Object,
             new Mock<IPluginLoader>().Object,
             new Mock<IModServiceGetterFactory>().Object,
@@ -111,6 +115,24 @@ public class EditorModuleTests
         _moduleC.Verify(i => i.Deactivate(), Times.Never());
         _moduleB.Verify(i => i.Deactivate(), Times.Once());
         _moduleD.Verify(i => i.Deactivate(), Times.Once());
+    }
 
+    [Fact]
+    public void DeactivateShouldSaveModuleOrder()
+    {
+        // change the order to something other than it was before
+        var items = _mainEditorVm.ListItems.ToList();
+        _mainEditorVm.ListItems.Clear();
+        foreach (var item in items.OrderBy(i => i.ModuleId))
+        {
+            _mainEditorVm.ListItems.Add(item);
+        }
+
+        // deactivate
+        _mainEditorVm.Deactivate();
+
+        // check saved correctly
+        Assert.Equal(new string[] { "test_module_a", "test_module_b", "test_module_c", "test_module_d" }, _editorModuleOrderSetting.Value);
+        _settingService.Verify(i => i.Save(), Times.Once());
     }
 }
