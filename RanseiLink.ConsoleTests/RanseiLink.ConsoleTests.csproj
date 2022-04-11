@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="ScriptTests\EnumerateByIdTest.lua" />
     <None Remove="ScriptTests\EnumerateWarriorsTest.lua" />
+    <None Remove="ScriptTests\ReadPokemonDataTest.lua" />
     <None Remove="ScriptTests\SetPropertyAndSaveTest.lua" />
   </ItemGroup>
 
@@ -20,6 +21,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="ScriptTests\EnumerateWarriorsTest.lua">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptTests\ReadPokemonDataTest.lua">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="ScriptTests\SetPropertyAndSaveTest.lua">
