@@ -3,6 +3,7 @@ using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services.ModPatchBuilders;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -25,13 +26,13 @@ public class ModPatchingService : IModPatchingService
 
     private readonly RomFsFactory _ndsFactory;
     private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
-    private readonly IPatchBuilder[] _builders;
+    private readonly IModServiceGetterFactory _modServiceGetterFactory;
 
-    public ModPatchingService(RomFsFactory ndsFactory, IFallbackSpriteProvider fallbackSpriteProvider, IPatchBuilder[] builders)
+    public ModPatchingService(RomFsFactory ndsFactory, IFallbackSpriteProvider fallbackSpriteProvider, IModServiceGetterFactory modServiceGetterFactory)
     {
         _fallbackSpriteProvider = fallbackSpriteProvider;
         _ndsFactory = ndsFactory;
-        _builders = builders;
+        _modServiceGetterFactory = modServiceGetterFactory;
     }
 
     public bool CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions, out string reasonCannotPatch)
@@ -57,7 +58,9 @@ public class ModPatchingService : IModPatchingService
         Exception exception = null;
         try
         {
-            GetFilesToPatch(filesToPatch, patchOptions);
+            var services = _modServiceGetterFactory.Create(modInfo);
+            var patchers = services.Get<IEnumerable<IPatchBuilder>>();
+            GetFilesToPatch(patchers, filesToPatch, patchOptions);
 
 #if PATCHER_BUG_FIXING
             string debugOut = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, "patch_debug_dump"));
@@ -119,9 +122,9 @@ public class ModPatchingService : IModPatchingService
         progress?.Report(new ProgressInfo(StatusText: "Done!", IsIndeterminate: false));
     }
 
-    private void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
+    private void GetFilesToPatch(IEnumerable<IPatchBuilder> patchBuilders, ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
     {
-        Parallel.ForEach(_builders, builder =>
+        Parallel.ForEach(patchBuilders, builder =>
         {
             builder.GetFilesToPatch(filesToPatch, patchOptions);
         });
