@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace RandomizerPlugin;
 
-internal class Randomizer
+public class Randomizer
 {
     private readonly PokemonId[] _pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
     private AbilityId[] _abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
@@ -26,7 +26,7 @@ internal class Randomizer
     private IMoveService _moveService;
     private IMoveRangeService _moveRangeService;
 
-    private RandomizationOptionForm options;
+    private RandomizationOptionForm _options;
 
     private Random random;
 
@@ -42,48 +42,36 @@ internal class Randomizer
         MoveEffectId.HitsStartOfTurnAfterNext,
     };
 
-    public void Run(IPluginContext context)
+    public void Run(IPluginContext context, RandomizationOptionForm options, IProgress<ProgressInfo> progress = null)
     {
-        var optionService = context.Services.Get<IPluginService>();
-        options = new RandomizationOptionForm();
-        if (!optionService.RequestOptions(options))
+        _options = options;
+        progress.Report(new ProgressInfo("Initializing Randomizer..."));
+        Init(context.Services);
+        progress.Report(new ProgressInfo(Progress:15, StatusText:"Randomizing..."));
+
+        Randomize();
+
+        if (options.SoftlockMinimization)
         {
-            return;
+            while (!IsValid())
+            {
+                Randomize();
+            }
         }
 
-        var dialogService = context.Services.Get<IDialogService>();
+        RandomizeNoValidationNeeded();
 
-        dialogService.ProgressDialog(progress =>
+        if (options.AllMaxLinkValue > 0)
         {
-            progress.Report(new ProgressInfo("Initializing Randomizer..."));
-            Init(context.Services);
-            progress.Report(new ProgressInfo(Progress:15, StatusText:"Randomizing..."));
+            progress.Report(new ProgressInfo(Progress: 70, StatusText: "Handling max link values..."));
+            HandleMaxLink(context.Services.Get<IMaxLinkService>());
+        }
 
-            Randomize();
-
-            if (options.SoftlockMinimization)
-            {
-                while (!IsValid())
-                {
-                    Randomize();
-                }
-            }
-
-            RandomizeNoValidationNeeded();
-
-            if (options.AllMaxLinkValue > 0)
-            {
-                progress.Report(new ProgressInfo(Progress: 70, StatusText: "Handling max link values..."));
-                HandleMaxLink(context.Services.Get<IMaxLinkService>());
-            }
-
-            progress.Report(new ProgressInfo(Progress: 85, StatusText: "Saving randomized data..."));
-            Save();
+        progress.Report(new ProgressInfo(Progress: 85, StatusText: "Saving randomized data..."));
+        Save();
 
 
-            progress.Report(new ProgressInfo(Progress: 100, StatusText: "Randomization Complete!"));
-
-        });
+        progress.Report(new ProgressInfo(Progress: 100, StatusText: "Randomization Complete!"));
     }
 
     /// <summary>
@@ -99,16 +87,16 @@ internal class Randomizer
 
         _moveRangeService = services.Get<IMoveRangeService>();
 
-        if (options.AvoidDummyAbilities)
+        if (_options.AvoidDummyAbilities)
         {
             _abilityIds = _abilityIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
-        if (options.AvoidDummyMoves)
+        if (_options.AvoidDummyMoves)
         {
             _moveIds = _moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
-        random = new Random(options.Seed.GetHashCode());
+        random = new Random(_options.Seed.GetHashCode());
     }
 
     /// <summary>
@@ -127,32 +115,32 @@ internal class Randomizer
     /// </summary>
     private void Randomize()
     {
-        if (options.Abilities || options.Types || options.Moves)
+        if (_options.Abilities || _options.Types || _options.Moves)
         {
             foreach (Pokemon poke in _pokemonService.Enumerate())
             {
-                if (options.Abilities)
+                if (_options.Abilities)
                 {
                     poke.Ability1 = random.Choice(_abilityIds);
                     poke.Ability2 = random.Choice(_abilityIds);
                     poke.Ability3 = random.Choice(_abilityIds);
                 }
-                if (options.Types)
+                if (_options.Types)
                 {
                     poke.Type1 = random.Choice(_typeIdsExceptNoType);
-                    poke.Type2 = options.PreventSameType
+                    poke.Type2 = _options.PreventSameType
                         ? random.Choice(_typeIds.Where(i => i != poke.Type1).ToArray())
                         : random.Choice(_typeIds);
 
                 }
-                if (options.Moves)
+                if (_options.Moves)
                 {
                     poke.Move = random.Choice(_moveIds);
                 }
             }
         }
 
-        if (options.ScenarioPokemon)
+        if (_options.ScenarioPokemon)
         {
             foreach (ScenarioPokemon sp in _scenarioPokemonService.Enumerate().SelectMany(i => i.Enumerate()))
             {
@@ -169,7 +157,7 @@ internal class Randomizer
     /// </summary>
     private void RandomizeNoValidationNeeded()
     {
-        if (options.Warriors)
+        if (_options.Warriors)
         {
             foreach (ScenarioWarrior sw in _scenarioWarriorService.Enumerate().SelectMany(i => i.Enumerate()))
             {
@@ -177,7 +165,7 @@ internal class Randomizer
             }
         }
 
-        if (options.MoveAnimations)
+        if (_options.MoveAnimations)
         {
             foreach (var move in _moveService.Enumerate())
             {
@@ -248,7 +236,7 @@ internal class Randomizer
         //{
         //    return false;
         //}
-        if ((options.Moves || options.ScenarioPokemon) && move.Power < 30)
+        if ((_options.Moves || _options.ScenarioPokemon) && move.Power < 30)
         {
             return false;
         }
@@ -312,9 +300,9 @@ internal class Randomizer
         {
             foreach (PokemonId pid in _pokemonIds)
             {
-                if (maxLinkTable.GetMaxLink(pid) < options.AllMaxLinkValue)
+                if (maxLinkTable.GetMaxLink(pid) < _options.AllMaxLinkValue)
                 {
-                    maxLinkTable.SetMaxLink(pid, options.AllMaxLinkValue);
+                    maxLinkTable.SetMaxLink(pid, _options.AllMaxLinkValue);
                 }
             }
         }

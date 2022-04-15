@@ -32,15 +32,15 @@ public class ModListItemViewModel : ViewModelBase
     private readonly ModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
     private readonly IModServiceGetterFactory _modKernelFactory;
+    private readonly IModPatchingService _modPatcher;
 
     public ModListItemViewModel(
         ModSelectionViewModel parent, 
         ModInfo mod, 
-        IModManager modManager, 
-        IDialogService dialogService, 
-        IFallbackSpriteProvider fallbackSpriteProvider,
+        IModManager modManager,
+        IModPatchingService modPatcher,
+        IDialogService dialogService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory)
     {
@@ -48,7 +48,7 @@ public class ModListItemViewModel : ViewModelBase
         _parentVm = parent;
         _modService = modManager;
         _dialogService = dialogService;
-        _fallbackSpriteProvider = fallbackSpriteProvider;
+        _modPatcher = modPatcher;
         Mod = mod;
         PluginItems = pluginLoader.LoadPlugins(out var _);
 
@@ -74,14 +74,14 @@ public class ModListItemViewModel : ViewModelBase
 
     private void PatchRom(ModInfo mod)
     {
-        if (!_dialogService.CommitToRom(Mod, out string romPath, out var patchOpt))
+        if (!_dialogService.CommitToRom(mod, out string romPath, out var patchOpt))
         {
             return;
         }
 
-        if (patchOpt.HasFlag(PatchOptions.IncludeSprites) && !_fallbackSpriteProvider.IsDefaultsPopulated)
+        if (!_modPatcher.CanPatch(mod, romPath, patchOpt, out string reason))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", "In order to patch sprites you must first run 'Populate Graphics Defaults' on the home screen so it has the necessary files"));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", reason));
             return;
         }
 
@@ -90,7 +90,7 @@ public class ModListItemViewModel : ViewModelBase
         {
             try
             {
-                _modService.Patch(mod, romPath, patchOpt, progress);
+                _modPatcher.Patch(mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {

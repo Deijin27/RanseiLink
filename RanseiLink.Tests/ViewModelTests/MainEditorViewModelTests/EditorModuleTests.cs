@@ -1,10 +1,11 @@
 ﻿using Moq;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -23,6 +24,8 @@ public class EditorModuleTests
 
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
     private readonly Mock<ISettingService> _settingService;
+    private readonly Mock<IModPatchingService> _patchingService;
+    private readonly Mock<IDialogService> _dialogService;
     private readonly MainEditorViewModel _mainEditorVm;
     private readonly Mock<EditorModule> _moduleA;
     private readonly Mock<EditorModule> _moduleB;
@@ -37,16 +40,18 @@ public class EditorModuleTests
         _settingService = new Mock<ISettingService>();
         _settingService.Setup(i => i.Get<EditorModuleOrderSetting>()).Returns(_editorModuleOrderSetting);
 
+        _patchingService = new Mock<IModPatchingService>();
+        _dialogService = new Mock<IDialogService>();
+
         _moduleA = SetupTestModule("a");
         _moduleB = SetupTestModule("b");
         _moduleC = SetupTestModule("c");
         _moduleD = SetupTestModule("d");
 
         _mainEditorVm = new MainEditorViewModel(
-            new Mock<IDialogService>().Object,
-            new Mock<IModManager>().Object,
+            _dialogService.Object,
+            _patchingService.Object,
             _settingService.Object,
-            new Mock<IFallbackSpriteProvider>().Object,
             new Mock<IPluginLoader>().Object,
             new Mock<IModServiceGetterFactory>().Object,
             new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object }
@@ -134,5 +139,60 @@ public class EditorModuleTests
         // check saved correctly
         Assert.Equal(new string[] { "test_module_a", "test_module_b", "test_module_c", "test_module_d" }, _editorModuleOrderSetting.Value);
         _settingService.Verify(i => i.Save(), Times.Once());
+    }
+
+    [Fact]
+    public void PatchShouldInformInitialisedModules()
+    {
+        string romPath = "romPath";
+        PatchOptions patchOptions = 0;
+        _dialogService.Setup(i => i.CommitToRom(It.IsAny<ModInfo>(), out romPath, out patchOptions)).Returns(true);
+        string failReason = "failreason";
+        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), romPath, patchOptions, out failReason)).Returns(true);
+
+        _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
+            .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));
+
+        // initialise module b and d
+        _mainEditorVm.CurrentModuleId = "test_module_b";
+        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
+        _mainEditorVm.CurrentModuleId = "test_module_d";
+        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
+
+        // assert that others arent initialised
+        _moduleA.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
+        _moduleC.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
+
+        _mainEditorVm.CommitRomCommand.Execute(null);
+
+        _moduleA.Verify(i => i.OnPatchingRom(), Times.Never());
+        _moduleC.Verify(i => i.OnPatchingRom(), Times.Never());
+        _moduleB.Verify(i => i.OnPatchingRom(), Times.Once());
+        _moduleD.Verify(i => i.OnPatchingRom(), Times.Once());
+    }
+
+    [Fact]
+    public void ShouldInformModulesOfPluginCompletion()
+    {
+        // initialise module b and d
+        _mainEditorVm.CurrentModuleId = "test_module_b";
+        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
+        _mainEditorVm.CurrentModuleId = "test_module_d";
+        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
+
+        // assert that others arent initialised
+        _moduleA.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
+        _moduleC.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
+
+        _mainEditorVm.PluginPopupOpen = true;
+        var plugin = new Mock<IPlugin>();
+        _mainEditorVm.SelectedPlugin = new PluginInfo(plugin.Object, null, null, null);
+
+        plugin.Verify(i => i.Run(It.IsAny<IPluginContext>()), Times.Once());
+
+        _moduleA.Verify(i => i.OnPluginComplete(), Times.Never());
+        _moduleC.Verify(i => i.OnPluginComplete(), Times.Never());
+        _moduleB.Verify(i => i.OnPluginComplete(), Times.Once());
+        _moduleD.Verify(i => i.OnPluginComplete(), Times.Once());
     }
 }

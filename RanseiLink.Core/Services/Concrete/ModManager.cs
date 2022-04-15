@@ -17,11 +17,9 @@ public class ModManager : IModManager
 
     private readonly RomFsFactory _ndsFactory;
     private readonly IMsgService _msgService;
-    private readonly IModPatchingService _modPatchingService;
 
-    public ModManager(string modFolder, RomFsFactory ndsFactory, IMsgService msgService, IModPatchingService modPatchingService)
+    public ModManager(string modFolder, RomFsFactory ndsFactory, IMsgService msgService)
     {
-        _modPatchingService = modPatchingService;
         _msgService = msgService;
         _ndsFactory = ndsFactory;
         _modFolder = modFolder;
@@ -176,10 +174,5 @@ public class ModManager : IModManager
     public void Delete(ModInfo modInfo)
     {
         Directory.Delete(modInfo.FolderPath, true);
-    }
-
-    public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions = PatchOptions.None, IProgress<ProgressInfo> progress = null)
-    {
-        _modPatchingService.Patch(modInfo, romPath, patchOptions, progress);
     }
 }

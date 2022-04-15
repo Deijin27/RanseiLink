@@ -11,13 +11,11 @@ namespace RanseiLink.Console.ModCommands;
 public class CommitModCommand : ICommand
 {
     private readonly ICurrentModService _currentModService;
-    private readonly IModManager _modManager;
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
-    public CommitModCommand(ICurrentModService currentModService, IModManager modManager, IFallbackSpriteProvider fallbackSpriteProvider)
+    private readonly IModPatchingService _modPatcher;
+    public CommitModCommand(ICurrentModService currentModService, IModPatchingService modPatcher)
     {
         _currentModService = currentModService;
-        _modManager = modManager;
-        _fallbackSpriteProvider = fallbackSpriteProvider;
+        _modPatcher = modPatcher;
     }
 
     [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
@@ -39,15 +37,15 @@ public class CommitModCommand : ICommand
         if (IncludeSprites)
         {
             patchOpt |= PatchOptions.IncludeSprites;
-
-            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
-            {
-                console.Output.WriteLine("Cannot patch sprites until you run the command 'populate graphics defaults'");
-                return default;
-            }
         }
 
-        _modManager.Patch(currentMod, Path, patchOpt);
+        if (!_modPatcher.CanPatch(currentMod, Path, patchOpt, out string reason))
+        {
+            console.Output.WriteLine(reason);
+            return default;
+        }
+
+        _modPatcher.Patch(currentMod, Path, patchOpt);
         console.Output.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
         console.Render(currentMod);
         return default;

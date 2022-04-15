@@ -17,8 +17,7 @@ public record EditorModuleListItem(string DisplayName, string ModuleId);
 public class MainEditorViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
-    private readonly IModManager _modService;
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    private readonly IModPatchingService _modPatcher;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
@@ -32,18 +31,16 @@ public class MainEditorViewModel : ViewModelBase
 
     public MainEditorViewModel(
         IDialogService dialogService, 
-        IModManager modManager, 
-        ISettingService settingService, 
-        IFallbackSpriteProvider fallbackSpriteProvider, 
+        IModPatchingService modPatcher, 
+        ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IEnumerable<EditorModule> modules)
     {
         _modKernelFactory = modKernelFactory;
         _dialogService = dialogService;
-        _modService = modManager;
+        _modPatcher = modPatcher;
         _settingService = settingService;
-        _fallbackSpriteProvider = fallbackSpriteProvider;
         _editorModuleOrderSetting = _settingService.Get<EditorModuleOrderSetting>();
 
         PluginItems = pluginLoader.LoadPlugins(out var loadFailures);
@@ -211,23 +208,23 @@ public class MainEditorViewModel : ViewModelBase
             return;
         }
 
-        if (patchOpt.HasFlag(PatchOptions.IncludeSprites) && !_fallbackSpriteProvider.IsDefaultsPopulated)
+        if (!_modPatcher.CanPatch(Mod, romPath, patchOpt, out string reason))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", "In order to patch sprites you must first run 'Populate Graphics Defaults' on the home screen so it has the necessary files"));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", reason));
             return;
         }
 
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
+            progress?.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
             foreach (var module in InitialisedModules.Values)
             {
                 module.OnPatchingRom();
             }
             try
             {
-                _modService.Patch(Mod, romPath, patchOpt, progress);
+                _modPatcher.Patch(Mod, romPath, patchOpt, progress);
             }
             catch (Exception e)
             {
