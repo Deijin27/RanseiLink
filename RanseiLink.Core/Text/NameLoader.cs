@@ -1,25 +1,26 @@
 ﻿using RanseiLink.Core.Resources;
 
-namespace RanseiLink.Core.Text;
-
-public static class NameLoader
+namespace RanseiLink.Core.Text
 {
-    public static string LoadName(byte[] nameData)
+    public static class NameLoader
     {
-        var result = EncodingProvider.ShiftJIS.GetString(nameData);
-        foreach (var (key, value) in CharacterTableResource.LoadTable)
+        public static string LoadName(byte[] nameData)
         {
-            result = result.Replace(key, value);
+            var result = EncodingProvider.ShiftJIS.GetString(nameData);
+            foreach (var kvp in CharacterTableResource.LoadTable)
+            {
+                result = result.Replace(kvp.Key, kvp.Value);
+            }
+            return result;
         }
-        return result;
-    }
 
-    public static byte[] SaveName(string name)
-    {
-        foreach (var (key, value) in CharacterTableResource.SaveTable)
+        public static byte[] SaveName(string name)
         {
-            name = name.Replace(key, value);
+            foreach (var kvp in CharacterTableResource.SaveTable)
+            {
+                name = name.Replace(kvp.Key, kvp.Value);
+            }
+            return EncodingProvider.ShiftJIS.GetBytes(name);
         }
-        return EncodingProvider.ShiftJIS.GetBytes(name);
     }
 }

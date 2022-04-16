@@ -38,8 +38,8 @@ public class NdsExtractFolderCommand : ICommand
 
         var romFsConfig = new RomFsConfig
         (
-            NameTableStartOffsetPositon: NtStartOffsetPosition ?? RomFs.NdsConfig.NameTableStartOffsetPositon,
-            AllocationTableStartOffsetPosition: FatStartOffsetPosition ?? RomFs.NdsConfig.AllocationTableStartOffsetPosition
+            nameTableStartOffsetPositon: NtStartOffsetPosition ?? RomFs.NdsConfig.NameTableStartOffsetPositon,
+            allocationTableStartOffsetPosition: FatStartOffsetPosition ?? RomFs.NdsConfig.AllocationTableStartOffsetPosition
         );
 
         using IRomFs nds = new RomFs(NdsPath, romFsConfig);

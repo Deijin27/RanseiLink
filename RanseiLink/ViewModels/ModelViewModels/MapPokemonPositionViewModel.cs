@@ -66,13 +66,13 @@ public class MapPokemonPositionViewModel : ViewModelBase
     public byte X
     {
         get => _positions[_positionId].X;
-        set => RaiseAndSetIfChanged(X, value, v => _positions[_positionId] = _positions[_positionId] with { X = v });
+        set => RaiseAndSetIfChanged(X, value, v => _positions[_positionId].X = v);
     }
 
     public byte Y
     {
         get => _positions[_positionId].Y;
-        set => RaiseAndSetIfChanged(Y, value, v => _positions[_positionId] = _positions[_positionId] with { Y = v });
+        set => RaiseAndSetIfChanged(Y, value, v => _positions[_positionId].Y = v);
     }
 
     public ICommand IncrementXCommand { get; }

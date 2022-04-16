@@ -3,125 +3,126 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace RanseiLink.Core.Maps;
-
-public enum Orientation : byte
+namespace RanseiLink.Core.Maps
 {
-    East,
-    South,
-    West,
-    North,
-    Default = 0xFF
-}
-
-public class MapGimmickItem
-{
-    public GimmickId Gimmick { get; set; }
-    public Position Position { get; set; }
-    public Orientation Orientation { get; set; }
-    public int UnknownValue { get; set; }
-    public List<(ushort, ushort)> UnknownList { get; set; } = new(); // usage seems to depend on gimmick type
-
-    public MapGimmickItem()
+    public enum Orientation : byte
     {
-        Position = new Position(0, 0);
+        East,
+        South,
+        West,
+        North,
+        Default = 0xFF
     }
 
-    public MapGimmickItem(BinaryReader br)
+    public class MapGimmickItem
     {
-        Gimmick = (GimmickId)br.ReadByte();
-        Position = new Position(br);
-        Orientation = (Orientation)br.ReadByte();
-        UnknownValue = br.ReadInt32();
-        var count = br.ReadInt32();
-        for (int i = 0; i < count; i++)
+        public GimmickId Gimmick { get; set; }
+        public Position Position { get; set; }
+        public Orientation Orientation { get; set; }
+        public int UnknownValue { get; set; }
+        public List<(ushort, ushort)> UnknownList { get; set; } = new List<(ushort, ushort)>(); // usage seems to depend on gimmick type
+
+        public MapGimmickItem()
         {
-            UnknownList.Add((br.ReadUInt16(), br.ReadUInt16()));
+            Position = new Position(0, 0);
         }
-    }
 
-    public void WriteTo(BinaryWriter bw)
-    {
-        bw.Write(((byte)Gimmick));
-        Position.WriteTo(bw);
-        bw.Write(((byte)Orientation));
-        bw.Write(UnknownValue);
-        bw.Write(UnknownList.Count);
-        foreach (var item in UnknownList)
+        public MapGimmickItem(BinaryReader br)
         {
-            bw.Write(item.Item1);
-            bw.Write(item.Item2);
-        }
-    }
-
-    public override string ToString()
-    {
-        var sb = new StringBuilder();
-
-        sb.AppendLine($"Gimmick: {Gimmick}");
-        sb.AppendLine($"Position: {Position}");
-        sb.AppendLine($"Orientation: {Orientation}");
-        sb.AppendLine($"Unknown Value: {UnknownValue:X}");
-        if (UnknownList.Count > 0)
-        {
-            sb.AppendLine($"Unknown List:");
-            foreach (var item in UnknownList)
+            Gimmick = (GimmickId)br.ReadByte();
+            Position = new Position(br);
+            Orientation = (Orientation)br.ReadByte();
+            UnknownValue = br.ReadInt32();
+            var count = br.ReadInt32();
+            for (int i = 0; i < count; i++)
             {
-                sb.AppendLine($"- {item.Item1}, {item.Item2}");
+                UnknownList.Add((br.ReadUInt16(), br.ReadUInt16()));
             }
         }
 
-        return sb.ToString();
+        public void WriteTo(BinaryWriter bw)
+        {
+            bw.Write(((byte)Gimmick));
+            Position.WriteTo(bw);
+            bw.Write(((byte)Orientation));
+            bw.Write(UnknownValue);
+            bw.Write(UnknownList.Count);
+            foreach (var item in UnknownList)
+            {
+                bw.Write(item.Item1);
+                bw.Write(item.Item2);
+            }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Gimmick: {Gimmick}");
+            sb.AppendLine($"Position: {Position}");
+            sb.AppendLine($"Orientation: {Orientation}");
+            sb.AppendLine($"Unknown Value: {UnknownValue:X}");
+            if (UnknownList.Count > 0)
+            {
+                sb.AppendLine($"Unknown List:");
+                foreach (var item in UnknownList)
+                {
+                    sb.AppendLine($"- {item.Item1}, {item.Item2}");
+                }
+            }
+
+            return sb.ToString();
+        }
     }
-}
 
-public class MapGimmickSection
-{
-    public List<MapGimmickItem> Items { get; set; }
-
-    public MapGimmickSection(BinaryReader br, ushort gimmickCount)
+    public class MapGimmickSection
     {
-        Items = new List<MapGimmickItem>();
+        public List<MapGimmickItem> Items { get; set; }
 
-        if (gimmickCount == 0)
+        public MapGimmickSection(BinaryReader br, ushort gimmickCount)
         {
-            return;
-        }
-        // Read allocation table just to find start of items
-        int firstItemStart = br.ReadInt32();
-        br.BaseStream.Seek(firstItemStart - 4, SeekOrigin.Current);
+            Items = new List<MapGimmickItem>();
 
-        // Read items
-        for (int i = 0; i < gimmickCount; i++)
-        {
-            Items.Add(new MapGimmickItem(br));
+            if (gimmickCount == 0)
+            {
+                return;
+            }
+            // Read allocation table just to find start of items
+            int firstItemStart = br.ReadInt32();
+            br.BaseStream.Seek(firstItemStart - 4, SeekOrigin.Current);
+
+            // Read items
+            for (int i = 0; i < gimmickCount; i++)
+            {
+                Items.Add(new MapGimmickItem(br));
+            }
         }
+
+        public void WriteTo(BinaryWriter bw)
+        {
+            var initOffset = bw.BaseStream.Position;
+            bw.Seek(Items.Count * 4, SeekOrigin.Current);
+
+            List<int> itemStarts = new List<int>();
+
+            // write items
+            foreach (var item in Items)
+            {
+                itemStarts.Add((int)(bw.BaseStream.Position - initOffset));
+                item.WriteTo(bw);
+            }
+
+            var endPosition = bw.BaseStream.Position;
+
+            // write item offsets
+            bw.BaseStream.Position = initOffset;
+            foreach (var start in itemStarts)
+            {
+                bw.Write(start);
+            }
+
+            bw.BaseStream.Position = endPosition;
+        }
+
     }
-
-    public void WriteTo(BinaryWriter bw)
-    {
-        var initOffset = bw.BaseStream.Position;
-        bw.Seek(Items.Count * 4, SeekOrigin.Current);
-
-        List<int> itemStarts = new();
-
-        // write items
-        foreach (var item in Items)
-        {
-            itemStarts.Add((int)(bw.BaseStream.Position - initOffset));
-            item.WriteTo(bw);
-        }
-
-        var endPosition = bw.BaseStream.Position;
-
-        // write item offsets
-        bw.BaseStream.Position = initOffset;
-        foreach (var start in itemStarts)
-        {
-            bw.Write(start);
-        }
-
-        bw.BaseStream.Position = endPosition;
-    }
-
 }

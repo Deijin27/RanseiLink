@@ -1,68 +1,69 @@
 ﻿using RanseiLink.Core.Enums;
 using System;
 
-namespace RanseiLink.Core.Models;
-
-public class ScenarioWarrior : BaseDataWindow
+namespace RanseiLink.Core.Models
 {
-    public const int DataLength = 0x20;
-
-    public ScenarioWarrior(byte[] data) : base(data, DataLength) { }
-
-    public ScenarioWarrior() : this(new byte[DataLength]) { }
-
-    public WarriorId Warrior
+    public class ScenarioWarrior : BaseDataWindow
     {
-        get => (WarriorId)GetByte(0);
-        set => SetByte(0, (byte)value);
-    }
+        public const int DataLength = 0x20;
 
-    public WarriorClassId Class
-    {
-        get => (WarriorClassId)GetInt(0, 9, 3);
-        set => SetInt(0, 9, 3, (int)value);
-    }
+        public ScenarioWarrior(byte[] data) : base(data, DataLength) { }
 
-    public KingdomId Kingdom
-    {
-        get => (KingdomId)GetInt(0, 12, 5);
-        set => SetInt(0, 12, 5, (int)value);
-    }
+        public ScenarioWarrior() : this(new byte[DataLength]) { }
 
-    public int Army
-    {
-        get => GetInt(0, 17, 5);
-        set => SetInt(0, 17, 5, value);
-    }
-
-    public int GetScenarioPokemon(int id)
-    {
-        if (id > 7 || id < 0)
+        public WarriorId Warrior
         {
-            throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
+            get => (WarriorId)GetByte(0);
+            set => SetByte(0, (byte)value);
         }
-        return GetUInt16(0xE + id * 2);
-    }
 
-    public void SetScenarioPokemon(int id, int value)
-    {
-        if (id > 7 || id < 0)
+        public WarriorClassId Class
         {
-            throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
+            get => (WarriorClassId)GetInt(0, 9, 3);
+            set => SetInt(0, 9, 3, (int)value);
         }
-        SetUInt16(0xE + id * 2, (ushort)value);
+
+        public KingdomId Kingdom
+        {
+            get => (KingdomId)GetInt(0, 12, 5);
+            set => SetInt(0, 12, 5, (int)value);
+        }
+
+        public int Army
+        {
+            get => GetInt(0, 17, 5);
+            set => SetInt(0, 17, 5, value);
+        }
+
+        public int GetScenarioPokemon(int id)
+        {
+            if (id > 7 || id < 0)
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
+            }
+            return GetUInt16(0xE + id * 2);
+        }
+
+        public void SetScenarioPokemon(int id, int value)
+        {
+            if (id > 7 || id < 0)
+            {
+                throw new ArgumentOutOfRangeException($"{nameof(id)} is out of range. Scenario warriors only have 8 pokemon");
+            }
+            SetUInt16(0xE + id * 2, (ushort)value);
+        }
+
+
+        public void MakeScenarioPokemonDefault(int id)
+        {
+            SetScenarioPokemon(id, DefaultScenarioPokemon);
+        }
+
+        public bool ScenarioPokemonIsDefault(int id)
+        {
+            return GetScenarioPokemon(id) == DefaultScenarioPokemon;
+        }
+
+        public const ushort DefaultScenarioPokemon = 1100;
     }
-
-
-    public void MakeScenarioPokemonDefault(int id)
-    {
-        SetScenarioPokemon(id, DefaultScenarioPokemon);
-    }
-
-    public bool ScenarioPokemonIsDefault(int id)
-    {
-        return GetScenarioPokemon(id) == DefaultScenarioPokemon; 
-    }
-
-    public const ushort DefaultScenarioPokemon = 1100;
 }

@@ -1,21 +1,22 @@
 ﻿using System.Xml.Linq;
 
-namespace RanseiLink.Core.Settings;
-
-public abstract class IntSetting : Setting<int>
+namespace RanseiLink.Core.Settings
 {
-    protected IntSetting(string uniqueElementName) : base(uniqueElementName) { }
-
-    public override void Deserialize(XElement element)
+    public abstract class IntSetting : Setting<int>
     {
-        if (int.TryParse(element.Value, out int value))
+        protected IntSetting(string uniqueElementName) : base(uniqueElementName) { }
+
+        public override void Deserialize(XElement element)
         {
-            Value = value;
+            if (int.TryParse(element.Value, out int value))
+            {
+                Value = value;
+            }
         }
-    }
 
-    public override void Serialize(XElement element)
-    {
-        element.Value = Value.ToString();
+        public override void Serialize(XElement element)
+        {
+            element.Value = Value.ToString();
+        }
     }
 }

@@ -2,22 +2,23 @@
 using RanseiLink.Core.Resources;
 using System.IO;
 
-namespace RanseiLink.Core.Services.DefaultPopulaters;
-
-public class ScbgDefaultPopulater : IGraphicTypeDefaultPopulater
+namespace RanseiLink.Core.Services.DefaultPopulaters
 {
-    public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
+    public class ScbgDefaultPopulater : IGraphicTypeDefaultPopulater
     {
-        if (gInfo is not ScbgConstants scbgInfo)
+        public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
         {
-            return;
-        }
-        string data = Path.Combine(defaultDataFolder, scbgInfo.Data);
-        string info = Path.Combine(defaultDataFolder, scbgInfo.Info);
-        bool tiled = true;
-        string pngDir = Path.Combine(defaultDataFolder, scbgInfo.PngFolder);
-        SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
-        
-    }
-}
+            if (!(gInfo is ScbgConstants scbgInfo))
+            {
+                return;
+            }
+            string data = Path.Combine(defaultDataFolder, scbgInfo.Data);
+            string info = Path.Combine(defaultDataFolder, scbgInfo.Info);
+            bool tiled = true;
+            string pngDir = Path.Combine(defaultDataFolder, scbgInfo.PngFolder);
+            SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
 
+        }
+    }
+
+}

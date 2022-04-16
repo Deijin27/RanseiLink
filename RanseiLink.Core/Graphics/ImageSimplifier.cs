@@ -5,109 +5,110 @@ using SixLabors.ImageSharp.Processing.Processors.Quantization;
 using System.Collections.Generic;
 using System.IO;
 
-namespace RanseiLink.Core.Graphics;
-
-public static class ImageSimplifier
+namespace RanseiLink.Core.Graphics
 {
-    /// <summary>
-    /// Simplify palette by grouping colors nearest to eachother
-    /// </summary>
-    /// <returns>False if the paletted didn't need to be simplified</returns>
-    public static bool SimplifyPalette(string imagePath, int maximumColors)
+    public static class ImageSimplifier
     {
-        string saveFile = FileUtil.MakeUniquePath(Path.Combine(
-            Path.GetDirectoryName(imagePath), Path.GetFileNameWithoutExtension(imagePath) + " - Simplified" + Path.GetExtension(imagePath)
-            ));
-
-        return SimplifyPalette(imagePath, maximumColors, saveFile);
-    }
-
-    public static bool SimplifyPalette(string imagePath, int maximumColors, string saveFile)
-    {
-        Image<Rgba32> img;
-        try
+        /// <summary>
+        /// Simplify palette by grouping colors nearest to eachother
+        /// </summary>
+        /// <returns>False if the paletted didn't need to be simplified</returns>
+        public static bool SimplifyPalette(string imagePath, int maximumColors)
         {
-            img = Image.Load<Rgba32>(imagePath);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+            string saveFile = FileUtil.MakeUniquePath(Path.Combine(
+                Path.GetDirectoryName(imagePath), Path.GetFileNameWithoutExtension(imagePath) + " - Simplified" + Path.GetExtension(imagePath)
+                ));
+
+            return SimplifyPalette(imagePath, maximumColors, saveFile);
         }
 
-        // Create a lookup of colors to points
-        var colors = new HashSet<Rgba32>();
-        for (int y = 0; y < img.Height; y++)
+        public static bool SimplifyPalette(string imagePath, int maximumColors, string saveFile)
         {
-            for (int x = 0; x < img.Width; x++)
+            Image<Rgba32> img;
+            try
             {
-                var color = img[x, y];
-                if (color.A == 0)
-                {
-                    continue;
-                }
-                colors.Add(color);
+                img = Image.Load<Rgba32>(imagePath);
             }
-        }
-        // if not using too many colors, no need to simplify
-        if (colors.Count + 1 <= maximumColors)
-        {
-            return false;
-        }
-
-        img.Mutate(g =>
-        {
-            g.Quantize(new OctreeQuantizer(new QuantizerOptions() { MaxColors = maximumColors, DitherScale = 0 }));
-        });
-
-        img.Save(saveFile);
-
-        img.Dispose();
-
-        return true;
-    }
-
-    public static bool ImageMatchesSize(string imagePath, int width, int height)
-    {
-        Image<Rgba32> img;
-        try
-        {
-            img = Image.Load<Rgba32>(imagePath);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
-        }
-
-        bool result = img.Height == height && img.Width == width;
-
-        img.Dispose();
-
-        return result;
-    }
-
-    public static void ResizeImage(string imagePath, int width, int height, string saveFile)
-    {
-        Image<Rgba32> img;
-        try
-        {
-            img = Image.Load<Rgba32>(imagePath);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
-        }
-
-        img.Mutate(g =>
-        {
-            g.Resize(new ResizeOptions
+            catch (UnknownImageFormatException e)
             {
-                Size = new Size(width, height),
-                Mode = ResizeMode.Max
+                throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+            }
+
+            // Create a lookup of colors to points
+            var colors = new HashSet<Rgba32>();
+            for (int y = 0; y < img.Height; y++)
+            {
+                for (int x = 0; x < img.Width; x++)
+                {
+                    var color = img[x, y];
+                    if (color.A == 0)
+                    {
+                        continue;
+                    }
+                    colors.Add(color);
+                }
+            }
+            // if not using too many colors, no need to simplify
+            if (colors.Count + 1 <= maximumColors)
+            {
+                return false;
+            }
+
+            img.Mutate(g =>
+            {
+                g.Quantize(new OctreeQuantizer(new QuantizerOptions() { MaxColors = maximumColors, DitherScale = 0 }));
             });
-        });
 
-        img.Save(saveFile);
+            img.Save(saveFile);
 
-        img.Dispose();
+            img.Dispose();
+
+            return true;
+        }
+
+        public static bool ImageMatchesSize(string imagePath, int width, int height)
+        {
+            Image<Rgba32> img;
+            try
+            {
+                img = Image.Load<Rgba32>(imagePath);
+            }
+            catch (UnknownImageFormatException e)
+            {
+                throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+            }
+
+            bool result = img.Height == height && img.Width == width;
+
+            img.Dispose();
+
+            return result;
+        }
+
+        public static void ResizeImage(string imagePath, int width, int height, string saveFile)
+        {
+            Image<Rgba32> img;
+            try
+            {
+                img = Image.Load<Rgba32>(imagePath);
+            }
+            catch (UnknownImageFormatException e)
+            {
+                throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+            }
+
+            img.Mutate(g =>
+            {
+                g.Resize(new ResizeOptions
+                {
+                    Size = new Size(width, height),
+                    Mode = ResizeMode.Max
+                });
+            });
+
+            img.Save(saveFile);
+
+            img.Dispose();
+        }
     }
 }

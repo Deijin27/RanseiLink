@@ -3,43 +3,49 @@ using System.IO;
 using System;
 using RanseiLink.Core.Enums;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IEpisodeService : IModelService<Episode>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class EpisodeService : BaseModelService<Episode>, IEpisodeService
-{
-    public EpisodeService(string abilityDatFile) : base(abilityDatFile, 0, 37, 511) { }
-
-    public EpisodeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EpisodeRomPath)) { }
-
-    public override void Reload()
+    public interface IEpisodeService : IModelService<Episode>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new Episode(br.ReadBytes(Episode.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class EpisodeService : BaseModelService<Episode>, IEpisodeService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public EpisodeService(string abilityDatFile) : base(abilityDatFile, 0, 37, 511) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public EpisodeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EpisodeRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new Episode(br.ReadBytes(Episode.DataLength)));
+                }
+            }
+                
         }
-        return ((EpisodeId)id).ToString();
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return ((EpisodeId)id).ToString();
+        }
     }
 }

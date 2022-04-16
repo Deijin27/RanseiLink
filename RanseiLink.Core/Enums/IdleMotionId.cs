@@ -1,9 +1,10 @@
 ﻿
-namespace RanseiLink.Core.Enums;
-
-public enum IdleMotionId
+namespace RanseiLink.Core.Enums
 {
-    Float,
-    FloatyBounce,
-    Grounded
+    public enum IdleMotionId
+    {
+        Float,
+        FloatyBounce,
+        Grounded
+    }
 }

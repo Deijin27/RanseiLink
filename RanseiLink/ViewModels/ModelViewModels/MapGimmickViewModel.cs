@@ -80,13 +80,13 @@ public class MapGimmickViewModel : ViewModelBase
     public byte X
     {
         get => GimmickItem.Position.X;
-        set => RaiseAndSetIfChanged(X, value, v => GimmickItem.Position = GimmickItem.Position with { X = v });
+        set => RaiseAndSetIfChanged(X, value, v => GimmickItem.Position.X = v);
     }
 
     public byte Y
     {
         get => GimmickItem.Position.Y;
-        set => RaiseAndSetIfChanged(Y, value, v => GimmickItem.Position = GimmickItem.Position with { Y = v });
+        set => RaiseAndSetIfChanged(Y, value, v => GimmickItem.Position.Y = v);
     }
 
     public Orientation Orientation

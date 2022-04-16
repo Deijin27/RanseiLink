@@ -3,43 +3,48 @@ using RanseiLink.Core.Models;
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IMoveRangeService : IModelService<MoveRange>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class MoveRangeService : BaseModelService<MoveRange>, IMoveRangeService
-{
-    public MoveRangeService(string MoveRangeDatFile) : base(MoveRangeDatFile, 0, 29) { }
-
-    public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) { }
-
-    public override void Reload()
+    public interface IMoveRangeService : IModelService<MoveRange>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class MoveRangeService : BaseModelService<MoveRange>, IMoveRangeService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public MoveRangeService(string MoveRangeDatFile) : base(MoveRangeDatFile, 0, 29) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
+                }
+            }
         }
-        return ((MoveRangeId)id).ToString();
-    }
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return ((MoveRangeId)id).ToString();
+        }
+    } 
 }

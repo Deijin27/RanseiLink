@@ -1,23 +1,24 @@
 ﻿using RanseiLink.Core.Enums;
 
-namespace RanseiLink.Core.Models;
-
-public class EventSpeaker : BaseDataWindow
+namespace RanseiLink.Core.Models
 {
-    public const int DataLength = 0x12;
-    public EventSpeaker(byte[] data) : base(data, DataLength) { }
-    public EventSpeaker() : base(new byte[DataLength], DataLength) { }
-
-    public string Name
+    public class EventSpeaker : BaseDataWindow
     {
-        get => GetPaddedUtf8String(0, 16);
-        set => SetPaddedUtf8String(0, 16, value);
-    }
+        public const int DataLength = 0x12;
+        public EventSpeaker(byte[] data) : base(data, DataLength) { }
+        public EventSpeaker() : base(new byte[DataLength], DataLength) { }
 
-    public int Sprite
-    {
-        get => GetByte(0x11);
-        set => SetByte(0x11, (byte)value);
-    }
+        public string Name
+        {
+            get => GetPaddedUtf8String(0, 16);
+            set => SetPaddedUtf8String(0, 16, value);
+        }
 
+        public int Sprite
+        {
+            get => GetByte(0x11);
+            set => SetByte(0x11, (byte)value);
+        }
+
+    }
 }

@@ -3,43 +3,48 @@ using RanseiLink.Core.Models;
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IScenarioKingdomService : IModelService<ScenarioKingdom>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class ScenarioKingdomService : BaseModelService<ScenarioKingdom>, IScenarioKingdomService
-{
-    public ScenarioKingdomService(ModInfo mod) : base(mod.FolderPath, 0, 10) 
+    public interface IScenarioKingdomService : IModelService<ScenarioKingdom>
     {
     }
 
-    public override void Reload()
+    public class ScenarioKingdomService : BaseModelService<ScenarioKingdom>, IScenarioKingdomService
     {
-        _cache.Clear();
-        for (int id = _minId; id <= _maxId; id++)
+        public ScenarioKingdomService(ModInfo mod) : base(mod.FolderPath, 0, 10)
         {
-            using var br = new BinaryReader(File.OpenRead(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id))));
-            _cache.Add(new ScenarioKingdom(br.ReadBytes(ScenarioKingdom.DataLength)));
         }
-    }
 
-    public override void Save()
-    {
-        for (int id = _minId; id <= _maxId; id++)
+        public override void Reload()
         {
-            using var bw = new BinaryWriter(File.OpenWrite(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id))));
-            bw.Write(_cache[id].Data);
+            _cache.Clear();
+            for (int id = _minId; id <= _maxId; id++)
+            {
+                using (var br = new BinaryReader(File.OpenRead(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id)))))
+                {
+                    _cache.Add(new ScenarioKingdom(br.ReadBytes(ScenarioKingdom.DataLength)));
+                } 
+            }
         }
-    }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public override void Save()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            for (int id = _minId; id <= _maxId; id++)
+            {
+                using (var bw = new BinaryWriter(File.OpenWrite(Path.Combine(_dataFile, Constants.ScenarioKingdomPathFromId(id)))))
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
         }
-        return ((ScenarioId)id).ToString();
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return ((ScenarioId)id).ToString();
+        }
     }
 }

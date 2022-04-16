@@ -1,10 +1,11 @@
 ﻿
-namespace RanseiLink.Core.Enums;
-
-public enum ItemCategoryId
+namespace RanseiLink.Core.Enums
 {
-    Consumable,
-    Equipment,
-    RawMaterial,
-    Miscellaneous
+    public enum ItemCategoryId
+    {
+        Consumable,
+        Equipment,
+        RawMaterial,
+        Miscellaneous
+    }
 }

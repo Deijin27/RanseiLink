@@ -1,18 +1,19 @@
 ﻿using System.Xml.Linq;
 
-namespace RanseiLink.Core.Settings;
-
-public abstract class StringSetting : Setting<string>
+namespace RanseiLink.Core.Settings
 {
-    protected StringSetting(string uniqueElementName) : base(uniqueElementName) { }
-
-    public override void Deserialize(XElement element)
+    public abstract class StringSetting : Setting<string>
     {
-        Value = element.Value;
-    }
+        protected StringSetting(string uniqueElementName) : base(uniqueElementName) { }
 
-    public override void Serialize(XElement element)
-    {
-        element.Value = Value;
+        public override void Deserialize(XElement element)
+        {
+            Value = element.Value;
+        }
+
+        public override void Serialize(XElement element)
+        {
+            element.Value = Value;
+        }
     }
 }

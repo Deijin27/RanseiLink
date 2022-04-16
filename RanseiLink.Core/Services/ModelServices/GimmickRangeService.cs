@@ -3,43 +3,48 @@ using RanseiLink.Core.Models;
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IGimmickRangeService : IModelService<MoveRange>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class GimmickRangeService : BaseModelService<MoveRange>, IGimmickRangeService
-{
-    public GimmickRangeService(string GimmickRangeDatFile) : base(GimmickRangeDatFile, 0, 29) { }
-
-    public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) { }
-
-    public override void Reload()
+    public interface IGimmickRangeService : IModelService<MoveRange>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class GimmickRangeService : BaseModelService<MoveRange>, IGimmickRangeService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public GimmickRangeService(string GimmickRangeDatFile) : base(GimmickRangeDatFile, 0, 29) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new MoveRange(br.ReadBytes(MoveRange.DataLength)));
+                }
+            }
         }
-        return ((GimmickRangeId)id).ToString();
-    }
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return ((GimmickRangeId)id).ToString();
+        }
+    } 
 }

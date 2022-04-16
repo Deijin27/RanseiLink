@@ -113,7 +113,7 @@ public class PartialTransferPlugin : IPlugin
         
         dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo(StatusText:"Transferring...", MaxProgress:filesToTransfer.Count+dirsToTransfer.Count));
+            progress.Report(new ProgressInfo(statusText:"Transferring...", maxProgress:filesToTransfer.Count+dirsToTransfer.Count));
 
             int count = 0;
             foreach (var file in filesToTransfer)
@@ -122,7 +122,7 @@ public class PartialTransferPlugin : IPlugin
                 string destinationPath = Path.Combine(destinationMod.FolderPath, file);
                 File.Copy(sourcePath, destinationPath, true);
                 count++;
-                progress.Report(new ProgressInfo(Progress:count));
+                progress.Report(new ProgressInfo(progress:count));
             }
             foreach(var dir in dirsToTransfer)
             {
@@ -135,10 +135,10 @@ public class PartialTransferPlugin : IPlugin
                 Directory.CreateDirectory(destinationPath);
                 FileUtil.CopyFilesRecursively(sourcePath, destinationPath);
                 count++;
-                progress.Report(new ProgressInfo(Progress: count));
+                progress.Report(new ProgressInfo(progress: count));
             }
 
-            progress.Report(new ProgressInfo(StatusText:"Transfer Complete!"));
+            progress.Report(new ProgressInfo(statusText:"Transfer Complete!"));
         });
     }
 }

@@ -217,7 +217,7 @@ public class MainEditorViewModel : ViewModelBase
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress?.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
+            progress?.Report(new ProgressInfo("Saving...", isIndeterminate: true));
             foreach (var module in InitialisedModules.Values)
             {
                 module.OnPatchingRom();

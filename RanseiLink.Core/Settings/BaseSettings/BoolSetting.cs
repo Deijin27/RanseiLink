@@ -1,21 +1,22 @@
 ﻿using System.Xml.Linq;
 
-namespace RanseiLink.Core.Settings;
-
-public abstract class BoolSetting : Setting<bool>
+namespace RanseiLink.Core.Settings
 {
-    protected BoolSetting(string uniqueElementName) : base(uniqueElementName) { }
-
-    public override void Deserialize(XElement element)
+    public abstract class BoolSetting : Setting<bool>
     {
-        if (bool.TryParse(element.Value, out bool value))
+        protected BoolSetting(string uniqueElementName) : base(uniqueElementName) { }
+
+        public override void Deserialize(XElement element)
         {
-            Value = value;
+            if (bool.TryParse(element.Value, out bool value))
+            {
+                Value = value;
+            }
         }
-    }
 
-    public override void Serialize(XElement element)
-    {
-        element.Value = Value.ToString();
+        public override void Serialize(XElement element)
+        {
+            element.Value = Value.ToString();
+        }
     }
 }

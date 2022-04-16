@@ -2,43 +2,48 @@
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IWarriorSkillService : IModelService<WarriorSkill>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class WarriorSkillService : BaseModelService<WarriorSkill>, IWarriorSkillService
-{
-    public WarriorSkillService(string WarriorSkillDatFile) : base(WarriorSkillDatFile, 0, 72) { }
-
-    public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath)) { }
-
-    public override void Reload()
+    public interface IWarriorSkillService : IModelService<WarriorSkill>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new WarriorSkill(br.ReadBytes(WarriorSkill.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class WarriorSkillService : BaseModelService<WarriorSkill>, IWarriorSkillService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public WarriorSkillService(string WarriorSkillDatFile) : base(WarriorSkillDatFile, 0, 72) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new WarriorSkill(br.ReadBytes(WarriorSkill.DataLength)));
+                }
+            }
         }
-        return _cache[id].Name;
-    }
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return _cache[id].Name;
+        }
+    } 
 }

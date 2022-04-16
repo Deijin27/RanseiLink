@@ -78,14 +78,14 @@ public class SpriteTypeViewModel : ViewModelBase
             progress.Report(new ProgressInfo("Loading..."));
 
             var files = _spriteProvider.GetAllSpriteFiles(SelectedType);
-            progress.Report(new ProgressInfo(MaxProgress: files.Count));
+            progress.Report(new ProgressInfo(maxProgress: files.Count));
             int count = 0;
             List<SpriteItemViewModel> newItems = new();
             foreach (var i in files)
             {
                 var item = new SpriteItemViewModel(i, _spriteProvider, _dialogService, this);
                 newItems.Add(item);
-                progress.Report(new ProgressInfo(Progress: ++count));
+                progress.Report(new ProgressInfo(progress: ++count));
             }
             Items = new ObservableCollection<SpriteItemViewModel>(newItems);
             RaisePropertyChanged(nameof(Items));

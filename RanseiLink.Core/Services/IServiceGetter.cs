@@ -1,31 +1,32 @@
 ﻿using Autofac;
 using System;
 
-namespace RanseiLink.Core.Services;
-
-/// <summary>
-/// Wrapper for whatever IOC is used
-/// </summary>
-public interface IServiceGetter : IDisposable
+namespace RanseiLink.Core.Services
 {
-    T Get<T>();
-}
-
-public class ServiceGetter : IServiceGetter
-{
-    public ILifetimeScope Services { get; set; }
-    public ServiceGetter()
+    /// <summary>
+    /// Wrapper for whatever IOC is used
+    /// </summary>
+    public interface IServiceGetter : IDisposable
     {
+        T Get<T>();
     }
 
-    public void Dispose()
+    public class ServiceGetter : IServiceGetter
     {
-        Services.Dispose();
-        GC.SuppressFinalize(this);
-    }
+        public ILifetimeScope Services { get; set; }
+        public ServiceGetter()
+        {
+        }
 
-    public T Get<T>()
-    {
-        return Services.Resolve<T>();
+        public void Dispose()
+        {
+            Services.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        public T Get<T>()
+        {
+            return Services.Resolve<T>();
+        }
     }
 }

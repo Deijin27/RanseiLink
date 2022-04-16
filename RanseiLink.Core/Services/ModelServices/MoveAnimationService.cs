@@ -3,43 +3,48 @@ using RanseiLink.Core.Models;
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IMoveAnimationService : IModelService<MoveAnimation>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class MoveAnimationService : BaseModelService<MoveAnimation>, IMoveAnimationService
-{
-    public MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
-
-    public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) { }
-
-    public override void Reload()
+    public interface IMoveAnimationService : IModelService<MoveAnimation>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new MoveAnimation(br.ReadBytes(MoveAnimation.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class MoveAnimationService : BaseModelService<MoveAnimation>, IMoveAnimationService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new MoveAnimation(br.ReadBytes(MoveAnimation.DataLength)));
+                }
+            }
         }
-        return ((MoveAnimationId)id).ToString();
-    }
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return ((MoveAnimationId)id).ToString();
+        }
+    } 
 }

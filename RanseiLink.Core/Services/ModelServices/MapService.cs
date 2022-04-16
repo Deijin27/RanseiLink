@@ -2,52 +2,57 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IMapService
+namespace RanseiLink.Core.Services.ModelServices
 {
-    PSLM Retrieve(MapId id);
-    void Save(MapId id, PSLM model);
-    string MapFolderPath { get; }
-    public ICollection<MapId> GetMapIds();
-}
-
-public class MapService : IMapService
-{
-    private readonly ModInfo _modInfo;
-    public MapService(ModInfo mod) 
+    public interface IMapService
     {
-        _modInfo = mod;
+        PSLM Retrieve(MapId id);
+        void Save(MapId id, PSLM model);
+        string MapFolderPath { get; }
+        ICollection<MapId> GetMapIds();
     }
 
-    public PSLM Retrieve(MapId id)
+    public class MapService : IMapService
     {
-        string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
-        using var br = new BinaryReader(File.OpenRead(file));
-        return new PSLM(br);
-    }
-
-    public void Save(MapId id, PSLM model)
-    {
-        string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
-        using var bw = new BinaryWriter(File.Create(file));
-        model.WriteTo(bw);
-    }
-
-    public string MapFolderPath => Path.Combine(_modInfo.FolderPath, Constants.MapFolderPath);
-
-    public ICollection<MapId> GetMapIds()
-    {
-        var files = Directory.GetFiles(MapFolderPath);
-        List<MapId> result = new();
-        foreach (var file in files)
+        private readonly ModInfo _modInfo;
+        public MapService(ModInfo mod)
         {
-            if (MapId.TryParseInternalFileName(Path.GetFileName(file), out var map))
+            _modInfo = mod;
+        }
+
+        public PSLM Retrieve(MapId id)
+        {
+            string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
+            using (var br = new BinaryReader(File.OpenRead(file)))
             {
-                result.Add(map);
+                return new PSLM(br);
             }
         }
 
-        return result;
+        public void Save(MapId id, PSLM model)
+        {
+            string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
+            using (var bw = new BinaryWriter(File.Create(file)))
+            {
+                model.WriteTo(bw);
+            }
+        }
+
+        public string MapFolderPath => Path.Combine(_modInfo.FolderPath, Constants.MapFolderPath);
+
+        public ICollection<MapId> GetMapIds()
+        {
+            var files = Directory.GetFiles(MapFolderPath);
+            List<MapId> result = new List<MapId>();
+            foreach (var file in files)
+            {
+                if (MapId.TryParseInternalFileName(Path.GetFileName(file), out var map))
+                {
+                    result.Add(map);
+                }
+            }
+
+            return result;
+        }
     }
 }

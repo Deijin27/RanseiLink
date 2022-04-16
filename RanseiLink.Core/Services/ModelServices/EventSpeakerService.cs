@@ -2,43 +2,48 @@
 using System.IO;
 using System;
 
-namespace RanseiLink.Core.Services.ModelServices;
-
-public interface IEventSpeakerService : IModelService<EventSpeaker>
+namespace RanseiLink.Core.Services.ModelServices
 {
-}
-
-public class EventSpeakerService : BaseModelService<EventSpeaker>, IEventSpeakerService
-{
-    public EventSpeakerService(string EventSpeakerDatFile) : base(EventSpeakerDatFile, 0, 59) { }
-
-    public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath)) { }
-
-    public override void Reload()
+    public interface IEventSpeakerService : IModelService<EventSpeaker>
     {
-        _cache.Clear();
-        using var br = new BinaryReader(File.OpenRead(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            _cache.Add(new EventSpeaker(br.ReadBytes(EventSpeaker.DataLength)));
-        }
     }
 
-    public override void Save()
+    public class EventSpeakerService : BaseModelService<EventSpeaker>, IEventSpeakerService
     {
-        using var bw = new BinaryWriter(File.OpenWrite(_dataFile));
-        for (int id = _minId; id <= _maxId; id++)
-        {
-            bw.Write(_cache[id].Data);
-        }
-    }
+        public EventSpeakerService(string EventSpeakerDatFile) : base(EventSpeakerDatFile, 0, 59) { }
 
-    public override string IdToName(int id)
-    {
-        if (!ValidateId(id))
+        public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath)) { }
+
+        public override void Reload()
         {
-            throw new ArgumentOutOfRangeException(nameof(id));
+            _cache.Clear();
+            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    _cache.Add(new EventSpeaker(br.ReadBytes(EventSpeaker.DataLength)));
+                }
+            }
         }
-        return _cache[id].Name;
-    }
+
+        public override void Save()
+        {
+            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            {
+                for (int id = _minId; id <= _maxId; id++)
+                {
+                    bw.Write(_cache[id].Data);
+                }
+            }  
+        }
+
+        public override string IdToName(int id)
+        {
+            if (!ValidateId(id))
+            {
+                throw new ArgumentOutOfRangeException(nameof(id));
+            }
+            return _cache[id].Name;
+        }
+    } 
 }

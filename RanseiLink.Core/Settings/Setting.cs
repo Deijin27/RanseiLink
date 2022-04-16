@@ -3,69 +3,70 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
-namespace RanseiLink.Core.Settings;
-
-public abstract class Setting<TSettingValue> : ISetting<TSettingValue>
+namespace RanseiLink.Core.Settings
 {
-    #region NotifyPropertyChanged
+    public abstract class Setting<TSettingValue> : ISetting<TSettingValue>
+    {
+        #region NotifyPropertyChanged
 
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void RaisePropertyChanged([CallerMemberName] string name = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
-    protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
-    {
-        if (!EqualityComparer<T>.Default.Equals(property, newValue))
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged([CallerMemberName] string name = null)
         {
-            property = newValue;
-            RaisePropertyChanged(name);
-            return true;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        return false;
-    }
-    #endregion
-
-    protected TSettingValue _default;
-    private bool _isDefault;
-    private TSettingValue _value;
-
-    protected Setting(string uniqueElementName)
-    {
-        UniqueElementName = uniqueElementName;
-    }
-
-    public string UniqueElementName { get; }
-    public string Name { get; protected set; }
-    public string Description { get; protected set; }
-    public bool IsHidden { get; protected set; }
-
-    public bool IsDefault
-    {
-        get => _isDefault;
-        set
+        protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
         {
-            if (RaiseAndSetIfChanged(ref _isDefault, value))
+            if (!EqualityComparer<T>.Default.Equals(property, newValue))
             {
-                RaisePropertyChanged(nameof(Value));
+                property = newValue;
+                RaisePropertyChanged(name);
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        protected TSettingValue _default;
+        private bool _isDefault;
+        private TSettingValue _value;
+
+        protected Setting(string uniqueElementName)
+        {
+            UniqueElementName = uniqueElementName;
+        }
+
+        public string UniqueElementName { get; }
+        public string Name { get; protected set; }
+        public string Description { get; protected set; }
+        public bool IsHidden { get; protected set; }
+
+        public bool IsDefault
+        {
+            get => _isDefault;
+            set
+            {
+                if (RaiseAndSetIfChanged(ref _isDefault, value))
+                {
+                    RaisePropertyChanged(nameof(Value));
+                }
             }
         }
-    }
 
-    public TSettingValue Value
-    {
-        get => _isDefault ? _default : _value;
-        set
+        public TSettingValue Value
         {
-            if (RaiseAndSetIfChanged(ref _value, value))
+            get => _isDefault ? _default : _value;
+            set
             {
-                _isDefault = false;
-                RaisePropertyChanged(nameof(IsDefault));
+                if (RaiseAndSetIfChanged(ref _value, value))
+                {
+                    _isDefault = false;
+                    RaisePropertyChanged(nameof(IsDefault));
+                }
             }
         }
+
+        public abstract void Serialize(XElement element);
+        public abstract void Deserialize(XElement element);
+
     }
-
-    public abstract void Serialize(XElement element);
-    public abstract void Deserialize(XElement element);
-
 }

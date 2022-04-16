@@ -1,17 +1,19 @@
 ﻿
-namespace RanseiLink.Core.Enums;
-
-public enum BuildingFunctionId
+namespace RanseiLink.Core.Enums
 {
-    Shop,
-    RaiseEnergy,
-    ObtainGold,
-    Airship,
-    Bank,
-    Alchemist,
-    Blacksmith,
-    TemporarilyImproveStats,
-    IncreaseWildPokemonNumber,
-    Battle,
-    ChangePokemonAbility,
+
+    public enum BuildingFunctionId
+    {
+        Shop,
+        RaiseEnergy,
+        ObtainGold,
+        Airship,
+        Bank,
+        Alchemist,
+        Blacksmith,
+        TemporarilyImproveStats,
+        IncreaseWildPokemonNumber,
+        Battle,
+        ChangePokemonAbility,
+    }
 }

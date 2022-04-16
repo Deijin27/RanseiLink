@@ -1,12 +1,13 @@
 ﻿
-namespace RanseiLink.Core.Enums;
-
-public enum EpisodeClearConditionId
+namespace RanseiLink.Core.Enums
 {
-    MainCampaign,
-    UnifyNations,
-    Befriend100Pokemon,
-    Befriend40Warriors,
-    Win5Battles,
-    DefeatNobunagaBeforeJan4,
+    public enum EpisodeClearConditionId
+    {
+        MainCampaign,
+        UnifyNations,
+        Befriend100Pokemon,
+        Befriend40Warriors,
+        Win5Battles,
+        DefeatNobunagaBeforeJan4,
+    }
 }

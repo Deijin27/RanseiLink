@@ -1,11 +1,12 @@
 ﻿
 
-namespace RanseiLink.Core.Models;
-
-public interface IDataWrapper
+namespace RanseiLink.Core.Models
 {
-    byte[] Data { get; }
+    public interface IDataWrapper
+    {
+        byte[] Data { get; }
 
-    string Serialize();
-    bool TryDeserialize(string serialized);
+        string Serialize();
+        bool TryDeserialize(string serialized);
+    }
 }

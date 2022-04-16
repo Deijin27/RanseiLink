@@ -1,8 +1,9 @@
 ﻿
-namespace RanseiLink.Core.Enums;
-
-public enum GenderId
+namespace RanseiLink.Core.Enums
 {
-    Male,
-    Female
+    public enum GenderId
+    {
+        Male,
+        Female
+    }
 }
