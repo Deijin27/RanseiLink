@@ -12,6 +12,7 @@ public class ConsoleServiceModule : Autofac.Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.RegisterType<CurrentModService>().As<ICurrentModService>().SingleInstance();
+        builder.RegisterType<PathConverter>().AsSelf().SingleInstance();
 
         foreach (var type in ThisAssembly.GetTypes())
         {
