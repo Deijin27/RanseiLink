@@ -5,6 +5,11 @@ using FluentAssertions;
 using System.Linq;
 
 namespace RanseiLink.CoreTests.ModelTests;
+
+/// <summary>
+/// At the moment manually add the event/00065.eve and 64.eve to the test mod folder for these tests to work.
+/// Since they're currently not part of mods.
+/// </summary>
 public class EventTests
 {
     private static string TestTempFolder => Path.Combine(TestConstants.TestTempFolder, "Event");

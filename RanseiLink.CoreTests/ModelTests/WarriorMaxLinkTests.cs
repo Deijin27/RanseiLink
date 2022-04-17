@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using Xunit;
 using RanseiLink.Core.Enums;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
@@ -9,7 +10,7 @@ public class WarriorMaxLinkTests
     [Fact]
     public void AccessorsReturnCorrectValues()
     {
-        MaxLink model = new MaxLink(new byte[]
+        MaxLink a = new MaxLink(new byte[]
         {
                 0x64, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x50, 0x50, 0x50, 0x32, 0x56, 0x56, 0x50, 0x50,
                 0x56, 0x50, 0x50, 0x5A, 0x5A, 0x5A, 0x50, 0x50, 0x50, 0x5A, 0x5A, 0x5A, 0x5A, 0x5A, 0x56, 0x56,
@@ -26,17 +27,17 @@ public class WarriorMaxLinkTests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00
         });
 
-        Assert.Equal(100, model.GetMaxLink(PokemonId.Eevee));
-        Assert.Equal(90, model.GetMaxLink(PokemonId.Jolteon));
+        a.GetMaxLink(PokemonId.Eevee).Should().Be(100);
+        a.GetMaxLink(PokemonId.Jolteon).Should().Be(90);
     }
 
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        MaxLink model = new MaxLink();
-        model.SetMaxLink(PokemonId.Eevee, 75);
-        model.SetMaxLink(PokemonId.Vaporeon, 12);
-        model.SetMaxLink(PokemonId.Pikachu, 56);
+        MaxLink a = new MaxLink();
+        a.SetMaxLink(PokemonId.Eevee, 75);
+        a.SetMaxLink(PokemonId.Vaporeon, 12);
+        a.SetMaxLink(PokemonId.Pikachu, 56);
 
         byte[] expected = new byte[]
         {
@@ -55,7 +56,7 @@ public class WarriorMaxLinkTests
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
         };
 
-        Assert.Equal(model.Data, expected);
+        a.Data.Should().Equal(expected);
     }
 
 }

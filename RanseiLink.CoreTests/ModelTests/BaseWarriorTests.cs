@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -18,26 +19,26 @@ public class BaseWarriorTests
                 0x18, 0x0E, 0xFC, 0x07
         });
 
-        Assert.Equal(23, a.Sprite);
-        Assert.Equal(GenderId.Female, a.Gender);
-        Assert.Equal(118, a.WarriorName);
-        Assert.Equal(TypeId.Poison, a.Speciality1);
-        Assert.Equal(TypeId.Flying, a.Speciality2);
-        Assert.Equal(TypeId.Psychic, a.Weakness1);
-        Assert.Equal(TypeId.Rock, a.Weakness2);
-        Assert.Equal(WarriorSkillId.Rally, a.Skill);
-        Assert.Equal(65, a.Power);
-        Assert.Equal(78, a.Wisdom);
-        Assert.Equal(75, a.Charisma);
-        Assert.Equal(5, a.Capacity);
-        Assert.Equal(WarriorId.Nene_2, a.RankUp);
-        Assert.Equal(RankUpConditionId.Unknown, a.RankUpCondition1);
-        Assert.Equal(RankUpConditionId.MonotypeGallery, a.RankUpCondition2);
-        Assert.Equal(TypeId.Poison, (TypeId)a.Quantity1ForRankUpCondition);
-        Assert.Equal(511, a.Quantity2ForRankUpCondition);
-        Assert.Equal(PokemonId.Golbat, a.RankUpPokemon1);
-        Assert.Equal(PokemonId.Crobat, a.RankUpPokemon2);
-        Assert.Equal(60, a.RankUpLink);
+        a.Sprite.Should().Be(23);
+        a.Gender.Should().Be(GenderId.Female);
+        a.WarriorName.Should().Be(118);
+        a.Speciality1.Should().Be(TypeId.Poison);
+        a.Speciality2.Should().Be(TypeId.Flying);
+        a.Weakness1.Should().Be(TypeId.Psychic);
+        a.Weakness2.Should().Be(TypeId.Rock);
+        a.Skill.Should().Be(WarriorSkillId.Rally);
+        a.Power.Should().Be(65);
+        a.Wisdom.Should().Be(78);
+        a.Charisma.Should().Be(75);
+        a.Capacity.Should().Be(5);
+        a.RankUp.Should().Be(WarriorId.Nene_2);
+        a.RankUpCondition1.Should().Be(RankUpConditionId.Unknown);
+        a.RankUpCondition2.Should().Be(RankUpConditionId.MonotypeGallery);
+        ((TypeId)a.Quantity1ForRankUpCondition).Should().Be(TypeId.Poison);
+        a.Quantity2ForRankUpCondition.Should().Be(511);
+        a.RankUpPokemon1.Should().Be(PokemonId.Golbat);
+        a.RankUpPokemon2.Should().Be(PokemonId.Crobat);
+        a.RankUpLink.Should().Be(60);
     }
 
     [Fact]
@@ -68,25 +69,25 @@ public class BaseWarriorTests
             RankUpLink = 20,
         };
 
-        Assert.Equal(128, a.Sprite);
-        Assert.Equal(GenderId.Male, a.Gender);
-        Assert.Equal(4, a.WarriorName);
-        Assert.Equal(TypeId.Fire, a.Speciality1);
-        Assert.Equal(TypeId.Water, a.Speciality2);
-        Assert.Equal(TypeId.Dark, a.Weakness1);
-        Assert.Equal(TypeId.Fighting, a.Weakness2);
-        Assert.Equal(WarriorSkillId.Bewilder, a.Skill);
-        Assert.Equal(3, a.Power);
-        Assert.Equal(24, a.Wisdom);
-        Assert.Equal(68, a.Charisma);
-        Assert.Equal(2, a.Capacity);
-        Assert.Equal(WarriorId.Nobunaga_1, a.RankUp);
-        Assert.Equal(RankUpConditionId.AtLeastNGalleryPokemon, a.RankUpCondition1);
-        Assert.Equal(RankUpConditionId.WarriorInSameKingdom, a.RankUpCondition2);
-        Assert.Equal(34, a.Quantity1ForRankUpCondition);
-        Assert.Equal(17, a.Quantity2ForRankUpCondition);
-        Assert.Equal(PokemonId.Beedrill, a.RankUpPokemon1);
-        Assert.Equal(PokemonId.Blitzle, a.RankUpPokemon2);
-        Assert.Equal(20, a.RankUpLink);
+        a.Sprite.Should().Be(128);
+        a.Gender.Should().Be(GenderId.Male);
+        a.WarriorName.Should().Be(4);
+        a.Speciality1.Should().Be(TypeId.Fire);
+        a.Speciality2.Should().Be(TypeId.Water);
+        a.Weakness1.Should().Be(TypeId.Dark);
+        a.Weakness2.Should().Be(TypeId.Fighting);
+        a.Skill.Should().Be(WarriorSkillId.Bewilder);
+        a.Power.Should().Be(3);
+        a.Wisdom.Should().Be(24);
+        a.Charisma.Should().Be(68);
+        a.Capacity.Should().Be(2);
+        a.RankUp.Should().Be(WarriorId.Nobunaga_1);
+        a.RankUpCondition1.Should().Be(RankUpConditionId.AtLeastNGalleryPokemon);
+        a.RankUpCondition2.Should().Be(RankUpConditionId.WarriorInSameKingdom);
+        a.Quantity1ForRankUpCondition.Should().Be(34);
+        a.Quantity2ForRankUpCondition.Should().Be(17);
+        a.RankUpPokemon1.Should().Be(PokemonId.Beedrill);
+        a.RankUpPokemon2.Should().Be(PokemonId.Blitzle);
+        a.RankUpLink.Should().Be(20);
     }
 }

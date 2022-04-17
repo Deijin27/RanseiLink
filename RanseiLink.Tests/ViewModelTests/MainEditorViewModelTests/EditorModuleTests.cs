@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
@@ -61,20 +62,20 @@ public class EditorModuleTests
     [Fact]
     public void LoadModuleOrderCorrectly()
     {
-        Assert.Equal(4, _mainEditorVm.ListItems.Count);
-        Assert.Equal("test_module_b", _mainEditorVm.ListItems[0].ModuleId);
-        Assert.Equal("test_module_c", _mainEditorVm.ListItems[1].ModuleId);
-        Assert.Equal("test_module_a", _mainEditorVm.ListItems[2].ModuleId);
-        Assert.Equal("test_module_d", _mainEditorVm.ListItems[3].ModuleId); // not in setting are put at end of list
+        _mainEditorVm.ListItems.Should().HaveCount(4);
+        _mainEditorVm.ListItems[0].ModuleId.Should().Be("test_module_b");
+        _mainEditorVm.ListItems[1].ModuleId.Should().Be("test_module_c");
+        _mainEditorVm.ListItems[2].ModuleId.Should().Be("test_module_a");
+        _mainEditorVm.ListItems[3].ModuleId.Should().Be("test_module_d"); // not in setting are put at end of list
     }
 
     [Fact]
     public void ChangeModuleShouldLoadViewModel()
     {
         _mainEditorVm.CurrentModuleId = "test_module_c";
-        Assert.Equal("module_c_view_model", _mainEditorVm.CurrentVm);
+        _mainEditorVm.CurrentVm.Should().Be("module_c_view_model");
         _mainEditorVm.CurrentModuleId = "test_module_d";
-        Assert.Equal("module_d_view_model", _mainEditorVm.CurrentVm);
+        _mainEditorVm.CurrentVm.Should().Be("module_d_view_model");
     }
     
     [Fact]
@@ -137,7 +138,7 @@ public class EditorModuleTests
         _mainEditorVm.Deactivate();
 
         // check saved correctly
-        Assert.Equal(new string[] { "test_module_a", "test_module_b", "test_module_c", "test_module_d" }, _editorModuleOrderSetting.Value);
+        _editorModuleOrderSetting.Value.Should().Equal(new string[] { "test_module_a", "test_module_b", "test_module_c", "test_module_d" });
         _settingService.Verify(i => i.Save(), Times.Once());
     }
 

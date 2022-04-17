@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -16,10 +17,10 @@ public class EpisodeTests
             0x40, 0xFE, 0xFF, 0x13
         });
 
-        Assert.Equal(EpisodeId.TheLegendOfRansei, a.UnlockCondition);
-        Assert.Equal(1, a.Difficulty);
-        Assert.Equal(12, a.Order);
-        Assert.Equal(ScenarioId.ShingenVsKenshin, a.Scenario);
+        a.UnlockCondition.Should().Be(EpisodeId.TheLegendOfRansei);
+        a.Difficulty.Should().Be(1);
+        a.Order.Should().Be(12);
+        a.Scenario.Should().Be(ScenarioId.ShingenVsKenshin);
     }
 
     [Fact]
@@ -33,9 +34,9 @@ public class EpisodeTests
             Scenario = ScenarioId.UniteRansei
         };
 
-        Assert.Equal(EpisodeId.ADateWithDestiny, a.UnlockCondition);
-        Assert.Equal(4, a.Difficulty);
-        Assert.Equal(10, a.Order);
-        Assert.Equal(ScenarioId.UniteRansei, a.Scenario);
+        a.UnlockCondition.Should().Be(EpisodeId.ADateWithDestiny);
+        a.Difficulty.Should().Be(4);
+        a.Order.Should().Be(10);
+        a.Scenario.Should().Be(ScenarioId.UniteRansei);
     }
 }

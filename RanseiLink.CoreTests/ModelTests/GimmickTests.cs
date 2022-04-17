@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -23,17 +24,17 @@ public class GimmickTests
                 0x4A, 0x69, 0x73, 0x03,
         });
 
-        Assert.Equal("Pillar of Fire", a.Name);
-        Assert.Equal(10, a.Image);
-        Assert.Equal(TypeId.Fire, a.AttackType);
-        Assert.Equal(TypeId.Water, a.DestroyType);
-        Assert.Equal(GimmickObjectId.PillarOfFire_State1, a.State1Object);
-        Assert.Equal(GimmickObjectId.PillarOfFire_State2, a.State2Object);
-        Assert.Equal(MoveEffectId.NoEffect, a.Effect);
-        Assert.Equal(0, a.UnknownQuantity1);
-        Assert.Equal(MoveAnimationId.Default, a.Animation1);
-        Assert.Equal(MoveAnimationId.GreySmokeYellowStars, a.Animation2);
-        Assert.Equal(GimmickRangeId.NoRange, a.Range);
+        a.Name.Should().Be("Pillar of Fire");
+        a.Image.Should().Be(10);
+        a.AttackType.Should().Be(TypeId.Fire);
+        a.DestroyType.Should().Be(TypeId.Water);
+        a.State1Object.Should().Be(GimmickObjectId.PillarOfFire_State1);
+        a.State2Object.Should().Be(GimmickObjectId.PillarOfFire_State2);
+        a.Effect.Should().Be(MoveEffectId.NoEffect);
+        a.UnknownQuantity1.Should().Be(0);
+        a.Animation1.Should().Be(MoveAnimationId.Default);
+        a.Animation2.Should().Be(MoveAnimationId.GreySmokeYellowStars);
+        a.Range.Should().Be(GimmickRangeId.NoRange);
 
     }
 
@@ -55,16 +56,16 @@ public class GimmickTests
             Range = GimmickRangeId.RightBackCorner,
         };
 
-        Assert.Equal("Pillar of Fire", a.Name);
-        Assert.Equal(24, a.Image);
-        Assert.Equal(TypeId.Dragon, a.AttackType);
-        Assert.Equal(TypeId.Ghost, a.DestroyType);
-        Assert.Equal(GimmickObjectId.CogWheel, a.State1Object);
-        Assert.Equal(GimmickObjectId.DriftingIce, a.State2Object);
-        Assert.Equal(MoveEffectId.ChanceToParalyzeTarget, a.Effect);
-        Assert.Equal(4, a.UnknownQuantity1);
-        Assert.Equal(MoveAnimationId.BlackSplatter, a.Animation1);
-        Assert.Equal(MoveAnimationId.BlueYellowStars, a.Animation2);
-        Assert.Equal(GimmickRangeId.RightBackCorner, a.Range);
+        a.Name.Should().Be("Pillar of Fire");
+        a.Image.Should().Be(24);
+        a.AttackType.Should().Be(TypeId.Dragon);
+        a.DestroyType.Should().Be(TypeId.Ghost);
+        a.State1Object.Should().Be(GimmickObjectId.CogWheel);
+        a.State2Object.Should().Be(GimmickObjectId.DriftingIce);
+        a.Effect.Should().Be(MoveEffectId.ChanceToParalyzeTarget);
+        a.UnknownQuantity1.Should().Be(4);
+        a.Animation1.Should().Be(MoveAnimationId.BlackSplatter);
+        a.Animation2.Should().Be(MoveAnimationId.BlueYellowStars);
+        a.Range.Should().Be(GimmickRangeId.RightBackCorner);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using System;
 using Xunit;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
@@ -14,14 +15,15 @@ public class BaseDataWindowTests
     [InlineData(5, 0b11111)]
     public void GetMaskGivesCorrectResult(int bitCount, int result)
     {
-        Assert.Equal(result, BaseDataWindow.GetMask(bitCount));
+        BaseDataWindow.GetMask(bitCount).Should().Be(result);
     }
 
     [Fact]
     public void ThrowsExceptionWithIncorrectByteCount()
     {
         byte[] bytes = new byte[8];
-        Assert.Throws<ArgumentException>(() => new BaseDataWindow(bytes, 4));
+        Action createBaseDataWindow = () => new BaseDataWindow(bytes, 4);
+        createBaseDataWindow.Should().Throw<ArgumentException>();
     }
 
     [Theory]
@@ -36,7 +38,7 @@ public class BaseDataWindowTests
 
         var bdw = new BaseDataWindow(bytes, 8);
 
-        Assert.Equal(result, bdw.GetInt(index, offset, bitCount));
+        bdw.GetInt(index, offset, bitCount).Should().Be(result);
     }
 
     [Theory]
@@ -53,7 +55,7 @@ public class BaseDataWindowTests
 
         bdw.SetInt(index, offset, bitCount, value);
 
-        Assert.Equal(resultingArray, bdw.Data);
+        bdw.Data.Should().Equal(resultingArray);
     }
 
     [Theory]
@@ -65,7 +67,7 @@ public class BaseDataWindowTests
     {
         var bdc = new InheritorOfBaseDataWindow(input, input.Length);
 
-        Assert.Equal(expected, bdc.Serialize());
+        bdc.Serialize().Should().Be(expected);
     }
 
     class InheritorOfBaseDataWindow : BaseDataWindow
@@ -82,9 +84,9 @@ public class BaseDataWindowTests
     {
         var bdc = new InheritorOfBaseDataWindow(new byte[expected.Length], expected.Length);
 
-        Assert.True(bdc.TryDeserialize(input));
+        bdc.TryDeserialize(input).Should().BeTrue();
 
-        Assert.Equal(expected, bdc.Data);
+        bdc.Data.Should().Equal(expected);
     }
 
 

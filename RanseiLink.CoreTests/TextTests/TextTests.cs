@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using FluentAssertions;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using System.IO;
 using Xunit;
@@ -24,7 +25,7 @@ public class TextTests
     [InlineData(new byte[] { 0x83, 0x47, 0x83, 0x8A, 0x81, 0x5B, 0x83, 0x67, 0x83, 0x67, 0x83, 0x8C, 0x81, 0x5B, 0x83, 0x69, 0x81, 0x5B }, "エリートトレーナー")]
     public void ReadConvertsNameCorrectly(byte[] input, string expected)
     {
-        Assert.Equal(expected, _msgService.LoadName(input));
+        _msgService.LoadName(input).Should().Be(expected);
     }
 
     [Theory]
@@ -38,7 +39,7 @@ public class TextTests
     [InlineData(new byte[] { 0x83, 0x47, 0x83, 0x8A, 0x81, 0x5B, 0x83, 0x67, 0x83, 0x67, 0x83, 0x8C, 0x81, 0x5B, 0x83, 0x69, 0x81, 0x5B }, "エリートトレーナー")]
     public void WriteConvertsNameCorrectly(byte[] expected, string input)
     {
-        Assert.Equal(expected, _msgService.SaveName(input));
+        _msgService.SaveName(input).Should().Equal(expected);
     }
 
     [Fact]
@@ -52,7 +53,8 @@ public class TextTests
             _msgService.SaveBlock(temp, messages);
             var shouldBeUnchangedBytes = File.ReadAllBytes(temp);
             File.Delete(temp);
-            Assert.Equal(unchangedBytes, shouldBeUnchangedBytes);
+
+            shouldBeUnchangedBytes.Should().Equal(unchangedBytes);
             
         }
     }

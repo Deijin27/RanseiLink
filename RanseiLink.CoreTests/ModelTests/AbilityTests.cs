@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
@@ -18,11 +19,11 @@ public class AbilityTests
                 0x41, 0x08, 0x00, 0x00
         });
 
-        Assert.Equal("Last Bastion", a.Name);
-        Assert.Equal(2, a.Effect1Amount);
-        Assert.Equal(AbilityEffectId.IncreaseUserAttack, a.Effect1);
-        Assert.Equal(AbilityEffectId.IncreaseUserDefence, a.Effect2);
-        Assert.Equal(2, a.Effect2Amount);
+        a.Name.Should().Be("Last Bastion");
+        a.Effect1Amount.Should().Be(2);
+        a.Effect1.Should().Be(AbilityEffectId.IncreaseUserAttack);
+        a.Effect2.Should().Be(AbilityEffectId.IncreaseUserDefence);
+        a.Effect2Amount.Should().Be(2);
     }
 
     [Fact]
@@ -46,12 +47,12 @@ public class AbilityTests
             Effect2Amount = 2
         };
 
-        Assert.Equal("Last Bastion", a.Name);
-        Assert.Equal(2, a.Effect1Amount);
-        Assert.Equal(AbilityEffectId.IncreaseUserAttack, a.Effect1);
-        Assert.Equal(AbilityEffectId.IncreaseUserDefence, a.Effect2);
-        Assert.Equal(2, a.Effect2Amount);
+        a.Name.Should().Be("Last Bastion");
+        a.Effect1Amount.Should().Be(2);
+        a.Effect1.Should().Be(AbilityEffectId.IncreaseUserAttack);
+        a.Effect2.Should().Be(AbilityEffectId.IncreaseUserDefence);
+        a.Effect2Amount.Should().Be(2);
 
-        Assert.Equal(lastBastionData, a.Data);
+        a.Data.Should().Equal(lastBastionData);
     }
 }

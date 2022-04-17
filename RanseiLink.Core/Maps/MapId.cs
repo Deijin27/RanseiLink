@@ -65,6 +65,9 @@ namespace RanseiLink.Core.Maps
         public static explicit operator int(MapId value) => value.Map << 8 | value.Variant;
         public static explicit operator MapId(int value) => new MapId(value >> 8, value & 0xFF);
 
+        public static bool operator ==(MapId obj1, MapId obj2) => obj1.Equals(obj2);
+        public static bool operator !=(MapId obj1, MapId obj2) => !obj1.Equals(obj2);
+
         public override bool Equals(object obj)
         {
             return obj is MapId other && Equals(other);

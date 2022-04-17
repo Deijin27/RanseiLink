@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Maps;
 using System.IO;
 using Xunit;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.MapTests;
 
@@ -24,7 +25,7 @@ public class MapLoadTests
             }
             var shouldBeUnchangedBytes = File.ReadAllBytes(temp);
             File.Delete(temp);
-            Assert.Equal(unchangedBytes, shouldBeUnchangedBytes);
+            shouldBeUnchangedBytes.Should().Equal(unchangedBytes);
 
         }
     }

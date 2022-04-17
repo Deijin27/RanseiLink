@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 namespace RanseiLink.Core.Graphics 
 {
-    public struct Rgb15
+    public struct Rgb15 : IEquatable<Rgb15>
     {
         public int R;
         public int G;
@@ -27,6 +29,24 @@ namespace RanseiLink.Core.Graphics
         public ushort ToUInt16()
         {
             return (ushort)(R | G << 5 | B << 10);
+        }
+
+        public static bool operator ==(Rgb15 obj1, Rgb15 obj2) => obj1.Equals(obj2);
+        public static bool operator !=(Rgb15 obj1, Rgb15 obj2) => !obj1.Equals(obj2);
+
+        public override bool Equals(object obj)
+        {
+            return obj is Rgb15 other && Equals(other);
+        }
+
+        public bool Equals(Rgb15 other)
+        {
+            return other.R == R && other.G == G && other.B == B;
+        }
+
+        public override int GetHashCode()
+        {
+            return ToUInt16();
         }
     }
 }

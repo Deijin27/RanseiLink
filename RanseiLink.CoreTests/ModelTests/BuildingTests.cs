@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -9,7 +10,7 @@ public class BuildingTests
     [Fact]
     public void AccessorsReturnCorrectValues()
     {
-        Building b = new Building(new byte[]
+        Building a = new Building(new byte[]
         {
                 0x53, 0x61, 0x63, 0x72,
                 0x65, 0x64, 0x20, 0x52,
@@ -22,22 +23,22 @@ public class BuildingTests
                 0x14, 0x26, 0x93, 0x99
         });
 
-        Assert.Equal("Sacred Ruins", b.Name);
-        Assert.Equal(KingdomId.Aurora, b.Kingdom);
-        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig1);
-        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig2);
-        Assert.Equal(BattleConfigId.SacredRuins, b.BattleConfig3);
-        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite1);
-        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite2);
-        Assert.Equal(BuildingSpriteId.SacredRuins, b.Sprite3);
-        Assert.Equal(BuildingFunctionId.Battle, b.Function);
+        a.Name.Should().Be("Sacred Ruins");
+        a.Kingdom.Should().Be(KingdomId.Aurora);
+        a.BattleConfig1.Should().Be(BattleConfigId.SacredRuins);
+        a.BattleConfig2.Should().Be(BattleConfigId.SacredRuins);
+        a.BattleConfig3.Should().Be(BattleConfigId.SacredRuins);
+        a.Sprite1.Should().Be(BuildingSpriteId.SacredRuins);
+        a.Sprite2.Should().Be(BuildingSpriteId.SacredRuins);
+        a.Sprite3.Should().Be(BuildingSpriteId.SacredRuins);
+        a.Function.Should().Be(BuildingFunctionId.Battle);
 
     }
 
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        Building b = new Building
+        Building a = new Building
         {
             Name = "Sacred Ruins",
             Kingdom = KingdomId.Cragspur,
@@ -50,15 +51,15 @@ public class BuildingTests
             Function = BuildingFunctionId.ObtainGold
         };
 
-        Assert.Equal("Sacred Ruins", b.Name);
-        Assert.Equal(KingdomId.Cragspur, b.Kingdom);
-        Assert.Equal(BattleConfigId.Cragspur, b.BattleConfig1);
-        Assert.Equal(BattleConfigId.SkyGarden_1, b.BattleConfig2);
-        Assert.Equal(BattleConfigId.Terrera, b.BattleConfig3);
-        Assert.Equal(BuildingSpriteId.SnowyMountain_1, b.Sprite1);
-        Assert.Equal(BuildingSpriteId.UndergroundMine_1, b.Sprite2);
-        Assert.Equal(BuildingSpriteId.Ravine_2, b.Sprite3);
-        Assert.Equal(BuildingFunctionId.ObtainGold, b.Function);
+        a.Name.Should().Be("Sacred Ruins");
+        a.Kingdom.Should().Be(KingdomId.Cragspur);
+        a.BattleConfig1.Should().Be(BattleConfigId.Cragspur);
+        a.BattleConfig2.Should().Be(BattleConfigId.SkyGarden_1);
+        a.BattleConfig3.Should().Be(BattleConfigId.Terrera);
+        a.Sprite1.Should().Be(BuildingSpriteId.SnowyMountain_1);
+        a.Sprite2.Should().Be(BuildingSpriteId.UndergroundMine_1);
+        a.Sprite3.Should().Be(BuildingSpriteId.Ravine_2);
+        a.Function.Should().Be(BuildingFunctionId.ObtainGold);
 
         // Add Array equal test when possible
     }

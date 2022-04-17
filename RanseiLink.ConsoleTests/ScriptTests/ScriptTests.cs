@@ -7,6 +7,7 @@ using Moq;
 using RanseiLink.Console.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Models;
+using FluentAssertions;
 
 namespace RanseiLink.ConsoleTests.ScriptTests;
 
@@ -35,13 +36,13 @@ public class ScriptTests
 
         // Create 
 
-        string file = Path.Combine(TestScriptFolder, "ReadPokemonDataTest.lua");
-        Assert.True(File.Exists(file), "Ensure that the test file exists");
+        string readPokemonDataTestFile = Path.Combine(TestScriptFolder, "ReadPokemonDataTest.lua");
+        File.Exists(readPokemonDataTestFile).Should().BeTrue();
 
         var luaService = new LuaService(mockModServiceContainer.Object);
 
         // assertions done within script
-        luaService.RunScript(file);
+        luaService.RunScript(readPokemonDataTestFile);
     }
 
     [Fact]
@@ -61,22 +62,22 @@ public class ScriptTests
 
         // Create 
 
-        string file = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
-        Assert.True(File.Exists(file), "Ensure that the test file exists");
+        string setPropertySaveTestFile = Path.Combine(TestScriptFolder, "SetPropertyAndSaveTest.lua");
+        File.Exists(setPropertySaveTestFile).Should().BeTrue();
 
         var luaService = new LuaService(mockModServiceContainer.Object);
 
-        luaService.RunScript(file);
+        luaService.RunScript(setPropertySaveTestFile);
 
         // Test Changes Occurred
 
         mockPokemonService.Verify(i => i.Retrieve(15), Times.Once());
         mockPokemonService.Verify(i => i.Save(), Times.Once());
-        Assert.Equal(TypeId.Electric, input.Type1);
-        Assert.Equal(34, input.Hp);
-        Assert.True(input.IsLegendary);
-        var evo = Assert.Single(input.Evolutions);
-        Assert.Equal(PokemonId.Glaceon, evo);
+
+        input.Type1.Should().Be(TypeId.Electric);
+        input.Hp.Should().Be(34);
+        input.IsLegendary.Should().BeTrue();
+        input.Evolutions.Should().ContainSingle().Which.Should().Be(PokemonId.Glaceon);
     }
 
     [Fact]
@@ -87,17 +88,17 @@ public class ScriptTests
         var mockModServiceContainer = new Mock<IModServiceContainer>();
         mockModServiceContainer.SetupGet(i => i.BaseWarrior).Returns(warriorService);
 
-        string file = Path.Combine(TestScriptFolder, "EnumerateWarriorsTest.lua");
-        Assert.True(File.Exists(file), "Ensure that the test file exists");
+        string enumerateWarriorsTestFile = Path.Combine(TestScriptFolder, "EnumerateWarriorsTest.lua");
+        File.Exists(enumerateWarriorsTestFile).Should().BeTrue();
 
         var luaService = new LuaService(mockModServiceContainer.Object);
 
-        luaService.RunScript(file);
+        luaService.RunScript(enumerateWarriorsTestFile);
 
         foreach (var warrior in warriorService.Enumerate())
         {
-            Assert.Equal(45, warrior.Wisdom);
-            Assert.Equal(TypeId.Fire, warrior.Speciality1);
+            warrior.Wisdom.Should().Be(45);
+            warrior.Speciality1.Should().Be(TypeId.Fire);
         }
     }
 
@@ -113,18 +114,18 @@ public class ScriptTests
         var mockModServiceContainer = new Mock<IModServiceContainer>();
         mockModServiceContainer.SetupGet(i => i.Item).Returns(itemService);
 
-        string file = Path.Combine(TestScriptFolder, "EnumerateByIdTest.lua");
-        Assert.True(File.Exists(file), "Ensure that the test file exists");
+        string enumerateByIdTestFile = Path.Combine(TestScriptFolder, "EnumerateByIdTest.lua");
+        File.Exists(enumerateByIdTestFile).Should().BeTrue();
 
         var luaService = new LuaService(mockModServiceContainer.Object);
 
-        luaService.RunScript(file);
+        luaService.RunScript(enumerateByIdTestFile);
 
         int id = 0;
         foreach (var item in itemService.Enumerate())
         {
-            Assert.Equal(id.ToString(), item.Name);
-            Assert.Equal(id, item.ShopPriceMultiplier);
+            item.Name.Should().Be(id.ToString());
+            item.ShopPriceMultiplier.Should().Be(id);
             id++;
         }
     }

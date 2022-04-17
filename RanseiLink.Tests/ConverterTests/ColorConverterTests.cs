@@ -3,6 +3,7 @@ using RanseiLink.ValueConverters;
 using System.Windows.Data;
 using System.Windows.Media;
 using Xunit;
+using FluentAssertions;
 
 namespace RanseiLink.Tests.ConverterTests;
 
@@ -23,7 +24,8 @@ public class ColorConverterTests
             Rgb15 initial = new(i, 0, 0);
             Color midpoint = (Color)_converter.Convert(initial, typeof(Color), null, null);
             Rgb15 final = (Rgb15)_converter.ConvertBack(midpoint, typeof(Rgb15), null, null);
-            Assert.Equal(initial, final);
+
+            final.Should().Be(initial);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using RanseiLink.PluginModule.Services;
+﻿using FluentAssertions;
+using RanseiLink.PluginModule.Services;
 using RanseiLink.PluginModule.Services.Concrete;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,70 +20,68 @@ public class FormToInfoTests
     public void BoolOptionsLoadCorrectly()
     {
         var options = _loadedInfo.UngroupedItems.OfType<BoolPluginFormItem>().ToList();
-        Assert.Single(options);
-        var option = options.Single();
-        Assert.Equal("Test display name", option.DisplayName);
-        Assert.Equal("Test description", option.Description);
-        Assert.True(option.Value);
+
+        var option = options.Should().ContainSingle().Which;
+        option.DisplayName.Should().Be("Test display name");
+        option.Description.Should().Be("Test description");
+        option.Value.Should().BeTrue();
     }
 
     [Fact]
     public void IntOptionsLoadCorrectly()
     {
         var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().ToList();
-        Assert.Single(options);
-        var option = options.Single();
-        Assert.Equal("Test int display name", option.DisplayName);
-        Assert.Equal("Test int description", option.Description);
-        Assert.Equal(4, option.Value);
-        Assert.Equal(3, option.MinValue);
-        Assert.Equal(10, option.MaxValue);
+
+        var option = options.Should().ContainSingle().Which;
+        option.DisplayName.Should().Be("Test int display name");
+        option.Description.Should().Be("Test int description");
+        option.Value.Should().Be(4);
+        option.MinValue.Should().Be(3);
+        option.MaxValue.Should().Be(10);
     }
 
     [Fact]
     public void StringOptionsLoadCorrectly()
     {
         var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<StringPluginFormItem>().ToList();
-        Assert.Single(options);
-        var option = options.Single();
-        Assert.Equal("Test string display name", option.DisplayName);
-        Assert.Equal("Test string description", option.Description);
-        Assert.Equal("test initial text", option.Value);
-        Assert.Equal(12, option.MaxLength);
+
+        var option = options.Should().ContainSingle().Which;
+        option.DisplayName.Should().Be("Test string display name");
+        option.Description.Should().Be("Test string description");
+        option.Value.Should().Be("test initial text");
+        option.MaxLength.Should().Be(12);
     }
 
     [Fact]
     public void TextOptionsLoadCorrectly()
     {
         var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 2").Items.OfType<TextPluginFormItem>().ToList();
-        Assert.Single(options);
-        var option = options.Single();
-        Assert.Equal("test text content", option.Value);
+
+        var option = options.Should().ContainSingle().Which;
+        option.Value.Should().Be("test text content");
     }
 
     [Fact]
     public void Collection1OptionsLoadCorrectly()
     {
         var options = _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().ToList();
-        Assert.Equal(2, options.Count);
-        var option = options.First();
-        Assert.Equal("Test collection display name", option.DisplayName);
-        Assert.Equal("Test collection description", option.Description);
-        var items = option.Values as string[];
-        Assert.NotNull(items);
-        Assert.Equal(new string[] { "hello", "hello again" }, items);
+        options.Should().HaveCount(2);
+
+        var option = options[0];
+        option.DisplayName.Should().Be("Test collection display name");
+        option.Description.Should().Be("Test collection description");
+        (option.Values as string[]).Should().Equal(new string[] { "hello", "hello again" });
     }
 
     [Fact]
     public void Collection2OptionsLoadCorrectly()
     {
         var options = _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().ToList();
-        Assert.Equal(2, options.Count);
-        var option = options.ElementAt(1);
-        Assert.Equal("Test collection display name", option.DisplayName);
-        Assert.Equal("Test collection description", option.Description);
-        var items = option.Values as List<int>;
-        Assert.NotNull(items);
-        Assert.Equal(new List<int> { 1, 2, 3, 4, 5 }, items);
+        options.Should().HaveCount(2);
+
+        var option = options[1];
+        option.DisplayName.Should().Be("Test collection display name");
+        option.Description.Should().Be("Test collection description");
+        (option.Values as List<int>).Should().Equal(new List<int> { 1, 2, 3, 4, 5 });
     }
 }

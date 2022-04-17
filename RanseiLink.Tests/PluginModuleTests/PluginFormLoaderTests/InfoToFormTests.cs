@@ -1,4 +1,5 @@
-﻿using RanseiLink.PluginModule.Services;
+﻿using FluentAssertions;
+using RanseiLink.PluginModule.Services;
 using RanseiLink.PluginModule.Services.Concrete;
 using System.Linq;
 using Xunit;
@@ -17,12 +18,15 @@ public class InfoToFormTests
         _loadedInfo = _formLoader.FormToInfo(_form);
     }
 
-    [Fact]
-    public void BoolOptionsLoadCorrectly()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void BoolOptionsLoadCorrectly(bool testValue)
     {
-        _loadedInfo.UngroupedItems.OfType<BoolPluginFormItem>().Single().Value = false;
+        _loadedInfo.UngroupedItems.OfType<BoolPluginFormItem>().Single().Value = testValue;
         _formLoader.InfoToForm(_loadedInfo);
-        Assert.False(_form.TestBoolOption1);
+
+        _form.TestBoolOption1.Should().Be(testValue);
     }
 
     [Fact]
@@ -30,7 +34,8 @@ public class InfoToFormTests
     {
         _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().Single().Value = 9;
         _formLoader.InfoToForm(_loadedInfo);
-        Assert.Equal(9, _form.TestIntOption);
+
+        _form.TestIntOption.Should().Be(9);
     }
 
     [Fact]
@@ -38,14 +43,16 @@ public class InfoToFormTests
     {
         _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<StringPluginFormItem>().Single().Value = "changed text";
         _formLoader.InfoToForm(_loadedInfo);
-        Assert.Equal("changed text", _form.TestStringOption);
+
+        _form.TestStringOption.Should().Be("changed text");
     }
 
     [Fact]
     public void Collection1OptionsLoadCorrectly()
     {
-        _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().First().Value = "hello again";
+        _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().First().Value = "hello there";
         _formLoader.InfoToForm(_loadedInfo);
-        Assert.Equal("hello again", _form.TestCollectionOption1);
+
+        _form.TestCollectionOption1.Should().Be("hello there");
     }
 }

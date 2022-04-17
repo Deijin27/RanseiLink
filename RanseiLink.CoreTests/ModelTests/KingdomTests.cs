@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -19,8 +20,8 @@ public class KingdomTests
                 0x42, 0x44, 0x00, 0x2E,
         });
 
-        Assert.Equal("Aurora", a.Name);
-        Assert.Equal(BattleConfigId.Aurora, a.BattleConfig);
+        a.Name.Should().Be("Aurora");
+        a.BattleConfig.Should().Be(BattleConfigId.Aurora);
     }
 
     [Fact]
@@ -32,7 +33,7 @@ public class KingdomTests
             BattleConfig = BattleConfigId.Yakasha
         };
 
-        Assert.Equal("Aurora", a.Name);
-        Assert.Equal(BattleConfigId.Yakasha, a.BattleConfig);
+        a.Name.Should().Be("Aurora");
+        a.BattleConfig.Should().Be(BattleConfigId.Yakasha);
     }
 }

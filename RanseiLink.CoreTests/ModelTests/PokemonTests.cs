@@ -2,6 +2,7 @@
 using RanseiLink.Core.Enums;
 using Xunit;
 using RanseiLink.Core;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
@@ -10,42 +11,43 @@ public class PokemonTests
     [Fact]
     public void AccessorsReturnCorrectValues()
     {
-        Pokemon p = new Pokemon(new byte[]
+        Pokemon a = new Pokemon(new byte[]
         {
-                0x47, 0x61, 0x6C, 0x6C, 0x61, 0x64, 0x65, 0x00, 0x00, 0x00, 0x00, 0x2D, 0xF6, 0x9C, 0x01, 0x49,
-                0xFF, 0xE4, 0x52, 0x0A, 0xCA, 0x4C, 0xF9, 0x0F, 0x1B, 0xC4, 0xAC, 0x50, 0x69, 0xFE, 0x03, 0x18,
-                0x78, 0xC5, 0xEB, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00
+            0x47, 0x61, 0x6C, 0x6C, 0x61, 0x64, 0x65, 0x00, 0x00, 0x00, 0x00, 0x2D, 0xF6, 0x9C, 0x01, 0x49,
+            0xFF, 0xE4, 0x52, 0x0A, 0xCA, 0x4C, 0xF9, 0x0F, 0x1B, 0xC4, 0xAC, 0x50, 0x69, 0xFE, 0x03, 0x18,
+            0x78, 0xC5, 0xEB, 0x76, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00
         });
 
-        Assert.Equal("Gallade", p.Name);
-        Assert.Equal(TypeId.Psychic, p.Type1);
-        Assert.Equal(TypeId.Fighting, p.Type2);
-        Assert.Equal(AbilityId.Parry, p.Ability1);
-        Assert.Equal(AbilityId.Conqueror, p.Ability2);
-        Assert.Equal(AbilityId.Justified, p.Ability3);
-        Assert.Equal(MoveId.PsychoCut, p.Move);
-        Assert.Equal(EvolutionConditionId.Item, p.EvolutionCondition1);
-        Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
-        Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
-        Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
-        Assert.Equal(3, p.MovementRange);
-        Assert.Equal(246, p.Hp);
-        Assert.Equal(255, p.Atk);
-        Assert.Equal(185, p.Def);
-        Assert.Equal(165, p.Spe);
-        Assert.False(p.IsLegendary);
-        Assert.Equal(0x40, p.NameOrderIndex);
-        Assert.Equal(475, p.NationalPokedexNumber);
+        a.Name.Should().Be("Gallade");
+        a.Type1.Should().Be(TypeId.Psychic);
+        a.Type2.Should().Be(TypeId.Fighting);
+        a.Ability1.Should().Be(AbilityId.Parry);
+        a.Ability2.Should().Be(AbilityId.Conqueror);
+        a.Ability3.Should().Be(AbilityId.Justified);
+        a.Move.Should().Be(MoveId.PsychoCut);
+        a.EvolutionCondition1.Should().Be(EvolutionConditionId.Item);
+        ((ItemId)a.QuantityForEvolutionCondition1).Should().Be(ItemId.DawnStone);
+        a.EvolutionCondition2.Should().Be(EvolutionConditionId.WarriorGender);
+        ((GenderId)a.QuantityForEvolutionCondition2).Should().Be(GenderId.Male);
+        a.MovementRange.Should().Be(3);
+        a.Hp.Should().Be(246);
+        a.Atk.Should().Be(255);
+        a.Def.Should().Be(185);
+        a.Spe.Should().Be(165);
+        a.IsLegendary.Should().BeFalse();
+        a.NameOrderIndex.Should().Be(0x40);
+        a.NationalPokedexNumber.Should().Be(475);
+
         foreach (KingdomId location in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
-            Assert.False(p.GetEncounterable(location, false));
+            a.GetEncounterable(location, false).Should().BeFalse();
         }
     }
 
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        Pokemon p = new Pokemon
+        Pokemon a = new Pokemon
         {
             Name = "Gallade",
             Type1 = TypeId.Psychic,
@@ -67,35 +69,35 @@ public class PokemonTests
             NameOrderIndex = 0x40,
             NationalPokedexNumber = 475,
         };
-        p.SetEncounterable(KingdomId.Aurora, true, true);
-        p.SetEncounterable(KingdomId.Cragspur, false, true);
-        p.SetEncounterable(KingdomId.Chrysalia, true, false);
-        p.SetEncounterable(KingdomId.Illusio, false, false);
+        a.SetEncounterable(KingdomId.Aurora, true, true);
+        a.SetEncounterable(KingdomId.Cragspur, false, true);
+        a.SetEncounterable(KingdomId.Chrysalia, true, false);
+        a.SetEncounterable(KingdomId.Illusio, false, false);
 
-        Assert.Equal("Gallade", p.Name);
-        Assert.Equal(TypeId.Psychic, p.Type1);
-        Assert.Equal(TypeId.Fighting, p.Type2);
-        Assert.Equal(AbilityId.Parry, p.Ability1);
-        Assert.Equal(AbilityId.Conqueror, p.Ability2);
-        Assert.Equal(AbilityId.Justified, p.Ability3);
-        Assert.Equal(MoveId.PsychoCut, p.Move);
-        Assert.Equal(EvolutionConditionId.Item, p.EvolutionCondition1);
-        Assert.Equal(ItemId.DawnStone, (ItemId)p.QuantityForEvolutionCondition1);
-        Assert.Equal(EvolutionConditionId.WarriorGender, p.EvolutionCondition2);
-        Assert.Equal(GenderId.Male, (GenderId)p.QuantityForEvolutionCondition2);
-        Assert.Equal(3, p.MovementRange);
-        Assert.Equal(246, p.Hp);
-        Assert.Equal(255, p.Atk);
-        Assert.Equal(185, p.Def);
-        Assert.Equal(165, p.Spe);
-        Assert.True(p.IsLegendary);
-        Assert.Equal(0x40, p.NameOrderIndex);
-        Assert.Equal(475, p.NationalPokedexNumber);
+        a.Name.Should().Be("Gallade");
+        a.Type1.Should().Be(TypeId.Psychic);
+        a.Type2.Should().Be(TypeId.Fighting);
+        a.Ability1.Should().Be(AbilityId.Parry);
+        a.Ability2.Should().Be(AbilityId.Conqueror);
+        a.Ability3.Should().Be(AbilityId.Justified);
+        a.Move.Should().Be(MoveId.PsychoCut);
+        a.EvolutionCondition1.Should().Be(EvolutionConditionId.Item);
+        ((ItemId)a.QuantityForEvolutionCondition1).Should().Be(ItemId.DawnStone);
+        a.EvolutionCondition2.Should().Be(EvolutionConditionId.WarriorGender);
+        ((GenderId)a.QuantityForEvolutionCondition2).Should().Be(GenderId.Male);
+        a.MovementRange.Should().Be(3);
+        a.Hp.Should().Be(246);
+        a.Atk.Should().Be(255);
+        a.Def.Should().Be(185);
+        a.Spe.Should().Be(165);
+        a.IsLegendary.Should().BeTrue();
+        a.NameOrderIndex.Should().Be(0x40);
+        a.NationalPokedexNumber.Should().Be(475);
 
-        Assert.True(p.GetEncounterable(KingdomId.Aurora, true));
-        Assert.True(p.GetEncounterable(KingdomId.Cragspur, false));
-        Assert.False(p.GetEncounterable(KingdomId.Chrysalia, true));
-        Assert.False(p.GetEncounterable(KingdomId.Illusio, false));
+        a.GetEncounterable(KingdomId.Aurora, true).Should().BeTrue();
+        a.GetEncounterable(KingdomId.Cragspur, false).Should().BeTrue();
+        a.GetEncounterable(KingdomId.Chrysalia, true).Should().BeFalse();
+        a.GetEncounterable(KingdomId.Illusio, false).Should().BeFalse();
 
         // Add Array equal test when possible
     }

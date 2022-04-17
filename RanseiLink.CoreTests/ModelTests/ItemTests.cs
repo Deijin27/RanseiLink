@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentAssertions;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using Xunit;
 
@@ -22,22 +23,21 @@ public class ItemTests
             0xEF, 0xDB, 0x00, 0x00,
         });
 
-        Assert.Equal("Potion", a.Name);
-        Assert.Equal(0, a.BuildingLevel);
-        Assert.Equal(ItemCategoryId.Consumable, a.Category);
-        Assert.Equal(ItemEffectId.HealsHp, a.Effect);
-        Assert.Equal(0, a.EffectDuration);
-        Assert.Equal(ItemId.Default, a.CraftingIngredient1);
-        Assert.Equal(0, a.CraftingIngredient1Amount);
-        Assert.Equal(ItemId.Default, a.CraftingIngredient2);
-        Assert.Equal(0, a.CraftingIngredient2Amount);
-        Assert.Equal(ItemId.Default, a.UnknownItem);
-        Assert.Equal(3, a.ShopPriceMultiplier);
-        Assert.Equal(20, a.QuantityForEffect);
+        a.Name.Should().Be("Potion");
+        a.BuildingLevel.Should().Be(0);
+        a.Category.Should().Be(ItemCategoryId.Consumable);
+        a.Effect.Should().Be(ItemEffectId.HealsHp);
+        a.EffectDuration.Should().Be(0);
+        a.CraftingIngredient1.Should().Be(ItemId.Default);
+        a.CraftingIngredient1Amount.Should().Be(0);
+        a.CraftingIngredient2.Should().Be(ItemId.Default);
+        a.CraftingIngredient2Amount.Should().Be(0);
+        a.UnknownItem.Should().Be(ItemId.Default);
+        a.ShopPriceMultiplier.Should().Be(3);
+        a.QuantityForEffect.Should().Be(20);
 
-        Assert.True(a.GetPurchasable(KingdomId.Fontaine));
-        Assert.False(a.GetPurchasable(KingdomId.Greenleaf));
-
+        a.GetPurchasable(KingdomId.Fontaine).Should().BeTrue();
+        a.GetPurchasable(KingdomId.Greenleaf).Should().BeFalse();
     }
 
     [Fact]
@@ -62,20 +62,20 @@ public class ItemTests
         a.SetPurchasable(KingdomId.Chrysalia, true);
         a.SetPurchasable(KingdomId.Dragnor, false);
 
-        Assert.Equal("Potion", a.Name);
-        Assert.Equal(2, a.BuildingLevel);
-        Assert.Equal(ItemCategoryId.Equipment, a.Category);
-        Assert.Equal(ItemEffectId.EasierToLinkWithPokemon, a.Effect);
-        Assert.Equal(5, a.EffectDuration);
-        Assert.Equal(ItemId.ColdMedicine, a.CraftingIngredient1);
-        Assert.Equal(1, a.CraftingIngredient1Amount);
-        Assert.Equal(ItemId.EmeraldGrace, a.CraftingIngredient2);
-        Assert.Equal(21, a.CraftingIngredient2Amount);
-        Assert.Equal(ItemId.DryIce, a.UnknownItem);
-        Assert.Equal(12, a.ShopPriceMultiplier);
-        Assert.Equal(8, a.QuantityForEffect);
+        a.Name.Should().Be("Potion");
+        a.BuildingLevel.Should().Be(2);
+        a.Category.Should().Be(ItemCategoryId.Equipment);
+        a.Effect.Should().Be(ItemEffectId.EasierToLinkWithPokemon);
+        a.EffectDuration.Should().Be(5);
+        a.CraftingIngredient1.Should().Be(ItemId.ColdMedicine);
+        a.CraftingIngredient1Amount.Should().Be(1);
+        a.CraftingIngredient2.Should().Be(ItemId.EmeraldGrace);
+        a.CraftingIngredient2Amount.Should().Be(21);
+        a.UnknownItem.Should().Be(ItemId.DryIce);
+        a.ShopPriceMultiplier.Should().Be(12);
+        a.QuantityForEffect.Should().Be(8);
 
-        Assert.True(a.GetPurchasable(KingdomId.Chrysalia));
-        Assert.False(a.GetPurchasable(KingdomId.Dragnor));
+        a.GetPurchasable(KingdomId.Chrysalia).Should().BeTrue();
+        a.GetPurchasable(KingdomId.Dragnor).Should().BeFalse();
     }
 }

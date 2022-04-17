@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using RanseiLink.Core.Enums;
 using Xunit;
+using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
@@ -9,44 +10,44 @@ public class ScenarioWarriorTests
     [Fact]
     public void AccessorsReturnCorrectValues()
     {
-        ScenarioWarrior p = new ScenarioWarrior(new byte[]
+        ScenarioWarrior a = new ScenarioWarrior(new byte[]
         {
-                0x08, 0x12, 0x23, 0x88,
-                0x00, 0x00, 0x00, 0x00,
-                0x18, 0x02, 0x00, 0x69,
-                0x00, 0x00, 0x01, 0x00,
-                0x4C, 0x04, 0x4C, 0x04,
-                0x4C, 0x04, 0x4C, 0x04,
-                0x4C, 0x04, 0x4C, 0x04,
-                0x4C, 0x04, 0x00, 0x00,
+            0x08, 0x12, 0x23, 0x88,
+            0x00, 0x00, 0x00, 0x00,
+            0x18, 0x02, 0x00, 0x69,
+            0x00, 0x00, 0x01, 0x00,
+            0x4C, 0x04, 0x4C, 0x04,
+            0x4C, 0x04, 0x4C, 0x04,
+            0x4C, 0x04, 0x4C, 0x04,
+            0x4C, 0x04, 0x00, 0x00,
         });
 
-        Assert.Equal(WarriorId.Oichi_1, p.Warrior);
-        Assert.Equal(1, p.GetScenarioPokemon(0));
-        Assert.False(p.ScenarioPokemonIsDefault(0));
-        Assert.Equal(WarriorClassId.ArmyMember, p.Class);
-        Assert.Equal(KingdomId.Default, p.Kingdom);
-        Assert.Equal(17, p.Army);
-
+        a.Warrior.Should().Be(WarriorId.Oichi_1);
+        a.GetScenarioPokemon(0).Should().Be(1);
+        a.ScenarioPokemonIsDefault(0).Should().BeFalse();
+        a.Class.Should().Be(WarriorClassId.ArmyMember);
+        a.Kingdom.Should().Be(KingdomId.Default);
+        a.Army.Should().Be(17);
     }
 
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        ScenarioWarrior p = new ScenarioWarrior
+        ScenarioWarrior a = new ScenarioWarrior
         {
             Warrior = WarriorId.Nobuchika,
             Class = WarriorClassId.FreeWarrior,
             Kingdom = KingdomId.Valora,
             Army = 5
         };
-        p.SetScenarioPokemon(0, 57);
+        a.SetScenarioPokemon(0, 57);
 
-        Assert.Equal(WarriorId.Nobuchika, p.Warrior);
-        Assert.Equal(57, p.GetScenarioPokemon(0));
-        Assert.Equal(WarriorClassId.FreeWarrior, p.Class);
-        Assert.Equal(KingdomId.Valora, p.Kingdom);
-        Assert.Equal(5, p.Army);
+        a.Warrior.Should().Be(WarriorId.Nobuchika);
+        a.GetScenarioPokemon(0).Should().Be(57);
+        a.Class.Should().Be(WarriorClassId.FreeWarrior);
+        a.Kingdom.Should().Be(KingdomId.Valora);
+        a.Army.Should().Be(5);
+
         // Add Array equal test when possible
     }
 }
