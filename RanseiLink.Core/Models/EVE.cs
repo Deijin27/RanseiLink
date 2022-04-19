@@ -190,27 +190,27 @@ namespace RanseiLink.Core.Models
                 FileId = header.FileId;
                 HeaderUnknown = header.Unknown;
 
-                Console.WriteLine("GroupItemCounts:");
+                //Console.WriteLine("GroupItemCounts:");
                 int[] groupItemCounts = new int[header.NumGroups];
                 for (int i = 0; i < header.NumGroups; i++)
                 {
                     groupItemCounts[i] = br.ReadInt32();
-                    Console.WriteLine($"  0x{groupItemCounts[i]:X}");
+                    //Console.WriteLine($"  0x{groupItemCounts[i]:X}");
                 }
 
                 // Offset Tables -------------------------------------------------------------------------------
 
-                Console.WriteLine("OffsetTableA:");
+                //Console.WriteLine("OffsetTableA:");
                 br.BaseStream.Position = OffsetTableStart;
                 int[][] groupsA = new int[header.NumGroups][];
                 for (int groupId = 0; groupId < header.NumGroups; groupId++)
                 {
-                    Console.WriteLine($"  Group {groupId} (numItems:{groupItemCounts[groupId]}):");
+                    //Console.WriteLine($"  Group {groupId} (numItems:{groupItemCounts[groupId]}):");
                     groupsA[groupId] = new int[groupItemCounts[groupId]];
                     for (int idWithinGroup = 0; idWithinGroup < groupItemCounts[groupId]; idWithinGroup++)
                     {
                         groupsA[groupId][idWithinGroup] = br.ReadInt32();
-                        Console.WriteLine($"    0x{groupsA[groupId][idWithinGroup]:X} (id: {idWithinGroup})");
+                        //Console.WriteLine($"    0x{groupsA[groupId][idWithinGroup]:X} (id: {idWithinGroup})");
                     }
                 }
 
@@ -223,23 +223,23 @@ namespace RanseiLink.Core.Models
                 }
 
 
-                Console.WriteLine("OffsetTableB:");
+                //Console.WriteLine("OffsetTableB:");
                 int[][] groupsB = new int[header.NumGroups][];
                 for (int groupId = 0; groupId < header.NumGroups; groupId++)
                 {
-                    Console.WriteLine($"  Group {groupId}:");
+                    //Console.WriteLine($"  Group {groupId}:");
                     groupsB[groupId] = new int[groupItemCounts[groupId]];
                     for (int idWithinGroup = 0; idWithinGroup < groupItemCounts[groupId]; idWithinGroup++)
                     {
                         groupsB[groupId][idWithinGroup] = br.ReadInt32();
-                        Console.WriteLine($"    0x{groupsB[groupId][idWithinGroup]:X} (id: {idWithinGroup})");
+                        //Console.WriteLine($"    0x{groupsB[groupId][idWithinGroup]:X} (id: {idWithinGroup})");
                     }
                 }
 
                 Debug.Assert(groupsB.Sum(i => i.Length) == header.NumOffsets);
 
                 var end = br.ReadInt32();
-                Console.WriteLine($"END OF OFFSETS VALUE = 0x{end:X}");
+                //Console.WriteLine($"END OF OFFSETS VALUE = 0x{end:X}");
 
                 // Data ---------------------------------------------------------------------------------------
 
@@ -259,7 +259,7 @@ namespace RanseiLink.Core.Models
                 }
 
                 var startOffsetB = br.BaseStream.Position;
-                Console.WriteLine("START OFFSET B: 0x{0:X}", startOffsetB);
+                //Console.WriteLine("START OFFSET B: 0x{0:X}", startOffsetB);
                 var expectedStartOffsetB = startOffsetA + header.TableBDataOffset;
                 Debug.Assert(startOffsetB == expectedStartOffsetB, $"Start offset of B is unexpected: 0x{startOffsetB:X} (expected: 0x{expectedStartOffsetB:X})");
 
@@ -417,7 +417,7 @@ namespace RanseiLink.Core.Models
 
                 public Header(BinaryReader br)
                 {
-                    Console.WriteLine($"       Start: 0x{br.BaseStream.Position:X} -------------------------------");
+                    //Console.WriteLine($"       Start: 0x{br.BaseStream.Position:X} -------------------------------");
                     var magicNumber = br.ReadMagicNumber();
                     if (magicNumber != MagicNumber)
                     {
@@ -435,12 +435,12 @@ namespace RanseiLink.Core.Models
                     AboutFileLength = br.ReadInt32();
                     NotQuiteFileLength = br.ReadInt32();
 
-                    Console.WriteLine($"      FileId: 0x{Zero:X}");
-                    Console.WriteLine($"   NumGroups: 0x{TwentyEight:X}");
-                    Console.WriteLine($"  NumOffsets: 0x{ThirtyThree:X}");
-                    Console.WriteLine($"TableBOffset: 0x{One:X}");
-                    Console.WriteLine($"     Unknown: 0x{AboutFileLength:X}");
-                    Console.WriteLine($"  FileLength: 0x{NotQuiteFileLength:X}");
+                    //Console.WriteLine($"      FileId: 0x{Zero:X}");
+                    //Console.WriteLine($"   NumGroups: 0x{TwentyEight:X}");
+                    //Console.WriteLine($"  NumOffsets: 0x{ThirtyThree:X}");
+                    //Console.WriteLine($"TableBOffset: 0x{One:X}");
+                    //Console.WriteLine($"     Unknown: 0x{AboutFileLength:X}");
+                    //Console.WriteLine($"  FileLength: 0x{NotQuiteFileLength:X}");
 
 
                 }

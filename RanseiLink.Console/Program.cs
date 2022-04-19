@@ -19,7 +19,7 @@ internal class Program
 
         // build application with clifx
         return await new CliApplicationBuilder()
-           .SetVersion("4.0")
+           .SetVersion("4.1-alpha1")
            .SetTitle("RanseiLink Console")
            .SetDescription("Pokemon Conquest ROM Editor")
            .AddCommandsFromThisAssembly()
