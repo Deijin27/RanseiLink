@@ -182,7 +182,7 @@ public class MapViewModel : ViewModelBase, IMapViewModel
 
         foreach (var gimmick in Gimmicks)
         {
-            Matrix[gimmick.Y][gimmick.X].Gimmicks.Add(gimmick);
+            Matrix[gimmick.Y][gimmick.X].AddGimmick(gimmick);
         }
     }
 

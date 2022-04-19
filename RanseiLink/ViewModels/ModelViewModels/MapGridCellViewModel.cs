@@ -37,20 +37,38 @@ public class MapGridCellViewModel : ViewModelBase
         SubCell6 = new(this, 6, renderMode);
         SubCell7 = new(this, 7, renderMode);
         SubCell8 = new(this, 8, renderMode);
+    }
 
-        Gimmicks.CollectionChanged += (s, e) =>
+    public void AddGimmick(MapGimmickViewModel gimmickViewModel)
+    {
+        Gimmicks.Add(gimmickViewModel);
+        gimmickViewModel.PropertyChanged += OnGimmickVmGimmickChanged;
+        UpdateVisibleGimmick();
+    }
+
+    public void RemoveGimmick(MapGimmickViewModel gimmickViewModel)
+    {
+        Gimmicks.Remove(gimmickViewModel);
+        gimmickViewModel.PropertyChanged -= OnGimmickVmGimmickChanged;
+        UpdateVisibleGimmick();
+    }
+
+    private void OnGimmickVmGimmickChanged(object sender, EventArgs e)
+    {
+        UpdateVisibleGimmick();
+    }
+
+    private void UpdateVisibleGimmick()
+    {
+        if (Gimmicks.Any())
         {
-            if (Gimmicks.Any())
-            {
-                var gimmick = Gimmicks.Last();
-                GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image).File;
-            }
-            else
-            {
-                GimmickImagePath = null;
-            }
-        };
-
+            var gimmick = Gimmicks.Last();
+            GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image).File;
+        }
+        else
+        {
+            GimmickImagePath = null;
+        }
     }
 
     public bool IsSelected

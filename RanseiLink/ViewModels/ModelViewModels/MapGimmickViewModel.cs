@@ -64,10 +64,10 @@ public class MapGimmickViewModel : ViewModelBase
     private void ChangePosition(Action doThePositionChange)
     {
         var sourceCell = _parent.Matrix[Y][X];
-        sourceCell.Gimmicks.Remove(this);
+        sourceCell.RemoveGimmick(this);
         doThePositionChange();
         var destinationCell = _parent.Matrix[Y][X];
-        destinationCell.Gimmicks.Add(this);
+        destinationCell.AddGimmick(this);
         _parent.SelectedCell = destinationCell;
     }
 
@@ -126,6 +126,7 @@ public class MapGimmickViewModel : ViewModelBase
                 GimmickItem.UnknownList.Clear();
                 GimmickItem.UnknownList.AddRange(newList);
             }
+            RaisePropertyChanged();
         }
     }
 

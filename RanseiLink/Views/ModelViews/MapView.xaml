@@ -259,9 +259,9 @@
                                             <TextBlock Height="20" Text="Gimmick" Grid.Row="0"/>
                                             <ComboBox Grid.Row="0" Grid.Column="1" Height="20" SelectedItem="{Binding Gimmick, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static const:EnumProvider.GimmickItems}"/>
                                             <TextBlock Height="20" Text="Unknown Value" Grid.Row="1"/>
-                                            <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding UnknownValue}"/>
+                                            <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding UnknownValue, UpdateSourceTrigger=LostFocus}"/>
                                             <TextBlock Height="20" Text="Parameters" Grid.Row="2"/>
-                                            <TextBox Grid.Row="2" Grid.Column="1" Height="20" Text="{Binding Params}"/>
+                                            <TextBox Grid.Row="2" Grid.Column="1" Height="20" Text="{Binding Params, UpdateSourceTrigger=LostFocus}"/>
                                         </Grid>
                                     </DockPanel>
                                 </DataTemplate>
