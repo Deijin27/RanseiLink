@@ -4,9 +4,9 @@ namespace RanseiLink.Services.Concrete;
 
 internal class JumpService : IJumpService 
 { 
-    private readonly MainEditorViewModel _mainEditor;
+    private readonly IMainEditorViewModel _mainEditor;
 
-    public JumpService(MainEditorViewModel mainEditorViewModel)
+    public JumpService(IMainEditorViewModel mainEditorViewModel)
     {
         _mainEditor = mainEditorViewModel;
     }

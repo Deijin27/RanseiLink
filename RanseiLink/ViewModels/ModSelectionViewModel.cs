@@ -7,7 +7,22 @@ using System.Windows.Data;
 
 namespace RanseiLink.ViewModels;
 
-public class ModSelectionViewModel : ViewModelBase
+public interface IModSelectionViewModel
+{
+    ICommand CreateModCommand { get; }
+    ICommand ImportModCommand { get; }
+    ICommand ModItemClicked { get; }
+    ObservableCollection<IModListItemViewModel> ModItems { get; }
+    bool OutdatedModsExist { get; set; }
+    ICommand PopulateGraphicsDefaultsCommand { get; }
+    ICommand UpgradeOutdatedModsCommand { get; }
+
+    event Action<ModInfo> ModSelected;
+
+    void RefreshModItems();
+}
+
+public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
@@ -22,7 +37,7 @@ public class ModSelectionViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
     }
 
-    public ObservableCollection<ModListItemViewModel> ModItems { get; } = new ObservableCollection<ModListItemViewModel>();
+    public ObservableCollection<IModListItemViewModel> ModItems { get; } = new ObservableCollection<IModListItemViewModel>();
 
     public ICommand ModItemClicked { get; }
     public ICommand CreateModCommand { get; }
@@ -33,9 +48,9 @@ public class ModSelectionViewModel : ViewModelBase
     public event Action<ModInfo> ModSelected;
 
     public ModSelectionViewModel(
-        IModManager modManager, 
-        IDialogService dialogService, 
-        IModListItemViewModelFactory modListItemViewModelFactory, 
+        IModManager modManager,
+        IDialogService dialogService,
+        IModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteProvider fallbackSpriteProvider)
     {
         _modService = modManager;

@@ -10,34 +10,47 @@ namespace RanseiLink.ViewModels;
 
 public interface IModListItemViewModelFactory
 {
-    ModListItemViewModel CreateViewModel(ModSelectionViewModel parent, ModInfo mod);
+    IModListItemViewModel CreateViewModel(IModSelectionViewModel parent, ModInfo mod);
 }
 
 public class ModListItemViewModelFactory : IModListItemViewModelFactory
 {
-    private readonly Func<ModSelectionViewModel, ModInfo, ModListItemViewModel> _factory;
-    public ModListItemViewModelFactory(Func<ModSelectionViewModel, ModInfo, ModListItemViewModel> factory)
+    private readonly Func<IModSelectionViewModel, ModInfo, IModListItemViewModel> _factory;
+    public ModListItemViewModelFactory(Func<IModSelectionViewModel, ModInfo, IModListItemViewModel> factory)
     {
         _factory = factory;
     }
 
-    public ModListItemViewModel CreateViewModel(ModSelectionViewModel parent, ModInfo mod)
+    public IModListItemViewModel CreateViewModel(IModSelectionViewModel parent, ModInfo mod)
     {
         return _factory(parent, mod);
     }
 }
 
-public class ModListItemViewModel : ViewModelBase
+public interface IModListItemViewModel
 {
-    private readonly ModSelectionViewModel _parentVm;
+    ICommand CreateModBasedOnCommand { get; }
+    ICommand DeleteModCommand { get; }
+    ICommand EditModInfoCommand { get; }
+    ICommand ExportModCommand { get; }
+    ModInfo Mod { get; }
+    ICommand PatchRomCommand { get; }
+    IReadOnlyCollection<PluginInfo> PluginItems { get; }
+    ICommand RandomizeCommand { get; }
+    ICommand RunPluginCommand { get; }
+}
+
+public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
+{
+    private readonly IModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IModPatchingService _modPatcher;
 
     public ModListItemViewModel(
-        ModSelectionViewModel parent, 
-        ModInfo mod, 
+        IModSelectionViewModel parent,
+        ModInfo mod,
         IModManager modManager,
         IModPatchingService modPatcher,
         IDialogService dialogService,
@@ -137,7 +150,7 @@ public class ModListItemViewModel : ViewModelBase
                     type: MessageBoxType.Error
                 ));
         }
-        
+
     }
     private void EditModInfo(ModInfo mod)
     {

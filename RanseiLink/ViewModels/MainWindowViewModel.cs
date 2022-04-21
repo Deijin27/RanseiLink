@@ -8,8 +8,8 @@ namespace RanseiLink.ViewModels;
 public class MainWindowViewModel : ViewModelBase
 {
     private readonly IThemeService _themeService;
-    private readonly ModSelectionViewModel _modSelectionVm;
-    private readonly MainEditorViewModel _mainEditorViewModel;
+    private readonly IModSelectionViewModel _modSelectionVm;
+    private readonly IMainEditorViewModel _mainEditorViewModel;
     private object _currentVm;
     private bool _backButtonVisible;
 
@@ -17,13 +17,13 @@ public class MainWindowViewModel : ViewModelBase
         IDialogService dialogService, 
         IPluginLoader pluginLoader, 
         IThemeService themeService,
-        ModSelectionViewModel modSelectionViewModel,
-        MainEditorViewModel mainEditorViewModel)
+        IModSelectionViewModel modSelectionViewModel,
+        IMainEditorViewModel mainEditorViewModel)
     {
         _themeService = themeService;
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
-        if (failures.AnyFailures)
+        if (failures?.AnyFailures == true)
         {
             dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                 title: "Plugin Load Failures",
@@ -67,7 +67,7 @@ public class MainWindowViewModel : ViewModelBase
 
     public void OnShutdown()
     {
-        if (_currentVm is MainEditorViewModel mainEditor)
+        if (_currentVm is IMainEditorViewModel mainEditor)
         {
             mainEditor.Deactivate();
         }
@@ -93,7 +93,7 @@ public class MainWindowViewModel : ViewModelBase
 
     private void OnBackButtonPressed()
     {
-        if (_currentVm is MainEditorViewModel mainEditor)
+        if (_currentVm is IMainEditorViewModel mainEditor)
         {
             mainEditor.Deactivate();
         }

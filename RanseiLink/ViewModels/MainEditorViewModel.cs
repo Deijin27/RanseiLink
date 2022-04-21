@@ -14,7 +14,23 @@ namespace RanseiLink.ViewModels;
 
 public record EditorModuleListItem(string DisplayName, string ModuleId);
 
-public class MainEditorViewModel : ViewModelBase
+public interface IMainEditorViewModel
+{
+    ICommand CommitRomCommand { get; }
+    string CurrentModuleId { get; set; }
+    object CurrentVm { get; }
+    ObservableCollection<EditorModuleListItem> ListItems { get; }
+    ModInfo Mod { get; }
+    IReadOnlyCollection<PluginInfo> PluginItems { get; }
+    bool PluginPopupOpen { get; set; }
+    PluginInfo SelectedPlugin { get; set; }
+
+    void Deactivate();
+    void SetMod(ModInfo mod);
+    bool TryGetModule(string moduleId, out EditorModule module);
+}
+
+public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 {
     private readonly IDialogService _dialogService;
     private readonly IModPatchingService _modPatcher;
@@ -30,8 +46,8 @@ public class MainEditorViewModel : ViewModelBase
     private EditorModule _currentModule;
 
     public MainEditorViewModel(
-        IDialogService dialogService, 
-        IModPatchingService modPatcher, 
+        IDialogService dialogService,
+        IModPatchingService modPatcher,
         ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
@@ -48,7 +64,7 @@ public class MainEditorViewModel : ViewModelBase
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Failed to load some plugins", loadFailures?.ToString()));
         }
-        
+
         CommitRomCommand = new RelayCommand(CommitRom);
 
         RegisterModules(modules);

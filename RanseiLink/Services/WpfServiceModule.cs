@@ -19,12 +19,12 @@ public class WpfServiceModule : Module
         builder.RegisterType<ExternalService>().As<IExternalService>().SingleInstance();
 
         builder.RegisterType<MainWindowViewModel>().As<MainWindowViewModel>().SingleInstance();
-        builder.RegisterType<ModSelectionViewModel>().As<ModSelectionViewModel>().SingleInstance();
-        builder.RegisterType<MainEditorViewModel>().As<MainEditorViewModel>().SingleInstance();
+        builder.RegisterType<ModSelectionViewModel>().As<IModSelectionViewModel>().SingleInstance();
+        builder.RegisterType<MainEditorViewModel>().As<IMainEditorViewModel>().SingleInstance();
 
         ContainerProvider.ModServiceGetterFactory.AddModule(new WpfModServiceModule());
 
-        builder.RegisterType<ModListItemViewModel>().As<ModListItemViewModel>();
+        builder.RegisterType<ModListItemViewModel>().As<IModListItemViewModel>();
         builder.RegisterType<ModListItemViewModelFactory>().As<IModListItemViewModelFactory>().SingleInstance();
 
         builder.RegisterType<JumpService>().As<IJumpService>().SingleInstance();
