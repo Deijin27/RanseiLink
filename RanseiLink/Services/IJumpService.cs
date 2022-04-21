@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Enums;
-
-namespace RanseiLink.Services;
+﻿namespace RanseiLink.Services;
 
 public interface IJumpService
 {
@@ -17,6 +15,11 @@ public interface IJumpService
     /// <param name="moduleId">Id of the editor module to choose</param>
     void JumpTo(string moduleId);
 
-    void JumpToScenarioWarrior(ScenarioId scenario, int id);
-    void JumpToScenarioPokemon(ScenarioId scenario, int id);
+    /// <summary>
+    /// Jump to selector view model within another selector view model
+    /// </summary>
+    /// <param name="moduleId">Id of the editor module to choose</param>
+    /// <param name="outerSelectedId">Id of the item within the outer selector view to select</param>
+    /// <param name="innerSelectedId">Id of the item within the inner selector view to select</param>
+    void JumpToNested(string moduleId, int outerSelectedId, int innerSelectedId);
 }

@@ -36,7 +36,7 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
             {
                 if (!sw.ScenarioPokemonIsDefault(0) && sw.GetScenarioPokemon(0) == _id)
                 {
-                    jumpService.JumpToScenarioWarrior(_scenario, i);
+                    jumpService.JumpToNested(ScenarioWarriorSelectorEditorModule.Id, (int)_scenario, i);
                     return;
                 }
                 i++;

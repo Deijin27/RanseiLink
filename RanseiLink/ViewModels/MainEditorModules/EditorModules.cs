@@ -330,18 +330,18 @@ public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmic
     }
 }
 
-public class MoveAnimationGridEditorModule : BaseSelectorEditorModule<IAbilityService>
-{
-    public const string Id = "move_animation_grid";
-    public override string UniqueId => Id;
-    public override string ListName => "Move Animation (Grid)";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<IAbilityViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
-    }
-}
+//public class MoveAnimationGridEditorModule : BaseSelectorEditorModule<IAbilityService>
+//{
+//    public const string Id = "move_animation_grid";
+//    public override string UniqueId => Id;
+//    public override string ListName => "Move Animation (Grid)";
+//    public override void Initialise(IServiceGetter modServices)
+//    {
+//        base.Initialise(modServices);
+//        var vm = modServices.Get<IAbilityViewModel>();
+//        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+//    }
+//}
 
 public class MapSelectorEditorModule : EditorModule
 {

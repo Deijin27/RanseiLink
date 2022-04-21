@@ -97,7 +97,7 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
         {
             if (ScenarioPokemonVm != null)
             {
-                jumpService.JumpToScenarioPokemon(_scenario, SelectedPokemon.ScenarioPokemonId);
+                jumpService.JumpToNested(ScenarioPokemonSelectorEditorModule.Id, (int)_scenario, SelectedPokemon.ScenarioPokemonId);
             }
         });
     }

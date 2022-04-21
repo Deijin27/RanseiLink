@@ -1,7 +1,4 @@
-﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Maps;
-using RanseiLink.ViewModels;
-using System.Linq;
+﻿using RanseiLink.ViewModels;
 
 namespace RanseiLink.Services.Concrete;
 
@@ -37,31 +34,24 @@ internal class JumpService : IJumpService
         _mainEditor.CurrentModuleId = moduleId;
     }
 
-    public void JumpToScenarioPokemon(ScenarioId scenario, int id)
+    public void JumpToNested(string moduleId, int outerSelectedId, int innerSelectedId)
     {
-        //var moduleId = ScenarioPokemonSelectorEditorModule.Id;
-        //if (_mainEditor.ViewModels[moduleId] is ScenarioPokemonSelectorViewModel selectorVm 
-        //    && selectorVm.ScenarioItems.Contains(scenario)
-        //    && selectorVm.MinIndex <= id
-        //    && selectorVm.MaxIndex >= id)
-        //{
-        //    selectorVm.SelectedScenario = scenario;
-        //    selectorVm.SelectedItem = id;
-        //    _mainEditor.CurrentModuleId = moduleId;
-        //}
+        if (!_mainEditor.TryGetModule(moduleId, out var module))
+        {
+            return;
+        }
+        if (module.ViewModel is not SelectorViewModel scenarioSelectorViewModel)
+        {
+            return;
+        }
+        scenarioSelectorViewModel.Selected = (int)outerSelectedId;
+
+        if (scenarioSelectorViewModel.NestedViewModel is SelectorViewModel nestedSelectorViewModel)
+        {
+            nestedSelectorViewModel.Selected = innerSelectedId;
+        }
+
+        _mainEditor.CurrentModuleId = moduleId;
     }
 
-    public void JumpToScenarioWarrior(ScenarioId scenario, int id)
-    {
-        //var moduleId = ScenarioWarriorSelectorEditorModule.Id;
-        //if (_mainEditor.ViewModels[moduleId] is ScenarioWarriorSelectorViewModel selectorVm
-        //    && selectorVm.ScenarioItems.Contains(scenario)
-        //    && selectorVm.MinIndex <= id
-        //    && selectorVm.MaxIndex >= id)
-        //{
-        //    selectorVm.SelectedScenario = scenario;
-        //    selectorVm.SelectedItem = id;
-        //    _mainEditor.CurrentModuleId = moduleId;
-        //}
-    }
 }
