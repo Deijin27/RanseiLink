@@ -3,6 +3,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
 using RanseiLink.ViewModels;
+using System.Reflection;
 using System.Windows;
 
 namespace RanseiLink;
@@ -12,7 +13,7 @@ namespace RanseiLink;
 /// </summary>
 public partial class App : Application
 {
-    public const string Version = "4.0";
+    public static readonly string Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     public MainWindowViewModel GetMainWindowViewModel() => ContainerProvider.Container.Resolve<MainWindowViewModel>();
 
     public App()

@@ -3,6 +3,7 @@ using CliFx;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using Autofac;
+using System.Reflection;
 
 namespace RanseiLink.Console;
 
@@ -19,7 +20,7 @@ internal class Program
 
         // build application with clifx
         return await new CliApplicationBuilder()
-           .SetVersion("4.1-alpha1")
+           .SetVersion(Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion)
            .SetTitle("RanseiLink Console")
            .SetDescription("Pokemon Conquest ROM Editor")
            .AddCommandsFromThisAssembly()
