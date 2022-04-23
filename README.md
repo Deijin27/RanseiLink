@@ -10,14 +10,18 @@ See the [Wiki](https://github.com/Deijin27/RanseiLink/wiki) and [this drive fold
 
 [Installation Guide](https://github.com/Deijin27/RanseiLink/wiki/RanseiLink-Installation-Guide)
 
-Get the latest plugins made by deijin here: https://drive.google.com/drive/folders/1LQDr4OF5MiOdRu1AFNIN9P7eaCQLHSA_?usp=sharing
-
 ![](https://i.imgur.com/ZHQ6yyN.png)
 
 How to use:
 
 - To get started with a mod, choose the "Create Mod" option. You will have to provide it with an unchanged rom to base the mod on. From there click on the mod that appears in the list and start editing.
 - Once you have finished editing, you can write the mod to a rom. The button to do this is both on the editing page, and also if you right click on the mod in the list.
+
+Get the latest plugins made by deijin here: https://drive.google.com/drive/folders/1LQDr4OF5MiOdRu1AFNIN9P7eaCQLHSA_?usp=sharing
+
+These include a randomizer, checker for your mods, quick actions and more.
+
+<img src="https://user-images.githubusercontent.com/40903783/164947192-19dce8ec-16d1-4fb7-8384-7f9f4bbf1fd4.png" width=400/>
 
 ## Console App
 
