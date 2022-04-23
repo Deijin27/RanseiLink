@@ -19,6 +19,7 @@
             Army initially assigned to each kingdom. 
             These numbers correspond to the "Army" numbers on the Scenario Warrior page. 
             The leader of the army is set via the "Warrior Class" on that page.
+            Click on the kingdom name to view a summary of the army.
         </TextBlock>
         <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding KingdomItems, Mode=OneTime}" Grid.IsSharedSizeScope="True" Style="{StaticResource ItemsControlVirtualizedStyle}">
             <ItemsControl.ItemTemplate>
@@ -29,7 +30,7 @@
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock VerticalAlignment="Center" Text="{Binding Kingdom}"/>
+                        <Button VerticalAlignment="Center" Content="{Binding Kingdom}" Style="{StaticResource HyperlinkButtonStyle}" ToolTip="Show army summary" Command="{Binding ShowSummaryCommand}"/>
                         <controls:NumberBox Grid.Column="2" Max="255" Value="{Binding Army}" Width="100" HorizontalAlignment="Left"/>
                     </Grid>
                 </DataTemplate>

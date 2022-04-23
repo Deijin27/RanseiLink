@@ -201,7 +201,7 @@ public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<ISce
     {
         base.Initialise(modServices);
         var vm = modServices.Get<IScenarioKingdomViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }
 
