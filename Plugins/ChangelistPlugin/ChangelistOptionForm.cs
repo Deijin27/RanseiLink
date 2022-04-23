@@ -51,6 +51,9 @@ public class ChangelistOptionForm : IPluginForm
     [BoolOption("Buildings", group: WhatChangelists)]
     public bool Building { get; set; }
 
+    [BoolOption("Episodes", group: WhatChangelists)]
+    public bool Episode { get; set; }
+
     [BoolOption("Event Speakers", group: WhatChangelists)]
     public bool EventSpeaker { get; set; }
 

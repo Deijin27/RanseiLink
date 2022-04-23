@@ -166,6 +166,10 @@ public class ChangelistPlugin : IPlugin
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IBuildingService>(), changedServices.Get<IBuildingService>()));
         }
+        if (options.Episode)
+        {
+            changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IEpisodeService>(), changedServices.Get<IEpisodeService>()));
+        }
         if (options.EventSpeaker)
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IEventSpeakerService>(), changedServices.Get<IEventSpeakerService>()));

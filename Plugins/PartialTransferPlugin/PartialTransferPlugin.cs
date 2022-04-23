@@ -74,6 +74,8 @@ public class PartialTransferPlugin : IPlugin
             filesToTransfer.Add(Constants.BuildingRomPath);
         if (options.EventSpeaker)
             filesToTransfer.Add(Constants.EventSpeakerRomPath);
+        if (options.Episode)
+            filesToTransfer.Add(Constants.EpisodeRomPath);
         if (options.Gimmicks)
             filesToTransfer.Add(Constants.GimmickRomPath);
         if (options.Item)

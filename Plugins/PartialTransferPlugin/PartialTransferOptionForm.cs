@@ -36,6 +36,9 @@ public class PartialTransferOptionForm : IPluginForm
     [BoolOption("Buildings", group: What)]
     public bool Building { get; set; }
 
+    [BoolOption("Episodes", group: What)]
+    public bool Episode { get; set; }
+
     [BoolOption("Event Speakers", group: What)]
     public bool EventSpeaker { get; set; }
 
