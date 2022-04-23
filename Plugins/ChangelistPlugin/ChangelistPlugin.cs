@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace ChangelistPlugin;
 
-[Plugin("Changelist", "Deijin", "2.1")]
+[Plugin("Changelist", "Deijin", "2.2")]
 public class ChangelistPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -99,21 +99,21 @@ public class ChangelistPlugin : IPlugin
     {
         var doc = new XDocument();
 
-        var root = new XElement("Changelist");
+        var root = new XElement("changelist");
 
         foreach (var groupByTypeName in changelist.GroupBy(i => i.TypeName))
         {
-            var typeNameElement = new XElement(groupByTypeName.Key);
+            var typeNameElement = new XElement("type", new XAttribute("name", groupByTypeName.Key));
 
             foreach (var groupByObjectId in groupByTypeName.GroupBy(i => i.ObjectId))
             {
-                var objectIdElement = new XElement(groupByObjectId.Key);
+                var objectIdElement = new XElement("object", new XAttribute("name", groupByObjectId.Key));
 
                 foreach (var changeInfo in groupByObjectId)
                 {
-                    var propertyElement = new XElement(changeInfo.PropertyName,
-                        new XElement("Before", changeInfo.OldValue),
-                        new XElement("After_", changeInfo.NewValue)
+                    var propertyElement = new XElement("property", new XAttribute("name", changeInfo.PropertyName),
+                        new XElement("before", changeInfo.OldValue),
+                        new XElement("after_", changeInfo.NewValue)
                         );
                     objectIdElement.Add(propertyElement);
                 }
@@ -231,9 +231,10 @@ public class ChangelistPlugin : IPlugin
                 var afterVal = prop.GetValue(afterObj);
                 if (!beforeVal.Equals(afterVal))
                 {
-                    changelist.Add(new(typeof(TModel).Name, afterService.IdToName(id++), prop.Name, beforeVal.ToString(), afterVal.ToString()));
+                    changelist.Add(new(typeof(TModel).Name, afterService.IdToName(id), prop.Name, beforeVal.ToString(), afterVal.ToString()));
                 }
             }
+            id++;
         }
         return changelist;
     }
