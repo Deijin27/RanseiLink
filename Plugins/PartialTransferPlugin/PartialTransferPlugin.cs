@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace PartialTransferPlugin;
 
-[Plugin("Partial Transfer", "Deijin", "2.0")]
+[Plugin("Partial Transfer", "Deijin", "2.1")]
 public class PartialTransferPlugin : IPlugin
 {
     public void Run(IPluginContext context)

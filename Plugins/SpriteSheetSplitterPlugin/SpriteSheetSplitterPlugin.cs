@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace SpriteSheetSplitterPlugin;
 
-[Plugin("Sprite Sheet Splitter", "Deijin", "1.0")]
+[Plugin("Sprite Sheet Splitter", "Deijin", "1.1")]
 public class SpriteSheetSplitterPlugin : IPlugin
 {
     private IDialogService _dialogService;
