@@ -11,14 +11,16 @@ public class SelectorViewModel : ViewModelBase
     private object _nestedViewModel;
     private readonly Action<int> _onSelectedChanged;
     private List<SelectorComboBoxItem> _displayItems;
+    private readonly Func<int, bool> _validateId;
 
     public SelectorViewModel(IModelService service, object nestedViewModel, Action<int> onSelectedChanged)
-        :this(service.GetComboBoxItemsExceptDefault(), nestedViewModel, onSelectedChanged)
+        :this(service.GetComboBoxItemsExceptDefault(), nestedViewModel, onSelectedChanged, service.ValidateId)
     {
     }
 
-    public SelectorViewModel(List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged)
+    public SelectorViewModel(List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged, Func<int, bool> validateId)
     {
+        _validateId = validateId;
         DisplayItems = displayItems;
 
         _onSelectedChanged = onSelectedChanged;
@@ -45,6 +47,10 @@ public class SelectorViewModel : ViewModelBase
         get => _selected;
         set
         {
+            if (!_validateId(value))
+            {
+                return;
+            }
             if (_selected != value)
             {
                 _selected = value;
@@ -67,8 +73,8 @@ public class SelectorViewModelWithoutScroll : SelectorViewModel
     public SelectorViewModelWithoutScroll(IModelService service, object nestedViewModel, Action<int> onSelectedChanged)
         : base(service, nestedViewModel, onSelectedChanged) { }
 
-    public SelectorViewModelWithoutScroll(List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged)
-        : base(displayItems, nestedViewModel, onSelectedChanged)
+    public SelectorViewModelWithoutScroll(List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged, Func<int, bool> validateId)
+        : base(displayItems, nestedViewModel, onSelectedChanged, validateId)
     {
     }
 }

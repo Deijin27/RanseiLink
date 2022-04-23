@@ -287,7 +287,7 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
             .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
             .ToList();
         
-        _viewModel = new SelectorViewModel(episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)));
+        _viewModel = new SelectorViewModel(episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -364,7 +364,8 @@ public class MapSelectorEditorModule : EditorModule
         {
             _currentMap = _service.Retrieve((MapId)id);
             _nestedVm.SetModel(_currentMap);
-        });
+        },
+        id => _service.GetMapIds().Cast<int>().Contains(id));
     }
 
     public override void OnPageClosing()
