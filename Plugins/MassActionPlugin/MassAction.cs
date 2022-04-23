@@ -3,6 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
+using System;
 using System.Linq;
 
 namespace MassActionPlugin;
@@ -44,6 +45,11 @@ internal class MassAction
                 progress.Report(new ProgressInfo("Setting capacity values..."));
                 HandleCapacity();
             }
+            else if (options.Target == ConstOptions.InitLink)
+            {
+                progress.Report(new ProgressInfo("Setting initial link values..."));
+                HandleInitLink();
+            }
 
             progress.Report(new ProgressInfo(progress:100, isIndeterminate:false, statusText:"Done!"));
 
@@ -75,12 +81,25 @@ internal class MassAction
         maxLinkService.Save();
     }
 
+    private int[] DecideScenarios()
+    {
+        if (options.Scenario == ConstOptions.AllScenarios)
+        {
+            return EnumUtil.GetValues<ScenarioId>().Select(i => (int)i).ToArray();
+        }
+        else
+        {
+            return new int[] { (int)System.Enum.Parse<ScenarioId>(options.Scenario) };
+        }
+    }
+
     private void HandleIVs()
     {
         var scenarioPokemonService = _services.Get<IScenarioPokemonService>();
 
-        foreach (var childService in scenarioPokemonService.Enumerate())
+        foreach (var scenarioId in DecideScenarios())
         {
+            var childService = scenarioPokemonService.Retrieve(scenarioId);
             foreach (var sp in childService.Enumerate())
             {
                 if (options.Mode == ConstOptions.AtLeast)
@@ -141,6 +160,40 @@ internal class MassAction
         }
 
         baseWarriorService.Save();
+    }
+
+    private void HandleInitLink()
+    {
+        var scenarioPokemonService = _services.Get<IScenarioPokemonService>();
+
+        var targetExp = LinkCalculator.CalculateExp(options.Value);
+
+        foreach (var scenarioId in DecideScenarios())
+        {
+            var childService = scenarioPokemonService.Retrieve(scenarioId);
+            foreach (var sp in childService.Enumerate())
+            {
+                // get current link and round
+                var currentLink = Convert.ToInt32(LinkCalculator.CalculateLink(sp.Exp));
+                
+                if (options.Mode == ConstOptions.AtLeast)
+                {
+                    if (currentLink < options.Value)
+                    {
+                        sp.Exp = targetExp;
+                    }
+                }
+                else if (options.Mode == ConstOptions.Exact)
+                {
+                    if (currentLink != options.Value)
+                    {
+                        sp.Exp = targetExp;
+                    }
+                }
+            }
+        }
+
+        scenarioPokemonService.Save();
     }
 }
 
