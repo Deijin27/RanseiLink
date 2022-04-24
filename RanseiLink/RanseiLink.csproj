@@ -9,7 +9,7 @@
     <PackageIconUrl />
     <Authors>Deijin</Authors>
     <VersionPrefix>4.2</VersionPrefix>
-	<VersionSuffix>beta2</VersionSuffix>
+	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
