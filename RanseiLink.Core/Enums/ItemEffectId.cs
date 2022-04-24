@@ -9,19 +9,19 @@ namespace RanseiLink.Core.Enums
         NoEffect,
 
         /// <summary>
-        /// Slightly increases Warriors Powers
+        /// Slightly increases Warriors Power
         /// </summary>
-        SmallIncreaseWarriorPower,
+        RaiseWarriorPower,
 
         /// <summary>
-        /// Increases Warriors Powers
+        /// Slightly increases Warriors Wisdom
         /// </summary>
-        MediumIncreaseWarriorPower,
+        RaiseWarriorWisdom,
 
         /// <summary>
-        /// Greatly increases Warriors Powers
+        /// Slightly increases Warriors Charisma
         /// </summary>
-        LargeIncreaseWarriorPower,
+        RaiseWarriorCharisma,
 
         /// <summary>
         /// Heals Pokémon gradually
@@ -29,14 +29,14 @@ namespace RanseiLink.Core.Enums
         HealPokemonEachTurn,
 
         /// <summary>
-        /// Increases Attack but may prevent Pokémon from moving	
+        /// Increases Attack but break
         /// </summary>
-        IncreaseAttackMayPreventMove,
+        IncreaseAttackMayBreak,
 
         /// <summary>
-        /// Increases Defence but may prevent Pokémon from moving
+        /// Increases Defence but may break
         /// </summary>
-        IncreaseDefenceMayPreventMove,
+        IncreaseDefenceMayBreak,
 
         /// <summary>
         /// Unknown
@@ -54,9 +54,9 @@ namespace RanseiLink.Core.Enums
         Unknown_9,
 
         /// <summary>
-        /// Heals Hp
+        /// Increase max hp
         /// </summary>
-        HealsHp,
+        IncreaseMaxHp,
 
         /// <summary>
         /// Cures a status condition
@@ -74,9 +74,9 @@ namespace RanseiLink.Core.Enums
         IncreasesPokemonEnergy,
 
         /// <summary>
-        /// Increases the Link percentage gained
+        /// Increases the Link between warrior and pokemon by a percenta
         /// </summary>
-        IncreasePercentageLinkGained,
+        PercentageMultiplyLink,
 
         /// <summary>
         /// Makes it easier to Link with a Pokémon
@@ -84,9 +84,9 @@ namespace RanseiLink.Core.Enums
         EasierToLinkWithPokemon,
 
         /// <summary>
-        /// Unknown
+        /// Placeholder for complex effects that are probably hardcoded to ids :(
         /// </summary>
-        Unknown_16,
+        Placeholder,
 
         /// <summary>
         /// Unknown
