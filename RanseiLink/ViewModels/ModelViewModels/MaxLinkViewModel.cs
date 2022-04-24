@@ -4,6 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.ViewModels;
 
@@ -41,14 +42,12 @@ public class MaxLinkViewModel : ViewModelBase, IMaxLinkViewModel
 
     public void SetModel(MaxLink model)
     {
-        var items = new List<WarriorMaxSyncListItem>();
+        Items.Clear();
         foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
         {
-            items.Add(new WarriorMaxSyncListItem(pid, model, _idToNameService.IdToName<IPokemonService>((int)pid)));
+            Items.Add(new WarriorMaxSyncListItem(pid, model, _idToNameService.IdToName<IPokemonService>((int)pid)));
         }
-        Items = items;
-        RaiseAllPropertiesChanged();
     }
 
-    public List<WarriorMaxSyncListItem> Items { get; private set; }
+    public ObservableCollection<WarriorMaxSyncListItem> Items { get; } = new ObservableCollection<WarriorMaxSyncListItem>();
 }
