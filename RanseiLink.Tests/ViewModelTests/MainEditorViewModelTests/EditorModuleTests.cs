@@ -4,6 +4,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
+using RanseiLink.Services;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
 using System;
@@ -23,7 +24,10 @@ public class EditorModuleTests
         return mock;
     }
 
+    private readonly Mock<IServiceGetter> _mockModServiceGetter;
+    private readonly Mock<IModServiceGetterFactory> _modServiceGetterFactory;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
+    private readonly Mock<ICachedMsgBlockService> _cachedMsgBlockService;
     private readonly Mock<ISettingService> _settingService;
     private readonly Mock<IModPatchingService> _patchingService;
     private readonly Mock<IDialogService> _dialogService;
@@ -44,6 +48,15 @@ public class EditorModuleTests
         _patchingService = new Mock<IModPatchingService>();
         _dialogService = new Mock<IDialogService>();
 
+        _cachedMsgBlockService = new Mock<ICachedMsgBlockService>();
+
+        _mockModServiceGetter = new Mock<IServiceGetter>();
+        _mockModServiceGetter.Setup(i => i.Get<ICachedMsgBlockService>()).Returns(_cachedMsgBlockService.Object);
+
+        _modServiceGetterFactory = new Mock<IModServiceGetterFactory>();
+        _modServiceGetterFactory.Setup(i => i.Create(It.IsAny<ModInfo>())).Returns(_mockModServiceGetter.Object);
+        
+
         _moduleA = SetupTestModule("a");
         _moduleB = SetupTestModule("b");
         _moduleC = SetupTestModule("c");
@@ -54,9 +67,11 @@ public class EditorModuleTests
             _patchingService.Object,
             _settingService.Object,
             new Mock<IPluginLoader>().Object,
-            new Mock<IModServiceGetterFactory>().Object,
+            _modServiceGetterFactory.Object,
             new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object }
             );
+
+        _mainEditorVm.SetMod(null);
     }
 
     [Fact]
@@ -84,8 +99,8 @@ public class EditorModuleTests
         _moduleA.Verify(i => i.OnPageOpening(), Times.Never());
         _mainEditorVm.CurrentModuleId = "test_module_a";
         _moduleA.Verify(i => i.OnPageOpening(), Times.Once());
-        _moduleB.Verify(i => i.OnPageOpening(), Times.Never());
-        _mainEditorVm.CurrentModuleId = "test_module_b";
+        _moduleD.Verify(i => i.OnPageOpening(), Times.Never());
+        _mainEditorVm.CurrentModuleId = "test_module_d";
         _moduleA.Verify(i => i.OnPageClosing(), Times.Once());
         _moduleA.Verify(i => i.OnPageOpening(), Times.Once());
     }
@@ -93,12 +108,12 @@ public class EditorModuleTests
     [Fact]
     public void ChangeModuleShouldInitialiseOnFirstLoad()
     {
-        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never(), "Initialised before loading");
-        _mainEditorVm.CurrentModuleId = "test_module_b";
-        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once(), "Not initialised on first load");
+        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never(), "Initialised before loading");
+        _mainEditorVm.CurrentModuleId = "test_module_d";
+        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once(), "Not initialised on first load");
         _mainEditorVm.CurrentModuleId = "test_module_c";
-        _mainEditorVm.CurrentModuleId = "test_module_b";
-        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once(), "Initialised more than once");
+        _mainEditorVm.CurrentModuleId = "test_module_d";
+        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once(), "Initialised more than once");
     }
 
     [Fact]
@@ -124,6 +139,14 @@ public class EditorModuleTests
     }
 
     [Fact]
+    public void DeactivateShouldSaveTextChanges()
+    {
+        _cachedMsgBlockService.Verify(i => i.SaveChangedBlocks(), Times.Never());
+        _mainEditorVm.Deactivate();
+        _cachedMsgBlockService.Verify(i => i.SaveChangedBlocks(), Times.Once());
+    }
+
+    [Fact]
     public void DeactivateShouldSaveModuleOrder()
     {
         // change the order to something other than it was before
@@ -142,8 +165,7 @@ public class EditorModuleTests
         _settingService.Verify(i => i.Save(), Times.Once());
     }
 
-    [Fact]
-    public void PatchShouldInformInitialisedModules()
+    private void PrepareForPatch()
     {
         string romPath = "romPath";
         PatchOptions patchOptions = 0;
@@ -153,6 +175,24 @@ public class EditorModuleTests
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
             .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));
+    }
+
+    [Fact]
+    public void PatchShouldSaveChangedText()
+    {
+        _cachedMsgBlockService.Verify(i => i.SaveChangedBlocks(), Times.Never());
+
+        PrepareForPatch();
+
+        _mainEditorVm.CommitRomCommand.Execute(null);
+
+        _cachedMsgBlockService.Verify(i => i.SaveChangedBlocks(), Times.Once());
+    }
+
+    [Fact]
+    public void PatchShouldInformInitialisedModules()
+    {
+        PrepareForPatch();
 
         // initialise module b and d
         _mainEditorVm.CurrentModuleId = "test_module_b";

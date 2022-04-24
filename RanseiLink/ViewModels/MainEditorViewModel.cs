@@ -111,6 +111,12 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private Dictionary<string, EditorModule> InitialisedModules { get; } = new();
 
 
+    private void SaveTextChanges()
+    {
+        _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
+        _cachedMsgBlockService.SaveChangedBlocks();
+    }
+
     public bool TryGetModule(string moduleId, out EditorModule module)
     {
         if (moduleId == null)
@@ -201,6 +207,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     public void Deactivate()
     {
+        SaveTextChanges();
         foreach (var module in InitialisedModules.Values.ToArray())
         {
             InitialisedModules.Remove(module.UniqueId);
@@ -234,6 +241,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _dialogService.ProgressDialog(progress =>
         {
             progress?.Report(new ProgressInfo("Saving...", isIndeterminate: true));
+            SaveTextChanges();
             foreach (var module in InitialisedModules.Values)
             {
                 module.OnPatchingRom();

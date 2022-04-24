@@ -74,14 +74,14 @@ namespace RanseiLink.Core.Enums
         IncreasesPokemonEnergy,
 
         /// <summary>
-        /// Makes it easier to Link with a Pokémon
-        /// </summary>
-        EasierToLinkWithPokemon,
-
-        /// <summary>
         /// Increases the Link percentage gained
         /// </summary>
         IncreasePercentageLinkGained,
+
+        /// <summary>
+        /// Makes it easier to Link with a Pokémon
+        /// </summary>
+        EasierToLinkWithPokemon,
 
         /// <summary>
         /// Unknown
