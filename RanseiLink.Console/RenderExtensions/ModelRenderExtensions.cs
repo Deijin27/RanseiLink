@@ -223,8 +223,20 @@ public static partial class RenderExtensions
         console.WriteTitle($"{id}");
         console.WriteProperty("Order", model.Order);
         console.WriteProperty("Unlock Condition", model.UnlockCondition);
+        console.WriteProperty("Clear Condition", model.ClearCondition);
         console.WriteProperty("Difficulty", model.Difficulty);
         console.WriteProperty("Scenario", model.Scenario);
+        console.WriteProperty("Start Kingdoms", "");
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.IsStartKingdom))
+        {
+            console.Output.WriteLine($"      - {kingdom}");
+        }
+        console.WriteProperty("Unlocked Kingdoms", "");
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.IsUnlockedKingdom))
+        {
+            console.Output.WriteLine($"      - {kingdom}");
+        }
+
     }
 
     public static void Render(this IConsole console, WarriorSkill saihai, WarriorSkillId id)
