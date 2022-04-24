@@ -22,6 +22,10 @@ internal class JumpService : IJumpService
             return;
         }
         selectorViewModel.Selected = selectId;
+        if (selectorViewModel.Selected != selectId)
+        {
+            return;
+        }
         _mainEditor.CurrentModuleId = moduleId;
     }
 
@@ -44,11 +48,21 @@ internal class JumpService : IJumpService
         {
             return;
         }
-        scenarioSelectorViewModel.Selected = (int)outerSelectedId;
+        scenarioSelectorViewModel.Selected = outerSelectedId;
+
+        if (scenarioSelectorViewModel.Selected != outerSelectedId)
+        {
+            return;
+        }
 
         if (scenarioSelectorViewModel.NestedViewModel is SelectorViewModel nestedSelectorViewModel)
         {
             nestedSelectorViewModel.Selected = innerSelectedId;
+
+            if (nestedSelectorViewModel.Selected != innerSelectedId)
+            {
+                return;
+            }
         }
 
         _mainEditor.CurrentModuleId = moduleId;
