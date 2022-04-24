@@ -76,7 +76,7 @@ namespace RanseiLink.Core.Enums
         /// <summary>
         /// Increases the Link between warrior and pokemon by a percenta
         /// </summary>
-        PercentageMultiplyLink,
+        PercentageMultiplyLinkGained,
 
         /// <summary>
         /// Makes it easier to Link with a Pokémon
