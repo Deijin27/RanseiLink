@@ -4,6 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -17,9 +18,11 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
 {
     private Episode _model;
     private readonly ICachedMsgBlockService _msgService;
+    private readonly IIdToNameService _idToNameService;
 
-    public EpisodeViewModel(ICachedMsgBlockService msgService, IEpisodeService episodeService)
+    public EpisodeViewModel(ICachedMsgBlockService msgService, IEpisodeService episodeService, IIdToNameService idToNameService)
     {
+        _idToNameService = idToNameService;
         _msgService = msgService;
         _model = new Episode();
 
@@ -35,6 +38,13 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
     {
         Id = (int)id;
         _model = model;
+
+        StartKingdomItems.Clear();
+        foreach (KingdomId kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+        {
+            StartKingdomItems.Add(new StartKingdomItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
+        }
+
         RaiseAllPropertiesChanged();
     }
 
@@ -62,6 +72,14 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
         set => RaiseAndSetIfChanged(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
     }
 
+    public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
+
+    public EpisodeClearConditionId ClearCondition
+    {
+        get => _model.ClearCondition;
+        set => RaiseAndSetIfChanged(_model.ClearCondition, value, v => _model.ClearCondition = v);
+    }
+
     public int Difficulty
     {
         get => _model.Difficulty;
@@ -78,6 +96,28 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
     {
         get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
+    }
+
+    public ObservableCollection<StartKingdomItem> StartKingdomItems { get; } = new();
+
+    public class StartKingdomItem : ViewModelBase
+    {
+        private readonly KingdomId _kingdom;
+        private readonly Episode _model;
+        public string KingdomName { get; }
+
+        public StartKingdomItem(Episode episode, KingdomId kingdom, string kingdomName)
+        {
+            _kingdom = kingdom;
+            _model = episode;
+            KingdomName = kingdomName;
+        }
+
+        public bool IsStartKingdom
+        {
+            get => _model.IsStartKingdom(_kingdom);
+            set => RaiseAndSetIfChanged(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
+        }
     }
 
 }

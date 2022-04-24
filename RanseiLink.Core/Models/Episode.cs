@@ -34,5 +34,21 @@ namespace RanseiLink.Core.Models
             get => GetInt(1, 6, 3);
             set => SetInt(1, 6, 3, value);
         }
+
+        public EpisodeClearConditionId ClearCondition 
+        {
+            get => (EpisodeClearConditionId)GetInt(1, 26, 4);
+            set => SetInt(1, 26, 4, (int)value);
+        }
+
+        public bool IsStartKingdom(KingdomId kingdomId)
+        {
+            return GetInt(0, 13 + (int)kingdomId, 1) == 1;
+        }
+
+        public void SetIsStartKingdom(KingdomId kingdomId, bool isStartKingdom)
+        {
+            SetInt(0, 13 + (int)kingdomId, 1, isStartKingdom ? 1 : 0);
+        }
     }
 }

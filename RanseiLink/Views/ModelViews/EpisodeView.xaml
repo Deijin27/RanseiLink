@@ -10,64 +10,103 @@
              d:DataContext="{d:DesignInstance Type=vm:EpisodeViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
+            <TextBlock Text="Name" Grid.Row="0" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
-        <TextBlock Text="Order" Grid.Row="1"/>
-        <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Order}" Max="511"/>
+            <TextBlock Text="Order" Grid.Row="1"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Order}" Max="511"/>
 
-        <TextBlock Text="Scenario" Grid.Row="2" />
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ScenarioItems}" SelectedItem="{Binding Scenario, Mode=TwoWay}"/>
+            <TextBlock Text="Scenario" Grid.Row="2" />
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ScenarioItems}" SelectedItem="{Binding Scenario, Mode=TwoWay}"/>
 
-        <TextBlock Text="Unlock Condition" Grid.Row="3"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding UnlockConditionItems}" SelectedValue="{Binding UnlockCondition, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <TextBlock Text="Unlock Condition" Grid.Row="3"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding UnlockConditionItems}" SelectedValue="{Binding UnlockCondition, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
-        <TextBlock Text="Difficulty" Grid.Row="4" />
-        <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Difficulty}" Max="4"/>
+            <TextBlock Text="Clear Condition" Grid.Row="4"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding ClearConditionItems}" SelectedItem="{Binding ClearCondition, Mode=TwoWay}"/>
 
-        <GroupBox Header="Description" Grid.Row="5" Grid.RowSpan="4" Grid.ColumnSpan="2">
-            <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
-        </GroupBox>
+            <TextBlock Text="Difficulty" Grid.Row="5" />
+            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding Difficulty}" Max="4"/>
 
-    </Grid>
+            <GroupBox Header="Description" Grid.Row="6" Grid.RowSpan="4" Grid.ColumnSpan="2">
+                <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
+            </GroupBox>
+
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Start Kingdoms" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
+                <ItemsControl ItemsSource="{Binding StartKingdomItems}" Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsStartKingdom}" Content="{Binding KingdomName}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </GroupBox>
+
+        </Grid>
+    </WrapPanel>
 </UserControl>
