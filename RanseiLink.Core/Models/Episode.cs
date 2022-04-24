@@ -50,5 +50,15 @@ namespace RanseiLink.Core.Models
         {
             SetInt(0, 13 + (int)kingdomId, 1, isStartKingdom ? 1 : 0);
         }
+
+        public bool IsUnlockedKingdom(KingdomId kingdomId)
+        {
+            return GetInt(1, 9 + (int)kingdomId, 1) == 1;
+        }
+
+        public void SetIsUnlockedKingdom(KingdomId kingdomId, bool isLockedKingdom)
+        {
+            SetInt(1, 9 + (int)kingdomId, 1, isLockedKingdom ? 1 : 0);
+        }
     }
 }

@@ -106,6 +106,20 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </GroupBox>
+            <GroupBox Header="Unlocked Kingdoms" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
+                <ItemsControl ItemsSource="{Binding UnlockedKingdomItems}" Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsUnlockedKingdom}" Content="{Binding KingdomName}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </GroupBox>
 
         </Grid>
     </WrapPanel>

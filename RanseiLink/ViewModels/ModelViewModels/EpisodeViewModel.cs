@@ -40,9 +40,12 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
         _model = model;
 
         StartKingdomItems.Clear();
+        UnlockedKingdomItems.Clear();
         foreach (KingdomId kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
-            StartKingdomItems.Add(new StartKingdomItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
+            string kingdomName = _idToNameService.IdToName<IKingdomService>((int)kingdom);
+            StartKingdomItems.Add(new StartKingdomItem(model, kingdom, kingdomName));
+            UnlockedKingdomItems.Add(new UnlockedKingdomItem(model, kingdom, kingdomName));
         }
 
         RaiseAllPropertiesChanged();
@@ -99,6 +102,7 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
     }
 
     public ObservableCollection<StartKingdomItem> StartKingdomItems { get; } = new();
+    public ObservableCollection<UnlockedKingdomItem> UnlockedKingdomItems { get; } = new();
 
     public class StartKingdomItem : ViewModelBase
     {
@@ -117,6 +121,26 @@ public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
         {
             get => _model.IsStartKingdom(_kingdom);
             set => RaiseAndSetIfChanged(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
+        }
+    }
+
+    public class UnlockedKingdomItem : ViewModelBase
+    {
+        private readonly KingdomId _kingdom;
+        private readonly Episode _model;
+        public string KingdomName { get; }
+
+        public UnlockedKingdomItem(Episode episode, KingdomId kingdom, string kingdomName)
+        {
+            _kingdom = kingdom;
+            _model = episode;
+            KingdomName = kingdomName;
+        }
+
+        public bool IsUnlockedKingdom
+        {
+            get => _model.IsUnlockedKingdom(_kingdom);
+            set => RaiseAndSetIfChanged(IsUnlockedKingdom, value, v => _model.SetIsUnlockedKingdom(_kingdom, v));
         }
     }
 
