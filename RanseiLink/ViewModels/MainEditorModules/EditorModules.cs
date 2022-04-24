@@ -139,10 +139,12 @@ public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<ISce
     public override string UniqueId => Id;
     public override string ListName => "Scenario Warrior";
     private IChildScenarioWarriorService _childScenarioWarriorService;
+    private IScenarioPokemonService _scenarioPokemonService;
     private int _scenario;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
+        _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
         var vm = modServices.Get<IScenarioWarriorViewModel>();
         _childScenarioWarriorService = _service.Retrieve(0);
         var innerSelector = new SelectorViewModel(_childScenarioWarriorService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioWarriorService.Retrieve(id)));
@@ -153,6 +155,18 @@ public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<ISce
             innerSelector.SetDisplayItems(_childScenarioWarriorService.GetComboBoxItemsExceptDefault());
             vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioWarriorService.Retrieve(innerSelector.Selected));
         });
+    }
+
+    public override void OnPatchingRom()
+    {
+        base.OnPatchingRom();
+        _scenarioPokemonService?.Save();
+    }
+
+    public override void Deactivate()
+    {
+        base.Deactivate();
+        _scenarioPokemonService?.Save();
     }
 }
 
