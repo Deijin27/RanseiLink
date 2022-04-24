@@ -77,7 +77,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _modServiceGetter = _modKernelFactory.Create(mod);
         _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
         _cachedMsgBlockService.RebuildCache();
-        SetCurrentModule(ListItems[0].ModuleId, true);
+        SetCurrentModule(CurrentModuleId ?? ListItems[0].ModuleId, true);
         RaiseAllPropertiesChanged();
     }
 
