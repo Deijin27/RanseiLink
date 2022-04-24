@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services.ModelServices;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -10,7 +11,6 @@ public class SelectorViewModel : ViewModelBase
     private int _selected;
     private object _nestedViewModel;
     private readonly Action<int> _onSelectedChanged;
-    private List<SelectorComboBoxItem> _displayItems;
     private readonly Func<int, bool> _validateId;
 
     public SelectorViewModel(IModelService service, object nestedViewModel, Action<int> onSelectedChanged)
@@ -21,7 +21,10 @@ public class SelectorViewModel : ViewModelBase
     public SelectorViewModel(List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged, Func<int, bool> validateId)
     {
         _validateId = validateId;
-        DisplayItems = displayItems;
+        foreach (var item in displayItems)
+        {
+            DisplayItems.Add(item);
+        }
 
         _onSelectedChanged = onSelectedChanged;
         NestedViewModel = nestedViewModel;
@@ -36,11 +39,17 @@ public class SelectorViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _nestedViewModel, value);
     }
 
-    public List<SelectorComboBoxItem> DisplayItems
+    public void SetDisplayItems(List<SelectorComboBoxItem> displayItems)
     {
-        get => _displayItems;
-        set => RaiseAndSetIfChanged(ref _displayItems, value);
+        DisplayItems.Clear();
+        foreach (var item in displayItems)
+        {
+            DisplayItems.Add(item);
+        }
+        RaisePropertyChanged(nameof(Selected));
     }
+
+    public ObservableCollection<SelectorComboBoxItem> DisplayItems { get; } = new ObservableCollection<SelectorComboBoxItem>();
 
     public int Selected
     {

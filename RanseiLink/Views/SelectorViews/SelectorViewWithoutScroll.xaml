@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <DockPanel Margin="10,10,10,0">
             <ComboBox Grid.Row="0" Height="20" 
-                      ItemsSource="{Binding DisplayItems, Mode=OneTime}" 
+                      ItemsSource="{Binding DisplayItems}" 
                       SelectedValue="{Binding Selected, Mode=TwoWay}"
                       DisplayMemberPath="IdAndName"
                       SelectedValuePath="Id"

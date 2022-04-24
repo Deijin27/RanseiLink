@@ -150,7 +150,7 @@ public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<ISce
         {
             _scenario = id;
             _childScenarioWarriorService = _service.Retrieve(id);
-            innerSelector.DisplayItems = _childScenarioWarriorService.GetComboBoxItemsExceptDefault();
+            innerSelector.SetDisplayItems(_childScenarioWarriorService.GetComboBoxItemsExceptDefault());
             vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioWarriorService.Retrieve(innerSelector.Selected));
         });
     }
@@ -173,7 +173,7 @@ public class ScenarioPokemonSelectorEditorModule : BaseSelectorEditorModule<ISce
         {
             _scenario = id;
             _childScenarioPokemonService = _service.Retrieve(id);
-            innerSelector.DisplayItems = _childScenarioPokemonService.GetComboBoxItemsExceptDefault();
+            innerSelector.SetDisplayItems(_childScenarioPokemonService.GetComboBoxItemsExceptDefault());
             vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioPokemonService.Retrieve(innerSelector.Selected));
         });
     }
@@ -365,7 +365,7 @@ public class MapSelectorEditorModule : EditorModule
             _currentMap = _service.Retrieve((MapId)id);
             _nestedVm.SetModel(_currentMap);
         },
-        id => _service.GetMapIds().Cast<int>().Contains(id));
+        id => _service.GetMapIds().Select(i => (int)i).Contains(id));
     }
 
     public override void OnPageClosing()
