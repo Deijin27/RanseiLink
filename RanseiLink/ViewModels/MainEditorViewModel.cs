@@ -140,7 +140,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     {
         if (moduleId == null)
         {
-            throw new ArgumentNullException(nameof(moduleId));
+            // I have no idea why, but randomly a null value is set sometimes
+            return;
         }
         if (_currentModule?.UniqueId == moduleId && !forceUpdate)
         {
