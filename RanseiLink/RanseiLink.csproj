@@ -149,9 +149,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Controls\RankUpConditionControl.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
     <Page Update="Controls\PortableSingleColorPicker.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

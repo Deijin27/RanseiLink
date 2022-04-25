@@ -50,7 +50,7 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
 
     
 
-    private const string NotEditableMessage = "Not Editable";
+    private const string NotEditableMessage = "Outside of msg range";
 
     private static (int block, int offsetWithinBlock, int maxValidId) GetInfoForType(MsgShortcut type)
     {
@@ -119,6 +119,11 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
             return NotEditableMessage;
         }
 
+        if (id < 0)
+        {
+            return NotEditableMessage;
+        }
+
         return GetWithOverflow(block, offsetWithinBlock + id);
     }
 
@@ -127,6 +132,11 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
         var (block, offsetWithinBlock, maxValidId) = GetInfoForType(type);
 
         if (id > maxValidId)
+        {
+            return;
+        }
+
+        if (id < 0)
         {
             return;
         }

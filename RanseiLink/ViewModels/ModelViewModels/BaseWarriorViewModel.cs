@@ -16,13 +16,15 @@ public interface IBaseWarriorViewModel
 public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
 {
     private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly ICachedMsgBlockService _cachedMsgBlockService;
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
-    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, IBaseWarriorService baseWarriorService)
+    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService)
     {
         _model = new BaseWarrior();
         _nameTable = baseWarriorService.NameTable;
         _spriteProvider = overrideSpriteProvider;
+        _cachedMsgBlockService = cachedMsgBlockService;
 
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
@@ -161,19 +163,66 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
     public RankUpConditionId RankUpCondition2
     {
         get => _model.RankUpCondition2;
-        set => RaiseAndSetIfChanged(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value))
+            {
+                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
+                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
+            }
+        }
     }
 
     public int Quantity1ForRankUpCondition
     {
         get => _model.Quantity1ForRankUpCondition;
-        set => RaiseAndSetIfChanged(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value);
+        set 
+        { 
+            if (RaiseAndSetIfChanged(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value)) 
+            {
+                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
+            } 
+        }
     }
 
     public int Quantity2ForRankUpCondition
     {
         get => _model.Quantity2ForRankUpCondition;
-        set => RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value))
+            {
+                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
+            }
+        }
+    }
+
+    public string Quantity1ForRankUpConditionName => GetNameOfQuantityForRankUpCondition(RankUpCondition2, Quantity1ForRankUpCondition);
+
+    public string Quantity2ForRankUpConditionName => GetNameOfQuantityForRankUpCondition(RankUpCondition2, Quantity2ForRankUpCondition);
+
+    private string GetNameOfQuantityForRankUpCondition(RankUpConditionId id, int quantity)
+    {
+        if (quantity == 511)
+        {
+            return "Default";
+        }
+        switch (id)
+        {
+            case RankUpConditionId.AfterCompletingEpisode:
+            case RankUpConditionId.DuringEpisode:
+                return _cachedMsgBlockService.GetMsgOfType(MsgShortcut.EpisodeName, quantity);
+
+            case RankUpConditionId.MonotypeGallery:
+                return $"{(TypeId)quantity}";
+
+            case RankUpConditionId.WarriorInSameArmyNotNearby:
+            case RankUpConditionId.WarriorInSameKingdom:
+                return $"{(WarriorLineId)quantity}";
+
+            default:
+                return "";
+        }
     }
 
     public int Sprite

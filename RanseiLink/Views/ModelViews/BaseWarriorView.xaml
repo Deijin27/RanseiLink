@@ -134,10 +134,22 @@
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="100"/>
 
             <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
-                <controls:RankUpConditionControl Condition="{Binding RankUpCondition2, Mode=TwoWay}"
-                                             Quantity1="{Binding Quantity1ForRankUpCondition, Mode=TwoWay}"
-                                             Quantity2="{Binding Quantity2ForRankUpCondition, Mode=TwoWay}"
-                                             />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition2}" Grid.ColumnSpan="2"/>
+                    <controls:NumberBox Value="{Binding Quantity1ForRankUpCondition}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding Quantity1ForRankUpConditionName}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding Quantity2ForRankUpCondition}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding Quantity2ForRankUpConditionName}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
+                </Grid>
             </GroupBox>
 
             <GroupBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Header="Alt Rank Up Condition (probably unused)">

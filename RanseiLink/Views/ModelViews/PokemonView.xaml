@@ -169,14 +169,36 @@
 
             <GroupBox Header="Evolution Condition 1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
                   ToolTip="The first requirement for a pokemon to evolve into this pokemon">
-                <controls:EvolutionConditionControl Condition="{Binding EvolutionCondition1, Mode=TwoWay}" 
-                                                Quantity="{Binding QuantityForEvolutionCondition1, Mode=TwoWay}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox ItemsSource="{x:Static const:EnumProvider.EvolutionConditionItems}" SelectedItem="{Binding EvolutionCondition1}" Grid.ColumnSpan="2"/>
+                    <controls:NumberBox Value="{Binding QuantityForEvolutionCondition1}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding QuantityForEvolutionCondition1Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                </Grid>
             </GroupBox>
 
             <GroupBox Header="Evolution Condition 2" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
                   ToolTip="The second requirement for a pokemon to evolve into this pokemon">
-                <controls:EvolutionConditionControl Condition="{Binding EvolutionCondition2, Mode=TwoWay}" 
-                                                Quantity="{Binding QuantityForEvolutionCondition2, Mode=TwoWay}"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox ItemsSource="{x:Static const:EnumProvider.EvolutionConditionItems}" SelectedItem="{Binding EvolutionCondition2}" Grid.ColumnSpan="2"/>
+                    <controls:NumberBox Value="{Binding QuantityForEvolutionCondition2}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding QuantityForEvolutionCondition2Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                </Grid>
             </GroupBox>
 
             <GroupBox Header="Habitats" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="11" Padding="11">

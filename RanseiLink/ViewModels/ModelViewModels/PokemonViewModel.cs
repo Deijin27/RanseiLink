@@ -19,9 +19,13 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     private Pokemon _model;
     private readonly List<SelectorComboBoxItem> _evolutionEntryOptions;
     private readonly IIdToNameService _idToNameService;
-    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService)
+    private readonly IKingdomService _kingdomService;
+    private readonly IItemService _itemService;
+    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService)
     {
         _idToNameService = idToNameService;
+        _kingdomService = kingdomService;
+        _itemService = itemService;
         _model = new Pokemon();
 
         MoveItems = _idToNameService.GetComboBoxItemsExceptDefault<IMoveService>();
@@ -160,25 +164,79 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     public EvolutionConditionId EvolutionCondition1
     {
         get => _model.EvolutionCondition1;
-        set => RaiseAndSetIfChanged(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value))
+            {
+                RaisePropertyChanged(nameof(QuantityForEvolutionCondition1Name));
+            }
+        }
     }
 
     public int QuantityForEvolutionCondition1
     {
         get => _model.QuantityForEvolutionCondition1;
-        set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
+        set 
+        {
+            if (RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value))
+            {
+                RaisePropertyChanged(nameof(QuantityForEvolutionCondition1Name));
+            }
+        }
+    }
+
+    public string QuantityForEvolutionCondition1Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition1, _model.QuantityForEvolutionCondition1);
+
+    private string GetNameOfQuantityForEvolutionCondition(EvolutionConditionId id, int quantity)
+    {
+        switch (id)
+        {
+            case EvolutionConditionId.Kingdom:
+                if (_kingdomService.ValidateId(quantity))
+                {
+                    return _kingdomService.IdToName(quantity);
+                }
+                return "Invalid";
+
+            case EvolutionConditionId.WarriorGender:
+                return $"{(GenderId)quantity}";
+
+            case EvolutionConditionId.Item:
+                if (_itemService.ValidateId(quantity))
+                {
+                    return _itemService.IdToName(quantity);
+                }
+                return "Invalid";
+            default:
+                return "";
+        }
     }
 
     public EvolutionConditionId EvolutionCondition2
     {
         get => _model.EvolutionCondition2;
-        set => RaiseAndSetIfChanged(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value))
+            {
+                RaisePropertyChanged(nameof(QuantityForEvolutionCondition2Name));
+            }
+        }
     }
+
     public int QuantityForEvolutionCondition2
     {
         get => _model.QuantityForEvolutionCondition2;
-        set => RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value))
+            {
+                RaisePropertyChanged(nameof(QuantityForEvolutionCondition2Name));
+            }
+        }
     }
+
+    public string QuantityForEvolutionCondition2Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition2, _model.QuantityForEvolutionCondition2);
 
     public ObservableCollection<HabitatItem> HabitatItems { get; } = new();
 
