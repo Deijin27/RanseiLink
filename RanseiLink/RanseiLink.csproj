@@ -128,7 +128,7 @@
     <Compile Update="Views\SelectorViews\ScenarioSelectorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\GridViews\ScenarioWarriorGridSelectorView.xaml.cs">
+    <Compile Update="Views\GridViews\ScenarioWarriorGridView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SelectorViews\SelectorView.xaml.cs">
@@ -289,7 +289,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\GridViews\ScenarioWarriorGridSelectorView.xaml">
+    <Page Update="Views\GridViews\ScenarioWarriorGridView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

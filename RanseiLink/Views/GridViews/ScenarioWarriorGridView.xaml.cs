@@ -5,9 +5,9 @@ namespace RanseiLink.Views;
 /// <summary>
 /// Interaction logic for SimpleSelectorView.xaml
 /// </summary>
-public partial class ScenarioWarriorGridSelectorView : UserControl
+public partial class ScenarioWarriorGridView : UserControl
 {
-    public ScenarioWarriorGridSelectorView()
+    public ScenarioWarriorGridView()
     {
         InitializeComponent();
     }

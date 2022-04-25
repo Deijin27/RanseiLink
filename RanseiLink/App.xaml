@@ -41,15 +41,13 @@
             <DataTemplate DataType="{x:Type vm:SelectorViewModelWithoutScroll}">
                 <views:SelectorViewWithoutScroll/>
             </DataTemplate>
+            
+            <!-- Registerd Grid View Models-->
 
-            <!--<DataTemplate DataType="{x:Type vm:ScenarioPokemonSelectorViewModel}">
-                <views:ScenarioSelectorView/>
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorGridViewModel}">
+                <views:ScenarioWarriorGridView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:ScenarioWarriorSelectorViewModel}">
-                <views:ScenarioSelectorView/>
-            </DataTemplate>-->
-            
             <!-- Register View Models -->
 
             <DataTemplate DataType="{x:Type vm:MapViewModel}">

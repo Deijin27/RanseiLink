@@ -133,6 +133,19 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
     }
 }
 
+public class ScenarioWarriorGridSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
+{
+    public const string Id = "scenario_warrior_grid";
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Warrior (Grid)";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<IScenarioWarriorGridViewModel>();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
+    }
+}
+
 public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
 {
     public const string Id = "scenario_warrior_selector";
