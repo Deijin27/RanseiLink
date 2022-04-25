@@ -11,7 +11,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="650" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:EvolutionConditionIdToQuantityNameConverter x:Key="evolutionConditionIdToQuantityNameConverter"/>
 
@@ -165,6 +165,12 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <GroupBox Header="Evolution Condition 1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
@@ -223,6 +229,14 @@
 
             <TextBlock Text="Unknown Value" Grid.Row="18" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="18" Grid.Column="1" Value="{Binding UnknownValue}"/>
+
+            <TextBlock Text="Unknown Anim. Val." Grid.Row="19" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
+
+            <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" Grid.ColumnSpan="2" Grid.Row="20" VerticalAlignment="Center"/>
+
+            <CheckBox IsChecked="{Binding LongAttackAnimation}" Content="Long Duration Attack Animation" Grid.ColumnSpan="2" Grid.Row="21" VerticalAlignment="Center"/>
+            
         </Grid>
 
     </WrapPanel>

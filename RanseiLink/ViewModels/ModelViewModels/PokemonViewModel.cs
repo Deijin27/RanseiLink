@@ -161,6 +161,24 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         set => RaiseAndSetIfChanged(_model.UnknownValue, value, v => _model.UnknownValue = v);
     }
 
+    public int UnknownAnimationValue
+    {
+        get => _model.UnknownAnimationValue;
+        set => RaiseAndSetIfChanged(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
+    }
+
+    public bool AsymmetricBattleSprite
+    {
+        get => _model.AsymmetricBattleSprite;
+        set => RaiseAndSetIfChanged(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
+    }
+
+    public bool LongAttackAnimation
+    {
+        get => _model.LongAttackAnimation;
+        set => RaiseAndSetIfChanged(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
+    }
+
     public EvolutionConditionId EvolutionCondition1
     {
         get => _model.EvolutionCondition1;

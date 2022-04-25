@@ -162,6 +162,12 @@ namespace RanseiLink.Core.Models
             set => SetInt(2, 24, 8, value);
         }
 
+        public int UnknownAnimationValue
+        {
+            get => GetInt(3, 18, 4);
+            set => SetInt(3, 18, 4, value);
+        }
+
         public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
             var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);
