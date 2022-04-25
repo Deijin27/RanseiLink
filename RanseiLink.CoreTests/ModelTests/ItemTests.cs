@@ -26,7 +26,7 @@ public class ItemTests
         a.Name.Should().Be("Potion");
         a.BuildingLevel.Should().Be(0);
         a.Category.Should().Be(ItemCategoryId.Consumable);
-        a.Effect.Should().Be(ItemEffectId.HealsHp);
+        a.Effect.Should().Be(ItemEffectId.IncreaseMaxHp);
         a.EffectDuration.Should().Be(0);
         a.CraftingIngredient1.Should().Be(ItemId.Default);
         a.CraftingIngredient1Amount.Should().Be(0);
