@@ -155,10 +155,10 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         set => RaiseAndSetIfChanged(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
-    public int UnknownValue
+    public int CatchRate
     {
-        get => _model.UnknownValue;
-        set => RaiseAndSetIfChanged(_model.UnknownValue, value, v => _model.UnknownValue = v);
+        get => _model.CatchRate;
+        set => RaiseAndSetIfChanged(_model.CatchRate, value, v => _model.CatchRate = v);
     }
 
     public int UnknownAnimationValue

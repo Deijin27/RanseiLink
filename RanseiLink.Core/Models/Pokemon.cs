@@ -156,7 +156,7 @@ namespace RanseiLink.Core.Models
             set => SetInt(11, 0, 8, value);
         }
 
-        public int UnknownValue
+        public int CatchRate
         {
             get => GetInt(2, 24, 8);
             set => SetInt(2, 24, 8, value);

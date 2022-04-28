@@ -227,8 +227,8 @@
             </GroupBox>
             <CheckBox VerticalAlignment="Center" Grid.Row="17" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
 
-            <TextBlock Text="Unknown Value" Grid.Row="18" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="18" Grid.Column="1" Value="{Binding UnknownValue}"/>
+            <TextBlock Text="Catch Rate" Grid.Row="18" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="18" Grid.Column="1" Value="{Binding CatchRate}" Max="255"/>
 
             <TextBlock Text="Unknown Anim. Val." Grid.Row="19" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
