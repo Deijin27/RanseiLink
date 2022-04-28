@@ -17,14 +17,23 @@ namespace RanseiLink.Core.Settings
             _settingsFilePath = settingsFilePath;
             if (File.Exists(_settingsFilePath))
             {
-                _doc = XDocument.Load(_settingsFilePath);
-                _docRoot = _doc.Root;
+                try
+                {
+                    _doc = XDocument.Load(_settingsFilePath);
+                    _docRoot = _doc.Root;
+                    return;
+                }
+                catch
+                {
+                    // corrupt setting file
+                    // continue to create new settings
+                }
+                
             }
-            else
-            {
-                _docRoot = new XElement("Settings");
-                _doc = new XDocument(_docRoot);
-            }
+
+            // create blank settings
+            _docRoot = new XElement("Settings");
+            _doc = new XDocument(_docRoot);
         }
 
         public void Save()
