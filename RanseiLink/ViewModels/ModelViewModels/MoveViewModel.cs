@@ -121,6 +121,30 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         set => RaiseAndSetIfChanged(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
+    public MoveEffectId Effect3
+    {
+        get => _model.Effect3;
+        set => RaiseAndSetIfChanged(_model.Effect3, value, v => _model.Effect3 = v);
+    }
+
+    public int Effect3Chance
+    {
+        get => _model.Effect3Chance;
+        set => RaiseAndSetIfChanged(_model.Effect3Chance, value, v => _model.Effect3Chance = v);
+    }
+
+    public MoveEffectId Effect4
+    {
+        get => _model.Effect4;
+        set => RaiseAndSetIfChanged(_model.Effect4, value, v => _model.Effect4 = v);
+    }
+
+    public int Effect4Chance
+    {
+        get => _model.Effect4Chance;
+        set => RaiseAndSetIfChanged(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
+    }
+
     public MoveAnimationId StartupAnimation
     {
         get => _model.StartupAnimation;
