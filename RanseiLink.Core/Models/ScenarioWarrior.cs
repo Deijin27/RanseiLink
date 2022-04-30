@@ -35,6 +35,12 @@ namespace RanseiLink.Core.Models
             set => SetInt(0, 17, 5, value);
         }
 
+        public ItemId Item
+        {
+            get => (ItemId)GetInt(2, 2, 8);
+            set => SetInt(2, 2, 8, (int)value);
+        }
+
         public int GetScenarioPokemon(int id)
         {
             if (id > 7 || id < 0)

@@ -90,9 +90,11 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
 
         WarriorItems = idToNameService.GetComboBoxItemsExceptDefault<IBaseWarriorService>();
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+        ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
 
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
         JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
         JumpToScenarioPokemon = new RelayCommand(() =>
         {
             if (ScenarioPokemonVm != null)
@@ -121,9 +123,11 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToMaxLinkCommand { get; }
     public ICommand JumpToScenarioPokemon { get; }
+    public ICommand JumpToItemCommand { get; }
 
     public List<SelectorComboBoxItem> WarriorItems { get; }
     public List<SelectorComboBoxItem> KingdomItems { get; }
+    public List<SelectorComboBoxItem> ItemItems { get; }
 
     public int Warrior
     {
@@ -147,6 +151,12 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
     {
         get => _model.Army;
         set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);
+    }
+
+    public int Item
+    {
+        get => (int)_model.Item;
+        set => RaiseAndSetIfChanged(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
     public ScenarioWarriorPokemonViewModel[] Pokemon { get; } = new ScenarioWarriorPokemonViewModel[8];

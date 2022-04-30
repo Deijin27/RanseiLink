@@ -40,6 +40,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -56,7 +57,11 @@
             <TextBlock Grid.Row="3" Grid.Column="0" Text="Army"/>
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Army}" Max="17" />
 
-            <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Item" Grid.Row="4" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Item}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Item, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="4"/>
+
+            <Button Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
                     Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
 
         </Grid>
