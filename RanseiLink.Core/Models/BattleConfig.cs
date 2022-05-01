@@ -68,5 +68,28 @@ namespace RanseiLink.Core.Models
             set => SetInt(2, 24, 5, value);
         }
 
+        public ItemId Treasure1
+        {
+            get => (ItemId)GetInt(3, 16, 8);
+            set => SetInt(3, 16, 8, (int)value);
+        }
+
+        public ItemId Treasure2
+        {
+            get => (ItemId)GetInt(4, 0, 8);
+            set => SetInt(4, 0, 8, (int)value);
+        }
+
+        public ItemId Treasure3
+        {
+            get => (ItemId)GetInt(4, 16, 8);
+            set => SetInt(4, 16, 8, (int)value);
+        }
+
+        public ItemId Treasure4
+        {
+            get => (ItemId)GetInt(5, 0, 8);
+            set => SetInt(5, 0, 8, (int)value);
+        }
     }
 }

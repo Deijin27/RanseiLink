@@ -18,13 +18,16 @@ public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
 {
     private BattleConfig _model;
 
-    public BattleConfigViewModel(IMapService mapService, IJumpService jumpService)
+    public BattleConfigViewModel(IMapService mapService, IJumpService jumpService, IIdToNameService idToNameService)
     {
         _model = new BattleConfig();
         
         MapItems = mapService.GetMapIds();
 
+        ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
+
         JumpToMapCommand = new RelayCommand<MapId>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, (int)id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
     }
 
     public void SetModel(BattleConfigId id, BattleConfig model)
@@ -138,4 +141,31 @@ public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
     public ICollection<MapId> MapItems { get; }
 
     public ICommand JumpToMapCommand { get; }
+    public ICommand JumpToItemCommand { get; }
+
+    public List<SelectorComboBoxItem> ItemItems { get; }
+
+    public int Treasure1
+    {
+        get => (int)_model.Treasure1;
+        set => RaiseAndSetIfChanged(_model.Treasure1, (ItemId)value, v => _model.Treasure1 = v);
+    }
+
+    public int Treasure2
+    {
+        get => (int)_model.Treasure2;
+        set => RaiseAndSetIfChanged(_model.Treasure2, (ItemId)value, v => _model.Treasure2 = v);
+    }
+
+    public int Treasure3
+    {
+        get => (int)_model.Treasure3;
+        set => RaiseAndSetIfChanged(_model.Treasure3, (ItemId)value, v => _model.Treasure3 = v);
+    }
+
+    public int Treasure4
+    {
+        get => (int)_model.Treasure4;
+        set => RaiseAndSetIfChanged(_model.Treasure4, (ItemId)value, v => _model.Treasure4 = v);
+    }
 }
