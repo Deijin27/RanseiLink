@@ -113,6 +113,12 @@ namespace RanseiLink.Core.Models
             set => SetInt(5, 18, 9, (int)value);
         }
 
+        public MoveAnimationId AdditionalAnimation
+        {
+            get => (MoveAnimationId)GetInt(8, 0, 9);
+            set => SetInt(8, 0, 9, (int)value);
+        }
+
         /// <summary>
         /// This is either wrong or i don't understand it yet
         /// </summary>

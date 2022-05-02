@@ -164,7 +164,13 @@
                 <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding ImpactAnimation}"/>
             </DockPanel>
 
-            <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Additional Animation"/>
+            <DockPanel Grid.Row="4" Grid.Column="1">
+                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Additional}"/>
+                <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding AdditionalAnimation}"/>
+            </DockPanel>
+
+            <GroupBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" FontSize="10" Text="{Binding CurrentPreviewAnimationName, StringFormat='Previewing {0}'}"/>
                     <Grid>
@@ -176,7 +182,7 @@
                 </DockPanel>
             </GroupBox>
 
-            <GroupBox Header="Description" Grid.Row="13" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <GroupBox Header="Description" Grid.Row="14" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
             </GroupBox>
 

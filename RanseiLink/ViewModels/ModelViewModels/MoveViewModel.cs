@@ -10,6 +10,7 @@ public enum MoveAnimationPreviewMode
     Startup,
     Projectile,
     Impact,
+    Additional,
     Movement,
 }
 
@@ -181,6 +182,18 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         }
     }
 
+    public MoveAnimationId AdditionalAnimation
+    {
+        get => _model.AdditionalAnimation;
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v))
+            {
+                OnAnimationChanged();
+            }
+        }
+    }
+
     public MoveMovementAnimationId MovementAnimation
     {
         get => _model.MovementAnimation;
@@ -241,6 +254,10 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
             case MoveAnimationPreviewMode.Impact:
                 CurrentPreviewAnimationUri = GetAnimationUri(ImpactAnimation);
                 CurrentPreviewAnimationName = ImpactAnimation.ToString();
+                break;
+            case MoveAnimationPreviewMode.Additional:
+                CurrentPreviewAnimationUri = GetAnimationUri(AdditionalAnimation);
+                CurrentPreviewAnimationName = AdditionalAnimation.ToString();
                 break;
             case MoveAnimationPreviewMode.Movement:
                 CurrentPreviewAnimationUri = _externalService.GetMoveMovementAnimationUri(MovementAnimation);
