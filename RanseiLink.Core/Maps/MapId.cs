@@ -3,7 +3,7 @@ using System;
 
 namespace RanseiLink.Core.Maps
 {
-    public class MapId : IEquatable<MapId>
+    public struct MapId : IEquatable<MapId>
     {
         public int Map { get; }
         public int Variant { get; }
@@ -37,7 +37,7 @@ namespace RanseiLink.Core.Maps
 
         public static bool TryParseInternalFileName(string fileName, out MapId result)
         {
-            result = null;
+            result = default;
 
             if (fileName.Length != 12 || !fileName.StartsWith("map") || !fileName.EndsWith(".bin"))
             {
@@ -65,8 +65,14 @@ namespace RanseiLink.Core.Maps
         public static explicit operator int(MapId value) => value.Map << 8 | value.Variant;
         public static explicit operator MapId(int value) => new MapId(value >> 8, value & 0xFF);
 
-        public static bool operator ==(MapId obj1, MapId obj2) => obj1.Equals(obj2);
-        public static bool operator !=(MapId obj1, MapId obj2) => !obj1.Equals(obj2);
+        public static bool operator ==(MapId obj1, MapId obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+        public static bool operator !=(MapId obj1, MapId obj2)
+        {
+            return !obj1.Equals(obj2);
+        }
 
         public override bool Equals(object obj)
         {

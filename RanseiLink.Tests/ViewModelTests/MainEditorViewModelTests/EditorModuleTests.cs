@@ -99,10 +99,11 @@ public class EditorModuleTests
         _moduleA.Verify(i => i.OnPageOpening(), Times.Never());
         _mainEditorVm.CurrentModuleId = "test_module_a";
         _moduleA.Verify(i => i.OnPageOpening(), Times.Once());
+        _moduleA.Verify(i => i.OnPageClosing(), Times.Never());
         _moduleD.Verify(i => i.OnPageOpening(), Times.Never());
         _mainEditorVm.CurrentModuleId = "test_module_d";
         _moduleA.Verify(i => i.OnPageClosing(), Times.Once());
-        _moduleA.Verify(i => i.OnPageOpening(), Times.Once());
+        _moduleD.Verify(i => i.OnPageOpening(), Times.Once());
     }
 
     [Fact]

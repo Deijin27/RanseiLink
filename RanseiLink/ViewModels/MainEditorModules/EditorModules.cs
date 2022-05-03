@@ -378,6 +378,7 @@ public class MapSelectorEditorModule : EditorModule
     private SelectorViewModel _viewModel;
     public override object ViewModel => _viewModel;
     private IMapService _service;
+    private MapId? _currentId;
     private PSLM _currentMap;
     private IMapViewModel _nestedVm;
 
@@ -389,7 +390,12 @@ public class MapSelectorEditorModule : EditorModule
         var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
         _viewModel = new SelectorViewModelWithoutScroll(mapComboItems, _nestedVm, id =>
         {
+            if (_currentMap != null && _currentId != null)
+            {
+                _service.Save(_currentId.Value, _currentMap);
+            }
             _currentMap = _service.Retrieve((MapId)id);
+            _currentId = (MapId)id;
             _nestedVm.SetModel(_currentMap);
         },
         id => _service.GetMapIds().Select(i => (int)i).Contains(id));
@@ -415,6 +421,14 @@ public class MapSelectorEditorModule : EditorModule
         if (_currentMap != null)
         {
             _nestedVm.SetModel(_currentMap);
+        }
+    }
+
+    public override void Deactivate()
+    {
+        if (_currentMap != null)
+        {
+            _service.Save((MapId)_viewModel.Selected, _currentMap);
         }
     }
 }
