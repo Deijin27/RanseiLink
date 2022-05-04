@@ -37,6 +37,7 @@ public class PokemonTests
         a.IsLegendary.Should().BeFalse();
         a.NameOrderIndex.Should().Be(0x40);
         a.NationalPokedexNumber.Should().Be(475);
+        a.CatchRate.Should().Be(45);
 
         foreach (KingdomId location in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
@@ -68,6 +69,7 @@ public class PokemonTests
             IsLegendary = true,
             NameOrderIndex = 0x40,
             NationalPokedexNumber = 475,
+            CatchRate = 37,
         };
         a.SetEncounterable(KingdomId.Aurora, true, true);
         a.SetEncounterable(KingdomId.Cragspur, false, true);
@@ -93,6 +95,7 @@ public class PokemonTests
         a.IsLegendary.Should().BeTrue();
         a.NameOrderIndex.Should().Be(0x40);
         a.NationalPokedexNumber.Should().Be(475);
+        a.CatchRate.Should().Be(37);
 
         a.GetEncounterable(KingdomId.Aurora, true).Should().BeTrue();
         a.GetEncounterable(KingdomId.Cragspur, false).Should().BeTrue();

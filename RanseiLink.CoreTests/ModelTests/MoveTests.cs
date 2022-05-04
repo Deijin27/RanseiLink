@@ -35,6 +35,8 @@ public class MoveTests
         a.StartupAnimation.Should().Be(MoveAnimationId.Default);
         a.ProjectileAnimation.Should().Be(MoveAnimationId.Default);
         a.ImpactAnimation.Should().Be(MoveAnimationId.WhiteImpactBubble);
+        a.AdditionalAnimation.Should().Be(MoveAnimationId.QuickPurpleBeam);
+        
 
     }
 
@@ -61,6 +63,7 @@ public class MoveTests
             StartupAnimation = MoveAnimationId.OrangeOrbBurst,
             ProjectileAnimation = MoveAnimationId.OrbBlackHole,
             ImpactAnimation = MoveAnimationId.PurpleCrescentBubble,
+            AdditionalAnimation = MoveAnimationId.BlackClawMarks,
         };
 
         a.Name.Should().Be("Cross Poison");
@@ -81,6 +84,7 @@ public class MoveTests
         a.StartupAnimation.Should().Be(MoveAnimationId.OrangeOrbBurst);
         a.ProjectileAnimation.Should().Be(MoveAnimationId.OrbBlackHole);
         a.ImpactAnimation.Should().Be(MoveAnimationId.PurpleCrescentBubble);
+        a.AdditionalAnimation.Should().Be(MoveAnimationId.BlackClawMarks);
 
         // Add Array equal test when possible
     }

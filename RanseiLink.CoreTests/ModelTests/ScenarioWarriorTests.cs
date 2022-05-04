@@ -28,6 +28,7 @@ public class ScenarioWarriorTests
         a.Class.Should().Be(WarriorClassId.ArmyMember);
         a.Kingdom.Should().Be(KingdomId.Default);
         a.Army.Should().Be(17);
+        a.Item.Should().Be(ItemId.Default);
     }
 
     [Fact]
@@ -38,7 +39,8 @@ public class ScenarioWarriorTests
             Warrior = WarriorId.Nobuchika,
             Class = WarriorClassId.FreeWarrior,
             Kingdom = KingdomId.Valora,
-            Army = 5
+            Army = 5,
+            Item = ItemId.DoublePlay
         };
         a.SetScenarioPokemon(0, 57);
 
@@ -47,6 +49,7 @@ public class ScenarioWarriorTests
         a.Class.Should().Be(WarriorClassId.FreeWarrior);
         a.Kingdom.Should().Be(KingdomId.Valora);
         a.Army.Should().Be(5);
+        a.Item.Should().Be(ItemId.DoublePlay);
 
         // Add Array equal test when possible
     }
