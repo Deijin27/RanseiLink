@@ -1,6 +1,10 @@
 # RanseiLink
 
-WIP Pokemon Conquest Rom Editor. A netcore windows app, as well as a netcore console app.
+Pokemon Conquest Rom Editor. A netcore windows app, as well as a netcore console app.
+
+[![GitHub license](https://img.shields.io/github/license/Deijin27/RanseiLink)](https://github.com/Deijin27/RanseiLink/blob/master/LICENSE)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Deijin27/RanseiLink)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Deijin27/RanseiLink?include_prereleases)
 
 ![](https://i.imgur.com/0WpMBxe.png)
 
