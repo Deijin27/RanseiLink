@@ -168,4 +168,52 @@ public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
         get => (int)_model.Treasure4;
         set => RaiseAndSetIfChanged(_model.Treasure4, (ItemId)value, v => _model.Treasure4 = v);
     }
+
+    public int Treasure5
+    {
+        get => (int)_model.Treasure5;
+        set => RaiseAndSetIfChanged(_model.Treasure5, (ItemId)value, v => _model.Treasure5 = v);
+    }
+
+    public int Treasure6
+    {
+        get => (int)_model.Treasure6;
+        set => RaiseAndSetIfChanged(_model.Treasure6, (ItemId)value, v => _model.Treasure6 = v);
+    }
+
+    public int Treasure7
+    {
+        get => (int)_model.Treasure7;
+        set => RaiseAndSetIfChanged(_model.Treasure7, (ItemId)value, v => _model.Treasure7 = v);
+    }
+
+    public int Treasure8
+    {
+        get => (int)_model.Treasure8;
+        set => RaiseAndSetIfChanged(_model.Treasure8, (ItemId)value, v => _model.Treasure8 = v);
+    }
+
+    public int Treasure9
+    {
+        get => (int)_model.Treasure9;
+        set => RaiseAndSetIfChanged(_model.Treasure9, (ItemId)value, v => _model.Treasure9 = v);
+    }
+
+    public int Treasure10
+    {
+        get => (int)_model.Treasure10;
+        set => RaiseAndSetIfChanged(_model.Treasure10, (ItemId)value, v => _model.Treasure10 = v);
+    }
+
+    public int Treasure11
+    {
+        get => (int)_model.Treasure11;
+        set => RaiseAndSetIfChanged(_model.Treasure11, (ItemId)value, v => _model.Treasure11 = v);
+    }
+
+    public int Treasure12
+    {
+        get => (int)_model.Treasure12;
+        set => RaiseAndSetIfChanged(_model.Treasure12, (ItemId)value, v => _model.Treasure12 = v);
+    }
 }

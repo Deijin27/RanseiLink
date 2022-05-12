@@ -40,6 +40,14 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -70,13 +78,46 @@
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure2}"/>
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="6"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 3" Grid.Row="7" ToolTip="Jump to selected item" 
+            <Button Style="{StaticResource HyperlinkButtonStyle}" FontWeight="Bold" FontStyle="Italic" Content="Treasure 3" Grid.Row="7" ToolTip="Jump to selected item" 
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure3}"/>
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure3, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="7"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 4" Grid.Row="8" ToolTip="Jump to selected item" 
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure4}"/>
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure4, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="8"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" FontWeight="Bold" FontStyle="Italic" Content="Treasure 5" Grid.Row="9" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure5}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure5, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="9"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 6" Grid.Row="10" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure6}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure6, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="10"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" FontWeight="Bold" FontStyle="Italic" Content="Treasure 7" Grid.Row="11" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure7}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure7, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="11"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 8" Grid.Row="12" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure8}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure8, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="12"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" FontWeight="Bold" FontStyle="Italic" Content="Treasure 9" Grid.Row="13" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure9}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure9, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="13"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 10" Grid.Row="14" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure10}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure10, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="14"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 11" Grid.Row="15" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure11}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure11, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="15"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 12" Grid.Row="16" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure12}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure12, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="16"/>
+
         </Grid>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
