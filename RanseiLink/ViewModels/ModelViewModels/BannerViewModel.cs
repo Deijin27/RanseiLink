@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Graphics;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Graphics;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using RanseiLink.ValueConverters;
@@ -23,10 +24,12 @@ public class BannerViewModel : ViewModelBase
         _bannerInfo = _bannerService.BannerInfo;
         ReplaceImageCommand = new RelayCommand(ReplaceImage);
         SetAllTitlesCommand = new RelayCommand(SetAllTitles);
+        ExportImageCommand = new RelayCommand(ExportImage, () => File.Exists(_bannerService.ImagePath));
         UpdateDisplayImage();
     }
 
     public ICommand ReplaceImageCommand { get; }
+    public ICommand ExportImageCommand { get; }
     public ICommand SetAllTitlesCommand { get; }
 
     public string AllTitles
@@ -134,5 +137,16 @@ public class BannerViewModel : ViewModelBase
         GermanTitle = title;
         ItalianTitle = title;
         SpanishTitle = title;
+    }
+
+    private void ExportImage()
+    {
+        if (!_dialogService.RequestFolder("Select folder to export image into", out string dir))
+        {
+            return;
+        }
+        var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_bannerService.ImagePath)));
+        File.Copy(_bannerService.ImagePath, dest);
+        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Image Exported", $"Exported to '{dest}'"));
     }
 }

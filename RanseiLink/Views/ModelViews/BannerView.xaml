@@ -51,7 +51,9 @@
                         <Image Source="{Binding DisplayImage}" Width="150" Height="150" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     </Grid>
                 </Border>
-                <Button Content="Change Image" Height="20" Width="150" Margin="10" Command="{Binding ReplaceImageCommand}"/>
+                <TextBlock Style="{x:Null}" Margin="5" HorizontalAlignment="Center" FontSize="10" Foreground="{DynamicResource AltForegroundBrush}" Text="palette-capacity=16, dimensions=32x32"/>
+                <Button Content="Change Image" Height="20" Width="150" Command="{Binding ReplaceImageCommand}"/>
+                <Button Content="Export Image" Height="20" Width="150" Margin="10" Command="{Binding ExportImageCommand}"/>
             </StackPanel>
 
             <TextBox Grid.Row="1" Text="{Binding AllTitles, Mode=TwoWay}" />
