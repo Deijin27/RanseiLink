@@ -47,12 +47,13 @@ public class MapCommand : ICommand
 
         var mapService = services.Get<IMapService>();
         
-        var mapName = mapService.GetMapIds().FirstOrDefault(i => i.Map == Map && i.Variant == Variant);
-        if (mapName == null)
+        var mapNames = mapService.GetMapIds().Where(i => i.Map == Map && i.Variant == Variant).ToList();
+        if (!mapNames.Any())
         {
             console.Output.WriteLine("No such map exists :(");
             return default;
         }
+        var mapName = mapNames.First();
 
         string file = Path.Combine(mapService.MapFolderPath, mapName.ToInternalFileName());
 

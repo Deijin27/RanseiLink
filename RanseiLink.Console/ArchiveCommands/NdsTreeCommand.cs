@@ -28,7 +28,7 @@ public class NdsTreeCommand : ICommand
     {
         using var stream = new BinaryReader(new FileStream(Source, FileMode.Open, FileAccess.Read));
 
-        long startOffset = StartOffset ?? GetStartOffset(stream, RomFs.NdsConfig.NameTableStartOffsetPositon);
+        long startOffset = StartOffset ?? GetStartOffset(stream, 0x40);
 
         List<RomFsNameTable.FileOrFolderName> contents = RomFsNameTable.GetRootFolderContents(stream, startOffset);
 

@@ -4,41 +4,38 @@ using System.Text;
 
 namespace RanseiLink.Core.RomFs
 {
-    public class RomFsConfig
-    {
-        public long NameTableStartOffsetPositon { get; }
-        public long AllocationTableStartOffsetPosition { get; }
-        public RomFsConfig(long nameTableStartOffsetPositon, long allocationTableStartOffsetPosition)
-        {
-            NameTableStartOffsetPositon = nameTableStartOffsetPositon;
-            AllocationTableStartOffsetPosition = allocationTableStartOffsetPosition;
-        }
-    }
-
     public class RomFs : IRomFs
     {
-        public static RomFsConfig NdsConfig { get; } = new RomFsConfig(0x40, 0x48);
-
         private readonly Stream _underlyingStream;
         private readonly BinaryReader _underlyingStreamReader;
         private readonly BinaryWriter _underlyingStreamWriter;
         private readonly long _nameTableStartOffset;
         private readonly long _fatStartOffset;
-        public RomFs(string filePath) : this(filePath, NdsConfig) { }
+        private readonly long _bannerStartOffset;
 
-        public RomFs(string filePath, RomFsConfig config)
+        private readonly NdsHeader _header;
+
+        public RomFs(string filePath)
         {
             _underlyingStream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite);
             _underlyingStreamReader = new BinaryReader(_underlyingStream);
             _underlyingStreamWriter = new BinaryWriter(_underlyingStream);
-            _nameTableStartOffset = GetStartOffset(config.NameTableStartOffsetPositon);
-            _fatStartOffset = GetStartOffset(config.AllocationTableStartOffsetPosition);
+            _header = new NdsHeader(_underlyingStreamReader);
+            _nameTableStartOffset = _header.FileNameTableOffset;
+            _fatStartOffset = _header.FileAllocationTableOffset;
+            _bannerStartOffset = _header.IconBannerOffset;
         }
 
-        private long GetStartOffset(long position)
+        public Banner GetBanner()
         {
-            _underlyingStream.Position = position;
-            return _underlyingStreamReader.ReadUInt32();
+            _underlyingStreamReader.BaseStream.Position = _bannerStartOffset;
+            return new Banner(_underlyingStreamReader);
+        }
+
+        public void SetBanner(Banner banner)
+        {
+            _underlyingStreamWriter.BaseStream.Position = _bannerStartOffset;
+            banner.WriteTo(_underlyingStreamWriter, _underlyingStreamReader);
         }
 
         private Fat32.Entry GetEntryFromPath(string path)

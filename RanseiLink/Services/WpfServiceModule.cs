@@ -71,5 +71,7 @@ public class WpfModServiceModule : Module
 
         builder.RegisterType<MsgGridViewModel>().As<MsgGridViewModel>();
         builder.RegisterType<ScenarioWarriorGridViewModel>().As<IScenarioWarriorGridViewModel>();
+
+        builder.RegisterType<BannerViewModel>().As<BannerViewModel>();
     }
 }

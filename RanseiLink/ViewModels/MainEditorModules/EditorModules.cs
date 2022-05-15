@@ -447,3 +447,22 @@ public class SpriteEditorModule : EditorModule
         _viewModel = modServices.Get<SpriteTypeViewModel>();
     }
 }
+
+public class BannerEditorModule : EditorModule
+{
+    public const string Id = "banner";
+    public override string UniqueId => Id;
+    public override string ListName => "Banner";
+    public override object ViewModel => _viewModel;
+
+    private BannerViewModel _viewModel;
+    private IBannerService _service;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<IBannerService>();
+        _viewModel = modServices.Get<BannerViewModel>();
+    }
+    public override void Deactivate() => _service.Save();
+    public override void OnPatchingRom() => _service.Save();
+}

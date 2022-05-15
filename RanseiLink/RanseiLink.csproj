@@ -8,8 +8,8 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <Authors>Deijin</Authors>
-    <VersionPrefix>4.3</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
+    <VersionPrefix>4.4</VersionPrefix>
+	<VersionSuffix>alpha3</VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -75,6 +75,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\GridViews\MsgGridView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModelViews\BannerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\EpisodeView.xaml.cs">
@@ -218,6 +221,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\GridViews\MsgGridView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\BannerView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

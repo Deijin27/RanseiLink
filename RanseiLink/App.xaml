@@ -50,6 +50,10 @@
 
             <!-- Register View Models -->
 
+            <DataTemplate DataType="{x:Type vm:BannerViewModel}">
+                <views:BannerView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:MapViewModel}">
                 <views:MapView/>
             </DataTemplate>

@@ -1,20 +1,18 @@
-﻿using CliFx.Attributes;
+﻿using CliFx;
+using CliFx.Attributes;
 using CliFx.Infrastructure;
-using System.Threading.Tasks;
-using System.IO;
+using RanseiLink.Core;
 using RanseiLink.Core.RomFs;
-using CliFx;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ArchiveCommands;
 
-[Command("nds extract folder", Description = "Extract a copy of a folder and all contents including sub-folders from an nds file system.")]
-public class NdsExtractFolderCommand : ICommand
+[Command("nds extract banner", Description = "Extract information from the banner of the rom.")]
+public class NdsExtractBannerCommand : ICommand
 {
     [CommandParameter(0, Description = "Path of nds file.", Name = "NdsPath")]
     public string NdsPath { get; set; }
-
-    [CommandOption("folder", 'f', Description = "Path of folder within nds file system. Omitting this will do root folder")]
-    public string FilePath { get; set; } = "";
 
     [CommandOption("destinationFolder", 'd', Description = "Optional destination folder to extract to; default is a in the same location as the nds file.")]
     public string DestinationFolder { get; set; }
@@ -30,8 +28,17 @@ public class NdsExtractFolderCommand : ICommand
             Directory.CreateDirectory(DestinationFolder);
         }
 
-        using IRomFs nds = new RomFs(NdsPath);
-        nds.ExtractCopyOfDirectory(FilePath, DestinationFolder);
+        var xmlInfoOut = FileUtil.MakeUniquePath(Path.Combine(DestinationFolder, "BannerInfo.xml"));
+        var imgOut = FileUtil.MakeUniquePath(Path.Combine(DestinationFolder, "BannerImage.png"));
+
+        using IRomFs romFs = new RomFs(NdsPath);
+
+        var banner = romFs.GetBanner();
+
+        console.Output.WriteLine(banner);
+
+        banner.SaveInfoToXml(xmlInfoOut);
+        banner.SaveImageToPng(imgOut);
 
         return default;
     }

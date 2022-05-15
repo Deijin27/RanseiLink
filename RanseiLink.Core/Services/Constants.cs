@@ -1,5 +1,4 @@
-﻿using RanseiLink.Core.Enums;
-using System;
+﻿using System;
 using System.IO;
 
 namespace RanseiLink.Core.Services
@@ -11,6 +10,9 @@ namespace RanseiLink.Core.Services
             RootFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RanseiLink");
             Directory.CreateDirectory(RootFolder);
         }
+
+        public const string BannerInfoFile = "BannerInfo.xml";
+        public const string BannerImageFile = "BannerImage.png";
 
         /// <summary>
         /// Root folder for application files in local app data

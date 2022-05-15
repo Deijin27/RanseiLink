@@ -106,10 +106,17 @@ namespace RanseiLink.Core.Services.Concrete
             };
             Directory.CreateDirectory(modInfo.FolderPath);
 
+            Banner banner;
+
             using (var nds = _ndsFactory(baseRomPath))
             {
                 nds.ExtractCopyOfDirectory(Constants.DataFolderPath, modInfo.FolderPath);
+
+                banner = nds.GetBanner();
             }
+
+            banner.SaveInfoToXml(Path.Combine(modInfo.FolderPath, Constants.BannerInfoFile));
+            banner.SaveImageToPng(Path.Combine(modInfo.FolderPath, Constants.BannerImageFile));
 
             var msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
             _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));

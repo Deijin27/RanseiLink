@@ -92,10 +92,14 @@ namespace RanseiLink.Core.Services.Concrete
             return;
 #endif
 
-                progress?.Report(new ProgressInfo(isIndeterminate: false, maxProgress: filesToPatch.Count, statusText: "Patching..."));
+                progress?.Report(new ProgressInfo(isIndeterminate: false, maxProgress: filesToPatch.Count + 1, statusText: "Patching..."));
                 int count = 0;
+
                 using (var nds = _ndsFactory(romPath)) 
                 {
+                    PatchBanner(nds, modInfo);
+                    progress?.Report(new ProgressInfo(progress: ++count));
+
                     foreach (var file in filesToPatch)
                     {
                         if (file.Options.HasFlag(FilePatchOptions.VariableLength))
@@ -141,6 +145,38 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 builder.GetFilesToPatch(filesToPatch, patchOptions);
             });
+        }
+
+        /// <summary>
+        /// Banner is special case because it's not in the file system
+        /// </summary>
+        private void PatchBanner(IRomFs romFs, ModInfo modInfo)
+        {
+            string bannerInfoFile = Path.Combine(modInfo.FolderPath, Constants.BannerInfoFile);
+            string bannerImageFile = Path.Combine(modInfo.FolderPath, Constants.BannerImageFile);
+            if (!File.Exists(bannerInfoFile) && !File.Exists(bannerImageFile))
+            {
+                return;
+            }
+
+            var banner = romFs.GetBanner();
+            
+            if (File.Exists(bannerInfoFile))
+            {
+                if (!banner.TryLoadInfoFromXml(bannerInfoFile, out _))
+                {
+                    return;
+                }
+            }
+            if (File.Exists(bannerImageFile))
+            {
+                if (!banner.TryLoadImageFromPng(bannerImageFile, out _))
+                {
+                    return;
+                }
+            }
+
+            romFs.SetBanner(banner);
         }
     }
 }
