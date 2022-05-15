@@ -97,13 +97,13 @@
             <TextBlock Grid.Row="12" Grid.Column="0" Text="{Binding Effect2, Mode=OneWay, Converter={StaticResource moveEffectIdToQuantityNameConverter}}" />
             <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Effect2Chance, Mode=TwoWay}" Max="127"/>
 
-            <TextBlock Text="Effect 3" Grid.Row="13"/>
+            <TextBlock Text="Rank 5 Effect 1" Grid.Row="13"/>
             <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect3, Mode=TwoWay}"/>
 
             <TextBlock Grid.Row="14" Grid.Column="0" Text="{Binding Effect3, Mode=OneWay, Converter={StaticResource moveEffectIdToQuantityNameConverter}}" />
             <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Effect3Chance, Mode=TwoWay}" Max="127"/>
 
-            <TextBlock Text="Effect 4" Grid.Row="15"/>
+            <TextBlock Text="Rank 5 Effect 2" Grid.Row="15"/>
             <ComboBox Grid.Row="15" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect4, Mode=TwoWay}"/>
 
             <TextBlock Grid.Row="16" Grid.Column="0" Text="{Binding Effect4, Mode=OneWay, Converter={StaticResource moveEffectIdToQuantityNameConverter}}" />
