@@ -38,6 +38,7 @@ public interface IModListItemViewModel
     IReadOnlyCollection<PluginInfo> PluginItems { get; }
     ICommand RandomizeCommand { get; }
     ICommand RunPluginCommand { get; }
+    ICommand ShowInExplorerCommand { get; }
 }
 
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
@@ -71,6 +72,10 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         CreateModBasedOnCommand = new RelayCommand(() => CreateModBasedOn(Mod));
         DeleteModCommand = new RelayCommand(() => DeleteMod(Mod));
         RunPluginCommand = new RelayCommand<PluginInfo>(parameter => RunPlugin(Mod, parameter));
+        ShowInExplorerCommand = new RelayCommand(() =>
+        {
+            System.Diagnostics.Process.Start("explorer.exe", Mod.FolderPath);
+        });
     }
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
@@ -82,6 +87,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public ICommand RandomizeCommand { get; }
     public ICommand DeleteModCommand { get; }
     public ICommand RunPluginCommand { get; }
+    public ICommand ShowInExplorerCommand { get; }
 
     #region Mod Specific Command Implementations
 

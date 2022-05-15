@@ -93,6 +93,7 @@
                                     </MenuItem>
                                     <Separator/>
                                     <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" />
+                                    <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
                             <controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
