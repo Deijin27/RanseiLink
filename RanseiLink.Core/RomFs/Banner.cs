@@ -19,13 +19,31 @@ namespace RanseiLink.Core.RomFs
 
     public class Banner : BannerInfo
     {
+        private Rgb15[] _imagePalette;
+
         public ushort Version { get; set; }
         public ushort CRC { get; private set; }
         public bool CRCCorrect { get; set; }
         public byte[] Reserved { get; set; }
 
         public byte[] ImagePixels { get; set; }
-        public Rgb15[] ImagePalette { get; set; }
+        public Rgb15[] ImagePalette
+        {
+            get => _imagePalette;
+            set
+            {
+                if (value.Length != 16)
+                {
+                    Rgb15[] palette = new Rgb15[16];
+                    value.CopyTo(palette, 0);
+                    _imagePalette = palette;
+                }
+                else
+                {
+                    _imagePalette = value;
+                }
+            }
+        }
 
         public Banner(BinaryReader br)
         {
@@ -199,7 +217,7 @@ namespace RanseiLink.Core.RomFs
                 failureReason = "Invalid image dimensions. Should be 32x32 pixels";
                 return false;
             }
-            if (imageInfo.Palette.Length != 16)
+            if (imageInfo.Palette.Length > 16)
             {
                 failureReason = "Invalid image palette. Should have at most 16 colors. You could use 'simplify palette' command";
                 return false;

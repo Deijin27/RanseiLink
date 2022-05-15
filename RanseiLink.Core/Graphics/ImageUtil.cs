@@ -99,7 +99,7 @@ namespace RanseiLink.Core.Graphics
                 {
                     Rgba32 pixColor = image[x, y];
                     int pltIndex;
-                    if (pixColor.A == 0)
+                    if (pixColor.A != 255)
                     {
                         pltIndex = 0;
                     }

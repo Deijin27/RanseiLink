@@ -34,15 +34,19 @@ namespace RanseiLink.Core.Graphics
                 throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
             }
 
+            var transparentPixelsBefore = new List<Point>();
             // Create a lookup of colors to points
             var colors = new HashSet<Rgba32>();
+            bool hasTransparent = false;
             for (int y = 0; y < img.Height; y++)
             {
                 for (int x = 0; x < img.Width; x++)
                 {
                     var color = img[x, y];
-                    if (color.A == 0)
+                    if (color.A != 255)
                     {
+                        hasTransparent = true;
+                        transparentPixelsBefore.Add(new Point(x, y));
                         continue;
                     }
                     colors.Add(color);
@@ -54,10 +58,50 @@ namespace RanseiLink.Core.Graphics
                 return false;
             }
 
+            if (!hasTransparent)
+            {
+                maximumColors -= 1;
+            }
+            System.Console.WriteLine($"Max colors: {maximumColors}");
+
             img.Mutate(g =>
             {
                 g.Quantize(new OctreeQuantizer(new QuantizerOptions() { MaxColors = maximumColors, DitherScale = 0 }));
             });
+
+            // Check the color count after quanitization. If transparency is not preserved
+            // (happens usually if theres a black pixel), we've got a problem
+            colors.Clear();
+            for (int y = 0; y < img.Height; y++)
+            {
+                for (int x = 0; x < img.Width; x++)
+                {
+                    var color = img[x, y];
+                    if (color.A != 255)
+                    {
+                        continue;
+                    }
+                    colors.Add(color);
+                }
+            }
+            if (colors.Count + 1 > maximumColors)
+            {
+                System.Console.WriteLine($"Doing second quanitization with color limit {maximumColors - 1}");
+                // quantize again, and allow for the required transparency.
+                img.Mutate(g =>
+                {
+                    g.Quantize(new OctreeQuantizer(new QuantizerOptions() { MaxColors = maximumColors - 1, DitherScale = 0 }));
+                });
+                // Add in the transparent pixels after to make sure they are preserved.
+                if (hasTransparent)
+                {
+                    foreach (var pixel in transparentPixelsBefore)
+                    {
+                        img[pixel.X, pixel.Y] = Color.Transparent;
+                    }
+                }
+            }
+
 
             img.Save(saveFile);
 

@@ -32,7 +32,11 @@ public class NdsInsertBannerCommand : ICommand
 
         if (BannerInfoPath != null)
         {
-            banner.LoadInfoFromXml(BannerInfoPath);
+            if (!banner.TryLoadInfoFromXml(BannerInfoPath, out string failureReason))
+            {
+                console.Output.WriteLine(failureReason);
+                return default;
+            }
         }
        
         if (BannerImagePath != null)
