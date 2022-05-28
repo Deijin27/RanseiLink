@@ -31,6 +31,7 @@ namespace RanseiLink.Core.Services
             builder.RegisterType<PkmdlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
             builder.RegisterType<ScbgDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
             builder.RegisterType<StlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
+            builder.RegisterType<MiscDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
 
             var modServiceFactory = new ModServiceGetterFactory();
             modServiceFactory.AddModule(new CoreModServiceModule());

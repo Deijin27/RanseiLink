@@ -26,26 +26,39 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 return new List<SpriteFile>();
             }
-            var dict = new Dictionary<SpriteType, Dictionary<int, SpriteFile>>();
+            var dict = new Dictionary<int, SpriteFile>();
             foreach (var i in _fallbackSpriteProvider.GetAllSpriteFiles(type))
             {
-                if (!dict.TryGetValue(i.Type, out Dictionary<int, SpriteFile> subDict))
-                {
-                    subDict = new Dictionary<int, SpriteFile>();
-                    dict[i.Type] = subDict;
-                }
-                subDict[i.Id] = i;
+                dict[i.Id] = i;
             }
-            string overrideFolder = Path.Combine(_mod.FolderPath, GraphicsInfoResource.Get(type).PngFolder);
-            if (Directory.Exists(overrideFolder))
+
+            var info = GraphicsInfoResource.Get(type);
+            if (info is MiscConstants miscInfo)
             {
-                foreach (var i in Directory.GetFiles(overrideFolder)
-                .Select(i => new SpriteFile(type: type, id: int.Parse(Path.GetFileNameWithoutExtension(i)), file: i, isOverride: true)))
+                for (int i = 0; i < miscInfo.Items.Length; i++)
                 {
-                    dict[i.Type][i.Id] = i;
+                    var file = Path.Combine(_mod.FolderPath, miscInfo.Items[i].PngFile);
+                    var fi = new SpriteFile(type, i, file, isOverride: false);
+                    if (File.Exists(fi.File))
+                    {
+                        dict[fi.Id] = fi;
+                    }
                 }
             }
-            return dict.Values.SelectMany(i => i.Values).ToList();
+            else
+            {
+                string overrideFolder = Path.Combine(_mod.FolderPath, info.PngFolder);
+                if (Directory.Exists(overrideFolder))
+                {
+                    foreach (var i in Directory.GetFiles(overrideFolder).Select(i => new SpriteFile(type: type, id: int.Parse(Path.GetFileNameWithoutExtension(i)), file: i, isOverride: true)))
+                    {
+                        dict[i.Id] = i;
+                    }
+                }
+                
+            }
+
+            return dict.Values.ToList();
         }
 
         private SpriteFile GetSpriteFilePathWithoutFallback(SpriteType type, int id)

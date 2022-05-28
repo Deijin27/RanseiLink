@@ -26,6 +26,7 @@ namespace RanseiLink.Core.Services
         StlPokemonWu,
         StlStaffRoll,
         StlStageObje,
+        Title
     }
 
     public interface ISpriteProvider

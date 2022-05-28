@@ -187,4 +187,15 @@
 		<Width>32</Width>
 		<Height>32</Height>
 	</STL>
+	<Misc Id="Title" DisplayName="Title">
+		<NSCR Link="graphics/title/00_00_BG_logo_up.G2DR"/>
+		<NCER Link="graphics/title/00_00_parts_logo_up.G2DR"/>
+		<NSCR Link="graphics/title/00_01_BG_logo_lo.G2DR"/>
+		<NSCR Link="graphics/title/00_04_BG_title_up.G2DR"/>
+		<NSCR Link="graphics/title/00_05_BG_title_lo.G2DR"/>
+		<NSCR Link="graphics/title/00_06_BG_titlemenu_lo.G2DR"/>
+		<NCER Link="graphics/title/gallery_top_stl_boy.G2DR"/>
+		<NCER Link="graphics/title/gallery_top_stl_girl.G2DR"/>
+		<NCER Link="graphics/title/gallery_top_stl_poke.G2DR"/>
+	</Misc>
 </GraphicsInfo>

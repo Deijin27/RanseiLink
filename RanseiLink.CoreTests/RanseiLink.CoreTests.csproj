@@ -25,4 +25,19 @@
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestData\test_multi.nclr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_parts.ncgr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_screen.ncgr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_single.nclr">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

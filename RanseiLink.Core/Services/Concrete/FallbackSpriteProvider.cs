@@ -58,14 +58,29 @@ namespace RanseiLink.Core.Services.Concrete
 
         public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
         {
-            string dir = Path.Combine(_defaultDataFolder, GraphicsInfoResource.Get(type).PngFolder);
-            if (!Directory.Exists(dir))
+            var info = GraphicsInfoResource.Get(type);
+            if (info is MiscConstants miscInfo)
             {
-                return new List<SpriteFile>();
+                List<SpriteFile> result = new List<SpriteFile>();
+                for (int i = 0; i < miscInfo.Items.Length; i++)
+                {
+                    var file = Path.Combine(_defaultDataFolder, miscInfo.Items[i].PngFile);
+                    result.Add(new SpriteFile(type, i, file, isOverride: false));
+                }
+                return result;
             }
-            return Directory.GetFiles(dir)
-                .Select(i => new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), i, isOverride: false))
-                .ToList();
+            else
+            {
+                string dir = Path.Combine(_defaultDataFolder, info.PngFolder);
+                if (!Directory.Exists(dir))
+                {
+                    return new List<SpriteFile>();
+                }
+                return Directory.GetFiles(dir)
+                    .Select(i => new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), i, isOverride: false))
+                    .ToList();
+            }
+            
         }
 
         public SpriteFile GetSpriteFile(SpriteType type, int id)

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
@@ -50,6 +51,44 @@ namespace RanseiLink.Core.Resources
         public override int PaletteCapacity => 16;
     }
 
+    public class MiscConstants : BaseGraphicsInfo
+    {
+        public MiscItem[] Items { get; set; }
+    }
+
+    public abstract class MiscItem
+    {
+        public abstract int PaletteCapacity { get; }
+        public abstract string PngFile { get; }
+    }
+
+    public class NscrMiscItem : MiscItem
+    {
+        public string Link { get; set; }
+        public string LinkFolder => Path.Combine(Path.GetDirectoryName(Link), Path.GetFileNameWithoutExtension(Link) + "-Unpacked");
+        public override string PngFile => Path.Combine(LinkFolder, "Image.png");
+
+        public string Ncgr => Path.Combine(LinkFolder, "0001.ncgr");
+        public string NcgrAlt => Path.Combine(LinkFolder, "0003.ncgr");
+        public string Nclr => Path.Combine(LinkFolder, "0004.nclr");
+        public string Nscr => Path.Combine(LinkFolder, "0005.ncgr");
+
+        public override int PaletteCapacity => 256;
+    }
+
+    public class NcerMiscItem : MiscItem
+    {
+        public string Link { get; set; }
+        public string LinkFolder => Path.Combine(Path.GetDirectoryName(Link), Path.GetFileNameWithoutExtension(Link) + "-Unpacked");
+        public override string PngFile => Path.Combine(LinkFolder, "Image.png");
+        public string Ncer => Path.Combine(LinkFolder, "0002.ncer");
+        public string Ncgr => Path.Combine(LinkFolder, "0001.ncgr");
+        public string NcgrAlt => Path.Combine(LinkFolder, "0003.ncgr");
+        public string Nclr => Path.Combine(LinkFolder, "0004.nclr");
+        
+        public override int PaletteCapacity => 256;
+    }
+
     public interface IGraphicsInfo
     {
         SpriteType Type { get; }
@@ -72,8 +111,8 @@ namespace RanseiLink.Core.Resources
         public bool StrictWidth { get; set; }
         public bool StrictHeight { get; set; }
         public bool FixedAmount { get; set; }
-        public abstract string PngFolder { get; }
-        public abstract int PaletteCapacity { get; }
+        public virtual string PngFolder { get; }
+        public virtual int PaletteCapacity { get; }
     }
 
     public static class GraphicsInfoResource
@@ -102,6 +141,7 @@ namespace RanseiLink.Core.Resources
                             Data = FileUtil.NormalizePath(element.Element("Data")?.Value),
                             Link = FileUtil.NormalizePath(element.Element("Link").Value),
                         };
+                        ProcessGroupedType(info, element);
                         break;
                     case "SCBG":
                         info = new ScbgConstants()
@@ -109,6 +149,7 @@ namespace RanseiLink.Core.Resources
                             Info = FileUtil.NormalizePath(element.Element("Info").Value),
                             Data = FileUtil.NormalizePath(element.Element("Data").Value),
                         };
+                        ProcessGroupedType(info, element);
                         break;
                     case "PKMDL":
                         info = new PkmdlConstants()
@@ -118,29 +159,56 @@ namespace RanseiLink.Core.Resources
                             DTXLink = FileUtil.NormalizePath(element.Element("DTXLink").Value),
                             PACLink = FileUtil.NormalizePath(element.Element("PACLink").Value),
                         };
+                        ProcessGroupedType(info, element);
+                        break;
+                    case "Misc":
+                        info = new MiscConstants
+                        {
+                            Type = (SpriteType)Enum.Parse(typeof(SpriteType), element.Attribute("Id").Value),
+                            DisplayName = element.Attribute("DisplayName").Value,
+                            Items = element.Elements().Select(miscItemElement =>
+                            {
+                                MiscItem miscItem;
+                                switch (miscItemElement.Name.ToString())
+                                {
+                                    case "NSCR":
+                                        miscItem = new NscrMiscItem() { Link = miscItemElement.Attribute("Link").Value };
+                                        break;
+                                    case "NCER":
+                                        miscItem = new NcerMiscItem() { Link = miscItemElement.Attribute("Link").Value };
+                                        break;
+                                    default:
+                                        throw new Exception("Invalid misc item element in GraphicsInfo.xml");
+                                }
+                                return miscItem;
+                            }).ToArray()
+                        };
                         break;
                     default:
                         throw new Exception("Invalid element in GraphicsInfo.xml");
                 }
-                // Things in all image formats
-                info.Type = (SpriteType)Enum.Parse(typeof(SpriteType), element.Attribute("Id").Value);
-                info.DisplayName = element.Element("DisplayName").Value;
-                var widthElement = element.Element("Width");
-                if (widthElement != null)
-                {
-                    info.Width = int.TryParse(widthElement.Value, out int resultWidth) ? (int?)resultWidth : null;
-                    info.StrictWidth = widthElement.Attribute("Strict")?.Value == "true";
-                }
-                var heightElement = element.Element("Height");
-                if (heightElement != null)
-                {
-                    info.Height = int.TryParse(heightElement.Value, out int resultHeight) ? (int?)resultHeight : null;
-                    info.StrictHeight = heightElement.Attribute("Strict")?.Value == "true";
-                }
-                info.FixedAmount = element.Element("FixedAmount")?.Value == "true";
 
                 _all[info.Type] = info;
             }
+        }
+
+        private static void ProcessGroupedType(BaseGraphicsInfo info, XElement element)
+        {
+            info.Type = (SpriteType)Enum.Parse(typeof(SpriteType), element.Attribute("Id").Value);
+            info.DisplayName = element.Element("DisplayName").Value;
+            var widthElement = element.Element("Width");
+            if (widthElement != null)
+            {
+                info.Width = int.TryParse(widthElement.Value, out int resultWidth) ? (int?)resultWidth : null;
+                info.StrictWidth = widthElement.Attribute("Strict")?.Value == "true";
+            }
+            var heightElement = element.Element("Height");
+            if (heightElement != null)
+            {
+                info.Height = int.TryParse(heightElement.Value, out int resultHeight) ? (int?)resultHeight : null;
+                info.StrictHeight = heightElement.Attribute("Strict")?.Value == "true";
+            }
+            info.FixedAmount = element.Element("FixedAmount")?.Value == "true";
         }
 
         private static readonly Dictionary<SpriteType, IGraphicsInfo> _all = new Dictionary<SpriteType, IGraphicsInfo>();
@@ -153,9 +221,18 @@ namespace RanseiLink.Core.Resources
 
         public static string GetRelativeSpritePath(SpriteType type, int id)
         {
-            string idString = id.ToString().PadLeft(4, '0');
-            string dir = GraphicsInfoResource.Get(type).PngFolder;
-            return Path.Combine(dir, idString + ".png");
+            var info = Get(type);
+
+            if (info is MiscConstants miscConstants)
+            {
+                return miscConstants.Items[id].PngFile;
+            }
+            else
+            {
+                string idString = id.ToString().PadLeft(4, '0');
+                string dir = info.PngFolder;
+                return Path.Combine(dir, idString + ".png");
+            }
         }
     }
 }

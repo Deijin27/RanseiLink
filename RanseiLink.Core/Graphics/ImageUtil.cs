@@ -130,12 +130,23 @@ namespace RanseiLink.Core.Graphics
             int minX = bank.Min(i => i.XOffset);
             int xShift = minX < 0 ? -minX : 0;
 
+            var width = imageInfo.Width;
+            var height = imageInfo.Height;
+
+            if (width < 0 || height < 0)
+            {
+                int maxY = bank.Max(i => i.YOffset + i.Height);
+                int maxX = bank.Max(i => i.XOffset + i.Width);
+                width = maxX - minX;
+                height = maxY - minY;
+            }
+
             PointGetter pointGetter = tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint);
 
             Rgba32[] palette32 = imageInfo.Palette;
             palette32[0] = Color.Transparent;
 
-            using (var graphic = new Image<Rgba32>(imageInfo.Width, imageInfo.Height))
+            using (var graphic = new Image<Rgba32>(width, height))
             {
 
                 for (int i = 0; i < bank.Length; i++)

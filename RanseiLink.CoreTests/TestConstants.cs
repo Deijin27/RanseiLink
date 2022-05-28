@@ -11,4 +11,7 @@ internal static class TestConstants
     public static string TestModFolder => Path.Combine(TestFolder, "TestMod");
 
     public static string TestTempFolder => Path.Combine(TestFolder, "Temp");
+
+    public static string EmbeddedTestDataFolder { get; } = Path.Combine(Path.GetDirectoryName(new Uri(typeof(TestConstants).Assembly.Location).AbsolutePath), "TestData");
+
 }
