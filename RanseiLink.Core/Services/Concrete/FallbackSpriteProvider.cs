@@ -62,10 +62,10 @@ namespace RanseiLink.Core.Services.Concrete
             if (info is MiscConstants miscInfo)
             {
                 List<SpriteFile> result = new List<SpriteFile>();
-                for (int i = 0; i < miscInfo.Items.Length; i++)
+                foreach (var item in miscInfo.Items)
                 {
-                    var file = Path.Combine(_defaultDataFolder, miscInfo.Items[i].PngFile);
-                    result.Add(new SpriteFile(type, i, file, isOverride: false));
+                    var file = Path.Combine(_defaultDataFolder, item.PngFile);
+                    result.Add(new SpriteFile(type, item.Id, file, isOverride: false));
                 }
                 return result;
             }

@@ -72,34 +72,6 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
                 );
         }
 
-        private static (int width, int height) GetSize(int fileSize, int bpp)
-        {
-            int num = fileSize * 8 / bpp;
-            int num3;
-            int num2;
-            if (Math.Pow((int)Math.Sqrt(num), 2.0) == (double)num)
-            {
-                num3 = (num2 = (int)Math.Sqrt(num));
-            }
-            else
-            {
-                num3 = ((num < 256) ? num : 256);
-                num2 = num / num3;
-            }
-
-            if (num2 == 0)
-            {
-                num2 = 1;
-            }
-
-            if (num3 == 0)
-            {
-                num3 = 1;
-            }
-
-            return (num3, num2);
-        }
-
         private void ProcessNscr(string defaultDataFolder, NscrMiscItem item)
         {
             string pngFile = Path.Combine(defaultDataFolder, item.PngFile);

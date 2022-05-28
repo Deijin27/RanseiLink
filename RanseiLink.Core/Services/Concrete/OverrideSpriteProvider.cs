@@ -35,10 +35,10 @@ namespace RanseiLink.Core.Services.Concrete
             var info = GraphicsInfoResource.Get(type);
             if (info is MiscConstants miscInfo)
             {
-                for (int i = 0; i < miscInfo.Items.Length; i++)
+                foreach (var item in miscInfo.Items)
                 {
-                    var file = Path.Combine(_mod.FolderPath, miscInfo.Items[i].PngFile);
-                    var fi = new SpriteFile(type, i, file, isOverride: false);
+                    var file = Path.Combine(_mod.FolderPath, item.PngFile);
+                    var fi = new SpriteFile(type, item.Id, file, isOverride: false);
                     if (File.Exists(fi.File))
                     {
                         dict[fi.Id] = fi;

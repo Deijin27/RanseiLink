@@ -58,6 +58,7 @@ namespace RanseiLink.Core.Resources
 
     public abstract class MiscItem
     {
+        public int Id { get; set; }
         public abstract int PaletteCapacity { get; }
         public abstract string PngFile { get; }
     }
@@ -166,7 +167,7 @@ namespace RanseiLink.Core.Resources
                         {
                             Type = (SpriteType)Enum.Parse(typeof(SpriteType), element.Attribute("Id").Value),
                             DisplayName = element.Attribute("DisplayName").Value,
-                            Items = element.Elements().Select(miscItemElement =>
+                            Items = element.Elements().Select((miscItemElement, id) =>
                             {
                                 MiscItem miscItem;
                                 switch (miscItemElement.Name.ToString())
@@ -180,6 +181,7 @@ namespace RanseiLink.Core.Resources
                                     default:
                                         throw new Exception("Invalid misc item element in GraphicsInfo.xml");
                                 }
+                                miscItem.Id = id;
                                 return miscItem;
                             }).ToArray()
                         };
