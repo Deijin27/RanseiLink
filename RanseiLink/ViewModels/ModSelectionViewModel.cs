@@ -177,6 +177,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     {
         if (_dialogService.PopulateDefaultSprites(out string romPath))
         {
+            Exception error = null;
             _dialogService.ProgressDialog(progress =>
             {
                 try
@@ -185,14 +186,18 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
                 }
                 catch (Exception e)
                 {
-                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                            title: "Error Populating Default Sprites",
-                            message: e.ToString(),
-                            type: MessageBoxType.Error
-                        ));
-                    return;
+                    error = e;
                 }
             });
+
+            if (error != null)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                            title: "Error Populating Default Sprites",
+                            message: error.ToString(),
+                            type: MessageBoxType.Error)
+                        );
+            }
         }
     }
 }
