@@ -38,7 +38,7 @@ namespace RanseiLink.Core.Services.Concrete
                 foreach (var item in miscInfo.Items)
                 {
                     var file = Path.Combine(_mod.FolderPath, item.PngFile);
-                    var fi = new SpriteFile(type, item.Id, file, isOverride: false);
+                    var fi = new SpriteFile(type, item.Id, file, isOverride: true);
                     if (File.Exists(fi.File))
                     {
                         dict[fi.Id] = fi;
