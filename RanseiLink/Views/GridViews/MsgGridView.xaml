@@ -53,6 +53,9 @@
         </StackPanel>
 
         <DataGrid Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False">
+            <DataGrid.RowValidationRules>
+                <vm:WorkaroundValidationRule ValidationStep="UpdatedValue"/>
+            </DataGrid.RowValidationRules>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Block" Binding="{Binding BlockId}" IsReadOnly="True"/>
                 <DataGridTextColumn Header="Entry" Binding="{Binding Id}" IsReadOnly="True"/>
