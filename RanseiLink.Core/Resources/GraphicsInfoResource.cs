@@ -59,7 +59,7 @@ namespace RanseiLink.Core.Resources
     public abstract class MiscItem
     {
         public int Id { get; set; }
-        public abstract int PaletteCapacity { get; }
+        public int PaletteCapacity { get; set; }
         public abstract string PngFile { get; }
     }
 
@@ -74,7 +74,6 @@ namespace RanseiLink.Core.Resources
         public string Nclr => Path.Combine(LinkFolder, "0004.nclr");
         public string Nscr => Path.Combine(LinkFolder, "0005.ncgr");
 
-        public override int PaletteCapacity => 256;
     }
 
     public class NcerMiscItem : MiscItem
@@ -87,7 +86,6 @@ namespace RanseiLink.Core.Resources
         public string NcgrAlt => Path.Combine(LinkFolder, "0003.ncgr");
         public string Nclr => Path.Combine(LinkFolder, "0004.nclr");
         
-        public override int PaletteCapacity => 256;
     }
 
     public interface IGraphicsInfo
@@ -166,6 +164,7 @@ namespace RanseiLink.Core.Resources
                         info = new MiscConstants
                         {
                             Type = (SpriteType)Enum.Parse(typeof(SpriteType), element.Attribute("Id").Value),
+                            FixedAmount = true,
                             DisplayName = element.Attribute("DisplayName").Value,
                             Items = element.Elements().Select((miscItemElement, id) =>
                             {
@@ -181,6 +180,13 @@ namespace RanseiLink.Core.Resources
                                     default:
                                         throw new Exception("Invalid misc item element in GraphicsInfo.xml");
                                 }
+                                miscItem.PaletteCapacity = 256;
+                                var palAttr = miscItemElement.Attribute("PaletteCapacity");
+                                if (palAttr != null && int.TryParse(palAttr.Value, out int palCap))
+                                {
+                                    miscItem.PaletteCapacity = palCap;
+                                }
+                                
                                 miscItem.Id = id;
                                 return miscItem;
                             }).ToArray()

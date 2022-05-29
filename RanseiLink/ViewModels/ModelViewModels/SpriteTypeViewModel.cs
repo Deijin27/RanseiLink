@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Resources;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,6 +58,12 @@ public class SpriteTypeViewModel : ViewModelBase
     private void UpdateInfo(SpriteType type)
     {
         IGraphicsInfo info = GraphicsInfoResource.Get(type);
+        if (info is MiscConstants)
+        {
+            DimensionInfo = "";
+            return;
+        }
+
         _canAddNew = !info.FixedAmount;
         string dimensionInfo = "";
         if (info.Width != null)
@@ -159,9 +166,20 @@ public class SpriteTypeViewModel : ViewModelBase
             }
         }
 
-        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, gInfo.PaletteCapacity, temp))
+
+        int paletteCapacity;
+        if (gInfo is MiscConstants miscInfo)
         {
-            if (!_dialogService.SimplfyPalette(gInfo.PaletteCapacity, file, temp))
+            paletteCapacity = miscInfo.Items[id].PaletteCapacity;
+        }
+        else
+        {
+            paletteCapacity = gInfo.PaletteCapacity;
+        }
+        
+        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
+        {
+            if (!_dialogService.SimplfyPalette(paletteCapacity, file, temp))
             {
                 return false;
             }
@@ -186,7 +204,7 @@ public class SpriteTypeViewModel : ViewModelBase
         }
         foreach (var spriteInfo in _spriteProvider.GetAllSpriteFiles(SelectedType))
         {
-            string dest = Path.Combine(dir, Path.GetFileName(spriteInfo.File));
+            string dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(spriteInfo.File)));
             File.Copy(spriteInfo.File, dest);
         }
         _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Export complete!", $"Sprites exported to: '{dir}'"));

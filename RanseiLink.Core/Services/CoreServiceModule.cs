@@ -74,9 +74,11 @@ namespace RanseiLink.Core.Services
             builder.RegisterType<DataPatchBuilder>().As<IPatchBuilder>().SingleInstance();
             builder.RegisterType<MsgPatchBuilder>().As<IPatchBuilder>().SingleInstance();
             builder.RegisterType<MapPatchBuilder>().As<IPatchBuilder>().SingleInstance();
+
             builder.RegisterType<StlPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
             builder.RegisterType<ScbgPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
             builder.RegisterType<PkmdlPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
+            builder.RegisterType<MiscPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
 
             builder.RegisterType<BannerService>().As<IBannerService>().SingleInstance();
         }

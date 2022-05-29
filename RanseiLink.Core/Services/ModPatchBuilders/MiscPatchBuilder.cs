@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Graphics;
+﻿using RanseiLink.Core.Archive;
+using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services.Concrete;
 using System;
@@ -48,15 +49,23 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
         private void ProcessNcer(ConcurrentBag<FileToPatch> filesToPatch, NcerMiscItem item, string pngFile)
         {
+            var tempDir = FileUtil.GetTemporaryDirectory();
+
+            FileUtil.CopyFilesRecursively(Path.Combine(_graphicsProviderFolder, item.LinkFolder), tempDir);
+            File.Delete(Path.Combine(tempDir, Path.GetFileName(item.PngFile)));
+
             // load up provider data
-            var ncer = NCER.Load(Path.Combine(_graphicsProviderFolder, item.Ncer));
-            var ncgrPath = Path.Combine(_graphicsProviderFolder, item.Ncgr);
+            var ncer = NCER.Load(Path.Combine(tempDir, Path.GetFileName(item.Ncer)));
+
+            var ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.Ncgr));
             if (new FileInfo(ncgrPath).Length == 0)
             {
-                ncgrPath = Path.Combine(_graphicsProviderFolder, item.NcgrAlt);
+                ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.NcgrAlt));
             }
             var ncgr = NCGR.Load(ncgrPath);
-            var nclr = NCLR.Load(Path.Combine(_graphicsProviderFolder, item.Nclr));
+
+            var nclrPath = Path.Combine(tempDir, Path.GetFileName(item.Nclr));
+            var nclr = NCLR.Load(nclrPath);
 
             // load up the png and replace provider data with new image data
             var imageInfo = ImageUtil.LoadPng(
@@ -66,6 +75,12 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                 tiled: ncgr.Pixels.IsTiled
                 );
             ncgr.Pixels.Data = imageInfo.Pixels;
+            if (ncgr.Pixels.TilesPerColumn != -1)
+            {
+                ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
+                ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
+            }
+
             var newPalette = RawPalette.From32bitColors(imageInfo.Palette);
             if (newPalette.Length > item.PaletteCapacity)
             {
@@ -74,30 +89,42 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
             }
             newPalette.CopyTo(nclr.Palettes.Palette, 0);
 
-            // save the modified provider files to temporary files ready for patching
-            var tempNcgr = Path.GetTempFileName();
-            var tempNclr = Path.GetTempFileName();
-            ncgr.Save(tempNcgr);
-            nclr.Save(tempNclr);
+            // save the modified provider files
+            ncgr.Save(ncgrPath);
+            nclr.Save(nclrPath);
 
-            filesToPatch.Add(new FileToPatch(ncgrPath, tempNcgr, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-            filesToPatch.Add(new FileToPatch(item.Nclr, tempNclr, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+            // make the link 
+            var tempLink = Path.GetTempFileName();
+            LINK.Pack(tempDir, tempLink);
+            Directory.Delete(tempDir, true);
+
+            filesToPatch.Add(new FileToPatch(item.Link, tempLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
         }
 
         private void ProcessNscr(ConcurrentBag<FileToPatch> filesToPatch, NscrMiscItem item, string pngFile)
         {
+            var tempDir = FileUtil.GetTemporaryDirectory();
+
+            FileUtil.CopyFilesRecursively(Path.Combine(_graphicsProviderFolder, item.LinkFolder), tempDir);
+            File.Delete(Path.Combine(tempDir, Path.GetFileName(item.PngFile)));
+
             // load up provider data
-            var ncgrPath = Path.Combine(_graphicsProviderFolder, item.Ncgr);
+            var ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.Ncgr));
             if (new FileInfo(ncgrPath).Length == 0)
             {
-                ncgrPath = Path.Combine(_graphicsProviderFolder, item.NcgrAlt);
+                ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.NcgrAlt));
             }
             var ncgr = NCGR.Load(ncgrPath);
-            var nclr = NCLR.Load(Path.Combine(_graphicsProviderFolder, item.Nclr));
+
+            var nclrPath = Path.Combine(tempDir, Path.GetFileName(item.Nclr));
+            var nclr = NCLR.Load(nclrPath);
 
             // load up the png and replace provider data with new image data
             var imageInfo = ImageUtil.LoadPng(pngFile, ncgr.Pixels.IsTiled);
             ncgr.Pixels.Data = imageInfo.Pixels;
+            ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
+            ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
+
             var newPalette = RawPalette.From32bitColors(imageInfo.Palette);
             if (newPalette.Length > item.PaletteCapacity)
             {
@@ -106,14 +133,16 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
             }
             newPalette.CopyTo(nclr.Palettes.Palette, 0);
 
-            // save the modified provider files to temporary files ready for patching
-            var tempNcgr = Path.GetTempFileName();
-            var tempNclr = Path.GetTempFileName();
-            ncgr.Save(tempNcgr);
-            nclr.Save(tempNclr);
+            // save the modified provider files
+            ncgr.Save(ncgrPath);
+            nclr.Save(nclrPath);
 
-            filesToPatch.Add(new FileToPatch(ncgrPath, tempNcgr, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-            filesToPatch.Add(new FileToPatch(item.Nclr, tempNclr, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+            // make the link 
+            var tempLink = Path.GetTempFileName();
+            LINK.Pack(tempDir, tempLink);
+            Directory.Delete(tempDir, true);
+
+            filesToPatch.Add(new FileToPatch(item.Link, tempLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
         }
     }
 }
