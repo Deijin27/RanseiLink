@@ -105,6 +105,7 @@ public class BannerViewModel : ViewModelBase
                 "Invalid dimensions",
                 $"The dimensions of this image should be 32x32."
                 ));
+            return;
         }
 
         string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
