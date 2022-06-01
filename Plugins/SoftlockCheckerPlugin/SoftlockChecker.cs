@@ -16,20 +16,12 @@ namespace SoftlockCheckerPlugin;
 
 internal class SoftlockChecker
 {
-    private PokemonId[] pokemonIds = EnumUtil.GetValuesExceptDefaults<PokemonId>().ToArray();
-    private AbilityId[] abilityIds = EnumUtil.GetValuesExceptDefaults<AbilityId>().ToArray();
-    private TypeId[] typeIds = EnumUtil.GetValues<TypeId>().ToArray();
-    private MoveId[] moveIds = EnumUtil.GetValues<MoveId>().ToArray();
-    private WarriorId[] warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
-    private ScenarioId[] scenarioIds = EnumUtil.GetValues<ScenarioId>().ToArray();
-    private MoveRangeId[] moveRangeIds = EnumUtil.GetValues<MoveRangeId>().ToArray();
-    private MoveAnimationId[] moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
-
     private IScenarioPokemonService _scenarioPokemonService;
     private IScenarioWarriorService _scenarioWarriorService;
     private IPokemonService _pokemonService;
     private IMoveService _moveService;
     private IMoveRangeService _moveRangeService;
+    private IMaxLinkService _maxLinkService;
 
     private int PlayersScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(0).GetScenarioPokemon(0);
     private int OichisScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(2).GetScenarioPokemon(0);
@@ -51,6 +43,7 @@ internal class SoftlockChecker
         _pokemonService = services.Get<IPokemonService>();
         _scenarioPokemonService = services.Get<IScenarioPokemonService>();
         _scenarioWarriorService = services.Get<IScenarioWarriorService>();
+        _maxLinkService = services.Get<IMaxLinkService>();
 
         _moveRangeService = services.Get<IMoveRangeService>();
     }
@@ -75,7 +68,7 @@ internal class SoftlockChecker
     /// </summary>
     private void NotifyUserIfNecessary()
     {
-        int totalCount = guaranteedCount + conditionalCount + probableCount + probableConditionalCount;
+        int totalCount = guaranteedCount + conditionalCount + probableCount + probableConditionalCount + suggestionCount;
         if (totalCount <= 0)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
@@ -92,6 +85,7 @@ internal class SoftlockChecker
             .AppendLine($"Conditional: {conditionalCount}")
             .AppendLine($"Probable: {probableCount}")
             .AppendLine($"ProbableConditional: {probableConditionalCount}")
+            .AppendLine($"Suggestion: {suggestionCount}")
             .AppendLine()
             .AppendLine(_reportBuilder.ToString())
             .ToString();
@@ -109,6 +103,7 @@ internal class SoftlockChecker
     private int conditionalCount = 0;
     private int probableCount = 0;
     private int probableConditionalCount = 0;
+    private int suggestionCount = 0;
 
     /// <summary>
     /// A softlock that is guaranteed to happen to someone in their playthrough
@@ -151,6 +146,13 @@ internal class SoftlockChecker
         _reportBuilder.AppendLine(description);
     }
 
+    private void ReportSuggestion(string description)
+    {
+        suggestionCount++;
+        _reportBuilder.Append("[Suggestion] ");
+        _reportBuilder.AppendLine(description);
+    }
+
     private void BeginReportSection(string name)
     {
         _reportBuilder.AppendLine("----------------------------------------------------------");
@@ -166,6 +168,8 @@ internal class SoftlockChecker
         ValidateAbilities();
         BeginReportSection("Move Validation");
         ValidateMoves();
+        BeginReportSection("Max Link Validation");
+        ValidateLinkPairs();
     }
 
     private void ValidateAbilities()
@@ -186,6 +190,52 @@ internal class SoftlockChecker
                 {
                     ReportConditional($"Scenario={scenario}, ScenarioWarrior={id}, ScenarioPokemon={scenarioWarrior.GetScenarioPokemon(0)}, Pokemon={pokemon.Name}: has ability {scenarioPokemon.Ability} which is not on of {scenarioPokemon.Pokemon}'s abilities "
                         + $"({pokemon.Ability1}, {pokemon.Ability2}, {pokemon.Ability3})");
+                }
+                id++;
+            }
+        }
+    }
+
+    private void GetEvolutions(PokemonId pokemonId, HashSet<PokemonId> evolutions)
+    {
+        if (evolutions.Contains(pokemonId) || pokemonId == PokemonId.Default) // prevent infinite loops
+        {
+            return;
+        }
+        evolutions.Add(pokemonId);
+        var pokemon = _pokemonService.Retrieve((int)pokemonId);
+        foreach (var evolution in pokemon.Evolutions)
+        {
+            GetEvolutions(evolution, evolutions);
+        }
+    }
+
+    private void ValidateLinkPairs()
+    {
+        foreach (ScenarioId scenario in EnumUtil.GetValues<ScenarioId>())
+        {
+            int id = 0;
+            foreach (var scenarioWarrior in _scenarioWarriorService.Retrieve((int)scenario).Enumerate())
+            {
+                if (scenarioWarrior.ScenarioPokemonIsDefault(0) || scenarioWarrior.Warrior == WarriorId.NoWarrior)
+                {
+                    continue;
+                }
+                var scenarioPokemon = _scenarioPokemonService.Retrieve((int)scenario).Retrieve(scenarioWarrior.GetScenarioPokemon(0));
+
+                // gather all the pokemon that evolve from the warriors starter pokemon
+                var evolutionTree = new HashSet<PokemonId>();
+                GetEvolutions(scenarioPokemon.Pokemon, evolutionTree);
+
+                var warriorMaxLinks = _maxLinkService.Retrieve((int)scenarioWarrior.Warrior);
+                foreach (var pokemon in evolutionTree)
+                {
+                    if (warriorMaxLinks.GetMaxLink(pokemon) == 0)
+                    {
+                        var poke = _pokemonService.Retrieve((int)pokemon);
+                        ReportSuggestion($"In scenario '{scenario}' scenario warrior '{id}' ({scenarioWarrior.Warrior}) has max link 0 with pokemon '{poke.Name}'"
+                            + " which is the, or an evolution of their scenario pokemon.");
+                    }
                 }
                 id++;
             }
