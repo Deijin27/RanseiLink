@@ -74,6 +74,24 @@ public class MoveViewModel : ViewModelBase, IMoveViewModel
         set => RaiseAndSetIfChanged(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
+    public MoveMovementId Movement
+    {
+        get => _model.Movement;
+        set => RaiseAndSetIfChanged(_model.Movement, value, v => _model.Movement = v);
+    }
+
+    public MoveUnknownOptionId UnknownOption
+    {
+        get => _model.UnknownOption;
+        set => RaiseAndSetIfChanged(_model.UnknownOption, value, v => _model.UnknownOption = v);
+    }
+
+    public int UnknownValue_6_28_4
+    {
+        get => _model.UnknownValue_6_28_4;
+        set => RaiseAndSetIfChanged(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
+    }
+
     public TypeId Type
     {
         get => _model.Type;

@@ -59,14 +59,17 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Name" Grid.Row="0" />
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
 
-            <GroupBox Header="Movement Flags... don't work :[" ToolTip="Correct except quick attack. Don't work. Must be stored somewhere else." Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="10">
+            <GroupBox Header="Movement Flags" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="10">
                 <StackPanel>
-                    <CheckBox Content="Movement or Knockback" IsChecked="{Binding MovementFlag_MovementOrKnockback, Mode=TwoWay}" Margin="0,0,0,13"/>
+                    <CheckBox Content="Display Movement/Knockback in Preview" IsChecked="{Binding MovementFlag_MovementOrKnockback, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Invert Movement Direction" IsChecked="{Binding MovementFlag_InvertMovementDirection, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Double Movement Distance" IsChecked="{Binding MovementFlag_DoubleMovementDistance, Mode=TwoWay}" />
                 </StackPanel>
@@ -109,6 +112,14 @@
             <TextBlock Grid.Row="16" Grid.Column="0" Text="{Binding Effect4, Mode=OneWay, Converter={StaticResource moveEffectIdToQuantityNameConverter}}" />
             <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Effect4Chance, Mode=TwoWay}" Max="127"/>
 
+            <TextBlock Grid.Row="17" Grid.Column="0" Text="Movement" />
+            <ComboBox Grid.Row="17" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveMovementItems}" SelectedItem="{Binding Movement, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="18" Grid.Column="0" Text="Unknown Option" />
+            <ComboBox Grid.Row="18" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveUnknownOptionItems}" SelectedItem="{Binding UnknownOption, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="19" Grid.Column="0" Text="Unknown Value 6_28_4" />
+            <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding UnknownValue_6_28_4, Mode=TwoWay}"/>
 
         </Grid>
         <Grid Margin="10">

@@ -119,21 +119,16 @@ namespace RanseiLink.Core.Models
             set => SetInt(8, 0, 9, (int)value);
         }
 
-        /// <summary>
-        /// This is either wrong or i don't understand it yet
-        /// </summary>
-        public MoveAnimationTargetId AnimationTarget1
+        public MoveUnknownOptionId UnknownOption
         {
-            get => (MoveAnimationTargetId)GetInt(7, 26, 3);
-            set => SetInt(7, 26, 3, (int)value);
+            get => (MoveUnknownOptionId)GetInt(7, 26, 4);
+            set => SetInt(7, 26, 4, (int)value);
         }
-        /// <summary>
-        /// This is either wrong or i don't understand it yet
-        /// </summary>
-        public MoveAnimationTargetId AnimationTarget2
+
+        public MoveMovementId Movement
         {
-            get => (MoveAnimationTargetId)GetInt(7, 29, 3);
-            set => SetInt(7, 29, 3, (int)value);
+            get => (MoveMovementId)GetInt(7, 30, 2);
+            set => SetInt(7, 30, 2, (int)value);
         }
 
         public MoveMovementAnimationId MovementAnimation
@@ -142,5 +137,10 @@ namespace RanseiLink.Core.Models
             set => SetInt(7, 14, 5, (int)value);
         }
 
+        public int UnknownValue_6_28_4
+        {
+            get => GetInt(6, 28, 4);
+            set => SetInt(6, 28, 4, value);
+        }
     }
 }
