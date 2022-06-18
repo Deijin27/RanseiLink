@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class BuildingService : BaseModelService<Building>, IBuildingService
     {
-        public BuildingService(string BuildingDatFile) : base(BuildingDatFile, 0, 118) { }
+        public BuildingService(string BuildingDatFile) : base(BuildingDatFile, 0, 118, 119) { }
 
         public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath)) { }
 

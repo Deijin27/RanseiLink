@@ -23,6 +23,7 @@ public class BuildingViewModel : ViewModelBase, IBuildingViewModel
         JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
 
         KingdomItems = idToNameService.GetComboBoxItemsExceptDefault<IKingdomService>();
+        BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
     }
 
     public void SetModel(BuildingId id, Building model)
@@ -41,11 +42,60 @@ public class BuildingViewModel : ViewModelBase, IBuildingViewModel
     }
 
     public List<SelectorComboBoxItem> KingdomItems { get; }
+    public List<SelectorComboBoxItem> BuildingItems { get; }
 
     public int Kingdom
     {
         get => (int)_model.Kingdom;
         set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
+    }
+
+    public int Building1
+    {
+        get => (int)_model.Building1;
+        set => RaiseAndSetIfChanged(_model.Building1, (BuildingId)value, v => _model.Building1 = v);
+    }
+
+    public int Building2
+    {
+        get => (int)_model.Building2;
+        set => RaiseAndSetIfChanged(_model.Building2, (BuildingId)value, v => _model.Building2 = v);
+    }
+
+    public int Building3
+    {
+        get => (int)_model.Building3;
+        set => RaiseAndSetIfChanged(_model.Building3, (BuildingId)value, v => _model.Building3 = v);
+    }
+
+    public int Building4
+    {
+        get => (int)_model.Building4;
+        set => RaiseAndSetIfChanged(_model.Building4, (BuildingId)value, v => _model.Building4 = v);
+    }
+
+    public int Building5
+    {
+        get => (int)_model.Building5;
+        set => RaiseAndSetIfChanged(_model.Building5, (BuildingId)value, v => _model.Building5 = v);
+    }
+
+    public int Building6
+    {
+        get => (int)_model.Building6;
+        set => RaiseAndSetIfChanged(_model.Building6, (BuildingId)value, v => _model.Building6 = v);
+    }
+
+    public int Building7
+    {
+        get => (int)_model.Building7;
+        set => RaiseAndSetIfChanged(_model.Building7, (BuildingId)value, v => _model.Building7 = v);
+    }
+
+    public int Building8
+    {
+        get => (int)_model.Building8;
+        set => RaiseAndSetIfChanged(_model.Building8, (BuildingId)value, v => _model.Building8 = v);
     }
 
     public BattleConfigId BattleConfig1

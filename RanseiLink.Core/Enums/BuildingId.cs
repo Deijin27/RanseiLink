@@ -2,6 +2,7 @@
 namespace RanseiLink.Core.Enums
 {
 
+    [DefaultValues(Default)]
     public enum BuildingId
     {
         Shop_0,
@@ -123,5 +124,6 @@ namespace RanseiLink.Core.Enums
         SnowyMountain_3,
         Park_4,
         ShrineOfResolve,
+        Default
     }
 }

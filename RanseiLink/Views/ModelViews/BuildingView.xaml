@@ -10,70 +10,111 @@
              d:DataContext="{d:DesignInstance Type=vm:BuildingViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Grid.Resources>
-            <ResourceDictionary>
-                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Setter Property="Height" Value="20"/>
-                </Style>
-            </ResourceDictionary>
-        </Grid.Resources>
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+    </UserControl.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="18"/>
+            <TextBlock Text="Name" Grid.Row="0" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="18"/>
 
-        <TextBlock Text="Kingdom" Grid.Row="1" />
-        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding Kingdom, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <TextBlock Text="Kingdom" Grid.Row="1" />
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding Kingdom, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
-        <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
-                    Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
+            <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
+                        Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
 
-        <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 2" ToolTip="Jump to selected battle config" 
-                    Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig2}"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
+            <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 2" ToolTip="Jump to selected battle config" 
+                        Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig2}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
 
-        <Button Grid.Row="4" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 3" ToolTip="Jump to selected battle config" 
-                    Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig3}"/>
-        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
+            <Button Grid.Row="4" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 3" ToolTip="Jump to selected battle config" 
+                        Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig3}"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
 
-        <TextBlock Text="Sprite 1" Grid.Row="5" />
-        <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite1, Mode=TwoWay}"/>
+            <TextBlock Text="Sprite 1" Grid.Row="5" />
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite1, Mode=TwoWay}"/>
 
-        <TextBlock Text="Sprite 2" Grid.Row="6" />
-        <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite2, Mode=TwoWay}"/>
+            <TextBlock Text="Sprite 2" Grid.Row="6" />
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite2, Mode=TwoWay}"/>
 
-        <TextBlock Text="Sprite 3" Grid.Row="7" />
-        <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite3, Mode=TwoWay}"/>
-        
-        <TextBlock Text="Function" Grid.Row="8" />
-        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
-    </Grid>
+            <TextBlock Text="Sprite 3" Grid.Row="7" />
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingSpriteItems}" SelectedItem="{Binding Sprite3, Mode=TwoWay}"/>
+
+            <TextBlock Text="Function" Grid.Row="8" />
+            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <GroupBox Header="Referenced Buildings" Grid.ColumnSpan="2" Grid.RowSpan="8">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="ComboBox" BasedOn="{StaticResource SelectorComboBoxStyle}">
+                            <Setter Property="Margin" Value="3"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building1}"/>
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building2}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building3}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building4}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building5}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building6}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building7}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building8}" />
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </WrapPanel>
 </UserControl>
