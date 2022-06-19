@@ -39,6 +39,7 @@ public class LuaService : ILuaService
                 ");
 
             lua["service"] = _modServiceContainer;
+            lua.RegisterFunction("toInt", typeof(LuaService).GetMethod(nameof(ConvertToInt)));
 
             // add all enum id items to the state to allow users to enumerate them with luanet.each
             void AddEnumToState<T>()
@@ -83,5 +84,10 @@ public class LuaService : ILuaService
 
             lua.DoFile(fileName);
         }
+    }
+
+    public static int ConvertToInt(object value)
+    {
+        return (int)value;
     }
 }
