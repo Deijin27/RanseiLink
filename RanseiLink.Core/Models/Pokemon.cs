@@ -168,6 +168,12 @@ namespace RanseiLink.Core.Models
             set => SetInt(3, 18, 4, value);
         }
 
+        public int UnknownValue2
+        {
+            get => GetInt(3, 23, 6);
+            set => SetInt(3, 23, 6, value);
+        }
+
         public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
             var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);

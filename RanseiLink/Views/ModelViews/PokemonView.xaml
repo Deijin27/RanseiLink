@@ -236,6 +236,9 @@
             <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" Grid.ColumnSpan="2" Grid.Row="20" VerticalAlignment="Center"/>
 
             <CheckBox IsChecked="{Binding LongAttackAnimation}" Content="Long Duration Attack Animation" Grid.ColumnSpan="2" Grid.Row="21" VerticalAlignment="Center"/>
+
+            <TextBlock Text="Unknown Value 2" Grid.Row="22" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="22" Grid.Column="1" Value="{Binding UnknownValue2}"/>
             
         </Grid>
 
