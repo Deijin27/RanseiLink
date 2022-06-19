@@ -8,7 +8,7 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <Authors>Deijin</Authors>
-    <VersionPrefix>4.4</VersionPrefix>
+    <VersionPrefix>4.5</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
