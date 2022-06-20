@@ -5,6 +5,8 @@ using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -16,15 +18,19 @@ public interface IScenarioPokemonViewModel
 
 public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
 {
+    private IPokemonService _pokemonService;
     private ScenarioPokemon _model;
     private int _id;
     private ScenarioId _scenario;
+    private readonly List<SelectorComboBoxItem> _allAbilityItems;
 
     public ScenarioPokemonViewModel(
         IJumpService jumpService, 
         IScenarioWarriorService scenarioWarriorService, 
-        IIdToNameService idToNameService)
+        IIdToNameService idToNameService,
+        IPokemonService pokemonService)
     {
+        _pokemonService = pokemonService;
         _model = new ScenarioPokemon(); ;
 
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
@@ -45,7 +51,26 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
 
         PokemonItems = idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
         PokemonItems.Add(new SelectorComboBoxItem(511, "Default"));
-        AbilityItems = idToNameService.GetComboBoxItemsPlusDefault<IAbilityService>();
+        _allAbilityItems = idToNameService.GetComboBoxItemsPlusDefault<IAbilityService>();
+    }
+
+    private void ReloadAbilities()
+    {
+        AbilityItems.Clear();
+        if (_model.Pokemon == PokemonId.Default)
+        {
+            return;
+        }
+        var pokemon = _pokemonService.Retrieve((int)_model.Pokemon);
+        foreach (var abilityItem in _allAbilityItems)
+        {
+            var abilityId = (AbilityId)abilityItem.Id;
+
+            if (pokemon.Ability1 == abilityId || pokemon.Ability2 == abilityId || pokemon.Ability3 == abilityId)
+            {
+                AbilityItems.Add(abilityItem);
+            }
+        }
     }
 
     public void SetModel(ScenarioId scenario, int id, ScenarioPokemon model)
@@ -53,6 +78,7 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
         _model = model;
         _scenario = scenario;
         _id = id;
+        ReloadAbilities();
         RaiseAllPropertiesChanged();
     }
 
@@ -65,12 +91,18 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
     public ICommand JumpToFirstWarriorCommand { get; }
 
     public List<SelectorComboBoxItem> PokemonItems { get; }
-    public List<SelectorComboBoxItem> AbilityItems { get; }
+    public ObservableCollection<SelectorComboBoxItem> AbilityItems { get; } = new ObservableCollection<SelectorComboBoxItem>();
 
     public int Pokemon
     {
         get => (int)_model.Pokemon;
-        set => RaiseAndSetIfChanged(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v);
+        set
+        { 
+            if (RaiseAndSetIfChanged(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v))
+            {
+                ReloadAbilities();
+            }
+        }
     }
 
     public int Ability
