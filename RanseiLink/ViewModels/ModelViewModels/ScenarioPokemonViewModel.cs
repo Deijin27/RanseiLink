@@ -147,5 +147,5 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
         }
     }
 
-    public double ApproximateLink => Math.Round(LinkCalculator.CalculateLink(_model.Exp));
+    public string ApproximateLink => LinkCalculator.CalculateLink(_model.Exp).ToString("0.00");
 }

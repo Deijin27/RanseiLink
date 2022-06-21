@@ -10,7 +10,12 @@ namespace RanseiLink.Core.Services
         /// </summary>
         public static double CalculateLink(ushort exp)
         {
-            return -0.123 + 0.0106 * exp - 5.92E-7 * Math.Pow(exp, 2) + 1.64E-11 * Math.Pow(exp, 3);
+            return 
+                - 0.0568
+                + 0.0106 * exp
+                - 6.08E-7 * Math.Pow(exp, 2) 
+                + 2.17E-11 * Math.Pow(exp, 3)
+                - 3.13E-16 * Math.Pow(exp, 4);
         }
 
         /// <summary>
@@ -20,7 +25,11 @@ namespace RanseiLink.Core.Services
         public static ushort CalculateExp(double link)
         {
             return (ushort)Math.Round(
-                0.219 + 99.9 * link + 0.0644 * Math.Pow(link, 2) + 0.0133 * Math.Pow(link, 3)
+                - 1.31
+                + 100 * link
+                + 0.0561 * Math.Pow(link, 2)
+                + 0.0134 * Math.Pow(link, 3)
+                - 3.24E-7 * Math.Pow(link, 4)
                 );
         }
     }
