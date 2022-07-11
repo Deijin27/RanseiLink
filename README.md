@@ -21,7 +21,7 @@ How to use:
 - To get started with a mod, choose the "Create Mod" option. You will have to provide it with an unchanged rom to base the mod on. From there click on the mod that appears in the list and start editing.
 - Once you have finished editing, you can write the mod to a rom. The button to do this is both on the editing page, and also if you right click on the mod in the list.
 
-Get the latest plugins made by deijin here: https://drive.google.com/drive/folders/1LQDr4OF5MiOdRu1AFNIN9P7eaCQLHSA_?usp=sharing
+Get the latest plugins made by deijin here: [Plugins-by-Deijin](https://github.com/Deijin27/RanseiLink/wiki/Plugins-by-Deijin)
 
 These include a randomizer, checker for your mods, quick actions and more.
 
