@@ -10,7 +10,7 @@ public static class ConstOptions
 
 public class DisableEventsOptionForm : IPluginForm
 {
-    public string Title => "Mass Action Configuration";
+    public string Title => "Disable Events Plugin";
     public string ProceedButtonText => "Go!";
     public string CancelButtonText => "Cancel";
 
