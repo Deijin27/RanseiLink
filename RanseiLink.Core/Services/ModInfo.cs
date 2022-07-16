@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using RanseiLink.Core.Enums;
+using System;
+using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services
 {
@@ -11,6 +13,7 @@ namespace RanseiLink.Core.Services
             public const string Version = "Version";
             public const string Author = "Author";
             public const string RLModVersion = "RLModVersion";
+            public const string GameCode = "GameCode";
         }
         /// <summary>
         /// Name given by user to mod
@@ -34,6 +37,8 @@ namespace RanseiLink.Core.Services
         /// </summary>
         public string FolderPath { get; set; }
 
+        public ConquestGameCode GameCode { get; set; }
+
         public static bool TryLoadFrom(XDocument doc, out ModInfo modInfo)
         {
             var element = doc.Root;
@@ -41,7 +46,8 @@ namespace RanseiLink.Core.Services
             {
                 Name = element.Element(ElementNames.Name)?.Value,
                 Version = element.Element(ElementNames.Version)?.Value,
-                Author = element.Element(ElementNames.Author)?.Value
+                Author = element.Element(ElementNames.Author)?.Value,
+                GameCode = Enum.TryParse(element.Element(ElementNames.GameCode)?.Value, out ConquestGameCode culture) ? culture : ConquestGameCode.VPYT
             };
 
             string version = element.Attribute(ElementNames.RLModVersion)?.Value;
@@ -59,7 +65,8 @@ namespace RanseiLink.Core.Services
                 new XAttribute(ElementNames.RLModVersion, RLModVersion.ToString()),
                 new XElement(ElementNames.Name, Name),
                 new XElement(ElementNames.Version, Version),
-                new XElement(ElementNames.Author, Author)
+                new XElement(ElementNames.Author, Author),
+                new XElement(ElementNames.GameCode, GameCode)
                 );
             doc.Add(element);
         }

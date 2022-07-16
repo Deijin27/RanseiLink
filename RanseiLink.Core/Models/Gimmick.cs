@@ -4,14 +4,22 @@ namespace RanseiLink.Core.Models
 {
     public class Gimmick : BaseDataWindow
     {
-        public const int DataLength = 0x28;
-        public Gimmick(byte[] data) : base(data, DataLength) { }
-        public Gimmick() : base(new byte[DataLength], DataLength) { }
+        public static int DataLength(ConquestGameCode culture) => culture == ConquestGameCode.VPYJ ? 0x24 : 0x28;
+
+        private readonly int _cultureNameLength;
+        private readonly int _cultureBinOffset;
+
+        public Gimmick(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+        {
+            _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0xE : 0x10;
+            _cultureBinOffset = culture == ConquestGameCode.VPYJ ? 0 : 1;
+        }
+        public Gimmick(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 16);
-            set => SetPaddedUtf8String(0, 16, value);
+            get => GetPaddedUtf8String(0, _cultureNameLength);
+            set => SetPaddedUtf8String(0, _cultureNameLength, value);
         }
 
         /// <summary>
@@ -19,8 +27,8 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public int Image
         {
-            get => GetInt(4, 8, 8);
-            set => SetInt(4, 8, 8, value);
+            get => GetByte(_cultureNameLength + 1);
+            set => SetByte(_cultureNameLength + 1, (byte)value);
         }
 
         /// <summary>
@@ -28,8 +36,8 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public TypeId AttackType
         {
-            get => (TypeId)GetInt(5, 0, 5);
-            set => SetInt(5, 0, 5, (int)value);
+            get => (TypeId)GetInt(4 + _cultureBinOffset, 0, 5);
+            set => SetInt(4 + _cultureBinOffset, 0, 5, (int)value);
         }
 
         /// <summary>
@@ -37,8 +45,8 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public TypeId DestroyType
         {
-            get => (TypeId)GetInt(5, 5, 5);
-            set => SetInt(5, 5, 5, (int)value);
+            get => (TypeId)GetInt(4 + _cultureBinOffset, 5, 5);
+            set => SetInt(4 + _cultureBinOffset, 5, 5, (int)value);
         }
 
         /// <summary>
@@ -46,20 +54,20 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public GimmickObjectId State1Object
         {
-            get => (GimmickObjectId)GetInt(5, 11, 7);
-            set => SetInt(5, 11, 7, (int)value);
+            get => (GimmickObjectId)GetInt(4 + _cultureBinOffset, 11, 7);
+            set => SetInt(4 + _cultureBinOffset, 11, 7, (int)value);
         }
 
         public GimmickObjectId State2Object
         {
-            get => (GimmickObjectId)GetInt(5, 18, 7);
-            set => SetInt(5, 18, 7, (int)value);
+            get => (GimmickObjectId)GetInt(4 + _cultureBinOffset, 18, 7);
+            set => SetInt(4 + _cultureBinOffset, 18, 7, (int)value);
         }
 
         public MoveEffectId Effect
         {
-            get => (MoveEffectId)GetInt(5, 25, 7);
-            set => SetInt(5, 25, 7, (int)value);
+            get => (MoveEffectId)GetInt(4 + _cultureBinOffset, 25, 7);
+            set => SetInt(4 + _cultureBinOffset, 25, 7, (int)value);
         }
 
         /// <summary>
@@ -67,26 +75,26 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public int UnknownQuantity1
         {
-            get => GetInt(6, 0, 8);
-            set => SetInt(6, 0, 8, value);
+            get => GetInt(5 + _cultureBinOffset, 0, 8);
+            set => SetInt(5 + _cultureBinOffset, 0, 8, value);
         }
 
         public MoveAnimationId Animation1
         {
-            get => (MoveAnimationId)GetInt(6, 8, 8);
-            set => SetInt(6, 8, 8, (int)value);
+            get => (MoveAnimationId)GetInt(5 + _cultureBinOffset, 8, 8);
+            set => SetInt(5 + _cultureBinOffset, 8, 8, (int)value);
         }
 
         public MoveAnimationId Animation2
         {
-            get => (MoveAnimationId)GetInt(6, 16, 8);
-            set => SetInt(6, 16, 8, (int)value);
+            get => (MoveAnimationId)GetInt(5 + _cultureBinOffset, 16, 8);
+            set => SetInt(5 + _cultureBinOffset, 16, 8, (int)value);
         }
 
         public GimmickRangeId Range
         {
-            get => (GimmickRangeId)GetInt(8, 19, 5);
-            set => SetInt(8, 19, 5, (int)value);
+            get => (GimmickRangeId)GetInt(7 + _cultureBinOffset, 19, 5);
+            set => SetInt(7 + _cultureBinOffset, 19, 5, (int)value);
         }
 
     }

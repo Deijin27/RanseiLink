@@ -7,11 +7,6 @@
              d:Background="{DynamicResource WindowBackgroundBrush}">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <!--<ColumnDefinition Width="40"/>
-            <ColumnDefinition Width="10"/>-->
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="10"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
@@ -19,7 +14,7 @@
         </Grid.RowDefinitions>
         <!--<Rectangle Fill="Gray" Grid.RowSpan="2" />-->
         <TextBlock x:Name="NameTextBlock" FontWeight="SemiBold" Text="Mod Name" FontSize="14" VerticalAlignment="Center" Grid.Column="0"/>
-        <TextBlock x:Name="AuthorTextBlock" Foreground="{DynamicResource AltForegroundBrush}" Text="by Author" FontSize="11" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
-        <TextBlock x:Name="VersionTextBlock" Foreground="{DynamicResource AltForegroundBrush}" Text="v1.0.1" Grid.Column="2" FontSize="11" TextAlignment="Left" VerticalAlignment="Center"/>
+
+        <TextBlock x:Name="BottomTextBlock" Text="v1.0.0 | Deijin | VPYJ" Foreground="{DynamicResource AltForegroundBrush}" FontSize="11" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
     </Grid>
 </UserControl>

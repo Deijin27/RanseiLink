@@ -12,6 +12,8 @@ public static partial class RenderExtensions
         console.WriteProperty("Name", modInfo.Name);
         console.WriteProperty("Version", modInfo.Version);
         console.WriteProperty("Author", modInfo.Author);
+        console.WriteProperty("GameCode", modInfo.GameCode);
+        console.WriteProperty("RLModVersion", modInfo.RLModVersion);
     }
 
     public static void Render(this IConsole console,  Message msg)

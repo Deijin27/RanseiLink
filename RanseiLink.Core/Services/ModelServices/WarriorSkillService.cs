@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using System.IO;
 using System;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.ModelServices
 {
@@ -10,9 +11,14 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class WarriorSkillService : BaseModelService<WarriorSkill>, IWarriorSkillService
     {
-        public WarriorSkillService(string WarriorSkillDatFile) : base(WarriorSkillDatFile, 0, 72) { }
+        private readonly ConquestGameCode _culture;
+        public WarriorSkillService(string WarriorSkillDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(WarriorSkillDatFile, 0, 72, delayReload:true) 
+        {
+            _culture = culture;
+            Reload();
+        }
 
-        public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath)) { }
+        public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath), mod.GameCode) { }
 
         public override void Reload()
         {
@@ -21,7 +27,7 @@ namespace RanseiLink.Core.Services.ModelServices
             {
                 for (int id = _minId; id <= _maxId; id++)
                 {
-                    _cache.Add(new WarriorSkill(br.ReadBytes(WarriorSkill.DataLength)));
+                    _cache.Add(new WarriorSkill(br.ReadBytes(WarriorSkill.DataLength(_culture)), _culture));
                 }
             }
         }

@@ -11,9 +11,14 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class KingdomService : BaseModelService<Kingdom>, IKingdomService
     {
-        public KingdomService(string KingdomDatFile) : base(KingdomDatFile, 0, 16, 17) { }
+        private readonly ConquestGameCode _culture;
+        public KingdomService(string KingdomDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(KingdomDatFile, 0, 16, 17, delayReload:true) 
+        {
+            _culture = culture;
+            Reload();
+        }
 
-        public KingdomService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.KingdomRomPath)) { }
+        public KingdomService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.KingdomRomPath), mod.GameCode) { }
 
         public override void Reload()
         {
@@ -22,7 +27,7 @@ namespace RanseiLink.Core.Services.ModelServices
             {
                 for (int id = _minId; id <= _maxId; id++)
                 {
-                    _cache.Add(new Kingdom(br.ReadBytes(Kingdom.DataLength)));
+                    _cache.Add(new Kingdom(br.ReadBytes(Kingdom.DataLength(_culture)), _culture));
                 }
             }
         }

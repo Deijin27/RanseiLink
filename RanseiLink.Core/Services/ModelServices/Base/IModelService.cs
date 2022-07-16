@@ -61,23 +61,29 @@ namespace RanseiLink.Core.Services.ModelServices
         protected readonly bool _hasDefaultId;
         protected readonly List<TModel> _cache = new List<TModel>();
 
-        protected BaseModelService(string dataFile, int minId, int maxId, int defaultId)
+        protected BaseModelService(string dataFile, int minId, int maxId, int defaultId, bool delayReload = false)
         {
             _dataFile = dataFile;
             _minId = minId;
             _maxId = maxId;
             _defaultId = defaultId;
             _hasDefaultId = true;
-            Reload();
+            if (!delayReload)
+            {
+                Reload();
+            }
         }
 
-        protected BaseModelService(string dataFile, int minId, int maxId)
+        protected BaseModelService(string dataFile, int minId, int maxId, bool delayReload = false)
         {
             _dataFile = dataFile;
             _minId = minId;
             _maxId = maxId;
             _hasDefaultId = false;
-            Reload();
+            if (!delayReload)
+            {
+                Reload();
+            }
         }
 
         public bool ValidateId(int id)

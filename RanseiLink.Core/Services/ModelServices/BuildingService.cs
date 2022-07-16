@@ -11,9 +11,14 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class BuildingService : BaseModelService<Building>, IBuildingService
     {
-        public BuildingService(string BuildingDatFile) : base(BuildingDatFile, 0, 118, 119) { }
+        private readonly ConquestGameCode _culture;
+        public BuildingService(string BuildingDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(BuildingDatFile, 0, 118, 119, delayReload:true) 
+        {
+            _culture = culture;
+            Reload();
+        }
 
-        public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath)) { }
+        public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath), mod.GameCode) { }
 
         public override void Reload()
         {
@@ -22,7 +27,7 @@ namespace RanseiLink.Core.Services.ModelServices
             {
                 for (int id = _minId; id <= _maxId; id++)
                 {
-                    _cache.Add(new Building(br.ReadBytes(Building.DataLength)));
+                    _cache.Add(new Building(br.ReadBytes(Building.DataLength(_culture)), _culture));
                 }
             }
         }

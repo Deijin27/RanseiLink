@@ -4,20 +4,25 @@ namespace RanseiLink.Core.Models
 {
     public class EventSpeaker : BaseDataWindow
     {
-        public const int DataLength = 0x12;
-        public EventSpeaker(byte[] data) : base(data, DataLength) { }
-        public EventSpeaker() : base(new byte[DataLength], DataLength) { }
+        public static int DataLength(ConquestGameCode culture) => culture == ConquestGameCode.VPYJ ? 0xC : 0x12;
+
+        private readonly int _cultureNameLength;
+        public EventSpeaker(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+        {
+            _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0xA : 0x10;
+        }
+        public EventSpeaker(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
 
         public string Name
         {
-            get => GetPaddedUtf8String(0, 16);
-            set => SetPaddedUtf8String(0, 16, value);
+            get => GetPaddedUtf8String(0, _cultureNameLength);
+            set => SetPaddedUtf8String(0, _cultureNameLength, value);
         }
 
         public int Sprite
         {
-            get => GetByte(0x11);
-            set => SetByte(0x11, (byte)value);
+            get => GetByte(_cultureNameLength + 1);
+            set => SetByte(_cultureNameLength + 1, (byte)value);
         }
 
     }

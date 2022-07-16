@@ -179,6 +179,11 @@ namespace RanseiLink.Core.Text
                     ParseTextBound();
                     break;
 
+                // weird thing in block 22 of japanese rom
+                case 0x09:
+                    builder.Append($"{{B22-9:{stream.ReadByte()}}}");
+                    break;
+
                 case 0x1B:
                     ParseTextFormat();
                     break;

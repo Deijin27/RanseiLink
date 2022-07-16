@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Services;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,8 +30,19 @@ public partial class ModInfoControl : UserControl
         if (e.NewValue != null)
         {
             target.NameTextBlock.Text = mi.Name;
-            target.AuthorTextBlock.Text = $"by {mi.Author}";
-            target.VersionTextBlock.Text = $"v{mi.Version}";
+
+            var bottomTextItems = new List<string>();
+            if (!string.IsNullOrEmpty(mi.Version))
+            {
+                bottomTextItems.Add($"v{mi.Version}");
+            }
+            if (!string.IsNullOrEmpty(mi.Author))
+            {
+                bottomTextItems.Add(mi.Author);
+            }
+            bottomTextItems.Add(mi.GameCode.ToString());
+
+            target.BottomTextBlock.Text = string.Join(" | ", bottomTextItems);
         }
     }
 }

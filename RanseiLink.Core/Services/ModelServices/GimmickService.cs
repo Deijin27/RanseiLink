@@ -12,9 +12,14 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class GimmickService : BaseModelService<Gimmick>, IGimmickService
     {
-        public GimmickService(string GimmickDatFile) : base(GimmickDatFile, 0, 147) { }
+        private readonly ConquestGameCode _culture;
+        public GimmickService(string GimmickDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(GimmickDatFile, 0, 147, delayReload:true) 
+        {
+            _culture = culture;
+            Reload();
+        }
 
-        public GimmickService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRomPath)) { }
+        public GimmickService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRomPath), mod.GameCode) { }
 
         public override void Reload()
         {
@@ -23,7 +28,7 @@ namespace RanseiLink.Core.Services.ModelServices
             {
                 for (int id = _minId; id <= _maxId; id++)
                 {
-                    _cache.Add(new Gimmick(br.ReadBytes(Gimmick.DataLength)));
+                    _cache.Add(new Gimmick(br.ReadBytes(Gimmick.DataLength(_culture)), _culture));
                 }
             }  
         }

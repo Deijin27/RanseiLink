@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System;
 using RanseiLink.Core.RomFs;
 using System.Linq;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.Concrete
 {
@@ -122,6 +123,22 @@ namespace RanseiLink.Core.Services.Concrete
             _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
             File.Delete(msgPath);
 
+            using (var br = new BinaryReader(File.OpenRead(baseRomPath)))
+            {
+                var header = new NdsHeader(br);
+                switch (header.GameCode)
+                {
+                    case "VPYJ":
+                        modInfo.GameCode = ConquestGameCode.VPYJ;
+                        break;
+                    case "VPYT":
+                        modInfo.GameCode = ConquestGameCode.VPYT;
+                        break;
+                    default:
+                        throw new Exception($"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
+                }
+            }
+
             Update(modInfo);
             return modInfo;
         }
@@ -134,7 +151,8 @@ namespace RanseiLink.Core.Services.Concrete
                 Name = name,
                 Version = version,
                 Author = author,
-                RLModVersion = CurrentModVersion
+                RLModVersion = CurrentModVersion,
+                GameCode = baseMod.GameCode
             };
             FileUtil.CopyFilesRecursively(baseMod.FolderPath, modInfo.FolderPath);
             Update(modInfo);

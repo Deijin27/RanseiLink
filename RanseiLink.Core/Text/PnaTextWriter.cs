@@ -390,6 +390,11 @@ namespace RanseiLink.Core.Text
                 Write(0x02, 201, 0x25);
                 writer.Write(param.ToCharArray()); // NT
             }
+            else if (command.StartsWith("B22-9:"))
+            {
+                byte num = ReadVariableArg(command, "B22-9:");
+                Write(0x09, num);
+            }
             else
             {
                 throw new FormatException($"Invalid control code: {command}");

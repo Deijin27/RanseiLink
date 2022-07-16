@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Models;
 using System.IO;
 using System;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.ModelServices
 {
@@ -10,9 +11,14 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class EventSpeakerService : BaseModelService<EventSpeaker>, IEventSpeakerService
     {
-        public EventSpeakerService(string EventSpeakerDatFile) : base(EventSpeakerDatFile, 0, 59) { }
+        private readonly ConquestGameCode _culture;
+        public EventSpeakerService(string EventSpeakerDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(EventSpeakerDatFile, 0, 59, delayReload:true) 
+        {
+            _culture = culture;
+            Reload();
+        }
 
-        public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath)) { }
+        public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath), mod.GameCode) { }
 
         public override void Reload()
         {
@@ -21,7 +27,7 @@ namespace RanseiLink.Core.Services.ModelServices
             {
                 for (int id = _minId; id <= _maxId; id++)
                 {
-                    _cache.Add(new EventSpeaker(br.ReadBytes(EventSpeaker.DataLength)));
+                    _cache.Add(new EventSpeaker(br.ReadBytes(EventSpeaker.DataLength(_culture)), _culture));
                 }
             }
         }
