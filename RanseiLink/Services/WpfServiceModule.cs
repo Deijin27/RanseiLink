@@ -45,7 +45,7 @@ public class WpfModServiceModule : Module
     protected override void Load(ContainerBuilder builder)
     {
         builder.RegisterType<CachedMsgBlockService>().As<ICachedMsgBlockService>().SingleInstance();
-        builder.RegisterType<IdToNameService>().As<IIdToNameService>();
+        builder.RegisterType<IdToNameService>().As<IIdToNameService>().SingleInstance();
 
         builder.RegisterType<AbilityViewModel>().As<IAbilityViewModel>();
         builder.RegisterType<BaseWarriorViewModel>().As<IBaseWarriorViewModel>();
