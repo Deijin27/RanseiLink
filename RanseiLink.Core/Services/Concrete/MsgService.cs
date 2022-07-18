@@ -10,17 +10,12 @@ namespace RanseiLink.Core.Services.Concrete
 {
     public class MsgService : IMsgService
     {
-        public int BlockCount => _blockCount;
-
-        private readonly int _blockCount;
-
         private readonly byte[] _encryptionKey;
 
         public MsgService(
-            int blockCount = 0x21, // 0x2C for Pokemon Nobunaga Ambition (japanese version?)
+            //int blockCount = 0x21, // 0x2C for Pokemon Nobunaga Ambition (japanese version?)
             string encryptionKey = "MsgLinker Ver1.00")
         {
-            _blockCount = blockCount;
             _encryptionKey = Encoding.ASCII.GetBytes(encryptionKey);
         }
 
@@ -28,38 +23,55 @@ namespace RanseiLink.Core.Services.Concrete
         {
             Directory.CreateDirectory(destinationFolder);
 
-            for (int i = 0; i < _blockCount; i++)
+            using (var br = new BinaryReader(File.OpenRead(sourceFile)))
             {
-                byte[] block = ExtractBlockFromMsgDat(sourceFile, i);
-                ApplyEncryption(block);
-
-                string destFile = Path.Combine(destinationFolder, $"block{i}.bin");
-                using (var stream = File.Create(destFile))
+                int i = 0;
+                while (true)
                 {
-                    stream.Write(block, 0, block.Length);
+                    uint offset = br.ReadUInt32();
+
+                    if (offset == 0)
+                    {
+                        break;
+                    }
+                    int size = br.ReadInt32();
+
+                    var pos = br.BaseStream.Position;
+                    br.BaseStream.Position = offset;
+                    byte[] block = br.ReadBytes(size);
+                    br.BaseStream.Position = pos;
+
+                    ApplyEncryption(block);
+
+                    string destFile = Path.Combine(destinationFolder, $"block{i++}.bin");
+                    using (var stream = File.Create(destFile))
+                    {
+                        stream.Write(block, 0, block.Length);
+                    }
                 }
             }
         }
 
         public void CreateMsgDat(string sourceFolder, string destinationFile)
         {
-            string[] files = Directory.GetFiles(sourceFolder);
-            byte[][] blocks = new byte[_blockCount][];
-            for (int i = 0; i < _blockCount; i++)
+            string[] files = Directory.GetFiles(sourceFolder).OrderBy(x => int.Parse(Path.GetFileNameWithoutExtension(x).Substring(5))).ToArray();
+
+            List<byte[]> blocks = new List<byte[]>();
+            foreach (var file in files)
             {
-                string currFile = Array.Find(files, name => Path.GetFileNameWithoutExtension(name) == "block" + i.ToString());
-                blocks[i] = File.ReadAllBytes(currFile);
-                ApplyEncryption(blocks[i]);
+                var block = File.ReadAllBytes(file);
+                ApplyEncryption(block);
+                blocks.Add(block);
             }
 
             using (var bw = new BinaryWriter(File.Create(destinationFile)))
             {
                 // Write offset table
-                uint offset = (uint)blocks.Length * 8;
+                uint offset = (uint)blocks.Count * 8;
                 if (offset % 0x800 != 0)  // Padding
                     offset += (0x800 - (offset % 0x800));
 
-                for (int i = 0; i < blocks.Length; i++)
+                for (int i = 0; i < blocks.Count; i++)
                 {
                     bw.Write(offset);
                     bw.Write(blocks[i].Length);
@@ -74,10 +86,9 @@ namespace RanseiLink.Core.Services.Concrete
                 if (bw.BaseStream.Position % 0x800 != 0)
                     rem = new byte[0x800 - (bw.BaseStream.Position % 0x800)];
                 bw.Write(rem);
-                bw.Flush();
 
                 // Write blocks
-                for (int i = 0; i < blocks.Length; i++)
+                for (int i = 0; i < blocks.Count; i++)
                 {
                     bw.Write(blocks[i]);
 
@@ -86,7 +97,6 @@ namespace RanseiLink.Core.Services.Concrete
                     if (bw.BaseStream.Position % 0x800 != 0)
                         rem = new byte[0x800 - (bw.BaseStream.Position % 0x800)];
                     bw.Write(rem);
-                    bw.Flush();
                 }
             }
         }
@@ -170,23 +180,6 @@ namespace RanseiLink.Core.Services.Concrete
                     }
                 }
             } 
-        }
-
-
-        public byte[] ExtractBlockFromMsgDat(string file, int blockId)
-        {
-            using (var br = new BinaryReader(File.OpenRead(file)))
-            {
-                br.BaseStream.Position = blockId * 8;
-
-                uint offset = br.ReadUInt32();
-                uint size = br.ReadUInt32();
-
-                br.BaseStream.Position = offset;
-                byte[] data = br.ReadBytes((int)size);
-
-                return data;
-            }
         }
 
         public void ApplyEncryption(byte[] data)

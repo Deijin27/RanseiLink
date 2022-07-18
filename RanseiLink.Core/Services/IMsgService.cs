@@ -6,8 +6,6 @@ namespace RanseiLink.Core.Services
 {
     public interface IMsgService
     {
-        int BlockCount { get; }
-
         string LoadName(byte[] nameData);
 
         byte[] SaveName(string name);
@@ -39,14 +37,6 @@ namespace RanseiLink.Core.Services
         /// <param name="sourceFolder">Folder containing blocks to import</param>
         /// <param name="destinationFile">MSG.DAT file (will be overwritten)</param>
         void CreateMsgDat(string sourceFolder, string destinationFile);
-
-        /// <summary>
-        /// Extract a block from a MSG.DAT file without applying any encryption.
-        /// </summary>
-        /// <param name="file">MSG.DAT file</param>
-        /// <param name="blockId">Id of block to extract</param>
-        /// <returns>Block data</returns>
-        byte[] ExtractBlockFromMsgDat(string file, int blockId);
 
         /// <summary>
         /// Apply symmetric encryption to data

@@ -19,7 +19,7 @@ namespace RanseiLink.Core.Services.ModelServices
         {
             _msgService = msgService;
             _mod = mod;
-            BlockCount = msgService.BlockCount;
+            BlockCount = Directory.GetFiles(Path.Combine(_mod.FolderPath, Constants.MsgFolderPath)).Length;
         }
 
         public int BlockCount { get; }

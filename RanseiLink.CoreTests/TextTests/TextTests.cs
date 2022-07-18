@@ -58,4 +58,42 @@ public class TextTests
             
         }
     }
+
+    [Theory]
+    [InlineData("VPYT")]
+    [InlineData("VPYJ")]
+    public void MsgDatIdenticalThroughUnpackPack(string gameCode)
+    {
+        string msgDat = Path.Combine(TestConstants.TestFolder, $"{gameCode}_MSG.DAT");
+        IMsgService msgService = new MsgService();
+
+        var unpackDir = Path.Combine(TestConstants.TestTempFolder, $"msg_unpack_{gameCode}");
+        if (Directory.Exists(unpackDir))
+        {
+            Directory.Delete(unpackDir, true);
+        }
+
+        Directory.CreateDirectory(unpackDir);
+
+        msgService.ExtractFromMsgDat(msgDat, unpackDir);
+
+        var tempFile = Path.Combine(TestConstants.TestTempFolder, $"msg_new_{gameCode}");
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+        }
+
+        msgService.CreateMsgDat(unpackDir, tempFile);
+
+        File.ReadAllBytes(msgDat).Should().Equal(File.ReadAllBytes(tempFile));
+
+        if (Directory.Exists(unpackDir))
+        {
+            Directory.Delete(unpackDir, true);
+        }
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+        }
+    }
 }
