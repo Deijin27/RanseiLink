@@ -52,7 +52,7 @@
             </DockPanel>
         </StackPanel>
 
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False">
+        <DataGrid x:Name="msgDataGrid" Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False">
             <DataGrid.RowValidationRules>
                 <vm:WorkaroundValidationRule ValidationStep="UpdatedValue"/>
             </DataGrid.RowValidationRules>
