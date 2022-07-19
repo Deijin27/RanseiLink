@@ -100,7 +100,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
         if (!_modPatcher.CanPatch(mod, romPath, patchOpt, out string reason))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", reason));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", reason));
             return;
         }
 

@@ -234,7 +234,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
         if (!_modPatcher.CanPatch(Mod, romPath, patchOpt, out string reason))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch sprites", reason));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", reason));
             return;
         }
 

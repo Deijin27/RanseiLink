@@ -48,6 +48,22 @@ namespace RanseiLink.Core.Services.Concrete
 
         public bool CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions, out string reasonCannotPatch)
         {
+            if (!File.Exists(romPath))
+            {
+                reasonCannotPatch = $"Rom file '{romPath}' does not exist.";
+                return false;
+            }
+
+            using (var br = new BinaryReader(File.OpenRead(romPath)))
+            {
+                var header = new NdsHeader(br);
+                if (modInfo.GameCode.ToString() != header.GameCode)
+                {
+                    reasonCannotPatch = $"Game code of mod '{modInfo.GameCode}' does not match game code of rom '{header.GameCode}'";
+                    return false;
+                }
+            }
+
             if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
             {
                 if (!_fallbackSpriteProvider.IsDefaultsPopulated)
