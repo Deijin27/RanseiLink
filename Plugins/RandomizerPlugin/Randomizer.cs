@@ -19,6 +19,8 @@ public class Randomizer
     private MoveId[] _moveIds = EnumUtil.GetValues<MoveId>().ToArray();
     private readonly WarriorId[] _warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private readonly MoveAnimationId[] _moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
+    private WarriorSkillId[] _warriorSkillIds = EnumUtil.GetValues<WarriorSkillId>().ToArray();
+    private readonly BattleConfigId[] _battleConfigIds = EnumUtil.GetValues<BattleConfigId>().ToArray();
 
     private IScenarioPokemonService _scenarioPokemonService;
     private IScenarioWarriorService _scenarioWarriorService;
@@ -59,7 +61,7 @@ public class Randomizer
             }
         }
 
-        RandomizeNoValidationNeeded();
+        RandomizeNoValidationNeeded(context.Services);
 
         if (options.AllMaxLinkValue > 0)
         {
@@ -94,6 +96,10 @@ public class Randomizer
         if (_options.AvoidDummyMoves)
         {
             _moveIds = _moveIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
+        }
+        if (_options.AvoidDummyWarriorSkills)
+        {
+            _warriorSkillIds = _warriorSkillIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
         random = new Random(_options.Seed.GetHashCode());
@@ -155,7 +161,7 @@ public class Randomizer
     /// <summary>
     /// Randomization that doesn't require validation
     /// </summary>
-    private void RandomizeNoValidationNeeded()
+    private void RandomizeNoValidationNeeded(IServiceGetter services)
     {
         if (_options.Warriors)
         {
@@ -173,6 +179,72 @@ public class Randomizer
                 move.ProjectileAnimation = random.Choice(_moveAnimationIds);
                 move.ImpactAnimation = random.Choice(_moveAnimationIds);
             }
+        }
+
+        if (_options.WarriorSkills)
+        {
+            var baseWarriorService = services.Get<IBaseWarriorService>();
+            foreach (var warrior in baseWarriorService.Enumerate())
+            {
+                warrior.Skill = random.Choice(_warriorSkillIds);
+            }
+            baseWarriorService.Save();
+        }
+
+        if (_options.StatRandomMode == StatRandomizationMode.Shuffle)
+        {
+            foreach (var pokemon in _pokemonService.Enumerate())
+            {
+                var statArray = new[] { pokemon.Hp, pokemon.Atk, pokemon.Def, pokemon.Spe };
+                RandomShuffle(random, statArray);
+                pokemon.Hp = statArray[0];
+                pokemon.Atk = statArray[1];
+                pokemon.Def = statArray[2];
+                pokemon.Spe = statArray[3];
+            }
+        }
+        else if (_options.StatRandomMode == StatRandomizationMode.Range)
+        {
+            var min = _options.StatRangeMin;
+            var max = _options.StatRangeMax + 1;
+            foreach (var pokemon in _pokemonService.Enumerate())
+            {
+                pokemon.Hp = random.Next(min, max);
+                pokemon.Atk = random.Next(min, max);
+                pokemon.Def = random.Next(min, max);
+                pokemon.Spe = random.Next(min, max);
+            }
+        }
+
+        if (_options.DiscoLights)
+        {
+            var battleConfigService = services.Get<IBattleConfigService>();
+            foreach (var battleConfig in battleConfigService.Enumerate())
+            {
+                battleConfig.UpperAtmosphereColor = RandomColor(random);
+                battleConfig.MiddleAtmosphereColor = RandomColor(random);
+                battleConfig.LowerAtmosphereColor = RandomColor(random);
+            }
+            battleConfigService.Save();
+        }
+
+        if (_options.BattleMaps)
+        {
+            var kingdomService = services.Get<IKingdomService>();
+            foreach (var kingdom in kingdomService.Enumerate().Skip(1)) // skip aurora because it will break tutorial
+            {
+                kingdom.BattleConfig = random.Choice(_battleConfigIds);
+            }
+            kingdomService.Save();
+
+            var buildingService = services.Get<IBuildingService>();
+            foreach (var building in buildingService.Enumerate().Where(x => x.Function == BuildingFunctionId.Battle))
+            {
+                building.BattleConfig1 = random.Choice(_battleConfigIds);
+                building.BattleConfig2 = random.Choice(_battleConfigIds);
+                building.BattleConfig3 = random.Choice(_battleConfigIds);
+            }
+            buildingService.Save();
         }
     }
 
@@ -308,5 +380,20 @@ public class Randomizer
         }
 
         maxLinkService.Save();
+    }
+
+    private static void RandomShuffle<T>(Random random, T[] values)
+    {
+        int n = values.Length;
+        while (n > 1)
+        {
+            int m = random.Next(n--);
+            (values[n], values[m]) = (values[m], values[n]);
+        }
+    }
+
+    private static RanseiLink.Core.Graphics.Rgb15 RandomColor(Random random)
+    {
+        return new RanseiLink.Core.Graphics.Rgb15(random.Next(32), random.Next(32), random.Next(32));
     }
 }
