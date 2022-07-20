@@ -91,8 +91,22 @@ public partial class NumberBox : UserControl
 
     private void NumberTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
     {
+        var tb = (TextBox)sender;
+        string currentText = tb.Text;
+        string newText;
+
+        if (tb.SelectionLength != 0)
+        {
+            string startText = currentText.Substring(0, tb.SelectionStart);
+            string endText = currentText.Substring(tb.SelectionStart + tb.SelectionLength);
+            newText = startText + e.Text + endText;
+        }
+        else
+        {
+            newText = currentText + e.Text;
+        }
         // If it's invlaid, mark as handled so it doesn't proceed, else mark as not handled.
-        string newText = ((TextBox)sender).Text + e.Text;
+        
         e.Handled = !(int.TryParse(newText, out int i) && i >= Min && i <= Max);
     }
 
