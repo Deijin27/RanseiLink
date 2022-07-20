@@ -10,10 +10,12 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
     {
         private readonly IGraphicTypePatchBuilder[] _builders;
         private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
-        public GraphicsPatchBuilder(IGraphicTypePatchBuilder[] builders, IFallbackSpriteProvider fallbackSpriteProvider)
+        private readonly ModInfo _mod;
+        public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackSpriteProvider fallbackSpriteProvider)
         {
             _builders = builders;
             _fallbackSpriteProvider = fallbackSpriteProvider;
+            _mod = mod;
         }
 
         public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
@@ -23,7 +25,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                 return;
             }
 
-            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
+            if (!_fallbackSpriteProvider.IsDefaultsPopulated(_mod.GameCode))
             {
                 throw new Exception("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
             }

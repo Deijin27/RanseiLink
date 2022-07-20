@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RanseiLink.Core.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace RanseiLink.Core.Services
@@ -29,12 +30,6 @@ namespace RanseiLink.Core.Services
         Title
     }
 
-    public interface ISpriteProvider
-    {
-        List<SpriteFile> GetAllSpriteFiles(SpriteType type);
-        SpriteFile GetSpriteFile(SpriteType type, int id);
-    }
-
     public class SpriteFile
     {
         public SpriteType Type { get; }
@@ -50,17 +45,19 @@ namespace RanseiLink.Core.Services
         }
     }
     
-
-
-    public interface IFallbackSpriteProvider : ISpriteProvider
+    public interface IFallbackSpriteProvider
     {
-        bool IsDefaultsPopulated { get; }
+        bool IsDefaultsPopulated(ConquestGameCode gc);
         void Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
+        List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type);
+        SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id);
     }
 
-    public interface IOverrideSpriteProvider : ISpriteProvider
+    public interface IOverrideSpriteProvider
     {
         void SetOverride(SpriteType type, int id, string file);
         void ClearOverride(SpriteType type, int id);
+        List<SpriteFile> GetAllSpriteFiles(SpriteType type);
+        SpriteFile GetSpriteFile(SpriteType type, int id);
     }
 }

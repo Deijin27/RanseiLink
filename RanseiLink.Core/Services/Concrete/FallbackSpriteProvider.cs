@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using RanseiLink.Core.Services.DefaultPopulaters;
 using System.Threading.Tasks;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.Concrete
 {
@@ -13,33 +14,41 @@ namespace RanseiLink.Core.Services.Concrete
     {
         private readonly RomFsFactory _ndsFactory;
         private readonly IGraphicTypeDefaultPopulater[] _populaters;
-        private readonly string _defaultDataFolder;
 
-        public FallbackSpriteProvider(string defaultDataFolder, RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
+        public FallbackSpriteProvider(RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
         {
-            _defaultDataFolder = defaultDataFolder;
             _populaters = populaters;
             _ndsFactory = ndsFactory;
-            Directory.CreateDirectory(_defaultDataFolder);
         }
-
-        public bool IsDefaultsPopulated => Directory.Exists(Path.Combine(_defaultDataFolder, Constants.GraphicsFolderPath));
+        public bool IsDefaultsPopulated(ConquestGameCode gameCode) => Directory.Exists(Path.Combine(Constants.DefaultDataFolder(gameCode), Constants.GraphicsFolderPath));
 
         public void Populate(string ndsFile, IProgress<ProgressInfo> progress = null)
         {
+            ConquestGameCode gc;
+            using (var br = new BinaryReader(File.OpenRead(ndsFile)))
+            {
+                var header = new NdsHeader(br);
+                if (!Enum.TryParse(header.GameCode, out gc))
+                {
+                    progress?.Report(new ProgressInfo(statusText: "Not a valid conquest rom! :("));
+                    return; // need to make this have better error reporting
+                }
+            }
+
+            string defaultDataFolder = Constants.DefaultDataFolder(gc);
             // reset the graphics folder
-            if (IsDefaultsPopulated)
+            if (IsDefaultsPopulated(gc))
             {
                 progress?.Report(new ProgressInfo(statusText: "Deleting Existing...", isIndeterminate: true));
-                Directory.Delete(_defaultDataFolder, true);
+                Directory.Delete(defaultDataFolder, true);
             }
-            Directory.CreateDirectory(_defaultDataFolder);
+            Directory.CreateDirectory(defaultDataFolder);
 
             // populate
             progress?.Report(new ProgressInfo(statusText: "Extracting files from rom...", isIndeterminate: true));
             using (var nds = _ndsFactory(ndsFile))
             {
-                nds.ExtractCopyOfDirectory(Constants.GraphicsFolderPath, _defaultDataFolder);
+                nds.ExtractCopyOfDirectory(Constants.GraphicsFolderPath, defaultDataFolder);
             }
                 
             var infos = GraphicsInfoResource.All;
@@ -49,29 +58,30 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 foreach (var populater in _populaters)
                 {
-                    populater.ProcessExportedFiles(_defaultDataFolder, gfxInfo);
+                    populater.ProcessExportedFiles(defaultDataFolder, gfxInfo);
                 }
                 progress?.Report(new ProgressInfo(progress: ++count));
             });
             progress?.Report(new ProgressInfo(statusText: "Done!"));
         }
 
-        public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
+        public List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type)
         {
+            string defaultDataFolder = Constants.DefaultDataFolder(gc);
             var info = GraphicsInfoResource.Get(type);
             if (info is MiscConstants miscInfo)
             {
                 List<SpriteFile> result = new List<SpriteFile>();
                 foreach (var item in miscInfo.Items)
                 {
-                    var file = Path.Combine(_defaultDataFolder, item.PngFile);
+                    var file = Path.Combine(defaultDataFolder, item.PngFile);
                     result.Add(new SpriteFile(type, item.Id, file, isOverride: false));
                 }
                 return result;
             }
             else
             {
-                string dir = Path.Combine(_defaultDataFolder, info.PngFolder);
+                string dir = Path.Combine(defaultDataFolder, info.PngFolder);
                 if (!Directory.Exists(dir))
                 {
                     return new List<SpriteFile>();
@@ -83,9 +93,10 @@ namespace RanseiLink.Core.Services.Concrete
             
         }
 
-        public SpriteFile GetSpriteFile(SpriteType type, int id)
+        public SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id)
         {
-            return new SpriteFile(type, id, Path.Combine(_defaultDataFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
+            string defaultDataFolder = Constants.DefaultDataFolder(gc);
+            return new SpriteFile(type, id, Path.Combine(defaultDataFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
         }
     }
 }

@@ -10,10 +10,11 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
     public class StlPatchBuilder : IGraphicTypePatchBuilder
     {
         private readonly IOverrideSpriteProvider _overrideSpriteProvider;
-        private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
-        public StlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider)
+        private readonly string _graphicsProviderFolder;
+        public StlPatchBuilder(ModInfo mod, IOverrideSpriteProvider overrideSpriteProvider)
         {
             _overrideSpriteProvider = overrideSpriteProvider;
+            _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
         }
 
         public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)

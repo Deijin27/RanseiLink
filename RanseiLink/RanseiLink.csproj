@@ -8,7 +8,7 @@
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <Authors>Deijin</Authors>
-    <VersionPrefix>4.8-beta1</VersionPrefix>
+    <VersionPrefix>4.8-beta2</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>

@@ -22,12 +22,12 @@ namespace RanseiLink.Core.Services.Concrete
 
         public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
         {
-            if (!_fallbackSpriteProvider.IsDefaultsPopulated)
+            if (!_fallbackSpriteProvider.IsDefaultsPopulated(_mod.GameCode))
             {
                 return new List<SpriteFile>();
             }
             var dict = new Dictionary<int, SpriteFile>();
-            foreach (var i in _fallbackSpriteProvider.GetAllSpriteFiles(type))
+            foreach (var i in _fallbackSpriteProvider.GetAllSpriteFiles(_mod.GameCode, type))
             {
                 dict[i.Id] = i;
             }
@@ -71,7 +71,7 @@ namespace RanseiLink.Core.Services.Concrete
             var file = GetSpriteFilePathWithoutFallback(type, id);
             if (!File.Exists(file.File))
             {
-                file = _fallbackSpriteProvider.GetSpriteFile(type, id);
+                file = _fallbackSpriteProvider.GetSpriteFile(_mod.GameCode, type, id);
             }
             return file;
         }

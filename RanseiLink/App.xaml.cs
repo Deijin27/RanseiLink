@@ -59,9 +59,10 @@ public partial class App : Application
 
     private static void LogUnhandledException(Exception exception, string source)
     {
-#if DEBUG
-        return;
-#endif
+        if (Debugger.IsAttached)
+        {
+            return;
+        }
         string title = "Unhandled Exception";
         string message = $"Please report this at https://github.com/Deijin27/RanseiLink/issues\n\n{exception}";
 

@@ -66,7 +66,7 @@ namespace RanseiLink.Core.Services.Concrete
 
             if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
             {
-                if (!_fallbackSpriteProvider.IsDefaultsPopulated)
+                if (!_fallbackSpriteProvider.IsDefaultsPopulated(modInfo.GameCode))
                 {
                     reasonCannotPatch = "Cannot patch sprites unless 'Populate Graphics Defaults' has been run";
                     return false;
