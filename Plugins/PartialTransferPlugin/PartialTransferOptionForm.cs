@@ -23,6 +23,8 @@ public class PartialTransferOptionForm : IPluginForm
     [CollectionOption("To", itemsSourcePropertyName: nameof(Mods), "The source of the transfer data", group: Where)]
     public string DestinationMod { get; set; }
 
+    [BoolOption("Transfer Names", description: "When transferring things with names, e.g. Pokemon, uncheck this to copy everything except for the names")]
+    public bool TransferNames { get; set; } = true;
 
     [BoolOption("Abilities", group: What)]
     public bool Ability { get; set; }
