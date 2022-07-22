@@ -20,7 +20,7 @@ public class Randomizer
     private readonly WarriorId[] _warriorIds = EnumUtil.GetValuesExceptDefaults<WarriorId>().ToArray();
     private readonly MoveAnimationId[] _moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
     private WarriorSkillId[] _warriorSkillIds = EnumUtil.GetValues<WarriorSkillId>().ToArray();
-    private readonly BattleConfigId[] _battleConfigIds = EnumUtil.GetValues<BattleConfigId>().ToArray();
+    private readonly BattleConfigId[] _battleConfigIds = EnumUtil.GetValuesExceptDefaults<BattleConfigId>().ToArray();
 
     private IScenarioPokemonService _scenarioPokemonService;
     private IScenarioWarriorService _scenarioWarriorService;
