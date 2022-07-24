@@ -39,7 +39,6 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
-    private string _currentModuleId;
     private object _currentVm;
     private ModInfo _mod;
     private IServiceGetter _modServiceGetter;
@@ -68,6 +67,9 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         CommitRomCommand = new RelayCommand(CommitRom);
 
         RegisterModules(modules);
+
+        GoForwardInModuleStackCommand = new RelayCommand(GoForwardInModuleStack, () => _forwardModuleStack.Any());
+        GoBackInModuleStackCommand = new RelayCommand(GoBackInModuleStack, () => _backModuleStack.Any());
     }
 
     private ICachedMsgBlockService _cachedMsgBlockService;
@@ -89,12 +91,26 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     public string CurrentModuleId
     {
-        get => _currentModuleId;
+        get => _currentModule?.UniqueId;
         set
         {
-            if (RaiseAndSetIfChanged(ref _currentModuleId, value))
+            if (_currentModule?.UniqueId != value)
             {
                 SetCurrentModule(value);
+            }
+        }
+    }
+
+    private EditorModuleListItem _selectedModuleItem;
+    public EditorModuleListItem SelectedModuleItem
+    {
+        get => _selectedModuleItem;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _selectedModuleItem, value))
+            {
+                SetCurrentModule(value.ModuleId);
+                _forwardModuleStack.Clear();
             }
         }
     }
@@ -110,6 +126,27 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private Dictionary<string, EditorModule> UninitialisedModules { get; } = new();
     private Dictionary<string, EditorModule> InitialisedModules { get; } = new();
 
+    private readonly Stack<string> _backModuleStack = new();
+    private readonly Stack<string> _forwardModuleStack = new();
+
+    public ICommand GoForwardInModuleStackCommand { get; }
+    public ICommand GoBackInModuleStackCommand { get; }
+
+    private void GoForwardInModuleStack()
+    {
+        if (_forwardModuleStack.Any())
+        {
+            SetCurrentModule(_forwardModuleStack.Pop());
+        }
+    }
+    private void GoBackInModuleStack()
+    {
+        if (_backModuleStack.Any())
+        {
+            _forwardModuleStack.Push(CurrentModuleId);
+            SetCurrentModule(_backModuleStack.Pop(), blockStackPush:true);
+        }
+    }
 
     private void SaveTextChanges()
     {
@@ -136,7 +173,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         return true;
     }
 
-    private void SetCurrentModule(string moduleId, bool forceUpdate = false)
+    private void SetCurrentModule(string moduleId, bool forceUpdate = false, bool blockStackPush = false)
     {
         if (moduleId == null)
         {
@@ -151,10 +188,17 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         {
             return;
         }
+        if (_currentModule != null && _currentModule.UniqueId != moduleId && !blockStackPush)
+        {
+            _backModuleStack.Push(_currentModule.UniqueId);
+        }
         _currentModule?.OnPageClosing();
         _currentModule = module;
         CurrentVm = _currentModule.ViewModel;
         _currentModule?.OnPageOpening();
+
+        _selectedModuleItem = ListItems.FirstOrDefault(x => x.ModuleId == moduleId);
+        RaisePropertyChanged(nameof(SelectedModuleItem));
     }
 
     #region Module Initialisation

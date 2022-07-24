@@ -15,6 +15,10 @@
         <vc:InvertBoolToVisibilityConverter x:Key="Converter.InvertBoolToVisibility"/>
         <vc:InvertBoolConverter x:Key="Converter.InvertBool" />
     </UserControl.Resources>
+    <UserControl.InputBindings>
+        <KeyBinding Key="Left" Modifiers="Ctrl" Command="{Binding GoBackInModuleStackCommand}"/>
+        <KeyBinding Key="Right" Modifiers="Ctrl" Command="{Binding GoForwardInModuleStackCommand}"/>
+    </UserControl.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -37,8 +41,8 @@
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
                   Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
                   ItemsSource="{Binding ListItems}"
-                  SelectedValue="{Binding CurrentModuleId, Delay=10}" 
-                  SelectedValuePath="ModuleId"
+                  SelectedItem="{Binding SelectedModuleItem}"
+                  
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.ShowAlwaysDropTargetAdorner="True">
@@ -83,6 +87,12 @@
                               IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={StaticResource Converter.InvertBool}}">
                     <ContentPresenter Height="18" Content="{StaticResource PluginIcon}" />
                 </ToggleButton>
+                <Button Command="{Binding GoBackInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip="Navigate Back (Ctrl+LeftArrow)" Style="{StaticResource RoundedGrayHoverButtonStyle}">
+                    <TextBlock Text="&#xE0A6;" FontFamily="{StaticResource SegoeMDL2Assets}"/>
+                </Button>
+                <Button Command="{Binding GoForwardInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip="Navigate Forward (Ctrl+RightArrow)" Style="{StaticResource RoundedGrayHoverButtonStyle}">
+                    <TextBlock Text="&#xE0AB;" FontFamily="{StaticResource SegoeMDL2Assets}"/>
+                </Button>
             </StackPanel>
         </Grid>
         
