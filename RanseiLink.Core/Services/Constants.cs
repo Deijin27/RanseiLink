@@ -20,7 +20,6 @@ namespace RanseiLink.Core.Services
         /// </summary>
         public static readonly string RootFolder;
 
-        public static string DefaultDataProviderFolder => Path.Combine(RootFolder, "DataProvider");
         public static string DefaultDataFolder(ConquestGameCode gameCode) => Path.Combine(RootFolder, "DefaultData", gameCode.ToString());
 
         /// <summary>

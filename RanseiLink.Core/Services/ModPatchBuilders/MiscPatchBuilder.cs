@@ -4,20 +4,18 @@ using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services.Concrete;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders
 {
     public class MiscPatchBuilder : IGraphicTypePatchBuilder
     {
         private readonly IOverrideSpriteProvider _overrideSpriteProvider;
-        private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
-        public MiscPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider)
+        private readonly string _graphicsProviderFolder;
+        public MiscPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod)
         {
             _overrideSpriteProvider = overrideSpriteProvider;
+            _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
         }
 
         public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)

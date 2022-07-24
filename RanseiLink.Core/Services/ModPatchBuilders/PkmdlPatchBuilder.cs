@@ -18,10 +18,11 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
         private const int _pokemonSpriteWidth = 32;
 
         private readonly IOverrideSpriteProvider _overrideSpriteProvider;
-        private readonly string _graphicsProviderFolder = Constants.DefaultDataProviderFolder;
-        public PkmdlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider)
+        private readonly string _graphicsProviderFolder;
+        public PkmdlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod)
         {
             _overrideSpriteProvider = overrideSpriteProvider;
+            _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
         }
 
         public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)

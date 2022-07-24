@@ -23,7 +23,7 @@ namespace RanseiLink.Core.Services
             builder.RegisterInstance(romFsFactory).As<RomFsFactory>();
 
             builder.RegisterType<MsgService>().As<IMsgService>().SingleInstance();
-            builder.RegisterType<FallbackSpriteProvider>().As<IFallbackSpriteProvider>().SingleInstance().WithParameter("defaultDataFolder", Constants.DefaultDataProviderFolder);
+            builder.RegisterType<FallbackSpriteProvider>().As<IFallbackSpriteProvider>().SingleInstance();
             builder.RegisterType<ModPatchingService>().As<IModPatchingService>().SingleInstance();
             builder.RegisterType<ModManager>().As<IModManager>().SingleInstance().WithParameter("modFolder", Path.Combine(Constants.RootFolder, "Mods"));
             builder.RegisterType<SettingService>().As<ISettingService>().SingleInstance().WithParameter("settingsFilePath", Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml"));
