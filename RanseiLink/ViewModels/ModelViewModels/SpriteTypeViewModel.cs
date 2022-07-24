@@ -58,13 +58,15 @@ public class SpriteTypeViewModel : ViewModelBase
     private void UpdateInfo(SpriteType type)
     {
         IGraphicsInfo info = GraphicsInfoResource.Get(type);
+
+        _canAddNew = !info.FixedAmount;
+
         if (info is MiscConstants)
         {
             DimensionInfo = "";
             return;
         }
 
-        _canAddNew = !info.FixedAmount;
         string dimensionInfo = "";
         if (info.Width != null)
         {
