@@ -1,17 +1,19 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
 public interface IPokemonViewModel 
 {
-    void SetModel(Pokemon model);
+    void SetModel(PokemonId id, Pokemon model);
 }
 
 public class PokemonViewModel : ViewModelBase, IPokemonViewModel
@@ -21,11 +23,17 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     private readonly IIdToNameService _idToNameService;
     private readonly IKingdomService _kingdomService;
     private readonly IItemService _itemService;
-    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService)
+    private readonly IOverrideSpriteProvider _spriteProvider;
+    private PokemonId _id;
+    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService, 
+        IOverrideSpriteProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
+        _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
         _itemService = itemService;
+        _spriteProvider = spriteProvider;
         _model = new Pokemon();
 
         MoveItems = _idToNameService.GetComboBoxItemsExceptDefault<IMoveService>();
@@ -37,11 +45,13 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
         AddEvolutionCommand = new RelayCommand(AddEvolution);
         RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
+        ViewSpritesCommand = new RelayCommand(ViewSprites);
     }
 
-    public void SetModel(Pokemon model)
+    public void SetModel(PokemonId id, Pokemon model)
     {
         _model = model;
+        _id = id;
         Evolutions.Clear();
         for (int i = 0; i < _model.Evolutions.Count; i++)
         {
@@ -324,6 +334,29 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     {
         _model.Evolutions.RemoveAt(_model.Evolutions.Count - 1);
         Evolutions.RemoveAt(Evolutions.Count - 1);
+    }
+
+    public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, (int)_id).File;
+
+    public ICommand ViewSpritesCommand { get; }
+    private void ViewSprites()
+    {
+        List<SpriteFile> sprites = new();
+        int id = (int)_id;
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonB, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonCI, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonL, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonS, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonSR, id));
+        //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonWu, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.ModelPokemon, id));
+
+        var dialog = new Dialogs.ImageListDialog(sprites, _spriteItemVmFactory) { Owner = System.Windows.Application.Current.MainWindow };
+        dialog.ShowDialog();
+
+        RaisePropertyChanged(SmallSpritePath);
+
     }
 }
 

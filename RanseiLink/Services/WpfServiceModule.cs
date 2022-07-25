@@ -46,6 +46,7 @@ public class WpfModServiceModule : Module
     {
         builder.RegisterType<CachedMsgBlockService>().As<ICachedMsgBlockService>().SingleInstance();
         builder.RegisterType<IdToNameService>().As<IIdToNameService>().SingleInstance();
+        builder.RegisterType<SpriteManager>().As<ISpriteManager>().SingleInstance();
 
         builder.RegisterType<AbilityViewModel>().As<IAbilityViewModel>();
         builder.RegisterType<BaseWarriorViewModel>().As<IBaseWarriorViewModel>();
@@ -71,6 +72,8 @@ public class WpfModServiceModule : Module
 
         builder.RegisterType<MsgGridViewModel>().As<MsgGridViewModel>();
         builder.RegisterType<ScenarioWarriorGridViewModel>().As<IScenarioWarriorGridViewModel>();
+
+        builder.RegisterType<SpriteItemViewModel>().As<SpriteItemViewModel>();
 
         builder.RegisterType<BannerViewModel>().As<BannerViewModel>();
     }

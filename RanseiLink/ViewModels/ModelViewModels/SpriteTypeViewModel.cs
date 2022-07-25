@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
+using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -11,15 +12,19 @@ namespace RanseiLink.ViewModels;
 
 public class SpriteTypeViewModel : ViewModelBase
 {
+    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     private readonly IOverrideSpriteProvider _spriteProvider;
     private readonly IDialogService _dialogService;
+    private readonly ISpriteManager _spriteManager;
     private string _dimensionInfo;
     private bool _canAddNew;
 
-    public SpriteTypeViewModel(IOverrideSpriteProvider overrideSpriteProvider, IDialogService dialogService)
+    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideSpriteProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;
+        _spriteManager = spriteManager;
+        _spriteItemVmFactory = spriteItemVmFactory;
 
         AddNewCommand = new RelayCommand(AddNew, () => _canAddNew);
         ExportAllCommand = new RelayCommand(ExportAll);
@@ -55,7 +60,7 @@ public class SpriteTypeViewModel : ViewModelBase
     public ICommand AddNewCommand { get; }
     public ICommand ExportAllCommand { get; }
 
-    private void UpdateInfo(SpriteType type)
+    public void UpdateInfo(SpriteType type)
     {
         IGraphicsInfo info = GraphicsInfoResource.Get(type);
 
@@ -77,6 +82,10 @@ public class SpriteTypeViewModel : ViewModelBase
             dimensionInfo += $"height={info.Height} ";
         }
         dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
+
+        int numberOverriden = _spriteProvider.GetAllSpriteFiles(SelectedType).Where(x => x.IsOverride).Count();
+        dimensionInfo += $"number-overriden={numberOverriden} ";
+
         DimensionInfo = dimensionInfo;
     }
 
@@ -92,7 +101,8 @@ public class SpriteTypeViewModel : ViewModelBase
             List<SpriteItemViewModel> newItems = new();
             foreach (var i in files)
             {
-                var item = new SpriteItemViewModel(i, _spriteProvider, _dialogService, this);
+                var item = _spriteItemVmFactory(i);
+                item.SpriteModified += OnSpriteModified;
                 newItems.Add(item);
                 progress.Report(new ProgressInfo(progress: ++count));
             }
@@ -109,93 +119,26 @@ public class SpriteTypeViewModel : ViewModelBase
             if (SetOverride(id, $"Pick a file to add in slot '{id}' "))
             {
                 var spriteFile = _spriteProvider.GetSpriteFile(SelectedType, id);
-                var item = new SpriteItemViewModel(spriteFile, _spriteProvider, _dialogService, this);
+                var item = _spriteItemVmFactory(spriteFile);
+                item.SpriteModified += OnSpriteModified;
                 Items.Add(item);
+                UpdateInfo(SelectedType);
             }
         }
     }
 
+    private void OnSpriteModified(object sender, SpriteFile file)
+    {
+        if (!File.Exists(file.File))
+        {
+            Items.Remove((SpriteItemViewModel)sender);
+        }
+        UpdateInfo(SelectedType);
+    }
+
     public bool SetOverride(int id, string requestFileMsg)
     {
-        if (!_dialogService.RequestFile(requestFileMsg, ".png", "PNG Image (.png)|*.png", out string file))
-        {
-            return false;
-        }
-
-        string temp = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
-
-        IGraphicsInfo gInfo = GraphicsInfoResource.Get(SelectedType);
-
-        if (gInfo.Width != null && gInfo.Height != null)
-        {
-            int width = (int)gInfo.Width;
-            int height = (int)gInfo.Height;
-
-            if (!Core.Graphics.ImageSimplifier.ImageMatchesSize(file, width, height))
-            {
-                if (gInfo.StrictHeight || gInfo.StrictWidth)
-                {
-                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                        "Invalid dimensions",
-                        $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nFor this image type it is a strict requirement."
-                        ));
-                    return false;
-                }
-
-                var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
-                title: "Invalid dimensions",
-                message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",
-                buttons: new[]
-                {
-                    new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
-                    new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
-                    new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
-                },
-                defaultResult: MessageBoxResult.Cancel
-                ));
-
-                switch (result)
-                {
-                    case MessageBoxResult.Yes:
-                        Core.Graphics.ImageSimplifier.ResizeImage(file, width, height, temp);
-                        file = temp;
-                        break;
-                    case MessageBoxResult.No:
-                        break;
-                    default:
-                        return false;
-                }
-            }
-        }
-
-
-        int paletteCapacity;
-        if (gInfo is MiscConstants miscInfo)
-        {
-            paletteCapacity = miscInfo.Items[id].PaletteCapacity;
-        }
-        else
-        {
-            paletteCapacity = gInfo.PaletteCapacity;
-        }
-        
-        if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
-        {
-            if (!_dialogService.SimplfyPalette(paletteCapacity, file, temp))
-            {
-                return false;
-            }
-            file = temp;
-        }
-
-        _spriteProvider.SetOverride(SelectedType, id, file);
-
-        if (File.Exists(temp))
-        {
-            File.Delete(temp);
-        }
-
-        return true;
+        return _spriteManager.SetOverride(SelectedType, id, requestFileMsg);
     }
 
     private void ExportAll()

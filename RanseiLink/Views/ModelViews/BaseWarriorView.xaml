@@ -59,40 +59,42 @@
                 <controls:NumberBox  Value="{Binding Sprite}"/>
                 <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </UniformGrid>
-            
-            <TextBlock Text="Sprite Unknown" Grid.Row="2"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteUnknownItems}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
 
-            <TextBlock Text="Speciality 1" Grid.Row="3" />
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Content="View Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>
 
-            <TextBlock Text="Speciality 2" Grid.Row="4" />
-            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
+            <TextBlock Text="Sprite Unknown" Grid.Row="3"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteUnknownItems}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
 
-            <TextBlock Text="Weakness 1" Grid.Row="5" />
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness1, Mode=TwoWay}"/>
+            <TextBlock Text="Speciality 1" Grid.Row="4" />
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
 
-            <TextBlock Text="Weakness 2" Grid.Row="6" />
-            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness2, Mode=TwoWay}"/>
+            <TextBlock Text="Speciality 2" Grid.Row="5" />
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Skill" Grid.Row="7" ToolTip="Jump to selected warrior skill" 
+            <TextBlock Text="Weakness 1" Grid.Row="6" />
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness1, Mode=TwoWay}"/>
+
+            <TextBlock Text="Weakness 2" Grid.Row="7" />
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness2, Mode=TwoWay}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Skill" Grid.Row="8" ToolTip="Jump to selected warrior skill" 
                     Command="{Binding JumpToWarriorSkillCommand}" CommandParameter="{Binding Skill}"/>
-            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems}" SelectedValue="{Binding Skill, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems}" SelectedValue="{Binding Skill, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
-            <TextBlock Text="Power" Grid.Row="8" />
-            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Power" Grid.Row="9" />
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
 
-            <TextBlock Text="Wisdom" Grid.Row="9" />
-            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Wisdom" Grid.Row="10" />
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
 
-            <TextBlock Text="Charisma" Grid.Row="10" />
-            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
+            <TextBlock Text="Charisma" Grid.Row="11" />
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
 
-            <TextBlock Text="Capacity" Grid.Row="11" />
-            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="8"/>
+            <TextBlock Text="Capacity" Grid.Row="12" />
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="8"/>
 
-            <TextBlock Text="Gender" Grid.Row="12"/>
-            <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GenderItems}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
+            <TextBlock Text="Gender" Grid.Row="13"/>
+            <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GenderItems}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
 
         </Grid>
         <Grid Margin="10">

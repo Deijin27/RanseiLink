@@ -4,13 +4,14 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
 public interface IBaseWarriorViewModel
 {
-    void SetModel(BaseWarrior model);
+    void SetModel(WarriorId id, BaseWarrior model);
 }
 
 public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
@@ -19,24 +20,31 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
-    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService)
+    private WarriorId _id;
+    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, 
+        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _model = new BaseWarrior();
         _nameTable = baseWarriorService.NameTable;
         _spriteProvider = overrideSpriteProvider;
         _cachedMsgBlockService = cachedMsgBlockService;
+        _spriteItemVmFactory = spriteItemVmFactory;
 
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
+
+        ViewSpritesCommand = new RelayCommand(ViewSprites);
 
         WarriorSkillItems = idToNameService.GetComboBoxItemsPlusDefault<IWarriorSkillService>();
         BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
         PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
     }
 
-    public void SetModel(BaseWarrior model)
+    public void SetModel(WarriorId id, BaseWarrior model)
     {
+        _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
@@ -238,4 +246,24 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
     }
 
     public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouM, Sprite).File;
+
+    public ICommand ViewSpritesCommand { get; }
+    private void ViewSprites()
+    {
+        List<SpriteFile> sprites = new();
+        int id = Sprite;
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouS, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouB, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouCI, id));
+        //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouF, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouLL, id));
+        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouM, id));
+        //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouWu, id));
+
+        var dialog = new Dialogs.ImageListDialog(sprites, _spriteItemVmFactory) { Owner = System.Windows.Application.Current.MainWindow };
+        dialog.ShowDialog();
+
+        RaisePropertyChanged(SmallSpritePath);
+
+    }
 }

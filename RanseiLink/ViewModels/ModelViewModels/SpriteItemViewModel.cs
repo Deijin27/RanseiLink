@@ -1,6 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Services;
+using RanseiLink.Services;
 using RanseiLink.ValueConverters;
+using System;
 using System.IO;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -9,19 +11,20 @@ namespace RanseiLink.ViewModels;
 
 public class SpriteItemViewModel : ViewModelBase
 {
-    private readonly SpriteTypeViewModel _parent;
     private readonly IDialogService _dialogService;
     private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly ISpriteManager _spriteManager;
     private readonly SpriteType _spriteType;
     private bool _isOverride;
     private string _displayFile;
     private ImageSource _displayImage;
-    
-    public SpriteItemViewModel(SpriteFile sprite, IOverrideSpriteProvider spriteProvider, IDialogService dialogService, SpriteTypeViewModel parent)
+
+    public delegate SpriteItemViewModel Factory(SpriteFile sprite);
+    public SpriteItemViewModel(SpriteFile sprite, ISpriteManager spriteManager, IOverrideSpriteProvider spriteProvider, IDialogService dialogService)
     {
-        _parent = parent;
         _dialogService = dialogService;
         _spriteProvider = spriteProvider;
+        _spriteManager = spriteManager;
         Id = sprite.Id;
         _spriteType = sprite.Type;
         _isOverride = sprite.IsOverride;
@@ -39,6 +42,7 @@ public class SpriteItemViewModel : ViewModelBase
     public ICommand RevertCommand { get; }
 
     public int Id { get; }
+    public bool IsOverride => _isOverride;
 
     public ImageSource DisplayImage
     {
@@ -64,15 +68,13 @@ public class SpriteItemViewModel : ViewModelBase
         {
             _spriteProvider.ClearOverride(_spriteType, Id);
             _isOverride = false;
+            RaisePropertyChanged(nameof(IsOverride));
             _displayFile = _spriteProvider.GetSpriteFile(_spriteType, Id).File;
             if (File.Exists(_displayFile))
             {
                 UpdateDisplayImage();
             }
-            else
-            {
-                _parent.Items.Remove(this);
-            }
+            RaiseSpriteModified();
         }
     }
 
@@ -89,12 +91,22 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void SetOverride()
     {
-        if (_parent.SetOverride(Id, $"Pick a file to replace sprite '{Id}' with"))
+        if (_spriteManager.SetOverride(_spriteType, Id, $"Pick a file to replace sprite '{Id}' with"))
         {
             var file = _spriteProvider.GetSpriteFile(_spriteType, Id);
             _displayFile = file.File;
             _isOverride = file.IsOverride;
+            RaisePropertyChanged(nameof(IsOverride));
             UpdateDisplayImage();
+            RaiseSpriteModified();
+
         }
     }
+
+    private void RaiseSpriteModified()
+    {
+        SpriteModified?.Invoke(this, new SpriteFile(_spriteType, Id, _displayFile, IsOverride));
+    }
+
+    public event EventHandler<SpriteFile> SpriteModified;
 }

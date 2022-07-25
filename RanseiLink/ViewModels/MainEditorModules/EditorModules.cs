@@ -16,7 +16,7 @@ public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<IPokemonViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((PokemonId)id, _service.Retrieve(id)));
     }
 }
 
@@ -116,7 +116,7 @@ public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWar
     {
         base.Initialise(modServices);
         var vm = modServices.Get<IBaseWarriorViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorId)id, _service.Retrieve(id)));
     }
 }
 

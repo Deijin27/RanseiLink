@@ -39,7 +39,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="{x:Type vm:SpriteItemViewModel}">
                         <Grid Background="{DynamicResource WindowBackgroundBrush}">
                             <Grid.ContextMenu>
                                 <ContextMenu>
@@ -55,7 +55,18 @@
                                 <RowDefinition Height="20"/>
                                 <RowDefinition Height="auto" SharedSizeGroup="imgHeight"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Foreground="{DynamicResource ForegroundBrush}" Text="{Binding Id}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Id}" HorizontalAlignment="Center" TextAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsOverride}" Value="True">
+                                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                             <Image Grid.Row="1" Source="{Binding DisplayImage}" Stretch="None" />
                             
                         </Grid>
