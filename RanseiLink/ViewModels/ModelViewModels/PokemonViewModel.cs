@@ -355,7 +355,7 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         var dialog = new Dialogs.ImageListDialog(sprites, _spriteItemVmFactory) { Owner = System.Windows.Application.Current.MainWindow };
         dialog.ShowDialog();
 
-        RaisePropertyChanged(SmallSpritePath);
+        RaisePropertyChanged(nameof(SmallSpritePath));
 
     }
 }
