@@ -8,18 +8,63 @@ namespace RanseiLink.Core.Archive
         public const string FileExtension = ".pac";
         const uint MagicNumber = 0x0040E3C4;
 
-        private static string FileTypeNumberToExtension(uint fileType)
+        private static string FileTypeNumberToExtension(int fileType)
         {
             switch (fileType)
             {
                 case 0: return ".bmd0";
                 case 1: return ".btx0";
                 case 2: return ".btp0";
+                case 3: return ".unknown3";
                 case 4: return ".bma0";
                 case 5: return ".unknown5";
                 case 6: return ".char";
                 case 7: return ".bta0";
                 default: return "";
+            };
+        }
+
+        private static int ExtensionToFileTypeNumber(string extension)
+        {
+            switch (extension)
+            {
+                case ".bmd":
+                case ".bmd0":
+                case ".nsbmd":
+                    return 0;
+
+                case ".btx":
+                case ".btx0":
+                case ".nsbtx":
+                    return 1;
+
+                case ".btp":
+                case ".btp0":
+                case ".nsbtp":
+                    return 2;
+
+                case ".unknown3":
+                    return 3;
+
+                case ".bma":
+                case ".bma0":
+                case ".nsbma":
+                    return 4;
+
+                case ".unknown5":
+                    return 5;
+
+                case ".chr":
+                case ".char":
+                    return 6;
+
+                case ".bta":
+                case ".bta0":
+                case ".nsbta":
+                    return 7;
+
+                default:
+                    return -1;
             };
         }
 
@@ -64,10 +109,10 @@ namespace RanseiLink.Core.Archive
                 fileOffsets[fileOffsets.Length - 1] = (int)br.BaseStream.Length;
 
                 br.BaseStream.Seek(0x2C, SeekOrigin.Begin);
-                uint[] fileTypes = new uint[numFiles];
+                int[] fileTypes = new int[numFiles];
                 for (int i = 0; i < numFiles; i++)
                 {
-                    fileTypes[i] = br.ReadUInt32();
+                    fileTypes[i] = br.ReadInt32();
                 }
 
                 // files
@@ -89,8 +134,22 @@ namespace RanseiLink.Core.Archive
             }
         }
 
-        public static void Pack(string[] files, int[] fileTypeNumbers, string destinationFile, uint sharedFileCount = 1)
+        private static int[] AutoDetectFileTypeNumbers(string[] files)
         {
+            int[] result = new int[files.Length];
+            for (int i = 0; i < files.Length; i++)
+            {
+                result[i] = ExtensionToFileTypeNumber(Path.GetExtension(files[i]));
+            }
+            return result;
+        }
+
+        public static void Pack(string[] files, string destinationFile, int[] fileTypeNumbers = null, uint sharedFileCount = 1)
+        {
+            if (fileTypeNumbers == null)
+            {
+                fileTypeNumbers = AutoDetectFileTypeNumbers(files);
+            }
             using (var bw = new BinaryWriter(File.Create(destinationFile)))
             {
 
@@ -124,7 +183,7 @@ namespace RanseiLink.Core.Archive
             }
         }
 
-        public static void Pack(string folderPath, int[] fileTypeNumbers, string destinationFile = null, uint sharedFileCount = 1)
+        public static void Pack(string folderPath, string destinationFile = null, int[] fileTypeNumbers = null, uint sharedFileCount = 1)
         {
             if (!Directory.Exists(folderPath))
             {
@@ -145,7 +204,7 @@ namespace RanseiLink.Core.Archive
             string[] files = Directory.GetFiles(folderPath);
             Array.Sort(files);
 
-            Pack(files, fileTypeNumbers, destinationFile, sharedFileCount);
+            Pack(files, destinationFile, fileTypeNumbers, sharedFileCount);
         }
     }
 }

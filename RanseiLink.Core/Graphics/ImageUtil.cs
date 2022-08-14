@@ -32,29 +32,85 @@ namespace RanseiLink.Core.Graphics
 
     public static class ImageUtil
     {
-        public static void SaveAsPng(string file, ImageInfo imageInfo, bool tiled = false)
+        public static void SaveAsPng(string file, ImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
         {
-            using (var img = ToImage(imageInfo, tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint)))
+            using (var img = ToImage(imageInfo, tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint), format))
             {
                 img.SaveAsPng(file);
             }
         }
 
-        public static Image<Rgba32> ToImage(ImageInfo imageInfo, PointGetter pointGetter)
+        public static Image<Rgba32> ToImage(ImageInfo imageInfo, PointGetter pointGetter, TexFormat format = TexFormat.Pltt16)
         {
             var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
-            for (int i = 0; i < imageInfo.Pixels.Length; i++)
+            switch (format)
             {
-                Point point = pointGetter(i, imageInfo.Width);
-                Rgba32 color = imageInfo.Palette[imageInfo.Pixels[i]];
-                img[point.X, point.Y] = color;
+                case TexFormat.Pltt4:
+                case TexFormat.Pltt16:
+                case TexFormat.Pltt256:
+                    {
+                        for (int i = 0; i < imageInfo.Pixels.Length; i++)
+                        {
+                            Point point = pointGetter(i, imageInfo.Width);
+                            Rgba32 color;
+
+                            byte pix = imageInfo.Pixels[i];
+                            color = imageInfo.Palette[pix];
+
+                            img[point.X, point.Y] = color;
+                        }
+                        
+                        break;
+                    }
+                case TexFormat.A3I5:
+                    {
+                        for (int i = 0; i < imageInfo.Pixels.Length; i++)
+                        {
+                            Point point = pointGetter(i, imageInfo.Width);
+                            Rgba32 color;
+
+                            byte pix = imageInfo.Pixels[i];
+                            int colorIndex = pix & 0b11111;
+                            int alphaSrc = pix >> 5;
+                            byte alpha = (byte)((alphaSrc * 4 + alphaSrc / 2) * 8);
+                            var baseColor = imageInfo.Palette[colorIndex];
+                            color = new Rgba32(baseColor.R, baseColor.G, baseColor.B, alpha);
+
+                            img[point.X, point.Y] = color;
+                        }
+                        
+                        break;
+                    }
+                case TexFormat.A5I3:
+                    {
+                        for (int i = 0; i < imageInfo.Pixels.Length; i++)
+                        {
+                            Point point = pointGetter(i, imageInfo.Width);
+                            Rgba32 color;
+
+                            byte pix = imageInfo.Pixels[i];
+                            int colorIndex = pix & 0b111;
+                            byte alpha = (byte)((pix >> 3) * 8);
+                            var baseColor = imageInfo.Palette[colorIndex];
+                            color = new Rgba32(baseColor.R, baseColor.G, baseColor.B, alpha);
+
+                            img[point.X, point.Y] = color;
+                        }
+                        
+                        break;
+                    }
+                case TexFormat.Direct:
+                case TexFormat.None:
+                case TexFormat.Comp4x4:
+                default:
+                    throw new Exception($"Invalid tex format {format}");
             }
 
             return img;
         }
 
-        public static ImageInfo LoadPng(string file, bool tiled = false)
+        public static ImageInfo LoadPng(string file, bool tiled = false, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
         {
             Image<Rgba32> image;
             try
@@ -68,15 +124,16 @@ namespace RanseiLink.Core.Graphics
 
             int width = image.Width;
             int height = image.Height;
-            var palette = new List<Rgba32>
-        {
-            Color.Transparent
-        };
+            var palette = new List<Rgba32>();
+            if (color0ToTransparent)
+            {
+                palette.Add(Color.Transparent);
+            }
 
             byte[] pixels;
             try
             {
-                pixels = FromImage(image, palette, tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex));
+                pixels = FromImage(image, palette, tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex), format, color0ToTransparent);
             }
             catch (Exception e)
             {
@@ -87,37 +144,116 @@ namespace RanseiLink.Core.Graphics
             return new ImageInfo(pixels, palette.ToArray(), width, height);
         }
 
-        public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter)
+        public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
         {
             int width = image.Width;
             int height = image.Height;
             byte[] pixels = new byte[width * height];
 
-            for (int x = 0; x < width; x++)
+            switch (format)
             {
-                for (int y = 0; y < height; y++)
-                {
-                    Rgba32 pixColor = image[x, y];
-                    int pltIndex;
-                    if (pixColor.A != 255)
+                case TexFormat.Pltt4:
+                case TexFormat.Pltt16:
+                case TexFormat.Pltt256:
                     {
-                        pltIndex = 0;
+                        for (int x = 0; x < width; x++)
+                        {
+                            for (int y = 0; y < height; y++)
+                            {
+                                Rgba32 pixColor = image[x, y];
+                                int pltIndex;
+
+                                if (color0ToTransparent && pixColor.A != 255)
+                                {
+                                    pltIndex = 0;
+                                }
+                                else
+                                {
+                                    pixColor.A = 255;
+                                    pltIndex = palette.IndexOf(pixColor);
+                                    if (pltIndex == -1)
+                                    {
+                                        pltIndex = palette.Count;
+                                        palette.Add(pixColor);
+                                    }
+                                    if (pltIndex > byte.MaxValue)
+                                    {
+                                        throw new InvalidPaletteException($"There can not be more than {byte.MaxValue + 1} colors");
+                                    }
+                                }
+
+                                pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;
+                            }
+                        }
+                        break;
                     }
-                    else
+                case TexFormat.A3I5:
                     {
-                        pltIndex = palette.IndexOf(pixColor);
-                        if (pltIndex == -1)
+                        for (int x = 0; x < width; x++)
                         {
-                            pltIndex = palette.Count;
-                            palette.Add(pixColor);
+                            for (int y = 0; y < height; y++)
+                            {
+                                Rgba32 pixColor = image[x, y];
+                                int pltIndex;
+
+                                var alphaColor = pixColor.A;
+                                pixColor.A = 255;
+                                pltIndex = palette.IndexOf(pixColor);
+                                if (pltIndex == -1)
+                                {
+                                    pltIndex = palette.Count;
+                                    palette.Add(pixColor);
+                                }
+                                //if (pltIndex > 31)
+                                //{
+                                //    throw new InvalidPaletteException($"There can not be more than 32 colors");
+                                //}
+                                var alpha = Math.Min(7, alphaColor * 8 / 255); // this accurately reproduces the values that are created the other way, even if it's weird.
+                                pltIndex = alpha << 5 | pltIndex;
+
+                                pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;
+                            }
                         }
-                        if (pltIndex > byte.MaxValue)
+                        if (palette.Count > 32)
                         {
-                            throw new InvalidPaletteException($"There can not be more than {byte.MaxValue + 1} colors");
+                            throw new InvalidPaletteException($"There can not be more than 32 colors (there are {palette.Count} colors)");
                         }
+                        break;
                     }
-                    pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;
-                }
+                case TexFormat.A5I3:
+                    {
+                        for (int x = 0; x < width; x++)
+                        {
+                            for (int y = 0; y < height; y++)
+                            {
+                                Rgba32 pixColor = image[x, y];
+                                int pltIndex;
+
+                                var alphaColor = pixColor.A;
+                                pixColor.A = 255;
+                                pltIndex = palette.IndexOf(pixColor);
+                                if (pltIndex == -1)
+                                {
+                                    pltIndex = palette.Count;
+                                    palette.Add(pixColor);
+                                }
+                                if (pltIndex > 7)
+                                {
+                                    throw new InvalidPaletteException($"There can not be more than 8 colors");
+                                }
+                                var alpha = alphaColor / 8;
+                                pltIndex = alpha << 3 | pltIndex;
+
+                                pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;
+                            }
+                        }
+                        
+                        break;
+                    }
+                case TexFormat.Direct:
+                case TexFormat.None:
+                case TexFormat.Comp4x4:
+                    throw new Exception($"Invalid tex format {format}");
             }
 
             return pixels;

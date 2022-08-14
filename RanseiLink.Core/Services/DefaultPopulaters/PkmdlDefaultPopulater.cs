@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters
@@ -47,11 +48,21 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
 
                 BTX0 btx0 = new BTX0(Path.Combine(texUnpacked, fileName));
 
-                Rgba32[] palette = RawPalette.To32bitColors(btx0.Texture.Palette1);
+                Rgba32[] palette = RawPalette.To32bitColors(btx0.Texture.Palettes[0].PaletteData);
                 palette[0] = Color.Transparent;
 
+                // merge individual TEX textures into one for speed
+                var texPixelmap = new byte[btx0.Texture.Textures.Sum(x => x.TextureData.Length)];
+                int pos = 0;
+                foreach (var pixelmap in btx0.Texture.Textures)
+                {
+                    pixelmap.TextureData.CopyTo(texPixelmap, pos);
+                    pos += pixelmap.TextureData.Length;
+                }
+
+                // generate images
                 var texImg = ImageUtil.ToImage(
-                    new ImageInfo(btx0.Texture.PixelMap, palette, _pokemonSpriteWidth, btx0.Texture.PixelMap.Length / _pokemonSpriteWidth),
+                    new ImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
                     PointUtil.GetPoint
                     );
 

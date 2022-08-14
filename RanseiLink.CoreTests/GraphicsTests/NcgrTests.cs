@@ -20,7 +20,7 @@ public class NcgrTests
         var chr = ncgr.Pixels;
         chr.Should().NotBeNull();
 
-        chr.BitsPerPixel.Should().Be(BitsPerPixel.EightBitsPerPixel);
+        chr.Format.Should().Be(TexFormat.Pltt256);
         chr.IsTiled.Should().BeTrue();
         chr.TilesPerColumn.Should().Be(0x18);
         chr.TilesPerRow.Should().Be(0x20);
@@ -41,7 +41,7 @@ public class NcgrTests
         var chr = ncgr.Pixels;
         chr.Should().NotBeNull();
 
-        chr.BitsPerPixel.Should().Be(BitsPerPixel.EightBitsPerPixel);
+        chr.Format.Should().Be(TexFormat.Pltt256);
         chr.IsTiled.Should().BeFalse();
         chr.TilesPerColumn.Should().Be(-1);
         chr.TilesPerRow.Should().Be(-1);

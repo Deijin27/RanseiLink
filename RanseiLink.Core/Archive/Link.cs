@@ -6,7 +6,7 @@ namespace RanseiLink.Core.Archive
 
     /// <summary>
     /// Archive format used in Pokemon Conquest used to group related graphic resources. 
-    /// No consistent file extension. ".G2GR" or ".ALL"
+    /// No consistent file extension. ".G2DR" or ".ALL"
     /// </summary>
     public static class LINK
     {

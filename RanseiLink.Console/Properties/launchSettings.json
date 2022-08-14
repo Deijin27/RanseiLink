@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "pokemon sprite export all \"C:\\Users\\Mia\\Desktop\\CqUnchanged.nds\" -d \"C:\\Users\\Mia\\Desktop\\New folder\""
+      "commandLineArgs": "btx0 extract \"C:\\Users\\Mia\\Desktop\\graphics\\ikusa_map\\MAP00_00-Unpacked\\0001.btx0\""
     }
   }
 }

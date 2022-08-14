@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\test_map2.btx0">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_multi.nclr">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

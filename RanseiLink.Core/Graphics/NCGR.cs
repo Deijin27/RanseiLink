@@ -76,7 +76,7 @@ namespace RanseiLink.Core.Graphics
                 public uint TotalLength;
                 public short TilesPerColumn;
                 public short TilesPerRow;
-                public BitsPerPixel BitsPerPixel;
+                public TexFormat Format;
                 public ushort Unknown1;
                 public ushort Unknown2;
                 public bool IsTiled;
@@ -94,7 +94,7 @@ namespace RanseiLink.Core.Graphics
                     TotalLength = br.ReadUInt32();
                     TilesPerColumn = br.ReadInt16();
                     TilesPerRow = br.ReadInt16();
-                    BitsPerPixel = (BitsPerPixel)br.ReadUInt32();
+                    Format = (TexFormat)br.ReadUInt32();
                     Unknown1 = br.ReadUInt16();
                     Unknown2 = br.ReadUInt16();
                     IsTiled = br.ReadInt32() == 0;
@@ -112,7 +112,7 @@ namespace RanseiLink.Core.Graphics
                     bw.Write(TotalLength);
                     bw.Write(TilesPerColumn);
                     bw.Write(TilesPerRow);
-                    bw.Write((uint)BitsPerPixel);
+                    bw.Write((uint)Format);
                     bw.Write(Unknown1);
                     bw.Write(Unknown2);
                     bw.Write(IsTiled ? 0 : 1);
@@ -121,7 +121,7 @@ namespace RanseiLink.Core.Graphics
                 }
             }
 
-            public BitsPerPixel BitsPerPixel { get; set; }
+            public TexFormat Format { get; set; }
             public short TilesPerRow { get; set; }
             public short TilesPerColumn { get; set; }
 
@@ -140,9 +140,9 @@ namespace RanseiLink.Core.Graphics
                 Unknown1 = header.Unknown1;
                 Unknown2 = header.Unknown2;
                 IsTiled = header.IsTiled;
-                BitsPerPixel = header.BitsPerPixel;
+                Format = header.Format;
                 Data = br.ReadBytes(header.DataLength);
-                if (header.BitsPerPixel == BitsPerPixel.FourBitsPerPixel)
+                if (header.Format == TexFormat.Pltt16)
                 {
                     Data = RawChar.Decompress(Data);
                 }
@@ -157,7 +157,7 @@ namespace RanseiLink.Core.Graphics
                 {
                     TilesPerRow = TilesPerRow,
                     TilesPerColumn = TilesPerColumn,
-                    BitsPerPixel = BitsPerPixel,
+                    Format = Format,
                     Unknown1 = Unknown1,
                     Unknown2 = Unknown2,
                     IsTiled = IsTiled,
@@ -168,7 +168,7 @@ namespace RanseiLink.Core.Graphics
 
                 // write data
                 var data = Data;
-                if (BitsPerPixel == BitsPerPixel.FourBitsPerPixel)
+                if (Format == TexFormat.Pltt16)
                 {
                     data = RawChar.Compress(data);
                 }
@@ -186,11 +186,5 @@ namespace RanseiLink.Core.Graphics
                 bw.BaseStream.Position = endOffset;
             }
         }
-    }
-
-    public enum BitsPerPixel
-    {
-        FourBitsPerPixel = 3,
-        EightBitsPerPixel = 4,
     }
 }

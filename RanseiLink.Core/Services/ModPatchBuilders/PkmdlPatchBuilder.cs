@@ -2,6 +2,7 @@
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services.Concrete;
+using RanseiLink.Core.Services.ModelServices;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -15,12 +16,18 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 {
     public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
     {
+        private const int _numPokemon = 200;
         private const int _pokemonSpriteWidth = 32;
+        private const int _pokemonSpriteHeight = 32;
+        private const int _texSpriteCount = 24;
 
         private readonly IOverrideSpriteProvider _overrideSpriteProvider;
+        private readonly IPokemonService _pokemonService; // this will be used to get the sprite asymmetry, whether the animation is double duration, and the pokemon's national dex number
         private readonly string _graphicsProviderFolder;
-        public PkmdlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod)
+
+        public PkmdlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService)
         {
+            _pokemonService = pokemonService;
             _overrideSpriteProvider = overrideSpriteProvider;
             _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
         }
@@ -52,12 +59,12 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
             var spriteFileDict = spriteFiles.ToDictionary(i => i.Id);
 
-            var texLinkFiles = new string[200];
-            var atxLinkFiles = new string[200];
-            var dtxLinkFiles = new string[200];
-            var pacLinkFiles = new string[200];
+            var texLinkFiles = new string[_numPokemon];
+            var atxLinkFiles = new string[_numPokemon];
+            var dtxLinkFiles = new string[_numPokemon];
+            var pacLinkFiles = new string[_numPokemon];
 
-            Parallel.For(0, 200, i =>
+            Parallel.For(0, _numPokemon, i =>
             {
                 string fileName = i.ToString().PadLeft(4, '0');
                 var spriteFile = spriteFileDict[i];
@@ -72,17 +79,30 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
                         // TEX ------------------------------------------------------------------------------------------------------
 
-                        string texSource = Path.Combine(texUnpacked, fileName);
                         string texTemp = Path.GetTempFileName();
-                        File.Copy(texSource, texTemp, true);
-                        BTX0 btx0 = new BTX0(texSource);
-                        int height = btx0.Texture.PixelMap.Length / _pokemonSpriteWidth;
+                        BTX0 btx0 = new BTX0 { Texture = new TEX0() };
+                        int height = _pokemonSpriteHeight * _texSpriteCount;
                         using (var texImg = combinedImage.Clone(g =>
                         {
                             g.Crop(new Rectangle(0, 0, _pokemonSpriteWidth, height));
                         }))
                         {
-                            btx0.Texture.PixelMap = ImageUtil.FromImage(texImg, palette, PointUtil.GetIndex);
+                            byte[] mergedPixels = ImageUtil.FromImage(texImg, palette, PointUtil.GetIndex, color0ToTransparent: true);
+                            for (int texNumber = 0; texNumber < _texSpriteCount; texNumber++)
+                            {
+                                btx0.Texture.Textures.Add(new TEX0.Texture
+                                {
+                                    Name = "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
+                                    Height = _pokemonSpriteHeight,
+                                    Width = _pokemonSpriteWidth,
+                                    Format = TexFormat.Pltt16,
+                                    FlipX = false,
+                                    FlipY = false,
+                                    RepeatX = false,
+                                    RepeatY = false,
+                                    Color0Transparent = true,
+                                });
+                            }
                         }
 
                         // ATX ------------------------------------------------------------------------------------------------------
@@ -133,7 +153,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                                 Path.Combine(pacUnpackedFolder, "0002"),
                                 pacCharTemp
                             };
-                            PAC.Pack(pacFiles, new[] { 0, 2, 5, 6 }, pacTemp, 1);
+                            PAC.Pack(pacFiles, pacTemp, new[] { 0, 2, 5, 6 }, 1);
                             File.Delete(pacCharTemp);
                             pacLinkFiles[i] = pacTemp;
                         }
@@ -153,8 +173,8 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         resizedPalette[0] = Color.FromRgb(120, 120, 120);
 
                         var convertedPalette = RawPalette.From32bitColors(resizedPalette);
-                        btx0.Texture.Palette1 = convertedPalette;
-                        btx0.Texture.Palette2 = convertedPalette;
+                        btx0.Texture.Palettes.Add(new TEX0.Palette { Name = "base_fix_f_pl" , PaletteData = convertedPalette });
+                        btx0.Texture.Palettes.Add(new TEX0.Palette { Name = "base_fix_b_pl", PaletteData = convertedPalette });
                         btx0.WriteTo(texTemp);
                         texLinkFiles[i] = texTemp;
                     }

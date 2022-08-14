@@ -20,7 +20,7 @@ public class NclrTests
         var plt = ncgr.Palettes;
         plt.Should().NotBeNull();
 
-        plt.BitsPerPixel.Should().Be(BitsPerPixel.EightBitsPerPixel);
+        plt.Format.Should().Be(TexFormat.Pltt256);
         plt.Palette.Should().HaveCount(0x100);
         plt.Palette[^1].Should().Be(new Rgb15(29, 29, 29));
         plt.Palette[^2].Should().Be(new Rgb15(28, 28, 28));
@@ -37,7 +37,7 @@ public class NclrTests
         
         var plt = ncgr.Palettes;
         plt.Should().NotBeNull();
-        plt.BitsPerPixel.Should().Be(BitsPerPixel.EightBitsPerPixel);
+        plt.Format.Should().Be(TexFormat.Pltt256);
         plt.Palette.Should().HaveCount(0x100);
         plt.Palette[0].Should().Be(new Rgb15(16, 31, 0));
 

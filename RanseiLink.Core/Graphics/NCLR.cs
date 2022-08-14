@@ -86,7 +86,7 @@ namespace RanseiLink.Core.Graphics
             {
                 public const string MagicNumber = "TTLP";
                 public uint TotalLength;
-                public BitsPerPixel BitsPerPixel;
+                public TexFormat Format;
                 public ushort Unknown1;
                 public uint Unknown2;
                 public int DataLength;
@@ -101,7 +101,7 @@ namespace RanseiLink.Core.Graphics
                     }
 
                     TotalLength = br.ReadUInt32();
-                    BitsPerPixel = (BitsPerPixel)br.ReadUInt16();
+                    Format = (TexFormat)br.ReadUInt16();
                     Unknown1 = br.ReadUInt16();
                     if (Unknown1 != 0)
                     {
@@ -125,7 +125,7 @@ namespace RanseiLink.Core.Graphics
                 {
                     bw.WriteMagicNumber(MagicNumber);
                     bw.Write(TotalLength);
-                    bw.Write((ushort)BitsPerPixel);
+                    bw.Write((ushort)Format);
                     bw.Write(Unknown1);
                     bw.Write(Unknown2);
                     bw.Write(DataLength);
@@ -136,7 +136,7 @@ namespace RanseiLink.Core.Graphics
             public PLTT(BinaryReader br)
             {
                 var header = new Header(br);
-                BitsPerPixel = header.BitsPerPixel;
+                Format = header.Format;
                 Palette = RawPalette.Decompress(br.ReadBytes(header.DataLength));
             }
 
@@ -146,7 +146,7 @@ namespace RanseiLink.Core.Graphics
 
                 var header = new Header
                 {
-                    BitsPerPixel = BitsPerPixel,
+                    Format = Format,
                 };
 
                 bw.Pad(Header.DataStartOffset + 8); // the data start offset is relative to the end of the generic chunk header which is magic num and total length i.e. 8
@@ -163,7 +163,7 @@ namespace RanseiLink.Core.Graphics
                 bw.BaseStream.Position = endOffset;
             }
 
-            public BitsPerPixel BitsPerPixel { get; set; }
+            public TexFormat Format { get; set; }
             public Rgb15[] Palette { get; set; }
         }
 

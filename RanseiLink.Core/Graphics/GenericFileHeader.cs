@@ -31,4 +31,24 @@ namespace RanseiLink.Core.Graphics
             bw.Write(ChunkCount);
         }
     }
+
+    public struct GenericChunkHeader
+    {
+        public const int Length = 8;
+
+        public string MagicNumber;
+        public uint ChunkLength;
+
+        public GenericChunkHeader(BinaryReader br)
+        {
+            MagicNumber = br.ReadMagicNumber();
+            ChunkLength = br.ReadUInt32();
+        }
+
+        public void WriteTo(BinaryWriter bw)
+        {
+            bw.WriteMagicNumber(MagicNumber);
+            bw.Write(ChunkLength);
+        }
+    }
 }

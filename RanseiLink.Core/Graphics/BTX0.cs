@@ -14,6 +14,11 @@ namespace RanseiLink.Core.Graphics
 
         public TEX0 Texture { get; set; }
 
+        public BTX0()
+        {
+
+        }
+
         public BTX0(string file)
         {
             using (var br = new BinaryReader(File.OpenRead(file)))
@@ -40,42 +45,43 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        /// <summary>
-        /// Only supports writing to an existing btx0 atm
-        /// </summary>
-        /// <param name="file"></param>
         public void WriteTo(string file)
         {
             using (var bw = new BinaryWriter(File.OpenWrite(file)))
             {
-                var header = new GenericFileHeader
-                {
-                    MagicNumber = MagicNumber,
-                    ByteOrderMarker = 0xFEFF,
-                    Version = 1,
-                    ChunkCount = 1,
-                    HeaderLength = 0x10
-                };
+                WriteTo(bw);
+            }
+        }
 
-                // skip header section, to be written later
-                bw.BaseStream.Seek(header.HeaderLength + 4 * header.ChunkCount, SeekOrigin.Begin);
+        public void WriteTo(BinaryWriter bw)
+        {
+            var header = new GenericFileHeader
+            {
+                MagicNumber = MagicNumber,
+                ByteOrderMarker = 0xFEFF,
+                Version = 1,
+                ChunkCount = 1,
+                HeaderLength = 0x10
+            };
 
-                uint[] chunkOffsets = new uint[header.ChunkCount];
+            // skip header section, to be written later
+            bw.BaseStream.Seek(header.HeaderLength + 4 * header.ChunkCount, SeekOrigin.Begin);
 
-                // write TEX0
-                chunkOffsets[0] = (uint)(bw.BaseStream.Position);
-                Texture.WriteTo(bw);
+            uint[] chunkOffsets = new uint[header.ChunkCount];
 
-                // return to start to write header
-                var endOffset = bw.BaseStream.Position;
-                bw.BaseStream.Position = 0;
+            // write TEX0
+            chunkOffsets[0] = (uint)(bw.BaseStream.Position);
+            Texture.WriteTo(bw);
 
-                header.FileLength = (uint)endOffset;
-                header.WriteTo(bw);
-                foreach (var chunkOffset in chunkOffsets)
-                {
-                    bw.Write(chunkOffset);
-                }
+            // return to start to write header
+            var endOffset = bw.BaseStream.Position;
+            bw.BaseStream.Position = 0;
+
+            header.FileLength = (uint)endOffset;
+            header.WriteTo(bw);
+            foreach (var chunkOffset in chunkOffsets)
+            {
+                bw.Write(chunkOffset);
             }
         }
     }
