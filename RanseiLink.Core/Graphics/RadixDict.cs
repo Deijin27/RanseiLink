@@ -38,6 +38,26 @@ namespace RanseiLink.Core.Graphics
         void WriteTo(BinaryWriter bw);
     }
 
+    /// <summary>
+    /// Common type of radix data
+    /// </summary>
+    public class OffsetRadixData : IRadixData
+    {
+        public ushort Length => 4;
+
+        public uint Offset { get; set; }
+
+        public void ReadFrom(BinaryReader br)
+        {
+            Offset = br.ReadUInt32();
+        }
+
+        public void WriteTo(BinaryWriter bw)
+        {
+            bw.Write(Offset);
+        }
+    }
+
     public class RadixDict<TRadixData> where TRadixData : IRadixData, new()
     {
         public struct HeaderA
