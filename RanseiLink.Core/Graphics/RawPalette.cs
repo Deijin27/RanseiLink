@@ -7,14 +7,23 @@ namespace RanseiLink.Core.Graphics
 {
     public static class RawPalette
     {
+        public static Rgba32 To32BitColor(Rgb15 color)
+        {
+            return new Rgba32((byte)(color.R * 8), (byte)(color.G * 8), (byte)(color.B * 8));
+        }
         public static Rgba32[] To32bitColors(IEnumerable<Rgb15> colors)
         {
-            return colors.Select(color => new Rgba32((byte)(color.R * 8), (byte)(color.G * 8), (byte)(color.B * 8))).ToArray();
+            return colors.Select(To32BitColor).ToArray();
+        }
+
+        public static Rgb15 From32BitColor(Rgba32 color)
+        {
+            return new Rgb15(color.R / 8, color.G / 8, color.B / 8);
         }
 
         public static Rgb15[] From32bitColors(IEnumerable<Rgba32> colors)
         {
-            return colors.Select(color => new Rgb15(color.R / 8, color.G / 8, color.B / 8)).ToArray();
+            return colors.Select(From32BitColor).ToArray();
         }
 
         public static Rgb15[] Decompress(byte[] data)

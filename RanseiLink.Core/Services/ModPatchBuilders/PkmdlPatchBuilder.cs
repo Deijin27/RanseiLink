@@ -80,7 +80,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         // TEX ------------------------------------------------------------------------------------------------------
 
                         string texTemp = Path.GetTempFileName();
-                        BTX0 btx0 = new BTX0 { Texture = new TEX0() };
+                        NSBTX btx0 = new NSBTX { Texture = new NSTEX() };
                         int height = _pokemonSpriteHeight * _texSpriteCount;
                         using (var texImg = combinedImage.Clone(g =>
                         {
@@ -90,7 +90,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                             byte[] mergedPixels = ImageUtil.FromImage(texImg, palette, PointUtil.GetIndex, color0ToTransparent: true);
                             for (int texNumber = 0; texNumber < _texSpriteCount; texNumber++)
                             {
-                                btx0.Texture.Textures.Add(new TEX0.Texture
+                                btx0.Texture.Textures.Add(new NSTEX.Texture
                                 {
                                     Name = "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
                                     Height = _pokemonSpriteHeight,
@@ -173,8 +173,8 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         resizedPalette[0] = Color.FromRgb(120, 120, 120);
 
                         var convertedPalette = RawPalette.From32bitColors(resizedPalette);
-                        btx0.Texture.Palettes.Add(new TEX0.Palette { Name = "base_fix_f_pl" , PaletteData = convertedPalette });
-                        btx0.Texture.Palettes.Add(new TEX0.Palette { Name = "base_fix_b_pl", PaletteData = convertedPalette });
+                        btx0.Texture.Palettes.Add(new NSTEX.Palette { Name = "base_fix_f_pl" , PaletteData = convertedPalette });
+                        btx0.Texture.Palettes.Add(new NSTEX.Palette { Name = "base_fix_b_pl", PaletteData = convertedPalette });
                         btx0.WriteTo(texTemp);
                         texLinkFiles[i] = texTemp;
                     }

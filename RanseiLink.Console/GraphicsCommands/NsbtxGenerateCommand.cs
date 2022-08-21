@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("btx0 generate", Description = "Generate new btx0 from textures")]
-public class Btx0GenerateCommand : ICommand
+[Command("nsbtx generate", Description = "Generate new btx0 from textures")]
+public class NsbtxGenerateCommand : ICommand
 {
-    [CommandParameter(0, Description = "Path of folder to pack into a link archive.", Name = "filePath")]
+    [CommandParameter(0, Description = "Path of folder to pack into a nsbtx.", Name = "filePath")]
     public string FolderPath { get; set; }
 
     [CommandOption("destinationFile", 'd', Description = "Optional file to pack to; default is a file in the same location as the folder.")]
@@ -36,14 +36,14 @@ public class Btx0GenerateCommand : ICommand
         var files = Directory.GetFiles(FolderPath);
         Array.Sort(files);
 
-        var tex0 = new TEX0();
+        var tex0 = new NSTEX();
         foreach ( var file in files)
         {
             var (texture, palette) = Load(file);
             tex0.Textures.Add(texture);
             tex0.Palettes.Add(palette);
         }
-        var btx0 = new BTX0 { Texture = tex0 };
+        var btx0 = new NSBTX { Texture = tex0 };
         btx0.WriteTo(DestinationFile);
 
         return default;
@@ -64,7 +64,7 @@ public class Btx0GenerateCommand : ICommand
         return false;
     }
 
-    private (TEX0.Texture texture, TEX0.Palette palette) Load(string file)
+    private (NSTEX.Texture texture, NSTEX.Palette palette) Load(string file)
     {
         
         Image<Rgba32> image;
@@ -107,7 +107,7 @@ public class Btx0GenerateCommand : ICommand
         {
             throw new Exception("Texture name is too long. Max length is 13");
         }
-        var texResult = new TEX0.Texture
+        var texResult = new NSTEX.Texture
         {
             Name = texName,
             TextureData = pixels,
@@ -118,7 +118,7 @@ public class Btx0GenerateCommand : ICommand
         };
         var outPal = RawPalette.From32bitColors(palette);
         Array.Resize(ref outPal, format.PaletteSize());
-        var palResult = new TEX0.Palette { Name = texName + "_pl", PaletteData =  outPal };
+        var palResult = new NSTEX.Palette { Name = texName + "_pl", PaletteData =  outPal };
 
         return (texResult, palResult);
     }

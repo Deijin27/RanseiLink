@@ -7,19 +7,19 @@ namespace RanseiLink.Core.Graphics
     /// <summary>
     /// Texture file
     /// </summary>
-    public class BTX0
+    public class NSBTX
     {
         public const string MagicNumber = "BTX0";
         public static readonly string[] FileExtensions = new[] { ".btx0", ".btx" };
 
-        public TEX0 Texture { get; set; }
+        public NSTEX Texture { get; set; }
 
-        public BTX0()
+        public NSBTX()
         {
 
         }
 
-        public BTX0(string file)
+        public NSBTX(string file)
         {
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
@@ -41,7 +41,7 @@ namespace RanseiLink.Core.Graphics
 
                 // read TEX0
                 br.BaseStream.Position = chunkOffsets[0];
-                Texture = new TEX0(br);
+                Texture = new NSTEX(br);
             }
         }
 

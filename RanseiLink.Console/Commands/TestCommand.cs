@@ -8,6 +8,7 @@ using System.Linq;
 using RanseiLink.Core.Enums;
 using System.Collections.Generic;
 using System.IO;
+using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Console.Commands;
 
@@ -25,43 +26,59 @@ public  class TestCommand : ICommand
         return b.ToString("X").PadLeft(2, '0');
     }
 
-    private void Test(IConsole console, string[] strings)
+    [CommandParameter(0, Description = "Path of btx0 data file.", Name = "bmd0File")]
+    public string FilePath { get; set; }
+
+    [CommandOption("dump", 'd')]
+    public bool DumpOption { get; set; }
+
+    void Dump(IConsole console, NSBMD bmd)
     {
+        console.Output.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
+        foreach (var command in bmd.Model.Models[0].RenderCommands.Commands)
+        {
+            console.Output.WriteLine($"{command.OpCode} : {command.Flags}");
+        }
         console.Output.WriteLine();
-        foreach (var s in strings)
+        console.Output.WriteLine("Poly Commands ---------------------------------------------------------------------------------------------");
+        foreach (var mesh in bmd.Model.Models[0].Meshes.MeshCommandList)
         {
-            console.Output.WriteLine(s);
+            console.Output.WriteLine(":: Begin Mesh ---------------------------------------------------------------------------------------------");
+            foreach (var c in mesh.Commands)
+            {
+                if (c.OpCode == MeshDisplayOpCode.BEGIN_VTXS)
+                {
+                    console.Output.WriteLine($"{c.OpCode} : {(PolygonType)c.Params[0]}");
+                }
+                else
+                {
+                    console.Output.WriteLine(c.OpCode);
+                }
+            }
+            console.Output.WriteLine();
         }
+    }
 
-        var nodes = RanseiLink.Core.Graphics.RadixTreeGenerator.Generate(strings);
-
-        var memoryStream = new MemoryStream();
-        var bw = new BinaryWriter(memoryStream);
-        var br = new BinaryReader(memoryStream);
-        foreach (var node in nodes)
-        {
-            memoryStream.Position = 0;
-            node.WriteTo(bw);
-            memoryStream.Position = 0;
-            console.Output.WriteLine($"{byteToString(br.ReadByte())} {byteToString(br.ReadByte())} {byteToString(br.ReadByte())} {byteToString(br.ReadByte())}");
-        }
-        memoryStream.Dispose();
+    void Export(IConsole console, NSBMD bmd)
+    {
+        var mdl = bmd.Model.Models[0];
+        var obj = ConvertModels.ModelToObj(mdl);
+        obj.Save(@$"C:\Users\Mia\Desktop\graphics\ikusa_map\{mdl.Name}-Unpacked\0000 - Extracted\{mdl.Name}.obj");
     }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var strings = new string[24];
-        for (int i = 0; i < 24; i++)
+        var bmd = new NSBMD(FilePath);
+
+        if (DumpOption)
         {
-            var s = i.ToString().PadLeft(2, '0');
-            strings[i] = $"base_fix_{s}";
+            Dump(console, bmd);
         }
-        Test(console, strings);
+        else
+        {
+            Export(console, bmd);
+        }
 
-        Test(console, new string[] { "base_fix_f_pl", "base_fix_b_pl" });
-        Test(console, new string[] { "map00_00_04", "map00_00_04a" });
-
-        
         //if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         //{
         //    console.Output.WriteLine("No mod selected");

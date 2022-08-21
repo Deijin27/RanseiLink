@@ -8,23 +8,23 @@ namespace RanseiLink.Core.Archive
         public const string FileExtension = ".pac";
         const uint MagicNumber = 0x0040E3C4;
 
-        private static string FileTypeNumberToExtension(int fileType)
+        public static string FileTypeNumberToExtension(int fileType)
         {
             switch (fileType)
             {
-                case 0: return ".bmd0";
-                case 1: return ".btx0";
-                case 2: return ".btp0";
+                case 0: return ".nsbmd"; // nitro sdk binary model data
+                case 1: return ".nsbtx"; // nitro sdk binary texture
+                case 2: return ".nsbtp"; // nitro sdk binary texture pattern
                 case 3: return ".unknown3";
-                case 4: return ".bma0";
-                case 5: return ".unknown5";
+                case 4: return ".nsbma"; // nitro sdk binary material animation
+                case 5: return ".unknown5"; // in pokemon model pacs this is some data without a header, not sure what it is yet.
                 case 6: return ".char";
-                case 7: return ".bta0";
+                case 7: return ".nsbta"; // nitro sdk binary texture animation
                 default: return "";
             };
         }
 
-        private static int ExtensionToFileTypeNumber(string extension)
+        public static int ExtensionToFileTypeNumber(string extension)
         {
             switch (extension)
             {

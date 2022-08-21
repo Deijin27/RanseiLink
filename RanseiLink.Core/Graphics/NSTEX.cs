@@ -6,10 +6,10 @@ namespace RanseiLink.Core.Graphics
 {
 
     /// <summary>
-    /// Texture data. The one chunk of <see cref="BTX0"/>.
+    /// Texture data. The one chunk of <see cref="NSBTX"/>.
     /// WARNING: Currently only supports writing to an existing file
     /// </summary>
-    public class TEX0
+    public class NSTEX
     {
         public const string MagicNumber = "TEX0";
 
@@ -217,7 +217,7 @@ namespace RanseiLink.Core.Graphics
             }
         }
         
-        public TEX0()
+        public NSTEX()
         {
 
         }
@@ -329,7 +329,7 @@ namespace RanseiLink.Core.Graphics
             bw.BaseStream.Position = endOffset;
         }
 
-        public TEX0(BinaryReader br)
+        public NSTEX(BinaryReader br)
         {
             var initOffset = br.BaseStream.Position;
             var header = new GenericChunkHeader(br);

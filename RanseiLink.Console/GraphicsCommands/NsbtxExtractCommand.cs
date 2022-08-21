@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("btx0 extract", Description = "Extract textures from btx0 as pngs")]
-public class Btx0ExtractCommand : ICommand
+[Command("nsbtx extract", Description = "Extract textures from btx0 as pngs")]
+public class NsbtxExtractCommand : ICommand
 {
     public enum Mode
     {
@@ -37,7 +37,7 @@ public class Btx0ExtractCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
-        var btx = new BTX0(FilePath);
+        var btx = new NSBTX(FilePath);
 
         var textures = btx.Texture.Textures;
         var palettes = btx.Texture.Palettes;
@@ -45,7 +45,7 @@ public class Btx0ExtractCommand : ICommand
         for (int i = 0; i < textures.Count; i++)
         {
             var tex = textures[i];
-            TEX0.Palette pal;
+            NSTEX.Palette pal;
             if (ChosenMode == Mode.ManyToOne)
             {
                 pal = palettes[0];

@@ -46,7 +46,7 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
                 string fileName = i.ToString().PadLeft(4, '0');
                 string outFilePath = Path.Combine(outFolderPath, fileName + ".png");
 
-                BTX0 btx0 = new BTX0(Path.Combine(texUnpacked, fileName));
+                NSBTX btx0 = new NSBTX(Path.Combine(texUnpacked, fileName));
 
                 Rgba32[] palette = RawPalette.To32bitColors(btx0.Texture.Palettes[0].PaletteData);
                 palette[0] = Color.Transparent;

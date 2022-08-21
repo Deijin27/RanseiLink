@@ -5,19 +5,19 @@ namespace RanseiLink.Core.Graphics
     /// <summary>
     /// Model and material file
     /// </summary>
-    public class BMD0
+    public class NSBMD
     {
         public const string MagicNumber = "BMD0";
         public static readonly string[] FileExtensions = new[] { ".bmd0", ".bmd" };
 
-        public MDL0 Model { get; set; }
+        public NSMDL Model { get; set; }
 
-        public BMD0()
+        public NSBMD()
         {
 
         }
 
-        public BMD0(string file)
+        public NSBMD(string file)
         {
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
@@ -39,7 +39,7 @@ namespace RanseiLink.Core.Graphics
 
                 // read TEX0
                 br.BaseStream.Position = chunkOffsets[0];
-                Model = new MDL0(br);
+                Model = new NSMDL(br);
             }
         }
 
