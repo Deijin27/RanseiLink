@@ -4,16 +4,13 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Graphics.ExternalFormats;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("nsbmd extract", Description = "Extract materials from bmd0")]
+[Command("nsbmd extract", Description = "Extract obj, mtl, and texture pngs from nsbmd")]
 public class NsbmdExtractCommand : ICommand
 {
     [CommandParameter(0, Description = "Path of folder containing nsbmd, nsbtx etc.", Name = "sourceDir")]
@@ -68,7 +65,6 @@ public class NsbmdExtractCommand : ICommand
         }
 
         return default;
-
     }
 
     private void ExtractModel(NSMDL.Model model)
@@ -88,8 +84,8 @@ public class NsbmdExtractCommand : ICommand
             var m = new MTL.Material
             {
                 Name = material.Name,
-                AmbientColor = RawPalette.To32BitColor(Rgb15.From((ushort)(material.DifAmb >> 16 & short.MaxValue))),
-                DiffuseColor = RawPalette.To32BitColor(Rgb15.From((ushort)(material.DifAmb & short.MaxValue))),
+                AmbientColor = RawPalette.To32BitColor(material.Ambient),
+                DiffuseColor = RawPalette.To32BitColor(material.Diffuse),
                 Dissolve = (material.PolyAttr >> 16 & 31) / 31f,
             };
             mtl.Materials.Add(m);

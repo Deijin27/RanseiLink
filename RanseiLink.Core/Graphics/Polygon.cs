@@ -1,14 +1,9 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: MKDS_Course_Modifier.G3D_Binary_File_Format.NSBMD
-// Assembly: MKDS Course Modifier, Version=4.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: DAEF8B62-698B-42D0-BEDD-3770EB8C9FE8
-// Assembly location: C:\Users\Mia\Desktop\MKDSCMLast\Last\MKDS Course Modifier.exe
-
-using RanseiLink.Core.Graphics.ExternalFormats;
+﻿using RanseiLink.Core.Graphics.ExternalFormats;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 
@@ -435,8 +430,8 @@ namespace RanseiLink.Core.Graphics
                     var y = FixedPoint.Fix(command.Params[0] >> 16, 1, 11, 4);
                     var scaleS = gpu.CurrentMaterial.ScaleS == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleS;
                     var scaleT = gpu.CurrentMaterial.ScaleT == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleT;
-                    texCoord.X = (float)(scaleS / gpu.CurrentMaterial.OrigWidth * x) / (uint)(((int)(gpu.CurrentMaterial.TexImageParam >> 18) & 1) + 1);
-                    texCoord.Y = (float)(-(scaleT / gpu.CurrentMaterial.OrigHeight) * y) / (uint)(((int)(gpu.CurrentMaterial.TexImageParam >> 19) & 1) + 1);
+                    texCoord.X = (float)(scaleS / gpu.CurrentMaterial.OrigWidth * x) / ((gpu.CurrentMaterial.TexImageParam >> 18 & 1) + 1);
+                    texCoord.Y = (float)(-(scaleT / gpu.CurrentMaterial.OrigHeight) * y) / ((gpu.CurrentMaterial.TexImageParam >> 19 & 1) + 1);
                     break;
 
                 case MeshDisplayOpCode.VTX_16:

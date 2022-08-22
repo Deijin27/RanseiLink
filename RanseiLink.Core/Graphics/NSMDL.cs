@@ -270,7 +270,6 @@ namespace RanseiLink.Core.Graphics
 
                     static Vector3[] CalcPivotMtx(int select, int neg, float a, float b)
                     {
-                        Console.WriteLine("Calculating Pivot Matrix");
                         float o = (neg & 1) == 0 ? 1 : -1;
                         float c = (neg >> 1 & 1) == 0 ? b : -b;
                         float d = (neg >> 2 & 1) == 0 ? a : -a;
