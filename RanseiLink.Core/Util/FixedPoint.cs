@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace RanseiLink.Core.Graphics
+namespace RanseiLink.Core.Util
 {
     public static class FixedPoint
     {
@@ -35,7 +35,7 @@ namespace RanseiLink.Core.Graphics
             }
             else
             {
-                var signMask = 1 << (intBits + fracBits);
+                var signMask = 1 << intBits + fracBits;
                 if ((value & signMask) != 0)
                 {
                     result = value | ~(signMask - 1);

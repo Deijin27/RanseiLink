@@ -29,7 +29,7 @@ namespace RanseiLink.Core.Maps
             SubCellZValues = new int[9];
             for (int i = 0; i < 9; i++)
             {
-                SubCellZValues[i] = br.ReadInt32() / 0x800; // they're all divisible by this, may as well scale down
+                SubCellZValues[i] = br.ReadInt32() / 0x800; // Core.Graphics.FixedPoint.Fix_1_19_12(br.ReadInt32())
             }
             Terrain = (TerrainId)br.ReadByte();
             Unknown3 = br.ReadByte();

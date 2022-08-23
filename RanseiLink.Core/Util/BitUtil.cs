@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Core
+﻿namespace RanseiLink.Core.Util
 {
     public static class BitUtil
     {
