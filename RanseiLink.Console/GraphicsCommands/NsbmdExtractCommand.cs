@@ -86,6 +86,7 @@ public class NsbmdExtractCommand : ICommand
                 Name = material.Name,
                 AmbientColor = RawPalette.To32BitColor(material.Ambient),
                 DiffuseColor = RawPalette.To32BitColor(material.Diffuse),
+                SpecularColor = RawPalette.To32BitColor(material.Specular),
                 Dissolve = (material.PolyAttr >> 16 & 31) / 31f,
             };
             mtl.Materials.Add(m);
@@ -93,6 +94,7 @@ public class NsbmdExtractCommand : ICommand
             string texFileNameWithExt = material.Texture + ".png";
             m.AmbientTextureMapFile = texFileNameWithExt;
             m.DiffuseTextureMapFile = texFileNameWithExt;
+            m.SpecularTextureMapFile = texFileNameWithExt;
             m.DissolveTextureMapFile = texFileNameWithExt;
 
             if (btx != null)

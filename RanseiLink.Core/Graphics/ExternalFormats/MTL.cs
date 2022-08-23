@@ -114,9 +114,20 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                             material.Dissolve = 1 - ParseFloatLine(lineParts, 1 - material.Dissolve);
                             break;
 
+                        case "map_Ka":
+                            material.AmbientTextureMapFile = ParseFilePathLine(line, lineParts);
+                            break;
+
                         case "map_Kd":
                             material.DiffuseTextureMapFile = ParseFilePathLine(line, lineParts);
-                            //material.DiffuseTextureMap = Image.Load<Rgba32>(material.DiffuseTextureMapFile);
+                            break;
+
+                        case "map_Ks":
+                            material.SpecularTextureMapFile = ParseFilePathLine(line, lineParts);
+                            break;
+
+                        case "map_d":
+                            material.DissolveTextureMapFile = ParseFilePathLine(line, lineParts);
                             break;
                     }
                 }
@@ -166,10 +177,24 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                     sw.WriteLine($"newmtl {material.Name}");
                     sw.WriteLine(WriteColorLine("Ka", material.AmbientColor));
                     sw.WriteLine(WriteColorLine("Kd", material.DiffuseColor));
+                    sw.WriteLine(WriteColorLine("Ks", material.SpecularColor));
                     sw.WriteLine(WriteFloatLine("d", material.Dissolve));
-                    sw.WriteLine(WriteFilePathLine("map_Ka", material.AmbientTextureMapFile, file));
-                    sw.WriteLine(WriteFilePathLine("map_Kd", material.DiffuseTextureMapFile, file));
-                    sw.WriteLine(WriteFilePathLine("map_d", material.DissolveTextureMapFile, file));
+                    if (material.AmbientTextureMapFile != null)
+                    {
+                        sw.WriteLine(WriteFilePathLine("map_Ka", material.AmbientTextureMapFile, file));
+                    }
+                    if (material.DiffuseTextureMapFile != null)
+                    {
+                        sw.WriteLine(WriteFilePathLine("map_Kd", material.DiffuseTextureMapFile, file));
+                    }
+                    if (material.SpecularTextureMapFile != null)
+                    {
+                        sw.WriteLine(WriteFilePathLine("map_Ks", material.SpecularTextureMapFile, file));
+                    }
+                    if (material.DissolveTextureMapFile != null)
+                    {
+                        sw.WriteLine(WriteFilePathLine("map_d", material.DissolveTextureMapFile, file));
+                    }
                 }
             }
         }
@@ -210,6 +235,11 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             /// map_Kd: specifies a color texture file to be applied to the diffuse reflectivity of the material. During rendering, map_Kd values are multiplied by the Kd values to derive the RGB components.
             /// </summary>
             public string DiffuseTextureMapFile { get; set; }
+
+            /// <summary>
+            /// map_Ks: specifies a color texture file to be applied to the specular reflectivity of the material. During rendering, map_Ks values are multiplied by the Ks values to derive the RGB components.
+            /// </summary>
+            public string SpecularTextureMapFile { get; set; }
 
             /// <summary>
             /// map_d
