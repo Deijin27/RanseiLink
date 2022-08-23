@@ -37,13 +37,40 @@ public  class TestCommand : ICommand
         console.Output.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
         foreach (var command in bmd.Model.Models[0].RenderCommands.Commands)
         {
-            console.Output.WriteLine($"{command.OpCode} : {command.Flags}");
+            if (command.OpCode == RenderOpCode.BIND_MATERIAL)
+            {
+                var mat = bmd.Model.Models[0].Materials.Materials[command.Parameters[0]];
+                console.Output.WriteLine($"{command.OpCode} : {mat.Texture}");
+            }
+            else if (command.OpCode == RenderOpCode.DRAW_MESH)
+            {
+                var msh = bmd.Model.Models[0].Meshes.MeshCommandList[command.Parameters[0]];
+                console.Output.WriteLine($"{command.OpCode} : {msh.Name}");
+            }
+            else if (command.OpCode == RenderOpCode.MTX_MULT)
+            {
+                var objIdx = command.Parameters[0];
+                var obj = bmd.Model.Models[0].Bones.Nodes[objIdx];
+                if (obj.HasRotate)
+                {
+                    console.Output.WriteLine($"{command.OpCode} : {obj.Name} T{obj.Translation}, S{obj.Scale}, R({obj.Rotate})");
+                }
+                else
+                {
+                    console.Output.WriteLine($"{command.OpCode} : {obj.Name} T{obj.Translation}, S{obj.Scale}, R()");
+                }
+            }
+            else
+            {
+                console.Output.WriteLine($"{command.OpCode} : {command.Flags}");
+            }
+            
         }
         console.Output.WriteLine();
         console.Output.WriteLine("Poly Commands ---------------------------------------------------------------------------------------------");
         foreach (var mesh in bmd.Model.Models[0].Meshes.MeshCommandList)
         {
-            console.Output.WriteLine(":: Begin Mesh ---------------------------------------------------------------------------------------------");
+            console.Output.WriteLine(":: Begin Mesh <{0}> ---------------------------------------------------------------------------------------------", mesh.Name);
             foreach (var c in mesh.Commands)
             {
                 if (c.OpCode == MeshDisplayOpCode.BEGIN_VTXS)

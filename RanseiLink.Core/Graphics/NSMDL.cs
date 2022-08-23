@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace RanseiLink.Core.Graphics
 {
@@ -260,15 +261,16 @@ namespace RanseiLink.Core.Graphics
                     public ushort Unknown;
 
                     public Vector3 Translation;
-                    public Vector3[] RotateMatrix;
+                    public Matrix3x3 Rotate;
                     public Vector3 Scale;
+                    public bool HasRotate;
 
                     public Matrix4x4 TRSMatrix;
 
                     public float A;
                     public float B;
 
-                    static Vector3[] CalcPivotMtx(int select, int neg, float a, float b)
+                    static Matrix3x3 CalcPivotMtx(int select, int neg, float a, float b)
                     {
                         float o = (neg & 1) == 0 ? 1 : -1;
                         float c = (neg >> 1 & 1) == 0 ? b : -b;
@@ -276,60 +278,17 @@ namespace RanseiLink.Core.Graphics
 
                         switch (select)
                         {
-                            case 0: return new Vector3[3] 
-                            { 
-                                new Vector3(o, 0, 0), 
-                                new Vector3(0, a, b), 
-                                new Vector3(0, c, d) 
-                            };
-                            case 1: return new Vector3[3] 
-                            { 
-                                new Vector3(0, o, 0), 
-                                new Vector3(a, 0, b), 
-                                new Vector3(c, 0, d) 
-                            };
-                            case 2: return new Vector3[3] 
-                            { 
-                                new Vector3(0, 0, o), 
-                                new Vector3(a, b, 0), 
-                                new Vector3(c, d, 0) 
-                            };
-                            case 3: return new Vector3[3] 
-                            { 
-                                new Vector3(0, a, b), 
-                                new Vector3(o, 0, 0), 
-                                new Vector3(0, c, d) 
-                            };
-                            case 4: return new Vector3[3] 
-                            { 
-                                new Vector3(a, 0, b), 
-                                new Vector3(0, o, 0), 
-                                new Vector3(c, 0, d) 
-                            };
-                            case 5: return new Vector3[3] 
-                            { 
-                                new Vector3(a, b, 0), 
-                                new Vector3(0, 0, o), 
-                                new Vector3(c, d, 0) 
-                            };
-                            case 6: return new Vector3[3] 
-                            { 
-                                new Vector3(0, a, b), 
-                                new Vector3(0, c, d), 
-                                new Vector3(o, 0, 0) 
-                            };
-                            case 7: return new Vector3[3] 
-                            { 
-                                new Vector3(a, 0, b), 
-                                new Vector3(c, 0, d), 
-                                new Vector3(0, o, 0) 
-                            };
-                            case 8: return new Vector3[3] 
-                            { 
-                                new Vector3(a, b, 0), 
-                                new Vector3(c, d, 0), 
-                                new Vector3(0, 0, o) 
-                            };
+                            case 0: return new Matrix3x3(o, 0, 0,   0, a, b,   0, c, d);
+                            case 1: return new Matrix3x3(0, o, 0,   a, 0, b,   c, 0, d);
+                            case 2: return new Matrix3x3(0, 0, o,   a, b, 0,   c, d, 0);
+
+                            case 3: return new Matrix3x3(0, a, b,   o, 0, 0,   0, c, d);
+                            case 4: return new Matrix3x3(a, 0, b,   0, o, 0,   c, 0, d);
+                            case 5: return new Matrix3x3(a, b, 0,   0, 0, o,   c, d, 0);
+
+                            case 6: return new Matrix3x3(0, a, b,   0, c, d,   o, 0, 0);
+                            case 7: return new Matrix3x3(a, 0, b,   c, 0, d,   0, o, 0);
+                            case 8: return new Matrix3x3(a, b, 0,   c, d, 0,   0, 0, o);
 
                             default: throw new Exception($"Unexepeced select value in {nameof(CalcPivotMtx)}");
                         }
@@ -350,6 +309,54 @@ namespace RanseiLink.Core.Graphics
                         result.M33 = matrix3x3[2].Z;
                         return result;
                     }
+
+                    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+                    public struct Matrix3x3
+                    {
+                        public static readonly Matrix3x3 Zero = new Matrix3x3();
+                        public static readonly Matrix3x3 Identity = new Matrix3x3() { M11 = 1.0f, M22 = 1.0f, M33 = 1.0f };
+                        public float M11;
+                        public float M12;
+                        public float M13;
+                        public float M21;
+                        public float M22;
+                        public float M23;
+                        public float M31;
+                        public float M32;
+                        public float M33;
+
+                        public Matrix3x3(float M11, float M12, float M13,
+                                        float M21, float M22, float M23,
+                                        float M31, float M32, float M33)
+                        {
+                            this.M11 = M11; this.M12 = M12; this.M13 = M13;
+                            this.M21 = M21; this.M22 = M22; this.M23 = M23;
+                            this.M31 = M31; this.M32 = M32; this.M33 = M33;
+                        }
+
+                        public Matrix4x4 As4x4()
+                        {
+                            Matrix4x4 result = Matrix4x4.Identity;
+                            result.M11 = this.M11;
+                            result.M12 = this.M12;
+                            result.M13 = this.M13;
+                            result.M21 = this.M21;
+                            result.M22 = this.M22;
+                            result.M23 = this.M23;
+                            result.M31 = this.M31;
+                            result.M32 = this.M32;
+                            result.M33 = this.M33;
+                            return result;
+                        }
+
+                        public override string ToString()
+                        {
+                            return $"Matrix3x3 [[{M11}, {M12}, {M13}], [{M21}, {M22}, {M23}], [{M31}, {M32}, {M33}]]";
+                        }
+                    }
+
+                    
+
                     public NodeData(BinaryReader br)
                     {
                         var f = br.ReadUInt16();
@@ -360,8 +367,8 @@ namespace RanseiLink.Core.Graphics
                         if (Flag.HasFlag(TransFlag.Translate))
                         {
                             Translation = new Vector3(
-                                FixedPoint.Fix_1_19_12(br.ReadInt32()),
-                                FixedPoint.Fix_1_19_12(br.ReadInt32()),
+                                FixedPoint.Fix_1_19_12(br.ReadInt32()),   
+                                FixedPoint.Fix_1_19_12(br.ReadInt32()),   
                                 FixedPoint.Fix_1_19_12(br.ReadInt32())
                             );
                         }
@@ -374,36 +381,32 @@ namespace RanseiLink.Core.Graphics
                             var b = FixedPoint.Fix_1_3_12(br.ReadUInt16());
                             var select = f >> 4 & 0b1111;
                             var neg = f >> 8 & 0b1111;
-                            RotateMatrix = CalcPivotMtx(select, neg, a, b);
+                            Rotate = CalcPivotMtx(select, neg, a, b);
+                            
                         }
                         else if (Flag.HasFlag(TransFlag.Rotate))
                         {
                             hasRotate = true;
-                            RotateMatrix = new Vector3[3]
-                            {
-                                new Vector3(
-                                    FixedPoint.Fix_1_3_12(m0),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16())
-                                    ),
-                                new Vector3(
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16())
-                                    ),
-                                new Vector3(
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                                    FixedPoint.Fix_1_3_12(br.ReadUInt16())
-                                    )
-                            };
+                            Rotate = new Matrix3x3(
+                                FixedPoint.Fix_1_3_12(m0),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),   
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16())
+                                );
                         }
 
                         if (Flag.HasFlag(TransFlag.Scale))
                         {
                             Scale = new Vector3(
-                                FixedPoint.Fix_1_19_12(br.ReadInt32()),
-                                FixedPoint.Fix_1_19_12(br.ReadInt32()),
+                                FixedPoint.Fix_1_19_12(br.ReadInt32()),   
+                                FixedPoint.Fix_1_19_12(br.ReadInt32()),   
                                 FixedPoint.Fix_1_19_12(br.ReadInt32())
                             );
                             var invSx = FixedPoint.Fix_1_19_12(br.ReadInt32());
@@ -418,11 +421,12 @@ namespace RanseiLink.Core.Graphics
                         }
                         if (hasRotate)
                         {
-                            TRSMatrix = Matrix4x4FromMatrix3x3(RotateMatrix) * TRSMatrix;
+                            HasRotate = true;
+                            TRSMatrix *= Rotate.As4x4();
                         }
                         if (Flag.HasFlag(TransFlag.Translate))
                         {
-                            TRSMatrix = Matrix4x4.CreateTranslation(Translation) * TRSMatrix;
+                            TRSMatrix *= Matrix4x4.CreateTranslation(Translation);
                         }
                     }
 
@@ -478,6 +482,7 @@ namespace RanseiLink.Core.Graphics
                     {
                         var d = new NodeData(br);
                         d.Name = nodeRadixDict.Names[i];
+                        
                         Nodes[i] = d;
                     }
                 }

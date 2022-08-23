@@ -286,6 +286,21 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
+    /// <summary>
+    /// For testing. The normal matrix formatting is garbage
+    /// </summary>
+    static class StringExtras
+    {
+        public static string Stringify(this Matrix4x4 mtx)
+        {
+            return $"Matrix4x4 [[{mtx.M11}, {mtx.M12}, {mtx.M13}, {mtx.M14}], " +
+                            $"[{mtx.M21}, {mtx.M22}, {mtx.M23}, {mtx.M24}], " +
+                            $"[{mtx.M31}, {mtx.M32}, {mtx.M33}, {mtx.M34}], " +
+                            $"[{mtx.M41}, {mtx.M42}, {mtx.M43}, {mtx.M44}]]";
+        }
+    }
+
+
     public class GpuState
     {
         public Matrix4x4[] MatrixStack { get; set; }
