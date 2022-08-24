@@ -21,9 +21,25 @@ namespace RanseiLink.Core.Util
             return Fix(value, 1, 3, 12);
         }
 
+        /// <summary>
+        /// 1, 19, 12
+        /// </summary>
+        public static int InverseFix_1_19_12(float value)
+        {
+            return InverseFix(value, 1, 19, 12);
+        }
+
+        /// <summary>
+        /// 1, 3, 12
+        /// </summary>
+        public static int Fix_1_3_12(float value)
+        {
+            return InverseFix(value, 1, 3, 12);
+        }
+
         public static float Fix(int value, int signBits, int intBits, int fracBits)
         {
-            Debug.Assert(signBits <= 1);
+            Debug.Assert(signBits == 0 || signBits == 1);
             Debug.Assert(intBits + fracBits >= 0);
             Debug.Assert(signBits + intBits + fracBits <= 32);
 
@@ -35,7 +51,7 @@ namespace RanseiLink.Core.Util
             }
             else
             {
-                var signMask = 1 << intBits + fracBits;
+                var signMask = 1 << (intBits + fracBits);
                 if ((value & signMask) != 0)
                 {
                     result = value | ~(signMask - 1);
@@ -47,6 +63,19 @@ namespace RanseiLink.Core.Util
             }
 
             return (float)(result * Math.Pow(0.5, fracBits));
+        }
+
+        public static int InverseFix(float value, int signBits, int intBits, int fracBits)
+        {
+            Debug.Assert(signBits == 0 || signBits == 1);
+            Debug.Assert(intBits + fracBits >= 0);
+            Debug.Assert(signBits + intBits + fracBits <= 32);
+
+            double dbl = value / Math.Pow(0.5, fracBits);
+
+            int result = (int)Math.Round(dbl);
+            int signFlag = signBits << (intBits + fracBits);
+            return result | signFlag;
         }
     }
 }

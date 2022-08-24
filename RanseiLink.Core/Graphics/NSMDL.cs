@@ -46,7 +46,7 @@ namespace RanseiLink.Core.Graphics
             private struct Header
             {
                 public uint TotalSize;
-                public uint OffsetBoneCommands;
+                public uint OffsetRenderCommands;
                 public uint OffsetMaterial;
                 public uint OffsetMeshes;
                 public uint OffsetEvpMatrix;
@@ -54,7 +54,7 @@ namespace RanseiLink.Core.Graphics
                 public Header(BinaryReader br)
                 {
                     TotalSize = br.ReadUInt32();
-                    OffsetBoneCommands = br.ReadUInt32();
+                    OffsetRenderCommands = br.ReadUInt32();
                     OffsetMaterial = br.ReadUInt32();
                     OffsetMeshes = br.ReadUInt32();
                     OffsetEvpMatrix = br.ReadUInt32();
@@ -63,7 +63,7 @@ namespace RanseiLink.Core.Graphics
                 public void WriteTo(BinaryWriter bw)
                 {
                     bw.Write(TotalSize);
-                    bw.Write(OffsetBoneCommands);
+                    bw.Write(OffsetRenderCommands);
                     bw.Write(OffsetMaterial);
                     bw.Write(OffsetMeshes);
                     bw.Write(OffsetEvpMatrix);
@@ -189,28 +189,42 @@ namespace RanseiLink.Core.Graphics
                 Bones = new BoneSet(br);
 
                 // bone commands
-                if (br.BaseStream.Position != header.OffsetBoneCommands + initPos)
+                if (br.BaseStream.Position != header.OffsetRenderCommands + initPos)
                 {
-                    throw new Exception("offset wrong");
+                    throw new Exception("offset wrong : bone commands");
                 }
                 RenderCommands = new RenderCommandSet(br);
 
                 // materials
                 if (br.BaseStream.Position != header.OffsetMaterial + initPos)
                 {
-                    //throw new Exception("offset wrong");
+                    throw new Exception("offset wrong : materials");
                 }
                 br.BaseStream.Position = initPos + header.OffsetMaterial;
                 Materials = new MaterialSet(br);
 
-                // shapes
+                // meshes
                 if (br.BaseStream.Position != header.OffsetMeshes + initPos)
                 {
-                    throw new Exception("offset wrong");
+                    throw new Exception("offset wrong : meshes");
                 }
                 Meshes = new MeshSet(br);
 
                 br.BaseStream.Position = initPos + header.TotalSize;
+            }
+
+            public void WriteTo(BinaryWriter bw)
+            {
+                var initPos = bw.BaseStream.Position;
+                Header header;
+
+                MdlInfo.WriteTo(bw);
+                Bones.WriteTo(bw);
+                header.OffsetRenderCommands = (uint)(bw.BaseStream.Position - initPos);
+                RenderCommands.WriteTo(bw);
+                header.OffsetMaterial = (uint)(bw.BaseStream.Position - initPos);
+                Materials.WriteTo(bw);
+                header.OffsetMeshes = (uint)(bw.BaseStream.Position - initPos);
             }
 
             public class RenderCommandSet
@@ -264,9 +278,6 @@ namespace RanseiLink.Core.Graphics
 
                     public Matrix4x4 TRSMatrix;
 
-                    public float A;
-                    public float B;
-
                     static Matrix3x3 CalcPivotMtx(int select, int neg, float a, float b)
                     {
                         float o = (neg & 1) == 0 ? 1 : -1;
@@ -289,7 +300,6 @@ namespace RanseiLink.Core.Graphics
 
                             default: throw new Exception($"Unexepeced select value in {nameof(CalcPivotMtx)}");
                         }
- 
                     }
 
                     public NodeData(BinaryReader br)
@@ -426,7 +436,25 @@ namespace RanseiLink.Core.Graphics
 
                 public void WriteTo(BinaryWriter bw)
                 {
-                    throw new NotImplementedException();
+                    var initPos = bw.BaseStream.Position;
+
+                    // skip radix dict for now
+                    bw.Pad(RadixDict<OffsetRadixData>.CalculateLength(Nodes.Length));
+
+                    var nodeRadixDict = new RadixDict<OffsetRadixData>();
+                    foreach (var d in Nodes)
+                    {
+                        nodeRadixDict.Names.Add(d.Name);
+                        nodeRadixDict.Data.Add(new OffsetRadixData { Offset = (uint)(bw.BaseStream.Position - initPos )});
+                        d.WriteTo(bw);
+                    }
+
+                    // write radix dict
+                    var endPos = bw.BaseStream.Position;
+                    bw.BaseStream.Position = initPos;
+                    nodeRadixDict.WriteTo(bw);
+                    bw.BaseStream.Position = endPos;
+
                 }
             }
 
@@ -454,7 +482,6 @@ namespace RanseiLink.Core.Graphics
                     }
 
                     public ushort ItemTag;
-                    public ushort Size;
                     public Rgb15 Diffuse;
                     public bool DiffuseIsDefaultVertexColor;
                     public Rgb15 Ambient;
@@ -483,12 +510,12 @@ namespace RanseiLink.Core.Graphics
                     public Material(BinaryReader br)
                     {
                         ItemTag = br.ReadUInt16();  
-                        Size = br.ReadUInt16();
-                        var diffAmb = br.ReadUInt32();
+                        var size = br.ReadUInt16();
+                        var diffAmb = br.ReadInt32();
                         Diffuse = Rgb15.From((ushort)(diffAmb & 0x7FFF));
                         DiffuseIsDefaultVertexColor = (diffAmb >> 15 & 1) == 1;
                         Ambient = Rgb15.From((ushort)(diffAmb >> 16 & 0x7FFF));
-                        var specEmi = br.ReadUInt32();
+                        var specEmi = br.ReadInt32();
                         Specular = Rgb15.From((ushort)(specEmi & 0x7FFF));
                         EnableShininessTable = (specEmi >> 15 & 1) == 1;
                         Emission = Rgb15.From((ushort)(specEmi >> 16 & 0x7FFF));
@@ -529,6 +556,71 @@ namespace RanseiLink.Core.Graphics
                         }
                     }
 
+                    public void WriteTo(BinaryWriter bw)
+                    {
+                        var initOffset = bw.BaseStream.Position;
+
+                        // skip header
+                        bw.Pad(4);
+
+                        // write data
+                        int diffAmb = 
+                            Diffuse.ToUInt16() 
+                            | (DiffuseIsDefaultVertexColor ? 1 : 0) << 15
+                            | Specular.ToUInt16() << 16;
+                        bw.Write(diffAmb);
+
+                        int speEmi = 
+                            Specular.ToUInt16()
+                            | (EnableShininessTable ? 1 : 0) << 15
+                            | Emission.ToUInt16() << 16;
+                        bw.Write(speEmi);
+
+                        bw.Write(PolyAttr);
+                        bw.Write(PolyAttrMask);
+                        bw.Write(TexImageParam);
+                        bw.Write(TexImageParamMask);
+                        bw.Write(TexPaletteBase);
+                        ushort flagVal = (ushort)~Flag;
+                        bw.Write(flagVal);
+                        bw.Write(OrigWidth);
+                        bw.Write(OrigHeight);
+
+                        bw.Write(MagWidth);
+                        bw.Write(MagHeight);
+
+                        if (Flag.HasFlag(MATFLAG.TEXMTX_SCALEONE))
+                        {
+                            bw.Write(ScaleS);
+                            bw.Write(ScaleT);
+                        }
+                        if (Flag.HasFlag(MATFLAG.TEXMTX_ROTZERO))
+                        {
+                            bw.Write(RotSin);
+                            bw.Write(RotCos);
+                        }
+                        if (Flag.HasFlag(MATFLAG.TEXMTX_TRANSZERO))
+                        {
+                            bw.Write(TransS);
+                            bw.Write(TransT);
+                        }
+                        if (!Flag.HasFlag(MATFLAG.EFFECTMTX)) // this check is inverse
+                        {
+                            for (int i = 0; i < 0x10; i++)
+                            {
+                                bw.Write(EffectMtx[i]);
+                            }
+                        }
+
+                        // write header
+                        var endOffset = bw.BaseStream.Position;
+                        bw.Write(ItemTag);
+                        ushort size = (ushort)(endOffset - initOffset);
+                        bw.Write(size);
+                        bw.BaseStream.Position = endOffset;
+
+                    }
+
                     public string Name { get; set; }
                     public string Texture { get; set; }
                     public string Palette { get; set; }
@@ -564,7 +656,7 @@ namespace RanseiLink.Core.Graphics
                         }
                     }
 
-                    // this padding is seen in map5
+                    // this padding is seen in map5. Probably just for 32bit alignment
                     if ((2 * materialRadixDict.Names.Count) % 4 != 0)
                     {
                         br.Skip(4 - (2 * materialRadixDict.Names.Count) % 4);
@@ -585,32 +677,134 @@ namespace RanseiLink.Core.Graphics
 
                 public void WriteTo(BinaryWriter bw)
                 {
+                    var initOffset = bw.BaseStream.Position;
+
+                    // preprare radix dicts and calculate material-texture-palette links
+                    var materialRadixDict = new RadixDict<OffsetRadixData>();
+                    var texToMatDict = new RadixDict<ToMatRadixData>();
+                    var palToMatDict = new RadixDict<ToMatRadixData>();
+                    var textureMaterials = new List<List<int>>();
+                    var palMaterials = new List<List<int>>();
+                    for (int mtlIdx = 0; mtlIdx < Materials.Length; mtlIdx++)
+                    {
+                        var m = Materials[mtlIdx];
+
+                        // prepare material radix dict
+                        materialRadixDict.Names.Add(m.Name);
+                        materialRadixDict.Data.Add(new OffsetRadixData());
+
+                        // prepare texture radix dict, and link to materials
+                        var texIdx = texToMatDict.Names.IndexOf(m.Texture);
+                        if (texIdx == -1)
+                        {
+                            texToMatDict.Names.Add(m.Texture);
+                            texToMatDict.Data.Add(new ToMatRadixData());
+                            textureMaterials.Add(new List<int> { mtlIdx });
+                        }
+                        else
+                        {
+                            textureMaterials[texIdx].Add(mtlIdx);
+                        }
+
+                        // prepare palette radix dict, and link to materials
+                        var palIdx = palToMatDict.Names.IndexOf(m.Palette);
+                        if (palIdx == -1)
+                        {
+                            palToMatDict.Names.Add(m.Palette);
+                            palToMatDict.Data.Add(new ToMatRadixData());
+                            palMaterials.Add(new List<int> { mtlIdx });
+                        }
+                        else
+                        {
+                            palMaterials[palIdx].Add(mtlIdx);
+                        }
+                    }
+
+                    // skip header and radix dicts for now
+                    ushort offsetMatDict = 4;
+                    ushort offsetTexToMatDict = (ushort)(offsetMatDict + RadixDict<OffsetRadixData>.CalculateLength(materialRadixDict.Names.Count));
+                    ushort offsetPalToMatDict = (ushort)(offsetTexToMatDict + RadixDict<ToMatRadixData>.CalculateLength(texToMatDict.Names.Count));
+                    int lenPalDict = RadixDict<ToMatRadixData>.CalculateLength(texToMatDict.Names.Count);
+                    bw.Pad(offsetPalToMatDict + lenPalDict);
+
+                    // write the list of texture-material and pal-material and store the offsets and counts in the dict data
+                    for (int i = 0; i < texToMatDict.Data.Count; i++)
+                    {
+                        var texMats = textureMaterials[i];
+                        var dictData = texToMatDict.Data[i];
+                        dictData.Offset = (ushort)(bw.BaseStream.Position - initOffset);
+                        dictData.NumMat = (byte)texMats.Count;
+                        foreach (int matIdx in texMats)
+                        {
+                            bw.Write((byte)matIdx);
+                        }
+                    }
+                    for (int i = 0; i < palToMatDict.Data.Count; i++)
+                    {
+                        var palMats = palMaterials[i];
+                        var dictData = palToMatDict.Data[i];
+                        dictData.Offset = (ushort)(bw.BaseStream.Position - initOffset);
+                        dictData.NumMat = (byte)palMats.Count;
+                        foreach (int matIdx in palMats)
+                        {
+                            bw.Write((byte)matIdx);
+                        }
+                    }
+
+                    // the 32bit alignment
+                    if ((2 * Materials.Length) % 4 != 0)
+                    {
+                        bw.Pad(4 - (2 * Materials.Length) % 4);
+                    }
+
+                    // write material data and record offsets
+                    for (int i = 0; i < Materials.Length; i++)
+                    {
+                        materialRadixDict.Data[i].Offset = (uint)(bw.BaseStream.Position - initOffset);
+                        Materials[i].WriteTo(bw);
+                    }
+
+                    // return to start to write header
+                    var endOffset = bw.BaseStream.Position;
+                    bw.BaseStream.Position = initOffset;
+
+                    // write radix dict offsets
+                    bw.Write(offsetTexToMatDict);
+                    bw.Write(offsetPalToMatDict);
+
+                    // write radix dicts
+                    materialRadixDict.WriteTo(bw);
+                    texToMatDict.WriteTo(bw);
+                    palToMatDict.WriteTo(bw);
+
+                    // return to end
+                    bw.BaseStream.Position = endOffset;
                 }
             }
 
             public class MeshSet
             {
-                private struct Mesh
+                [Flags]
+                public enum SHPFLAG : uint
                 {
-                    [Flags]
-                    public enum SHPFLAG : uint
-                    {
-                        USE_NORMAL = 1,
-                        USE_COLOR = 2,
-                        USE_TEXCOORD = 4,
-                        USE_RESTOREMTX = 8,
-                    }
+                    USE_NORMAL = 1,
+                    USE_COLOR = 2,
+                    USE_TEXCOORD = 4,
+                    USE_RESTOREMTX = 8,
+                }
 
+                public struct MeshInfo
+                {
                     public ushort ItemTag;
-                    public ushort Size;
+                    public const ushort Length = 16;
                     public SHPFLAG Flag;
                     public uint CommandsOffset;
                     public int CommandsLength;
 
-                    public Mesh(BinaryReader br)
+                    public MeshInfo(BinaryReader br)
                     {
                         ItemTag = br.ReadUInt16();
-                        Size = br.ReadUInt16();
+                        var length = br.ReadUInt16();
                         Flag = (SHPFLAG)br.ReadUInt32();
                         CommandsOffset = br.ReadUInt32();
                         CommandsLength = br.ReadInt32();
@@ -619,7 +813,7 @@ namespace RanseiLink.Core.Graphics
                     public void WriteTo(BinaryWriter bw)
                     {
                         bw.Write(ItemTag);
-                        bw.Write(Size);
+                        bw.Write(Length);
                         bw.Write((uint)Flag);
                         bw.Write(CommandsOffset);
                         bw.Write(CommandsLength);
@@ -629,16 +823,17 @@ namespace RanseiLink.Core.Graphics
                 public MeshSet(BinaryReader br)
                 {
                     var shapeRadixDict = new RadixDict<OffsetRadixData>(br);
-                    Mesh[] shapes = new Mesh[shapeRadixDict.Names.Count];
+                    MeshInfo[] shapes = new MeshInfo[shapeRadixDict.Names.Count];
                     for (int i = 0; i < shapes.Length; i++)
                     {
-                        shapes[i] = new Mesh(br);
+                        shapes[i] = new MeshInfo(br);
                     }
 
                     for (int i = 0; i < shapes.Length; i++)
                     {
-                        var endPos = br.BaseStream.Position + shapes[i].CommandsLength;
-                        var commandSet = new MeshCommands { Name = shapeRadixDict.Names[i] };
+                        var shape = shapes[i];
+                        var endPos = br.BaseStream.Position + shape.CommandsLength;
+                        var commandSet = new Mesh { Name = shapeRadixDict.Names[i], ItemTag = shape.ItemTag, Flag = shape.Flag };
                         while (br.BaseStream.Position < endPos)
                         {
                             var commandIds = br.ReadBytes(4).Select(x => (MeshDisplayOpCode)x).ToArray();
@@ -657,13 +852,80 @@ namespace RanseiLink.Core.Graphics
                         MeshCommandList.Add(commandSet);
                     }
                 }
-                public class MeshCommands
+
+                public void WriteTo(BinaryWriter bw)
                 {
+                    var initOffset = bw.BaseStream.Position;
+                    
+                    // skip radix dict and mesh info for now
+                    bw.Pad(RadixDict<OffsetRadixData>.CalculateLength(MeshCommandList.Count));
+                    var meshInfoOffset = bw.BaseStream.Position;
+                    bw.Pad(MeshInfo.Length * MeshCommandList.Count);
+
+                    var shapeRadixDict = new RadixDict<OffsetRadixData>();
+                    MeshInfo[] meshInfo = new MeshInfo[MeshCommandList.Count];
+
+                    // write mesh commands and store offsets and lengths in meshinfo, and store names in radix dict
+                    for (int i = 0; i < MeshCommandList.Count; i++)
+                    {
+                        Mesh mesh = MeshCommandList[i];
+
+                        shapeRadixDict.Names.Add(mesh.Name);
+
+                        MeshInfo mi = meshInfo[i];
+                        mi.ItemTag = mesh.ItemTag;
+                        mi.Flag = mesh.Flag;
+                        mi.CommandsOffset = (uint)(bw.BaseStream.Position - initOffset);
+
+                        // write commands in sets of 4
+                        for (int cmdIdx = 0; cmdIdx < mesh.Commands.Count; cmdIdx += 4)
+                        {
+                            var commandSet = new MeshDisplayCommand[] { mesh.Commands[i], mesh.Commands[i + 1], mesh.Commands[i + 2], mesh.Commands[i + 3] };
+                            foreach (var c in commandSet)
+                            {
+                                bw.Write((byte)c.OpCode);
+                            }
+                            foreach (var c in commandSet)
+                            {
+                                for (int paramIdx = 0; paramIdx < c.OpCode.ParamLength(); paramIdx++)
+                                {
+                                    bw.Write(c.Params[paramIdx]);
+                                }
+                            }
+                        }
+
+                        mi.CommandsLength = (int)(bw.BaseStream.Position - initOffset - mi.CommandsOffset);
+                    }
+
+                    // remember end offset
+                    var endOffset = bw.BaseStream.Position;
+
+                    // write meshInfo and store offsets in radix dict data
+                    bw.BaseStream.Position = meshInfoOffset;
+                    for (int i = 0; i < meshInfo.Length; i++)
+                    {
+                        MeshInfo mi = meshInfo[i];
+                        shapeRadixDict.Data[i].Offset = (uint)(bw.BaseStream.Position - initOffset);
+                        mi.WriteTo(bw);
+                    }
+
+                    // write radix dict
+                    bw.BaseStream.Position = initOffset;
+                    shapeRadixDict.WriteTo(bw);
+
+                    // return to end
+                    bw.BaseStream.Position = endOffset;
+                }
+
+                public class Mesh
+                {
+                    public ushort ItemTag { get; set; }
+                    public SHPFLAG Flag { get; set; }
                     public string Name { get; set; }
                     public List<MeshDisplayCommand> Commands { get; set; } = new List<MeshDisplayCommand>();
                 }
 
-                public List<MeshCommands> MeshCommandList { get; set; } = new List<MeshCommands>();
+                public List<Mesh> MeshCommandList { get; set; } = new List<Mesh>();
 
                 
             }
