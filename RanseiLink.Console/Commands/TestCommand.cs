@@ -79,7 +79,14 @@ public  class TestCommand : ICommand
                 }
                 else
                 {
-                    console.Output.WriteLine(c.OpCode);
+                    if (c.Params != null && c.Params.Length != 0)
+                    {
+                        console.Output.WriteLine("{0}: [{1}]", c.OpCode, string.Join(", ", c.Params.Select(x => x.ToString("X"))));
+                    }
+                    else
+                    {
+                        console.Output.WriteLine(c.OpCode);
+                    }
                 }
             }
             console.Output.WriteLine();

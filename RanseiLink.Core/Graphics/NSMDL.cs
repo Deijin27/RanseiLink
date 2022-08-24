@@ -198,7 +198,7 @@ namespace RanseiLink.Core.Graphics
                 // materials
                 if (br.BaseStream.Position != header.OffsetMaterial + initPos)
                 {
-                    throw new Exception("offset wrong : materials");
+                    //throw new Exception("offset wrong : materials");
                 }
                 br.BaseStream.Position = initPos + header.OffsetMaterial;
                 Materials = new MaterialSet(br);

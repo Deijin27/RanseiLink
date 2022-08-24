@@ -4,15 +4,15 @@ using System.IO;
 using Xunit;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
-public class Btx0Tests
+public class NsbtxTests
 {
     [Fact]
     public void TestMap_LoadCorrectly()
     {
-        var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_map2.btx0");
+        var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_map2.nsbtx");
         File.Exists(file).Should().BeTrue();
 
-        var btx = new BTX0(file);
+        var btx = new NSBTX(file);
         var tex = btx.Texture;
         tex.Should().NotBeNull();
 
@@ -76,11 +76,11 @@ public class Btx0Tests
     [Fact]
     public void TestMap_IdenticalThroughLoadSaveCycle()
     {
-        string fileName = "test_map2.btx0";
+        string fileName = "test_map2.nsbtx";
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
         File.Exists(file).Should().BeTrue();
 
-        var btx = new BTX0(file);
+        var btx = new NSBTX(file);
 
         var mem = new MemoryStream();
         var bw = new BinaryWriter(mem);

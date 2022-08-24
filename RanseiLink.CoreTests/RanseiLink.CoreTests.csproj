@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestData\test_map2.btx0">
+    <None Update="TestData\test_map2.nsbtx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="TestData\test_multi.nclr">
