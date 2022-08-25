@@ -76,9 +76,9 @@ public class NsbmdExtractCommand : ICommand
     private void ExtractMaterialAndTextures(NSMDL.Model model, NSBTX btx, IConsole console)
     {
         var mtl = new MTL();
-        for (int i = 0; i < model.Materials.Materials.Length; i++)
+        for (int i = 0; i < model.Materials.Count; i++)
         {
-            NSMDL.Model.MaterialSet.Material material = model.Materials.Materials[i];
+            NSMDL.Model.Material material = model.Materials[i];
             console.Output.WriteLine("  Exporting material: {0}", material.Name);
 
             var m = new MTL.Material

@@ -4,6 +4,7 @@ using System.IO;
 using Xunit;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
+
 public class NsbtxTests
 {
     [Fact]

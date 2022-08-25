@@ -3,9 +3,6 @@ using RanseiLink.Core.Util;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 
 namespace RanseiLink.Core.Graphics
@@ -23,7 +20,7 @@ namespace RanseiLink.Core.Graphics
     {
         public static OBJ ModelToObj(NSMDL.Model model)
         {
-            var bmdGroupSet = SBCRipper.Rip(model);
+            var bmdGroupSet = ModelRipper.Rip(model);
 
             var obj = new OBJ();
 
@@ -93,11 +90,11 @@ namespace RanseiLink.Core.Graphics
                             //    }
                             //}
                             //vertexId += polygon.Vertex.Length;
-                            break;
+                            //break;
 
                         case PolygonType.QUAD_STRIP:
                             throw new NotImplementedException("QuadStrip polygon exporter not yet implemented");
-                            break;
+                            //break;
 
                         case PolygonType.NONE:
                             break;
@@ -130,7 +127,7 @@ namespace RanseiLink.Core.Graphics
         public Vector3[] Normals;
         public Vector2[] TexCoords;
         public Vector3[] Vertex;
-        public Color[] Colors;
+        public Rgba32[] Colors;
 
         public Polygon()
         {
@@ -141,7 +138,7 @@ namespace RanseiLink.Core.Graphics
           Vector3[] Normals,
           Vector2[] TexCoords,
           Vector3[] Vertex,
-          Color[] Colors = null)
+          Rgba32[] Colors = null)
         {
             this.PolyType = PolyType;
             this.Normals = Normals;
@@ -151,20 +148,20 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
-    public class SBCRipper
+    public class ModelRipper
     {
-        private SBCRipper()
+        private ModelRipper()
         {
 
         }
 
         public static List<Group> Rip(NSMDL.Model model)
         {
-            var state = new SBCRipper();
+            var state = new ModelRipper();
             state.gpu = new GpuState();
             state.model = model;
-            state.gpu.CurrentMaterial = model.Materials.Materials[0];
-            state.Process(model.RenderCommands.Commands);
+            state.gpu.CurrentMaterial = model.Materials[0];
+            state.Process(model.RenderCommands);
             return state.groups;
         }
 
@@ -198,19 +195,19 @@ namespace RanseiLink.Core.Graphics
                     break;
 
                 case RenderOpCode.BIND_MATERIAL:
-                    gpu.CurrentMaterial = model.Materials.Materials[command.Parameters[0]];
+                    gpu.CurrentMaterial = model.Materials[command.Parameters[0]];
                     break;
 
                 case RenderOpCode.DRAW_MESH:
-                    var dl = model.Meshes.MeshCommandList[command.Parameters[0]];
-                    var g = DLRipper.Rip(dl.Commands, gpu);
+                    var dl = model.Polygons[command.Parameters[0]];
+                    var g = PolygonRipper.Rip(dl.Commands, gpu);
                     g.Name = dl.Name;
                     g.MaterialName = gpu.CurrentMaterial.Name;
                     groups.Add(g);
                     break;
 
                 case RenderOpCode.MTX_MULT:
-                    var objIndex = command.Parameters[0];
+                    var polymshIdx = command.Parameters[0];
                     //var parentId = command.Parameters[1];
                     //var unknown = command.Parameters[2];
 
@@ -239,7 +236,7 @@ namespace RanseiLink.Core.Graphics
                         gpu.Restore(restoreIndex);
                     }
 
-                    var data = model.Bones.Nodes[objIndex];
+                    var data = model.Polymeshes[polymshIdx];
 
                     gpu.MultiplyMatrix(data.TRSMatrix);
 
@@ -306,7 +303,7 @@ namespace RanseiLink.Core.Graphics
     {
         public Matrix4x4[] MatrixStack { get; set; }
         public Matrix4x4 CurrentMatrix { get; set; }
-        public NSMDL.Model.MaterialSet.Material CurrentMaterial { get; set; }
+        public NSMDL.Model.Material CurrentMaterial { get; set; }
 
         public GpuState()
         {
@@ -334,22 +331,22 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
-    public class DLRipper
+    public class PolygonRipper
     {
-        private DLRipper()
+        private PolygonRipper()
         {
 
         }
 
-        public static Group Rip(IEnumerable<MeshDisplayCommand> commands, GpuState gpu)
+        public static Group Rip(IEnumerable<PolygonDisplayCommand> commands, GpuState gpu)
         {
-            var state = new DLRipper();
+            var state = new PolygonRipper();
             state.gpu = gpu;
             state.Process(commands);
             return state.group;
         }
 
-        private void Process(IEnumerable<MeshDisplayCommand> commands)
+        private void Process(IEnumerable<PolygonDisplayCommand> commands)
         {
             foreach (var command in commands)
             {
@@ -387,7 +384,7 @@ namespace RanseiLink.Core.Graphics
             texCoords.Add(texCoord);
         }
 
-        private void ProcessCommand(MeshDisplayCommand command)
+        private void ProcessCommand(PolygonDisplayCommand command)
         {
             switch (command.OpCode)
             {

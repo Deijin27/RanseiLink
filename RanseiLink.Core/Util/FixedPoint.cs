@@ -32,7 +32,7 @@ namespace RanseiLink.Core.Util
         /// <summary>
         /// 1, 3, 12
         /// </summary>
-        public static int Fix_1_3_12(float value)
+        public static int InverseFix_1_3_12(float value)
         {
             return InverseFix(value, 1, 3, 12);
         }
@@ -71,7 +71,7 @@ namespace RanseiLink.Core.Util
             Debug.Assert(intBits + fracBits >= 0);
             Debug.Assert(signBits + intBits + fracBits <= 32);
 
-            double dbl = value / Math.Pow(0.5, fracBits);
+            double dbl = value * Math.Pow(2, fracBits);
 
             int result = (int)Math.Round(dbl);
             if (signBits != 0 && value < 0)

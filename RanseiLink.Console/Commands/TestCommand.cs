@@ -9,6 +9,7 @@ using RanseiLink.Core.Enums;
 using System.Collections.Generic;
 using System.IO;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Util;
 
 namespace RanseiLink.Console.Commands;
 
@@ -35,29 +36,29 @@ public  class TestCommand : ICommand
     void Dump(IConsole console, NSBMD bmd)
     {
         console.Output.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
-        foreach (var command in bmd.Model.Models[0].RenderCommands.Commands)
+        foreach (var command in bmd.Model.Models[0].RenderCommands)
         {
             if (command.OpCode == RenderOpCode.BIND_MATERIAL)
             {
-                var mat = bmd.Model.Models[0].Materials.Materials[command.Parameters[0]];
+                var mat = bmd.Model.Models[0].Materials[command.Parameters[0]];
                 console.Output.WriteLine($"{command.OpCode} : {mat.Texture}");
             }
             else if (command.OpCode == RenderOpCode.DRAW_MESH)
             {
-                var msh = bmd.Model.Models[0].Meshes.MeshCommandList[command.Parameters[0]];
-                console.Output.WriteLine($"{command.OpCode} : {msh.Name}");
+                var ply = bmd.Model.Models[0].Polygons[command.Parameters[0]];
+                console.Output.WriteLine($"{command.OpCode} : {ply.Name}");
             }
             else if (command.OpCode == RenderOpCode.MTX_MULT)
             {
-                var objIdx = command.Parameters[0];
-                var obj = bmd.Model.Models[0].Bones.Nodes[objIdx];
-                if (obj.HasRotate)
+                var pmIdx = command.Parameters[0];
+                var plymsh = bmd.Model.Models[0].Polymeshes[pmIdx];
+                if (plymsh.HasRotate)
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {obj.Name} T{obj.Translation}, S{obj.Scale}, R({obj.Rotate})");
+                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R({plymsh.Rotate})");
                 }
                 else
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {obj.Name} T{obj.Translation}, S{obj.Scale}, R()");
+                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R()");
                 }
             }
             else
@@ -68,10 +69,10 @@ public  class TestCommand : ICommand
         }
         console.Output.WriteLine();
         console.Output.WriteLine("Poly Commands ---------------------------------------------------------------------------------------------");
-        foreach (var mesh in bmd.Model.Models[0].Meshes.MeshCommandList)
+        foreach (var ply in bmd.Model.Models[0].Polygons)
         {
-            console.Output.WriteLine(":: Begin Mesh <{0}> ---------------------------------------------------------------------------------------------", mesh.Name);
-            foreach (var c in mesh.Commands)
+            console.Output.WriteLine(":: Begin Mesh <{0}> ---------------------------------------------------------------------------------------------", ply.Name);
+            foreach (var c in ply.Commands)
             {
                 if (c.OpCode == MeshDisplayOpCode.BEGIN_VTXS)
                 {
@@ -110,7 +111,8 @@ public  class TestCommand : ICommand
         }
         else
         {
-            Export(console, bmd);
+            console.Output.WriteLine(FixedPoint.Fix_1_3_12(0x1000));
+            //Export(console, bmd);
         }
 
         //if (!_currentModService.TryGetCurrentModServiceGetter(out var services))

@@ -57,7 +57,7 @@ namespace RanseiLink.Core.Graphics
             {
                 MagicNumber = MagicNumber,
                 ByteOrderMarker = 0xFEFF,
-                Version = 1,
+                Version = 2,
                 ChunkCount = 1,
                 HeaderLength = 0x10
             };
@@ -67,7 +67,7 @@ namespace RanseiLink.Core.Graphics
 
             uint[] chunkOffsets = new uint[header.ChunkCount];
 
-            // write TEX0
+            // write MDL
             chunkOffsets[0] = (uint)(bw.BaseStream.Position);
             Model.WriteTo(bw);
 
