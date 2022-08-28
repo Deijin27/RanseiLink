@@ -5,6 +5,9 @@ namespace RanseiLink.Core.Graphics
 {
     public struct Rgb15 : IEquatable<Rgb15>
     {
+        public static readonly Rgb15 White = new Rgb15(31, 31, 31);
+        public static readonly Rgb15 Black = new Rgb15(0, 0, 0);
+
         public int R;
         public int G;
         public int B;

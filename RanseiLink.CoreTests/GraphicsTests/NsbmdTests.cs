@@ -153,10 +153,12 @@ public class NsbmdTests
 
     }
 
-    [Fact]
-    public void TestMap_IdenticalThroughLoadSaveCycle()
+    [Theory]
+    [InlineData("test_map0.nsbmd")]
+    [InlineData("test_map3.nsbmd")]
+    [InlineData("test_map5.nsbmd")]
+    public void TestMap_IdenticalThroughLoadSaveCycle(string fileName)
     {
-        string fileName = "test_map3.nsbmd";
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
         File.Exists(file).Should().BeTrue();
 
@@ -168,7 +170,7 @@ public class NsbmdTests
         var data = mem.ToArray();
         mem.Dispose();
 
-        //File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
+        File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
 
         data.Should().Equal(File.ReadAllBytes(file));
     }

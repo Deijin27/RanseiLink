@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Core.Graphics
 {
-    public struct GenericFileHeader
+    public struct NitroFileHeader
     {
         public string MagicNumber;
         public ushort ByteOrderMarker;
@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Graphics
         public ushort HeaderLength;
         public ushort ChunkCount;
 
-        public GenericFileHeader(BinaryReader br)
+        public NitroFileHeader(BinaryReader br)
         {
             MagicNumber = br.ReadMagicNumber();
             ByteOrderMarker = br.ReadUInt16();
@@ -32,14 +32,14 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
-    public struct GenericChunkHeader
+    public struct NitroChunkHeader
     {
         public const int Length = 8;
 
         public string MagicNumber;
         public uint ChunkLength;
 
-        public GenericChunkHeader(BinaryReader br)
+        public NitroChunkHeader(BinaryReader br)
         {
             MagicNumber = br.ReadMagicNumber();
             ChunkLength = br.ReadUInt32();

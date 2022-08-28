@@ -32,7 +32,7 @@ namespace RanseiLink.Core.Graphics
             long initOffset = br.BaseStream.Position;
 
             // first a typical file header
-            var header = new GenericFileHeader(br);
+            var header = new NitroFileHeader(br);
 
             if (header.MagicNumber != MagicNumber)
             {
@@ -54,7 +54,7 @@ namespace RanseiLink.Core.Graphics
         {
             long initOffset = bw.BaseStream.Position;
 
-            var header = new GenericFileHeader
+            var header = new NitroFileHeader
             {
                 MagicNumber = MagicNumber,
                 ByteOrderMarker = 0xFEFF,

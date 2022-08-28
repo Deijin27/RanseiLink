@@ -1,29 +1,31 @@
-﻿using System.IO;
+﻿
+using System.IO;
 
 namespace RanseiLink.Core.Graphics
 {
+
     /// <summary>
-    /// Model and material file
+    /// Texture file
     /// </summary>
-    public class NSBMD
+    public class NSBTX
     {
-        public const string MagicNumber = "BMD0";
-        public static readonly string[] FileExtensions = new[] { ".bmd0", ".bmd" };
+        public const string MagicNumber = "BTX0";
+        public static readonly string[] FileExtensions = new[] { ".btx0", ".btx" };
 
-        public NSMDL Model { get; set; }
+        public NSTEX Texture { get; set; }
 
-        public NSBMD()
+        public NSBTX()
         {
 
         }
 
-        public NSBMD(string file)
+        public NSBTX(string file)
         {
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
 
                 // first a typical file header
-                var header = new GenericFileHeader(br);
+                var header = new NitroFileHeader(br);
 
                 if (header.MagicNumber != MagicNumber)
                 {
@@ -39,7 +41,7 @@ namespace RanseiLink.Core.Graphics
 
                 // read TEX0
                 br.BaseStream.Position = chunkOffsets[0];
-                Model = new NSMDL(br);
+                Texture = new NSTEX(br);
             }
         }
 
@@ -53,11 +55,11 @@ namespace RanseiLink.Core.Graphics
 
         public void WriteTo(BinaryWriter bw)
         {
-            var header = new GenericFileHeader
+            var header = new NitroFileHeader
             {
                 MagicNumber = MagicNumber,
                 ByteOrderMarker = 0xFEFF,
-                Version = 2,
+                Version = 1,
                 ChunkCount = 1,
                 HeaderLength = 0x10
             };
@@ -67,9 +69,9 @@ namespace RanseiLink.Core.Graphics
 
             uint[] chunkOffsets = new uint[header.ChunkCount];
 
-            // write MDL
+            // write TEX0
             chunkOffsets[0] = (uint)(bw.BaseStream.Position);
-            Model.WriteTo(bw);
+            Texture.WriteTo(bw);
 
             // return to start to write header
             var endOffset = bw.BaseStream.Position;

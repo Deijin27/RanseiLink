@@ -32,9 +32,9 @@ namespace RanseiLink.Core.Util
         /// <summary>
         /// 1, 3, 12
         /// </summary>
-        public static int InverseFix_1_3_12(float value)
+        public static ushort InverseFix_1_3_12(float value)
         {
-            return InverseFix(value, 1, 3, 12);
+            return (ushort)InverseFix(value, 1, 3, 12);
         }
 
         public static float Fix(int value, int signBits, int intBits, int fracBits)

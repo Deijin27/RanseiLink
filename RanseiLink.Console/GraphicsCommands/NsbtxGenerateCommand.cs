@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("nsbtx generate", Description = "Generate new btx0 from textures")]
+[Command("nsbtx generate", Description = "Generate new nsbtx from textures")]
 public class NsbtxGenerateCommand : ICommand
 {
     [CommandParameter(0, Description = "Path of folder to pack into a nsbtx.", Name = "filePath")]
@@ -21,7 +21,7 @@ public class NsbtxGenerateCommand : ICommand
     public string DestinationFile { get; set; }
 
     [CommandOption("transparencyFormat", 't', Description = "Texture format to use for images with transparency")]
-    public TexFormat TranspacencyFormat { get; set; } = TexFormat.A3I5;
+    public TexFormat TransparencyFormat { get; set; } = TexFormat.A3I5;
 
     [CommandOption("opacityFormat", 'o', Description = "Texture format to use for images without transparency")]
     public TexFormat OpacityFormat { get; set; } = TexFormat.Pltt256;
@@ -30,7 +30,7 @@ public class NsbtxGenerateCommand : ICommand
     {
         if (string.IsNullOrEmpty(DestinationFile))
         {
-            DestinationFile = Path.Combine(Path.GetDirectoryName(FolderPath), Path.GetFileNameWithoutExtension(FolderPath) + ".btx0");
+            DestinationFile = Path.Combine(Path.GetDirectoryName(FolderPath), Path.GetFileNameWithoutExtension(FolderPath) + ".nsbtx");
         }
 
         var files = Directory.GetFiles(FolderPath);
@@ -39,7 +39,7 @@ public class NsbtxGenerateCommand : ICommand
         var tex0 = new NSTEX();
         foreach ( var file in files)
         {
-            var (texture, palette) = Load(file);
+            var (texture, palette) = LoadTextureFromImage(file, TransparencyFormat, OpacityFormat);
             tex0.Textures.Add(texture);
             tex0.Palettes.Add(palette);
         }
@@ -64,7 +64,7 @@ public class NsbtxGenerateCommand : ICommand
         return false;
     }
 
-    private (NSTEX.Texture texture, NSTEX.Palette palette) Load(string file)
+    public static (NSTEX.Texture texture, NSTEX.Palette palette) LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat)
     {
         
         Image<Rgba32> image;
@@ -78,8 +78,8 @@ public class NsbtxGenerateCommand : ICommand
         }
 
         bool imageHasTransparency = ImageHasTransparency(image);
-        bool colorZeroTransparent = imageHasTransparency && (TranspacencyFormat == TexFormat.Pltt4 || TranspacencyFormat == TexFormat.Pltt16 || TranspacencyFormat == TexFormat.Pltt256);
-        var format = imageHasTransparency ? TranspacencyFormat : OpacityFormat;
+        bool colorZeroTransparent = imageHasTransparency && (transparencyFormat == TexFormat.Pltt4 || transparencyFormat == TexFormat.Pltt16 || transparencyFormat == TexFormat.Pltt256);
+        var format = imageHasTransparency ? transparencyFormat : opacityFormat;
 
         int width = image.Width;
         int height = image.Height;

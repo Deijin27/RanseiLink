@@ -21,8 +21,6 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
         {
         }
 
-        
-
         public OBJ(string file)
         {
             using (StreamReader sr = File.OpenText(file))
@@ -50,6 +48,14 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                     {
                         case "mtllib":
                             MaterialLib = new MTL(Path.Combine(Path.GetDirectoryName(file), line.Substring(lineParts[0].Length + 1).Trim()));
+                            break;
+
+                        case "g":
+                            if (lineParts.Length >= 2)
+                            {
+                                group = new Group { Name = lineParts[1] };
+                                Groups.Add(group);
+                            }
                             break;
 
                         case "usemtl":
@@ -134,6 +140,12 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                 sw.WriteLine("# Total-Normal-Count: {0}", Groups.Sum(x => x.Normals.Count));
                 sw.WriteLine("# Total-TextureVertex-Count: {0}", Groups.Sum(x => x.TextureVertices.Count));
                 sw.WriteLine("# Total-Face-Count: {0}", Groups.Sum(x => x.Faces.Count));
+                sw.WriteLine();
+                sw.WriteLine("# Groups:");
+                foreach (var group in Groups)
+                {
+                    sw.WriteLine("# {0} [ Vertices: {1}, Normals: {2}, TexCoords: {3}, Faces: {4} ]", group.Name, group.Vertices.Count, group.Normals.Count, group.TextureVertices.Count, group.Faces.Count);
+                }
 
                 if (MaterialLib != null)
                 {
@@ -148,6 +160,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                 {
                     sw.WriteLine();
                     sw.WriteLine("g {0}", group.Name);
+                    sw.WriteLine("# Vertices: {0}, Normals: {1}, TexCoords: {2}, Faces: {3}", group.Vertices.Count, group.Normals.Count, group.TextureVertices.Count, group.Faces.Count);
 
                     foreach (Vector3 vertex in group.Vertices)
                     {

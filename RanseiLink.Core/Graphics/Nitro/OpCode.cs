@@ -24,7 +24,7 @@ namespace RanseiLink.Core.Graphics
         UNKNOWN_13 = 0xD,
     }
 
-    public enum MeshDisplayOpCode : byte
+    public enum PolygonDisplayOpCode : byte
     {
         NOP = 0x00,
         MTX_MODE = 0x10,
@@ -68,56 +68,56 @@ namespace RanseiLink.Core.Graphics
 
     public static class OpCodeExtensions
     {
-        public static int ParamLength(this MeshDisplayOpCode command)
+        public static int ParamLength(this PolygonDisplayOpCode command)
         {
             switch (command)
             {
-                case MeshDisplayOpCode.NOP: return 0;
+                case PolygonDisplayOpCode.NOP: return 0;
 
-                case MeshDisplayOpCode.MTX_MODE: return 1;
-                case MeshDisplayOpCode.MTX_PUSH: return 0;
-                case MeshDisplayOpCode.MTX_POP: return 1;
-                case MeshDisplayOpCode.MTX_STORE: return 1;
-                case MeshDisplayOpCode.MTX_RESTORE: return 1;
-                case MeshDisplayOpCode.MTX_IDENTITY: return 0;
-                case MeshDisplayOpCode.MTX_LOAD_4x4: return 16;
-                case MeshDisplayOpCode.MTX_LOAD_4x3: return 12;
-                case MeshDisplayOpCode.MTX_MULT_4x4: return 16;
-                case MeshDisplayOpCode.MTX_MULT_4x3: return 12;
-                case MeshDisplayOpCode.MTX_MULT_3x3: return 9;
-                case MeshDisplayOpCode.MTX_SCALE: return 3;
-                case MeshDisplayOpCode.MTX_TRANS: return 3;
+                case PolygonDisplayOpCode.MTX_MODE: return 1;
+                case PolygonDisplayOpCode.MTX_PUSH: return 0;
+                case PolygonDisplayOpCode.MTX_POP: return 1;
+                case PolygonDisplayOpCode.MTX_STORE: return 1;
+                case PolygonDisplayOpCode.MTX_RESTORE: return 1;
+                case PolygonDisplayOpCode.MTX_IDENTITY: return 0;
+                case PolygonDisplayOpCode.MTX_LOAD_4x4: return 16;
+                case PolygonDisplayOpCode.MTX_LOAD_4x3: return 12;
+                case PolygonDisplayOpCode.MTX_MULT_4x4: return 16;
+                case PolygonDisplayOpCode.MTX_MULT_4x3: return 12;
+                case PolygonDisplayOpCode.MTX_MULT_3x3: return 9;
+                case PolygonDisplayOpCode.MTX_SCALE: return 3;
+                case PolygonDisplayOpCode.MTX_TRANS: return 3;
 
-                case MeshDisplayOpCode.COLOR: return 1;
-                case MeshDisplayOpCode.NORMAL: return 1;
-                case MeshDisplayOpCode.TEXCOORD: return 1;
-                case MeshDisplayOpCode.VTX_16: return 2;
-                case MeshDisplayOpCode.VTX_10: return 1;
-                case MeshDisplayOpCode.VTX_XY: return 1;
-                case MeshDisplayOpCode.VTX_XZ: return 1;
-                case MeshDisplayOpCode.VTX_YZ: return 1;
-                case MeshDisplayOpCode.VTX_DIFF: return 1;
+                case PolygonDisplayOpCode.COLOR: return 1;
+                case PolygonDisplayOpCode.NORMAL: return 1;
+                case PolygonDisplayOpCode.TEXCOORD: return 1;
+                case PolygonDisplayOpCode.VTX_16: return 2;
+                case PolygonDisplayOpCode.VTX_10: return 1;
+                case PolygonDisplayOpCode.VTX_XY: return 1;
+                case PolygonDisplayOpCode.VTX_XZ: return 1;
+                case PolygonDisplayOpCode.VTX_YZ: return 1;
+                case PolygonDisplayOpCode.VTX_DIFF: return 1;
 
-                case MeshDisplayOpCode.POLYGON_ATTR: return 1;
-                case MeshDisplayOpCode.TEXIMAGE_PARAM: return 1;
-                case MeshDisplayOpCode.PLTT_BASE: return 1;
+                case PolygonDisplayOpCode.POLYGON_ATTR: return 1;
+                case PolygonDisplayOpCode.TEXIMAGE_PARAM: return 1;
+                case PolygonDisplayOpCode.PLTT_BASE: return 1;
 
-                case MeshDisplayOpCode.DIF_AMB: return 1;
-                case MeshDisplayOpCode.SPE_EMI: return 1;
-                case MeshDisplayOpCode.LIGHT_VECTOR: return 1;
-                case MeshDisplayOpCode.LIGHT_COLOR: return 1;
-                case MeshDisplayOpCode.SHININESS: return 32;
+                case PolygonDisplayOpCode.DIF_AMB: return 1;
+                case PolygonDisplayOpCode.SPE_EMI: return 1;
+                case PolygonDisplayOpCode.LIGHT_VECTOR: return 1;
+                case PolygonDisplayOpCode.LIGHT_COLOR: return 1;
+                case PolygonDisplayOpCode.SHININESS: return 32;
 
-                case MeshDisplayOpCode.BEGIN_VTXS: return 1;
-                case MeshDisplayOpCode.END_VTXS: return 0;
+                case PolygonDisplayOpCode.BEGIN_VTXS: return 1;
+                case PolygonDisplayOpCode.END_VTXS: return 0;
 
-                case MeshDisplayOpCode.SWAP_BUFFERS: return 1;
+                case PolygonDisplayOpCode.SWAP_BUFFERS: return 1;
 
-                case MeshDisplayOpCode.VIEWPORT: return 1;
+                case PolygonDisplayOpCode.VIEWPORT: return 1;
 
-                case MeshDisplayOpCode.BOX_TEST: return 3;
-                case MeshDisplayOpCode.POS_TEST: return 2;
-                case MeshDisplayOpCode.VEC_TEST: return 1;
+                case PolygonDisplayOpCode.BOX_TEST: return 3;
+                case PolygonDisplayOpCode.POS_TEST: return 2;
+                case PolygonDisplayOpCode.VEC_TEST: return 1;
 
                 default: return 0;
             }

@@ -28,7 +28,7 @@ namespace RanseiLink.Core.Graphics
             long initOffset = br.BaseStream.Position;
 
             // first a typical file header
-            var header = new GenericFileHeader(br);
+            var header = new NitroFileHeader(br);
 
             if (header.MagicNumber != MagicNumber)
             {

@@ -230,12 +230,12 @@ namespace RanseiLink.Core.Graphics
             var initOffset = bw.BaseStream.Position;
 
             // skip header and radix dicts for now
-            var texDictOffset = GenericChunkHeader.Length + TexInfo.Length + Tex4x4Info.Length + PalInfo.Length;
+            var texDictOffset = NitroChunkHeader.Length + TexInfo.Length + Tex4x4Info.Length + PalInfo.Length;
             var palDictOffset = texDictOffset + RadixDict<TexRadixData>.CalculateLength(Textures.Count);
             bw.Pad(palDictOffset + RadixDict<PalRadixData>.CalculateLength(Palettes.Count));
 
             // create header, infos, and dicts
-            var header = new GenericChunkHeader { MagicNumber = MagicNumber };
+            var header = new NitroChunkHeader { MagicNumber = MagicNumber };
             var texInfo = new TexInfo();
             var tex4x4Info = new Tex4x4Info();
             var palInfo = new PalInfo();
@@ -333,7 +333,7 @@ namespace RanseiLink.Core.Graphics
         public NSTEX(BinaryReader br)
         {
             var initOffset = br.BaseStream.Position;
-            var header = new GenericChunkHeader(br);
+            var header = new NitroChunkHeader(br);
             if (header.MagicNumber != MagicNumber)
             {
                 throw new InvalidDataException($"Unexpected magic number in file header '{header.MagicNumber}' (expected: {MagicNumber})");

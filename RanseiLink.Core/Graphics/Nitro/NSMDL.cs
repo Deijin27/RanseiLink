@@ -20,7 +20,7 @@ namespace RanseiLink.Core.Graphics
 
         public NSMDL(BinaryReader br)
         {
-            var header = new GenericChunkHeader(br);
+            var header = new NitroChunkHeader(br);
             if (header.MagicNumber != MagicNumber)
             {
                 throw new InvalidDataException($"Unexpected magic number in file header '{header.MagicNumber}' (expected: {MagicNumber})");
@@ -38,7 +38,7 @@ namespace RanseiLink.Core.Graphics
         {
             var initOffset = bw.BaseStream.Position;
 
-            var header = new GenericChunkHeader
+            var header = new NitroChunkHeader
             {
                 MagicNumber = MagicNumber,
             };
@@ -46,7 +46,7 @@ namespace RanseiLink.Core.Graphics
             var radix = new RadixDict<OffsetRadixData>();
 
             // skip header and radix for now
-            bw.Pad(GenericChunkHeader.Length + RadixDict<OffsetRadixData>.CalculateLength(Models.Count));
+            bw.Pad(NitroChunkHeader.Length + RadixDict<OffsetRadixData>.CalculateLength(Models.Count));
 
             // write models
             foreach (var model in Models)
@@ -82,7 +82,7 @@ namespace RanseiLink.Core.Graphics
 
             public Model()
             {
-
+                MdlInfo = new ModelInfo();
             }
 
             public Model(BinaryReader br)
@@ -98,21 +98,21 @@ namespace RanseiLink.Core.Graphics
                 // commands
                 if (br.BaseStream.Position != header.OffsetRenderCommands + initPos)
                 {
-                    throw new Exception("offset wrong : bone commands");
+                    throw new Exception($"offset wrong : render commands (found: 0x{br.BaseStream.Position:X}, expected: 0x{initPos + header.OffsetRenderCommands:X})");
                 }
                 ReadRenderCommands(br);
 
                 // materials
                 if (br.BaseStream.Position != header.OffsetMaterials + initPos)
                 {
-                    throw new Exception("offset wrong : materials");
+                    throw new Exception($"offset wrong : materials (found: 0x{br.BaseStream.Position:X}, expected: 0x{initPos + header.OffsetMaterials:X})");
                 }
                 ReadMaterials(br);
 
                 // polygons
                 if (br.BaseStream.Position != header.OffsetPolygons + initPos)
                 {
-                    throw new Exception("offset wrong : meshes");
+                    throw new Exception($"offset wrong : polygons (found: 0x{br.BaseStream.Position:X}, expected: 0x{initPos + header.OffsetPolygons:X})");
                 }
                 ReadPolygons(br);
 
@@ -126,6 +126,11 @@ namespace RanseiLink.Core.Graphics
 
                 // skip header for now
                 bw.Pad(Header.Length);
+
+                // Fix mdl values
+                MdlInfo.NumPolymesh = (byte)Polymeshes.Count;
+                MdlInfo.NumMat = (byte)Materials.Count;
+                MdlInfo.NumPolygon = (byte)Polygons.Count;
 
                 // Write contents
                 MdlInfo.WriteTo(bw);
@@ -179,81 +184,86 @@ namespace RanseiLink.Core.Graphics
                 }
             }
 
-            public struct ModelInfo
+            public class ModelInfo
             {
-                public byte SbcType;
-                public byte ScalingRule;
-                public byte TexMtxMode;
-                public byte NumBone;
+                public byte RenderCommandsType = 0;
+                public byte ScalingRule = 2;
+                public byte TexMtxMode = 3;
+                public byte NumPolymesh;
                 public byte NumMat;
-                public byte NumMesh;
-                public byte FirstUnusedMtxStackId;
-                public byte Unknown;
-                public float UpScale;
-                public float DownScale;
+                public byte NumPolygon;
+                public byte FirstUnusedMtxStackId = 2;
+                public byte Unknown = 0;
+                public float UpScale = 128f;
+                public float DownScale = 1 / 128f;
                 public ushort NumVertex;
-                public ushort NumPolygon;
+                public ushort NumFace;
                 public ushort NumTriangle;
                 public ushort NumQuad;
-                public ushort BoxX; // float2
-                public ushort BoxY; // float2
-                public ushort BoxZ; // float2
-                public ushort BoxW; // float2
-                public ushort BoxH; // float2
-                public ushort BoxD; // float2
-                public uint BoxUpScale;
-                public uint BoxDownScale;
+                public float BoxX; // float2
+                public float BoxY; // float2
+                public float BoxZ; // float2
+                public float BoxW; // float2
+                public float BoxH; // float2
+                public float BoxD; // float2
+                public float BoxUpScale = 128f;
+                public float BoxDownScale = 1 / 128f;
+
+                public ModelInfo()
+                {
+
+                }
 
                 public ModelInfo(BinaryReader br)
                 {
-                    SbcType = br.ReadByte();
+                    RenderCommandsType = br.ReadByte();
                     ScalingRule = br.ReadByte();
                     TexMtxMode = br.ReadByte();
-                    NumBone = br.ReadByte();
+                    NumPolymesh = br.ReadByte();
                     NumMat = br.ReadByte();
-                    NumMesh = br.ReadByte();
+                    NumPolygon = br.ReadByte();
                     FirstUnusedMtxStackId = br.ReadByte();
                     Unknown = br.ReadByte();
                     UpScale = FixedPoint.Fix_1_19_12(br.ReadInt32());
                     DownScale = FixedPoint.Fix_1_19_12(br.ReadInt32());
                     NumVertex = br.ReadUInt16();
-                    NumPolygon = br.ReadUInt16();
+                    NumFace = br.ReadUInt16();
                     NumTriangle = br.ReadUInt16();
                     NumQuad = br.ReadUInt16();
-                    BoxX = br.ReadUInt16();
-                    BoxY = br.ReadUInt16();
-                    BoxZ = br.ReadUInt16();
-                    BoxW = br.ReadUInt16();
-                    BoxH = br.ReadUInt16();
-                    BoxD = br.ReadUInt16();
-                    BoxUpScale = br.ReadUInt32();
-                    BoxDownScale = br.ReadUInt32();
+                    BoxX = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxY = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxZ = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxW = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxH = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxD = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                    BoxUpScale = FixedPoint.Fix_1_19_12(br.ReadInt32());
+                    BoxDownScale = FixedPoint.Fix_1_19_12(br.ReadInt32());
                 }
 
                 public void WriteTo(BinaryWriter bw)
                 {
-                    bw.Write(SbcType);
+                    bw.Write(RenderCommandsType);
                     bw.Write(ScalingRule);
                     bw.Write(TexMtxMode);
-                    bw.Write(NumBone);
+                    bw.Write(NumPolymesh);
                     bw.Write(NumMat);
-                    bw.Write(NumMesh);
+                    bw.Write(NumPolygon);
                     bw.Write(FirstUnusedMtxStackId);
                     bw.Write(Unknown);
                     bw.Write(FixedPoint.InverseFix_1_19_12(UpScale));
                     bw.Write(FixedPoint.InverseFix_1_19_12(DownScale));
                     bw.Write(NumVertex);
-                    bw.Write(NumPolygon);
+                    bw.Write(NumFace);
                     bw.Write(NumTriangle);
                     bw.Write(NumQuad);
-                    bw.Write(BoxX);
-                    bw.Write(BoxY);
-                    bw.Write(BoxZ);
-                    bw.Write(BoxW);
-                    bw.Write(BoxH);
-                    bw.Write(BoxD);
-                    bw.Write(BoxUpScale);
-                    bw.Write(BoxDownScale);
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxX));
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxY));
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxZ));
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxW));
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxH));
+                    bw.Write(FixedPoint.InverseFix_1_3_12(BoxD));
+                    bw.Write(FixedPoint.InverseFix_1_19_12(BoxUpScale));
+                    bw.Write(FixedPoint.InverseFix_1_19_12(BoxDownScale));
                 }
             }
 
@@ -269,25 +279,24 @@ namespace RanseiLink.Core.Graphics
                     Translate = 1,
                     Rotate = 2,
                     Scale = 4,
-                    Pivot = 8,
                 }
                 public string Name;
 
                 public TransFlag Flag;
 
-                public Vector3 Translation;
+                public Vector3 Translation = Vector3.Zero;
                 public Matrix3x3 Rotate = Matrix3x3.Identity;
-                public Vector3 Scale;
+                public Vector3 Scale = Vector3.One;
 
                 // matrix parameters, may not be necessary in the future
-                public bool HasRotate;
+                public bool Pivot;
                 public float A;
                 public float B;
                 public int Select;
                 public int Neg;
 
                 // pre-calculated trs matrix
-                public Matrix4x4 TRSMatrix;
+                public Matrix4x4 TRSMatrix = Matrix4x4.Identity;
 
                 static Matrix3x3 CalcPivotMtx(int select, int neg, float a, float b)
                 {
@@ -313,10 +322,14 @@ namespace RanseiLink.Core.Graphics
                     }
                 }
 
+                public PolymeshData() 
+                { 
+                }
+
                 public PolymeshData(BinaryReader br)
                 {
                     var f = br.ReadUInt16();
-                    Flag = (TransFlag)((~f) & 0b1111); // inverted because they use 0 as true
+                    Flag = (TransFlag)((~f) & 0b111); // inverted because they use 0 as true
 
                     var m0 = br.ReadUInt16(); // part of rotation matrix stuff
 
@@ -329,38 +342,37 @@ namespace RanseiLink.Core.Graphics
                         );
                     }
 
-                    bool hasRotate = false;
-                    if (!Flag.HasFlag(TransFlag.Pivot))
+                    if (Flag.HasFlag(TransFlag.Rotate))
                     {
-                        if (!Flag.HasFlag(TransFlag.Rotate))
+                        Pivot = (f >> 3 & 1) == 1;
+
+                        if (Pivot)
                         {
-                            throw new Exception("Pivot can exist without rotate!!!!!!!!!!!!!");
+                            A = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                            B = FixedPoint.Fix_1_3_12(br.ReadUInt16());
+                            Select = f >> 4 & 0b1111;
+                            Neg = f >> 8 & 0b111;
+                            Rotate = CalcPivotMtx(Select, Neg, A, B);
+
                         }
-                        hasRotate = true;
-                        A = FixedPoint.Fix_1_3_12(br.ReadUInt16());
-                        B = FixedPoint.Fix_1_3_12(br.ReadUInt16());
-                        Select = f >> 4 & 0b1111;
-                        Neg = f >> 8 & 0b111;
-                        Rotate = CalcPivotMtx(Select, Neg, A, B);
+                        else
+                        {
+                            Rotate = new Matrix3x3(
+                                FixedPoint.Fix_1_3_12(m0),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
 
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16()),
+                                FixedPoint.Fix_1_3_12(br.ReadUInt16())
+                                );
+                        }
                     }
-                    else if (Flag.HasFlag(TransFlag.Rotate))
-                    {
-                        hasRotate = true;
-                        Rotate = new Matrix3x3(
-                            FixedPoint.Fix_1_3_12(m0),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16()),
-                            FixedPoint.Fix_1_3_12(br.ReadUInt16())
-                            );
-                    }
+                    
 
                     if (Flag.HasFlag(TransFlag.Scale))
                     {
@@ -369,19 +381,18 @@ namespace RanseiLink.Core.Graphics
                             FixedPoint.Fix_1_19_12(br.ReadInt32()),
                             FixedPoint.Fix_1_19_12(br.ReadInt32())
                         );
-                        var invSx = FixedPoint.Fix_1_19_12(br.ReadInt32());
-                        var invSy = FixedPoint.Fix_1_19_12(br.ReadInt32());
-                        var invSz = FixedPoint.Fix_1_19_12(br.ReadInt32());
+                        // inverse Scale
+                        br.ReadInt32();
+                        br.ReadInt32();
+                        br.ReadInt32();
                     }
 
-                    TRSMatrix = Matrix4x4.Identity;
                     if (Flag.HasFlag(TransFlag.Scale))
                     {
                         TRSMatrix = Matrix4x4.CreateScale(Scale);
                     }
-                    if (hasRotate)
+                    if (Flag.HasFlag(TransFlag.Rotate))
                     {
-                        HasRotate = true;
                         TRSMatrix *= Rotate.As4x4();
                     }
                     if (Flag.HasFlag(TransFlag.Translate))
@@ -393,10 +404,12 @@ namespace RanseiLink.Core.Graphics
                 public void WriteTo(BinaryWriter bw)
                 {
                     // calculate f and m0
-                    int f = (~(int)Flag) & 0b1111
-                          | 0b11111 << 11 // this is always there
-                          | Select << 4 // default 0
-                          | Neg << 8; // default 0
+                    int f = ((~(int)Flag) & 0b111)
+                          | ((Pivot ? 1 : 0) << 3)
+                          | (Select << 4) // default 0
+                          | (Neg << 8) // default 0
+                          | (0b11111 << 11) // this is always there
+                          ;
 
                     bw.Write((ushort)f);
                     bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M11)); // take the value from identity matrix as default, that is 1f=0x1000
@@ -409,24 +422,26 @@ namespace RanseiLink.Core.Graphics
                         bw.Write(FixedPoint.InverseFix_1_19_12(Translation.Z));
                     }
 
-                    if (!Flag.HasFlag(TransFlag.Pivot))
+                    if (Flag.HasFlag(TransFlag.Rotate))
                     {
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(A));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(B));
+                        if (Pivot)
+                        {
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(A));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(B));
+                        }
+                        else
+                        {
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M12));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M13));
 
-                    }
-                    else if (Flag.HasFlag(TransFlag.Rotate))
-                    {
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M12));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M13));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M21));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M22));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M23));
 
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M21));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M22));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M23));
-
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M31));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M32));
-                        bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M33));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M31));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M32));
+                            bw.Write((ushort)FixedPoint.InverseFix_1_3_12(Rotate.M33));
+                        }
                     }
 
                     if (Flag.HasFlag(TransFlag.Scale))
@@ -554,16 +569,19 @@ namespace RanseiLink.Core.Graphics
                     TEXMTX_SCALEONE = 2,
                     TEXMTX_ROTZERO = 4,
                     TEXMTX_TRANSZERO = 8,
+                    
                     ORIGWH_SAME = 16, // 0x0010
                     WIREFRAME = 32, // 0x0020
                     DIFFUSE = 64, // 0x0040
                     AMBIENT = 128, // 0x0080
+                    
                     VTXCOLOR = 256, // 0x0100
                     SPECULAR = 512, // 0x0200
                     EMISSION = 1024, // 0x0400
                     SHININESS = 2048, // 0x0800
+                    
                     TEXPLTTBASE = 4096, // 0x1000
-                    EFFECTMTX = 8192, // 0x2000
+                    EFFECTMTX = 8192 // 0x2000 
                 }
 
                 public ushort ItemTag;
@@ -582,8 +600,8 @@ namespace RanseiLink.Core.Graphics
                 public ushort OrigWidth;
                 public ushort OrigHeight;
 
-                public uint MagWidth;
-                public uint MagHeight;
+                public float MagWidth;
+                public float MagHeight;
                 public uint ScaleS;
                 public uint ScaleT;
                 public ushort RotSin;
@@ -591,6 +609,11 @@ namespace RanseiLink.Core.Graphics
                 public uint TransS;
                 public uint TransT;
                 public uint[] EffectMtx;
+
+                public Material()
+                {
+
+                }
 
                 public Material(BinaryReader br)
                 {
@@ -609,12 +632,12 @@ namespace RanseiLink.Core.Graphics
                     TexImageParam = br.ReadUInt32();
                     TexImageParamMask = br.ReadUInt32();
                     TexPaletteBase = br.ReadUInt16();
-                    Flag = (MATFLAG)(~br.ReadUInt16()); // inverted
+                    Flag = (MATFLAG)((~br.ReadUInt16()) & 0x3FFF) ^ MATFLAG.EFFECTMTX; // flip effect_mtx because it is inverted
                     OrigWidth = br.ReadUInt16();
                     OrigHeight = br.ReadUInt16();
 
-                    MagWidth = br.ReadUInt32();
-                    MagHeight = br.ReadUInt32();
+                    MagWidth = FixedPoint.Fix_1_19_12(br.ReadInt32());
+                    MagHeight = FixedPoint.Fix_1_19_12(br.ReadInt32());
 
                     if (Flag.HasFlag(MATFLAG.TEXMTX_SCALEONE))
                     {
@@ -631,7 +654,7 @@ namespace RanseiLink.Core.Graphics
                         TransS = br.ReadUInt32();
                         TransT = br.ReadUInt32();
                     }
-                    if (!Flag.HasFlag(MATFLAG.EFFECTMTX)) // this check is inverse
+                    if (Flag.HasFlag(MATFLAG.EFFECTMTX)) // this check is inverse
                     {
                         EffectMtx = new uint[0x10];
                         for (int i = 0; i < 0x10; i++)
@@ -666,13 +689,12 @@ namespace RanseiLink.Core.Graphics
                     bw.Write(TexImageParam);
                     bw.Write(TexImageParamMask);
                     bw.Write(TexPaletteBase);
-                    ushort flagVal = (ushort)~Flag;
-                    bw.Write(flagVal);
+                    bw.Write((ushort)((~(int)(Flag ^ MATFLAG.EFFECTMTX)) & 0x3FFF)); // flip effect mtx because it's inverted
                     bw.Write(OrigWidth);
                     bw.Write(OrigHeight);
 
-                    bw.Write(MagWidth);
-                    bw.Write(MagHeight);
+                    bw.Write(FixedPoint.InverseFix_1_19_12(MagWidth));
+                    bw.Write(FixedPoint.InverseFix_1_19_12(MagHeight));
 
                     if (Flag.HasFlag(MATFLAG.TEXMTX_SCALEONE))
                     {
@@ -689,7 +711,7 @@ namespace RanseiLink.Core.Graphics
                         bw.Write(TransS);
                         bw.Write(TransT);
                     }
-                    if (!Flag.HasFlag(MATFLAG.EFFECTMTX)) // this check is inverse
+                    if (Flag.HasFlag(MATFLAG.EFFECTMTX))
                     {
                         for (int i = 0; i < 0x10; i++)
                         {
@@ -714,10 +736,21 @@ namespace RanseiLink.Core.Graphics
 
             private void ReadMaterials(BinaryReader br)
             {
+                var initPos = br.BaseStream.Position;
                 ushort offsetDictTextToMatList = br.ReadUInt16();
                 ushort offsetDictPalToMatList = br.ReadUInt16();
                 var materialRadixDict = new RadixDict<OffsetRadixData>(br);
+
+                if (br.BaseStream.Position != offsetDictTextToMatList + initPos)
+                {
+                    throw new Exception($"offset wrong : render commands (found: 0x{br.BaseStream.Position:X}, expected: 0x{initPos + offsetDictTextToMatList:X})");
+                }
                 var texToMatDict = new RadixDict<ToMatRadixData>(br);
+
+                if (br.BaseStream.Position != offsetDictPalToMatList + initPos)
+                {
+                    throw new Exception($"offset wrong : render commands (found: 0x{br.BaseStream.Position:X}, expected: 0x{initPos + offsetDictPalToMatList:X})");
+                }
                 var palToMatDict = new RadixDict<ToMatRadixData>(br);
 
                 var materialTextures = new string[materialRadixDict.Names.Count];
@@ -750,6 +783,10 @@ namespace RanseiLink.Core.Graphics
 
                 for (int i = 0; i < materialRadixDict.Names.Count; i++)
                 {
+                    if (br.BaseStream.Position != materialRadixDict.Data[i].Offset + initPos)
+                    {
+                        throw new Exception($"offset wrong : render commands (found: 0x{br.BaseStream.Position:X}, expected: 0x{materialRadixDict.Data[i].Offset + initPos:X})");
+                    }
                     var m = new Material(br);
                     m.Texture = materialTextures[i];
                     m.Palette = materialPalettes[i];
@@ -928,7 +965,7 @@ namespace RanseiLink.Core.Graphics
                     var poly = new Polygon { Name = polygonRadixDict.Names[i], ItemTag = polyInfo.ItemTag, Flag = polyInfo.Flag };
                     while (br.BaseStream.Position < endPos)
                     {
-                        var commandIds = br.ReadBytes(4).Select(x => (MeshDisplayOpCode)x).ToArray();
+                        var commandIds = br.ReadBytes(4).Select(x => (PolygonDisplayOpCode)x).ToArray();
                         foreach (var id in commandIds)
                         {
                             var numPrms = id.ParamLength();
@@ -971,6 +1008,11 @@ namespace RanseiLink.Core.Graphics
                         Flag = poly.Flag,
                         CommandsOffset = (uint)(bw.BaseStream.Position - currentPolyInfoOffset)
                     };
+
+                    if (poly.Commands.Count % 4 != 0)
+                    {
+                        throw new Exception("Polygon did not have a number of commands divisible by 4");
+                    }
 
                     // write commands in sets of 4
                     for (int cmdIdx = 0; cmdIdx < poly.Commands.Count; cmdIdx += 4)
@@ -1023,6 +1065,7 @@ namespace RanseiLink.Core.Graphics
         public int Flags { get; set; }
         public byte[] Parameters { get; set; }
 
+        public RenderCommand() { }
         public RenderCommand(BinaryReader br)
         {
             var b = br.ReadByte();
@@ -1049,7 +1092,7 @@ namespace RanseiLink.Core.Graphics
 
     public class PolygonDisplayCommand
     {
-        public MeshDisplayOpCode OpCode { get; set; }
+        public PolygonDisplayOpCode OpCode { get; set; }
         public int[] Params { get; set; }
     }
 

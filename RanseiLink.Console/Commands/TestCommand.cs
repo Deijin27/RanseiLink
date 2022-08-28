@@ -38,32 +38,38 @@ public  class TestCommand : ICommand
         console.Output.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
         foreach (var command in bmd.Model.Models[0].RenderCommands)
         {
+            string lineEnd = $"Flag: {command.Flags}, Params: [";
+            if (command.Parameters != null)
+            {
+                lineEnd += string.Join(", ", command.Parameters);
+            }
+            lineEnd += "]";
             if (command.OpCode == RenderOpCode.BIND_MATERIAL)
             {
                 var mat = bmd.Model.Models[0].Materials[command.Parameters[0]];
-                console.Output.WriteLine($"{command.OpCode} : {mat.Texture}");
+                console.Output.WriteLine($"{command.OpCode} : {mat.Texture}, {lineEnd}");
             }
             else if (command.OpCode == RenderOpCode.DRAW_MESH)
             {
                 var ply = bmd.Model.Models[0].Polygons[command.Parameters[0]];
-                console.Output.WriteLine($"{command.OpCode} : {ply.Name}");
+                console.Output.WriteLine($"{command.OpCode} : {ply.Name}, {lineEnd}");
             }
             else if (command.OpCode == RenderOpCode.MTX_MULT)
             {
                 var pmIdx = command.Parameters[0];
                 var plymsh = bmd.Model.Models[0].Polymeshes[pmIdx];
-                if (plymsh.HasRotate)
+                if (plymsh.Flag.HasFlag(NSMDL.Model.PolymeshData.TransFlag.Rotate))
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R({plymsh.Rotate})");
+                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R({plymsh.Rotate}), {lineEnd}");
                 }
                 else
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R()");
+                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R(), {lineEnd}");
                 }
             }
             else
             {
-                console.Output.WriteLine($"{command.OpCode} : {command.Flags}");
+                console.Output.WriteLine($"{command.OpCode} : {lineEnd}");
             }
             
         }
@@ -72,9 +78,14 @@ public  class TestCommand : ICommand
         foreach (var ply in bmd.Model.Models[0].Polygons)
         {
             console.Output.WriteLine(":: Begin Mesh <{0}> ---------------------------------------------------------------------------------------------", ply.Name);
+            int i = 0;
             foreach (var c in ply.Commands)
             {
-                if (c.OpCode == MeshDisplayOpCode.BEGIN_VTXS)
+                if (i++ % 4 == 0)
+                {
+                    console.Output.WriteLine();
+                }
+                if (c.OpCode == PolygonDisplayOpCode.BEGIN_VTXS)
                 {
                     console.Output.WriteLine($"{c.OpCode} : {(PolygonType)c.Params[0]}");
                 }
@@ -111,7 +122,10 @@ public  class TestCommand : ICommand
         }
         else
         {
-            console.Output.WriteLine(FixedPoint.Fix_1_3_12(0x1000));
+            console.Output.WriteLine(FixedPoint.Fix(0b_10000_00000, 1, 3, 6));
+            console.Output.WriteLine(FixedPoint.Fix(0b_01111_11111, 1, 3, 6));
+            console.Output.WriteLine(FixedPoint.InverseFix(7.9999999f, 1, 3, 6));
+            console.Output.WriteLine(FixedPoint.InverseFix(-8f, 1, 3, 6));
             //Export(console, bmd);
         }
 
