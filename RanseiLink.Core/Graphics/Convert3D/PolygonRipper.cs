@@ -145,7 +145,7 @@ namespace RanseiLink.Core.Graphics
 
                 case PolygonDisplayOpCode.VTX_YZ:
                     Vector3 yz = CommandParamExtractor.VTX_YZ(command);
-                    vertex.X = yz.Y;
+                    vertex.Y = yz.Y;
                     vertex.Z = yz.Z;
                     DrawVert();
                     break;
