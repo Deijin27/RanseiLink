@@ -38,7 +38,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             return defaultReturn;
         }
 
-        private static string ParseFilePathLine(string line, string[] lineParts)
+        private static string ParseFilePathLine(string mtlFile, string line, string[] lineParts)
         {
             string file = line.Substring(lineParts[0].Length + 1).Trim();
             if (Path.IsPathRooted(file))
@@ -47,7 +47,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             }
             else
             {
-                return Path.Combine(Path.GetDirectoryName(file), file);
+                return Path.Combine(Path.GetDirectoryName(mtlFile), file);
             }
         }
 
@@ -115,19 +115,19 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                             break;
 
                         case "map_Ka":
-                            material.AmbientTextureMapFile = ParseFilePathLine(line, lineParts);
+                            material.AmbientTextureMapFile = ParseFilePathLine(file, line, lineParts);
                             break;
 
                         case "map_Kd":
-                            material.DiffuseTextureMapFile = ParseFilePathLine(line, lineParts);
+                            material.DiffuseTextureMapFile = ParseFilePathLine(file, line, lineParts);
                             break;
 
                         case "map_Ks":
-                            material.SpecularTextureMapFile = ParseFilePathLine(line, lineParts);
+                            material.SpecularTextureMapFile = ParseFilePathLine(file, line, lineParts);
                             break;
 
                         case "map_d":
-                            material.DissolveTextureMapFile = ParseFilePathLine(line, lineParts);
+                            material.DissolveTextureMapFile = ParseFilePathLine(file, line, lineParts);
                             break;
                     }
                 }
