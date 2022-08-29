@@ -21,7 +21,7 @@ public class NsbtxGenerateCommand : ICommand
     public string DestinationFile { get; set; }
 
     [CommandOption("transparencyFormat", 't', Description = "Texture format to use for images with transparency")]
-    public TexFormat TransparencyFormat { get; set; } = TexFormat.A3I5;
+    public TexFormat TransparencyFormat { get; set; } = TexFormat.Pltt256;
 
     [CommandOption("opacityFormat", 'o', Description = "Texture format to use for images without transparency")]
     public TexFormat OpacityFormat { get; set; } = TexFormat.Pltt256;
