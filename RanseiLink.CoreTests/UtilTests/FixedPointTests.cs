@@ -1,10 +1,5 @@
 ﻿using FluentAssertions;
 using RanseiLink.Core.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace RanseiLink.CoreTests.UtilTests;
@@ -32,6 +27,9 @@ public class FixedPointTests
     [InlineData(0xD4FA, 1, 3, 12, -2.6889648f)]
     [InlineData(0x351, 1, 3, 6, -2.734375f)]
     [InlineData(0x19, 1, 3, 6, 0.390625f)]
+    [InlineData(0, 1, 19, 12, -0.000009f)] // this test is important. The game flips out at zero with a negative flag, so that flag should not be incuded if the value gets rounded to zero
+    [InlineData(0, 1, 19, 12, -0f)]
+    [InlineData(0, 1, 19, 12, 0f)]
     public void InverseFixCorrectly(int expectedOutput, int signBits, int intBits, int fracBits, float input)
     {
         FixedPoint.InverseFix(input, signBits, intBits, fracBits).Should().Be(expectedOutput);

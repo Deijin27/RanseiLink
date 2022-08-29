@@ -74,7 +74,7 @@ namespace RanseiLink.Core.Util
             double dbl = value * Math.Pow(2, fracBits);
 
             int result = (int)Math.Round(dbl);
-            if (signBits != 0 && value < 0)
+            if (signBits != 0 && value < 0 && result != 0)
             {
                 int signMask = 1 << (intBits + fracBits);
                 result &= signMask - 1;
