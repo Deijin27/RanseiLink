@@ -16,7 +16,7 @@ public class NsbtxExtractCommand : ICommand
         ManyToOne
     }
 
-    [CommandParameter(0, Description = "Path of btx0 data file.", Name = "btx0File")]
+    [CommandParameter(0, Description = "Path of nsbtx data file.", Name = "nsbtxFile")]
     public string FilePath { get; set; }
 
    
