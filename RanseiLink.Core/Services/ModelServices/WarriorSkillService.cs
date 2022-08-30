@@ -20,6 +20,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public WarriorSkillService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.WarriorSkillRomPath), mod.GameCode) { }
 
+        public WarriorSkill Retrieve(WarriorSkillId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

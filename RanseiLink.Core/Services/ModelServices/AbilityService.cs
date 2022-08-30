@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public AbilityService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.AbilityRomPath)) { }
 
+        public Ability Retrieve(AbilityId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

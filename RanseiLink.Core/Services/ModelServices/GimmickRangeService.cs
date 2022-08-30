@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) { }
 
+        public MoveRange Retrieve(GimmickRangeId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

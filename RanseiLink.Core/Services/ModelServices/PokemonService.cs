@@ -19,6 +19,8 @@ namespace RanseiLink.Core.Services.ModelServices
         public PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
         public PokemonService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.PokemonRomPath)) { }
 
+        public Pokemon Retrieve(PokemonId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

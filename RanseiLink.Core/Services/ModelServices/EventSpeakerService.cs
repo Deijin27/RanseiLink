@@ -20,6 +20,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath), mod.GameCode) { }
 
+        public EventSpeaker Retrieve(EventSpeakerId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

@@ -10,12 +10,22 @@ namespace RanseiLink.Core.Models
 
         public int GetArmy(KingdomId kingdom)
         {
-            return GetByte((int)kingdom);
+            return GetArmy((int)kingdom);
         }
 
         public void SetArmy(KingdomId kingdom, int armyId)
         {
-            SetByte((int)kingdom, (byte)armyId);
+            SetArmy((int)kingdom, armyId);
+        }
+
+        public int GetArmy(int kingdom)
+        {
+            return GetByte(kingdom);
+        }
+
+        public void SetArmy(int kingdom, int armyId)
+        {
+            SetByte(kingdom, (byte)armyId);
         }
 
     }

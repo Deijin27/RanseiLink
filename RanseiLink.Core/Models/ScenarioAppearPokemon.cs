@@ -9,7 +9,7 @@ namespace RanseiLink.Core.Models
         public ScenarioAppearPokemon() : this(new byte[DataLength]) { }
         public bool GetCanAppear(PokemonId id)
         {
-            return GetByte((int)id) == AppearsValue;
+            return GetCanAppear((int)id);
         }
 
         private const byte AppearsValue = 0x20;
@@ -17,7 +17,17 @@ namespace RanseiLink.Core.Models
 
         public void SetCanAppear(PokemonId id, bool canAppear)
         {
-            SetByte((int)id, canAppear ? AppearsValue : DoesNotAppearValue);
+            SetCanAppear((int)id, canAppear);
+        }
+
+        public bool GetCanAppear(int id)
+        {
+            return GetByte(id) == AppearsValue;
+        }
+
+        public void SetCanAppear(int id, bool canAppear)
+        {
+            SetByte(id, canAppear ? AppearsValue : DoesNotAppearValue);
         }
 
     }

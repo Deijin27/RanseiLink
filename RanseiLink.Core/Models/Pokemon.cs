@@ -176,13 +176,23 @@ namespace RanseiLink.Core.Models
 
         public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
         {
-            var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);
-            return (BitConverter.ToUInt64(Data, 9 * 4) >> shift & 1) == 1;
+            return GetEncounterable((int)kingdom, requiresLevel2);
         }
 
         public void SetEncounterable(KingdomId kingdom, bool requiresLevel2, bool value)
         {
-            var shift = (byte)kingdom * 3 + (requiresLevel2 ? 1 : 0);
+            SetEncounterable((int)kingdom, requiresLevel2, value);
+        }
+
+        public bool GetEncounterable(int kingdom, bool requiresLevel2)
+        {
+            var shift = kingdom * 3 + (requiresLevel2 ? 1 : 0);
+            return (BitConverter.ToUInt64(Data, 9 * 4) >> shift & 1) == 1;
+        }
+
+        public void SetEncounterable(int kingdom, bool requiresLevel2, bool value)
+        {
+            var shift = kingdom * 3 + (requiresLevel2 ? 1 : 0);
             var num = BitConverter.ToUInt64(Data, 9 * 4) & ~(1uL << shift);
             if (value)
             {

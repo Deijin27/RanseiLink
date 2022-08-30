@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
         {
         }
 
+        public ScenarioAppearPokemon Retrieve(ScenarioId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

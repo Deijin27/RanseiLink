@@ -24,6 +24,8 @@ namespace RanseiLink.Core.Services.ModelServices
             }
         }
 
+        public IChildScenarioWarriorService Retrieve(ScenarioId id) => Retrieve((int)id);
+
         public override string IdToName(int id)
         {
             if (!ValidateId(id))

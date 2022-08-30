@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public ItemService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.ItemRomPath)) { }
 
+        public Item Retrieve(ItemId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

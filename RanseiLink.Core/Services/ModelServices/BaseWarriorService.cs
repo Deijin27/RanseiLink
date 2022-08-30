@@ -16,6 +16,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public BaseWarriorService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BaseBushouRomPath)) { }
 
+        public BaseWarrior Retrieve(WarriorId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

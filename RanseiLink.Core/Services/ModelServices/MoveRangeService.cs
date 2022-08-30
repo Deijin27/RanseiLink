@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) { }
 
+        public MoveRange Retrieve(MoveRangeId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

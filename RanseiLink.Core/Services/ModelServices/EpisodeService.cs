@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public EpisodeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EpisodeRomPath)) { }
 
+        public Episode Retrieve(EpisodeId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

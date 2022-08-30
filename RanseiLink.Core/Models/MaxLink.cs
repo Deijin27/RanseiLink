@@ -10,12 +10,22 @@ namespace RanseiLink.Core.Models
 
         public int GetMaxLink(PokemonId pokemon)
         {
-            return GetByte((int)pokemon);
+            return GetMask((int)pokemon);
         }
 
         public void SetMaxLink(PokemonId pokemon, int value)
         {
-            SetByte((int)pokemon, (byte)value);
+            SetMaxLink((int)pokemon, value);
+        }
+
+        public int GetMaxLink(int pokemon)
+        {
+            return GetByte(pokemon);
+        }
+
+        public void SetMaxLink(int pokemon, int value)
+        {
+            SetByte(pokemon, (byte)value);
         }
     }
 }

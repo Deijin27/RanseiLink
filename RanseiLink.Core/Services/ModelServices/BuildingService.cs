@@ -18,6 +18,8 @@ namespace RanseiLink.Core.Services.ModelServices
             Reload();
         }
 
+        public Building Retrieve(BuildingId id) => Retrieve((int)id);
+
         public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath), mod.GameCode) { }
 
         public override void Reload()

@@ -20,6 +20,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public KingdomService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.KingdomRomPath), mod.GameCode) { }
 
+        public Kingdom Retrieve(KingdomId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

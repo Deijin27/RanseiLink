@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public BattleConfigService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BattleConfigRomPath)) { }
 
+        public BattleConfig Retrieve(BattleConfigId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

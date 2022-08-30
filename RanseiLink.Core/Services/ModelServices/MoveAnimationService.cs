@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) { }
 
+        public MoveAnimation Retrieve(MoveAnimationId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();

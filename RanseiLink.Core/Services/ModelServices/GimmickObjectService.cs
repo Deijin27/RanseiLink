@@ -15,6 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public GimmickObjectService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickObjectRomPath)) { }
 
+        public GimmickObject Retrieve(GimmickObjectId id) => Retrieve((int)id);
+
         public override void Reload()
         {
             _cache.Clear();
