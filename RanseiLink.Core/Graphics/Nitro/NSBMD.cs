@@ -8,7 +8,7 @@ namespace RanseiLink.Core.Graphics
     public class NSBMD
     {
         public const string MagicNumber = "BMD0";
-        public static readonly string[] FileExtensions = new[] { ".bmd0", ".bmd" };
+        public static readonly string[] FileExtensions = new[] { ".nsbmd", ".bmd0", ".bmd" };
 
         public NSMDL Model { get; set; }
 
@@ -37,7 +37,7 @@ namespace RanseiLink.Core.Graphics
                     chunkOffsets[i] = br.ReadUInt32();
                 }
 
-                // read TEX0
+                // read MDL
                 br.BaseStream.Position = chunkOffsets[0];
                 Model = new NSMDL(br);
             }

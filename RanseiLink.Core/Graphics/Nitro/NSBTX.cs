@@ -10,7 +10,7 @@ namespace RanseiLink.Core.Graphics
     public class NSBTX
     {
         public const string MagicNumber = "BTX0";
-        public static readonly string[] FileExtensions = new[] { ".btx0", ".btx" };
+        public static readonly string[] FileExtensions = new[] { ".nsbtx", ".btx0", ".btx" };
 
         public NSTEX Texture { get; set; }
 
