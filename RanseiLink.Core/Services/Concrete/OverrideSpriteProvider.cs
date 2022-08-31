@@ -82,5 +82,44 @@ namespace RanseiLink.Core.Services.Concrete
             Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
             File.Copy(file, targetFile, overwrite: true);
         }
+
+        private DataFile GetDataFilePathWithoutFallback(string pathInRom)
+        {
+            return new DataFile(pathInRom, Path.Combine(_mod.FolderPath, pathInRom), true);
+        }
+
+        public void SetOverride(string pathInRom, string file)
+        {
+            string targetFile = GetDataFilePathWithoutFallback(pathInRom).File;
+            Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
+            File.Copy(file, targetFile, overwrite: true);
+        }
+
+        public void ClearOverride(string pathInRom)
+        {
+            File.Delete(GetDataFilePathWithoutFallback(pathInRom).File);
+        }
+
+        public DataFile GetDataFile(string pathInRom)
+        {
+            var file = GetDataFilePathWithoutFallback(pathInRom);
+            if (!File.Exists(file.File))
+            {
+                file = _fallbackSpriteProvider.GetDataFile(_mod.GameCode, pathInRom);
+            }
+            return file;
+        }
+
+        public List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom)
+        {
+            var files = _fallbackSpriteProvider.GetAllDataFilesInFolder(_mod.GameCode, pathOfFolderInRom).ToDictionary(x => x.RomPath);
+            foreach (var file in Directory.GetFiles(Path.Combine(_mod.FolderPath, pathOfFolderInRom)))
+            {
+                string pathOfFileInRom = Path.Combine(pathOfFolderInRom, Path.GetFileName(file));
+                files[pathOfFileInRom] = new DataFile(pathOfFileInRom, file, false);
+            }
+            return files.Values.ToList();
+
+        }
     }
 }

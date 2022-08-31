@@ -98,5 +98,23 @@ namespace RanseiLink.Core.Services.Concrete
             string defaultDataFolder = Constants.DefaultDataFolder(gc);
             return new SpriteFile(type, id, Path.Combine(defaultDataFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
         }
+
+        public DataFile GetDataFile(ConquestGameCode gc, string pathInRom)
+        {
+            string defaultDataFolder = Constants.DefaultDataFolder(gc);
+            return new DataFile(pathInRom, Path.Combine(defaultDataFolder, pathInRom), false);
+        }
+
+        public List<DataFile> GetAllDataFilesInFolder(ConquestGameCode gc, string pathOfFolderInRom)
+        {
+            string defaultDataFolder = Constants.DefaultDataFolder(gc);
+            List<DataFile> files = new List<DataFile>();
+            foreach (var file in Directory.GetFiles(Path.Combine(defaultDataFolder, pathOfFolderInRom)))
+            {
+                string pathOfFileInRom = Path.Combine(pathOfFolderInRom, Path.GetFileName(file));
+                files.Add(new DataFile(pathOfFileInRom, file, false));
+            }
+            return files;
+        }
     }
 }

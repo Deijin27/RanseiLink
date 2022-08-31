@@ -44,6 +44,19 @@ namespace RanseiLink.Core.Services
             IsOverride = isOverride;
         }
     }
+
+    public class DataFile
+    {
+        public string RomPath { get; }
+        public string File { get; }
+        public bool IsOverride { get; }
+        public DataFile(string romPath, string file, bool isOverride)
+        {
+            RomPath = romPath;
+            File = file;
+            IsOverride = isOverride;
+        }
+    }
     
     public interface IFallbackSpriteProvider
     {
@@ -51,6 +64,8 @@ namespace RanseiLink.Core.Services
         void Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
         List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type);
         SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id);
+        DataFile GetDataFile(ConquestGameCode gc, string pathInRom);
+        List<DataFile> GetAllDataFilesInFolder(ConquestGameCode gc, string pathOfFolderInRom);
     }
 
     public interface IOverrideSpriteProvider
@@ -59,5 +74,11 @@ namespace RanseiLink.Core.Services
         void ClearOverride(SpriteType type, int id);
         List<SpriteFile> GetAllSpriteFiles(SpriteType type);
         SpriteFile GetSpriteFile(SpriteType type, int id);
+
+        void SetOverride(string pathInRom, string file);
+        void ClearOverride(string pathInRom);
+        DataFile GetDataFile(string pathInRom);
+        List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom);
+
     }
 }
