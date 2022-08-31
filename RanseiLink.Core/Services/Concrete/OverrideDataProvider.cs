@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace RanseiLink.Core.Services.Concrete
 {
-    internal class OverrideSpriteProvider : IOverrideSpriteProvider
+    internal class OverrideDataProvider : IOverrideDataProvider
     {
-        private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+        private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly ModInfo _mod;
-        public OverrideSpriteProvider(IFallbackSpriteProvider fallbackSpriteProvider, ModInfo mod)
+        public OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, ModInfo mod)
         {
             _mod = mod;
             _fallbackSpriteProvider = fallbackSpriteProvider;

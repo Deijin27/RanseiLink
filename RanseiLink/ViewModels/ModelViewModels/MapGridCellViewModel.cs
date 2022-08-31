@@ -18,8 +18,8 @@ public class MapGridCellViewModel : ViewModelBase
     private bool _isSelected;
 
     private readonly IGimmickService _gimmickService;
-    private readonly IOverrideSpriteProvider _spriteProvider;
-    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideSpriteProvider spriteProvider)
+    private readonly IOverrideDataProvider _spriteProvider;
+    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideDataProvider spriteProvider)
     {
         _gimmickService = gimmickService;
         _spriteProvider = spriteProvider;

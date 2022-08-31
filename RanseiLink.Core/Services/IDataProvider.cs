@@ -58,7 +58,7 @@ namespace RanseiLink.Core.Services
         }
     }
     
-    public interface IFallbackSpriteProvider
+    public interface IFallbackDataProvider
     {
         bool IsDefaultsPopulated(ConquestGameCode gc);
         void Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
@@ -68,7 +68,7 @@ namespace RanseiLink.Core.Services
         List<DataFile> GetAllDataFilesInFolder(ConquestGameCode gc, string pathOfFolderInRom);
     }
 
-    public interface IOverrideSpriteProvider
+    public interface IOverrideDataProvider
     {
         void SetOverride(SpriteType type, int id, string file);
         void ClearOverride(SpriteType type, int id);

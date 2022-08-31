@@ -9,8 +9,8 @@ namespace RanseiLink.Console.GraphicsCommands;
 [Command("populate graphics defaults", Description = "Populate the default graphics, providing files to patch sprites, and use OverrideSpriteProvider in lua scripts.")]
 public class PopulateGraphicsDefaultsCommand : ICommand
 {
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
-    public PopulateGraphicsDefaultsCommand(IFallbackSpriteProvider fallbackSpriteProvider)
+    private readonly IFallbackDataProvider _fallbackSpriteProvider;
+    public PopulateGraphicsDefaultsCommand(IFallbackDataProvider fallbackSpriteProvider)
     {
         _fallbackSpriteProvider = fallbackSpriteProvider;
     }

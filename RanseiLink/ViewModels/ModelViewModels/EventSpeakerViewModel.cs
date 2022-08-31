@@ -11,9 +11,9 @@ public interface IEventSpeakerViewModel
 public class EventSpeakerViewModel : ViewModelBase, IEventSpeakerViewModel
 {
     private EventSpeaker _model;
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
 
-    public EventSpeakerViewModel(IOverrideSpriteProvider overrideSpriteProvider)
+    public EventSpeakerViewModel(IOverrideDataProvider overrideSpriteProvider)
     {
         _spriteProvider = overrideSpriteProvider;
         _model = new EventSpeaker();

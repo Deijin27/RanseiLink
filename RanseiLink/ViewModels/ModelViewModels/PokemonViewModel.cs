@@ -23,11 +23,11 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     private readonly IIdToNameService _idToNameService;
     private readonly IKingdomService _kingdomService;
     private readonly IItemService _itemService;
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
     private PokemonId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService, 
-        IOverrideSpriteProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory)
+        IOverrideDataProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;

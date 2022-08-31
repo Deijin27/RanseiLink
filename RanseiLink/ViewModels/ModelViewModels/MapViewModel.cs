@@ -30,11 +30,11 @@ public class MapViewModel : ViewModelBase, IMapViewModel
     private MapGridCellViewModel _selectedCell;
     private readonly IDialogService _dialogService;
     private readonly IGimmickService _gimmickService;
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
 
     public PSLM Map { get; set; }
 
-    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideSpriteProvider overrideSpriteProvider)
+    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideDataProvider overrideSpriteProvider)
     {
         _dialogService = dialogService;
         _gimmickService = gimmickService;

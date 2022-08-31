@@ -10,12 +10,12 @@ using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.Concrete
 {
-    public class FallbackSpriteProvider : IFallbackSpriteProvider
+    public class FallbackDataProvider : IFallbackDataProvider
     {
         private readonly RomFsFactory _ndsFactory;
         private readonly IGraphicTypeDefaultPopulater[] _populaters;
 
-        public FallbackSpriteProvider(RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
+        public FallbackDataProvider(RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
         {
             _populaters = populaters;
             _ndsFactory = ndsFactory;

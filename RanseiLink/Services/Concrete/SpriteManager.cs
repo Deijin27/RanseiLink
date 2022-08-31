@@ -5,10 +5,10 @@ using System.IO;
 namespace RanseiLink.Services.Concrete;
 public class SpriteManager : ISpriteManager
 {
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
 
-    public SpriteManager(IOverrideSpriteProvider overrideSpriteProvider, IDialogService dialogService)
+    public SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;

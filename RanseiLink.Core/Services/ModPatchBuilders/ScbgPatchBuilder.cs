@@ -9,8 +9,8 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 {
     public class ScbgPatchBuilder : IGraphicTypePatchBuilder
     {
-        private readonly IOverrideSpriteProvider _overrideSpriteProvider;
-        public ScbgPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider)
+        private readonly IOverrideDataProvider _overrideSpriteProvider;
+        public ScbgPatchBuilder(IOverrideDataProvider overrideSpriteProvider)
         {
             _overrideSpriteProvider = overrideSpriteProvider;
         }

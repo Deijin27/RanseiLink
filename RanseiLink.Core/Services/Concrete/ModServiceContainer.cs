@@ -27,7 +27,7 @@ namespace RanseiLink.Core.Services.Concrete
         private readonly Lazy<IMoveAnimationService> _moveAnimation;
         private readonly Lazy<IGimmickObjectService> _gimmickObject;
         private readonly Lazy<IMapService> _map;
-        private readonly Lazy<IOverrideSpriteProvider> _overrideSpriteProvider;
+        private readonly Lazy<IOverrideDataProvider> _overrideSpriteProvider;
         private readonly Lazy<IEpisodeService> _episode;
 
         public ModServiceContainer(IServiceGetter modServices)
@@ -54,7 +54,7 @@ namespace RanseiLink.Core.Services.Concrete
             _moveAnimation = new Lazy<IMoveAnimationService>(() => modServices.Get<IMoveAnimationService>());
             _gimmickObject = new Lazy<IGimmickObjectService>(() => modServices.Get<IGimmickObjectService>());
             _map = new Lazy<IMapService>(() => modServices.Get<IMapService>());
-            _overrideSpriteProvider = new Lazy<IOverrideSpriteProvider>(() => modServices.Get<IOverrideSpriteProvider>());
+            _overrideSpriteProvider = new Lazy<IOverrideDataProvider>(() => modServices.Get<IOverrideDataProvider>());
             _episode = new Lazy<IEpisodeService>(() => modServices.Get<IEpisodeService>());
         }
 
@@ -80,7 +80,7 @@ namespace RanseiLink.Core.Services.Concrete
         public IMoveAnimationService MoveAnimation => _moveAnimation.Value;
         public IGimmickObjectService GimmickObject => _gimmickObject.Value;
         public IMapService Map => _map.Value;
-        public IOverrideSpriteProvider OverrideSpriteProvider => _overrideSpriteProvider.Value;
+        public IOverrideDataProvider OverrideSpriteProvider => _overrideSpriteProvider.Value;
         public IEpisodeService Episode => _episode.Value;
     } 
 }

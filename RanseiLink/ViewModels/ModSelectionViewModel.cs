@@ -27,7 +27,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
     private readonly IModListItemViewModelFactory _itemViewModelFactory;
-    private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+    private readonly IFallbackDataProvider _fallbackSpriteProvider;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
 
@@ -51,7 +51,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         IModManager modManager,
         IDialogService dialogService,
         IModListItemViewModelFactory modListItemViewModelFactory,
-        IFallbackSpriteProvider fallbackSpriteProvider)
+        IFallbackDataProvider fallbackSpriteProvider)
     {
         _modService = modManager;
         _dialogService = dialogService;

@@ -12,7 +12,7 @@ namespace RanseiLink.ViewModels;
 public class SpriteItemViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
     private readonly ISpriteManager _spriteManager;
     private readonly SpriteType _spriteType;
     private bool _isOverride;
@@ -20,7 +20,7 @@ public class SpriteItemViewModel : ViewModelBase
     private ImageSource _displayImage;
 
     public delegate SpriteItemViewModel Factory(SpriteFile sprite);
-    public SpriteItemViewModel(SpriteFile sprite, ISpriteManager spriteManager, IOverrideSpriteProvider spriteProvider, IDialogService dialogService)
+    public SpriteItemViewModel(SpriteFile sprite, ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
     {
         _dialogService = dialogService;
         _spriteProvider = spriteProvider;

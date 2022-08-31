@@ -23,7 +23,7 @@ namespace RanseiLink.Core.Services
             builder.RegisterInstance(romFsFactory).As<RomFsFactory>();
 
             builder.RegisterType<MsgService>().As<IMsgService>().SingleInstance();
-            builder.RegisterType<FallbackSpriteProvider>().As<IFallbackSpriteProvider>().SingleInstance();
+            builder.RegisterType<FallbackDataProvider>().As<IFallbackDataProvider>().SingleInstance();
             builder.RegisterType<ModPatchingService>().As<IModPatchingService>().SingleInstance();
             builder.RegisterType<ModManager>().As<IModManager>().SingleInstance().WithParameter("modFolder", Path.Combine(Constants.RootFolder, "Mods"));
             builder.RegisterType<SettingService>().As<ISettingService>().SingleInstance().WithParameter("settingsFilePath", Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml"));
@@ -68,7 +68,7 @@ namespace RanseiLink.Core.Services
             builder.RegisterType<ScenarioWarriorService>().As<IScenarioWarriorService>().SingleInstance();
             builder.RegisterType<WarriorSkillService>().As<IWarriorSkillService>().SingleInstance();
 
-            builder.RegisterType<OverrideSpriteProvider>().As<IOverrideSpriteProvider>().SingleInstance();
+            builder.RegisterType<OverrideDataProvider>().As<IOverrideDataProvider>().SingleInstance();
 
             builder.RegisterType<GraphicsPatchBuilder>().As<IPatchBuilder>().SingleInstance();
             builder.RegisterType<DataPatchBuilder>().As<IPatchBuilder>().SingleInstance();

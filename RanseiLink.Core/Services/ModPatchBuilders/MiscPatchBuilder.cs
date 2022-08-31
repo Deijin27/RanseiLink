@@ -10,9 +10,9 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 {
     public class MiscPatchBuilder : IGraphicTypePatchBuilder
     {
-        private readonly IOverrideSpriteProvider _overrideSpriteProvider;
+        private readonly IOverrideDataProvider _overrideSpriteProvider;
         private readonly string _graphicsProviderFolder;
-        public MiscPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod)
+        public MiscPatchBuilder(IOverrideDataProvider overrideSpriteProvider, ModInfo mod)
         {
             _overrideSpriteProvider = overrideSpriteProvider;
             _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);

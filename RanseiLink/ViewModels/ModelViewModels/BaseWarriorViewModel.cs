@@ -16,13 +16,13 @@ public interface IBaseWarriorViewModel
 
 public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
 {
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
     private WarriorId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
-    public BaseWarriorViewModel(IJumpService jumpService, IOverrideSpriteProvider overrideSpriteProvider, IIdToNameService idToNameService, 
+    public BaseWarriorViewModel(IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
         IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _model = new BaseWarrior();

@@ -36,10 +36,10 @@ namespace RanseiLink.Core.Services.Concrete
     {
 
         private readonly RomFsFactory _ndsFactory;
-        private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+        private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly IModServiceGetterFactory _modServiceGetterFactory;
 
-        public ModPatchingService(RomFsFactory ndsFactory, IFallbackSpriteProvider fallbackSpriteProvider, IModServiceGetterFactory modServiceGetterFactory)
+        public ModPatchingService(RomFsFactory ndsFactory, IFallbackDataProvider fallbackSpriteProvider, IModServiceGetterFactory modServiceGetterFactory)
         {
             _fallbackSpriteProvider = fallbackSpriteProvider;
             _ndsFactory = ndsFactory;

@@ -30,6 +30,6 @@ namespace RanseiLink.Core.Services
         IMoveAnimationService MoveAnimation { get; }
         IGimmickObjectService GimmickObject { get; }
         IEpisodeService Episode { get; }
-        IOverrideSpriteProvider OverrideSpriteProvider { get; }
+        IOverrideDataProvider OverrideSpriteProvider { get; }
     }
 }

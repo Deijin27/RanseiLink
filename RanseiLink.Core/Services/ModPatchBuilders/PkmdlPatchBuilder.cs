@@ -21,11 +21,11 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
         private const int _pokemonSpriteHeight = 32;
         private const int _texSpriteCount = 24;
 
-        private readonly IOverrideSpriteProvider _overrideSpriteProvider;
+        private readonly IOverrideDataProvider _overrideSpriteProvider;
         private readonly IPokemonService _pokemonService; // this will be used to get the sprite asymmetry, whether the animation is double duration, and the pokemon's national dex number
         private readonly string _graphicsProviderFolder;
 
-        public PkmdlPatchBuilder(IOverrideSpriteProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService)
+        public PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService)
         {
             _pokemonService = pokemonService;
             _overrideSpriteProvider = overrideSpriteProvider;

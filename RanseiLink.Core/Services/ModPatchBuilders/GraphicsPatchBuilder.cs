@@ -9,9 +9,9 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
     public class GraphicsPatchBuilder : IPatchBuilder
     {
         private readonly IGraphicTypePatchBuilder[] _builders;
-        private readonly IFallbackSpriteProvider _fallbackSpriteProvider;
+        private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly ModInfo _mod;
-        public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackSpriteProvider fallbackSpriteProvider)
+        public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackDataProvider fallbackSpriteProvider)
         {
             _builders = builders;
             _fallbackSpriteProvider = fallbackSpriteProvider;

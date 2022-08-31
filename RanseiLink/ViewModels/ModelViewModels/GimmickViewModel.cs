@@ -21,9 +21,9 @@ public class GimmickViewModel : ViewModelBase, IGimmickViewModel
 {
     private Gimmick _model;
     private readonly IExternalService _externalService;
-    private readonly IOverrideSpriteProvider _spriteProvider;
+    private readonly IOverrideDataProvider _spriteProvider;
 
-    public GimmickViewModel(IExternalService externalService, IOverrideSpriteProvider overrideSpriteProvider, IJumpService jumpService)
+    public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService)
     {
         _model = new Gimmick();
 
