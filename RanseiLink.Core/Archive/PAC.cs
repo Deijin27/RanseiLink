@@ -6,7 +6,6 @@ namespace RanseiLink.Core.Archive
     public static class PAC
     {
         public const string FileExtension = ".pac";
-        const uint MagicNumber = 0x0040E3C4;
 
         public static string FileTypeNumberToExtension(int fileType)
         {
@@ -89,10 +88,8 @@ namespace RanseiLink.Core.Archive
 
                 // header
                 uint magicNumber = br.ReadUInt32();
-                if (magicNumber != MagicNumber)
-                {
-                    throw new Exception($"Unexpected magic number in PAC file {filePath}");
-                }
+                // seen a couple of different magic numbers, with no difference in the file. So be forgiving here
+                // currenly seen: 0x0040E3C4, 0x0040E3BC
 
                 // If not 0, this is a variant of another, with one of the files shared with that base
                 // i.e. a file is omitted from this because it would be the same as the base
@@ -144,7 +141,7 @@ namespace RanseiLink.Core.Archive
             return result;
         }
 
-        public static void Pack(string[] files, string destinationFile, int[] fileTypeNumbers = null, uint sharedFileCount = 1)
+        public static void Pack(string[] files, string destinationFile, int[] fileTypeNumbers = null, uint sharedFileCount = 1, uint magicNumber = 0x0040E3C4)
         {
             if (fileTypeNumbers == null)
             {
@@ -166,7 +163,7 @@ namespace RanseiLink.Core.Archive
                 }
 
                 bw.BaseStream.Position = 0;
-                bw.Write(MagicNumber);
+                bw.Write(magicNumber);
                 bw.Write(sharedFileCount);
                 bw.Write(files.Length);
 
