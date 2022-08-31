@@ -4,7 +4,7 @@ using System.Text;
 namespace RanseiLink.Core.Graphics
 {
     /// <summary>
-    /// Model and material file
+    /// Nitro SDK Binary Texture Pattern - Pattern animations
     /// </summary>
     public class NSBTP
     {

@@ -19,6 +19,10 @@ namespace RanseiLink.Core.Graphics
         public NSPAT(BinaryReader br)
         {
             var header = new NitroChunkHeader(br);
+            if (header.MagicNumber != MagicNumber)
+            {
+                throw new InvalidDataException($"Unexpected magic number in chunk header '{header.MagicNumber}' (expected: {MagicNumber})");
+            }
             var radix = new RadixDict<OffsetRadixData>(br);
             foreach (var name in radix.Names)
             {

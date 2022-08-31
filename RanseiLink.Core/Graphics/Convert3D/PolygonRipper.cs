@@ -105,8 +105,7 @@ namespace RanseiLink.Core.Graphics
                     break;
 
                 case PolygonDisplayOpCode.NORMAL:
-                    normal = CommandParamExtractor.NORMAL(command);
-                    normal = Vector3.TransformNormal(normal, gpu.CurrentMatrix);
+                    normal = Vector3.Normalize(Vector3.TransformNormal(CommandParamExtractor.NORMAL(command), gpu.CurrentMatrix));
                     break;
 
                 case PolygonDisplayOpCode.TEXCOORD:

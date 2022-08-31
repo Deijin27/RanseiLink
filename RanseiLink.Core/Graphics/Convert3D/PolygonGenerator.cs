@@ -54,18 +54,21 @@ namespace RanseiLink.Core.Graphics
 
         private Vector2 ReverseTex(Vector2 texCoord)
         {
-            var scaleS = gpu.CurrentMaterial.ScaleS == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleS;
-            var scaleT = gpu.CurrentMaterial.ScaleT == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleT;
+            texCoord.X = gpu.CurrentMaterial.OrigWidth * texCoord.X;
+            texCoord.Y = gpu.CurrentMaterial.OrigHeight * texCoord.Y;
 
-            texCoord.X = (float)(scaleS * gpu.CurrentMaterial.OrigWidth * texCoord.X) * ((gpu.CurrentMaterial.TexImageParam >> 18 & 1) + 1);
-            texCoord.Y = (float)(-(scaleT * gpu.CurrentMaterial.OrigHeight) * texCoord.Y) * ((gpu.CurrentMaterial.TexImageParam >> 19 & 1) + 1);
+            //    var scaleS = gpu.CurrentMaterial.ScaleS == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleS;
+            //    var scaleT = gpu.CurrentMaterial.ScaleT == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleT;
+
+            //    texCoord.X = (float)(scaleS * gpu.CurrentMaterial.OrigWidth * texCoord.X) * ((gpu.CurrentMaterial.TexImageParam >> 18 & 1) + 1);
+            //    texCoord.Y = (float)(-(scaleT * gpu.CurrentMaterial.OrigHeight) * texCoord.Y) * ((gpu.CurrentMaterial.TexImageParam >> 19 & 1) + 1);
 
             return texCoord;
         }
 
         private Vector3 ReverseNormal(Vector3 normal)
         {
-            return Vector3.TransformNormal(normal, gpu.InverseCurrentMatrix);
+            return Vector3.Normalize(Vector3.TransformNormal(normal, gpu.InverseCurrentMatrix));
         }
 
         private Vector3 ReverseVertex(Vector3 vertex)

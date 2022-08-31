@@ -88,8 +88,8 @@ public class NsbmdGenerateCommand : ICommand
         ConvertModels.ExtractInfoFromObj(obj, model);
 
         var groups = ConvertModels.ObjToIntermediate(obj);
-
-        ModelGenerator.Generate(groups, model);
+        IModelGenerator modGen = new MapModelGenerator();
+        modGen.Generate(groups, model);
     }
 
     private class TexInfo
@@ -106,21 +106,12 @@ public class NsbmdGenerateCommand : ICommand
         var texInfos = new List<TexInfo>();
         foreach (var tex in textures)
         {
-            string absolutePath;
-            if (Path.IsPathRooted(tex))
+            if (!File.Exists(tex))
             {
-                absolutePath = tex;
-            }
-            else
-            {
-                absolutePath = Path.Combine(Path.GetDirectoryName(SourceFile), tex);
-            }
-            if (!File.Exists(absolutePath))
-            {
-                console.Output.WriteLine("Failed to find texture at {0}", absolutePath);
+                console.Output.WriteLine("Failed to find texture at {0}", tex);
                 return false;
             }
-            var (texture, palette) = NsbtxGenerateCommand.LoadTextureFromImage(absolutePath, TransparencyFormat, OpacityFormat);
+            var (texture, palette) = NsbtxGenerateCommand.LoadTextureFromImage(tex, TransparencyFormat, OpacityFormat);
             nstex.Textures.Add(texture);
             nstex.Palettes.Add(palette);
             texInfos.Add(new TexInfo { FilePathAsWrittenInMtl = tex, Texture = texture, Palette = palette });

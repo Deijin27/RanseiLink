@@ -3,21 +3,25 @@ using System.Numerics;
 
 namespace RanseiLink.Core.Graphics
 {
-    public class ModelGenerator
+    public interface IModelGenerator
+    {
+        void Generate(List<Group> groups, NSMDL.Model model);
+    }
+
+    public class MapModelGenerator : IModelGenerator
     {
         /// <summary>
         /// Make sure to populate materials first, then run this.
         /// Populates the Polymeshes, RenderCommands, and Polygons
         /// </summary>
-        public static void Generate(List<Group> groups, NSMDL.Model model)
+        public void Generate(List<Group> groups, NSMDL.Model model)
         {
-            var state = new ModelGenerator();
-            state.gpu = new InverseGpuState();
-            state.model = model;
-            state.parentPolymeshStack = new Stack<int>();
-            state.parentPolymeshStack.Push(0);
-            state.gpu.CurrentMaterial = state.model.Materials[0];
-            state.Process(groups);
+            gpu = new InverseGpuState();
+            this.model = model;
+            parentPolymeshStack = new Stack<int>();
+            parentPolymeshStack.Push(0);
+            gpu.CurrentMaterial = this.model.Materials[0];
+            Process(groups);
         }
 
         private InverseGpuState gpu;
