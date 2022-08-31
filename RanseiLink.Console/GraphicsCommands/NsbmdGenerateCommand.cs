@@ -88,7 +88,7 @@ public class NsbmdGenerateCommand : ICommand
         ConvertModels.ExtractInfoFromObj(obj, model);
 
         var groups = ConvertModels.ObjToIntermediate(obj);
-        IModelGenerator modGen = new MapModelGenerator();
+        ModelGenerator modGen = new MapModelGenerator();
         modGen.Generate(groups, model);
     }
 

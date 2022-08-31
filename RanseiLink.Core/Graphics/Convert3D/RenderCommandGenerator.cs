@@ -110,6 +110,15 @@
                 OpCode = RenderOpCode.MTX_SCALE
             };
         }
+
+        public static RenderCommand UNKNOWN_7(int polymeshId)
+        {
+            return new RenderCommand
+            {
+                OpCode = RenderOpCode.UNKNOWN_7,
+                Parameters = new byte[] { (byte)polymeshId }
+            };
+        }
     }
 
 }

@@ -3,17 +3,8 @@ using System.Numerics;
 
 namespace RanseiLink.Core.Graphics
 {
-    public interface IModelGenerator
+    public abstract class ModelGenerator
     {
-        void Generate(List<Group> groups, NSMDL.Model model);
-    }
-
-    public class MapModelGenerator : IModelGenerator
-    {
-        /// <summary>
-        /// Make sure to populate materials first, then run this.
-        /// Populates the Polymeshes, RenderCommands, and Polygons
-        /// </summary>
         public void Generate(List<Group> groups, NSMDL.Model model)
         {
             gpu = new InverseGpuState();
@@ -24,75 +15,41 @@ namespace RanseiLink.Core.Graphics
             Process(groups);
         }
 
-        private InverseGpuState gpu;
-        private NSMDL.Model model;
-        private Stack<int> parentPolymeshStack;
+        protected InverseGpuState gpu;
+        protected NSMDL.Model model;
+        protected Stack<int> parentPolymeshStack;
 
-        private void Process(List<Group> groups)
+        protected abstract void Process(List<Group> groups);
+
+        protected void NOP()
         {
-            // root set
-            model.Polymeshes.Add(new NSMDL.Model.PolymeshData
-            {
-                Name = "set-" + model.Name.ToLowerInvariant(),
-            });
-            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE(0, parentPolymeshStack.Peek(), 0, 0));
-            parentPolymeshStack.Push(0);
+            model.RenderCommands.Add(RenderCommandGenerator.NOP());
+        }
 
-            // first and only child of set
-            model.Polymeshes.Add(new NSMDL.Model.PolymeshData
-            {
-                Name = model.Name.ToLowerInvariant()
-            });
-            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE(1, parentPolymeshStack.Peek(), 0, 1));
-            parentPolymeshStack.Push(1);
-
-            // contents of child
-            bool first = true;
-            foreach (var group in groups)
-            {
-                ProcessGroup(group, first);
-                first = false;
-            }
-
+        protected void END()
+        {
             model.RenderCommands.Add(RenderCommandGenerator.END());
         }
 
-        private void ProcessGroup(Group group, bool first)
+        protected void VISIBILITY(int polymeshId, bool isVisible)
         {
-            int polymeshId = model.Polymeshes.Count;
-            int polygonId = model.Polygons.Count;
-            int materialId = model.Materials.FindIndex(x => x.Name == group.MaterialName);
+            model.RenderCommands.Add(RenderCommandGenerator.VISIBILITY(polymeshId, isVisible));
+        }
 
-            // create polymesh data
-            model.Polymeshes.Add(new NSMDL.Model.PolymeshData
-            {
-                Name = $"polymsh{polymeshId}"
-            });
+        protected void MTX_RESTORE(int stackIndex)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_RESTORE(stackIndex));
+        }
 
-            // do the commands
+        protected void BIND_MATERIAL(int materialIndex)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.BIND_MATERIAL(materialIndex));
+            gpu.CurrentMaterial = model.Materials[materialIndex];
+        }
 
-            if (first)
-            {
-                model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT(polymeshId, parentPolymeshStack.Peek(), 0));
-                gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
-            }
-            else
-            {
-                model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_RESTORE(polymeshId, parentPolymeshStack.Peek(), 0, 1));
-                gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
-            }
-
-
-            model.RenderCommands.Add(RenderCommandGenerator.VISIBILITY(polymeshId, true));
-
-            model.RenderCommands.Add(RenderCommandGenerator.MTX_SCALE_UP());
-            gpu.MultiplyMatrix(Matrix4x4.CreateScale(model.MdlInfo.UpScale));
-
-            model.RenderCommands.Add(RenderCommandGenerator.BIND_MATERIAL(materialId));
-            gpu.CurrentMaterial = model.Materials[materialId];
-
-            // create polygon display commands
-            model.RenderCommands.Add(RenderCommandGenerator.DRAW_MESH(polygonId));
+        protected void DRAW_MESH(Group group)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.DRAW_MESH(model.Polygons.Count));
             var dl = PolygonGenerator.Generate(group, gpu);
             model.Polygons.Add(new NSMDL.Model.Polygon
             {
@@ -101,9 +58,47 @@ namespace RanseiLink.Core.Graphics
                 Name = group.Name,
                 Commands = dl,
             });
+        }
 
+        protected void MTX_MULT(int polymeshId, int parentId, int unknown)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT(polymeshId, parentId, unknown));
+            gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
+        }
+
+        protected void MTX_MULT_STORE(int polymeshId, int parentId, int unknown, int storeIndex)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE(polymeshId, parentId, unknown, storeIndex));
+            gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
+        }
+
+        protected void MTX_MULT_RESTORE(int polymeshId, int parentId, int unknown, int restoreIndex)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE(polymeshId, parentId, unknown, restoreIndex));
+            gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
+        }
+
+        protected void MTX_MULT_STORE_RESTORE(int polymeshId, int parentId, int unknown, int storeIndex, int restoreIndex)
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE_RESTORE(polymeshId, parentId, unknown, storeIndex, restoreIndex));
+            gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
+        }
+
+        protected void MTX_SCALE_DOWN()
+        {
             model.RenderCommands.Add(RenderCommandGenerator.MTX_SCALE_DOWN());
             gpu.MultiplyMatrix(Matrix4x4.CreateScale(model.MdlInfo.DownScale));
+        }
+
+        protected void MTX_SCALE_UP()
+        {
+            model.RenderCommands.Add(RenderCommandGenerator.MTX_SCALE_UP());
+            gpu.MultiplyMatrix(Matrix4x4.CreateScale(model.MdlInfo.UpScale));
+        }
+
+        protected void NEW_POLYMESH(string name)
+        {
+            model.Polymeshes.Add(new NSMDL.Model.PolymeshData { Name = name });
         }
     }
 }
