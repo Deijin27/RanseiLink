@@ -41,52 +41,27 @@ public class NsbmdGenerateCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
-        string objFile = SourceFile;
-        string mtlFile = Path.ChangeExtension(objFile, ".mtl");
-
-        if (objFile == null)
+        var settings = new ModelExtractorGenerator.GenerationSettings
         {
-            console.Output.WriteLine($"Could not find .obj file: {objFile}");
-            return default;
-        }
-        if (mtlFile == null)
-        {
-            console.Output.WriteLine($"Could not find .mtl file: {mtlFile}");
-            return default;
-        }
-
-        var obj = new OBJ(objFile);
-        var mtl = new MTL(mtlFile);
-
-        NSMDL.Model model = new NSMDL.Model() { Name = Path.GetFileNameWithoutExtension(objFile) };
-        NSTEX tex = new NSTEX();
-
-        if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, TransparencyFormat, OpacityFormat))
-        {
-            return default;
-        }
-
-        var nsbtx = new NSBTX { Texture = tex };
-        nsbtx.WriteTo(Path.Combine(DestinationFolder, $"{model.Name}.nsbtx"));
-
-        ModelExtractorGenerator.GenerateModelData(obj, model);
-
-        var nsbmd = new NSBMD
-        {
-            Model = new NSMDL
-            {
-                Models = new List<NSMDL.Model> { model }
-            }
+            ObjFile = SourceFile,
+            DestinationFolder = DestinationFolder,
+            TransparencyFormat = TransparencyFormat,
+            OpacityFormat = OpacityFormat,
+            ModelGenerator = new MapModelGenerator()
         };
 
-        nsbmd.WriteTo(Path.Combine(DestinationFolder, $"{model.Name}.nsbmd"));
+        var result = ModelExtractorGenerator.GenerateModel(settings);
+
+        if (result.Success == false)
+        {
+            console.Output.WriteLine($"Generation Failed: {result.FailureReason}");
+        }
+        else
+        {
+            console.Output.WriteLine($"Generation Succeeded");
+            console.Output.WriteLine();
+        }
 
         return default;
     }
-
-    
-
-
-
-
 }

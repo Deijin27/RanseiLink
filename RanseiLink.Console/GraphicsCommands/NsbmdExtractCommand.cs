@@ -24,7 +24,15 @@ public class NsbmdExtractCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
-        ModelExtractorGenerator.ExtractModelFromFolder(SourceDir, DestinationFolder);
+        var result = ModelExtractorGenerator.ExtractModelFromFolder(SourceDir, DestinationFolder);
+        if (result.Success)
+        {
+            console.Output.WriteLine("Model successfully extracted");
+        }
+        else
+        {
+            console.Output.WriteLine("Extraction Failed: {0}", result.FailureReason);
+        }
 
         return default;
     }

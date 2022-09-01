@@ -1,6 +1,8 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -16,7 +18,9 @@ public enum MapRenderMode
 
 public interface IMapViewModel
 {
-    void SetModel(PSLM model);
+    void SetModel(MapId id, PSLM model);
+    event EventHandler RequestSave;
+    event EventHandler RequestReload;
 }
 
 public class MapViewModel : ViewModelBase, IMapViewModel
@@ -31,21 +35,35 @@ public class MapViewModel : ViewModelBase, IMapViewModel
     private readonly IDialogService _dialogService;
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
+    private readonly IMapManager _mapManager;
+    private MapId _id;
+
+    public event EventHandler RequestSave;
+    public event EventHandler RequestReload;
 
     public PSLM Map { get; set; }
 
-    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideDataProvider overrideSpriteProvider)
+    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideDataProvider overrideSpriteProvider, IMapManager mapManager)
     {
+        _mapManager = mapManager;
         _dialogService = dialogService;
         _gimmickService = gimmickService;
         _spriteProvider = overrideSpriteProvider;
         
         RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
         ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
+        ImportObjCommand = new RelayCommand(ImportObj);
+        ExportObjCommand = new RelayCommand(ExportObj);
+        ImportPacCommand = new RelayCommand(ImportPac);
+        ExportPacCommand = new RelayCommand(ExportPac);
+        ImportPslmCommand = new RelayCommand(ImportPslm);
+        ExportPslmCommand = new RelayCommand(ExportPslm);
+        RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
     }
 
-    public void SetModel(PSLM model)
+    public void SetModel(MapId id, PSLM model)
     {
+        _id = id;
         Map = model;
         Gimmicks.Clear();
         PokemonPositions.Clear();
@@ -58,7 +76,16 @@ public class MapViewModel : ViewModelBase, IMapViewModel
             PokemonPositions.Add(new MapPokemonPositionViewModel(this, Map.PositionSection.Positions, i));
         }
         Draw();
+        RaisePropertyChanged(nameof(Is3dModelOverriden));
     }
+    public bool Is3dModelOverriden => _mapManager.IsOverriden(_id);
+    public ICommand RevertModelCommand { get; }
+    public ICommand ExportPslmCommand { get; }
+    public ICommand ImportPslmCommand { get; }
+    public ICommand ExportObjCommand { get; }
+    public ICommand ImportObjCommand { get; }
+    public ICommand ExportPacCommand { get; }
+    public ICommand ImportPacCommand { get; }
 
     public ICommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
@@ -281,6 +308,52 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
         
+    }
+
+    public void Revert3dModel()
+    {
+        _mapManager.RevertModelToDefault(_id);
+        RaisePropertyChanged(nameof(Is3dModelOverriden));
+    }
+
+    private void ImportObj()
+    {
+        _mapManager.ImportObj(_id);
+        RaisePropertyChanged(nameof(Is3dModelOverriden));
+    }
+
+    private void ExportObj()
+    {
+        _mapManager.ExportObj(_id);
+    }
+
+    private void ImportPac()
+    {
+        _mapManager.ImportPac(_id);
+        RaisePropertyChanged(nameof(Is3dModelOverriden));
+    }
+
+    private void ExportPac()
+    {
+        _mapManager.ExportPac(_id);
+    }
+
+    private void ImportPslm()
+    {
+        if (!_mapManager.ImportPslm(_id))
+        {
+            return;
+        }
+        RequestReload.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ExportPslm()
+    {
+        RequestSave.Invoke(this, EventArgs.Empty);
+        if (!_mapManager.ExportPslm(_id))
+        {
+            return;
+        }
     }
 
     

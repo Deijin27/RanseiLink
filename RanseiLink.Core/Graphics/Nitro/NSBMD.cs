@@ -8,6 +8,7 @@ namespace RanseiLink.Core.Graphics
     public class NSBMD
     {
         public const string MagicNumber = "BMD0";
+        public const string FileExtension = ".nsbmd";
         public static readonly string[] FileExtensions = new[] { ".nsbmd", ".bmd0", ".bmd" };
 
         public NSMDL Model { get; set; }

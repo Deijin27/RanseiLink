@@ -328,6 +328,35 @@
                         <Image Grid.Row="3" Grid.Column="0" Width="30" Height="30" Stretch="Uniform" Source="{Binding TerrainBrushImagePath, Converter={StaticResource Converter.PathToImage}}"/>
                     </Grid>
                 </TabItem>
+                <TabItem Header="Import/Export">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Margin="4" VerticalAlignment="Center" Text="{Binding Is3dModelOverriden, StringFormat='3D Model is Overriden: {0}'}" d:Text="3D Model is Overriden: false"/>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="1" Command="{Binding ExportObjCommand}">Export 3D Model as OBJ</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="2" Command="{Binding ExportPacCommand}">Export 3D Model as PAC</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="3">Import 3D Model from OBJ</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="4">Import 3D Model from PAC</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="5">Revert 3D Model to Default</Button>
+
+                        <Button Margin="4" Grid.Column="1" Grid.Row="1">Export PSLM</Button>
+                        <Button Margin="4" Grid.Column="1" Grid.Row="2">Import PSLM</Button>
+                    </Grid>
+                </TabItem>
             </TabControl>
             
         </DockPanel>

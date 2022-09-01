@@ -10,6 +10,7 @@ namespace RanseiLink.Core.Services.ModelServices
         void Save(MapId id, PSLM model);
         string MapFolderPath { get; }
         ICollection<MapId> GetMapIds();
+        string GetFilePath(MapId mapId);
     }
 
     public class MapService : IMapService
@@ -53,6 +54,11 @@ namespace RanseiLink.Core.Services.ModelServices
             }
 
             return result;
+        }
+
+        public string GetFilePath(MapId mapId)
+        {
+            return Path.Combine(MapFolderPath, mapId.ToInternalFileName());
         }
     }
 }

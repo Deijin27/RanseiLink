@@ -394,11 +394,27 @@ public class MapSelectorEditorModule : EditorModule
             {
                 _service.Save(_currentId.Value, _currentMap);
             }
-            _currentMap = _service.Retrieve((MapId)id);
-            _currentId = (MapId)id;
-            _nestedVm.SetModel(_currentMap);
+            var mid = (MapId)id;
+            _currentMap = _service.Retrieve(mid);
+            _currentId = mid;
+            _nestedVm.SetModel(mid, _currentMap);
         },
         id => _service.GetMapIds().Select(i => (int)i).Contains(id));
+
+        _nestedVm.RequestSave += NestedVm_RequestSave;
+        _nestedVm.RequestReload += NestedVm_RequestReload;
+    }
+
+    private void NestedVm_RequestReload(object sender, System.EventArgs e)
+    {
+        var id = (MapId)_viewModel.Selected;
+        _currentMap = _service.Retrieve(id);
+        _nestedVm.SetModel(id, _currentMap);
+    }
+
+    private void NestedVm_RequestSave(object sender, System.EventArgs e)
+    {
+        _service.Save((MapId)_viewModel.Selected, _currentMap);
     }
 
     public override void OnPageClosing()
@@ -420,7 +436,7 @@ public class MapSelectorEditorModule : EditorModule
     {
         if (_currentMap != null)
         {
-            _nestedVm.SetModel(_currentMap);
+            _nestedVm.SetModel((MapId)_viewModel.Selected, _currentMap);
         }
     }
 

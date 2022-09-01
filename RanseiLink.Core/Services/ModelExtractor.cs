@@ -13,16 +13,20 @@ namespace RanseiLink.Core.Services
 {
     public static class ModelExtractorGenerator
     {
-        public static void ExtractModelFromPac(string pac, string destinationFolder)
+        public static Result ExtractModelFromPac(string pac, string destinationFolder)
         {
             string temp = FileUtil.GetTemporaryDirectory();
             PAC.Unpack(pac, temp, true, 4);
-            ExtractModelFromFolder(temp, destinationFolder);
+            var result = ExtractModelFromFolder(temp, destinationFolder);
             Directory.Delete(temp);
+            return result;
         }
 
-        public static void ExtractModelFromFolder(string sourceDir, string destinationFolder)
+        public static Result ExtractModelFromFolder(string sourceDir, string destinationFolder)
         {
+            Directory.CreateDirectory(destinationFolder);
+            Result result = new Result();
+
             var files = Directory.GetFiles(sourceDir);
             var filesByType = new Dictionary<PAC.FileTypeNumber, string>();
             foreach (var file in files)
@@ -33,11 +37,13 @@ namespace RanseiLink.Core.Services
 
             if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBTX))
             {
-                throw new System.Exception($"Could not find .nsbtx file in folder: {sourceDir}");
+                result.FailureReason = $"Could not find .nsbtx file in folder: {sourceDir}";
+                return result;
             }
             if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBMD))
             {
-                throw new System.Exception($"Could not find .nsbmd file in folder: {sourceDir}");
+                result.FailureReason = $"Could not find .nsbmd file in folder: {sourceDir}";
+                return result;
             }
 
             var bmd = new NSBMD(filesByType[PAC.FileTypeNumber.NSBMD]);
@@ -69,6 +75,8 @@ namespace RanseiLink.Core.Services
                         break;
                 }
             }
+
+            return result;
         }
 
         public static void ExtractPatternAnim(string filePath, string destinationFile)
@@ -146,8 +154,15 @@ namespace RanseiLink.Core.Services
             return false;
         }
 
-        public static (NSTEX.Texture texture, NSTEX.Palette palette) LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat)
+        public class TextureLoadResult : Result
         {
+            public NSTEX.Texture Texture;
+            public NSTEX.Palette Palette;
+        }
+
+        public static TextureLoadResult LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat)
+        {
+            var result = new TextureLoadResult();
 
             Image<Rgba32> image;
             try
@@ -156,7 +171,8 @@ namespace RanseiLink.Core.Services
             }
             catch (UnknownImageFormatException e)
             {
-                throw new UnknownImageFormatException(e.Message + $" File='{file}'");
+                result.FailureReason = e.Message + $" File='{file}'";
+                return result;
             }
 
             bool imageHasTransparency = ImageHasTransparency(image);
@@ -178,7 +194,8 @@ namespace RanseiLink.Core.Services
             }
             catch (Exception e)
             {
-                throw new Exception($"Error converting image '{file}'", e);
+                result.FailureReason = $"Error converting image '{file}': {e}";
+                return result;
             }
             image.Dispose();
 
@@ -187,7 +204,8 @@ namespace RanseiLink.Core.Services
             string texName = Path.GetFileNameWithoutExtension(file);
             if (texName.Length > 13) // 14 to allow the palette to add the _pl
             {
-                throw new Exception("Texture name is too long. Max length is 13");
+                result.FailureReason = "Texture name is too long. Max length is 13";
+                return result;
             }
             var texResult = new NSTEX.Texture
             {
@@ -202,7 +220,9 @@ namespace RanseiLink.Core.Services
             Array.Resize(ref outPal, format.PaletteSize());
             var palResult = new NSTEX.Palette { Name = texName + "_pl", PaletteData = outPal };
 
-            return (texResult, palResult);
+            result.Texture = texResult;
+            result.Palette = palResult;
+            return result;
         }
 
         private class TexInfo
@@ -212,8 +232,10 @@ namespace RanseiLink.Core.Services
             public NSTEX.Palette Palette { get; set; }
         }
 
-        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, TexFormat transparencyFormat, TexFormat opacityFormat)
+        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, TexFormat transparencyFormat, TexFormat opacityFormat, out string failureReason)
         {
+            failureReason = null;
+
             var textures = mtl.Materials.Select(x => x.DiffuseTextureMapFile).Distinct().ToArray();
             Array.Sort(textures);
             var texInfos = new List<TexInfo>();
@@ -221,13 +243,18 @@ namespace RanseiLink.Core.Services
             {
                 if (!File.Exists(tex))
                 {
-                    //console.Output.WriteLine("Failed to find texture at {0}", tex);
+                    failureReason = string.Format("Failed to find texture at {0}", tex);
                     return false;
                 }
-                var (texture, palette) = ModelExtractorGenerator.LoadTextureFromImage(tex, transparencyFormat, opacityFormat);
-                nstex.Textures.Add(texture);
-                nstex.Palettes.Add(palette);
-                texInfos.Add(new TexInfo { FilePathAsWrittenInMtl = tex, Texture = texture, Palette = palette });
+                var result = ModelExtractorGenerator.LoadTextureFromImage(tex, transparencyFormat, opacityFormat);
+                if (!result.Success)
+                {
+                    failureReason = result.FailureReason;
+                    return false;
+                }
+                nstex.Textures.Add(result.Texture);
+                nstex.Palettes.Add(result.Palette);
+                texInfos.Add(new TexInfo { FilePathAsWrittenInMtl = tex, Texture = result.Texture, Palette = result.Palette });
             }
 
             foreach (var material in mtl.Materials)
@@ -269,13 +296,110 @@ namespace RanseiLink.Core.Services
 
         }
 
-        public static void GenerateModelData(OBJ obj, NSMDL.Model model)
+        public class Result
         {
-            ConvertModels.ExtractInfoFromObj(obj, model);
+            public bool Success;
+            public string FailureReason;
+        }
 
+        public class GenerationResult : Result
+        {
+            public string NsbtxFile;
+            public string NsbmdFile;
+        }
+
+        public class GenerationSettings
+        {
+            public string ObjFile;
+            public string ModelName;
+            public TexFormat TransparencyFormat = TexFormat.Pltt256;
+            public TexFormat OpacityFormat = TexFormat.Pltt256;
+            public string DestinationFolder;
+            public string NsbtxFile;
+            public string NsbmdFile;
+            public ModelGenerator ModelGenerator;
+        }
+
+        public static GenerationResult GenerateModel(GenerationSettings settings)
+        {
+            var result = new GenerationResult();
+
+            // resolve settings
+
+            if (settings.ObjFile == null || !File.Exists(settings.ObjFile))
+            {
+                result.FailureReason = $"Could not find .obj file: {settings.ObjFile}";
+                return result;
+            }
+
+            if (settings.ModelName == null)
+            {
+                settings.ModelName = Path.GetFileNameWithoutExtension(settings.ObjFile);
+            }
+
+            if (settings.ModelGenerator == null)
+            {
+                result.FailureReason = "Could not resolve Model Generator";
+                return result;
+            }
+
+            result.NsbtxFile = settings.NsbtxFile ?? Path.Combine(settings.DestinationFolder, settings.ModelName + NSBTX.FileExtension);
+            if (result.NsbtxFile == null)
+            {
+                result.FailureReason = "Could not resolve NSBTX output file";
+                return result;
+            }
+
+            result.NsbmdFile = settings.NsbmdFile ?? Path.Combine(settings.DestinationFolder, settings.ModelName + NSBMD.FileExtension);
+            if (result.NsbmdFile == null)
+            {
+                result.FailureReason = "Could not resolve NSBMD output file";
+                return result;
+            }
+
+            // load obj and mtl
+
+            var obj = new OBJ(settings.ObjFile);
+            var mtl = obj.MaterialLib;
+            if (mtl == null)
+            {
+                result.FailureReason = "Could not resolve MTL file";
+                return result;
+            }
+
+            // generate model
+
+            NSMDL.Model model = new NSMDL.Model() { Name = settings.ModelName };
+            NSTEX tex = new NSTEX();
+
+            if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, settings.TransparencyFormat, settings.OpacityFormat, out string failureReason))
+            {
+                result.FailureReason = failureReason;
+                return result;
+            }
+
+            ConvertModels.ExtractInfoFromObj(obj, model);
             var groups = ConvertModels.ObjToIntermediate(obj);
-            ModelGenerator modGen = new MapModelGenerator();
-            modGen.Generate(groups, model);
+            settings.ModelGenerator.Generate(groups, model);
+
+            // save model
+
+            var nsbtx = new NSBTX { Texture = tex };
+
+            nsbtx.WriteTo(result.NsbtxFile);
+
+            var nsbmd = new NSBMD
+            {
+                Model = new NSMDL
+                {
+                    Models = new List<NSMDL.Model> { model }
+                }
+            };
+
+            nsbmd.WriteTo(result.NsbmdFile);
+
+            result.Success = true;
+            return result;
         }
     }
 }
