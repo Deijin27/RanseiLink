@@ -9,29 +9,6 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.Concrete
 {
-
-    [Flags]
-    public enum FilePatchOptions
-    {
-        None = 0,
-        DeleteSourceWhenDone = 1,
-        VariableLength = 2,
-    }
-
-    public class FileToPatch
-    {
-        public string GamePath { get; } 
-        public string FileSystemPath { get; } 
-        public FilePatchOptions Options { get; }
-        public FileToPatch(string gamePath, string fileSystemPath, FilePatchOptions options) 
-        {
-            GamePath = gamePath;
-            FileSystemPath = fileSystemPath;
-            Options = options;
-        }
-    }
-
-
     public class ModPatchingService : IModPatchingService
     {
 
@@ -46,12 +23,11 @@ namespace RanseiLink.Core.Services.Concrete
             _modServiceGetterFactory = modServiceGetterFactory;
         }
 
-        public bool CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions, out string reasonCannotPatch)
+        public CanPatchResult CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions)
         {
             if (!File.Exists(romPath))
             {
-                reasonCannotPatch = $"Rom file '{romPath}' does not exist.";
-                return false;
+                return new CanPatchResult(false, CannotPatchCategory.RomFileDoesntExist, $"Rom file '{romPath}' does not exist.");
             }
 
             using (var br = new BinaryReader(File.OpenRead(romPath)))
@@ -59,8 +35,7 @@ namespace RanseiLink.Core.Services.Concrete
                 var header = new NdsHeader(br);
                 if (modInfo.GameCode.ToString() != header.GameCode)
                 {
-                    reasonCannotPatch = $"Game code of mod '{modInfo.GameCode}' does not match game code of rom '{header.GameCode}'";
-                    return false;
+                    return new CanPatchResult(false, CannotPatchCategory.ModGameCodeDoesntMatchRom, $"Game code of mod '{modInfo.GameCode}' does not match game code of rom '{header.GameCode}'");
                 }
             }
 
@@ -68,13 +43,11 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 if (!_fallbackSpriteProvider.IsDefaultsPopulated(modInfo.GameCode))
                 {
-                    reasonCannotPatch = "Cannot patch sprites unless 'Populate Graphics Defaults' has been run";
-                    return false;
+                    return new CanPatchResult(false, CannotPatchCategory.GraphicsDefaultsNotPopulated, "Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
                 }
             }
 
-            reasonCannotPatch = "";
-            return true;
+            return new CanPatchResult(true);
         }
 
         public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo> progress = null)

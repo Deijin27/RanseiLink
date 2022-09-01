@@ -11,9 +11,16 @@ namespace RanseiLink.Services.Concrete;
 
 public class MapManager : IMapManager
 {
+    private const string _pacExt = ".pac";
+    private const string _pacFilter = "PAC Archive (.pac)|*.pac";
+    private const string _objExt = ".obj";
+    private const string _objFilter = "Wavefront OBJ (.obj)|*.obj";
+    private const string _pslmExt = ".pslm";
+    private const string _pslmFilter = "Pokemon Conquest Map Data (.pslm)|*.pslm";
+
     private static string ResolveMapModelFile(MapId id)
     {
-        return Path.Combine("graphics", "ikusa_map", "MAP" + id.Map.ToString().PadLeft(2, '0') + id.Variant.ToString().PadLeft(2, '0') + ".pac");
+        return Path.Combine("graphics", "ikusa_map", $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}.pac");
     }
 
     private readonly IDialogService _dialogService;
@@ -52,7 +59,7 @@ public class MapManager : IMapManager
 
     public bool ImportPac(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose a PAC file to import", ".pac", "*.pac", out string result))
+        if (!_dialogService.RequestFile("Choose a PAC file to import", _pacExt, _pacFilter, out string result))
         {
             return false;
         }
@@ -63,6 +70,11 @@ public class MapManager : IMapManager
 
     public bool ExportPac(MapId id)
     {
+        if (!_overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id))
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Cannot export", "You must populate default graphics."));
+            return false;
+        }
         if (!_dialogService.RequestFolder("Choose a folder in which to place the exported PAC", out string result))
         {
             return false;
@@ -77,7 +89,7 @@ public class MapManager : IMapManager
 
     public bool ImportObj(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose an OBJ file to import", ".obj", "*.obj", out string objFile))
+        if (!_dialogService.RequestFile("Choose an OBJ file to import", _objExt, _objFilter, out string objFile))
         {
             return false;
         }
@@ -114,7 +126,7 @@ public class MapManager : IMapManager
         }
         finally
         {
-            Directory.Delete(tempFolder);
+            Directory.Delete(tempFolder, true);
             File.Delete(tempPac);
         }
 
@@ -123,6 +135,11 @@ public class MapManager : IMapManager
 
     public bool ExportObj(MapId id)
     {
+        if (!_overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id))
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Cannot export", "You must populate default graphics."));
+            return false;
+        }
         if (!_dialogService.RequestFolder("Choose a folder in which to place the exported OBJ", out string destinationFolder))
         {
             return false;
@@ -167,7 +184,7 @@ public class MapManager : IMapManager
 
     public bool ImportPslm(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose a PSLM file to import", ".pslm", "*.pslm", out string pslmFile))
+        if (!_dialogService.RequestFile("Choose a PSLM file to import", _pslmExt, _pslmFilter, out string pslmFile))
         {
             return false;
         }

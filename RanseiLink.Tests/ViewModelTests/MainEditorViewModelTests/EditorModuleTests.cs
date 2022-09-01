@@ -171,8 +171,7 @@ public class EditorModuleTests
         string romPath = "romPath";
         PatchOptions patchOptions = 0;
         _dialogService.Setup(i => i.CommitToRom(It.IsAny<ModInfo>(), out romPath, out patchOptions)).Returns(true);
-        string failReason = "failreason";
-        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), romPath, patchOptions, out failReason)).Returns(true);
+        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), romPath, patchOptions)).Returns(new CanPatchResult(true));
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
             .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));

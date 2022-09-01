@@ -39,9 +39,10 @@ public class CommitModCommand : ICommand
             patchOpt |= PatchOptions.IncludeSprites;
         }
 
-        if (!_modPatcher.CanPatch(currentMod, Path, patchOpt, out string reason))
+        var canPatch = _modPatcher.CanPatch(currentMod, Path, patchOpt);
+        if (!canPatch.CanPatch)
         {
-            console.Output.WriteLine(reason);
+            console.Output.WriteLine(canPatch.ReasonCannotPatch);
             return default;
         }
 

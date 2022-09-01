@@ -121,5 +121,10 @@ namespace RanseiLink.Core.Services.Concrete
             return files.Values.ToList();
 
         }
+
+        public bool IsDefaultsPopulated()
+        {
+            return _fallbackSpriteProvider.IsDefaultsPopulated(_mod.GameCode);
+        }
     }
 }

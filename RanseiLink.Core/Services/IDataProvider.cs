@@ -70,6 +70,7 @@ namespace RanseiLink.Core.Services
 
     public interface IOverrideDataProvider
     {
+        bool IsDefaultsPopulated();
         void SetOverride(SpriteType type, int id, string file);
         void ClearOverride(SpriteType type, int id);
         List<SpriteFile> GetAllSpriteFiles(SpriteType type);

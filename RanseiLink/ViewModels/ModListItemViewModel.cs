@@ -98,9 +98,10 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             return;
         }
 
-        if (!_modPatcher.CanPatch(mod, romPath, patchOpt, out string reason))
+        var canPatch = _modPatcher.CanPatch(mod, romPath, patchOpt);
+        if (!canPatch.CanPatch)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", reason));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", canPatch.ReasonCannotPatch));
             return;
         }
 

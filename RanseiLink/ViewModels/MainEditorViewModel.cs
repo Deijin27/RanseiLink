@@ -276,9 +276,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             return;
         }
 
-        if (!_modPatcher.CanPatch(Mod, romPath, patchOpt, out string reason))
+        var canPatch = _modPatcher.CanPatch(Mod, romPath, patchOpt);
+        if (!canPatch.CanPatch)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", reason));
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", canPatch.ReasonCannotPatch));
             return;
         }
 
