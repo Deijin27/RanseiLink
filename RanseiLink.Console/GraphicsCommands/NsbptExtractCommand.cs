@@ -2,13 +2,9 @@
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core;
-using RanseiLink.Core.Archive;
-using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Graphics.ExternalFormats;
+using RanseiLink.Core.Services;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
@@ -29,13 +25,7 @@ public class NsbptExtractCommand : ICommand
             DestinationFile = FileUtil.MakeUniquePath(Path.ChangeExtension(FilePath, "xml"));
         }
 
-        var nsbtp = new NSBTP(FilePath);
-
-        var element = nsbtp.PatternAnimations.Serialize();
-
-        var doc = new XDocument(element);
-
-        doc.Save(DestinationFile);
+        ModelExtractorGenerator.ExtractPatternAnim(FilePath, DestinationFile);
 
 
         return default;

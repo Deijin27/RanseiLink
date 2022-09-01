@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static RanseiLink.Core.Archive.PAC;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders
 {
@@ -153,7 +154,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                                 Path.Combine(pacUnpackedFolder, "0002"),
                                 pacCharTemp
                             };
-                            PAC.Pack(pacFiles, pacTemp, new[] { 0, 2, 5, 6 }, 1);
+                            PAC.Pack(pacFiles, pacTemp, new[] { FileTypeNumber.NSBMD, FileTypeNumber.NSBTP, FileTypeNumber.UNKNOWN5, FileTypeNumber.CHAR }, 1);
                             File.Delete(pacCharTemp);
                             pacLinkFiles[i] = pacTemp;
                         }

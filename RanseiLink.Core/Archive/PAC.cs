@@ -7,63 +7,77 @@ namespace RanseiLink.Core.Archive
     {
         public const string FileExtension = ".pac";
 
-        public static string FileTypeNumberToExtension(int fileType)
+        public enum FileTypeNumber
+        {
+            NSBMD,
+            NSBTX,
+            NSBTP,
+            UNKNOWN3,
+            NSBMA,
+            UNKNOWN5,
+            CHAR,
+            NSBTA,
+
+            DEFAULT = -1
+        }
+
+        public static string FileTypeNumberToExtension(FileTypeNumber fileType)
         {
             switch (fileType)
             {
-                case 0: return ".nsbmd"; // nitro sdk binary model data
-                case 1: return ".nsbtx"; // nitro sdk binary texture
-                case 2: return ".nsbtp"; // nitro sdk binary texture pattern
-                case 3: return ".unknown3";
-                case 4: return ".nsbma"; // nitro sdk binary material animation
-                case 5: return ".unknown5"; // in pokemon model pacs this is some data without a header, not sure what it is yet.
-                case 6: return ".char";
-                case 7: return ".nsbta"; // nitro sdk binary texture animation
+                case FileTypeNumber.NSBMD: return ".nsbmd"; // nitro sdk binary model data
+                case FileTypeNumber.NSBTX: return ".nsbtx"; // nitro sdk binary texture
+                case FileTypeNumber.NSBTP: return ".nsbtp"; // nitro sdk binary texture pattern
+                case FileTypeNumber.UNKNOWN3: return ".unknown3";
+                case FileTypeNumber.NSBMA: return ".nsbma"; // nitro sdk binary material animation
+                case FileTypeNumber.UNKNOWN5: return ".unknown5"; // in pokemon model pacs this is some data without a header, not sure what it is yet.
+                case FileTypeNumber.CHAR: return ".char";
+                case FileTypeNumber.NSBTA: return ".nsbta"; // nitro sdk binary texture animation
                 default: return "";
             };
         }
 
-        public static int ExtensionToFileTypeNumber(string extension)
+        public static FileTypeNumber ExtensionToFileTypeNumber(string extension)
         {
             switch (extension)
             {
                 case ".bmd":
                 case ".bmd0":
                 case ".nsbmd":
-                    return 0;
+                    return FileTypeNumber.NSBMD;
 
                 case ".btx":
                 case ".btx0":
                 case ".nsbtx":
-                    return 1;
+                    return FileTypeNumber.NSBTX;
 
                 case ".btp":
                 case ".btp0":
                 case ".nsbtp":
-                    return 2;
+                    return FileTypeNumber.NSBTP;
 
                 case ".unknown3":
-                    return 3;
+                    return FileTypeNumber.UNKNOWN3;
 
                 case ".bma":
                 case ".bma0":
                 case ".nsbma":
-                    return 4;
+                    return FileTypeNumber.NSBMA;
 
                 case ".unknown5":
-                    return 5;
+                    return FileTypeNumber.UNKNOWN5;
 
                 case ".chr":
                 case ".char":
-                    return 6;
+                    return FileTypeNumber.CHAR;
 
                 case ".bta":
                 case ".bta0":
                 case ".nsbta":
-                    return 7;
+                    return FileTypeNumber.NSBTA;
 
                 default:
-                    return -1;
+                    return FileTypeNumber.DEFAULT;
             };
         }
 
@@ -123,7 +137,7 @@ namespace RanseiLink.Core.Archive
                         i.ToString().PadLeft(zeroPadLength, '0'));
                     if (detectExt)
                     {
-                        fileDest += FileTypeNumberToExtension(fileTypes[i]);
+                        fileDest += FileTypeNumberToExtension((FileTypeNumber)fileTypes[i]);
                     }
                     byte[] buffer = br.ReadBytes(length);
                     File.WriteAllBytes(fileDest, buffer);
@@ -131,9 +145,9 @@ namespace RanseiLink.Core.Archive
             }
         }
 
-        private static int[] AutoDetectFileTypeNumbers(string[] files)
+        private static FileTypeNumber[] AutoDetectFileTypeNumbers(string[] files)
         {
-            int[] result = new int[files.Length];
+            FileTypeNumber[] result = new FileTypeNumber[files.Length];
             for (int i = 0; i < files.Length; i++)
             {
                 result[i] = ExtensionToFileTypeNumber(Path.GetExtension(files[i]));
@@ -141,7 +155,7 @@ namespace RanseiLink.Core.Archive
             return result;
         }
 
-        public static void Pack(string[] files, string destinationFile, int[] fileTypeNumbers = null, uint sharedFileCount = 1, uint magicNumber = 0x0040E3C4)
+        public static void Pack(string[] files, string destinationFile, FileTypeNumber[] fileTypeNumbers = null, uint sharedFileCount = 1, uint magicNumber = 0x0040E3C4)
         {
             if (fileTypeNumbers == null)
             {
@@ -175,12 +189,12 @@ namespace RanseiLink.Core.Archive
                 bw.BaseStream.Position = 0x2C;
                 foreach (var fileType in fileTypeNumbers)
                 {
-                    bw.Write(fileType);
+                    bw.Write((int)fileType);
                 }
             }
         }
 
-        public static void Pack(string folderPath, string destinationFile = null, int[] fileTypeNumbers = null, uint sharedFileCount = 1)
+        public static void Pack(string folderPath, string destinationFile = null, FileTypeNumber[] fileTypeNumbers = null, uint sharedFileCount = 1)
         {
             if (!Directory.Exists(folderPath))
             {
