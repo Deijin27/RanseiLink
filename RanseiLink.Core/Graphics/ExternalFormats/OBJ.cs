@@ -129,6 +129,15 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                     Groups.Insert(0, defaultGroup);
                 }
             }
+
+            if (MaterialLib == null)
+            {
+                var expectedMtlFile = Path.ChangeExtension(file, ".mtl");
+                if (File.Exists(expectedMtlFile))
+                {
+                    MaterialLib = new MTL(expectedMtlFile);
+                }
+            }
         }
 
         public void Save(string file)

@@ -77,6 +77,8 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         }
         Draw();
         RaisePropertyChanged(nameof(Is3dModelOverriden));
+        RaisePropertyChanged(nameof(Width));
+        RaisePropertyChanged(nameof(Height));
     }
     public bool Is3dModelOverriden => _mapManager.IsOverriden(_id);
     public ICommand RevertModelCommand { get; }
@@ -355,6 +357,4 @@ public class MapViewModel : ViewModelBase, IMapViewModel
             return;
         }
     }
-
-    
 }

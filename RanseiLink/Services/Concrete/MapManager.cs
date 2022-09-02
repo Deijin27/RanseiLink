@@ -12,15 +12,20 @@ namespace RanseiLink.Services.Concrete;
 public class MapManager : IMapManager
 {
     private const string _pacExt = ".pac";
-    private const string _pacFilter = "PAC Archive (.pac)|*.pac";
+    private const string _pacFilter = "Pokemon Conquest 3D Archive (.pac)|*.pac";
     private const string _objExt = ".obj";
     private const string _objFilter = "Wavefront OBJ (.obj)|*.obj";
     private const string _pslmExt = ".pslm";
     private const string _pslmFilter = "Pokemon Conquest Map Data (.pslm)|*.pslm";
 
-    private static string ResolveMapModelFile(MapId id)
+    private static string ResolveMapModelFileNameWithoutExt(MapId id)
     {
-        return Path.Combine("graphics", "ikusa_map", $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}.pac");
+        return $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}";
+    }
+
+    private static string ResolveMapModelFilePath(MapId id)
+    {
+        return Path.Combine("graphics", "ikusa_map", ResolveMapModelFileNameWithoutExt(id) + _pacExt);
     }
 
     private readonly IDialogService _dialogService;
@@ -53,7 +58,7 @@ public class MapManager : IMapManager
         {
             return false;
         }
-        _overrideDataProvider.ClearOverride(ResolveMapModelFile(id));
+        _overrideDataProvider.ClearOverride(ResolveMapModelFilePath(id));
         return true;
     }
 
@@ -64,7 +69,7 @@ public class MapManager : IMapManager
             return false;
         }
 
-        _overrideDataProvider.SetOverride(ResolveMapModelFile(id), result);
+        _overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), result);
         return true;
     }
 
@@ -80,7 +85,7 @@ public class MapManager : IMapManager
             return false;
         }
 
-        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFile(id));
+        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
         var exportFile = Path.Combine(result, Path.GetFileName(dataFile.File));
         exportFile = FileUtil.MakeUniquePath(exportFile);
         File.Copy(dataFile.File, exportFile);
@@ -104,6 +109,7 @@ public class MapManager : IMapManager
             var settings = new ModelExtractorGenerator.GenerationSettings
             {
                 ObjFile = objFile,
+                ModelName = ResolveMapModelFileNameWithoutExt(id),
                 DestinationFolder = tempFolder,
                 ModelGenerator = new MapModelGenerator()
             };
@@ -112,7 +118,7 @@ public class MapManager : IMapManager
             if (result.Success)
             {
                 PAC.Pack(tempFolder, tempPac);
-                _overrideDataProvider.SetOverride(ResolveMapModelFile(id), tempPac);
+                _overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), tempPac);
                 success = true;
             }
             else
@@ -145,8 +151,8 @@ public class MapManager : IMapManager
             return false;
         }
 
-        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFile(id));
-        var exportFolder = Path.Combine(destinationFolder, Path.GetFileName(dataFile.File));
+        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
+        var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(dataFile.File));
         exportFolder = FileUtil.MakeUniquePath(exportFolder);
 
         try
@@ -175,7 +181,7 @@ public class MapManager : IMapManager
         }
 
         var internalFile = _mapService.GetFilePath(id);
-        string exportTo = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(internalFile)));
+        string exportTo = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, id.ToExternalFileName()));
 
         File.Copy(internalFile, exportTo);
 
@@ -193,19 +199,9 @@ public class MapManager : IMapManager
         return true;
     }
 
-    public bool ExportBundle(MapId id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool ImportBundle(MapId id)
-    {
-        throw new NotImplementedException();
-    }
-
     public bool IsOverriden(MapId id)
     {
-        var info = _overrideDataProvider.GetDataFile(ResolveMapModelFile(id));
+        var info = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
         return info.IsOverride;
     }
 }

@@ -18,7 +18,7 @@ namespace RanseiLink.Core.Services
             string temp = FileUtil.GetTemporaryDirectory();
             PAC.Unpack(pac, temp, true, 4);
             var result = ExtractModelFromFolder(temp, destinationFolder);
-            Directory.Delete(temp);
+            Directory.Delete(temp, true);
             return result;
         }
 
@@ -51,8 +51,10 @@ namespace RanseiLink.Core.Services
 
             foreach (var model in bmd.Model.Models)
             {
-                ModelExtractorGenerator.ExtractModel(model, destinationFolder);
-                ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, destinationFolder);
+                var obj = ConvertModels.ModelToObj(model);
+                var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, destinationFolder);
+                obj.MaterialLib = mtl;
+                obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
             }
 
             foreach (var type in filesByType)
@@ -76,6 +78,7 @@ namespace RanseiLink.Core.Services
                 }
             }
 
+            result.Success = true;
             return result;
         }
 
@@ -90,13 +93,7 @@ namespace RanseiLink.Core.Services
             doc.Save(destinationFile);
         }
 
-        public static void ExtractModel(NSMDL.Model model, string destinationFolder)
-        {
-            var obj = ConvertModels.ModelToObj(model);
-            obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
-        }
-
-        public static void ExtractMaterialAndTextures(NSMDL.Model model, NSBTX btx, string destinationFolder)
+        public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX btx, string destinationFolder)
         {
             var mtl = new MTL();
             for (int i = 0; i < model.Materials.Count; i++)
@@ -136,22 +133,31 @@ namespace RanseiLink.Core.Services
                 }
 
             }
-            mtl.Save(Path.Combine(destinationFolder, model.Name + ".mtl"));
+            return mtl;
         }
 
-        private static bool ImageHasTransparency(Image<Rgba32> image)
+        private static (bool hasTransparency, bool hasSemiTransparency) ImageHasTransparency(Image<Rgba32> image)
         {
+            bool hasTransparency = false;
             for (int x = 0; x < image.Width; x++)
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    if (image[x, y].A != 255)
+                    var a = image[x, y].A;
+                    if (a != 255)
                     {
-                        return true;
+                        if (a != 0)
+                        {
+                            return (true, true);
+                        }
+                        else
+                        {
+                            hasTransparency = true;
+                        }
                     }
                 }
             }
-            return false;
+            return (hasTransparency, false);
         }
 
         public class TextureLoadResult : Result
@@ -160,7 +166,7 @@ namespace RanseiLink.Core.Services
             public NSTEX.Palette Palette;
         }
 
-        public static TextureLoadResult LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat)
+        public static TextureLoadResult LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat)
         {
             var result = new TextureLoadResult();
 
@@ -175,9 +181,22 @@ namespace RanseiLink.Core.Services
                 return result;
             }
 
-            bool imageHasTransparency = ImageHasTransparency(image);
-            bool colorZeroTransparent = imageHasTransparency && (transparencyFormat == TexFormat.Pltt4 || transparencyFormat == TexFormat.Pltt16 || transparencyFormat == TexFormat.Pltt256);
-            var format = imageHasTransparency ? transparencyFormat : opacityFormat;
+            var (imageHasTransparency, imageHasSemiTransparency) = ImageHasTransparency(image);
+            TexFormat format;
+            if (imageHasSemiTransparency)
+            {
+                format = semiTransparencyFormat;
+            }
+            else if (imageHasTransparency)
+            {
+                format = transparencyFormat;
+            }
+            else
+            {
+                format = opacityFormat;
+            }
+
+            var colorZeroTransparent = (imageHasTransparency || imageHasSemiTransparency) && (format == TexFormat.Pltt4 || format == TexFormat.Pltt16 || format == TexFormat.Pltt256);
 
             int width = image.Width;
             int height = image.Height;
@@ -222,6 +241,7 @@ namespace RanseiLink.Core.Services
 
             result.Texture = texResult;
             result.Palette = palResult;
+            result.Success = true;
             return result;
         }
 
@@ -232,7 +252,7 @@ namespace RanseiLink.Core.Services
             public NSTEX.Palette Palette { get; set; }
         }
 
-        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, TexFormat transparencyFormat, TexFormat opacityFormat, out string failureReason)
+        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat, out string failureReason)
         {
             failureReason = null;
 
@@ -246,7 +266,7 @@ namespace RanseiLink.Core.Services
                     failureReason = string.Format("Failed to find texture at {0}", tex);
                     return false;
                 }
-                var result = ModelExtractorGenerator.LoadTextureFromImage(tex, transparencyFormat, opacityFormat);
+                var result = ModelExtractorGenerator.LoadTextureFromImage(tex, transparencyFormat, opacityFormat, semiTransparencyFormat);
                 if (!result.Success)
                 {
                     failureReason = result.FailureReason;
@@ -314,6 +334,7 @@ namespace RanseiLink.Core.Services
             public string ModelName;
             public TexFormat TransparencyFormat = TexFormat.Pltt256;
             public TexFormat OpacityFormat = TexFormat.Pltt256;
+            public TexFormat SemiTransparencyFormat = TexFormat.A3I5;
             public string DestinationFolder;
             public string NsbtxFile;
             public string NsbmdFile;
@@ -372,7 +393,7 @@ namespace RanseiLink.Core.Services
             NSMDL.Model model = new NSMDL.Model() { Name = settings.ModelName };
             NSTEX tex = new NSTEX();
 
-            if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, settings.TransparencyFormat, settings.OpacityFormat, out string failureReason))
+            if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, settings.TransparencyFormat, settings.OpacityFormat, settings.SemiTransparencyFormat, out string failureReason))
             {
                 result.FailureReason = failureReason;
                 return result;

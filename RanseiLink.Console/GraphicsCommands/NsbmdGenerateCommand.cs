@@ -32,6 +32,8 @@ public class NsbmdGenerateCommand : ICommand
 
     [CommandOption("opacityFormat", 'o', Description = "Texture format to use for images without transparency")]
     public TexFormat OpacityFormat { get; set; } = TexFormat.Pltt256;
+    [CommandOption("semiTransparencyFormat", 's', Description = "Texture format to use for images with transparency")]
+    public TexFormat SemiTransparencyFormat { get; set; } = TexFormat.A3I5;
 
     public ValueTask ExecuteAsync(IConsole console)
     {
@@ -47,6 +49,7 @@ public class NsbmdGenerateCommand : ICommand
             DestinationFolder = DestinationFolder,
             TransparencyFormat = TransparencyFormat,
             OpacityFormat = OpacityFormat,
+            SemiTransparencyFormat = SemiTransparencyFormat,
             ModelGenerator = new MapModelGenerator()
         };
 
