@@ -161,6 +161,10 @@ namespace RanseiLink.Core.Archive
             {
                 fileTypeNumbers = AutoDetectFileTypeNumbers(files);
             }
+
+            // get them in the correct order
+            Array.Sort(fileTypeNumbers, files);
+
             using (var bw = new BinaryWriter(File.Create(destinationFile)))
             {
 
@@ -172,8 +176,10 @@ namespace RanseiLink.Core.Archive
                 for (int i = 0; i < files.Length; i++)
                 {
                     fileOffsets[i] = (int)bw.BaseStream.Position;
-                    byte[] buffer = File.ReadAllBytes(files[i]);
-                    bw.Write(buffer);
+                    using (var stream = File.OpenRead(files[i]))
+                    {
+                        stream.CopyTo(bw.BaseStream);
+                    }
                 }
 
                 bw.BaseStream.Position = 0;

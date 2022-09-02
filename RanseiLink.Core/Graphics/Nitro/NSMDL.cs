@@ -1059,6 +1059,7 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("RenderCommand: {OpCode}, {Flags}")]
     public class RenderCommand
     {
         public RenderOpCode OpCode { get; set; }
@@ -1090,6 +1091,7 @@ namespace RanseiLink.Core.Graphics
         }
     }
 
+    [System.Diagnostics.DebuggerDisplay("PolygonDisplayCommand: {OpCode}")]
     public class PolygonDisplayCommand
     {
         public PolygonDisplayOpCode OpCode { get; set; }

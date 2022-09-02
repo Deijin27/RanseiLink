@@ -13,6 +13,7 @@ namespace RanseiLink.Core.Services
 {
     public static class ModelExtractorGenerator
     {
+        private const string _patternAnimationFileWithExt = "library_pattern_animations.xml";
         public static Result ExtractModelFromPac(string pac, string destinationFolder)
         {
             string temp = FileUtil.GetTemporaryDirectory();
@@ -48,11 +49,17 @@ namespace RanseiLink.Core.Services
 
             var bmd = new NSBMD(filesByType[PAC.FileTypeNumber.NSBMD]);
             var btx = new NSBTX(filesByType[PAC.FileTypeNumber.NSBTX]);
+            NSBTP btp = null;
+            if (filesByType.TryGetValue(PAC.FileTypeNumber.NSBTP, out var btpFile))
+            {
+                btp = new NSBTP(btpFile);
+                ExtractPatternAnim(btp, Path.Combine(destinationFolder, _patternAnimationFileWithExt));
+            }
 
             foreach (var model in bmd.Model.Models)
             {
                 var obj = ConvertModels.ModelToObj(model);
-                var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, destinationFolder);
+                var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, btp?.PatternAnimations, destinationFolder);
                 obj.MaterialLib = mtl;
                 obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
             }
@@ -64,9 +71,7 @@ namespace RanseiLink.Core.Services
                     case PAC.FileTypeNumber.NSBMD:
                     case PAC.FileTypeNumber.NSBTX:
                     case PAC.FileTypeNumber.DEFAULT:
-                        break;
                     case PAC.FileTypeNumber.NSBTP:
-                        ExtractPatternAnim(type.Value, Path.Combine(destinationFolder, "library_pattern_animations.xml"));
                         break;
                     case PAC.FileTypeNumber.UNKNOWN3:
                     case PAC.FileTypeNumber.NSBMA:
@@ -82,10 +87,8 @@ namespace RanseiLink.Core.Services
             return result;
         }
 
-        public static void ExtractPatternAnim(string filePath, string destinationFile)
+        public static void ExtractPatternAnim(NSBTP nsbtp, string destinationFile)
         {
-            var nsbtp = new NSBTP(filePath);
-
             var element = nsbtp.PatternAnimations.Serialize();
 
             var doc = new XDocument(element);
@@ -93,9 +96,26 @@ namespace RanseiLink.Core.Services
             doc.Save(destinationFile);
         }
 
-        public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX btx, string destinationFolder)
+        private static void ExtractTexture(NSTEX nstex, string texName, string palName, string destinationFolder, string texFileNameWithExt)
+        {
+            var tex = nstex.Textures.First(x => x.Name == texName);
+            var pal = nstex.Palettes.First(x => x.Name == palName);
+
+            var convPal = RawPalette.To32bitColors(pal.PaletteData);
+            if (tex.Color0Transparent)
+            {
+                convPal[0] = SixLabors.ImageSharp.Color.Transparent;
+            }
+            ImageUtil.SaveAsPng(Path.Combine(destinationFolder, texFileNameWithExt),
+                new ImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
+                tiled: false,
+                format: tex.Format);
+        }
+
+        public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX btx, NSPAT nspat, string destinationFolder)
         {
             var mtl = new MTL();
+            HashSet<string> doneTextures = new HashSet<string>();
             for (int i = 0; i < model.Materials.Count; i++)
             {
                 NSMDL.Model.Material material = model.Materials[i];
@@ -116,23 +136,26 @@ namespace RanseiLink.Core.Services
                 m.SpecularTextureMapFile = texFileNameWithExt;
                 m.DissolveTextureMapFile = texFileNameWithExt;
 
-                if (btx != null)
+                if (btx != null && !doneTextures.Contains(material.Texture))
                 {
-                    var tex = btx.Texture.Textures.First(x => x.Name == material.Texture);
-                    var pal = btx.Texture.Palettes.First(x => x.Name == material.Palette);
-
-                    var convPal = RawPalette.To32bitColors(pal.PaletteData);
-                    if (tex.Color0Transparent)
-                    {
-                        convPal[0] = SixLabors.ImageSharp.Color.Transparent;
-                    }
-                    ImageUtil.SaveAsPng(Path.Combine(destinationFolder, texFileNameWithExt),
-                        new ImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
-                        tiled: false,
-                        format: tex.Format);
+                    doneTextures.Add(material.Texture);
+                    ExtractTexture(btx.Texture, material.Texture, material.Palette, destinationFolder, texFileNameWithExt);
                 }
-
             }
+
+            // sometimes there is textures in nspat that arent listed in material, export these
+            if (btx != null && nspat != null)
+            {
+                foreach (var kf in nspat.PatternAnimations.SelectMany(x => x.Tracks).SelectMany(x => x.KeyFrames))
+                {
+                    if (!doneTextures.Contains(kf.Texture))
+                    {
+                        doneTextures.Add(kf.Texture);
+                        ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, Path.Combine(kf.Texture, ".png"));
+                    }
+                }
+            }
+            
             return mtl;
         }
 
@@ -247,26 +270,46 @@ namespace RanseiLink.Core.Services
 
         private class TexInfo
         {
-            public string FilePathAsWrittenInMtl { get; set; }
+            public string PngFile { get; set; }
             public NSTEX.Texture Texture { get; set; }
             public NSTEX.Palette Palette { get; set; }
         }
 
-        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat, out string failureReason)
+        public static bool GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, NSPAT pat, string textureSearchFolder, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat, out string failureReason)
         {
             failureReason = null;
 
-            var textures = mtl.Materials.Select(x => x.DiffuseTextureMapFile).Distinct().ToArray();
-            Array.Sort(textures);
-            var texInfos = new List<TexInfo>();
-            foreach (var tex in textures)
+            var textures = mtl.Materials.Select(x => x.DiffuseTextureMapFile).Distinct().ToList();
+            // if nspat, get textures from there too.
+            if (pat != null)
             {
-                if (!File.Exists(tex))
+                var usedTextures = new HashSet<string>(textures.Select(x => Path.GetFileNameWithoutExtension(x)));
+                foreach (var t in pat.PatternAnimations.SelectMany(x => x.Tracks).SelectMany(x => x.KeyFrames).Select(x => x.Texture))
                 {
-                    failureReason = string.Format("Failed to find texture at {0}", tex);
+                    if (!usedTextures.Contains(t))
+                    {
+                        usedTextures.Add(t);
+                        var file = Path.Combine(textureSearchFolder, t);
+                        if (!File.Exists(file))
+                        {
+                            failureReason = $"Cannot find texture specified in library_pattern_animations: '{file}'";
+                            return false;
+                        }
+                        textures.Add(file);
+                    }
+                }
+            }
+
+            textures.Sort();
+            var texInfos = new List<TexInfo>();
+            foreach (var texPng in textures)
+            {
+                if (!File.Exists(texPng))
+                {
+                    failureReason = string.Format("Failed to find texture at {0}", texPng);
                     return false;
                 }
-                var result = ModelExtractorGenerator.LoadTextureFromImage(tex, transparencyFormat, opacityFormat, semiTransparencyFormat);
+                var result = ModelExtractorGenerator.LoadTextureFromImage(texPng, transparencyFormat, opacityFormat, semiTransparencyFormat);
                 if (!result.Success)
                 {
                     failureReason = result.FailureReason;
@@ -274,12 +317,12 @@ namespace RanseiLink.Core.Services
                 }
                 nstex.Textures.Add(result.Texture);
                 nstex.Palettes.Add(result.Palette);
-                texInfos.Add(new TexInfo { FilePathAsWrittenInMtl = tex, Texture = result.Texture, Palette = result.Palette });
+                texInfos.Add(new TexInfo { PngFile = texPng, Texture = result.Texture, Palette = result.Palette });
             }
 
             foreach (var material in mtl.Materials)
             {
-                var texInf = texInfos.Find(x => x.FilePathAsWrittenInMtl == material.DiffuseTextureMapFile);
+                var texInf = texInfos.Find(x => x.PngFile == material.DiffuseTextureMapFile);
                 var nsmtl = new NSMDL.Model.Material
                 {
                     ItemTag = 0,
@@ -324,20 +367,20 @@ namespace RanseiLink.Core.Services
 
         public class GenerationResult : Result
         {
-            public string NsbtxFile;
-            public string NsbmdFile;
         }
 
         public class GenerationSettings
         {
+            // input
             public string ObjFile;
             public string ModelName;
+            public string PatternAnimation;
             public TexFormat TransparencyFormat = TexFormat.Pltt256;
             public TexFormat OpacityFormat = TexFormat.Pltt256;
             public TexFormat SemiTransparencyFormat = TexFormat.A3I5;
+
+            // output
             public string DestinationFolder;
-            public string NsbtxFile;
-            public string NsbmdFile;
             public ModelGenerator ModelGenerator;
         }
 
@@ -364,18 +407,26 @@ namespace RanseiLink.Core.Services
                 return result;
             }
 
-            result.NsbtxFile = settings.NsbtxFile ?? Path.Combine(settings.DestinationFolder, settings.ModelName + NSBTX.FileExtension);
-            if (result.NsbtxFile == null)
+            if (settings.DestinationFolder == null)
             {
-                result.FailureReason = "Could not resolve NSBTX output file";
+                result.FailureReason = "Destination folder is null";
                 return result;
             }
 
-            result.NsbmdFile = settings.NsbmdFile ?? Path.Combine(settings.DestinationFolder, settings.ModelName + NSBMD.FileExtension);
-            if (result.NsbmdFile == null)
+            Directory.CreateDirectory(settings.DestinationFolder);
+            var nsbmdFile = Path.Combine(settings.DestinationFolder, settings.ModelName + PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBMD));
+            var nsbtxFile = Path.Combine(settings.DestinationFolder, settings.ModelName + PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBTX));
+
+            // load files that may not have handlers, but should be put in the destination
+            foreach (var file in Directory.GetFiles(Path.GetDirectoryName(settings.ObjFile)))
             {
-                result.FailureReason = "Could not resolve NSBMD output file";
-                return result;
+                var ext = Path.GetExtension(file);
+                var num = PAC.ExtensionToFileTypeNumber(ext);
+                if (num != PAC.FileTypeNumber.DEFAULT)
+                {
+                    var dest = Path.Combine(settings.DestinationFolder, settings.ModelName + ext);
+                    File.Copy(file, dest, true);
+                }
             }
 
             // load obj and mtl
@@ -388,12 +439,29 @@ namespace RanseiLink.Core.Services
                 return result;
             }
 
+            // load pattern animation if exists
+            if (settings.PatternAnimation == null)
+            {
+                settings.PatternAnimation = Path.Combine(Path.GetDirectoryName(settings.ObjFile), _patternAnimationFileWithExt);
+            }
+            NSPAT pat = null;
+            if (File.Exists(settings.PatternAnimation))
+            {
+                var doc = XDocument.Load(settings.PatternAnimation);
+                if (NSPAT.TryDeserialize(doc.Root, out pat))
+                {
+                    result.FailureReason = $"Failed to deserialize pattern animation file '{settings.PatternAnimation}'";
+                    return result;
+                }
+            }
+
             // generate model
 
             NSMDL.Model model = new NSMDL.Model() { Name = settings.ModelName };
             NSTEX tex = new NSTEX();
+           
 
-            if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, settings.TransparencyFormat, settings.OpacityFormat, settings.SemiTransparencyFormat, out string failureReason))
+            if (!ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, pat, Path.GetDirectoryName(settings.PatternAnimation), settings.TransparencyFormat, settings.OpacityFormat, settings.SemiTransparencyFormat, out string failureReason))
             {
                 result.FailureReason = failureReason;
                 return result;
@@ -407,7 +475,7 @@ namespace RanseiLink.Core.Services
 
             var nsbtx = new NSBTX { Texture = tex };
 
-            nsbtx.WriteTo(result.NsbtxFile);
+            nsbtx.WriteTo(nsbtxFile);
 
             var nsbmd = new NSBMD
             {
@@ -417,7 +485,7 @@ namespace RanseiLink.Core.Services
                 }
             };
 
-            nsbmd.WriteTo(result.NsbmdFile);
+            nsbmd.WriteTo(nsbmdFile);
 
             result.Success = true;
             return result;

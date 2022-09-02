@@ -69,7 +69,7 @@ namespace RanseiLink.Core.Graphics
                 PatternAnimations.Select(x => x.Serialize())
                 );
         }
-        public bool TryDeserialize(XElement element, out NSPAT result)
+        public static bool TryDeserialize(XElement element, out NSPAT result)
         {
             result = new NSPAT();
             foreach (var patternAnimEl in element.Elements("pattern_animation"))

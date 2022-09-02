@@ -30,7 +30,7 @@ namespace RanseiLink.Core.Graphics
         private void ProcessGroup(Group group, bool first)
         {
             int polymeshId = model.Polymeshes.Count;
-            int materialId = model.Materials.IndexOf(gpu.CurrentMaterial);
+            int materialId = model.Materials.FindIndex(x => x.Name == group.MaterialName);
 
             // create polymesh data
             NEW_POLYMESH($"polymsh{polymeshId}");

@@ -4,6 +4,7 @@ using System.Numerics;
 
 namespace RanseiLink.Core.Graphics
 {
+    [System.Diagnostics.DebuggerDisplay("Group: Name={Name}, Material={MaterialName}")]
     public class Group
     {
         public string Name { get; set; }
