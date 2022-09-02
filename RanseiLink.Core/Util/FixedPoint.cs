@@ -71,6 +71,22 @@ namespace RanseiLink.Core.Util
             Debug.Assert(intBits + fracBits >= 0);
             Debug.Assert(signBits + intBits + fracBits <= 32);
 
+            // coerce value into correct range (i know the implementation is slow, but it doesn't matter
+            var min = MinValue(signBits, intBits, fracBits);
+            if (value < min)
+            {
+                value = min;
+            }
+            else
+            {
+                var max = MaxValue(signBits, intBits, fracBits);
+                if (value > max)
+                {
+                    value = max;
+                }
+            }
+
+            // calculate result
             double dbl = value * Math.Pow(2, fracBits);
 
             int result = (int)Math.Round(dbl);
@@ -81,6 +97,25 @@ namespace RanseiLink.Core.Util
                 result |= signMask;
             }
             return result;
+        }
+
+        public static float MaxValue(int signBits, int intBits, int fracBits)
+        {
+            int signMask = 1 << (intBits + fracBits);
+            return FixedPoint.Fix(signMask - 1, signBits, intBits, fracBits);
+        }
+
+        public static float MinValue(int signBits, int intBits, int fracBits)
+        {
+            if (signBits != 0)
+            {
+                return FixedPoint.Fix(1 << (intBits + fracBits), signBits, intBits, fracBits);
+            }
+            else
+            {
+                return 0;
+            }
+            
         }
     }
 }

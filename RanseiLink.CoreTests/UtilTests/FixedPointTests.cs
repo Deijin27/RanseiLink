@@ -30,6 +30,7 @@ public class FixedPointTests
     [InlineData(0, 1, 19, 12, -0.000009f)] // this test is important. The game flips out at zero with a negative flag, so that flag should not be incuded if the value gets rounded to zero
     [InlineData(0, 1, 19, 12, -0f)]
     [InlineData(0, 1, 19, 12, 0f)]
+    [InlineData(0x1FF, 1, 0, 9, 1f)] // make sure vertex normals work correctly if they are 1
     public void InverseFixCorrectly(int expectedOutput, int signBits, int intBits, int fracBits, float input)
     {
         FixedPoint.InverseFix(input, signBits, intBits, fracBits).Should().Be(expectedOutput);

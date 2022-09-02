@@ -55,7 +55,7 @@ namespace RanseiLink.Core.Graphics
         private Vector2 ReverseTex(Vector2 texCoord)
         {
             texCoord.X = gpu.CurrentMaterial.OrigWidth * texCoord.X;
-            texCoord.Y = gpu.CurrentMaterial.OrigHeight * texCoord.Y;
+            texCoord.Y = -gpu.CurrentMaterial.OrigHeight * texCoord.Y;
 
             //    var scaleS = gpu.CurrentMaterial.ScaleS == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleS;
             //    var scaleT = gpu.CurrentMaterial.ScaleT == 0.0 ? 1.0 : gpu.CurrentMaterial.ScaleT;

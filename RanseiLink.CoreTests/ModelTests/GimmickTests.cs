@@ -28,8 +28,8 @@ public class GimmickTests
         a.Image.Should().Be(10);
         a.AttackType.Should().Be(TypeId.Fire);
         a.DestroyType.Should().Be(TypeId.Water);
-        a.State1Object.Should().Be(GimmickObjectId.PillarOfFire_State1);
-        a.State2Object.Should().Be(GimmickObjectId.PillarOfFire_State2);
+        a.State1Object.Should().Be(GimmickObjectId.PillarOfFire_Ignited);
+        a.State2Object.Should().Be(GimmickObjectId.PillarOfFire_Extinguished);
         a.Effect.Should().Be(MoveEffectId.NoEffect);
         a.UnknownQuantity1.Should().Be(0);
         a.Animation1.Should().Be(MoveAnimationId.Default);
