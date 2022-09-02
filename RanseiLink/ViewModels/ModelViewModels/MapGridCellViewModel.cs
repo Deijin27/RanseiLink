@@ -86,21 +86,10 @@ public class MapGridCellViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);
     }
 
-    public string Unknown3
-    {
-        get => TerrainEntry.Unknown3 switch
-        {
-            0 => "In Bounds",
-            1 => "Out Of Bounds",
-            > 1 and < 14 => $"Pokemon {TerrainEntry.Unknown3 - 2}",
-            _ => $"{TerrainEntry.Unknown3}"
-        };
-    }
-
-    public int Unknown3Numeric
+    public Unknown3 Unknown3
     {
         get => TerrainEntry.Unknown3;
-        set => RaiseAndSetIfChanged(TerrainEntry.Unknown3, (byte)value, v => TerrainEntry.Unknown3 = v);
+        set => RaiseAndSetIfChanged(TerrainEntry.Unknown3, value, v => TerrainEntry.Unknown3 = v);
     }
 
     public int Unknown4
@@ -109,10 +98,10 @@ public class MapGridCellViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(TerrainEntry.Unknown4, (byte)value, v => TerrainEntry.Unknown4 = v);
     }
 
-    public int Unknown5
+    public OrientationAlt Orientation
     {
-        get => TerrainEntry.Unknown5;
-        set => RaiseAndSetIfChanged(TerrainEntry.Unknown5, (byte)value, v => TerrainEntry.Unknown5 = v);
+        get => TerrainEntry.Orientation;
+        set => RaiseAndSetIfChanged(TerrainEntry.Orientation, value, v => TerrainEntry.Orientation = v);
     }
 
     public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();

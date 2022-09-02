@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace RanseiLink.ValueConverters;
 
-public class ZToHueConverter : ValueConverter<int, Brush>
+public class ZToHueConverter : ValueConverter<float, Brush>
 {
     private const double _value = 0.6;
     private const double _saturation = 0.6;
@@ -30,17 +30,17 @@ public class ZToHueConverter : ValueConverter<int, Brush>
         };
     }
 
-    public Brush ConvertValue(int value)
+    public Brush ConvertValue(float value)
     {
         return Convert(value);
     }
 
-    protected override Brush Convert(int value)
+    protected override Brush Convert(float value)
     {
-        return new SolidColorBrush(ColorFromHSV((double)value / 40 * 255, _saturation, _value));
+        return new SolidColorBrush(ColorFromHSV((double)value / 40 / 25 * 255, _saturation, _value));
     }
 
-    protected override int ConvertBack(Brush value)
+    protected override float ConvertBack(Brush value)
     {
         throw new NotImplementedException();
     }

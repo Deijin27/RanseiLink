@@ -4,49 +4,90 @@ using System.Text;
 
 namespace RanseiLink.Core.Maps
 {
+    public enum Unknown3
+    {
+        InBounds,
+        OutOfBounds,
+        Pokemon_0,
+        Pokemon_1,
+        Pokemon_2,
+        Pokemon_3,
+        Pokemon_4,
+        Pokemon_5,
+        Pokemon_6,
+        Pokemon_7,
+        Pokemon_8,
+        Pokemon_9,
+        Pokemon_10,
+        Pokemon_11,
 
+        // unknowns probably aren't used. Are they anywhere
+        Unknown_0,
+        Unknown_1,
+        Unknown_2,
+        Unknown_3,
+        Unknown_4,
+        Unknown_5,
+        Unknown_6,
+        Unknown_7,
+        Unknown_8,
+        Unknown_9,
+        Unknown_10,
+        Unknown_11,
+        Unknown_12,
+        Unknown_13,
+        Unknown_14,
+        Unknown_15,
+        Unknown_16,
+        Unknown_17,
+        Unknown_18,
+        Unknown_19,
+        Unknown_20,
+        Unknown_Penultimate = 254,
+        Unknown_Final = 255
+    }
     public class MapTerrainEntry
     {
         /// <summary>
         /// The elevation of each sub-cell in the grid. There is 9 sub cells
         /// </summary>
-        public int[] SubCellZValues { get; }
+        public float[] SubCellZValues { get; }
         public TerrainId Terrain { get; set; }
-        public byte Unknown3 { get; set; }
+        public Unknown3 Unknown3 { get; set; }
 
         public byte Unknown4 { get; set; }
-        public byte Unknown5 { get; set; }
+        public OrientationAlt Orientation { get; set; }
 
         public MapTerrainEntry()
         {
-            SubCellZValues = new int[9];
+            SubCellZValues = new float[9];
             Terrain = TerrainId.Default;
             Unknown4 = 0xFF;
         }
 
         public MapTerrainEntry(BinaryReader br)
         {
-            SubCellZValues = new int[9];
+            SubCellZValues = new float[9];
             for (int i = 0; i < 9; i++)
             {
-                SubCellZValues[i] = br.ReadInt32() / 0x800; // Core.Graphics.FixedPoint.Fix_1_19_12(br.ReadInt32())
+                SubCellZValues[i] = Util.FixedPoint.Fix_1_19_12(br.ReadInt32()) * 25;
             }
             Terrain = (TerrainId)br.ReadByte();
-            Unknown3 = br.ReadByte();
+            Unknown3 = (Unknown3)br.ReadByte();
             Unknown4 = br.ReadByte();
-            Unknown5 = br.ReadByte();
+            Orientation = (OrientationAlt)br.ReadByte();
         }
 
         public void WriteTo(BinaryWriter bw)
         {
             foreach (var entry in SubCellZValues)
             {
-                bw.Write(entry * 0x800);
+                bw.Write(Util.FixedPoint.InverseFix_1_19_12(entry / 25));
             }
             bw.Write((byte)Terrain);
-            bw.Write(Unknown3);
+            bw.Write((byte)Unknown3);
             bw.Write(Unknown4);
-            bw.Write(Unknown5);
+            bw.Write((byte)Orientation);
         }
 
         public override string ToString()
@@ -59,7 +100,7 @@ namespace RanseiLink.Core.Maps
             sb.Append($"{Terrain,13}");
             sb.Append($"{Unknown3,4}");
             sb.Append($"{Unknown4,4}");
-            sb.Append($"{Unknown5,4}");
+            sb.Append($"{Orientation,4}");
             return sb.ToString();
         }
     }

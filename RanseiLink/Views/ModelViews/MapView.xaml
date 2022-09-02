@@ -39,7 +39,7 @@
                     <TextBlock d:Text="Gimmick: HotSpring" Text="{Binding Parent.GimmicksString, StringFormat='Gimmick: {0}'}"/>
                     <TextBlock d:Text="Unknown3: 5" Text="{Binding Parent.Unknown3, StringFormat='Unknown3: {0}'}"/>
                     <TextBlock d:Text="Unknown4: 5" Text="{Binding Parent.Unknown4, StringFormat='Unknown4: {0}'}"/>
-                    <TextBlock d:Text="Unknown5: 5" Text="{Binding Parent.Unknown5, StringFormat='Unknown5: {0}'}"/>
+                    <TextBlock d:Text="Orientation: North" Text="{Binding Parent.Orientation, StringFormat='Orientation: {0}'}"/>
                 </UniformGrid>
             </Border>
             <ItemsControl x:Name="MatrixElement" d:Width="300" d:Background="Gray" HorizontalAlignment="Left" ItemsSource="{Binding Matrix}">
@@ -181,11 +181,11 @@
                                     <TextBlock Height="20" Grid.Row="1">Terrain</TextBlock>
                                     <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedItem="{Binding Terrain}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
                                     <TextBlock Height="20" Grid.Row="2">Unknown3</TextBlock>
-                                    <controls:NumberBox Grid.Row="2" Grid.Column="1" Height="20" Value="{Binding Unknown3Numeric}" Max="255"/>
+                                    <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Unknown3}" ItemsSource="{x:Static const:EnumProvider.Unknown3Items}"/>
                                     <TextBlock Height="20" Grid.Row="3">Unknown4</TextBlock>
                                     <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown4}" Max="255"/>
-                                    <TextBlock Height="20" Grid.Row="4">Unknown5</TextBlock>
-                                    <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Unknown5}" Max="255"/>
+                                    <TextBlock Height="20" Grid.Row="4">Orientation</TextBlock>
+                                    <ComboBox Grid.Row="4" Grid.Column="1" Height="20" SelectedItem="{Binding Orientation}" ItemsSource="{x:Static const:EnumProvider.OrientationAltItems}"/>
                                 </Grid>
                             </DataTemplate>
                         </ContentPresenter.ContentTemplate>

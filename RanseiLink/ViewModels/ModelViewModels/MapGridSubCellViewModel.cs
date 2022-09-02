@@ -18,7 +18,7 @@ public class MapGridSubCellViewModel : ViewModelBase
 
     public MapGridCellViewModel Parent { get; }
 
-    public int Z
+    public float Z
     {
         get => Parent.TerrainEntry.SubCellZValues[_entryId];
         set => RaiseAndSetIfChanged(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value);

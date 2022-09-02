@@ -8,10 +8,35 @@ namespace RanseiLink.Core.Maps
     public enum Orientation : byte
     {
         East,
+        North,
+        West,
+        South,
+        Default = 0xFF
+    }
+
+    public enum OrientationAlt : byte
+    {
+        North,
+        East,
         South,
         West,
-        North,
-        Default = 0xFF
+        Unknown_4,
+        Unknown_5,
+        Unknown_6,
+        Unknown_7,
+        Unknown_8,
+        Unknown_9,
+        Unknown_10,
+        Unknown_11,
+        Unknown_12,
+        Unknown_13,
+        Unknown_14,
+        Unknown_15,
+        Unknown_16,
+        Unknown_17,
+        Unknown_18,
+        Unknown_19,
+        Unknown_20,
     }
 
     public class MapGimmickItem

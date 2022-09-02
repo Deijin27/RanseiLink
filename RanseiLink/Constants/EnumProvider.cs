@@ -43,4 +43,6 @@ public static class EnumProvider
     public static ItemId[] ItemItems { get; } = EnumUtil.GetValues<ItemId>().ToArray();
     public static MoveMovementId[] MoveMovementItems { get; } = EnumUtil.GetValues<MoveMovementId>().ToArray();
     public static MoveUnknownOptionId[] MoveUnknownOptionItems { get; } = EnumUtil.GetValues<MoveUnknownOptionId>().ToArray();
+    public static Unknown3[] Unknown3Items { get; } = EnumUtil.GetValues<Unknown3>().ToArray();
+    public static OrientationAlt[] OrientationAltItems { get; } = EnumUtil.GetValues<OrientationAlt>().ToArray();
 }
