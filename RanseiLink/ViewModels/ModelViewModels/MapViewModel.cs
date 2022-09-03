@@ -27,7 +27,12 @@ public class MapViewModel : ViewModelBase, IMapViewModel
 {
     private static bool _terrainPaintingActive;
     private static TerrainId _terrainBrush;
+    private static bool _elevationPaintingActive;
+    private static float _elevationToPaint;
+    private static bool _paintElevationEntireCell;
     private static MapRenderMode _mapRenderMode; // static so it's preserved between pages
+    private static bool _hideGimmicks;
+    private static bool _hidePokemonMarkers;
     private MapGimmickViewModel _selectedGimmick;
     private MapPokemonPositionViewModel _selectedPokemonPosition;
     private MapGridSubCellViewModel _mouseOverItem;
@@ -59,6 +64,7 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         ImportPslmCommand = new RelayCommand(ImportPslm);
         ExportPslmCommand = new RelayCommand(ExportPslm);
         RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
+        ModifyElevationToPaintCommand = new RelayCommand<string>(diff => ElevationToPaint += float.Parse(diff));
     }
 
     public void SetModel(MapId id, PSLM model)
@@ -88,6 +94,7 @@ public class MapViewModel : ViewModelBase, IMapViewModel
     public ICommand ImportObjCommand { get; }
     public ICommand ExportPacCommand { get; }
     public ICommand ImportPacCommand { get; }
+    public ICommand ModifyElevationToPaintCommand { get; }
 
     public ICommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
@@ -113,12 +120,54 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         set => RaiseAndSetIfChanged(ref _terrainPaintingActive, value);
     }
 
+    public bool ElevationPaintingActive
+    {
+        get => _elevationPaintingActive;
+        set => RaiseAndSetIfChanged(ref _elevationPaintingActive, value);
+    }
+
+    public float ElevationToPaint
+    {
+        get => _elevationToPaint;
+        set => RaiseAndSetIfChanged(ref _elevationToPaint, value);
+    }
+
+    public bool PaintElevationEntireCell
+    {
+        get => _paintElevationEntireCell;
+        set => RaiseAndSetIfChanged(ref _paintElevationEntireCell, value);
+    }
+
     public MapRenderMode RenderMode
     {
         get => _mapRenderMode;
         set
         {
             if (RaiseAndSetIfChanged(ref _mapRenderMode, value))
+            {
+                Draw();
+            }
+        }
+    }
+
+    public bool HideGimmicks
+    {
+        get => _hideGimmicks;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _hideGimmicks, value))
+            {
+                Draw();
+            }
+        }
+    }
+
+    public bool HidePokemonMarkers
+    {
+        get => _hidePokemonMarkers;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _hidePokemonMarkers, value))
             {
                 Draw();
             }
@@ -193,7 +242,7 @@ public class MapViewModel : ViewModelBase, IMapViewModel
             var rowItems = new List<MapGridCellViewModel>();
             foreach (var col in row)
             {
-                var cellVm = new MapGridCellViewModel(col, x++, y, RenderMode, _gimmickService, _spriteProvider);
+                var cellVm = new MapGridCellViewModel(col, x++, y, RenderMode, HideGimmicks, HidePokemonMarkers, _gimmickService, _spriteProvider);
                 rowItems.Add(cellVm);
                 if (col == selectedTerrainEntry)
                 {
@@ -237,6 +286,25 @@ public class MapViewModel : ViewModelBase, IMapViewModel
         if (TerrainPaintingActive)
         {
             SelectedCell.Terrain = TerrainBrush;
+        }
+        if (ElevationPaintingActive)
+        {
+            if (PaintElevationEntireCell)
+            {
+                SelectedCell.SubCell0.Z = ElevationToPaint;
+                SelectedCell.SubCell1.Z = ElevationToPaint;
+                SelectedCell.SubCell2.Z = ElevationToPaint;
+                SelectedCell.SubCell3.Z = ElevationToPaint;
+                SelectedCell.SubCell4.Z = ElevationToPaint;
+                SelectedCell.SubCell5.Z = ElevationToPaint;
+                SelectedCell.SubCell6.Z = ElevationToPaint;
+                SelectedCell.SubCell7.Z = ElevationToPaint;
+                SelectedCell.SubCell8.Z = ElevationToPaint;
+            }
+            else
+            {
+                clickedSubCell.Z = ElevationToPaint;
+            }
         }
 
         _selectedGimmick = SelectedCell.Gimmicks.FirstOrDefault();

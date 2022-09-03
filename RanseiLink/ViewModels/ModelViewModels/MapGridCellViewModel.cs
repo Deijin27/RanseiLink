@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -19,11 +20,15 @@ public class MapGridCellViewModel : ViewModelBase
 
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
-    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, IGimmickService gimmickService, IOverrideDataProvider spriteProvider)
+    private readonly bool _hideGimmicks;
+    private readonly bool _hidePokemonMarkers;
+    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, bool hideGimmicks, bool hidePokemonMarkers, IGimmickService gimmickService, IOverrideDataProvider spriteProvider)
     {
         _gimmickService = gimmickService;
         _spriteProvider = spriteProvider;
         TerrainEntry = entry;
+        _hideGimmicks = hideGimmicks;
+        _hidePokemonMarkers = hidePokemonMarkers;
 
         X = x;
         Y = y;
@@ -37,6 +42,8 @@ public class MapGridCellViewModel : ViewModelBase
         SubCell6 = new(this, 6, renderMode);
         SubCell7 = new(this, 7, renderMode);
         SubCell8 = new(this, 8, renderMode);
+
+        Pokemon.CollectionChanged += (s, e) => RaisePropertyChanged(nameof(PokemonMarkerVisibility));
     }
 
     public void AddGimmick(MapGimmickViewModel gimmickViewModel)
@@ -60,7 +67,8 @@ public class MapGridCellViewModel : ViewModelBase
 
     private void UpdateVisibleGimmick()
     {
-        if (Gimmicks.Any())
+        RaisePropertyChanged(nameof(GimmickMarkerVisibility));
+        if (Gimmicks.Any() && !_hideGimmicks)
         {
             var gimmick = Gimmicks.Last();
             GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image).File;
@@ -102,6 +110,36 @@ public class MapGridCellViewModel : ViewModelBase
     {
         get => TerrainEntry.Orientation;
         set => RaiseAndSetIfChanged(TerrainEntry.Orientation, value, v => TerrainEntry.Orientation = v);
+    }
+
+    public Visibility GimmickMarkerVisibility
+    {
+        get
+        {
+            if (_hideGimmicks)
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Gimmicks.Any() ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
+    }
+
+    public Visibility PokemonMarkerVisibility
+    {
+        get
+        {
+            if (_hidePokemonMarkers)
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Pokemon.Any() ? Visibility.Visible : Visibility.Hidden;
+            }
+        }
     }
 
     public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();

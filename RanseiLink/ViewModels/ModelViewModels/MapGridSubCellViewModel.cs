@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RanseiLink.ValueConverters;
+using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
@@ -21,8 +18,16 @@ public class MapGridSubCellViewModel : ViewModelBase
     public float Z
     {
         get => Parent.TerrainEntry.SubCellZValues[_entryId];
-        set => RaiseAndSetIfChanged(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value))
+            {
+                RaisePropertyChanged(nameof(Brush));
+            }
+        }
     }
 
     public MapRenderMode RenderMode { get; }
+
+    public Brush Brush => SubCellToBrushConverter.ConvertValue(this);
 }
