@@ -137,7 +137,13 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
                         // PAC ------------------------------------------------------------------------------------------------------
 
-                        string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
+                        // find the path of the nsbtp (may be override)
+
+                        string pacUnpackedFolder = Path.Combine(pkmdlInfo.PACLinkFolder, fileName + "-Unpacked");
+                        var relative = Path.Combine(pacUnpackedFolder, "0001");
+                        var nsbtp = _overrideSpriteProvider.GetDataFile(relative).File;
+
+                        // convert the png
                         var pacDecompressedLen = new FileInfo(Path.Combine(pacUnpackedFolder, "0003")).Length * 2;
                         using (var pacImg = combinedImage.Clone(g =>
                         {
@@ -150,7 +156,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                             string[] pacFiles = new string[]
                             {
                                 Path.Combine(pacUnpackedFolder, "0000"),
-                                Path.Combine(pacUnpackedFolder, "0001"),
+                                nsbtp,
                                 Path.Combine(pacUnpackedFolder, "0002"),
                                 pacCharTemp
                             };

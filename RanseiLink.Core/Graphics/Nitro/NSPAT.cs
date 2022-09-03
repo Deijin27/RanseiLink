@@ -256,7 +256,7 @@ namespace RanseiLink.Core.Graphics
             public XElement Serialize()
             {
                 return new XElement("pattern_animation",
-                    new XAttribute("name", Name),
+                    new XAttribute("name", Name ?? string.Empty),
                     new XAttribute("num_frames", NumFrames),
                     Tracks.Select(x => x.Serialize())
                     );
@@ -298,7 +298,7 @@ namespace RanseiLink.Core.Graphics
             public XElement Serialize()
             {
                 return new XElement("track",
-                    new XAttribute("material", Material),
+                    new XAttribute("material", Material ?? string.Empty),
                     KeyFrames.Select(x => x.Serialize())
                     );
             }
@@ -337,8 +337,8 @@ namespace RanseiLink.Core.Graphics
             {
                 return new XElement("key_frame",
                     new XAttribute("frame", Frame),
-                    new XAttribute("texture", Texture),
-                    new XAttribute("palette", Palette)
+                    new XAttribute("texture", Texture ?? string.Empty),
+                    new XAttribute("palette", Palette ?? string.Empty)
                     );
             }
             public static bool TryDeserialize(XElement element, out KeyFrame result)

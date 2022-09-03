@@ -24,6 +24,9 @@ public class NsbtxGenerateCommand : ICommand
     [CommandOption("opacityFormat", 'o', Description = "Texture format to use for images without transparency")]
     public TexFormat OpacityFormat { get; set; } = TexFormat.Pltt256;
 
+    [CommandOption("semiTransparencyFormat", 's', Description = "Texture format to use for images with semi-transparency")]
+    public TexFormat SemiTransparencyFormat { get; set; } = TexFormat.A3I5;
+
     public ValueTask ExecuteAsync(IConsole console)
     {
         if (string.IsNullOrEmpty(DestinationFile))
@@ -37,9 +40,9 @@ public class NsbtxGenerateCommand : ICommand
         var tex0 = new NSTEX();
         foreach ( var file in files)
         {
-            var (texture, palette) = ModelExtractorGenerator.LoadTextureFromImage(file, TransparencyFormat, OpacityFormat);
-            tex0.Textures.Add(texture);
-            tex0.Palettes.Add(palette);
+            var res = ModelExtractorGenerator.LoadTextureFromImage(file, TransparencyFormat, OpacityFormat, SemiTransparencyFormat);
+            tex0.Textures.Add(res.Texture);
+            tex0.Palettes.Add(res.Palette);
         }
         var btx0 = new NSBTX { Texture = tex0 };
         btx0.WriteTo(DestinationFile);

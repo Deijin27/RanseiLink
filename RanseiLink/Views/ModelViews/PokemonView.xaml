@@ -176,11 +176,21 @@
 
             <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
                 <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
-                <Button Content="View Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>
+                <Button Content="View, Export, and Import Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Export Pattern Animation" Height="20" Command="{Binding ExportAnimationCommand}"/>
+                <Button Grid.Column="2" Content="Import Pattern Animation" Height="20" Command="{Binding ImportAnimationCommand}"/>
+            </Grid>
             
 
-            <GroupBox Header="Evolution Condition 1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
+            <GroupBox Header="Evolution Condition 1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
                   ToolTip="The first requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -197,7 +207,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Evolution Condition 2" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
+            <GroupBox Header="Evolution Condition 2" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
                   ToolTip="The second requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -214,7 +224,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Habitats" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="11" Padding="11">
+            <GroupBox Header="Habitats" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="11" Padding="11">
                 <ItemsControl ItemsSource="{Binding HabitatItems}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -233,20 +243,20 @@
                 </ItemsControl>
             </GroupBox>
             
-            <CheckBox VerticalAlignment="Center" Grid.Row="18" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+            <CheckBox VerticalAlignment="Center" Grid.Row="19" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
 
-            <TextBlock Text="Catch Rate" Grid.Row="19" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding CatchRate}" Max="255"/>
+            <TextBlock Text="Catch Rate" Grid.Row="20" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="20" Grid.Column="1" Value="{Binding CatchRate}" Max="255"/>
 
-            <TextBlock Text="Unknown Anim. Val." Grid.Row="20" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="20" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
+            <TextBlock Text="Unknown Anim. Val." Grid.Row="21" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="21" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
 
-            <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" Grid.ColumnSpan="2" Grid.Row="21" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" Grid.ColumnSpan="2" Grid.Row="22" VerticalAlignment="Center"/>
 
-            <CheckBox IsChecked="{Binding LongAttackAnimation}" Content="Long Duration Attack Animation" Grid.ColumnSpan="2" Grid.Row="22" VerticalAlignment="Center"/>
+            <CheckBox IsChecked="{Binding LongAttackAnimation}" Content="Long Duration Attack Animation" Grid.ColumnSpan="2" Grid.Row="23" VerticalAlignment="Center"/>
 
-            <TextBlock Text="Unknown Value 2" Grid.Row="23" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="23" Grid.Column="1" Value="{Binding UnknownValue2}"/>
+            <TextBlock Text="Unknown Value 2" Grid.Row="24" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="24" Grid.Column="1" Value="{Binding UnknownValue2}"/>
 
         </Grid>
 

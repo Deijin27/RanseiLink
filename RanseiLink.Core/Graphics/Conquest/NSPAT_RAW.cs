@@ -1,0 +1,102 @@
+﻿using System.IO;
+
+namespace RanseiLink.Core.Graphics.Conquest
+{
+    /// <summary>
+    /// Minimal format for Pattern animations used with pokemon models along with the other pattern animation file
+    /// </summary>
+    public static class NSPAT_RAW
+    {
+        public static NSPAT Load(string file)
+        {
+            using (var br = new BinaryReader(File.OpenRead(file)))
+            {
+                return Load(br);
+            }
+        }
+
+        private static readonly string[] _animNames = new string[]
+        {
+            "FN_A",
+            "BN_A",
+            "FN_B",
+            "BN_B",
+            "FN_C",
+            "BN_C",
+            "FN_D",
+            "BN_D",
+        };
+
+        public static NSPAT Load(BinaryReader br)
+        {
+            var result = new NSPAT();
+            ushort[] kfCounts = new ushort[8];
+            for (int i = 0; i < 8; i++)
+            {
+                kfCounts[i] = br.ReadUInt16();
+            }
+            var start = br.BaseStream.Position;
+            for (int i = 0; i < kfCounts.Length; i++)
+            {
+                var kfc = kfCounts[i];
+                var anim = new NSPAT.PatternAnimation() { Name = _animNames[i] };
+                result.PatternAnimations.Add(anim);
+                var track = new NSPAT.PatternAnimationTrack();
+                anim.Tracks.Add(track);
+                br.BaseStream.Seek(start + 0x40 * i, SeekOrigin.Begin);
+                for (int j = 0; j < kfc; j++)
+                {
+                    track.KeyFrames.Add(new NSPAT.KeyFrame { Frame = br.ReadUInt16() });
+                }
+            }
+            return result;
+        }
+
+        public static void WriteTo(NSPAT nspat, string file)
+        {
+            using (var bw = new BinaryWriter(File.Create(file)))
+            {
+                WriteTo(nspat, bw);
+            }
+        }
+
+        public static void WriteTo(NSPAT nspat, BinaryWriter bw)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                if (i < nspat.PatternAnimations.Count && nspat.PatternAnimations[i].Tracks.Count > 0)
+                {
+                    bw.Write((ushort)nspat.PatternAnimations[i].Tracks[0].KeyFrames.Count);
+                }
+                else
+                {
+                    bw.Write((ushort)0);
+                }
+            }
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (i < nspat.PatternAnimations.Count && nspat.PatternAnimations[i].Tracks.Count > 0)
+                {
+                    var track = nspat.PatternAnimations[i].Tracks[0];
+                    for (int j = 0; j < 0x20; j++)
+                    {
+                        if (j < track.KeyFrames.Count)
+                        {
+                            bw.Write(track.KeyFrames[j].Frame);
+                        }
+                        else
+                        {
+                            bw.Write((ushort)0);
+                        }
+                    }
+                    bw.Write((ushort)nspat.PatternAnimations[i].Tracks[0].KeyFrames.Count);
+                }
+                else
+                {
+                    bw.Pad(0x40);
+                }
+            }
+        }
+    }
+}

@@ -1,13 +1,18 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Xml.Linq;
 
 namespace RanseiLink.ViewModels;
 
@@ -24,16 +29,18 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     private readonly IKingdomService _kingdomService;
     private readonly IItemService _itemService;
     private readonly IOverrideDataProvider _spriteProvider;
+    private readonly IDialogService _dialogService;
     private PokemonId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService, 
-        IOverrideDataProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory)
+        IOverrideDataProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory, IDialogService dialogService)
     {
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
         _itemService = itemService;
         _spriteProvider = spriteProvider;
+        _dialogService = dialogService;
         _model = new Pokemon();
 
         MoveItems = _idToNameService.GetComboBoxItemsExceptDefault<IMoveService>();
@@ -46,6 +53,8 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         AddEvolutionCommand = new RelayCommand(AddEvolution);
         RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
+        ImportAnimationCommand = new RelayCommand(ImportAnimation);
+        ExportAnimationCommand = new RelayCommand(ExportAnimation);
     }
 
     public void SetModel(PokemonId id, Pokemon model)
@@ -66,6 +75,8 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         RaiseAllPropertiesChanged();
     }
 
+    public ICommand ImportAnimationCommand { get; }
+    public ICommand ExportAnimationCommand { get; }
     public ICommand JumpToMoveCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
 
@@ -357,6 +368,78 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
 
         RaisePropertyChanged(nameof(SmallSpritePath));
 
+    }
+
+    private void ImportAnimation()
+    {
+        var proceed = _dialogService.RequestFile(
+            "Select the pattern animation library file",
+            ".xml",
+            "Pattern Animation XML (.xml)|*.xml",
+            out string result
+            );
+
+        NSPAT nspat;
+        try
+        {
+            var doc = XDocument.Load(result);
+            if (!NSPAT.TryDeserialize(doc.Root, out nspat))
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "Invalid formatting", 
+                    "Failed to load the document because it doesn't match what is expected for a pattern animation", 
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
+            return;
+        }
+
+        var temp = Path.GetTempFileName();
+        new NSBTP { PatternAnimations = nspat }.WriteTo(temp);
+        var nsbtp = ResolveRelativeAnimPath();
+        _spriteProvider.SetOverride(nsbtp, temp);
+        File.Delete(temp);
+    }
+
+    private string ResolveRelativeAnimPath()
+    {
+        var info = (PkmdlConstants)GraphicsInfoResource.Get(SpriteType.ModelPokemon);
+        var pacLinkRelative = info.PACLinkFolder;
+        string fileName = ((int)_id).ToString().PadLeft(4, '0');
+        string pacUnpackedFolder = Path.Combine(pacLinkRelative, fileName + "-Unpacked");
+        return Path.Combine(pacUnpackedFolder, "0001");
+    }
+
+    private void ExportAnimation()
+    {
+        if (!_spriteProvider.IsDefaultsPopulated())
+        {
+            return;
+        }
+
+        var proceed = _dialogService.RequestFolder(
+            "Select folder to export animation file to",
+            out string destFolder
+            );
+
+        if (!proceed)
+        {
+            return;
+        }
+
+        var nsbtpFile = ResolveRelativeAnimPath();
+        var file = _spriteProvider.GetDataFile(nsbtpFile);
+        var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"NSBTP_{(int)_id}_{Name}.xml"));
+
+        var nsbtp = new NSBTP(file.File);
+        var doc = new XDocument(nsbtp.PatternAnimations.Serialize());
+        doc.Save(dest);
     }
 }
 

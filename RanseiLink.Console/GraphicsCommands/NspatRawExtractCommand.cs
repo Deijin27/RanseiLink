@@ -2,17 +2,18 @@
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core;
-using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Graphics.Conquest;
 using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
-[Command("nsbtp extract", Description = "Extract human readable xml from nsbtp")]
-public class NsbptExtractCommand : ICommand
+[Command("nspatraw extract", Description = "Extract human readable xml from NSPAT_RAW")]
+public class NspatRawExtractCommand : ICommand
 {
-    [CommandParameter(0, Description = "Path of nsbtp data file.", Name = "nsbtpFile")]
+    [CommandParameter(0, Description = "Path of nspatraw data file.", Name = "nspatrawFile")]
     public string FilePath { get; set; }
 
 
@@ -26,8 +27,8 @@ public class NsbptExtractCommand : ICommand
             DestinationFile = FileUtil.MakeUniquePath(Path.ChangeExtension(FilePath, "xml"));
         }
 
-        var nsbtp = new NSBTP(FilePath);
-        ModelExtractorGenerator.ExtractPatternAnim(nsbtp, DestinationFile);
+        var el = NSPAT_RAW.Load(FilePath).Serialize();
+        new XDocument(el).Save(DestinationFile);
 
 
         return default;
