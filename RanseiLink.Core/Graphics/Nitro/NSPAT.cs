@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using RanseiLink.Core.Util;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace RanseiLink.Core.Graphics
 {
     public class NSPAT
     {
+        public const string RootElementName = "library_pattern_animations";
         public const string MagicNumber = "PAT0";
         public List<PatternAnimation> PatternAnimations { get; set; } = new List<PatternAnimation>();
 
@@ -65,22 +67,18 @@ namespace RanseiLink.Core.Graphics
         public XElement Serialize()
         {
             return new XElement(
-                "library_pattern_animations",
+                RootElementName,
                 PatternAnimations.Select(x => x.Serialize())
                 );
         }
-        public static bool TryDeserialize(XElement element, out NSPAT result)
+        public static NSPAT Deserialize(XElement element)
         {
-            result = new NSPAT();
+            var result = new NSPAT();
             foreach (var patternAnimEl in element.Elements("pattern_animation"))
             {
-                if (!PatternAnimation.TryDeserialize(patternAnimEl, out var anim))
-                {
-                    return false;
-                }
-                result.PatternAnimations.Add(anim);
+                result.PatternAnimations.Add(PatternAnimation.Deserialize(patternAnimEl));
             }
-            return true;
+            return result;
         }
 
         public class PatternAnimation
@@ -126,7 +124,7 @@ namespace RanseiLink.Core.Graphics
                 var header = new Header(br);
                 NumFrames = header.NumFrames;
 
-                var radix = new RadixDict<KeyFrameRadixData>(br);
+                var radix = new RadixDict<TrackRadixData>(br);
 
                 var perTrackKeyFrameInfos = new KeyFrameInfo[radix.Names.Count][];
 
@@ -143,18 +141,18 @@ namespace RanseiLink.Core.Graphics
                 var textureNames = new string[header.NumTextures];
                 for (int i = 0; i < header.NumTextures; i++)
                 {
-                    textureNames[i] = RadixDict<KeyFrameRadixData>.ReadName(br);
+                    textureNames[i] = RadixDict<TrackRadixData>.ReadName(br);
                 }
 
                 var paletteNames = new string[header.NumPalettes];
                 for (int i = 0; i < header.NumPalettes; i++)
                 {
-                    paletteNames[i] = RadixDict<KeyFrameRadixData>.ReadName(br);
+                    paletteNames[i] = RadixDict<TrackRadixData>.ReadName(br);
                 }
 
                 for (int i = 0; i < radix.Names.Count; i++)
                 {
-                    var track = new PatternAnimationTrack { Material = radix.Names[i] };
+                    var track = new PatternAnimationTrack { Material = radix.Names[i], Unknown = radix.Data[i].Unknown };
                     Tracks.Add(track);
                     var trackKeyFrameInfos = perTrackKeyFrameInfos[i];
                     foreach (var info in trackKeyFrameInfos)
@@ -176,21 +174,21 @@ namespace RanseiLink.Core.Graphics
                 var initOffset = bw.BaseStream.Position;
 
                 // skip header
-                bw.Pad(Header.Length + RadixDict<KeyFrameRadixData>.CalculateLength(Tracks.Count));
+                bw.Pad(Header.Length + RadixDict<TrackRadixData>.CalculateLength(Tracks.Count));
 
                 // write tracks
                 List<string> textures = new List<string>();
                 List<string> palettes = new List<string>();
-                var radix = new RadixDict<KeyFrameRadixData>();
+                var radix = new RadixDict<TrackRadixData>();
                 foreach (var track in Tracks)
                 {
                     radix.Names.Add(track.Material);
-                    radix.Data.Add(new KeyFrameRadixData
+                    radix.Data.Add(new TrackRadixData
                     {
                         NumKeyFrames = (ushort)track.KeyFrames.Count,
                         Offset = (ushort)(bw.BaseStream.Position - initOffset),
                         Flag = 0,
-                        RatioDataFrame = 1, // TODO
+                        Unknown = 1, // TODO
                     });
                     foreach (var frame in track.KeyFrames)
                     {
@@ -219,13 +217,13 @@ namespace RanseiLink.Core.Graphics
                 ushort texturesOffset = (ushort)(bw.BaseStream.Position - initOffset);
                 foreach (var texture in textures)
                 {
-                    RadixDict<KeyFrameRadixData>.WriteName(bw, texture);
+                    RadixDict<TrackRadixData>.WriteName(bw, texture);
                 }
 
                 ushort palettesOffset = (ushort)(bw.BaseStream.Position - initOffset);
                 foreach (var palette in palettes)
                 {
-                    RadixDict<KeyFrameRadixData>.WriteName(bw, palette);
+                    RadixDict<TrackRadixData>.WriteName(bw, palette);
                 }
 
 
@@ -255,75 +253,70 @@ namespace RanseiLink.Core.Graphics
 
             public XElement Serialize()
             {
-                return new XElement("pattern_animation",
-                    new XAttribute("name", Name ?? string.Empty),
-                    new XAttribute("num_frames", NumFrames),
-                    Tracks.Select(x => x.Serialize())
-                    );
+                var el = new XElement("pattern_animation");
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    el.Add(new XAttribute("name", Name));
+                }
+                if (NumFrames != 0)
+                {
+                    el.Add(new XAttribute("num_frames", NumFrames));
+                }
+                el.Add(Tracks.Select(x => x.Serialize()));
+                return el;
             }
-            public static bool TryDeserialize(XElement element, out PatternAnimation result)
+
+            public static PatternAnimation Deserialize(XElement element)
             {
-                result = null;
+                var result = new PatternAnimation();
 
-                var nameAttrVal = element.Attribute("name")?.Value;
-                if (nameAttrVal == null)
-                {
-                    return false;
-                }
+                result.Name = element.Attribute("name")?.Value;
+                result.NumFrames = ushort.TryParse(element.Attribute("num_frames")?.Value, out ushort numFrames) ? numFrames : (ushort)0;
 
-                var numFramesAttrVal = element.Attribute("num_frames")?.Value;
-                if (!ushort.TryParse(numFramesAttrVal, out ushort numFrames))
-                {
-                    return false;
-                }
-
-                result = new PatternAnimation { Name = nameAttrVal, NumFrames = numFrames };
                 foreach (var trackEl in element.Elements("track"))
                 {
-                    if (!PatternAnimationTrack.TryDeserialize(trackEl, out var track))
-                    {
-                        return false;
-                    }
-                    result.Tracks.Add(track);
+                     result.Tracks.Add(PatternAnimationTrack.Deserialize(trackEl));
                 }
-                return true;
+                return result;
             }
         }
 
         public class PatternAnimationTrack
         {
             public string Material { get; set; }
+            public float Unknown { get; set; }
             public List<KeyFrame> KeyFrames { get; set; } = new List<KeyFrame>();
 
             public XElement Serialize()
             {
-                return new XElement("track",
-                    new XAttribute("material", Material ?? string.Empty),
-                    KeyFrames.Select(x => x.Serialize())
-                    );
-            }
-            public static bool TryDeserialize(XElement element, out PatternAnimationTrack result)
-            {
-                result = null;
-
-                var name = element.Attribute("material")?.Value;
-                if (name == null)
+                var el =  new XElement("track");
+                if (!string.IsNullOrEmpty(Material))
                 {
-                    return false;
+                    el.Add(new XAttribute("material", Material));
                 }
+                if (Unknown != 0)
+                {
+                    el.Add(new XAttribute("unknown", Unknown));
+                }
+                el.Add(KeyFrames.Select(x => x.Serialize()));
+                
+                return el;
+            }
 
-                result = new PatternAnimationTrack { Material = name };
+            public static PatternAnimationTrack Deserialize(XElement element)
+            {
+                var result = new PatternAnimationTrack
+                {
+                    Material = element.Attribute("material")?.Value,
+                    Unknown = float.TryParse(element.Attribute("unknown")?.Value, out var unk) ? unk : 0
+                };
 
                 foreach (var keyFrameElement in element.Elements("key_frame"))
                 {
-                    if (!KeyFrame.TryDeserialize(keyFrameElement, out var kf))
-                    {
-                        return false;
-                    }
-                    result.KeyFrames.Add(kf);
+                    result.KeyFrames.Add(KeyFrame.Deserialize(keyFrameElement));
                 }
 
-                return true;
+                return result;
             }
         }
 
@@ -335,37 +328,28 @@ namespace RanseiLink.Core.Graphics
 
             public XElement Serialize()
             {
-                return new XElement("key_frame",
-                    new XAttribute("frame", Frame),
-                    new XAttribute("texture", Texture ?? string.Empty),
-                    new XAttribute("palette", Palette ?? string.Empty)
-                    );
-            }
-            public static bool TryDeserialize(XElement element, out KeyFrame result)
-            {
-                result = null;
-
-                var frameStringValue = element.Element("frame")?.Value;
-                var textureStringValue = element.Element("texture")?.Value;
-                var paletteStringValue = element.Element("palette")?.Value;
+                var el = new XElement("key_frame");
+                el.Add(new XAttribute("frame", Frame));
                 
-                if (frameStringValue == null || textureStringValue == null || paletteStringValue == null)
+                if (!string.IsNullOrEmpty(Texture))
                 {
-                    return false;
+                    el.Add(new XAttribute("texture", Texture));
                 }
-
-                if (!ushort.TryParse(frameStringValue, out ushort frame))
+                if (!string.IsNullOrEmpty(Palette))
                 {
-                    return false;
+                    el.Add(new XAttribute("palette", Palette));
                 }
+                return el;
+            }
 
-                result = new KeyFrame
+            public static KeyFrame Deserialize(XElement element)
+            {
+                return new KeyFrame
                 {
-                    Frame = frame,
-                    Texture = textureStringValue,
-                    Palette = paletteStringValue,
+                    Frame = ushort.TryParse(element.Attribute("frame")?.Value, out ushort frame) ? frame : (ushort)0,
+                    Texture = element.Attribute("texture")?.Value,
+                    Palette = element.Attribute("palette")?.Value,
                 };
-                return true;
             }
         }
 
@@ -390,20 +374,24 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        private class KeyFrameRadixData : IRadixData
+        private class TrackRadixData : IRadixData
         {
             public ushort Length => 8;
 
             public ushort NumKeyFrames;
             public ushort Flag;
-            public ushort RatioDataFrame; // fixed point
+            public float Unknown; // fixed point
             public ushort Offset;
 
             public void ReadFrom(BinaryReader br)
             {
                 NumKeyFrames = br.ReadUInt16();
                 Flag = br.ReadUInt16();
-                RatioDataFrame = br.ReadUInt16();
+                if (Flag != 0)
+                {
+                    throw new System.Exception("The flag in KeyFrameRadixData is not zero!");
+                }
+                Unknown = FixedPoint.Fix(br.ReadUInt16(), 0, 7, 9);
                 Offset = br.ReadUInt16();
             }
 
@@ -411,7 +399,7 @@ namespace RanseiLink.Core.Graphics
             {
                 bw.Write(NumKeyFrames);
                 bw.Write(Flag);
-                bw.Write(RatioDataFrame);
+                bw.Write((ushort)FixedPoint.InverseFix(Unknown, 0, 7, 9));
                 bw.Write(Offset);
             }
         }

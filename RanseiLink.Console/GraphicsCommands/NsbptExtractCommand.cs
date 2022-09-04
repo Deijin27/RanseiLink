@@ -3,9 +3,10 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Services;
+using RanseiLink.Core.Graphics.Conquest;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
@@ -15,9 +16,11 @@ public class NsbptExtractCommand : ICommand
     [CommandParameter(0, Description = "Path of nsbtp data file.", Name = "nsbtpFile")]
     public string FilePath { get; set; }
 
-
     [CommandOption("destinationFile", 'd', Description = "Optional destination file; default is a file in the same location as the file.")]
     public string DestinationFile { get; set; }
+
+    [CommandOption("raw", 'r', Description = "Is the custom minimal format used to store additional animations for pokemon 3d models")]
+    public bool Raw { get; set; }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
@@ -26,9 +29,17 @@ public class NsbptExtractCommand : ICommand
             DestinationFile = FileUtil.MakeUniquePath(Path.ChangeExtension(FilePath, "xml"));
         }
 
-        var nsbtp = new NSBTP(FilePath);
-        ModelExtractorGenerator.ExtractPatternAnim(nsbtp, DestinationFile);
+        XElement el;
+        if (Raw)
+        {
+            el = NSPAT_RAW.Load(FilePath).SerializeRaw();
+        }
+        else
+        {
+            el = new NSBTP(FilePath).PatternAnimations.Serialize();
+        }
 
+        new XDocument(el).Save(DestinationFile);
 
         return default;
     }

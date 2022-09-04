@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Graphics.Conquest;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
@@ -54,7 +55,10 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
-        ExportAnimationCommand = new RelayCommand(ExportAnimation);
+        ImportRawAnimationCommand = new RelayCommand(ImportRawAnimation);
+        ExportAnimationsCommand = new RelayCommand(ExportAnimations);
+        RevertAnimationCommand = new RelayCommand(() => RevertAnimation(false));
+        RevertRawAnimationCommand = new RelayCommand(() => RevertAnimation(true));
     }
 
     public void SetModel(PokemonId id, Pokemon model)
@@ -76,7 +80,10 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     }
 
     public ICommand ImportAnimationCommand { get; }
-    public ICommand ExportAnimationCommand { get; }
+    public ICommand ImportRawAnimationCommand { get; }
+    public ICommand RevertRawAnimationCommand { get; }
+    public ICommand RevertAnimationCommand { get; }
+    public ICommand ExportAnimationsCommand { get; }
     public ICommand JumpToMoveCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
 
@@ -379,11 +386,26 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             out string result
             );
 
+        if (!proceed)
+        {
+            return;
+        }
+
         NSPAT nspat;
         try
         {
             var doc = XDocument.Load(result);
-            if (!NSPAT.TryDeserialize(doc.Root, out nspat))
+            if (doc.Root.Name != NSPAT.RootElementName)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "Invalid root element",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {NSPAT.RootElementName})",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+            nspat = NSPAT.Deserialize(doc.Root);
+            if (nspat == null)
             {
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
                     "Invalid formatting", 
@@ -402,21 +424,86 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
 
         var temp = Path.GetTempFileName();
         new NSBTP { PatternAnimations = nspat }.WriteTo(temp);
-        var nsbtp = ResolveRelativeAnimPath();
+        var nsbtp = ResolveRelativeAnimPath(false);
         _spriteProvider.SetOverride(nsbtp, temp);
         File.Delete(temp);
+        RaisePropertyChanged(nameof(IsAnimationOverwritten));
     }
 
-    private string ResolveRelativeAnimPath()
+    private void ImportRawAnimation()
+    {
+        var proceed = _dialogService.RequestFile(
+            "Select the raw pattern animation library file",
+            ".xml",
+            "Pattern Animation XML (.xml)|*.xml",
+            out string result
+            );
+
+        if (!proceed)
+        {
+            return;
+        }
+
+        NSPAT nspat;
+        try
+        {
+            var doc = XDocument.Load(result);
+            if (doc.Root.Name != NSPAT_RAW.RootElementName)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "Invalid root element",
+                    $"Failed to load the document because it doesn't match what is expected for a raw pattern animation (found: {doc.Root.Name}, expected: {NSPAT_RAW.RootElementName})",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+            nspat = NSPAT.Deserialize(doc.Root);
+            if (nspat == null)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "Invalid formatting",
+                    "Failed to load the document because it doesn't match what is expected for a pattern animation",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
+            return;
+        }
+
+        var temp = Path.GetTempFileName();
+        NSPAT_RAW.WriteTo(nspat, temp);
+        var nspatRaw = ResolveRelativeAnimPath(true);
+        _spriteProvider.SetOverride(nspatRaw, temp);
+        File.Delete(temp);
+        RaisePropertyChanged(nameof(IsRawAnimationOverwritten));
+    }
+
+    public bool IsAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false)).IsOverride;
+    public bool IsRawAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true)).IsOverride;
+
+    private void RevertAnimation(bool isRaw)
+    {
+        string p = ResolveRelativeAnimPath(isRaw);
+        _spriteProvider.ClearOverride(p);
+        RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        RaisePropertyChanged(nameof(IsRawAnimationOverwritten));
+    }
+
+    private string ResolveRelativeAnimPath(bool raw)
     {
         var info = (PkmdlConstants)GraphicsInfoResource.Get(SpriteType.ModelPokemon);
         var pacLinkRelative = info.PACLinkFolder;
         string fileName = ((int)_id).ToString().PadLeft(4, '0');
         string pacUnpackedFolder = Path.Combine(pacLinkRelative, fileName + "-Unpacked");
-        return Path.Combine(pacUnpackedFolder, "0001");
+        return Path.Combine(pacUnpackedFolder, raw ? "0002" : "0001");
     }
 
-    private void ExportAnimation()
+    private void ExportAnimations()
     {
         if (!_spriteProvider.IsDefaultsPopulated())
         {
@@ -433,13 +520,26 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             return;
         }
 
-        var nsbtpFile = ResolveRelativeAnimPath();
-        var file = _spriteProvider.GetDataFile(nsbtpFile);
-        var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"NSBTP_{(int)_id}_{Name}.xml"));
+        {
+            var nsbtpFile = ResolveRelativeAnimPath(false);
+            var file = _spriteProvider.GetDataFile(nsbtpFile);
+            var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT_STANDARD.xml"));
 
-        var nsbtp = new NSBTP(file.File);
-        var doc = new XDocument(nsbtp.PatternAnimations.Serialize());
-        doc.Save(dest);
+            var nsbtp = new NSBTP(file.File);
+            var doc = new XDocument(nsbtp.PatternAnimations.Serialize());
+            doc.Save(dest);
+        }
+
+        {
+            var nsbtpRawFile = ResolveRelativeAnimPath(true);
+            var rawfile = _spriteProvider.GetDataFile(nsbtpRawFile);
+            var rawdest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT_RAW.xml"));
+
+            var nspat = NSPAT_RAW.Load(rawfile.File);
+            var rawdoc = new XDocument(nspat.SerializeRaw());
+            rawdoc.Save(rawdest);
+        }
+        
     }
 }
 

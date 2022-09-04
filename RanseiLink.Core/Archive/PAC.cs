@@ -14,7 +14,7 @@ namespace RanseiLink.Core.Archive
             NSBTP,
             UNKNOWN3,
             NSBMA,
-            UNKNOWN5,
+            PAT,
             CHAR,
             NSBTA,
 
@@ -30,7 +30,7 @@ namespace RanseiLink.Core.Archive
                 case FileTypeNumber.NSBTP: return ".nsbtp"; // nitro sdk binary texture pattern
                 case FileTypeNumber.UNKNOWN3: return ".unknown3";
                 case FileTypeNumber.NSBMA: return ".nsbma"; // nitro sdk binary material animation
-                case FileTypeNumber.UNKNOWN5: return ".unknown5"; // in pokemon model pacs this is some data without a header, not sure what it is yet.
+                case FileTypeNumber.PAT: return ".pat"; // in pokemon model pacs this is a stripped down version of nsbtp
                 case FileTypeNumber.CHAR: return ".char";
                 case FileTypeNumber.NSBTA: return ".nsbta"; // nitro sdk binary texture animation
                 default: return "";
@@ -64,8 +64,9 @@ namespace RanseiLink.Core.Archive
                 case ".nsbma":
                     return FileTypeNumber.NSBMA;
 
-                case ".unknown5":
-                    return FileTypeNumber.UNKNOWN5;
+                case ".unknown5": // retained for compatibity since we didn't used to know what this file was
+                case ".pat":
+                    return FileTypeNumber.PAT;
 
                 case ".chr":
                 case ".char":

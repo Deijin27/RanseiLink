@@ -8,7 +8,6 @@ namespace RanseiLink.Core.Graphics
 
     /// <summary>
     /// Texture data. The one chunk of <see cref="NSBTX"/>.
-    /// WARNING: Currently only supports writing to an existing file
     /// </summary>
     public class NSTEX
     {

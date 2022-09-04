@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace RanseiLink.Core.Graphics.Conquest
 {
@@ -7,12 +9,21 @@ namespace RanseiLink.Core.Graphics.Conquest
     /// </summary>
     public static class NSPAT_RAW
     {
+        public const string RootElementName = "library_raw_pattern_animations";
         public static NSPAT Load(string file)
         {
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
                 return Load(br);
             }
+        }
+
+        public static XElement SerializeRaw(this NSPAT nspat)
+        {
+            return new XElement(
+                RootElementName,
+                nspat.PatternAnimations.Select(x => x.Serialize())
+                );
         }
 
         private static readonly string[] _animNames = new string[]
@@ -90,7 +101,6 @@ namespace RanseiLink.Core.Graphics.Conquest
                             bw.Write((ushort)0);
                         }
                     }
-                    bw.Write((ushort)nspat.PatternAnimations[i].Tracks[0].KeyFrames.Count);
                 }
                 else
                 {

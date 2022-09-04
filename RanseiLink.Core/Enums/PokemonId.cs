@@ -4,206 +4,206 @@ namespace RanseiLink.Core.Enums
     [DefaultValues(Default)]
     public enum PokemonId
     {
-        Eevee,
-        Vaporeon,
-        Jolteon,
-        Flareon,
-        Espeon,
-        Umbreon,
-        Leafeon,
-        Glaceon,
-        Ralts,
-        Kirlia,
-        Gardevoir,
-        Gallade,
-        Magikarp,
-        Gyarados,
-        Pichu,
-        Pikachu,
-        Raichu,
-        Wooper,
-        Quagsire,
-        Igglybuff,
-        Jigglypuff,
-        Wigglytuff,
-        Zubat,
-        Golbat,
-        Crobat,
-        Starly,
-        Staravia,
-        Staraptor,
-        Bidoof,
-        Bibarel,
-        Venipede,
-        Whirlipede,
-        Scolipede,
-        Shinx,
-        Luxio,
-        Luxray,
-        Litwick,
-        Lampent,
-        Chandelure,
-        Roggenrola,
-        Boldore,
-        Gigalith,
-        Petilil,
-        Lilligant,
-        Mareep,
-        Flaaffy,
-        Ampharos,
-        Cottonee,
-        Whimsicott,
-        Riolu,
-        Lucario,
-        Chingling,
-        Chimecho,
-        Ekans,
-        Arbok,
-        Pineco,
-        Forretress,
-        Meowth,
-        Persian,
-        Spheal,
-        Sealeo,
-        Walrein,
-        Gothita,
-        Gothorita,
-        Gothitelle,
-        Sandile,
-        Krokorok,
-        Krookodile,
-        Duskull,
-        Dusclops,
-        Dusknoir,
-        Munna,
-        Musharna,
-        Blitzle,
-        Zebstrika,
-        Dratini,
-        Dragonair,
-        Dragonite,
-        Larvitar,
-        Pupitar,
-        Tyranitar,
-        Beldum,
-        Metang,
-        Metagross,
-        Gible,
-        Gabite,
-        Garchomp,
-        Croagunk,
-        Toxicroak,
-        Deino,
-        Zweilous,
-        Hydreigon,
-        Snorunt,
-        Glalie,
-        Froslass,
-        Minccino,
-        Cinccino,
-        Machop,
-        Machoke,
-        Machamp,
-        Timburr,
-        Gurdurr,
-        Conkeldurr,
-        Cubchoo,
-        Beartic,
-        Oshawott,
-        Dewott,
-        Samurott,
-        Charmander,
-        Charmeleon,
-        Charizard,
-        Gastly,
-        Haunter,
-        Gengar,
-        Chimchar,
-        Monferno,
-        Infernape,
-        Snivy,
-        Servine,
-        Serperior,
-        Tepig,
-        Pignite,
-        Emboar,
-        Sewaddle,
-        Swadloon,
-        Leavanny,
-        Abra,
-        Kadabra,
-        Alakazam,
-        Treecko,
-        Grovyle,
-        Sceptile,
-        Piplup,
-        Prinplup,
-        Empoleon,
-        Pansage,
-        Simisage,
-        Pansear,
-        Simisear,
-        Panpour,
-        Simipour,
-        Darumaka,
-        Darmanitan,
-        Axew,
-        Fraxure,
-        Haxorus,
-        Joltik,
-        Galvantula,
-        Aron,
-        Lairon,
-        Aggron,
-        Drilbur,
-        Excadrill,
-        Zorua,
-        Zoroark,
-        Skorupi,
-        Drapion,
-        Pawniard,
-        Bisharp,
-        Rhyhorn,
-        Rhydon,
-        Rhyperior,
-        Shieldon,
-        Bastiodon,
-        Scraggy,
-        Scrafty,
-        Drifloon,
-        Drifblim,
-        Rufflet,
-        Braviary,
-        Anorith,
-        Armaldo,
-        Larvesta,
-        Volcarona,
-        Onix,
-        Steelix,
-        Beedrill,
-        Munchlax,
-        Snorlax,
-        Emolga,
-        Sneasel,
-        Weavile,
-        Misdreavus,
-        Mismagius,
-        Audino,
-        Carnivine,
-        Spiritomb,
-        Scyther,
-        Scizor,
-        Lapras,
-        Terrakion,
-        Articuno,
-        Registeel,
-        Groudon,
-        Dialga,
-        Mewtwo,
-        Reshiram,
-        Zekrom,
-        Arceus,
-        Rayquaza,
+        Eevee, // 0
+        Vaporeon, // 1
+        Jolteon, // 2
+        Flareon, // 3
+        Espeon, // 4
+        Umbreon, // 5
+        Leafeon, // 6
+        Glaceon, // 7
+        Ralts, // 8
+        Kirlia, // 9
+        Gardevoir, // 10
+        Gallade, // 11
+        Magikarp, // 12
+        Gyarados, // 13
+        Pichu, // 14
+        Pikachu, // 15
+        Raichu, // 16
+        Wooper, // 17
+        Quagsire, // 18
+        Igglybuff, // 19
+        Jigglypuff, // 20
+        Wigglytuff, // 21
+        Zubat, // 22
+        Golbat, // 23
+        Crobat, // 24
+        Starly, // 25
+        Staravia, // 26
+        Staraptor, // 27
+        Bidoof, // 28
+        Bibarel, // 29
+        Venipede, // 30
+        Whirlipede, // 31
+        Scolipede, // 32
+        Shinx, // 33
+        Luxio, // 34
+        Luxray, // 35
+        Litwick, // 36
+        Lampent, // 37
+        Chandelure, // 38
+        Roggenrola, // 39
+        Boldore, // 40
+        Gigalith, // 41
+        Petilil, // 42
+        Lilligant, // 43
+        Mareep, // 44
+        Flaaffy, // 45
+        Ampharos, // 46
+        Cottonee, // 47
+        Whimsicott, // 48
+        Riolu, // 49
+        Lucario, // 50
+        Chingling, // 51
+        Chimecho, // 52
+        Ekans, // 53
+        Arbok, // 54
+        Pineco, // 55
+        Forretress, // 56
+        Meowth, // 57
+        Persian, // 58
+        Spheal, // 59
+        Sealeo, // 60
+        Walrein, // 61
+        Gothita, // 62
+        Gothorita, // 63
+        Gothitelle, // 64
+        Sandile, // 65
+        Krokorok, // 66
+        Krookodile, // 67
+        Duskull, // 68
+        Dusclops, // 69
+        Dusknoir, // 70
+        Munna, // 71
+        Musharna, // 72
+        Blitzle, // 73
+        Zebstrika, // 74
+        Dratini, // 75
+        Dragonair, // 76
+        Dragonite, // 77
+        Larvitar, // 78
+        Pupitar, // 79
+        Tyranitar, // 80
+        Beldum, // 81
+        Metang, // 82
+        Metagross, // 83
+        Gible, // 84
+        Gabite, // 85
+        Garchomp, // 86
+        Croagunk, // 87
+        Toxicroak, // 88
+        Deino, // 89
+        Zweilous, // 90
+        Hydreigon, // 91
+        Snorunt, // 92
+        Glalie, // 93
+        Froslass, // 94
+        Minccino, // 95
+        Cinccino, // 96
+        Machop, // 97
+        Machoke, // 98
+        Machamp, // 99
+        Timburr, // 100
+        Gurdurr, // 101
+        Conkeldurr, // 102
+        Cubchoo, // 103
+        Beartic, // 104
+        Oshawott, // 105
+        Dewott, // 106
+        Samurott, // 107
+        Charmander, // 108
+        Charmeleon, // 109
+        Charizard, // 110
+        Gastly, // 111
+        Haunter, // 112
+        Gengar, // 113
+        Chimchar, // 114
+        Monferno, // 115
+        Infernape, // 116
+        Snivy, // 117
+        Servine, // 118
+        Serperior, // 119
+        Tepig, // 120
+        Pignite, // 121
+        Emboar, // 122
+        Sewaddle, // 123
+        Swadloon, // 124
+        Leavanny, // 125
+        Abra, // 126
+        Kadabra, // 127
+        Alakazam, // 128
+        Treecko, // 129
+        Grovyle, // 130
+        Sceptile, // 131
+        Piplup, // 132
+        Prinplup, // 133
+        Empoleon, // 134
+        Pansage, // 135
+        Simisage, // 136
+        Pansear, // 137
+        Simisear, // 138
+        Panpour, // 139
+        Simipour, // 140
+        Darumaka, // 141
+        Darmanitan, // 142
+        Axew, // 143
+        Fraxure, // 144
+        Haxorus, // 145
+        Joltik, // 146
+        Galvantula, // 147 
+        Aron, // 148
+        Lairon, // 149
+        Aggron, // 150
+        Drilbur, // 151
+        Excadrill, // 152
+        Zorua, // 153
+        Zoroark, // 154
+        Skorupi, // 155
+        Drapion, // 156
+        Pawniard, // 157
+        Bisharp, // 158
+        Rhyhorn, // 159
+        Rhydon, // 160
+        Rhyperior, // 161
+        Shieldon, // 162
+        Bastiodon, // 163
+        Scraggy, // 164
+        Scrafty, // 165
+        Drifloon, // 166
+        Drifblim, // 167
+        Rufflet, // 168
+        Braviary, // 169
+        Anorith, // 170
+        Armaldo, // 171
+        Larvesta, // 172
+        Volcarona, // 173
+        Onix, // 174
+        Steelix, // 175
+        Beedrill, // 176
+        Munchlax, // 177
+        Snorlax, // 178
+        Emolga, // 179
+        Sneasel, // 180
+        Weavile, // 181
+        Misdreavus, // 182
+        Mismagius, // 183
+        Audino, // 184
+        Carnivine, // 185
+        Spiritomb, // 186
+        Scyther, // 187
+        Scizor, // 188
+        Lapras, // 189
+        Terrakion, // 190
+        Articuno, // 191
+        Registeel, // 192
+        Groudon, // 193
+        Dialga, // 194
+        Mewtwo, // 195
+        Reshiram, // 196
+        Zekrom, // 197
+        Arceus, // 198
+        Rayquaza, // 199
 
         Default = 511
     }

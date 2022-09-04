@@ -1,17 +1,16 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
-using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.ModelServices;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static RanseiLink.Core.Archive.PAC;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders
 {
@@ -71,6 +70,30 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                 var spriteFile = spriteFileDict[i];
                 if (spriteFile.IsOverride)
                 {
+                    // determine heights of columns within sprite sheet based on pokemon data
+                    var pokemon = _pokemonService.Retrieve(i);
+                    int atxHeight;
+                    int dtxHeight;
+                    int pacHeight;
+                    if (pokemon.AsymmetricBattleSprite)
+                    {
+                        atxHeight = _pokemonSpriteHeight * 16;
+                        dtxHeight = _pokemonSpriteHeight * 12;
+                        pacHeight = _pokemonSpriteHeight * 24;
+                    }
+                    else
+                    {
+                        atxHeight = _pokemonSpriteHeight * 8;
+                        dtxHeight = _pokemonSpriteHeight * 8;
+                        pacHeight = _pokemonSpriteHeight * 16;
+                    }
+
+                    if (pokemon.LongAttackAnimation)
+                    {
+                        atxHeight *= 2;
+                    }
+
+                    // load columns from sprite sheet
                     using (var combinedImage = Image.Load<Rgba32>(spriteFile.File))
                     {
 
@@ -82,15 +105,23 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
                         string texTemp = Path.GetTempFileName();
                         NSBTX btx0 = new NSBTX { Texture = new NSTEX() };
-                        int height = _pokemonSpriteHeight * _texSpriteCount;
+                        int texHeight = _pokemonSpriteHeight * _texSpriteCount;
                         using (var texImg = combinedImage.Clone(g =>
                         {
-                            g.Crop(new Rectangle(0, 0, _pokemonSpriteWidth, height));
+                            g.Crop(new Rectangle(0, 0, _pokemonSpriteWidth, texHeight));
                         }))
                         {
                             byte[] mergedPixels = ImageUtil.FromImage(texImg, palette, PointUtil.GetIndex, color0ToTransparent: true);
                             for (int texNumber = 0; texNumber < _texSpriteCount; texNumber++)
                             {
+                                var subArray = new byte[_pokemonSpriteWidth * _pokemonSpriteHeight];
+                                Array.Copy(
+                                    sourceArray: mergedPixels,
+                                    sourceIndex: _pokemonSpriteHeight * _pokemonSpriteWidth * texNumber,
+                                    destinationArray: subArray,
+                                    destinationIndex: 0,
+                                    length: _pokemonSpriteHeight * _pokemonSpriteWidth
+                                    );
                                 btx0.Texture.Textures.Add(new NSTEX.Texture
                                 {
                                     Name = "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
@@ -102,6 +133,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                                     RepeatX = false,
                                     RepeatY = false,
                                     Color0Transparent = true,
+                                    TextureData = subArray
                                 });
                             }
                         }
@@ -111,7 +143,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         var atxDecompressedLen = new FileInfo(Path.Combine(atxUnpacked, fileName)).Length * 2;
                         using (var atxImg = combinedImage.Clone(g =>
                         {
-                            g.Crop(new Rectangle(_pokemonSpriteWidth, 0, _pokemonSpriteWidth, (int)(atxDecompressedLen / _pokemonSpriteWidth)));
+                            g.Crop(new Rectangle(_pokemonSpriteWidth, 0, _pokemonSpriteWidth, atxHeight));
 
                         }))
                         {
@@ -126,7 +158,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         var dtxDecompressedLen = new FileInfo(Path.Combine(atxUnpacked, fileName)).Length * 2;
                         using (var dtxImg = combinedImage.Clone(g =>
                         {
-                            g.Crop(new Rectangle(_pokemonSpriteWidth * 2, 0, _pokemonSpriteWidth, (int)(dtxDecompressedLen / _pokemonSpriteWidth)));
+                            g.Crop(new Rectangle(_pokemonSpriteWidth * 2, 0, _pokemonSpriteWidth, dtxHeight));
                         }))
                         {
                             string dtxTemp = Path.GetTempFileName();
@@ -137,17 +169,12 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
                         // PAC ------------------------------------------------------------------------------------------------------
 
-                        // find the path of the nsbtp (may be override)
-
                         string pacUnpackedFolder = Path.Combine(pkmdlInfo.PACLinkFolder, fileName + "-Unpacked");
-                        var relative = Path.Combine(pacUnpackedFolder, "0001");
-                        var nsbtp = _overrideSpriteProvider.GetDataFile(relative).File;
 
                         // convert the png
-                        var pacDecompressedLen = new FileInfo(Path.Combine(pacUnpackedFolder, "0003")).Length * 2;
                         using (var pacImg = combinedImage.Clone(g =>
                         {
-                            g.Crop(new Rectangle(_pokemonSpriteWidth * 3, 0, _pokemonSpriteWidth, (int)(pacDecompressedLen / _pokemonSpriteWidth)));
+                            g.Crop(new Rectangle(_pokemonSpriteWidth * 3, 0, _pokemonSpriteWidth, pacHeight));
                         }))
                         {
                             string pacCharTemp = Path.GetTempFileName();
@@ -155,12 +182,12 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                             string pacTemp = Path.GetTempFileName();
                             string[] pacFiles = new string[]
                             {
-                                Path.Combine(pacUnpackedFolder, "0000"),
-                                nsbtp,
-                                Path.Combine(pacUnpackedFolder, "0002"),
+                                Path.Combine(_graphicsProviderFolder, pacUnpackedFolder, "0000"),
+                                _overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0001")).File,
+                                _overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0002")).File,
                                 pacCharTemp
                             };
-                            PAC.Pack(pacFiles, pacTemp, new[] { FileTypeNumber.NSBMD, FileTypeNumber.NSBTP, FileTypeNumber.UNKNOWN5, FileTypeNumber.CHAR }, 1);
+                            PAC.Pack(pacFiles, pacTemp, new[] { PAC.FileTypeNumber.NSBMD, PAC.FileTypeNumber.NSBTP, PAC.FileTypeNumber.PAT, PAC.FileTypeNumber.CHAR }, 1);
                             File.Delete(pacCharTemp);
                             pacLinkFiles[i] = pacTemp;
                         }

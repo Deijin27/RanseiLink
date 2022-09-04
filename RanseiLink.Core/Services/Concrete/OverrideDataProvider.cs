@@ -17,7 +17,11 @@ namespace RanseiLink.Core.Services.Concrete
 
         public void ClearOverride(SpriteType type, int id)
         {
-            File.Delete(GetSpriteFilePathWithoutFallback(type, id).File);
+            var file = GetSpriteFilePathWithoutFallback(type, id).File;
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
         }
 
         public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
@@ -97,7 +101,11 @@ namespace RanseiLink.Core.Services.Concrete
 
         public void ClearOverride(string pathInRom)
         {
-            File.Delete(GetDataFilePathWithoutFallback(pathInRom).File);
+            var file = GetDataFilePathWithoutFallback(pathInRom).File;
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
         }
 
         public DataFile GetDataFile(string pathInRom)
@@ -113,11 +121,16 @@ namespace RanseiLink.Core.Services.Concrete
         public List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom)
         {
             var files = _fallbackSpriteProvider.GetAllDataFilesInFolder(_mod.GameCode, pathOfFolderInRom).ToDictionary(x => x.RomPath);
-            foreach (var file in Directory.GetFiles(Path.Combine(_mod.FolderPath, pathOfFolderInRom)))
+            var dir = Path.Combine(_mod.FolderPath, pathOfFolderInRom);
+            if (Directory.Exists(dir))
             {
-                string pathOfFileInRom = Path.Combine(pathOfFolderInRom, Path.GetFileName(file));
-                files[pathOfFileInRom] = new DataFile(pathOfFileInRom, file, false);
+                foreach (var file in Directory.GetFiles(dir))
+                {
+                    string pathOfFileInRom = Path.Combine(pathOfFolderInRom, Path.GetFileName(file));
+                    files[pathOfFileInRom] = new DataFile(pathOfFileInRom, file, false);
+                }
             }
+            
             return files.Values.ToList();
 
         }

@@ -75,7 +75,7 @@ namespace RanseiLink.Core.Services
                         break;
                     case PAC.FileTypeNumber.UNKNOWN3:
                     case PAC.FileTypeNumber.NSBMA:
-                    case PAC.FileTypeNumber.UNKNOWN5:
+                    case PAC.FileTypeNumber.PAT:
                     case PAC.FileTypeNumber.CHAR:
                     case PAC.FileTypeNumber.NSBTA:
                         File.Copy(type.Value, Path.Combine(destinationFolder, Path.GetFileName(type.Value)), true);
@@ -151,7 +151,7 @@ namespace RanseiLink.Core.Services
                     if (!doneTextures.Contains(kf.Texture))
                     {
                         doneTextures.Add(kf.Texture);
-                        ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, Path.Combine(kf.Texture, ".png"));
+                        ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, kf.Texture + ".png");
                     }
                 }
             }
@@ -448,11 +448,7 @@ namespace RanseiLink.Core.Services
             if (File.Exists(settings.PatternAnimation))
             {
                 var doc = XDocument.Load(settings.PatternAnimation);
-                if (NSPAT.TryDeserialize(doc.Root, out pat))
-                {
-                    result.FailureReason = $"Failed to deserialize pattern animation file '{settings.PatternAnimation}'";
-                    return result;
-                }
+                pat = NSPAT.Deserialize(doc.Root);
             }
 
             // generate model
