@@ -173,12 +173,44 @@ namespace RanseiLink.Core.Graphics
             {
                 var initOffset = bw.BaseStream.Position;
 
+                var animHeader = new AnimationHeader
+                {
+                    Category = "M",
+                    Revision = 0,
+                    SubCategory = "PT"
+                };
+                animHeader.WriteTo(bw);
+
+                var postAnimHeaderOffset = bw.BaseStream.Position;
+
+                var header = new Header
+                {
+                    NumFrames = NumFrames
+                };
+
                 // skip header
                 bw.Pad(Header.Length + RadixDict<TrackRadixData>.CalculateLength(Tracks.Count));
 
-                // write tracks
+                // textures are sorted, so build the list first, then go through to calculate the values
                 List<string> textures = new List<string>();
                 List<string> palettes = new List<string>();
+                foreach (var frame in Tracks.SelectMany(x => x.KeyFrames))
+                {
+                    var texIndex = textures.IndexOf(frame.Texture);
+                    if (texIndex == -1)
+                    {
+                        textures.Add(frame.Texture);
+                    }
+                    var palIndex = palettes.IndexOf(frame.Palette);
+                    if (palIndex == -1)
+                    {
+                        palettes.Add(frame.Palette);
+                    }
+                }
+                textures.Sort();
+                palettes.Sort();
+
+                // write tracks
                 var radix = new RadixDict<TrackRadixData>();
                 foreach (var track in Tracks)
                 {
@@ -187,23 +219,13 @@ namespace RanseiLink.Core.Graphics
                     {
                         NumKeyFrames = (ushort)track.KeyFrames.Count,
                         Offset = (ushort)(bw.BaseStream.Position - initOffset),
-                        Flag = 0,
-                        Unknown = 1, // TODO
+                        Unknown = track.Unknown,
                     });
                     foreach (var frame in track.KeyFrames)
                     {
+                        // use the pre-calculated and sorted textures and palette lists
                         var texIndex = textures.IndexOf(frame.Texture);
-                        if (texIndex == -1)
-                        {
-                            texIndex = textures.Count;
-                            textures.Add(frame.Texture);
-                        }
-                        var palIndex = textures.IndexOf(frame.Palette);
-                        if (palIndex == -1)
-                        {
-                            palIndex = palettes.Count;
-                            palettes.Add(frame.Palette);
-                        }
+                        var palIndex = palettes.IndexOf(frame.Palette);
                         var info = new KeyFrameInfo
                         {
                             Frame = frame.Frame,
@@ -214,13 +236,13 @@ namespace RanseiLink.Core.Graphics
                     }
                 }
 
-                ushort texturesOffset = (ushort)(bw.BaseStream.Position - initOffset);
+                header.TexturesOffset = (ushort)(bw.BaseStream.Position - initOffset);
                 foreach (var texture in textures)
                 {
                     RadixDict<TrackRadixData>.WriteName(bw, texture);
                 }
 
-                ushort palettesOffset = (ushort)(bw.BaseStream.Position - initOffset);
+                header.PalettesOffset = (ushort)(bw.BaseStream.Position - initOffset);
                 foreach (var palette in palettes)
                 {
                     RadixDict<TrackRadixData>.WriteName(bw, palette);
@@ -228,21 +250,12 @@ namespace RanseiLink.Core.Graphics
 
 
                 // write header
+                header.NumTextures = (byte)textures.Count;
+                header.NumPalettes = (byte)palettes.Count;
                 var endOffset = bw.BaseStream.Position;
-                bw.BaseStream.Position = initOffset;
-                var header = new AnimationHeader
-                {
-                    Category = "M",
-                    Revision = 0,
-                    SubCategory = "PT"
-                };
-
+                bw.BaseStream.Position = postAnimHeaderOffset;
                 header.WriteTo(bw);
-                bw.Write(NumFrames);
-                bw.Write((byte)textures.Count);
-                bw.Write((byte)palettes.Count);
-                bw.Write(texturesOffset);
-                bw.Write(palettesOffset);
+                radix.WriteTo(bw);
 
                 bw.BaseStream.Position = endOffset;
             }
@@ -399,6 +412,10 @@ namespace RanseiLink.Core.Graphics
             {
                 bw.Write(NumKeyFrames);
                 bw.Write(Flag);
+                if (Flag != 0)
+                {
+                    throw new System.Exception("The flag in KeyFrameRadixData is not zero!");
+                }
                 bw.Write((ushort)FixedPoint.InverseFix(Unknown, 0, 7, 9));
                 bw.Write(Offset);
             }

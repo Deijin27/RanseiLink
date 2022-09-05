@@ -453,11 +453,17 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             _spriteProvider.SetOverride(nspatRawFile, temp1);
 
             // non raw
+            // need to make sure the natdex number is correct
+            foreach (var anim in nspat.PatternAnimations)
+            {
+                var name = anim.Name;
+                var end = name.Substring(name.Length - 5);
+                var num = NationalPokedexNumber.ToString().PadLeft(3, '0');
+                anim.Name = $"POKEMON{num}{end}";
+            }
             new NSBTP { PatternAnimations = nspat }.WriteTo(temp2);
             var nsbtpFile = ResolveRelativeAnimPath(false);
             _spriteProvider.SetOverride(nsbtpFile, temp2);
-            
-
         }
         catch (Exception ex)
         {
