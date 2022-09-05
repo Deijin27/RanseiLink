@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Windows.Input;
 using System.Xml.Linq;
 
@@ -55,10 +54,8 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
-        ImportRawAnimationCommand = new RelayCommand(ImportRawAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
-        RevertAnimationCommand = new RelayCommand(() => RevertAnimation(false));
-        RevertRawAnimationCommand = new RelayCommand(() => RevertAnimation(true));
+        RevertAnimationCommand = new RelayCommand(RevertAnimation);
     }
 
     public void SetModel(PokemonId id, Pokemon model)
@@ -380,59 +377,6 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
     private void ImportAnimation()
     {
         var proceed = _dialogService.RequestFile(
-            "Select the pattern animation library file",
-            ".xml",
-            "Pattern Animation XML (.xml)|*.xml",
-            out string result
-            );
-
-        if (!proceed)
-        {
-            return;
-        }
-
-        NSPAT nspat;
-        try
-        {
-            var doc = XDocument.Load(result);
-            if (doc.Root.Name != NSPAT.RootElementName)
-            {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    "Invalid root element",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {NSPAT.RootElementName})",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-            nspat = NSPAT.Deserialize(doc.Root);
-            if (nspat == null)
-            {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    "Invalid formatting", 
-                    "Failed to load the document because it doesn't match what is expected for a pattern animation", 
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-
-        }
-        catch (Exception ex)
-        {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
-            return;
-        }
-
-        var temp = Path.GetTempFileName();
-        new NSBTP { PatternAnimations = nspat }.WriteTo(temp);
-        var nsbtp = ResolveRelativeAnimPath(false);
-        _spriteProvider.SetOverride(nsbtp, temp);
-        File.Delete(temp);
-        RaisePropertyChanged(nameof(IsAnimationOverwritten));
-    }
-
-    private void ImportRawAnimation()
-    {
-        var proceed = _dialogService.RequestFile(
             "Select the raw pattern animation library file",
             ".xml",
             "Pattern Animation XML (.xml)|*.xml",
@@ -444,54 +388,104 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             return;
         }
 
-        NSPAT nspat;
+        
+        var temp1 = Path.GetTempFileName();
+        var temp2 = Path.GetTempFileName();
         try
         {
+            NSPAT nspat;
+            NSPAT nspatRaw;
+
             var doc = XDocument.Load(result);
-            if (doc.Root.Name != NSPAT_RAW.RootElementName)
+            if (doc.Root.Name != PatternGroupElementName)
             {
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    "Invalid root element",
-                    $"Failed to load the document because it doesn't match what is expected for a raw pattern animation (found: {doc.Root.Name}, expected: {NSPAT_RAW.RootElementName})",
+                    "File invalid",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {PatternGroupElementName})",
                     MessageBoxType.Warning
                     ));
                 return;
             }
-            nspat = NSPAT.Deserialize(doc.Root);
+            var nonRawEl = doc.Root.Element(NSPAT.RootElementName);
+            if (nonRawEl == null)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "File invalid",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT.RootElementName})",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+            var rawEl = doc.Root.Element(NSPAT_RAW.RootElementName);
+            if (nonRawEl == null)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "File invalid",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT_RAW.RootElementName})",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+            nspat = NSPAT.Deserialize(nonRawEl);
             if (nspat == null)
             {
                 _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
-                    "Invalid formatting",
-                    "Failed to load the document because it doesn't match what is expected for a pattern animation",
+                    "File invalid",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT.RootElementName}",
                     MessageBoxType.Warning
                     ));
                 return;
             }
+            nspatRaw = NSPAT.Deserialize(rawEl);
+            if (nspatRaw == null)
+            {
+                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    "File invalid",
+                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT_RAW.RootElementName}",
+                    MessageBoxType.Warning
+                    ));
+                return;
+            }
+
+            // raw
+            NSPAT_RAW.WriteTo(nspat, temp1);
+            var nspatRawFile = ResolveRelativeAnimPath(true);
+            _spriteProvider.SetOverride(nspatRawFile, temp1);
+
+            // non raw
+            new NSBTP { PatternAnimations = nspat }.WriteTo(temp2);
+            var nsbtpFile = ResolveRelativeAnimPath(false);
+            _spriteProvider.SetOverride(nsbtpFile, temp2);
+            
 
         }
         catch (Exception ex)
         {
             _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
-            return;
+        }
+        finally
+        {
+            File.Delete(temp1);
+            File.Delete(temp2);
+            // update ui
+            RaisePropertyChanged(nameof(IsAnimationOverwritten));
         }
 
-        var temp = Path.GetTempFileName();
-        NSPAT_RAW.WriteTo(nspat, temp);
-        var nspatRaw = ResolveRelativeAnimPath(true);
-        _spriteProvider.SetOverride(nspatRaw, temp);
-        File.Delete(temp);
-        RaisePropertyChanged(nameof(IsRawAnimationOverwritten));
+        return;
+
     }
 
-    public bool IsAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false)).IsOverride;
-    public bool IsRawAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true)).IsOverride;
-
-    private void RevertAnimation(bool isRaw)
+    public bool IsAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false)).IsOverride || _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true)).IsOverride;
+ 
+    private void RevertAnimation()
     {
-        string p = ResolveRelativeAnimPath(isRaw);
-        _spriteProvider.ClearOverride(p);
+        string nonRawFile = ResolveRelativeAnimPath(false);
+        _spriteProvider.ClearOverride(nonRawFile);
+
+        var rawFile = ResolveRelativeAnimPath(true);
+        _spriteProvider.ClearOverride(rawFile);
+
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
-        RaisePropertyChanged(nameof(IsRawAnimationOverwritten));
     }
 
     private string ResolveRelativeAnimPath(bool raw)
@@ -520,26 +514,19 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             return;
         }
 
-        {
-            var nsbtpFile = ResolveRelativeAnimPath(false);
-            var file = _spriteProvider.GetDataFile(nsbtpFile);
-            var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT_STANDARD.xml"));
+        var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT.xml"));
+        var file = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false));
+        var rawfile = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true));
 
-            var nsbtp = new NSBTP(file.File);
-            var doc = new XDocument(nsbtp.PatternAnimations.Serialize());
-            doc.Save(dest);
-        }
-
-        {
-            var nsbtpRawFile = ResolveRelativeAnimPath(true);
-            var rawfile = _spriteProvider.GetDataFile(nsbtpRawFile);
-            var rawdest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT_RAW.xml"));
-
-            var nspat = NSPAT_RAW.Load(rawfile.File);
-            var rawdoc = new XDocument(nspat.SerializeRaw());
-            rawdoc.Save(rawdest);
-        }
-        
+        var nsbtp = new NSBTP(file.File);
+        var nspat = NSPAT_RAW.Load(rawfile.File);
+        var doc = new XDocument(new XElement(PatternGroupElementName,
+            nsbtp.PatternAnimations.Serialize(),
+            nspat.SerializeRaw()
+            ));
+        doc.Save(dest);
     }
+
+    private const string PatternGroupElementName = "library_collection";
 }
 
