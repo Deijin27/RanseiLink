@@ -121,10 +121,10 @@ public class ObjTests
             outputMat.DiffuseColor.Should().Be(inputMat.DiffuseColor);
             outputMat.SpecularColor.Should().Be(inputMat.SpecularColor);
             outputMat.Dissolve.Should().Be(inputMat.Dissolve);
-            outputMat.DiffuseTextureMapFile.Should().Be(inputMat.DiffuseTextureMapFile);
-            outputMat.SpecularTextureMapFile.Should().Be(inputMat.SpecularTextureMapFile);
-            outputMat.AmbientTextureMapFile.Should().Be(inputMat.AmbientTextureMapFile);
-            outputMat.DissolveTextureMapFile.Should().Be(inputMat.DissolveTextureMapFile);
+            outputMat.DiffuseTextureMapFile.Should().EndWith(inputMat.DiffuseTextureMapFile);
+            outputMat.SpecularTextureMapFile.Should().EndWith(inputMat.SpecularTextureMapFile);
+            outputMat.AmbientTextureMapFile.Should().EndWith(inputMat.AmbientTextureMapFile);
+            outputMat.DissolveTextureMapFile.Should().EndWith(inputMat.DissolveTextureMapFile);
         }
     }
 

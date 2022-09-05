@@ -10,7 +10,7 @@ namespace RanseiLink.Core.Models
 
         public int GetMaxLink(PokemonId pokemon)
         {
-            return GetMask((int)pokemon);
+            return GetMaxLink((int)pokemon);
         }
 
         public void SetMaxLink(PokemonId pokemon, int value)
