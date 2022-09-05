@@ -14,9 +14,9 @@ namespace RanseiLink.Core.Models
             set => SetInt(0, 0, 8, value);
         }
 
-        public WarriorSprite2Id Sprite_Unknown
+        public SpeakerId SpeakerId
         {
-            get => (WarriorSprite2Id)GetInt(0, 8, 8);
+            get => (SpeakerId)GetInt(0, 8, 8);
             set => SetInt(0, 8, 8, (int)value);
         }
 

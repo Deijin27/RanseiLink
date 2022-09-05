@@ -9,7 +9,7 @@ namespace RanseiLink.Constants;
 public static class EnumProvider
 {
     public static AbilityEffectId[] AbilityEffectItems { get; } = EnumUtil.GetValues<AbilityEffectId>().ToArray();
-    public static WarriorSprite2Id[] WarriorSpriteUnknownItems { get; } = EnumUtil.GetValues<WarriorSprite2Id>().ToArray();
+    public static SpeakerId[] WarriorSpriteUnknownItems { get; } = EnumUtil.GetValues<SpeakerId>().ToArray();
     public static GenderId[] GenderItems { get; } = EnumUtil.GetValues<GenderId>().ToArray();
     public static TypeId[] TypeItems { get; } = EnumUtil.GetValues<TypeId>().ToArray();
     public static WarriorSkillId[] WarriorSkillItems { get; } = EnumUtil.GetValues<WarriorSkillId>().ToArray();

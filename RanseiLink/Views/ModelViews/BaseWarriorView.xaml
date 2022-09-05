@@ -62,8 +62,9 @@
 
             <Button Grid.Row="2" Grid.ColumnSpan="2" Content="View Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>
 
-            <TextBlock Text="Sprite Unknown" Grid.Row="3"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorSpriteUnknownItems}" SelectedItem="{Binding Sprite_Unknown, Mode=TwoWay}"/>
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Speaker ID" Grid.Row="3" ToolTip="Jump messages filtered to this speaker" 
+                    Command="{Binding JumpToSpeakerMessagesCommand}" />
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding SpeakerItems}" SelectedValue="{Binding SpeakerId, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyleIdOnly}"/>
 
             <TextBlock Text="Speciality 1" Grid.Row="4" />
             <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>

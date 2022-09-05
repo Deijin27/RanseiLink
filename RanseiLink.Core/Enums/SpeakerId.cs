@@ -2,7 +2,7 @@
 namespace RanseiLink.Core.Enums
 {
 
-    public enum WarriorSprite2Id
+    public enum SpeakerId
     {
         PlayerMale, // 0
         PlayerFemale, // 3

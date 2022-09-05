@@ -76,7 +76,7 @@ public class LuaService : ILuaService
             AddEnumToState<WarriorSkillEffectId>();
             AddEnumToState<WarriorSkillId>();
             AddEnumToState<WarriorSkillTargetId>();
-            AddEnumToState<WarriorSprite2Id>();
+            AddEnumToState<SpeakerId>();
             AddEnumToState<BattleConfigId>();
             AddEnumToState<GimmickRangeId>();
             AddEnumToState<GimmickObjectId>();

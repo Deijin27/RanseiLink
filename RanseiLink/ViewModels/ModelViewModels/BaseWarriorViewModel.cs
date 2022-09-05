@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
@@ -34,12 +35,17 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
+        JumpToSpeakerMessagesCommand = new RelayCommand(() =>
+        {
+            jumpService.JumpToMessageFilter($"{{text-if:{{commander:{SpeakerId}}}}}", false);
+        });
 
         ViewSpritesCommand = new RelayCommand(ViewSprites);
 
         WarriorSkillItems = idToNameService.GetComboBoxItemsPlusDefault<IWarriorSkillService>();
         BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
         PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
+        SpeakerItems = EnumUtil.GetValues<SpeakerId>().Select(x => new SelectorComboBoxItem((int)x, ((int)x).ToString())).ToList();
     }
 
     public void SetModel(WarriorId id, BaseWarrior model)
@@ -52,16 +58,17 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
     public List<SelectorComboBoxItem> WarriorSkillItems { get; }
     public List<SelectorComboBoxItem> BaseWarriorItems { get; }
     public List<SelectorComboBoxItem> PokemonItems { get; }
+    public List<SelectorComboBoxItem> SpeakerItems { get; }
 
     public ICommand JumpToWarriorSkillCommand { get; }
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToPokemonCommand { get; }
+    public ICommand JumpToSpeakerMessagesCommand { get; }
 
-
-    public WarriorSprite2Id Sprite_Unknown
+    public int SpeakerId
     {
-        get => _model.Sprite_Unknown;
-        set => RaiseAndSetIfChanged(_model.Sprite_Unknown, value, v => _model.Sprite_Unknown = v);
+        get => (int)_model.SpeakerId;
+        set => RaiseAndSetIfChanged(_model.SpeakerId, (SpeakerId)value, v => _model.SpeakerId = v);
     }
 
     public GenderId Gender

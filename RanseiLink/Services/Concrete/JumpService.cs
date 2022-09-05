@@ -11,6 +11,21 @@ internal class JumpService : IJumpService
         _mainEditor = mainEditorViewModel;
     }
 
+    public void JumpToMessageFilter(string filter, bool regex = false)
+    {
+        if (!_mainEditor.TryGetModule(MsgGridEditorModule.Id, out var module))
+        {
+            return;
+        }
+        if (module.ViewModel is not MsgGridViewModel vm)
+        {
+            return;
+        }
+        vm.UseRegex = false;
+        vm.SearchTerm = filter;
+        _mainEditor.CurrentModuleId = MsgGridEditorModule.Id;
+    }
+
     public void JumpTo(string moduleId, int selectId)
     {
         if (!_mainEditor.TryGetModule(moduleId, out var module))

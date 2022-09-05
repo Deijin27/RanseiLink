@@ -153,6 +153,20 @@
                 <Setter Property="Height" Value="20"/>
             </Style>
 
+            <Style x:Key="SelectorComboBoxStyleIdOnly" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="IdString"/>
+                <Setter Property="TextSearch.TextPath" Value="IdString"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+
+            <Style x:Key="SelectorComboBoxStyleNameOnly" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="Name"/>
+                <Setter Property="TextSearch.TextPath" Value="Name"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

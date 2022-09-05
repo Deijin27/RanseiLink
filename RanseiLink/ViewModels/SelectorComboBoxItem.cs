@@ -9,10 +9,12 @@ public class SelectorComboBoxItem
     public SelectorComboBoxItem(int id, string name)
     {
         Id = id;
-        IdAndName = $"{id.ToString().PadLeft(3, '0')} - {name}";
+        IdString = id.ToString().PadLeft(3, '0');
+        IdAndName = $"{IdString} - {name}";
         Name = name;
     }
     public int Id { get; }
+    public string IdString { get; }
     public string IdAndName { get; }
     public string Name { get; }
 }
