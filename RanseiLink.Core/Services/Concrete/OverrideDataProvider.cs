@@ -127,7 +127,7 @@ namespace RanseiLink.Core.Services.Concrete
                 foreach (var file in Directory.GetFiles(dir))
                 {
                     string pathOfFileInRom = Path.Combine(pathOfFolderInRom, Path.GetFileName(file));
-                    files[pathOfFileInRom] = new DataFile(pathOfFileInRom, file, false);
+                    files[pathOfFileInRom] = new DataFile(pathOfFileInRom, file, true);
                 }
             }
             
