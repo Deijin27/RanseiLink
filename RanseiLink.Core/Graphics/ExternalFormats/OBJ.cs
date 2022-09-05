@@ -1,12 +1,10 @@
-﻿using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace RanseiLink.Core.Graphics.ExternalFormats
 {
@@ -51,6 +49,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                             break;
 
                         case "g":
+                        case "o":
                             if (lineParts.Length >= 2)
                             {
                                 group = new Group { Name = lineParts[1] };
@@ -168,7 +167,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                 foreach (var group in Groups)
                 {
                     sw.WriteLine();
-                    sw.WriteLine("g {0}", group.Name);
+                    sw.WriteLine("o {0}", group.Name);
                     sw.WriteLine("# Vertices: {0}, Normals: {1}, TexCoords: {2}, Faces: {3}", group.Vertices.Count, group.Normals.Count, group.TextureVertices.Count, group.Faces.Count);
 
                     foreach (Vector3 vertex in group.Vertices)
@@ -250,80 +249,6 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                 }
             }
         }
-
-        /*
-        public static OBJ FixNitroUV(OBJ input)
-        {
-            OBJ obj = new OBJ
-            {
-                MaterialLib = input.MaterialLib,
-                Vertices = input.Vertices,
-                Normals = input.Normals
-            };
-            int i = 0;
-            foreach (var face1 in input.Faces)
-            {
-                Vector2[] texVerts = new Vector2[3]
-                {
-                    input.TextureVertices[face1.TexCoordIndices[0]],
-                    input.TextureVertices[face1.TexCoordIndices[1]],
-                    input.TextureVertices[face1.TexCoordIndices[2]]
-                };
-                MTL.Material materialByName = obj.MaterialLib.Materials.FirstOrDefault(x => x.Name == face1.MaterialName);
-                if (materialByName.DiffuseTextureMapFile != null)
-                {
-                    float num2 = 2047.938f / materialByName.DiffuseTextureMap.Width;
-                    float num3 = -2048f / materialByName.DiffuseTextureMap.Width;
-                    float num4 = 2047.938f / materialByName.DiffuseTextureMap.Height;
-                    float num5 = -2048f / materialByName.DiffuseTextureMap.Height;
-                    float num6 = texVerts[0].X % 1f;
-                    float num7 = texVerts[0].Y % 1f;
-                    texVerts[1].X = texVerts[1].X - texVerts[0].X + num6;
-                    texVerts[1].Y = texVerts[1].Y - texVerts[0].Y + num7;
-                    texVerts[2].X = texVerts[2].X - texVerts[0].X + num6;
-                    texVerts[2].Y = texVerts[2].Y - texVerts[0].Y + num7;
-                    texVerts[0].X = num6;
-                    texVerts[0].Y = num7;
-                    for (; (double)texVerts[0].X <= (double)num3 || (double)texVerts[1].X <= (double)num3 || (double)texVerts[2].X <= (double)num3; ++texVerts[2].X)
-                    {
-                        ++texVerts[0].X;
-                        ++texVerts[1].X;
-                    }
-                    for (; (double)texVerts[0].X >= (double)num2 || (double)texVerts[1].X >= (double)num2 || (double)texVerts[2].X >= (double)num2; --texVerts[2].X)
-                    {
-                        --texVerts[0].X;
-                        --texVerts[1].X;
-                    }
-                    for (; (double)texVerts[0].Y <= (double)num5 || (double)texVerts[1].Y <= (double)num5 || (double)texVerts[2].Y <= (double)num5; ++texVerts[2].Y)
-                    {
-                        ++texVerts[0].Y;
-                        ++texVerts[1].Y;
-                    }
-                    for (; (double)texVerts[0].Y >= (double)num4 || (double)texVerts[1].Y >= (double)num4 || (double)texVerts[2].Y >= (double)num4; --texVerts[2].Y)
-                    {
-                        --texVerts[0].Y;
-                        --texVerts[1].Y;
-                    }
-                    if ((double)texVerts[0].X <= (double)num3 || (double)texVerts[1].X <= (double)num3 || (double)texVerts[2].X <= (double)num3 || (double)texVerts[0].X >= (double)num2 || (double)texVerts[1].X >= (double)num2 || (double)texVerts[2].X >= (double)num2 || (double)texVerts[0].Y <= (double)num5 || (double)texVerts[1].Y <= (double)num5 || (double)texVerts[2].Y <= (double)num5 || (double)texVerts[0].Y >= (double)num4 || (double)texVerts[1].Y >= (double)num4 || (double)texVerts[2].Y >= (double)num4)
-                    {
-                        Console.WriteLine("Your model seems to contain a face which texture is repeated too many to fix. Try splitting the face up, or less repeating the texture before trying again.\r\nMaterial Name: " + face1.MaterialName + "\r\nThere may be more though.");
-                        return (OBJ)null;
-                    }
-                }
-                obj.TextureVertices.AddRange(texVerts);
-                Face face2 = new Face
-                {
-                    MaterialName = face1.MaterialName,
-                    NormalIndices = face1.NormalIndices
-                };
-                face2.TexCoordIndices.AddRange(new int[3] { i, i + 1, i + 2 });
-                i += 3;
-                face2.VertexIndices = face1.VertexIndices;
-                obj.Faces.Add(face2);
-            }
-            return obj;
-        }
-        */
 
         public class Face
         {
