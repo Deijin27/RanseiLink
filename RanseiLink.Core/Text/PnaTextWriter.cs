@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Globalization;
+using System.Linq;
 
 namespace RanseiLink.Core.Text
 {
@@ -246,10 +247,11 @@ namespace RanseiLink.Core.Text
                 Write(0x1B, 0x73, color);
                 return;
             }
-            else if (command.StartsWith("char_img:"))
+            else if (command.StartsWith("emotion:"))
             {
                 WriteTextStartToken();
-                byte index = ReadVariableArg(command, "char_img:");
+                byte[] indexes = ReadVariableArgSet(command, "emotion:");
+                byte index = (byte)( ((indexes[0] & 0b1111) << 4) | (indexes[1] & 0b1111) );
                 Write(0x1B, 0x66, index);
                 return;
             }
@@ -436,6 +438,13 @@ namespace RanseiLink.Core.Text
         {
             string arg = command.Substring(token.Length);
             return byte.Parse(arg, NumberStyles.Integer);
+        }
+
+        byte[] ReadVariableArgSet(string command, string token)
+        {
+            string arg = command.Substring(token.Length);
+            string[] split = arg.Split(',');
+            return split.Select(x => byte.Parse(arg, NumberStyles.Integer)).ToArray();
         }
 
         string ReadControl()

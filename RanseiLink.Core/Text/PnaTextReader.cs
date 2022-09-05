@@ -266,7 +266,9 @@ namespace RanseiLink.Core.Text
 
                 case 0x66:
                     byte charImgIdx = stream.ReadByte();
-                    builder.Append($"{{char_img:{charImgIdx}}}");
+                    int rightHalf = charImgIdx & 0b1111;
+                    int leftHalf = charImgIdx >> 4;
+                    builder.Append($"{{emotion:{leftHalf},{rightHalf}}}");
                     break;
 
                 case 0x6B:
