@@ -226,39 +226,38 @@ namespace RanseiLink.Core.Text
             string command = ReadControl();
 
             // Text format
-            if (command.StartsWith("color:"))
+            if (command.StartsWith($"{PnaConstNames.Color}:"))
             {
                 WriteTextStartToken();
-                byte color = ReadVariableArg(command, "color:");
+                byte color = ReadVariableArgPair(command, $"{PnaConstNames.Color}:");
                 Write(0x1B, 0x63, color);
                 return;
             }
-            else if (command.StartsWith("char:"))
+            else if (command.StartsWith($"{PnaConstNames.ScenarioWarrior}:"))
             {
                 WriteTextStartToken();
                 Write(0x1B, 0x40);
-                writer.Write(command.Substring("char:".Length).ToCharArray()); // NT
+                writer.Write(command.Substring($"{PnaConstNames.ScenarioWarrior}:".Length).ToCharArray()); // NT
                 return;
             }
-            else if (command.StartsWith("speaker_color:"))
+            else if (command.StartsWith($"{PnaConstNames.SpeakerColor}:"))
             {
                 WriteTextStartToken();
-                byte color = ReadVariableArg(command, "speaker_color:");
+                byte color = ReadVariableArgPair(command, $"{PnaConstNames.SpeakerColor}:");
                 Write(0x1B, 0x73, color);
                 return;
             }
-            else if (command.StartsWith("emotion:"))
+            else if (command.StartsWith($"{PnaConstNames.Emotion}:"))
             {
                 WriteTextStartToken();
-                byte[] indexes = ReadVariableArgSet(command, "emotion:");
-                byte index = (byte)( ((indexes[0] & 0b1111) << 4) | (indexes[1] & 0b1111) );
+                byte index = ReadVariableArgPair(command, $"{PnaConstNames.Emotion}:");
                 Write(0x1B, 0x66, index);
                 return;
             }
-            else if (command.StartsWith("wait:"))
+            else if (command.StartsWith($"{PnaConstNames.Wait}:"))
             {
                 WriteTextStartToken();
-                byte wait = ReadVariableArg(command, "wait:");
+                byte wait = ReadVariableArg(command, $"{PnaConstNames.Wait}:");
                 Write(0x1B, 0x77, wait);
                 return;
             }
@@ -324,10 +323,10 @@ namespace RanseiLink.Core.Text
             {
                 Write(0x02, 203);
             }
-            else if (command.StartsWith("commander:"))
+            else if (command.StartsWith($"{PnaConstNames.SpeakerId}:"))
             {
                 Write(0x02, 202, 0x25);
-                writer.Write(command.Substring("commander:".Length).ToCharArray()); // NT
+                writer.Write(command.Substring($"{PnaConstNames.SpeakerId}:".Length).ToCharArray()); // NT
             }
             else if (command.StartsWith("param:"))
             {
@@ -341,9 +340,9 @@ namespace RanseiLink.Core.Text
                 Write(0x05, 0x05, 0x04);
 
                 // It should parse any kind of "text variable" but in the
-                // practice, only "commander:" follows so:
+                // practice, only "speaker_id:" follows so:
                 string content = command.Substring("text-if:".Length);
-                if (!content.StartsWith("{commander:"))
+                if (!content.StartsWith($"{{{PnaConstNames.SpeakerId}:"))
                 {
                     throw new FormatException("Unexpected 'text-if' command");
                 }
@@ -354,7 +353,7 @@ namespace RanseiLink.Core.Text
                     throw new FormatException("Missing end token");
                 }
 
-                int start = "{commander:".Length;
+                int start = $"{{{PnaConstNames.SpeakerId}:".Length;
                 string param = content.Substring(start, endToken - start);
                 Write(0x02, 202, 0x25);
                 writer.Write(param.ToCharArray()); // NT
@@ -440,11 +439,12 @@ namespace RanseiLink.Core.Text
             return byte.Parse(arg, NumberStyles.Integer);
         }
 
-        byte[] ReadVariableArgSet(string command, string token)
+        byte ReadVariableArgPair(string command, string token)
         {
             string arg = command.Substring(token.Length);
-            string[] split = arg.Split(',');
-            return split.Select(x => byte.Parse(arg, NumberStyles.Integer)).ToArray();
+            var num = byte.Parse(arg, NumberStyles.Integer);
+            var final = (num & 0b1111) | (0b0011 << 4); // the other param is always 3, so it is omitted then added back in here.
+            return (byte)final;
         }
 
         string ReadControl()

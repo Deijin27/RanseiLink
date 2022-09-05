@@ -23,6 +23,7 @@ using System.Text;
 
 namespace RanseiLink.Core.Text
 {
+
     public class PnaTextReader
     {
         static readonly byte[] KanjiTable = {
@@ -246,7 +247,7 @@ namespace RanseiLink.Core.Text
             {
                 case 0x40:
                     string charIdx = ReadParameter();
-                    builder.Append($"{{char:{charIdx}}}");
+                    builder.Append($"{{{PnaConstNames.ScenarioWarrior}:{charIdx}}}");
                     break;
 
                 case 0x48:
@@ -261,14 +262,12 @@ namespace RanseiLink.Core.Text
                 case 0x63:
                     SetTextBuilder();
                     byte color = stream.ReadByte();
-                    builder.Append($"{{color:{color}}}");
+                    builder.Append($"{{{PnaConstNames.Color}:{color & 0b1111}}}"); // other 4 bits is always 0b0011
                     break;
 
                 case 0x66:
                     byte charImgIdx = stream.ReadByte();
-                    int rightHalf = charImgIdx & 0b1111;
-                    int leftHalf = charImgIdx >> 4;
-                    builder.Append($"{{emotion:{leftHalf},{rightHalf}}}");
+                    builder.Append($"{{{PnaConstNames.Emotion}:{charImgIdx & 0b1111}}}"); // other 4 bits is always 0b0011
                     break;
 
                 case 0x6B:
@@ -285,13 +284,13 @@ namespace RanseiLink.Core.Text
 
                 case 0x73:
                     byte speakerColor = stream.ReadByte();
-                    builder.Append($"{{speaker_color:{speakerColor}}}");
+                    builder.Append($"{{{PnaConstNames.SpeakerColor}:{speakerColor & 0b1111}}}"); // other 4 bits is always 0b0011
                     break;
 
                 case 0x77:
                     SetTextBuilder();
                     byte wait = stream.ReadByte();
-                    builder.Append($"{{wait:{wait}}}");
+                    builder.Append($"{{{PnaConstNames.Wait}:{wait}}}");
                     break;
 
                 default:
@@ -398,7 +397,7 @@ namespace RanseiLink.Core.Text
                     if (modulo == 1)
                         builder.Append($"{{param:{ParseExpression()}}}");
                     else if (modulo == 2)
-                        builder.Append($"{{commander:{ParseExpression()}}}");
+                        builder.Append($"{{{PnaConstNames.SpeakerId}:{ParseExpression()}}}");
                     else if (modulo == 3)
                         builder.Append("{name1}");
                     else if (modulo == 4)

@@ -3,6 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Core.Text;
 using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
         JumpToSpeakerMessagesCommand = new RelayCommand(() =>
         {
-            jumpService.JumpToMessageFilter($"{{text-if:{{commander:{SpeakerId}}}}}", false);
+            jumpService.JumpToMessageFilter($"{{{PnaConstNames.SpeakerId}:{SpeakerId}}}", false);
         });
 
         ViewSpritesCommand = new RelayCommand(ViewSprites);
