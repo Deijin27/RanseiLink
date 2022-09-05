@@ -68,6 +68,10 @@ public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
 
             if (pokemon.Ability1 == abilityId || pokemon.Ability2 == abilityId || pokemon.Ability3 == abilityId)
             {
+                AbilityItems.Insert(0, abilityItem);
+            }
+            else
+            {
                 AbilityItems.Add(abilityItem);
             }
         }
