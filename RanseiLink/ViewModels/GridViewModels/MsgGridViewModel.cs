@@ -1,4 +1,5 @@
-﻿using RanseiLink.Services;
+﻿using RanseiLink.Core.Text;
+using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -130,22 +131,38 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
                 return;
             }
             
-            foreach (var item in _allItems)
+            for (var i = 0; i < _allItems.Count; i++)
             {
+                var item = _allItems[i];
                 if (rx.IsMatch(item.Text) || rx.IsMatch(item.BoxConfig) || rx.IsMatch(item.Context))
                 {
                     Items.Add(item);
+                    if (item.Context.Contains($"{{{PnaConstNames.MultiStart}:", StringComparison.InvariantCulture))
+                    {
+                        i++;
+                        Items.Add(_allItems[i]);
+                        i++;
+                        Items.Add(_allItems[i]);
+                    }
                 }
             }
         }
         else
         {
             StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
-            foreach (var item in _allItems)
+            for (var i = 0; i < _allItems.Count; i++)
             {
+                var item = _allItems[i];
                 if (item.Text.Contains(searchTerm, comparison) || item.Context.Contains(searchTerm, comparison) || item.BoxConfig.Contains(searchTerm, comparison))
                 {
                     Items.Add(item);
+                    if (item.Context.Contains($"{{{PnaConstNames.MultiStart}:", StringComparison.InvariantCulture))
+                    {
+                        i++;
+                        Items.Add(_allItems[i]);
+                        i++;
+                        Items.Add(_allItems[i]);
+                    }
                 }
             }
         }

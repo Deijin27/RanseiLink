@@ -9,6 +9,7 @@ namespace RanseiLink.Core.Text
         public const string SpeakerColor = "speaker_color";
         public const string Color = "color";
         public const string Wait = "wait";
+        public const string MultiStart = "multi-start";
 
     }
 }
