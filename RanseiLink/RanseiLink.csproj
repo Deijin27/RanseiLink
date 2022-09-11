@@ -5,11 +5,12 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
+	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
     <Authors>Deijin</Authors>
     <VersionPrefix>5.0</VersionPrefix>
-	<VersionSuffix>beta2</VersionSuffix>
+	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -145,9 +146,11 @@
   <ItemGroup>
     <None Update="External\MoveAnimations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
     <None Update="External\MoveMovementAnimations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
