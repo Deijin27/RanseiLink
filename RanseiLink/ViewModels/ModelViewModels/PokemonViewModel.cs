@@ -464,6 +464,9 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
             new NSBTP { PatternAnimations = nspat }.WriteTo(temp2);
             var nsbtpFile = ResolveRelativeAnimPath(false);
             _spriteProvider.SetOverride(nsbtpFile, temp2);
+
+            AsymmetricBattleSprite = bool.TryParse(doc.Root.Attribute(AsymmetricalAttributeName)?.Value, out var asv) && asv;
+            LongAttackAnimation = bool.TryParse(doc.Root.Attribute(LongAttackAttributeName)?.Value, out var lav) && lav;
         }
         catch (Exception ex)
         {
@@ -527,12 +530,16 @@ public class PokemonViewModel : ViewModelBase, IPokemonViewModel
         var nsbtp = new NSBTP(file.File);
         var nspat = NSPAT_RAW.Load(rawfile.File);
         var doc = new XDocument(new XElement(PatternGroupElementName,
+            new XAttribute(LongAttackAttributeName, LongAttackAnimation),
+            new XAttribute(AsymmetricalAttributeName, AsymmetricBattleSprite),
             nsbtp.PatternAnimations.Serialize(),
             nspat.SerializeRaw()
             ));
         doc.Save(dest);
     }
 
+    private const string LongAttackAttributeName = "long_attack";
+    private const string AsymmetricalAttributeName = "asymmetrical";
     private const string PatternGroupElementName = "library_collection";
 }
 
