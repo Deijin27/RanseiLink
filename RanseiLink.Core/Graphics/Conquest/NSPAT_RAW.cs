@@ -49,16 +49,16 @@ namespace RanseiLink.Core.Graphics.Conquest
             var start = br.BaseStream.Position;
             for (int i = 0; i < kfCounts.Length; i++)
             {
-                var kfc = kfCounts[i];
                 var anim = new NSPAT.PatternAnimation() { Name = _animNames[i] };
                 result.PatternAnimations.Add(anim);
                 var track = new NSPAT.PatternAnimationTrack();
                 anim.Tracks.Add(track);
                 br.BaseStream.Seek(start + 0x40 * i, SeekOrigin.Begin);
-                for (int j = 0; j < kfc; j++)
+                for (int j = 0; j < kfCounts[i] - 1; j++) // the last one is numframes
                 {
                     track.KeyFrames.Add(new NSPAT.KeyFrame { Frame = br.ReadUInt16() });
                 }
+                anim.NumFrames = br.ReadUInt16(); // the last one is the number of frames
             }
             return result;
         }
@@ -77,7 +77,7 @@ namespace RanseiLink.Core.Graphics.Conquest
             {
                 if (i < nspat.PatternAnimations.Count && nspat.PatternAnimations[i].Tracks.Count > 0)
                 {
-                    bw.Write((ushort)nspat.PatternAnimations[i].Tracks[0].KeyFrames.Count);
+                    bw.Write((ushort)(nspat.PatternAnimations[i].Tracks[0].KeyFrames.Count + 1));
                 }
                 else
                 {
@@ -89,12 +89,19 @@ namespace RanseiLink.Core.Graphics.Conquest
             {
                 if (i < nspat.PatternAnimations.Count && nspat.PatternAnimations[i].Tracks.Count > 0)
                 {
-                    var track = nspat.PatternAnimations[i].Tracks[0];
+                    var anim = nspat.PatternAnimations[i];
+                    var track = anim.Tracks[0];
+                    bool writtenNumFrames = false;
                     for (int j = 0; j < 0x20; j++)
                     {
                         if (j < track.KeyFrames.Count)
                         {
                             bw.Write(track.KeyFrames[j].Frame);
+                        }
+                        else if (!writtenNumFrames)
+                        {
+                            bw.Write(anim.NumFrames);
+                            writtenNumFrames = true;
                         }
                         else
                         {
