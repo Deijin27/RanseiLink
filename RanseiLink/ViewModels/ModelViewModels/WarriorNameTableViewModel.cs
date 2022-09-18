@@ -5,11 +5,6 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.ViewModels;
 
-public interface IWarriorNameTableViewModel
-{
-    void SetModel(WarriorNameTable model);
-}
-
 public class WarriorNameTableItem : ViewModelBase
 {
     private readonly WarriorNameTable _table;
@@ -26,7 +21,7 @@ public class WarriorNameTableItem : ViewModelBase
         set => RaiseAndSetIfChanged(Name, value, v => _table.SetEntry(Index, v));
     }
 }
-public class WarriorNameTableViewModel : ViewModelBase, IWarriorNameTableViewModel
+public class WarriorNameTableViewModel : ViewModelBase
 {
     public WarriorNameTableViewModel()
     {

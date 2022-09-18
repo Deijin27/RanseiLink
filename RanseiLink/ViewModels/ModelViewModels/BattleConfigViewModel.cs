@@ -9,12 +9,7 @@ using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public interface IBattleConfigViewModel
-{
-    void SetModel(BattleConfigId id, BattleConfig model);
-}
-
-public class BattleConfigViewModel : ViewModelBase, IBattleConfigViewModel
+public class BattleConfigViewModel : ViewModelBase
 {
     private BattleConfig _model;
 

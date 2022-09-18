@@ -4,12 +4,7 @@ using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public interface IWarriorSkillViewModel
-{
-    void SetModel(WarriorSkillId id, WarriorSkill model);
-}
-
-public class WarriorSkillViewModel : ViewModelBase, IWarriorSkillViewModel
+public class WarriorSkillViewModel : ViewModelBase
 {
     public WarriorSkill _model;
 

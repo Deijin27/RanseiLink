@@ -3,12 +3,7 @@ using RanseiLink.Core.Services;
 
 namespace RanseiLink.ViewModels;
 
-public interface IEventSpeakerViewModel
-{
-    void SetModel(EventSpeaker model);
-}
-
-public class EventSpeakerViewModel : ViewModelBase, IEventSpeakerViewModel
+public class EventSpeakerViewModel : ViewModelBase
 {
     private EventSpeaker _model;
     private readonly IOverrideDataProvider _spriteProvider;

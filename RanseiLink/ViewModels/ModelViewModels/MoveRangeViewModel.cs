@@ -2,12 +2,7 @@
 
 namespace RanseiLink.ViewModels;
 
-public interface IMoveRangeViewModel 
-{
-    void SetModel(MoveRange model);
-}
-
-public class MoveRangeViewModel : ViewModelBase, IMoveRangeViewModel
+public class MoveRangeViewModel : ViewModelBase
 {
     private MoveRange _model;
 

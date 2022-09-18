@@ -11,12 +11,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IBaseWarriorViewModel
-{
-    void SetModel(WarriorId id, BaseWarrior model);
-}
-
-public class BaseWarriorViewModel : ViewModelBase, IBaseWarriorViewModel
+public class BaseWarriorViewModel : ViewModelBase
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;

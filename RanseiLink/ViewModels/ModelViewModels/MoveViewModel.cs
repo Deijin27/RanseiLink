@@ -14,12 +14,7 @@ public enum MoveAnimationPreviewMode
     Movement,
 }
 
-public interface IMoveViewModel 
-{
-    void SetModel(MoveId id, Move model);
-}
-
-public class MoveViewModel : ViewModelBase, IMoveViewModel
+public class MoveViewModel : ViewModelBase
 {
     private Move _model;
     private readonly ICachedMsgBlockService _msgService;

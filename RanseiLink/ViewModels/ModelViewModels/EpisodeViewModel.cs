@@ -9,12 +9,7 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public interface IEpisodeViewModel
-{
-    void SetModel(EpisodeId id, Episode model);
-}
-
-public class EpisodeViewModel : ViewModelBase, IEpisodeViewModel
+public class EpisodeViewModel : ViewModelBase
 {
     private Episode _model;
     private readonly ICachedMsgBlockService _msgService;

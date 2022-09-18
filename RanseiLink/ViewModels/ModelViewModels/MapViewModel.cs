@@ -16,14 +16,7 @@ public enum MapRenderMode
     Elevation
 }
 
-public interface IMapViewModel
-{
-    void SetModel(MapId id, PSLM model);
-    event EventHandler RequestSave;
-    event EventHandler RequestReload;
-}
-
-public class MapViewModel : ViewModelBase, IMapViewModel
+public class MapViewModel : ViewModelBase
 {
     private static bool _terrainPaintingActive;
     private static TerrainId _terrainBrush;

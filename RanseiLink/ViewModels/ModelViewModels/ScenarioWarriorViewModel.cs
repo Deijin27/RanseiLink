@@ -8,11 +8,6 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IScenarioWarriorViewModel
-{
-    void SetModel(ScenarioId scenario, int id, ScenarioWarrior model);
-}
-
 public class ScenarioWarriorPokemonViewModel : ViewModelBase
 {
     private readonly ScenarioWarrior _model;
@@ -74,16 +69,16 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
     public ICommand SetToDefaultCommand { get; }
 }
 
-public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
+public class ScenarioWarriorViewModel : ViewModelBase
 {
     private ScenarioWarrior _model;
     private ScenarioPokemon _currentScenarioPokemon;
     private ScenarioId _scenario;
-    private readonly IScenarioPokemonViewModel _scenarioPokemonVm;
+    private readonly ScenarioPokemonViewModel _scenarioPokemonVm;
     private readonly IScenarioPokemonService _scenarioPokemonService;
     private ScenarioWarriorPokemonViewModel _selectedPokemon;
 
-    public ScenarioWarriorViewModel(IJumpService jumpService, IScenarioPokemonViewModel newScenarioPokemonViewModel, IScenarioPokemonService scenarioPokemonService, IIdToNameService idToNameService)
+    public ScenarioWarriorViewModel(IJumpService jumpService, ScenarioPokemonViewModel newScenarioPokemonViewModel, IScenarioPokemonService scenarioPokemonService, IIdToNameService idToNameService)
     {
         _scenarioPokemonService = scenarioPokemonService;
         _scenarioPokemonVm = newScenarioPokemonViewModel;
@@ -189,5 +184,5 @@ public class ScenarioWarriorViewModel : ViewModelBase, IScenarioWarriorViewModel
         }
     }
 
-    public IScenarioPokemonViewModel ScenarioPokemonVm => _scenarioPokemonVm;
+    public ScenarioPokemonViewModel ScenarioPokemonVm => _scenarioPokemonVm;
 }

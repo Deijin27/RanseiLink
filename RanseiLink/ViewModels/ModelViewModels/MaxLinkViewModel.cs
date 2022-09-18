@@ -8,11 +8,6 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.ViewModels;
 
-public interface IMaxLinkViewModel 
-{ 
-    void SetModel(MaxLink model); 
-}
-
 public class WarriorMaxSyncListItem : ViewModelBase
 {
     private readonly MaxLink _model;
@@ -32,7 +27,7 @@ public class WarriorMaxSyncListItem : ViewModelBase
     public string Pokemon { get; }
 }
 
-public class MaxLinkViewModel : ViewModelBase, IMaxLinkViewModel
+public class MaxLinkViewModel : ViewModelBase
 {
     private readonly IIdToNameService _idToNameService;
     public MaxLinkViewModel(IIdToNameService idToNameService)

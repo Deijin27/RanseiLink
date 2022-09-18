@@ -12,11 +12,6 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IScenarioKingdomViewModel
-{
-    void SetModel(int scenario, ScenarioKingdom model);
-}
-
 public class ScenarioKingdomItem : ViewModelBase
 {
     private readonly ScenarioKingdom _model;
@@ -41,7 +36,7 @@ public class ScenarioKingdomItem : ViewModelBase
     public event Action<int> ShowArmySummary;
     
 }
-public class ScenarioKingdomViewModel : ViewModelBase, IScenarioKingdomViewModel
+public class ScenarioKingdomViewModel : ViewModelBase
 {
     private readonly IIdToNameService _idToNameService;
     private readonly IScenarioWarriorService _scenarioWarriorService;

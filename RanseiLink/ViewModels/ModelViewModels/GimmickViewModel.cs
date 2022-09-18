@@ -12,12 +12,7 @@ public enum GimmickAnimationPreviewMode
     Two
 }
 
-public interface IGimmickViewModel
-{
-    void SetModel(GimmickId id, Gimmick model);
-}
-
-public class GimmickViewModel : ViewModelBase, IGimmickViewModel
+public class GimmickViewModel : ViewModelBase
 {
     private Gimmick _model;
     private readonly IExternalService _externalService;

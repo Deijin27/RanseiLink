@@ -15,7 +15,7 @@ public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IPokemonViewModel>();
+        var vm = modServices.Get<PokemonViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((PokemonId)id, _service.Retrieve(id)));
     }
 }
@@ -42,7 +42,7 @@ public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IAbilityViewModel>();
+        var vm = modServices.Get<AbilityViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
     }
 }
@@ -55,7 +55,7 @@ public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarrio
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IWarriorSkillViewModel>();
+        var vm = modServices.Get<WarriorSkillViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
     }
 }
@@ -68,7 +68,7 @@ public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRange
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IMoveRangeViewModel>();
+        var vm = modServices.Get<MoveRangeViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
@@ -81,7 +81,7 @@ public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IMoveViewModel>();
+        var vm = modServices.Get<MoveViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((MoveId)id, _service.Retrieve(id)));
     }
 }
@@ -115,7 +115,7 @@ public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWar
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IBaseWarriorViewModel>();
+        var vm = modServices.Get<BaseWarriorViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorId)id, _service.Retrieve(id)));
     }
 }
@@ -128,7 +128,7 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IMaxLinkViewModel>();
+        var vm = modServices.Get<MaxLinkViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
@@ -158,7 +158,7 @@ public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<ISce
     {
         base.Initialise(modServices);
         _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
-        var vm = modServices.Get<IScenarioWarriorViewModel>();
+        var vm = modServices.Get<ScenarioWarriorViewModel>();
         _childScenarioWarriorService = _service.Retrieve(0);
         var innerSelector = new SelectorViewModel(_childScenarioWarriorService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioWarriorService.Retrieve(id)));
         _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
@@ -193,7 +193,7 @@ public class ScenarioPokemonSelectorEditorModule : BaseSelectorEditorModule<ISce
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IScenarioPokemonViewModel>();
+        var vm = modServices.Get<ScenarioPokemonViewModel>();
         _childScenarioPokemonService = _service.Retrieve(0);
         var innerSelector = new SelectorViewModel(_childScenarioPokemonService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioPokemonService.Retrieve(id)));
         _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
@@ -214,7 +214,7 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IScenarioAppearPokemonViewModel>();
+        var vm = modServices.Get<ScenarioAppearPokemonViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
@@ -227,7 +227,7 @@ public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<ISce
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IScenarioKingdomViewModel>();
+        var vm = modServices.Get<ScenarioKingdomViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }
@@ -240,7 +240,7 @@ public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventS
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IEventSpeakerViewModel>();
+        var vm = modServices.Get<EventSpeakerViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
@@ -253,7 +253,7 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IItemViewModel>();
+        var vm = modServices.Get<ItemViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
     }
 }
@@ -266,7 +266,7 @@ public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingSe
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IBuildingViewModel>();
+        var vm = modServices.Get<BuildingViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BuildingId)id, _service.Retrieve(id)));
     }
 }
@@ -294,7 +294,7 @@ public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IGimmickViewModel>();
+        var vm = modServices.Get<GimmickViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
     }
 }
@@ -307,7 +307,7 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IEpisodeViewModel>();
+        var vm = modServices.Get<EpisodeViewModel>();
         var msgService = modServices.Get<ICachedMsgBlockService>();
         var episodeComboItems = _service
             .ValidIds()
@@ -326,7 +326,7 @@ public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomServ
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IKingdomViewModel>();
+        var vm = modServices.Get<KingdomViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((KingdomId)id, _service.Retrieve(id)));
     }
 }
@@ -339,7 +339,7 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IBattleConfigViewModel>();
+        var vm = modServices.Get<BattleConfigViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
     }
 }
@@ -352,7 +352,7 @@ public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmic
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IMoveRangeViewModel>();
+        var vm = modServices.Get<MoveRangeViewModel>();
         _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
@@ -380,13 +380,13 @@ public class MapSelectorEditorModule : EditorModule
     private IMapService _service;
     private MapId? _currentId;
     private PSLM _currentMap;
-    private IMapViewModel _nestedVm;
+    private MapViewModel _nestedVm;
 
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _service = modServices.Get<IMapService>();
-        _nestedVm = modServices.Get<IMapViewModel>();
+        _nestedVm = modServices.Get<MapViewModel>();
         var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
         _viewModel = new SelectorViewModelWithoutScroll(mapComboItems, _nestedVm, id =>
         {

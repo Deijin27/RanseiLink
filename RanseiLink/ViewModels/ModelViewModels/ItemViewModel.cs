@@ -7,12 +7,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IItemViewModel 
-{
-    void SetModel(ItemId id, Item model);
-}
-
-public class ItemViewModel : ViewModelBase, IItemViewModel
+public class ItemViewModel : ViewModelBase
 {
     private Item _model;
     private readonly ICachedMsgBlockService _msgService;

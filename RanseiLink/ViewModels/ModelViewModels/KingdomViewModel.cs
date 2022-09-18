@@ -7,13 +7,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IKingdomViewModel 
-{
-    void SetModel(KingdomId id, Kingdom model);
-}
-
-
-public class KingdomViewModel : ViewModelBase, IKingdomViewModel
+public class KingdomViewModel : ViewModelBase
 {
     private Kingdom _model;
 

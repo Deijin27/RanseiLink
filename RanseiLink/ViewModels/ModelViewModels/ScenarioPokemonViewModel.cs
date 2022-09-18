@@ -11,12 +11,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IScenarioPokemonViewModel
-{
-    void SetModel(ScenarioId scenario, int id, ScenarioPokemon model);
-}
-
-public class ScenarioPokemonViewModel : ViewModelBase, IScenarioPokemonViewModel
+public class ScenarioPokemonViewModel : ViewModelBase
 {
     private IPokemonService _pokemonService;
     private ScenarioPokemon _model;

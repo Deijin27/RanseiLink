@@ -7,12 +7,7 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IBuildingViewModel
-{
-    void SetModel(BuildingId id, Building model);
-}
-
-public class BuildingViewModel : ViewModelBase, IBuildingViewModel
+public class BuildingViewModel : ViewModelBase
 {
     private Building _model;
 

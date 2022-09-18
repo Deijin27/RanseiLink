@@ -9,11 +9,6 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public interface IScenarioAppearPokemonViewModel
-{
-    void SetModel(ScenarioAppearPokemon model);
-}
-
 public class AppearItem : ViewModelBase
 {
     private readonly ScenarioAppearPokemon _model;
@@ -34,7 +29,7 @@ public class AppearItem : ViewModelBase
     public string Pokemon { get; set; }
 }
 
-public class ScenarioAppearPokemonViewModel : ViewModelBase, IScenarioAppearPokemonViewModel
+public class ScenarioAppearPokemonViewModel : ViewModelBase
 {
     private readonly IIdToNameService _idToNameService;
     public ScenarioAppearPokemonViewModel(IIdToNameService idToNameService)

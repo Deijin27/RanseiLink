@@ -4,12 +4,7 @@ using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
-public interface IAbilityViewModel
-{
-    void SetModel(AbilityId id, Ability model);
-}
-
-public class AbilityViewModel : ViewModelBase, IAbilityViewModel
+public class AbilityViewModel : ViewModelBase
 {
     private Ability _model;
     private readonly ICachedMsgBlockService _msgService;

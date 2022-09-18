@@ -16,12 +16,7 @@ using System.Xml.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public interface IPokemonViewModel 
-{
-    void SetModel(PokemonId id, Pokemon model);
-}
-
-public class PokemonViewModel : ViewModelBase, IPokemonViewModel
+public class PokemonViewModel : ViewModelBase
 {
     private Pokemon _model;
     private readonly List<SelectorComboBoxItem> _evolutionEntryOptions;
