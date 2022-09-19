@@ -11,7 +11,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class ItemService : BaseModelService<Item>, IItemService
     {
-        public ItemService(string ItemDatFile) : base(ItemDatFile, 0, 133, 134) { }
+        public static ItemService Load(string ItemDatFile) => new ItemService(ItemDatFile);
+        private ItemService(string ItemDatFile) : base(ItemDatFile, 0, 133, 134) { }
 
         public ItemService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.ItemRomPath)) { }
 

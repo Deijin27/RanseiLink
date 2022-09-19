@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Autofac.Core;
+﻿using DryIoc;
 using System.Collections.Generic;
 
 namespace RanseiLink.Core.Services
@@ -40,16 +39,17 @@ namespace RanseiLink.Core.Services
         public IServiceGetter Create(ModInfo mod)
         {
             var serviceGetter = new ServiceGetter();
-            var scope = ContainerProvider.Container.BeginLifetimeScope(builder =>
+            // RegistrySharing.CloneButKeepCache important to make the child container disposable
+            // childDefaultServiceKey=null important because with a value multiple registrations to the same interface dont work
+            var builder = ContainerProvider.Container.CreateChild(RegistrySharing.CloneButKeepCache, null);
+
+            builder.RegisterInstance(mod);
+            builder.RegisterInstance<IServiceGetter>(serviceGetter);
+            foreach (IModule module in _modules)
             {
-                builder.RegisterInstance(mod).As<ModInfo>();
-                builder.RegisterInstance(serviceGetter).As<IServiceGetter>();
-                foreach (IModule module in _modules)
-                {
-                    builder.RegisterModule(module);
-                }
-            });
-            serviceGetter.Services = scope;
+                builder.RegisterModule(module);
+            }
+            serviceGetter.Services = builder;
 
             return serviceGetter;
         }

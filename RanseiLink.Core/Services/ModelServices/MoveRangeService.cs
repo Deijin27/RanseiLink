@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class MoveRangeService : BaseModelService<MoveRange>, IMoveRangeService
     {
-        public MoveRangeService(string MoveRangeDatFile) : base(MoveRangeDatFile, 0, 29) { }
+        private MoveRangeService(string MoveRangeDatFile) : base(MoveRangeDatFile, 0, 29) { }
 
         public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) { }
 

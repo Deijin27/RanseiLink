@@ -72,8 +72,8 @@ public class PartialTransferPlugin : IPlugin
             progress.Report(new ProgressInfo(statusText: "Preparing...", isIndeterminate:true));
 
             var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
-            var sourceServices = sourceMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(sourceMod);
-            var destinationServices = destinationMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(destinationMod);
+            using var sourceServices = sourceMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(sourceMod);
+            using var destinationServices = destinationMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(destinationMod);
 
             List<string> filesToTransfer = new();
             List<string> dirsToTransfer = new();

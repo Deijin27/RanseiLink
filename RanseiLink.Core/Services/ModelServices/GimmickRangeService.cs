@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class GimmickRangeService : BaseModelService<MoveRange>, IGimmickRangeService
     {
-        public GimmickRangeService(string GimmickRangeDatFile) : base(GimmickRangeDatFile, 0, 29) { }
+        private GimmickRangeService(string GimmickRangeDatFile) : base(GimmickRangeDatFile, 0, 29) { }
 
         public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) { }
 

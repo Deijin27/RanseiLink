@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using DryIoc;
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
@@ -29,11 +29,11 @@ public partial class App : Application
         SetupExceptionHandling();
 
         // Register services here because theme service requires that application resources are already initialized
-        var builder = new ContainerBuilder();
+        var builder = new Container();
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new PluginServiceModule());
         builder.RegisterModule(new WpfServiceModule());
-        var container = builder.Build();
+        var container = builder;
         ContainerProvider.Container = container;
 
         base.OnStartup(e);

@@ -12,7 +12,7 @@ namespace RanseiLink.Core.Services.ModelServices
     public class KingdomService : BaseModelService<Kingdom>, IKingdomService
     {
         private readonly ConquestGameCode _culture;
-        public KingdomService(string KingdomDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(KingdomDatFile, 0, 16, 17, delayReload:true) 
+        private KingdomService(string KingdomDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(KingdomDatFile, 0, 16, 17, delayReload:true) 
         {
             _culture = culture;
             Reload();

@@ -9,24 +9,15 @@ namespace RanseiLink.ViewModels;
 
 public interface IModSelectionViewModel
 {
-    ICommand CreateModCommand { get; }
-    ICommand ImportModCommand { get; }
-    ICommand ModItemClicked { get; }
-    ObservableCollection<IModListItemViewModel> ModItems { get; }
-    bool OutdatedModsExist { get; set; }
-    ICommand PopulateGraphicsDefaultsCommand { get; }
-    ICommand UpgradeOutdatedModsCommand { get; }
-
     event Action<ModInfo> ModSelected;
-
+    ObservableCollection<IModListItemViewModel> ModItems { get; }
     void RefreshModItems();
 }
-
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
-    private readonly IModListItemViewModelFactory _itemViewModelFactory;
+    private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFallbackDataProvider _fallbackSpriteProvider;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
@@ -50,7 +41,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public ModSelectionViewModel(
         IModManager modManager,
         IDialogService dialogService,
-        IModListItemViewModelFactory modListItemViewModelFactory,
+        ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackDataProvider fallbackSpriteProvider)
     {
         _modService = modManager;
@@ -86,7 +77,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             ModItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
-                ModItems.Add(_itemViewModelFactory.CreateViewModel(this, mi));
+                ModItems.Add(_itemViewModelFactory(this, mi));
             }
         }
     }

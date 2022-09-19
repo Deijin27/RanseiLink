@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class MoveService : BaseModelService<Move>, IMoveService
     {
-        public MoveService(string MoveDatFile) : base(MoveDatFile, 0, 142) { }
+        private MoveService(string MoveDatFile) : base(MoveDatFile, 0, 142) { }
 
         public MoveService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRomPath)) { }
 

@@ -7,12 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.ViewModels;
 
-public interface IScenarioWarriorGridViewModel
-{
-    void SetModel(int scenario, IChildScenarioWarriorService childScenarioWarriorService);
-}
-
-public class ScenarioWarriorGridViewModel : ViewModelBase, IScenarioWarriorGridViewModel
+public class ScenarioWarriorGridViewModel : ViewModelBase
 {
     private readonly IScenarioPokemonService _scenarioPokemonService;
     private readonly IPokemonService _pokemonService;

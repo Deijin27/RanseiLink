@@ -55,7 +55,7 @@ public class BaseWarriorServiceTests
         string temp = Path.GetTempFileName();
         string source = Path.Combine(TestConstants.TestModFolder, Constants.BaseBushouRomPath);
         File.Copy(source, temp, true);
-        IBaseWarriorService service = new BaseWarriorService(temp);
+        IBaseWarriorService service = BaseWarriorService.Load(temp);
         service.Save();
         byte[] expected = File.ReadAllBytes(source);
         byte[] actual = File.ReadAllBytes(temp);

@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class MoveAnimationService : BaseModelService<MoveAnimation>, IMoveAnimationService
     {
-        public MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
+        private MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
 
         public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) { }
 

@@ -1,13 +1,14 @@
-﻿using Autofac;
+﻿using DryIoc;
+using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services.Concrete;
 
 namespace RanseiLink.PluginModule.Services;
 
-public class PluginServiceModule : Module
+public class PluginServiceModule : IModule
 {
-    protected override void Load(ContainerBuilder builder)
+    public void Load(IRegistrator builder)
     {
-        builder.RegisterType<PluginFormLoader>().As<IPluginFormLoader>().SingleInstance();
-        builder.RegisterType<PluginLoader>().As<IPluginLoader>().SingleInstance();
+        builder.Register<IPluginFormLoader, PluginFormLoader>();
+        builder.Register<IPluginLoader, PluginLoader>();
     }
 }

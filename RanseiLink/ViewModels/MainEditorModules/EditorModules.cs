@@ -141,7 +141,7 @@ public class ScenarioWarriorGridSelectorEditorModule : BaseSelectorEditorModule<
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<IScenarioWarriorGridViewModel>();
+        var vm = modServices.Get<ScenarioWarriorGridViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }

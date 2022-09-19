@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class AbilityService : BaseModelService<Ability>, IAbilityService
     {
-        public AbilityService(string abilityDatFile) : base(abilityDatFile, 0, 127, 128) { }
+        private AbilityService(string abilityDatFile) : base(abilityDatFile, 0, 127, 128) { }
 
         public AbilityService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.AbilityRomPath)) { }
 

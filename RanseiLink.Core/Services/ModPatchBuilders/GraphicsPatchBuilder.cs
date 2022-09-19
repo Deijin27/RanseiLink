@@ -1,17 +1,17 @@
 ﻿using RanseiLink.Core.Resources;
-using RanseiLink.Core.Services.Concrete;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders
 {
     public class GraphicsPatchBuilder : IPatchBuilder
     {
-        private readonly IGraphicTypePatchBuilder[] _builders;
+        private readonly IEnumerable<IGraphicTypePatchBuilder> _builders;
         private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly ModInfo _mod;
-        public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackDataProvider fallbackSpriteProvider)
+        public GraphicsPatchBuilder(ModInfo mod, IEnumerable<IGraphicTypePatchBuilder> builders, IFallbackDataProvider fallbackSpriteProvider)
         {
             _builders = builders;
             _fallbackSpriteProvider = fallbackSpriteProvider;

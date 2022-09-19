@@ -16,7 +16,8 @@ namespace RanseiLink.Core.Services.ModelServices
         private const int _defaultEvoId = 1400;
         private const long _evoTableOffset = 0x25C0;
 
-        public PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
+        public static PokemonService Load(string pokemonDatFile) => new PokemonService(pokemonDatFile);
+        private PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
         public PokemonService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.PokemonRomPath)) { }
 
         public Pokemon Retrieve(PokemonId id) => Retrieve((int)id);

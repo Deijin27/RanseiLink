@@ -2,8 +2,8 @@
 using CliFx;
 using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
-using Autofac;
 using System.Reflection;
+using DryIoc;
 
 namespace RanseiLink.Console;
 
@@ -12,10 +12,10 @@ internal class Program
     public static async Task<int> Main()
     {
         // load services
-        var builder = new ContainerBuilder();
+        var builder = new Container();
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new ConsoleServiceModule());
-        var container = builder.Build();
+        var container = builder;
         ContainerProvider.Container = container;
 
         // build application with clifx

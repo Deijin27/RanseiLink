@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class GimmickObjectService : BaseModelService<GimmickObject>, IGimmickObjectService
     {
-        public GimmickObjectService(string GimmickObjectDatFile) : base(GimmickObjectDatFile, 0, 99) { }
+        private GimmickObjectService(string GimmickObjectDatFile) : base(GimmickObjectDatFile, 0, 99) { }
 
         public GimmickObjectService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickObjectRomPath)) { }
 

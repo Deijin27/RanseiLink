@@ -12,7 +12,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class BaseWarriorService : BaseModelService<BaseWarrior>, IBaseWarriorService
     {
-        public BaseWarriorService(string BaseWarriorServiceDatFile) : base(BaseWarriorServiceDatFile, 0, 251, 252) { }
+        public static BaseWarriorService Load(string BaseWarriorServiceDatFile) => new BaseWarriorService(BaseWarriorServiceDatFile);
+        private BaseWarriorService(string BaseWarriorServiceDatFile) : base(BaseWarriorServiceDatFile, 0, 251, 252) { }
 
         public BaseWarriorService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BaseBushouRomPath)) { }
 

@@ -12,7 +12,7 @@ namespace RanseiLink.Core.Services.ModelServices
     public class BuildingService : BaseModelService<Building>, IBuildingService
     {
         private readonly ConquestGameCode _culture;
-        public BuildingService(string BuildingDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(BuildingDatFile, 0, 118, 119, delayReload:true) 
+        private BuildingService(string BuildingDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(BuildingDatFile, 0, 118, 119, delayReload:true) 
         {
             _culture = culture;
             Reload();

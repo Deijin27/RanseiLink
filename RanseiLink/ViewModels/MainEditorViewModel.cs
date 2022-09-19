@@ -16,20 +16,11 @@ public record EditorModuleListItem(string DisplayName, string ModuleId);
 
 public interface IMainEditorViewModel
 {
-    ICommand CommitRomCommand { get; }
-    string CurrentModuleId { get; set; }
-    object CurrentVm { get; }
-    ObservableCollection<EditorModuleListItem> ListItems { get; }
-    ModInfo Mod { get; }
-    IReadOnlyCollection<PluginInfo> PluginItems { get; }
-    bool PluginPopupOpen { get; set; }
-    PluginInfo SelectedPlugin { get; set; }
-
-    void Deactivate();
     void SetMod(ModInfo mod);
+    void Deactivate();
+    string CurrentModuleId { get; set; }
     bool TryGetModule(string moduleId, out EditorModule module);
 }
-
 public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 {
     private readonly IDialogService _dialogService;
@@ -76,6 +67,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     public void SetMod(ModInfo mod)
     {
         Mod = mod;
+        _modServiceGetter?.Dispose();
         _modServiceGetter = _modKernelFactory.Create(mod);
         _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
         _cachedMsgBlockService.RebuildCache();
@@ -109,7 +101,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         {
             if (RaiseAndSetIfChanged(ref _selectedModuleItem, value))
             {
-                SetCurrentModule(value.ModuleId);
+                SetCurrentModule(value?.ModuleId);
                 _forwardModuleStack.Clear();
             }
         }

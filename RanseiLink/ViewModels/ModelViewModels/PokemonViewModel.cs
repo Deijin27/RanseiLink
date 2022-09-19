@@ -26,9 +26,9 @@ public class PokemonViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
     private PokemonId _id;
-    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
     public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService, 
-        IOverrideDataProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory, IDialogService dialogService)
+        IOverrideDataProvider spriteProvider, SpriteItemViewModelFactory spriteItemVmFactory, IDialogService dialogService)
     {
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;

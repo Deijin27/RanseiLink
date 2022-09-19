@@ -12,7 +12,7 @@ namespace RanseiLink.Core.Services.ModelServices
     public class WarriorSkillService : BaseModelService<WarriorSkill>, IWarriorSkillService
     {
         private readonly ConquestGameCode _culture;
-        public WarriorSkillService(string WarriorSkillDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(WarriorSkillDatFile, 0, 72, delayReload:true) 
+        private WarriorSkillService(string WarriorSkillDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(WarriorSkillDatFile, 0, 72, delayReload:true) 
         {
             _culture = culture;
             Reload();

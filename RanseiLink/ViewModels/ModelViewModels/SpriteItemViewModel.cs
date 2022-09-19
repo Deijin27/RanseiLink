@@ -9,6 +9,8 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
+public delegate SpriteItemViewModel SpriteItemViewModelFactory(SpriteFile sprite);
+
 public class SpriteItemViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
@@ -19,7 +21,6 @@ public class SpriteItemViewModel : ViewModelBase
     private string _displayFile;
     private ImageSource _displayImage;
 
-    public delegate SpriteItemViewModel Factory(SpriteFile sprite);
     public SpriteItemViewModel(SpriteFile sprite, ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
     {
         _dialogService = dialogService;

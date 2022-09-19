@@ -13,7 +13,7 @@ namespace RanseiLink.Core.Services.ModelServices
     public class GimmickService : BaseModelService<Gimmick>, IGimmickService
     {
         private readonly ConquestGameCode _culture;
-        public GimmickService(string GimmickDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(GimmickDatFile, 0, 147, delayReload:true) 
+        private GimmickService(string GimmickDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(GimmickDatFile, 0, 147, delayReload:true) 
         {
             _culture = culture;
             Reload();

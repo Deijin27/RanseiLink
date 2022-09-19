@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="CliFx" Version="2.2.2" />
+    <PackageReference Include="DryIoc.dll" Version="5.2.2" />
     <PackageReference Include="NLua" Version="1.6.0" />
   </ItemGroup>
 

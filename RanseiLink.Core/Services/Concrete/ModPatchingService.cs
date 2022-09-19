@@ -58,48 +58,50 @@ namespace RanseiLink.Core.Services.Concrete
             Exception exception = null;
             try
             {
-                var services = _modServiceGetterFactory.Create(modInfo);
-                var patchers = services.Get<IEnumerable<IPatchBuilder>>();
-                GetFilesToPatch(patchers, filesToPatch, patchOptions);
+                using (var services = _modServiceGetterFactory.Create(modInfo))
+                {
+                    var patchers = services.Get<IEnumerable<IPatchBuilder>>();
+                    GetFilesToPatch(patchers, filesToPatch, patchOptions);
 
 #if PATCHER_BUG_FIXING
-            string debugOut = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, "patch_debug_dump"));
-            Directory.CreateDirectory(debugOut);
-            foreach (var file in filesToPatch)
-            {
-                string dest = Path.Combine(debugOut, file.GamePath.Replace(Path.DirectorySeparatorChar, '~'));
-                if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
-                {
-                    File.Move(file.FileSystemPath, dest);
-                }
-                else
-                {
-                    File.Copy(file.FileSystemPath, dest);
-                }
-                
-            }
-            return;
-#endif
-
-                progress?.Report(new ProgressInfo(isIndeterminate: false, maxProgress: filesToPatch.Count + 1, statusText: "Patching..."));
-                int count = 0;
-
-                using (var nds = _ndsFactory(romPath)) 
-                {
-                    PatchBanner(nds, modInfo);
-                    progress?.Report(new ProgressInfo(progress: ++count));
-
+                    string debugOut = FileUtil.MakeUniquePath(Path.Combine(FileUtil.DesktopDirectory, "patch_debug_dump"));
+                    Directory.CreateDirectory(debugOut);
                     foreach (var file in filesToPatch)
                     {
-                        if (file.Options.HasFlag(FilePatchOptions.VariableLength))
+                        string dest = Path.Combine(debugOut, file.GamePath.Replace(Path.DirectorySeparatorChar, '~'));
+                        if (file.Options.HasFlag(FilePatchOptions.DeleteSourceWhenDone))
                         {
-                            nds.InsertVariableLengthFile(file.GamePath, file.FileSystemPath);
+                            File.Move(file.FileSystemPath, dest);
                         }
                         else
                         {
-                            nds.InsertFixedLengthFile(file.GamePath, file.FileSystemPath);
+                            File.Copy(file.FileSystemPath, dest);
                         }
+                
+                    }
+                    return;
+#endif
+
+                    progress?.Report(new ProgressInfo(isIndeterminate: false, maxProgress: filesToPatch.Count + 1, statusText: "Patching..."));
+                    int count = 0;
+
+                    using (var nds = _ndsFactory(romPath))
+                    {
+                        PatchBanner(nds, modInfo);
                         progress?.Report(new ProgressInfo(progress: ++count));
+
+                        foreach (var file in filesToPatch)
+                        {
+                            if (file.Options.HasFlag(FilePatchOptions.VariableLength))
+                            {
+                                nds.InsertVariableLengthFile(file.GamePath, file.FileSystemPath);
+                            }
+                            else
+                            {
+                                nds.InsertFixedLengthFile(file.GamePath, file.FileSystemPath);
+                            }
+                            progress?.Report(new ProgressInfo(progress: ++count));
+                        }
                     }
                 }
             }

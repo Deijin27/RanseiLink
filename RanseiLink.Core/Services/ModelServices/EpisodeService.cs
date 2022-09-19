@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class EpisodeService : BaseModelService<Episode>, IEpisodeService
     {
-        public EpisodeService(string abilityDatFile) : base(abilityDatFile, 0, 37, 511) { }
+        private EpisodeService(string abilityDatFile) : base(abilityDatFile, 0, 37, 511) { }
 
         public EpisodeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EpisodeRomPath)) { }
 

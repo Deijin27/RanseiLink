@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class MaxLinkService : BaseModelService<MaxLink>, IMaxLinkService
     {
-        public MaxLinkService(string MaxLinkDatFile) : base(MaxLinkDatFile, 0, 251) { }
+        private MaxLinkService(string MaxLinkDatFile) : base(MaxLinkDatFile, 0, 251) { }
 
         public MaxLinkService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MaxLinkRomPath)) { }
 

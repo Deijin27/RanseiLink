@@ -74,7 +74,7 @@ public class PokemonServiceTests
         string temp = Path.GetTempFileName();
         string source = Path.Combine(TestConstants.TestModFolder, Constants.PokemonRomPath);
         File.Copy(source, temp, true);
-        IPokemonService service = new PokemonService(temp);
+        IPokemonService service = PokemonService.Load(temp);
         service.Save();
         byte[] expected = File.ReadAllBytes(source);
         byte[] actual = File.ReadAllBytes(temp);

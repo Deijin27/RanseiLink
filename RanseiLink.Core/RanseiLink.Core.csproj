@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="DryIoc.dll" Version="5.2.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.0" />
 	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />

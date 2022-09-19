@@ -11,7 +11,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class BattleConfigService : BaseModelService<BattleConfig>, IBattleConfigService
     {
-        public BattleConfigService(string BattleConfigDatFile) : base(BattleConfigDatFile, 0, 46, 47) { }
+        private BattleConfigService(string BattleConfigDatFile) : base(BattleConfigDatFile, 0, 46, 47) { }
 
         public BattleConfigService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BattleConfigRomPath)) { }
 

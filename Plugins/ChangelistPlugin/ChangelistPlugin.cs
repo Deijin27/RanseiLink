@@ -69,8 +69,8 @@ public class ChangelistPlugin : IPlugin
 
         var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
 
-        var unchangedServices = unchangedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(unchangedMod);
-        var changedServices = changedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(changedMod);
+        using var unchangedServices = unchangedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(unchangedMod);
+        using var changedServices = changedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(changedMod);
 
         var changelist = BuildChangelist(options, unchangedServices, changedServices);
 

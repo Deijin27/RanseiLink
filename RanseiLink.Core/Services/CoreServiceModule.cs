@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using DryIoc;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.DefaultPopulaters;
@@ -9,79 +9,103 @@ using System.IO;
 
 namespace RanseiLink.Core.Services
 {
+
+    public interface IModule
+    {
+        // Here we are using registration role of DryIoc Container for the builder
+        void Load(IRegistrator builder);
+    }
+
+    public static class RegistratorExtensions
+    {
+        public static void RegisterModule(this IRegistrator registrator, IModule module) => module.Load(registrator);
+    }
+
     public static class ContainerProvider
     {
         public static IContainer Container { get; set; }
         public static IModServiceGetterFactory ModServiceGetterFactory { get; set; }
     }
 
-    public class CoreServiceModule : Module
+    public class CoreServiceModule : IModule
     {
-        protected override void Load(ContainerBuilder builder)
+        public void Load(IRegistrator builder)
         {
             RomFsFactory romFsFactory = file => new RomFs.RomFs(file);
-            builder.RegisterInstance(romFsFactory).As<RomFsFactory>();
+            builder.RegisterInstance(romFsFactory);
 
-            builder.RegisterType<MsgService>().As<IMsgService>().SingleInstance();
-            builder.RegisterType<FallbackDataProvider>().As<IFallbackDataProvider>().SingleInstance();
-            builder.RegisterType<ModPatchingService>().As<IModPatchingService>().SingleInstance();
-            builder.RegisterType<ModManager>().As<IModManager>().SingleInstance().WithParameter("modFolder", Path.Combine(Constants.RootFolder, "Mods"));
-            builder.RegisterType<SettingService>().As<ISettingService>().SingleInstance().WithParameter("settingsFilePath", Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml"));
+            builder.Register<IMsgService, MsgService>(Reuse.Singleton);
+            builder.Register<IFallbackDataProvider, FallbackDataProvider>(Reuse.Singleton);
+            builder.Register<IModPatchingService, ModPatchingService>(Reuse.Singleton);
 
-            builder.RegisterType<PkmdlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
-            builder.RegisterType<ScbgDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
-            builder.RegisterType<StlDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
-            builder.RegisterType<MiscDefaultPopulater>().As<IGraphicTypeDefaultPopulater>().SingleInstance();
+            string modFolder = Path.Combine(Constants.RootFolder, "Mods");
+            builder.Register<IModManager, ModManager>(Reuse.Singleton,
+                Made.Of(() => new ModManager(
+                    modFolder,
+                    Arg.Of<RomFsFactory>(),
+                    Arg.Of<IMsgService>()
+                )));
+
+            string settingFolder = Path.Combine(Constants.RootFolder, "RanseiLinkSettings.xml");
+            builder.Register<ISettingService, SettingService>(Reuse.Singleton,
+                Made.Of(() => new SettingService(
+                    settingFolder
+                    )));
+
+            builder.Register<IGraphicTypeDefaultPopulater, PkmdlDefaultPopulater>(Reuse.Singleton);
+            builder.Register<IGraphicTypeDefaultPopulater, ScbgDefaultPopulater>(Reuse.Singleton);
+            builder.Register<IGraphicTypeDefaultPopulater, StlDefaultPopulater>(Reuse.Singleton);
+            builder.Register<IGraphicTypeDefaultPopulater, MiscDefaultPopulater>(Reuse.Singleton);
 
             var modServiceFactory = new ModServiceGetterFactory();
             modServiceFactory.AddModule(new CoreModServiceModule());
             ContainerProvider.ModServiceGetterFactory = modServiceFactory;
-            builder.RegisterInstance(modServiceFactory).As<IModServiceGetterFactory>();
+            builder.RegisterInstance<IModServiceGetterFactory>(modServiceFactory);
         }
     }
 
-    public class CoreModServiceModule : Module
+    public class CoreModServiceModule : IModule
     {
-        protected override void Load(ContainerBuilder builder)
+        public void Load(IRegistrator builder)
         {
-            builder.RegisterType<AbilityService>().As<IAbilityService>().SingleInstance();
-            builder.RegisterType<BaseWarriorService>().As<IBaseWarriorService>().SingleInstance();
-            builder.RegisterType<BattleConfigService>().As<IBattleConfigService>().SingleInstance();
-            builder.RegisterType<BuildingService>().As<IBuildingService>().SingleInstance();
-            builder.RegisterType<EpisodeService>().As<IEpisodeService>().SingleInstance();
-            builder.RegisterType<EventSpeakerService>().As<IEventSpeakerService>().SingleInstance();
-            builder.RegisterType<GimmickObjectService>().As<IGimmickObjectService>().SingleInstance();
-            builder.RegisterType<GimmickRangeService>().As<IGimmickRangeService>().SingleInstance();
-            builder.RegisterType<GimmickService>().As<IGimmickService>().SingleInstance();
-            builder.RegisterType<ItemService>().As<IItemService>().SingleInstance();
-            builder.RegisterType<KingdomService>().As<IKingdomService>().SingleInstance();
-            builder.RegisterType<MapService>().As<IMapService>().SingleInstance();
-            builder.RegisterType<MaxLinkService>().As<IMaxLinkService>().SingleInstance();
-            builder.RegisterType<MoveAnimationService>().As<IMoveAnimationService>().SingleInstance();
-            builder.RegisterType<MoveRangeService>().As<IMoveRangeService>().SingleInstance();
-            builder.RegisterType<MoveService>().As<IMoveService>().SingleInstance();
-            builder.RegisterType<MsgBlockService>().As<IMsgBlockService>().SingleInstance();
-            builder.RegisterType<PokemonService>().As<IPokemonService>().SingleInstance();
-            builder.RegisterType<ScenarioAppearPokemonService>().As<IScenarioAppearPokemonService>().SingleInstance();
-            builder.RegisterType<ScenarioKingdomService>().As<IScenarioKingdomService>().SingleInstance();
-            builder.RegisterType<ScenarioPokemonService>().As<IScenarioPokemonService>().SingleInstance();
-            builder.RegisterType<ScenarioWarriorService>().As<IScenarioWarriorService>().SingleInstance();
-            builder.RegisterType<WarriorSkillService>().As<IWarriorSkillService>().SingleInstance();
+            builder.Register<IAbilityService, AbilityService>(Reuse.Singleton);
+            builder.Register<IBaseWarriorService, BaseWarriorService>(Reuse.Singleton);
+            builder.Register<IBattleConfigService, BattleConfigService>(Reuse.Singleton);
+            builder.Register<IBuildingService, BuildingService>(Reuse.Singleton);
+            builder.Register<IEpisodeService, EpisodeService>(Reuse.Singleton);
+            builder.Register<IEventSpeakerService, EventSpeakerService>(Reuse.Singleton);
+            builder.Register<IGimmickObjectService, GimmickObjectService>(Reuse.Singleton);
+            builder.Register<IGimmickRangeService, GimmickRangeService>(Reuse.Singleton);
+            builder.Register<IGimmickService, GimmickService>(Reuse.Singleton);
+            builder.Register<IItemService, ItemService>(Reuse.Singleton);
+            builder.Register<IKingdomService, KingdomService>(Reuse.Singleton);
+            builder.Register<IMapService, MapService>(Reuse.Singleton);
+            builder.Register<IMaxLinkService, MaxLinkService>(Reuse.Singleton);
+            builder.Register<IMoveAnimationService, MoveAnimationService>(Reuse.Singleton);
+            builder.Register<IMoveRangeService, MoveRangeService>(Reuse.Singleton);
+            builder.Register<IMoveService, MoveService>(Reuse.Singleton);
+            builder.Register<IMsgBlockService, MsgBlockService>(Reuse.Singleton);
+            builder.Register<IPokemonService, PokemonService>(Reuse.Singleton);
+            builder.Register<IScenarioAppearPokemonService, ScenarioAppearPokemonService>(Reuse.Singleton);
+            builder.Register<IScenarioKingdomService, ScenarioKingdomService>(Reuse.Singleton);
+            builder.Register<IScenarioPokemonService, ScenarioPokemonService>(Reuse.Singleton);
+            builder.Register<IScenarioWarriorService, ScenarioWarriorService>(Reuse.Singleton);
+            builder.Register<IWarriorSkillService, WarriorSkillService>(Reuse.Singleton);
 
-            builder.RegisterType<OverrideDataProvider>().As<IOverrideDataProvider>().SingleInstance();
+            builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
 
-            builder.RegisterType<GraphicsPatchBuilder>().As<IPatchBuilder>().SingleInstance();
-            builder.RegisterType<DataPatchBuilder>().As<IPatchBuilder>().SingleInstance();
-            builder.RegisterType<MsgPatchBuilder>().As<IPatchBuilder>().SingleInstance();
-            builder.RegisterType<MapPatchBuilder>().As<IPatchBuilder>().SingleInstance();
-            builder.RegisterType<MapModelPatchBuilder>().As<IPatchBuilder>().SingleInstance();
+            builder.Register<IPatchBuilder, GraphicsPatchBuilder>(Reuse.Singleton);
+            builder.Register<IPatchBuilder, DataPatchBuilder>(Reuse.Singleton);
+            builder.Register<IPatchBuilder, MsgPatchBuilder>(Reuse.Singleton);
+            builder.Register<IPatchBuilder, MapPatchBuilder>(Reuse.Singleton);
+            builder.Register<IPatchBuilder, MapModelPatchBuilder>(Reuse.Singleton);
 
-            builder.RegisterType<StlPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
-            builder.RegisterType<ScbgPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
-            builder.RegisterType<PkmdlPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
-            builder.RegisterType<MiscPatchBuilder>().As<IGraphicTypePatchBuilder>().SingleInstance();
+            builder.Register<IGraphicTypePatchBuilder, StlPatchBuilder>(Reuse.Singleton);
+            builder.Register<IGraphicTypePatchBuilder, ScbgPatchBuilder>(Reuse.Singleton);
+            builder.Register<IGraphicTypePatchBuilder, PkmdlPatchBuilder>(Reuse.Singleton);
+            builder.Register<IGraphicTypePatchBuilder, MiscPatchBuilder>(Reuse.Singleton);
 
-            builder.RegisterType<BannerService>().As<IBannerService>().SingleInstance();
+            builder.Register<IBannerService, BannerService>(Reuse.Singleton);
         }
     }
 }

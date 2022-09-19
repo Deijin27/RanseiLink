@@ -8,39 +8,12 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public interface IModListItemViewModelFactory
-{
-    IModListItemViewModel CreateViewModel(IModSelectionViewModel parent, ModInfo mod);
-}
-
-public class ModListItemViewModelFactory : IModListItemViewModelFactory
-{
-    private readonly Func<IModSelectionViewModel, ModInfo, IModListItemViewModel> _factory;
-    public ModListItemViewModelFactory(Func<IModSelectionViewModel, ModInfo, IModListItemViewModel> factory)
-    {
-        _factory = factory;
-    }
-
-    public IModListItemViewModel CreateViewModel(IModSelectionViewModel parent, ModInfo mod)
-    {
-        return _factory(parent, mod);
-    }
-}
+public delegate IModListItemViewModel ModListItemViewModelFactory(IModSelectionViewModel parent, ModInfo mod);
 
 public interface IModListItemViewModel
 {
-    ICommand CreateModBasedOnCommand { get; }
-    ICommand DeleteModCommand { get; }
-    ICommand EditModInfoCommand { get; }
-    ICommand ExportModCommand { get; }
-    ModInfo Mod { get; }
-    ICommand PatchRomCommand { get; }
-    IReadOnlyCollection<PluginInfo> PluginItems { get; }
-    ICommand RandomizeCommand { get; }
-    ICommand RunPluginCommand { get; }
-    ICommand ShowInExplorerCommand { get; }
-}
 
+}
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
     private readonly IModSelectionViewModel _parentVm;
@@ -230,7 +203,10 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     {
         try
         {
-            chosen.Plugin.Run(new PluginContext(_modKernelFactory.Create(mod)));
+            using (var serviceGetter = _modKernelFactory.Create(mod))
+            {
+                chosen.Plugin.Run(new PluginContext(serviceGetter));
+            }
         }
         catch (Exception e)
         {

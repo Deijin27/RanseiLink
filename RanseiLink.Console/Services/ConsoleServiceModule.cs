@@ -1,24 +1,26 @@
-﻿using Autofac;
-using CliFx;
+﻿using CliFx;
 using CliFx.Attributes;
+using DryIoc;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using System.Reflection;
 
 namespace RanseiLink.Console.Services;
 
-public class ConsoleServiceModule : Autofac.Module
+public class ConsoleServiceModule : IModule
 {
-    protected override void Load(ContainerBuilder builder)
+    public void Load(IRegistrator builder)
     {
-        builder.RegisterType<CurrentModService>().As<ICurrentModService>().SingleInstance();
-        builder.RegisterType<PathConverter>().AsSelf().SingleInstance();
+        builder.Register<ICurrentModService, CurrentModService>(Reuse.Singleton);
+        builder.Register<PathConverter>(Reuse.Singleton);
 
-        foreach (var type in ThisAssembly.GetTypes())
+        foreach (var type in GetType().Assembly.GetTypes())
         {
-            if (typeof(ICommand).IsAssignableFrom(type) && type.GetCustomAttribute<CommandAttribute>() != null)
+            if (typeof(ICommand).IsAssignableFrom(type)
+                && type.GetCustomAttribute<CommandAttribute>() != null
+                && !type.IsAbstract)
             {
-                builder.RegisterType(type).AsSelf();
+                builder.Register(type);
             }
         }
 
@@ -26,11 +28,11 @@ public class ConsoleServiceModule : Autofac.Module
     }
 }
 
-public class ConsoleModServiceModule : Autofac.Module
+public class ConsoleModServiceModule : IModule
 {
-    protected override void Load(ContainerBuilder builder)
+    public void Load(IRegistrator builder)
     {
-        builder.RegisterType<ModServiceContainer>().As<IModServiceContainer>().SingleInstance();
-        builder.RegisterType<LuaService>().As<ILuaService>().SingleInstance();
+        builder.Register<IModServiceContainer, ModServiceContainer>(Reuse.Singleton);
+        builder.Register<ILuaService, LuaService>(Reuse.Singleton);
     }
 }

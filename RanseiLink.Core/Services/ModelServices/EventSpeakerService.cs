@@ -12,7 +12,7 @@ namespace RanseiLink.Core.Services.ModelServices
     public class EventSpeakerService : BaseModelService<EventSpeaker>, IEventSpeakerService
     {
         private readonly ConquestGameCode _culture;
-        public EventSpeakerService(string EventSpeakerDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(EventSpeakerDatFile, 0, 59, delayReload:true) 
+        private EventSpeakerService(string EventSpeakerDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) : base(EventSpeakerDatFile, 0, 59, delayReload:true) 
         {
             _culture = culture;
             Reload();

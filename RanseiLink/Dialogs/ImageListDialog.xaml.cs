@@ -11,7 +11,7 @@ namespace RanseiLink.Dialogs;
 /// </summary>
 public partial class ImageListDialog : Window
 {
-    public ImageListDialog(IEnumerable<SpriteFile> sprites, SpriteItemViewModel.Factory factory)
+    public ImageListDialog(IEnumerable<SpriteFile> sprites, SpriteItemViewModelFactory factory)
     {
         InitializeComponent();
 

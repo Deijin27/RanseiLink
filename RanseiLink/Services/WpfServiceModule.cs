@@ -2,80 +2,94 @@
 using RanseiLink.PluginModule.Api;
 using RanseiLink.Services.Concrete;
 using RanseiLink.ViewModels;
-using Autofac;
-using System.Collections.Generic;
-using System;
-using System.Linq;
+using DryIoc;
+using RanseiLink.PluginModule.Services;
 
 namespace RanseiLink.Services;
 
-public class WpfServiceModule : Module
+public class WpfServiceModule : IModule
 {
-    protected override void Load(ContainerBuilder builder)
+    public void Load(IRegistrator builder)
     {
-        builder.RegisterType<DialogService>().As<IDialogService>().SingleInstance();
-        builder.RegisterType<PluginService>().As<IPluginService>().SingleInstance();
-        builder.RegisterType<ThemeService>().As<IThemeService>().SingleInstance();
-        builder.RegisterType<ExternalService>().As<IExternalService>().SingleInstance();
+        builder.Register<IDialogService, DialogService>(Reuse.Singleton);
+        builder.Register<IPluginService, PluginService>(Reuse.Singleton);
+        builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
+        builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
 
-        builder.RegisterType<MainWindowViewModel>().As<MainWindowViewModel>().SingleInstance();
-        builder.RegisterType<ModSelectionViewModel>().As<IModSelectionViewModel>().SingleInstance();
-        builder.RegisterType<MainEditorViewModel>().As<IMainEditorViewModel>().SingleInstance();
+        builder.Register<MainWindowViewModel>(Reuse.Singleton);
+        builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
+        builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
 
         ContainerProvider.ModServiceGetterFactory.AddModule(new WpfModServiceModule());
 
-        builder.RegisterType<ModListItemViewModel>().As<IModListItemViewModel>();
-        builder.RegisterType<ModListItemViewModelFactory>().As<IModListItemViewModelFactory>().SingleInstance();
+        builder.RegisterDelegate(context =>
+            new ModListItemViewModelFactory((parent, mod) =>
+                new ModListItemViewModel(
+                    parent,
+                    mod,
+                    context.Resolve<IModManager>(),
+                    context.Resolve<IModPatchingService>(),
+                    context.Resolve<IDialogService>(),
+                    context.Resolve<IPluginLoader>(),
+                    context.Resolve<IModServiceGetterFactory>()
+            )), Reuse.Singleton);
 
-        builder.RegisterType<JumpService>().As<IJumpService>().SingleInstance();
+        builder.Register<IJumpService, JumpService>(Reuse.Singleton);
 
         // editor modules
-        IEnumerable<Type> types = ThisAssembly
-                .GetTypes()
-                .Where(i => typeof(EditorModule).IsAssignableFrom(i) && !i.IsAbstract);
-        foreach (Type t in types)
+        foreach (var type in GetType().Assembly.GetTypes())
         {
-            builder.RegisterType(t).As<EditorModule>();
+            if (typeof(EditorModule).IsAssignableFrom(type) && !type.IsAbstract)
+            {
+                builder.Register(typeof(EditorModule), type);
+            }
         }
     }
 }
 
-public class WpfModServiceModule : Module
+public class WpfModServiceModule : IModule
 {
-    protected override void Load(ContainerBuilder builder)
+    public void Load(IRegistrator builder)
     {
-        builder.RegisterType<CachedMsgBlockService>().As<ICachedMsgBlockService>().SingleInstance();
-        builder.RegisterType<IdToNameService>().As<IIdToNameService>().SingleInstance();
-        builder.RegisterType<SpriteManager>().As<ISpriteManager>().SingleInstance();
-        builder.RegisterType<MapManager>().As<IMapManager>().SingleInstance();
+        builder.Register<ICachedMsgBlockService, CachedMsgBlockService>(Reuse.Singleton);
+        builder.Register<IIdToNameService, IdToNameService>(Reuse.Singleton);
+        builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
+        builder.Register<IMapManager, MapManager>(Reuse.Singleton);
 
-        builder.RegisterType<AbilityViewModel>().AsSelf();
-        builder.RegisterType<BaseWarriorViewModel>().AsSelf();
-        builder.RegisterType<BattleConfigViewModel>().AsSelf();
-        builder.RegisterType<BuildingViewModel>().AsSelf();
-        builder.RegisterType<EpisodeViewModel>().AsSelf();
-        builder.RegisterType<EventSpeakerViewModel>().AsSelf();
-        builder.RegisterType<GimmickViewModel>().AsSelf();
-        builder.RegisterType<ItemViewModel>().AsSelf();
-        builder.RegisterType<KingdomViewModel>().AsSelf();
-        builder.RegisterType<MapViewModel>().AsSelf();
-        builder.RegisterType<MaxLinkViewModel>().AsSelf();
-        builder.RegisterType<MoveRangeViewModel>().AsSelf();
-        builder.RegisterType<MoveViewModel>().AsSelf();
-        builder.RegisterType<PokemonViewModel>().AsSelf();
-        builder.RegisterType<ScenarioAppearPokemonViewModel>().AsSelf();
-        builder.RegisterType<ScenarioKingdomViewModel>().AsSelf();
-        builder.RegisterType<ScenarioPokemonViewModel>().AsSelf();
-        builder.RegisterType<ScenarioWarriorViewModel>().AsSelf();
-        builder.RegisterType<SpriteTypeViewModel>().AsSelf();
-        builder.RegisterType<WarriorNameTableViewModel>().AsSelf();
-        builder.RegisterType<WarriorSkillViewModel>().AsSelf();
+        builder.Register<AbilityViewModel>();
+        builder.Register<BaseWarriorViewModel>();
+        builder.Register<BattleConfigViewModel>();
+        builder.Register<BuildingViewModel>();
+        builder.Register<EpisodeViewModel>();
+        builder.Register<EventSpeakerViewModel>();
+        builder.Register<GimmickViewModel>();
+        builder.Register<ItemViewModel>();
+        builder.Register<KingdomViewModel>();
+        builder.Register<MapViewModel>();
+        builder.Register<MaxLinkViewModel>();
+        builder.Register<MoveRangeViewModel>();
+        builder.Register<MoveViewModel>();
+        builder.Register<PokemonViewModel>();
+        builder.Register<ScenarioAppearPokemonViewModel>();
+        builder.Register<ScenarioKingdomViewModel>();
+        builder.Register<ScenarioPokemonViewModel>();
+        builder.Register<ScenarioWarriorViewModel>();
+        builder.Register<SpriteTypeViewModel>();
+        builder.Register<WarriorNameTableViewModel>();
+        builder.Register<WarriorSkillViewModel>();
 
-        builder.RegisterType<MsgGridViewModel>().As<MsgGridViewModel>();
-        builder.RegisterType<ScenarioWarriorGridViewModel>().As<IScenarioWarriorGridViewModel>();
+        builder.Register<MsgGridViewModel>();
+        builder.Register<ScenarioWarriorGridViewModel>();
 
-        builder.RegisterType<SpriteItemViewModel>().As<SpriteItemViewModel>();
+        builder.RegisterDelegate(context =>
+            new SpriteItemViewModelFactory(file =>
+                new SpriteItemViewModel(
+                    file,
+                    context.Resolve<ISpriteManager>(),
+                    context.Resolve<IOverrideDataProvider>(),
+                    context.Resolve<IDialogService>()
+            )));
 
-        builder.RegisterType<BannerViewModel>().As<BannerViewModel>();
+        builder.Register<BannerViewModel>();
     }
 }

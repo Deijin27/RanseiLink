@@ -18,9 +18,9 @@ public class BaseWarriorViewModel : ViewModelBase
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
     private WarriorId _id;
-    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
     public BaseWarriorViewModel(IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
-        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory)
+        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModelFactory spriteItemVmFactory)
     {
         _model = new BaseWarrior();
         _nameTable = baseWarriorService.NameTable;

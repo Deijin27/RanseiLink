@@ -12,14 +12,14 @@ namespace RanseiLink.ViewModels;
 
 public class SpriteTypeViewModel : ViewModelBase
 {
-    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
     private readonly ISpriteManager _spriteManager;
     private string _dimensionInfo;
     private bool _canAddNew;
 
-    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
+    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModelFactory spriteItemVmFactory)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;

@@ -83,7 +83,7 @@ public class ScriptTests
     [Fact]
     public void EnumerateWarriorsTest()
     {
-        var warriorService = new BaseWarriorService(Path.Combine(TestModFolder, Constants.BaseBushouRomPath));
+        var warriorService = BaseWarriorService.Load(Path.Combine(TestModFolder, Constants.BaseBushouRomPath));
 
         var mockModServiceContainer = new Mock<IModServiceContainer>();
         mockModServiceContainer.SetupGet(i => i.BaseWarrior).Returns(warriorService);
@@ -109,7 +109,7 @@ public class ScriptTests
         // rather than a generator to provide the IEnumerable
         // else luanet.each doesn't work
 
-        var itemService = new ItemService(Path.Combine(TestModFolder, Constants.ItemRomPath));
+        var itemService = ItemService.Load(Path.Combine(TestModFolder, Constants.ItemRomPath));
 
         var mockModServiceContainer = new Mock<IModServiceContainer>();
         mockModServiceContainer.SetupGet(i => i.Item).Returns(itemService);

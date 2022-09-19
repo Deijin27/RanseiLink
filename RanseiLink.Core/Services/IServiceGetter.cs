@@ -1,4 +1,4 @@
-﻿using Autofac;
+﻿using DryIoc;
 using System;
 
 namespace RanseiLink.Core.Services
@@ -13,7 +13,7 @@ namespace RanseiLink.Core.Services
 
     public class ServiceGetter : IServiceGetter
     {
-        public ILifetimeScope Services { get; set; }
+        public IContainer Services { get; set; }
         public ServiceGetter()
         {
         }
