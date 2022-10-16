@@ -49,7 +49,8 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
     private void Split()
     {
-        if (!_dialogService.RequestFile("Select the sprite sheet", ".png", "PNG Image (.png)|*.png", out string file))
+        var file = _dialogService.ShowOpenSingleFileDialog(new("Select the sprite sheet", new FileDialogFilter("PNG Image (.png)", ".png")));
+        if (string.IsNullOrEmpty(file))
         {
             return;
         }
@@ -117,7 +118,8 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
     private void Create()
     {
-        if (!_dialogService.RequestFolder("Select folder that contains sprites", out string folder))
+        string folder = _dialogService.ShowOpenFolderDialog(new("Select folder that contains sprites"));
+        if (string.IsNullOrEmpty(folder))
         {
             return;
         }

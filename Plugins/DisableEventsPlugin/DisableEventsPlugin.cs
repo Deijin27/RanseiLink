@@ -27,7 +27,8 @@ public class DisableEventsPlugin : IPlugin
         string find64Alt = "10000064.eve";
         string find65Alt = "10000065.eve";
 
-        if (!dialogService.RequestRomFile(out string result))
+        var result = dialogService.RequestRomFile();
+        if (string.IsNullOrEmpty(result))
         {
             return;
         }

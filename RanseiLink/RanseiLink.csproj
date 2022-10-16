@@ -6,8 +6,6 @@
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-    <PackageIcon></PackageIcon>
-    <PackageIconUrl />
     <Authors>Deijin</Authors>
     <VersionPrefix>5.0</VersionPrefix>
 	<VersionSuffix></VersionSuffix>

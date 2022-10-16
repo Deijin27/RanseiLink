@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Settings;
 
-internal class PatchSpritesSetting : BoolSetting
+public class PatchSpritesSetting : BoolSetting
 {
     public PatchSpritesSetting() : base("PatchSprites") 
     {

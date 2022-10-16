@@ -168,10 +168,10 @@ public class EditorModuleTests
 
     private void PrepareForPatch()
     {
-        string romPath = "romPath";
-        PatchOptions patchOptions = 0;
-        _dialogService.Setup(i => i.CommitToRom(It.IsAny<ModInfo>(), out romPath, out patchOptions)).Returns(true);
-        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), romPath, patchOptions)).Returns(new CanPatchResult(true));
+        _settingService.Setup(i => i.Get<RecentCommitRomSetting>()).Returns(new RecentCommitRomSetting());
+        _settingService.Setup(i => i.Get<PatchSpritesSetting>()).Returns(new PatchSpritesSetting());
+        _dialogService.Setup(i => i.ShowDialog(It.IsAny<ModCommitViewModel>())).Callback((object vm) => ((ModCommitViewModel)vm).OnClosing(true));
+        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), It.IsAny<string>(), It.IsAny<PatchOptions>())).Returns(new CanPatchResult(true));
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
             .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));

@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Settings;
 
-internal class RecentCommitRomSetting : StringSetting
+public class RecentCommitRomSetting : StringSetting
 {
     public RecentCommitRomSetting() : base("RecentCommitRom") 
     {
