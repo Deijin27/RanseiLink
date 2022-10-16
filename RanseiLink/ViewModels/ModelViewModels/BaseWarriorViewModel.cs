@@ -15,14 +15,16 @@ public class BaseWarriorViewModel : ViewModelBase
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
+    private readonly IDialogService _dialogService;
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
     private WarriorId _id;
     private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
     public BaseWarriorViewModel(IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
-        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModelFactory spriteItemVmFactory)
+        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModelFactory spriteItemVmFactory, IDialogService dialogService)
     {
         _model = new BaseWarrior();
+        _dialogService = dialogService;
         _nameTable = baseWarriorService.NameTable;
         _spriteProvider = overrideSpriteProvider;
         _cachedMsgBlockService = cachedMsgBlockService;
@@ -263,8 +265,8 @@ public class BaseWarriorViewModel : ViewModelBase
         sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouM, id));
         //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouWu, id));
 
-        var dialog = new Dialogs.ImageListDialog(sprites, _spriteItemVmFactory) { Owner = System.Windows.Application.Current.MainWindow };
-        dialog.ShowDialog();
+        var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
+        _dialogService.ShowDialog(vm);
 
         RaisePropertyChanged(nameof(SmallSpritePath));
 

@@ -107,7 +107,7 @@ public class ScenarioKingdomViewModel : ViewModelBase
         string text = sb.ToString();
         System.Windows.Clipboard.SetText(text);
 
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok($"Army {army} Summary", $"(Copied to clipboard)\n\n{text}"));
+        _dialogService.ShowMessageBox(MessageBoxSettings.Ok($"Army {army} Summary", $"(Copied to clipboard)\n\n{text}"));
     }
 
 }

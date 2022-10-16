@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+        d:DataContext="{d:DesignInstance vm:ImageListViewModel, IsDesignTimeCreatable=False}"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
@@ -16,7 +17,7 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <ScrollViewer Grid.Row="0" Margin="10">
-                <ItemsControl x:Name="imageitemsControl">
+                <ItemsControl ItemsSource="{Binding Sprites}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel/>

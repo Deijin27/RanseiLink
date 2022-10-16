@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         xmlns:controls="clr-namespace:RanseiLink.Controls"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
-        d:DataContext="{d:DesignInstance vm:ModCommitViewModel, IsDesignTimeCreatable=False}"
+        d:DataContext="{d:DesignInstance vm:ModifyMapDimensionsViewModel, IsDesignTimeCreatable=False}"
         Title="Patch rom" Height="200" Width="350" Background="{DynamicResource WindowBackgroundBrush}">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
@@ -25,9 +25,9 @@
                     <TextBlock Margin="10" TextWrapping="Wrap">Reducing the dimensions will permanently remove outer cell data</TextBlock>
                     <StackPanel Margin="5" Orientation="Horizontal">
                         <TextBlock Margin="5">Width</TextBlock>
-                        <controls:NumberBox x:Name="WidthNumberBox" Margin="5" Width="100" Min="1" Max="65535"/>
+                        <controls:NumberBox Value="{Binding Width}" Margin="5" Width="100" Min="1" Max="65535"/>
                         <TextBlock Margin="5">Height</TextBlock>
-                        <controls:NumberBox x:Name="HeightNumberBox" Margin="5" Width="100" Min="1" Max="65535"/>
+                        <controls:NumberBox Value="{Binding Height}" Margin="5" Width="100" Min="1" Max="65535"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

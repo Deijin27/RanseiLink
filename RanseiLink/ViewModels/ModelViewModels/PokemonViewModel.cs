@@ -362,8 +362,8 @@ public class PokemonViewModel : ViewModelBase
         //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonWu, id));
         sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.ModelPokemon, id));
 
-        var dialog = new Dialogs.ImageListDialog(sprites, _spriteItemVmFactory) { Owner = System.Windows.Application.Current.MainWindow };
-        dialog.ShowDialog();
+        var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
+        _dialogService.ShowDialog(vm);
 
         RaisePropertyChanged(nameof(SmallSpritePath));
 
@@ -371,19 +371,24 @@ public class PokemonViewModel : ViewModelBase
 
     private void ImportAnimation()
     {
-        var proceed = _dialogService.RequestFile(
-            "Select the raw pattern animation library file",
-            ".xml",
-            "Pattern Animation XML (.xml)|*.xml",
-            out string result
-            );
+        var result = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        {
+            Title = "Select the raw pattern animation library file",
+            Filters = new List<FileDialogFilter>
+            {
+                new FileDialogFilter
+                {
+                    Name = "Pattern Animation XML (.xml)",
+                    Extensions = new() { ".xml" }
+                }
+            }
+        });
 
-        if (!proceed)
+        if (string.IsNullOrEmpty(result))
         {
             return;
         }
 
-        
         var temp1 = Path.GetTempFileName();
         var temp2 = Path.GetTempFileName();
         try
@@ -394,7 +399,7 @@ public class PokemonViewModel : ViewModelBase
             var doc = XDocument.Load(result);
             if (doc.Root.Name != PatternGroupElementName)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "File invalid",
                     $"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {PatternGroupElementName})",
                     MessageBoxType.Warning
@@ -404,7 +409,7 @@ public class PokemonViewModel : ViewModelBase
             var nonRawEl = doc.Root.Element(NSPAT.RootElementName);
             if (nonRawEl == null)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "File invalid",
                     $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT.RootElementName})",
                     MessageBoxType.Warning
@@ -414,7 +419,7 @@ public class PokemonViewModel : ViewModelBase
             var rawEl = doc.Root.Element(NSPAT_RAW.RootElementName);
             if (nonRawEl == null)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "File invalid",
                     $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT_RAW.RootElementName})",
                     MessageBoxType.Warning
@@ -424,7 +429,7 @@ public class PokemonViewModel : ViewModelBase
             nspat = NSPAT.Deserialize(nonRawEl);
             if (nspat == null)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "File invalid",
                     $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT.RootElementName}",
                     MessageBoxType.Warning
@@ -434,7 +439,7 @@ public class PokemonViewModel : ViewModelBase
             nspatRaw = NSPAT.Deserialize(rawEl);
             if (nspatRaw == null)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "File invalid",
                     $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT_RAW.RootElementName}",
                     MessageBoxType.Warning
@@ -465,7 +470,7 @@ public class PokemonViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
         }
         finally
         {
@@ -508,17 +513,27 @@ public class PokemonViewModel : ViewModelBase
             return;
         }
 
-        var proceed = _dialogService.RequestFolder(
-            "Select folder to export animation file to",
-            out string destFolder
-            );
+        var dest = _dialogService.ShowSaveFileDialog(new SaveFileDialogSettings
+        {
+            Title = "Export animation file",
+            DefaultExtension = ".xml",
+            InitialFileName = $"{(int)_id}_{Name}_NSPAT.xml",
+            Filters = new()
+            {
+                new()
+                {
+                    Name = "Pattern Animation XML (.xml)",
+                    Extensions = new() { ".xml" }
+                }
+            }
+        });
 
-        if (!proceed)
+        if (string.IsNullOrEmpty(dest))
         {
             return;
         }
 
-        var dest = FileUtil.MakeUniquePath(Path.Combine(destFolder, $"{(int)_id}_{Name}_NSPAT.xml"));
+        dest = FileUtil.MakeUniquePath(dest);
         var file = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false));
         var rawfile = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true));
 

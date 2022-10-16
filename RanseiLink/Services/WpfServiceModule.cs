@@ -4,6 +4,8 @@ using RanseiLink.Services.Concrete;
 using RanseiLink.ViewModels;
 using DryIoc;
 using RanseiLink.PluginModule.Services;
+using RanseiLink.Core.Settings;
+using RanseiLink.Dialogs;
 
 namespace RanseiLink.Services;
 
@@ -11,7 +13,9 @@ public class WpfServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
+        builder.RegisterInstance<IDialogLocator>(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
+
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
         builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
@@ -30,6 +34,7 @@ public class WpfServiceModule : IModule
                     context.Resolve<IModManager>(),
                     context.Resolve<IModPatchingService>(),
                     context.Resolve<IDialogService>(),
+                    context.Resolve<ISettingService>(),
                     context.Resolve<IPluginLoader>(),
                     context.Resolve<IModServiceGetterFactory>()
             )), Reuse.Singleton);
@@ -44,6 +49,26 @@ public class WpfServiceModule : IModule
                 builder.Register(typeof(EditorModule), type);
             }
         }
+    }
+
+    private static IDialogLocator CreateDialogLocator()
+    {
+        var locator = new RegistryDialogLocator();
+
+        locator.Register<ImageListDialog, ImageListViewModel>();
+        locator.Register<ModCommitDialog, ModCommitViewModel>();
+        locator.Register<ModCreateBasedOnDialog, ModCreateBasedOnViewModel>();
+        locator.Register<ModCreationDialog, ModCreationViewModel>();
+        locator.Register<ModDeleteDialog, ModDeleteViewModel>();
+        locator.Register<ModEditInfoDialog, ModEditInfoViewModel>();
+        locator.Register<ModExportDialog, ModExportViewModel>();
+        locator.Register<ModifyMapDimensionsDialog, ModifyMapDimensionsViewModel>();
+        locator.Register<ModImportDialog, ModImportViewModel>();
+        locator.Register<ModUpgradeDialog, ModUpgradeViewModel>();
+        locator.Register<PopulateDefaultSpriteDialog, PopulateDefaultSpriteViewModel>();
+        locator.Register<SimplifyPaletteDialog, SimplifyPaletteViewModel>();
+
+        return locator;
     }
 }
 

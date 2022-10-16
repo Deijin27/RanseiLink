@@ -1,27 +1,68 @@
 ﻿
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RanseiLink.Core.Services
 {
     public interface IDialogService
     {
-        bool UpgradeMods(out string romPath);
-        bool CreateMod(out ModInfo modInfo, out string romPath);
-        bool CreateModBasedOn(ModInfo baseMod, out ModInfo newModInfo);
-        bool ExportMod(ModInfo info, out string folder);
-        bool ImportMod(out string file);
-        bool EditModInfo(ModInfo info);
-        bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions);
-        bool RequestRomFile(out string result);
-        bool ConfirmDelete(ModInfo info);
-        MessageBoxResult ShowMessageBox(MessageBoxArgs options);
-        bool RequestFolder(string title, out string result);
-        bool RequestModFile(out string result);
+        void ShowDialog(object dialogViewModel);
+        MessageBoxResult ShowMessageBox(MessageBoxSettings options);
+        string[] ShowOpenFileDialog(OpenFileDialogSettings settings);
+        string ShowSaveFileDialog(SaveFileDialogSettings settings);
+        string ShowOpenFolderDialog(OpenFolderDialogSettings settings);
         void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
-        bool ModifyMapDimensions(ref ushort width, ref ushort height);
-        bool RequestFile(string title, string defaultExt, string filter, out string result);
-        bool PopulateDefaultSprites(out string romPath);
-        bool SimplfyPalette(int maxColors, string original, string simplified);
+    }
+
+    public interface IModalDialogViewModel
+    {
+        void OnClosing(bool result);
+    }
+
+    public interface IModalDialogViewModel<TDialogResult>
+    {
+        TDialogResult Result { get; }
+    }
+
+    public interface IDialogLocator
+    {
+        Type Locate(object viewModel);
+    }
+
+    public class NamingConventionLocator : IDialogLocator
+    {
+        public Type Locate(object viewModel)
+        {
+            var viewModelName = viewModel.GetType().FullName;
+            var name = viewModelName.Replace("ViewModel", "Dialog");
+            return Type.GetType(name);
+        }
+    }
+
+    public class RegistryDialogLocator : IDialogLocator
+    {
+        private readonly ConcurrentDictionary<Type, Type> _registry = new ConcurrentDictionary<Type, Type>();
+
+        public Type Locate(object viewModel)
+        {
+            if (viewModel == null)
+            {
+                return null;
+            }
+            var vmType = viewModel.GetType();
+            if (!_registry.TryGetValue(vmType, out var dialogType))
+            {
+                return null;
+            }
+            return dialogType;
+        }
+
+        public void Register(Type dialogType, Type viewModelType)
+        {
+            _registry[viewModelType] = dialogType;
+        }
     }
 
     public class ProgressInfo
@@ -39,4 +80,114 @@ namespace RanseiLink.Core.Services
         }
     }
 
+    public abstract class FileSystemDialogSettings
+    {
+        public string Title { get; set; } = string.Empty;
+        public string InitialDirectory { get; set; } = string.Empty;
+    }
+
+    public abstract class FileDialogSettings : FileSystemDialogSettings
+    {
+        public string InitialFileName { get; set; } = string.Empty;
+        public List<FileDialogFilter> Filters { get; set; } = new List<FileDialogFilter>();
+    }
+
+    public class SaveFileDialogSettings : FileDialogSettings
+    {
+        public SaveFileDialogSettings() { }
+        public string DefaultExtension { get; set; }
+    }
+
+    public class OpenFileDialogSettings : FileDialogSettings
+    {
+        public OpenFileDialogSettings() { }
+        public OpenFileDialogSettings(string title, params FileDialogFilter[] filters)
+        {
+            Title = title;
+            Filters.AddRange(filters);
+        }
+        public bool AllowMultiple { get; set; }
+    }
+
+    public class OpenFolderDialogSettings : FileSystemDialogSettings
+    {
+        public OpenFolderDialogSettings() { }
+        public OpenFolderDialogSettings(string title)
+        {
+            Title = title;
+        }
+    }
+
+    public class FileDialogFilter
+    {
+        public FileDialogFilter() { }
+
+        public FileDialogFilter(string name, params string[] extensions)
+        {
+            Name = name;
+            Extensions.AddRange(extensions);
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the filter, e.g. ("Text files (.txt)").
+        /// </summary>
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets a list of file extensions matched by the filter (e.g. "txt" or "*" for all
+        /// files).
+        /// </summary>
+        public List<string> Extensions { get; set; } = new List<string>();
+    }
+
+    public static class DialogServiceExtensions
+    {
+        public static TDialogResult ShowDialogWithResult<TDialogResult>(this IDialogService dialogService, IModalDialogViewModel<TDialogResult> dialogViewModel)
+        {
+            dialogService.ShowDialog(dialogViewModel);
+            return dialogViewModel.Result;
+        }
+
+        public static string RequestRomFile(this IDialogService dialogService)
+        {
+            return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+            {
+                Title = "Select a Rom",
+                Filters = new List<FileDialogFilter>
+                {
+                    new FileDialogFilter("Pokemon Conquest Rom (.nds)", ".nds")
+                }
+            });
+        }
+
+        public static string RequestModFile(this IDialogService dialogService)
+        {
+            return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+            {
+                Title = "Select a Mod",
+                Filters = new List<FileDialogFilter>
+                {
+                    new FileDialogFilter("RanseiLink Mod (.rlmod)", ".rlmod")
+                }
+            });
+        }
+
+        public static string ShowOpenSingleFileDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        {
+            settings.AllowMultiple = false;
+            var result = dialogService.ShowOpenFileDialog(settings);
+            var file = result?.FirstOrDefault();
+            if (string.IsNullOrEmpty(file))
+            {
+                file = null;
+            }
+            return file;
+        }
+
+        public static string[] ShowOpenMultipleFilesDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        {
+            settings.AllowMultiple = true;
+            return dialogService.ShowOpenFileDialog(settings);
+        }
+    }
 }

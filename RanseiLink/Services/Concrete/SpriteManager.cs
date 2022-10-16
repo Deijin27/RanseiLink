@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
+using RanseiLink.ViewModels;
 using System.IO;
 
 namespace RanseiLink.Services.Concrete;
@@ -16,7 +17,19 @@ public class SpriteManager : ISpriteManager
 
     public bool SetOverride(SpriteType type, int id, string requestFileMsg)
     {
-        if (!_dialogService.RequestFile(requestFileMsg, ".png", "PNG Image (.png)|*.png", out string file))
+        var file = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        {
+            Title = requestFileMsg,
+            Filters = new()
+            {
+                new()
+                {
+                    Name = "PNG Image (.png)",
+                    Extensions = new() { ".png" }
+                }
+            }
+        });
+        if (string.IsNullOrEmpty(file))
         {
             return false;
         }
@@ -34,14 +47,14 @@ public class SpriteManager : ISpriteManager
             {
                 if (gInfo.StrictHeight || gInfo.StrictWidth)
                 {
-                    _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                    _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                         "Invalid dimensions",
                         $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nFor this image type it is a strict requirement."
                         ));
                     return false;
                 }
 
-                var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+                var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
                     title: "Invalid dimensions",
                     message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",
                     buttons: new[]
@@ -80,7 +93,8 @@ public class SpriteManager : ISpriteManager
 
         if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
         {
-            if (!_dialogService.SimplfyPalette(paletteCapacity, file, temp))
+            var vm = new SimplifyPaletteViewModel(paletteCapacity, file, temp);
+            if (!_dialogService.ShowDialogWithResult(vm))
             {
                 return false;
             }

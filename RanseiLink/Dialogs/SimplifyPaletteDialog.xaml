@@ -13,7 +13,7 @@
         xmlns:controls="clr-namespace:RanseiLink.Controls"
         xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
-        d:DataContext="{d:DesignInstance vm:PaletteSimplifierDialogViewModel, IsDesignTimeCreatable=false}"
+        d:DataContext="{d:DesignInstance vm:SimplifyPaletteViewModel, IsDesignTimeCreatable=false}"
         Title="Patch rom" Background="{DynamicResource WindowBackgroundBrush}">
     <Window.Resources>
         <conv:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>

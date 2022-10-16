@@ -1,16 +1,24 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
+using RanseiLink.Settings;
 using RanseiLink.DragDrop;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public class ModCommitViewModel : ViewModelBase
+public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private string _file;
     private bool _includeSprites = true;
+    private readonly RecentCommitRomSetting _recentCommitRomSetting;
+    private readonly PatchSpritesSetting _patchSpritesSetting;
+    private readonly ISettingService _settingService;
 
-    public ModCommitViewModel(IDialogService dialogService, ModInfo modInfo, string initFile)
+    public ModCommitViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo)
     {
+        _settingService = settingService;
+        _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();
+        _patchSpritesSetting = settingService.Get<PatchSpritesSetting>();
         ModInfo = modInfo;
         RomDropHandler = new RomDropHandler();
         RomDropHandler.FileDropped += f =>
@@ -18,15 +26,35 @@ public class ModCommitViewModel : ViewModelBase
             File = f;
         };
 
-        File = initFile;
+        File = _recentCommitRomSetting.Value;
 
         FilePickerCommand = new RelayCommand(() =>
         {
-            if (dialogService.RequestRomFile(out string file))
+            var file = dialogService.RequestRomFile();
+            if (!string.IsNullOrEmpty(file))
             {
                 File = file;
             }
         });
+    }
+
+    public bool Result { get; private set; }
+    public PatchOptions PatchOpt { get; private set; }
+    public void OnClosing(bool result)
+    {
+        Result = result;
+
+        if (result)
+        {
+            _recentCommitRomSetting.Value = File;
+            _patchSpritesSetting.Value = IncludeSprites;
+            _settingService.Save();
+            
+            if (IncludeSprites)
+            {
+                PatchOpt |= PatchOptions.IncludeSprites;
+            }
+        }
     }
 
     public ICommand FilePickerCommand { get; }

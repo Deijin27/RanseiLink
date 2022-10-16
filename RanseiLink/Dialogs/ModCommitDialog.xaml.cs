@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RanseiLink.Core.Services;
+using RanseiLink.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace RanseiLink.Dialogs;
 
@@ -30,15 +23,17 @@ public partial class ModCommitDialog : Window
         }
     }
 
+    private IModalDialogViewModel ViewModel => DataContext as IModalDialogViewModel;
+
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = true;
+        ViewModel?.OnClosing(true);
         Close();
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
+        ViewModel?.OnClosing(false);
         Close();
 
     }

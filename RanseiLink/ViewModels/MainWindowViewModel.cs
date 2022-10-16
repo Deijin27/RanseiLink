@@ -25,7 +25,7 @@ public class MainWindowViewModel : ViewModelBase
         pluginLoader.LoadPlugins(out var failures);
         if (failures?.AnyFailures == true)
         {
-            dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Plugin Load Failures",
                 message: $"Unable to load some of the plugins, details:\n\n{failures}",
                 type: MessageBoxType.Warning

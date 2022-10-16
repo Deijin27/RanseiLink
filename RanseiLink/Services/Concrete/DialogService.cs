@@ -1,296 +1,151 @@
 ﻿using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
-using RanseiLink.Settings;
-using RanseiLink.ViewModels;
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace RanseiLink.Services.Concrete;
 
+internal static class DialogLocatorExtensions
+{
+    public static void Register<TDialog, TViewModel>(this RegistryDialogLocator locator) where TDialog : Window
+    {
+        locator.Register(typeof(TDialog), typeof(TViewModel));
+    }
+}
+
 internal class DialogService : IDialogService
 {
-    private readonly ISettingService _settingService;
-    private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    private readonly RecentCommitRomSetting _recentCommitRomSetting;
-    private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
-    private readonly PatchSpritesSetting _patchSpritesSetting;
-    public DialogService(ISettingService settings)
+    private readonly IDialogLocator _locator;
+    public DialogService(IDialogLocator locator)
     {
-        _settingService = settings;
-        _recentLoadRomSetting = settings.Get<RecentLoadRomSetting>();
-        _recentCommitRomSetting = settings.Get<RecentCommitRomSetting>();
-        _recentExportModFolderSetting = settings.Get<RecentExportModFolderSetting>();
-        _patchSpritesSetting = settings.Get<PatchSpritesSetting>();
+        _locator = locator;
     }
 
-    public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxArgs options)
+    private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
+    private Window MainWindow => System.Windows.Application.Current.MainWindow;
+
+    public void ShowDialog(object dialogViewModel)
     {
-        var dialog = new Dialogs.MessageBoxDialog(options)
+        var type = _locator.Locate(dialogViewModel);
+        if (type == null)
         {
-            Owner = Application.Current.MainWindow
-        };
-        dialog.ShowDialog();
-        return dialog.Result;
+            throw new TypeLoadException($"Dialog type for view model '{dialogViewModel.GetType().FullName}' not found.");
+        }
+        if (!typeof(Window).IsAssignableFrom(type))
+        {
+            throw new Exception($"Dialog type '{type.FullName}' is not assignable to Window");
+        }
+
+        Dispatcher.Invoke(() =>
+        {
+            var dialog = (Window)Activator.CreateInstance(type);
+            dialog.Owner = MainWindow;
+            dialog.DataContext = dialogViewModel;
+            dialog.ShowDialog();
+        });
     }
 
-    public bool RequestFile(string title, string defaultExt, string filter, out string result)
+    public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxSettings options)
     {
-        var dialog = new Microsoft.Win32.OpenFileDialog
+        return Dispatcher.Invoke(() =>
         {
-            Title = title,
-            DefaultExt = defaultExt,
-            Filter = filter,
-            CheckFileExists = true,
-            CheckPathExists = true,
-        };
-
-        // Show save file dialog box
-        bool? proceed = dialog.ShowDialog();
-        result = dialog.FileName;
-        // Process save file dialog box results
-        return proceed == true;
-    }
-
-    public bool RequestRomFile(out string result)
-    {
-        var dialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Title = "Select a Rom",
-            DefaultExt = ".nds",
-            Filter = "Pokemon Conquest Rom (.nds)|*.nds",
-            CheckFileExists = true,
-            CheckPathExists = true,
-        };
-
-        // Show save file dialog box
-        bool? proceed = dialog.ShowDialog();
-        result = dialog.FileName;
-        // Process save file dialog box results
-        return proceed == true;
-    }
-
-    public bool RequestModFile(out string result)
-    {
-        var dialog = new Microsoft.Win32.OpenFileDialog
-        {
-            Title = "Select a Mod",
-            DefaultExt = ".rlmod",
-            Filter = "RanseiLink Mod (.rlmod)|*.rlmod",
-            CheckFileExists = true,
-            CheckPathExists = true,
-        };
-
-        // Show save file dialog box
-        bool? proceed = dialog.ShowDialog();
-        result = dialog.FileName;
-        // Process save file dialog box results
-        return proceed == true;
-    }
-
-    public bool RequestFolder(string title, out string result)
-    {
-        using (var dialog = new System.Windows.Forms.FolderBrowserDialog() { UseDescriptionForTitle = true, Description = title })
-        {
-            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            var dialog = new Dialogs.MessageBoxDialog(options)
             {
-                result = null;
-                return false;
-            }
-            else
+                Owner = MainWindow
+            };
+            dialog.ShowDialog();
+            return dialog.Result;
+        });
+    }
+
+    private static string GenerateWin32FilterString(IEnumerable<FileDialogFilter> filters)
+    {
+        var parts = new List<string>();
+        foreach (var filter in filters)
+        {
+            parts.Add(filter.Name);
+            parts.Add(string.Join(';', filter.Extensions.Select(ext =>
             {
-                result = dialog.SelectedPath;
-                return Directory.Exists(result);
-            }
+                if (!ext.StartsWith("."))
+                {
+                    ext = "." + ext;
+                }
+                return "*" + ext;
+            })));
         }
+        return string.Join('|', parts);
     }
 
-    public bool CreateMod(out ModInfo modInfo, out string romPath)
+    public string[] ShowOpenFileDialog(OpenFileDialogSettings settings)
     {
-        var vm = new ModCreationViewModel(this, _recentLoadRomSetting.Value);
-
-        var dialog = new Dialogs.ModCreationDialog
+        return Dispatcher.Invoke(() =>
         {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            modInfo = vm.ModInfo;
-            romPath = vm.File;
-            _recentLoadRomSetting.Value = vm.File;
-            _settingService.Save();
-            return true;
-        }
-        else
-        {
-            modInfo = null;
-            romPath = null;
-            return false;
-        }
-    }
-
-    public bool CreateModBasedOn(ModInfo baseMod, out ModInfo newModInfo)
-    {
-        var vm = new ModCreateBasedOnViewModel(baseMod);
-
-        var dialog = new Dialogs.ModCreateBasedOnDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            newModInfo = vm.ModInfo;
-            return true;
-        }
-        else
-        {
-            newModInfo = null;
-            return false;
-        }
-    }
-
-    public bool ExportMod(ModInfo info, out string folder)
-    {
-        var vm = new ModExportViewModel(this, info, _recentExportModFolderSetting.Value);
-
-        var dialog = new Dialogs.ModExportDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            folder = vm.Folder;
-            _recentExportModFolderSetting.Value = vm.Folder;
-            _settingService.Save();
-            return true;
-        }
-        else
-        {
-            folder = null;
-            return false;
-        }
-    }
-
-    public bool ImportMod(out string file)
-    {
-        var vm = new ModImportViewModel(this);
-
-        var dialog = new Dialogs.ModImportDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            file = vm.File;
-            return true;
-        }
-        else
-        {
-            file = null;
-            return false;
-        }
-    }
-
-    public bool EditModInfo(ModInfo info)
-    {
-        var vm = new ModEditInfoViewModel(new ModInfo() { Name = info.Name, Version = info.Version, Author = info.Author });
-
-        var dialog = new Dialogs.ModEditInfoDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            info.Name = vm.Name;
-            info.Author = vm.Author;
-            info.Version = vm.Version;
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public bool CommitToRom(ModInfo info, out string romPath, out PatchOptions patchOptions)
-    {
-        var vm = new ModCommitViewModel(this, info, _recentCommitRomSetting.Value)
-        {
-            IncludeSprites = _patchSpritesSetting.Value
-        };
-
-        var dialog = new Dialogs.ModCommitDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm,
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            romPath = vm.File;
-            _recentCommitRomSetting.Value = vm.File;
-            _patchSpritesSetting.Value = vm.IncludeSprites;
-            _settingService.Save();
-            patchOptions = 0;
-
-            if (vm.IncludeSprites)
+            var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                patchOptions |= PatchOptions.IncludeSprites;
-            }
-
-            return true;
-        }
-        else
-        {
-            romPath = null;
-            patchOptions = 0;
-            return false;
-        }
+                Title = settings.Title,
+                InitialDirectory = settings.InitialDirectory,
+                Filter = GenerateWin32FilterString(settings.Filters),
+                Multiselect = settings.AllowMultiple,
+                CheckFileExists = true,
+                CheckPathExists = true,
+            };
+            var result = dialog.ShowDialog();
+            return result == true ? dialog.FileNames : null;
+        });
     }
 
-    public bool ConfirmDelete(ModInfo info)
+    public string ShowSaveFileDialog(SaveFileDialogSettings settings)
     {
-        var vm = new ModDeleteViewModel(info);
-
-        var dialog = new Dialogs.ModDeleteDialog
+        return Dispatcher.Invoke(() =>
         {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = settings.Title,
+                InitialDirectory = settings.InitialDirectory,
+                DefaultExt = settings.DefaultExtension,
+                Filter = GenerateWin32FilterString(settings.Filters),
+            };
+            var result = dialog.ShowDialog();
+            return result == true ? dialog.FileName : null;
+        });
+    }
 
-        bool? proceed = dialog.ShowDialog();
+    public string ShowOpenFolderDialog(OpenFolderDialogSettings settings)
+    {
+        return Dispatcher.Invoke(() =>
+        {
+            var dialog = new FolderBrowserDialog
+            {
+                Description = settings.Title,
+                SelectedPath = settings.InitialDirectory,
+            };
 
-        return proceed == true;
+            var resultEnum = dialog.ShowDialog();
+
+            bool? result = resultEnum switch
+            {
+                DialogResult.OK => true,
+                DialogResult.Yes => true,
+                DialogResult.No => false,
+                DialogResult.Abort => false,
+                _ => null
+            };
+
+            string resultString = result == true ? dialog.SelectedPath : null;
+            dialog.Dispose();
+            return resultString;
+        });
     }
 
     public void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true)
     {
         var progressWindow = new Dialogs.LoadingDialog
         {
-            Owner = Application.Current.MainWindow
+            Owner = MainWindow
         };
 
         var progressReporter = new Progress<ProgressInfo>(info =>
@@ -324,96 +179,5 @@ internal class DialogService : IDialogService
         };
 
         progressWindow.ShowDialog();
-    }
-
-    public bool UpgradeMods(out string romPath)
-    {
-        var vm = new ModUpgradeViewModel(this, _recentLoadRomSetting.Value);
-
-        var dialog = new Dialogs.ModUpgradeDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            romPath = vm.File;
-            _recentLoadRomSetting.Value = vm.File;
-            _settingService.Save();
-            return true;
-        }
-        else
-        {
-            romPath = null;
-            return false;
-        }
-    }
-
-    public bool ModifyMapDimensions(ref ushort width, ref ushort height)
-    {
-        var dialog = new Dialogs.ModifyMapDimensionsDialog()
-        {
-            Owner = Application.Current.MainWindow
-        };
-        dialog.WidthNumberBox.Value = width;
-        dialog.HeightNumberBox.Value = height;
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            width = (ushort)dialog.WidthNumberBox.Value;
-            height = (ushort)dialog.HeightNumberBox.Value;
-            return true;
-        }
-        return false;
-    }
-
-    public bool PopulateDefaultSprites(out string romPath)
-    {
-        var vm = new PopulateDefaultSpriteViewModel(this, _recentLoadRomSetting.Value);
-
-        var dialog = new Dialogs.PopulateDefaultSpriteDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        if (proceed == true)
-        {
-            romPath = vm.File;
-            _recentLoadRomSetting.Value = vm.File;
-            _settingService.Save();
-            return true;
-        }
-        else
-        {
-            romPath = null;
-            return false;
-        }
-    }
-
-    public bool SimplfyPalette(int maxColors, string original, string simplified)
-    {
-        var vm = new PaletteSimplifierDialogViewModel(
-            maxColors,
-            original,
-            simplified
-        );
-
-        var dialog = new Dialogs.SimplifyPaletteDialog
-        {
-            Owner = Application.Current.MainWindow,
-            DataContext = vm
-        };
-
-        bool? proceed = dialog.ShowDialog();
-
-        return proceed == true;
     }
 }

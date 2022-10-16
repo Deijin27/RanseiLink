@@ -92,13 +92,13 @@ public class DisableEventsPlugin : IPlugin
 
         if (!found64 && !found65)
         {
-            dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Failed to locate event files", "", MessageBoxType.Error
                 ));
         }
         else
         {
-            dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Success", "The events have been " + options.Action == ConstOptions.DisableEvents ? "disabled" : "enabled"
                 ));
         }

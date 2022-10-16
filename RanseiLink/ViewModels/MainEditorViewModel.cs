@@ -52,7 +52,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         PluginItems = pluginLoader.LoadPlugins(out var loadFailures);
         if (loadFailures?.AnyFailures == true)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Failed to load some plugins", loadFailures?.ToString()));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load some plugins", loadFailures?.ToString()));
         }
 
         CommitRomCommand = new RelayCommand(CommitRom);
@@ -263,15 +263,16 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void CommitRom()
     {
-        if (!_dialogService.CommitToRom(Mod, out string romPath, out var patchOpt))
+        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
 
-        var canPatch = _modPatcher.CanPatch(Mod, romPath, patchOpt);
+        var canPatch = _modPatcher.CanPatch(Mod, vm.File, vm.PatchOpt);
         if (!canPatch.CanPatch)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", canPatch.ReasonCannotPatch));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ReasonCannotPatch));
             return;
         }
 
@@ -286,7 +287,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             }
             try
             {
-                _modPatcher.Patch(Mod, romPath, patchOpt, progress);
+                _modPatcher.Patch(Mod, vm.File, vm.PatchOpt, progress);
             }
             catch (Exception e)
             {
@@ -296,7 +297,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
         if (error != null)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Error Writing To Rom",
                 message: error.ToString(),
                 type: MessageBoxType.Error
@@ -336,7 +337,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.ToString(),
                 type: MessageBoxType.Error

@@ -56,7 +56,7 @@ public class ChangelistPlugin : IPlugin
 
             if (options.UnchangedMod == options.ChangedMod)
             {
-                dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "Invalid Options",
                     "The source mod must be different to the destination mod"
                     ));
@@ -91,7 +91,7 @@ public class ChangelistPlugin : IPlugin
         else if (options.OutputType == OutputType.TSV)
         {
             OutputTsv(file, changelist);
-            dialogService.ShowMessageBox(MessageBoxArgs.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
+            dialogService.ShowMessageBox(MessageBoxSettings.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
         }
     }
 

@@ -1,16 +1,22 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
+using RanseiLink.Settings;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public class ModCreationViewModel : ViewModelBase
+public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
-    public ModCreationViewModel(IDialogService dialogService, string initFile)
+    private readonly RecentLoadRomSetting _recentLoadRomSetting;
+    private readonly ISettingService _settingService;
+    public ModCreationViewModel(IDialogService dialogService, ISettingService settingService)
     {
+        _settingService = settingService;
+        _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
         ModInfo = new ModInfo();
         RomDropHandler = new RomDropHandler();
-        File = initFile;
+        File = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
         {
             File = f;
@@ -18,11 +24,28 @@ public class ModCreationViewModel : ViewModelBase
 
         FilePickerCommand = new RelayCommand(() =>
         {
-            if (dialogService.RequestRomFile(out string file))
+            var file = dialogService.RequestRomFile();
+            if (!string.IsNullOrEmpty(file))
             {
                 File = file;
             }
         });
+    }
+
+    public bool Result { get; private set; }
+    public void OnClosing(bool result)
+    {
+        Result = result;
+        if (result)
+        {
+            _recentLoadRomSetting.Value = File;
+            _settingService.Save();
+        }
+        else
+        {
+            File = null;
+        }
+        
     }
 
     public ICommand FilePickerCommand { get; }

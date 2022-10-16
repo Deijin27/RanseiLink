@@ -12,12 +12,12 @@ namespace RanseiLink.Services.Concrete;
 public class MapManager : IMapManager
 {
     private const string _pacExt = ".pac";
-    private const string _pacFilter = "Pokemon Conquest 3D Archive (.pac)|*.pac";
     private const string _objExt = ".obj";
-    private const string _objFilter = "Wavefront OBJ (.obj)|*.obj";
     private const string _pslmExt = ".pslm";
-    private const string _pslmFilter = "Pokemon Conquest Map Data (.pslm)|*.pslm";
-
+    private static readonly FileDialogFilter _pacFilter = new("Pokemon Conquest 3D Archive (.pac)", ".pac");
+    private static readonly FileDialogFilter _objFilter = new("Wavefront OBJ (.obj)", ".obj");
+    private static readonly FileDialogFilter _pslmFilter = new("Pokemon Conquest Map Data (.pslm)", ".pslm");
+    
     private static string ResolveMapModelFileNameWithoutExt(MapId id)
     {
         return $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}";
@@ -44,13 +44,13 @@ public class MapManager : IMapManager
         {
             return false;
         }
-        var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+        var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
             $"Revert map 3D Model {id} to default?",
             "Confirm to permanently delete the internally stored 3D model which overrides the default",
             new MessageBoxButton[]
             {
-                new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
-                new MessageBoxButton("Yes, revert to default", MessageBoxResult.Yes)
+                new("Cancel", MessageBoxResult.Cancel),
+                new("Yes, revert to default", MessageBoxResult.Yes)
             }
             ));
 
@@ -64,7 +64,8 @@ public class MapManager : IMapManager
 
     public bool ImportPac(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose a PAC file to import", _pacExt, _pacFilter, out string result))
+        var result = _dialogService.ShowOpenSingleFileDialog(new("Choose a PAC file", _pacFilter));
+        if (string.IsNullOrEmpty(result))
         {
             return false;
         }
@@ -77,16 +78,22 @@ public class MapManager : IMapManager
     {
         if (!_overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Cannot export", "You must populate default graphics."));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
             return false;
         }
-        if (!_dialogService.RequestFolder("Choose a folder in which to place the exported PAC", out string result))
+        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
+        var exportFile = _dialogService.ShowSaveFileDialog(new SaveFileDialogSettings
+        {
+            Title = "Export Map PAC",
+            DefaultExtension = ".pac",
+            InitialFileName = Path.GetFileName(dataFile.File),
+            Filters = new() { new("Pokemon Conquest 3D Archive (.pac)", ".pac") }
+        });
+        if (string.IsNullOrEmpty(exportFile))
         {
             return false;
         }
 
-        var dataFile = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
-        var exportFile = Path.Combine(result, Path.GetFileName(dataFile.File));
         exportFile = FileUtil.MakeUniquePath(exportFile);
         File.Copy(dataFile.File, exportFile);
         return true;
@@ -94,7 +101,8 @@ public class MapManager : IMapManager
 
     public bool ImportObj(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose an OBJ file to import", _objExt, _objFilter, out string objFile))
+        var objFile = _dialogService.ShowOpenSingleFileDialog(new("Choose an OBJ file", _objFilter));
+        if (string.IsNullOrEmpty(objFile))
         {
             return false;
         }
@@ -123,12 +131,12 @@ public class MapManager : IMapManager
             }
             else
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Error importing map", $"{result.FailureReason}", MessageBoxType.Error));
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error importing map", $"{result.FailureReason}", MessageBoxType.Error));
             }
         }
         catch (Exception ex)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
         }
         finally
         {
@@ -143,10 +151,11 @@ public class MapManager : IMapManager
     {
         if (!_overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Cannot export", "You must populate default graphics."));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
             return false;
         }
-        if (!_dialogService.RequestFolder("Choose a folder in which to place the exported OBJ", out string destinationFolder))
+        var destinationFolder = _dialogService.ShowOpenFolderDialog(new("Choose a folder in which to place the exported OBJ"));
+        if (string.IsNullOrEmpty(destinationFolder))
         {
             return false;
         }
@@ -160,13 +169,13 @@ public class MapManager : IMapManager
             var result = ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, exportFolder);
             if (!result.Success)
             {
-                _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Error exporting map as obj", $"{result.FailureReason}", MessageBoxType.Error));
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error exporting map as obj", $"{result.FailureReason}", MessageBoxType.Error));
                 return false;
             }
         }
         catch (Exception ex)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
             return false;
         }
 
@@ -175,7 +184,11 @@ public class MapManager : IMapManager
 
     public bool ExportPslm(MapId id)
     {
-        if (!_dialogService.RequestFolder("Choose a folder in which to place the exported PSLM", out string destinationFolder))
+        var destinationFolder = _dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
+        {
+            Title = "Choose a folder in which to place the exported PSLM"
+        });
+        if (string.IsNullOrEmpty(destinationFolder))
         {
             return false;
         }
@@ -190,7 +203,8 @@ public class MapManager : IMapManager
 
     public bool ImportPslm(MapId id)
     {
-        if (!_dialogService.RequestFile("Choose a PSLM file to import", _pslmExt, _pslmFilter, out string pslmFile))
+        var pslmFile = _dialogService.ShowOpenSingleFileDialog(new("Choose a PSLM file", _pslmFilter));
+        if (string.IsNullOrEmpty(pslmFile))
         {
             return false;
         }
@@ -204,4 +218,7 @@ public class MapManager : IMapManager
         var info = _overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
         return info.IsOverride;
     }
+
+    
 }
+

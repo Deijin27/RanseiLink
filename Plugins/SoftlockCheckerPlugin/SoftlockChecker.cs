@@ -71,7 +71,7 @@ internal class SoftlockChecker
         int totalCount = guaranteedCount + conditionalCount + probableCount + probableConditionalCount + suggestionCount;
         if (totalCount <= 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Validation Passed",
                 "There is no known softlock causes in your mod!"
                 ));

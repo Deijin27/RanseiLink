@@ -52,7 +52,7 @@ public class PartialTransferPlugin : IPlugin
 
             if (options.SourceMod == options.DestinationMod)
             {
-                dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+                dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "Invalid Options",
                     "The source mod must be different to the destination mod"
                     ));

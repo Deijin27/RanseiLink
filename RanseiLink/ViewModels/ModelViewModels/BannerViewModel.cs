@@ -94,14 +94,15 @@ public class BannerViewModel : ViewModelBase
 
     private void ReplaceImage()
     {
-        if (!_dialogService.RequestFile("Choose a file to set as banner image", ".png", "PNG Image (.png)|*.png", out string file))
+        var file = _dialogService.ShowOpenSingleFileDialog(new("Choose a file to set as banner image", new FileDialogFilter("PNG Image (.png)", ".png")));
+        if (string.IsNullOrEmpty(file))
         {
             return;
         }
 
         if (!ImageSimplifier.ImageMatchesSize(file, 32, 32))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Invalid dimensions",
                 $"The dimensions of this image should be 32x32."
                 ));
@@ -112,7 +113,8 @@ public class BannerViewModel : ViewModelBase
 
         if (ImageSimplifier.SimplifyPalette(file, 16, temp))
         {
-            if (!_dialogService.SimplfyPalette(16, file, temp))
+            var vm = new SimplifyPaletteViewModel(16, file, temp);
+            if (!_dialogService.ShowDialogWithResult(vm))
             {
                 return;
             }
@@ -142,12 +144,13 @@ public class BannerViewModel : ViewModelBase
 
     private void ExportImage()
     {
-        if (!_dialogService.RequestFolder("Select folder to export image into", out string dir))
+        var dir = _dialogService.ShowOpenFolderDialog(new("Select folder to export image into"));
+        if (string.IsNullOrEmpty(dir))
         {
             return;
         }
         var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_bannerService.ImagePath)));
         File.Copy(_bannerService.ImagePath, dest);
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Image Exported", $"Exported to '{dest}'"));
+        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Image Exported", $"Exported to '{dest}'"));
     }
 }

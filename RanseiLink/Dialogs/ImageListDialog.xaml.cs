@@ -11,11 +11,9 @@ namespace RanseiLink.Dialogs;
 /// </summary>
 public partial class ImageListDialog : Window
 {
-    public ImageListDialog(IEnumerable<SpriteFile> sprites, SpriteItemViewModelFactory factory)
+    public ImageListDialog()
     {
         InitializeComponent();
-
-        imageitemsControl.ItemsSource = sprites.Select(x => factory(x)).ToArray();
     }
 
     private void TopBar_MouseDown(object sender, MouseButtonEventArgs e)

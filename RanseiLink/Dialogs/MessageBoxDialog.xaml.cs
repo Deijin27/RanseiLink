@@ -10,7 +10,7 @@ namespace RanseiLink.Dialogs;
 /// </summary>
 public partial class MessageBoxDialog : Window
 {
-    public MessageBoxDialog(MessageBoxArgs args)
+    public MessageBoxDialog(MessageBoxSettings args)
     {
         InitializeComponent();
         DataContext = args;

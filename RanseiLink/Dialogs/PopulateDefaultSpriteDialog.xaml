@@ -11,7 +11,7 @@
         xmlns:views="clr-namespace:RanseiLink.Views"
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
         xmlns:dd="urn:gong-wpf-dragdrop"
-        d:DataContext="{d:DesignInstance vm:ModUpgradeViewModel, IsDesignTimeCreatable=False}"
+        d:DataContext="{d:DesignInstance vm:PopulateDefaultSpriteViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Height="225" Width="550" Background="Transparent">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>

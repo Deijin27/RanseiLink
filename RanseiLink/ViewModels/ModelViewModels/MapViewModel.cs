@@ -316,12 +316,13 @@ public class MapViewModel : ViewModelBase
 
     private void ModifyMapDimensions()
     {
-        var width = Width;
-        var height = Height;
-        if (!_dialogService.ModifyMapDimensions(ref width, ref height))
+        var vm = new ModifyMapDimensionsViewModel(Width, Height);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
+        ushort height = vm.Height;
+        ushort width = vm.Width;
         var matrix = Map.TerrainSection.MapMatrix;
         // modify column size
         while (matrix.Count > height)

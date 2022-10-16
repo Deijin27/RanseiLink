@@ -10,9 +10,13 @@ namespace RanseiLink.Core.Graphics
     public static class ImageSimplifier
     {
         /// <summary>
-        /// Simplify palette by grouping colors nearest to eachother
+        /// Reduce the number of colors in an image with quantization.
+        /// Saves to a file next to the input file.
         /// </summary>
-        /// <returns>False if the paletted didn't need to be simplified</returns>
+        /// <param name="imagePath">Path of image file to simplify</param>
+        /// <param name="maximumColors">Palette capacity of image</param>
+        /// <returns>True if the image was simplified. False if simplification was not necessary</returns>
+        /// <exception cref="UnknownImageFormatException"></exception>
         public static bool SimplifyPalette(string imagePath, int maximumColors)
         {
             string saveFile = FileUtil.MakeUniquePath(Path.Combine(
@@ -22,6 +26,14 @@ namespace RanseiLink.Core.Graphics
             return SimplifyPalette(imagePath, maximumColors, saveFile);
         }
 
+        /// <summary>
+        /// Reduce the number of colors in an image with quantization
+        /// </summary>
+        /// <param name="imagePath">Path of image file to simplify</param>
+        /// <param name="maximumColors">Palette capacity of image</param>
+        /// <param name="saveFile">File to save simplified version of image to</param>
+        /// <returns>True if the image was simplified. False if simplification was not necessary</returns>
+        /// <exception cref="UnknownImageFormatException"></exception>
         public static bool SimplifyPalette(string imagePath, int maximumColors, string saveFile)
         {
             Image<Rgba32> img;

@@ -21,7 +21,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
         _dialogService ??= context.Services.Get<IDialogService>();
         _pluginService ??= context.Services.Get<IPluginService>();
 
-        var result = _dialogService.ShowMessageBox(new MessageBoxArgs(
+        var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
             "Split or Create?",
             "Would you like to split a sprite sheet into it's constituent sprites, or create one from a folder of sprites?",
             new MessageBoxButton[]
@@ -70,13 +70,13 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
         if (spriteSheet.Width % spriteWidth != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid dimensions", $"The sprite sheet is width is not divisible by the provided sprite width"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is width is not divisible by the provided sprite width"));
             return;
         }
 
         if (spriteSheet.Height % spriteHeight != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid dimensions", $"The sprite sheet is height is not divisible by the provided sprite height"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is height is not divisible by the provided sprite height"));
             return;
         }
 
@@ -133,7 +133,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
         string[] files = Directory.GetFiles(folder);
         if (files.Length == 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Folder is empty", $"There are no files in the folder '{folder}'"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Folder is empty", $"There are no files in the folder '{folder}'"));
             return;
         }
 
@@ -149,7 +149,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
         int spriteHeight = first.Height;
         if (!images.All(i => i.Width == first.Width && i.Height == first.Height))
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid images", $"All images must have the same dimensions"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"All images must have the same dimensions"));
             return;
         }
 
@@ -157,20 +157,20 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
         if (spriteSheetWidth % first.Width != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid images", $"The width you provided is not divisible by the widths of the sprites"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The width you provided is not divisible by the widths of the sprites"));
             return;
         }
 
         int spriteSheetHeight = options.SheetHeight;
         if (spriteSheetHeight % first.Height != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid images", $"The height you provided is not divisible by the height of the sprites"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The height you provided is not divisible by the height of the sprites"));
             return;
         }
 
         if (images.Count * spriteWidth * spriteHeight > spriteSheetHeight * spriteSheetWidth)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Invalid images", $"The sprites do not fit in the sheet size"));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The sprites do not fit in the sheet size"));
             return;
         }
 

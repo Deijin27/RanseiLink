@@ -1,14 +1,20 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
+using RanseiLink.Settings;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
-public class ModExportViewModel : ViewModelBase
+public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
-    public ModExportViewModel(IDialogService dialogService, ModInfo modInfo, string initFolder)
+    private readonly ISettingService _settingService;
+    private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
+    public ModExportViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo)
     {
-        Folder = initFolder;
+        _settingService = settingService;
+        _recentExportModFolderSetting = settingService.Get<RecentExportModFolderSetting>();
+        Folder = _recentExportModFolderSetting.Value;
         ModInfo = modInfo;
         RomDropHandler = new FolderDropHandler();
         RomDropHandler.FolderDropped += f =>
@@ -18,11 +24,24 @@ public class ModExportViewModel : ViewModelBase
 
         FolderPickerCommand = new RelayCommand(() =>
         {
-            if (dialogService.RequestFolder("Select a folder to export the mod into", out string folder))
+            var folder = dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings { Title = "Select a folder to export the mod into" });
+            if (!string.IsNullOrEmpty(folder))
             {
                 Folder = folder;
             }
         });
+    }
+
+    public bool Result { get; private set; }
+
+    public void OnClosing(bool result)
+    {
+        Result = result;
+        if (result)
+        {
+            _recentExportModFolderSetting.Value = Folder;
+            _settingService.Save();
+        }
     }
 
     public ICommand FolderPickerCommand { get; }

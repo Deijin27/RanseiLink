@@ -81,13 +81,17 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void Export()
     {
-        if (!_dialogService.RequestFolder("Select folder to export sprite into", out string dir))
+        var dir = _dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
+        {
+            Title = "Select folder to export sprite into"
+        });
+        if (string.IsNullOrEmpty(dir))
         {
             return;
         }
         var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_displayFile)));
         File.Copy(_displayFile, dest);
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
+        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }
 
     private void SetOverride()

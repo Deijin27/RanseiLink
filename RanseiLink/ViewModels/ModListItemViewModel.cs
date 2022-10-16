@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System;
@@ -19,6 +20,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly IModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
+    private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IModPatchingService _modPatcher;
 
@@ -28,9 +30,11 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         IModManager modManager,
         IModPatchingService modPatcher,
         IDialogService dialogService,
+        ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory)
     {
+        _settingService = settingService;
         _modKernelFactory = modKernelFactory;
         _parentVm = parent;
         _modService = modManager;
@@ -66,15 +70,16 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private void PatchRom(ModInfo mod)
     {
-        if (!_dialogService.CommitToRom(mod, out string romPath, out var patchOpt))
+        var vm = new ModCommitViewModel(_dialogService, _settingService, mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
 
-        var canPatch = _modPatcher.CanPatch(mod, romPath, patchOpt);
+        var canPatch = _modPatcher.CanPatch(mod, vm.File, vm.PatchOpt);
         if (!canPatch.CanPatch)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Unable to patch", canPatch.ReasonCannotPatch));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ReasonCannotPatch));
             return;
         }
 
@@ -83,7 +88,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         {
             try
             {
-                _modPatcher.Patch(mod, romPath, patchOpt, progress);
+                _modPatcher.Patch(mod, vm.File, vm.PatchOpt, progress);
             }
             catch (Exception e)
             {
@@ -93,7 +98,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
         if (error != null)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Error Writing To Rom",
                 message: error.ToString(),
                 type: MessageBoxType.Error
@@ -102,7 +107,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private void ExportMod(ModInfo mod)
     {
-        if (!_dialogService.ExportMod(mod, out string folder))
+        var vm = new ModExportViewModel(_dialogService, _settingService, mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -112,7 +118,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             progress.Report(new ProgressInfo("Exporting mod..."));
             try
             {
-                _modService.Export(mod, folder);
+                _modService.Export(mod, vm.Folder);
             }
             catch (Exception e)
             {
@@ -124,7 +130,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
         if (error != null)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     title: "Error Exporting Mod",
                     message: error.ToString(),
                     type: MessageBoxType.Error
@@ -134,7 +140,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private void EditModInfo(ModInfo mod)
     {
-        if (!_dialogService.EditModInfo(mod))
+        var vm = new ModEditInfoViewModel(mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -149,10 +156,12 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private void CreateModBasedOn(ModInfo mod)
     {
-        if (!_dialogService.CreateModBasedOn(mod, out ModInfo newModInfo))
+        var vm = new ModCreateBasedOnViewModel(mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
+        var newModInfo = vm.ModInfo;
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
@@ -175,7 +184,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
         if (error != null)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     title: "Error Creating Mod",
                     message: error.ToString(),
                     type: MessageBoxType.Error
@@ -185,7 +194,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private void DeleteMod(ModInfo mod)
     {
-        if (!_dialogService.ConfirmDelete(mod))
+        var vm = new ModDeleteViewModel(mod);
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -210,7 +220,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.ToString(),
                 type: MessageBoxType.Error

@@ -27,9 +27,9 @@
         }
     }
 
-    public class MessageBoxArgs
+    public class MessageBoxSettings
     {
-        public MessageBoxArgs(
+        public MessageBoxSettings(
             string title,
             string message,
             MessageBoxButton[] buttons,
@@ -46,11 +46,11 @@
         /// <summary>
         /// Simple way to create a message box that just has one button on it saying "OK"
         /// </summary>
-        public static MessageBoxArgs Ok(string title,
+        public static MessageBoxSettings Ok(string title,
             string message,
             MessageBoxType type = MessageBoxType.Information)
         {
-            return new MessageBoxArgs(
+            return new MessageBoxSettings(
                 title,
                 message,
                 new MessageBoxButton[] { new MessageBoxButton("OK", MessageBoxResult.Ok) },

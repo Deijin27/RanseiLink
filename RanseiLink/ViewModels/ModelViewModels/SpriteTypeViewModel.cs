@@ -143,7 +143,11 @@ public class SpriteTypeViewModel : ViewModelBase
 
     private void ExportAll()
     {
-        if (!_dialogService.RequestFolder("Select folder to export sprites into", out string dir))
+        var dir = _dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
+        {
+            Title = "Select folder to export sprites into"
+        });
+        if (string.IsNullOrEmpty(dir))
         {
             return;
         }
@@ -152,6 +156,6 @@ public class SpriteTypeViewModel : ViewModelBase
             string dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(spriteInfo.File)));
             File.Copy(spriteInfo.File, dest);
         }
-        _dialogService.ShowMessageBox(MessageBoxArgs.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
+        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
     }
 }

@@ -2,11 +2,18 @@
 
 namespace RanseiLink.ViewModels;
 
-public class ModEditInfoViewModel : ViewModelBase
+public class ModEditInfoViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     public ModEditInfoViewModel(ModInfo info)
     {
-        ModInfo = info;
+        ModInfo = info.Clone();
+    }
+
+    public bool Result { get; private set; }
+
+    public void OnClosing(bool result)
+    {
+        Result = result;
     }
 
     public ModInfo ModInfo { get; }

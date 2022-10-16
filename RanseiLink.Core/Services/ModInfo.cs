@@ -70,5 +70,18 @@ namespace RanseiLink.Core.Services
                 );
             doc.Add(element);
         }
+
+        public ModInfo Clone()
+        {
+            return new ModInfo
+            {
+                RLModVersion = RLModVersion,
+                Name = Name,
+                Version = Version,
+                Author = Author,
+                GameCode = GameCode,
+                FolderPath = FolderPath,
+            };
+        }
     }
 }

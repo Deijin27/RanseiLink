@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class ModImportViewModel : ViewModelBase
+public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly IDialogService _dialogService;
     public ModImportViewModel(IDialogService dialogService)
@@ -21,7 +21,8 @@ public class ModImportViewModel : ViewModelBase
 
         FilePickerCommand = new RelayCommand(() =>
         {
-            if (_dialogService.RequestModFile(out string file))
+            var file = _dialogService.RequestModFile();
+            if (!string.IsNullOrEmpty(file))
             {
                 SafeSetAndPreviewFile(file);
             }
@@ -54,12 +55,18 @@ public class ModImportViewModel : ViewModelBase
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(MessageBoxArgs.Ok(
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Unable to load mod",
                 message: e.Message,
                 type: MessageBoxType.Error
             ));
         }
+    }
+
+    public bool Result { get; private set; }
+    public void OnClosing(bool result)
+    {
+        Result = result;
     }
 
     public ICommand FilePickerCommand { get; }

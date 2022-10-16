@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using RanseiLink.Core.Services;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RanseiLink.Dialogs;
@@ -21,15 +22,17 @@ public partial class PopulateDefaultSpriteDialog : Window
         }
     }
 
+    private IModalDialogViewModel ViewModel => DataContext as IModalDialogViewModel;
+
     private void OkButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = true;
+        ViewModel?.OnClosing(true);
         Close();
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
+        ViewModel?.OnClosing(false);
         Close();
 
     }
