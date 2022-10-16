@@ -21,7 +21,7 @@ namespace RanseiLink.Core.Services
         void OnClosing(bool result);
     }
 
-    public interface IModalDialogViewModel<TDialogResult>
+    public interface IModalDialogViewModel<TDialogResult> : IModalDialogViewModel
     {
         TDialogResult Result { get; }
     }
