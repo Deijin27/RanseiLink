@@ -27,7 +27,8 @@ namespace RanseiLink.Core.Services
     {
         RomFileDoesntExist,
         GraphicsDefaultsNotPopulated,
-        ModGameCodeDoesntMatchRom,
+        ModGameCodeNotCompatibleWithRom,
+        RomGameCodeNotValid,
 
         Default = -1
     }

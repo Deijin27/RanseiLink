@@ -186,11 +186,12 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             return;
         }
         Exception error = null;
+        PopulateResult result = null;
         _dialogService.ProgressDialog(progress =>
         {
             try
             {
-                _fallbackSpriteProvider.Populate(vm.File, progress);
+                result = _fallbackSpriteProvider.Populate(vm.File, progress);
             }
             catch (Exception e)
             {
@@ -201,10 +202,18 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         if (error != null)
         {
             _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                        title: "Error Populating Default Sprites",
-                        message: error.ToString(),
-                        type: MessageBoxType.Error)
-                    );
+                title: "Error Populating Default Sprites",
+                message: error.ToString(),
+                type: MessageBoxType.Error
+                ));
+        }
+        else if (!result.Success)
+        {
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                title: "Failed to Populate Default Sprites",
+                message: result.FailureReason,
+                type: MessageBoxType.Error
+                ));
         }
     }
 }

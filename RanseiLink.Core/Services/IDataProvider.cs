@@ -57,11 +57,23 @@ namespace RanseiLink.Core.Services
             IsOverride = isOverride;
         }
     }
-    
+
+    public class PopulateResult
+    {
+        public PopulateResult(bool success, string failureReason)
+        {
+            Success = success;
+            FailureReason = failureReason;
+        }
+
+        public bool Success { get; }
+        public string FailureReason { get; }
+    }
+
     public interface IFallbackDataProvider
     {
         bool IsDefaultsPopulated(ConquestGameCode gc);
-        void Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
+        PopulateResult Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
         List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type);
         SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id);
         DataFile GetDataFile(ConquestGameCode gc, string pathInRom);

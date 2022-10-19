@@ -62,7 +62,7 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
         int offsetWithinBlock;
         int maxValidId;
 
-        switch (_gameCode)
+        switch (_gameCode.CompatibilitySet())
         {
             case ConquestGameCode.VPYT:
                 switch (type)

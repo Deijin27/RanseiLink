@@ -22,9 +22,17 @@ public class PopulateGraphicsDefaultsCommand : ICommand
     {
         console.Output.WriteLine("Populating...");
 
-        _fallbackSpriteProvider.Populate(Path);
+        var result = _fallbackSpriteProvider.Populate(Path);
 
-        console.Output.WriteLine("Done!");
+        if (result.Success)
+        {
+            console.Output.WriteLine("Done!");
+        }
+        else
+        {
+            console.Output.WriteLine($"Population Failed: {result.FailureReason}");
+        }
+        
         return default;
     }
 }

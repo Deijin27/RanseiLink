@@ -134,6 +134,9 @@ namespace RanseiLink.Core.Services.Concrete
                     case "VPYT":
                         modInfo.GameCode = ConquestGameCode.VPYT;
                         break;
+                    case "VPYP":
+                        modInfo.GameCode = ConquestGameCode.VPYP;
+                        break;
                     default:
                         throw new Exception($"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
                 }

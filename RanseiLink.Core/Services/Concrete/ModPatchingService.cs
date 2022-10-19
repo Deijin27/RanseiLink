@@ -1,4 +1,5 @@
 ﻿//#define PATCHER_BUG_FIXING
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services.ModPatchBuilders;
 using System;
@@ -33,9 +34,13 @@ namespace RanseiLink.Core.Services.Concrete
             using (var br = new BinaryReader(File.OpenRead(romPath)))
             {
                 var header = new NdsHeader(br);
-                if (modInfo.GameCode.ToString() != header.GameCode)
+                if (!Enum.TryParse(header.GameCode, out ConquestGameCode romGameCode))
                 {
-                    return new CanPatchResult(false, CannotPatchCategory.ModGameCodeDoesntMatchRom, $"Game code of mod '{modInfo.GameCode}' does not match game code of rom '{header.GameCode}'");
+                    return new CanPatchResult(false, CannotPatchCategory.RomGameCodeNotValid, $"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
+                }
+                if (modInfo.GameCode.IsCompatibleWith(romGameCode))
+                {
+                    return new CanPatchResult(false, CannotPatchCategory.ModGameCodeNotCompatibleWithRom, $"Game code of mod '{modInfo.GameCode}' is not compatible with game code of rom '{romGameCode}'");
                 }
             }
 

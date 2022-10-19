@@ -20,7 +20,7 @@ namespace RanseiLink.Core.Services
         /// </summary>
         public static readonly string RootFolder;
 
-        public static string DefaultDataFolder(ConquestGameCode gameCode) => Path.Combine(RootFolder, "DefaultData", gameCode.ToString());
+        public static string DefaultDataFolder(ConquestGameCode gameCode) => Path.Combine(RootFolder, "DefaultData", gameCode.CompatibilitySet().ToString());
 
         /// <summary>
         /// folder that decrypted blocks are stored in relative to .rlmod file. not in rom.

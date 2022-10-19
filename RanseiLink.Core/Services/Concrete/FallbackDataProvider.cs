@@ -10,6 +10,8 @@ using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services.Concrete
 {
+    
+
     public class FallbackDataProvider : IFallbackDataProvider
     {
         private readonly RomFsFactory _ndsFactory;
@@ -22,7 +24,7 @@ namespace RanseiLink.Core.Services.Concrete
         }
         public bool IsDefaultsPopulated(ConquestGameCode gameCode) => Directory.Exists(Path.Combine(Constants.DefaultDataFolder(gameCode), Constants.GraphicsFolderPath));
 
-        public void Populate(string ndsFile, IProgress<ProgressInfo> progress = null)
+        public PopulateResult Populate(string ndsFile, IProgress<ProgressInfo> progress = null)
         {
             ConquestGameCode gc;
             using (var br = new BinaryReader(File.OpenRead(ndsFile)))
@@ -30,8 +32,7 @@ namespace RanseiLink.Core.Services.Concrete
                 var header = new NdsHeader(br);
                 if (!Enum.TryParse(header.GameCode, out gc))
                 {
-                    progress?.Report(new ProgressInfo(statusText: "Not a valid conquest rom! :("));
-                    return; // need to make this have better error reporting
+                    return new PopulateResult(false, $"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
                 }
             }
 
@@ -63,6 +64,8 @@ namespace RanseiLink.Core.Services.Concrete
                 progress?.Report(new ProgressInfo(progress: ++count));
             });
             progress?.Report(new ProgressInfo(statusText: "Done!"));
+
+            return new PopulateResult(true, null);
         }
 
         public List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type)
