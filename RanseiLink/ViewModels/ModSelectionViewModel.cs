@@ -89,8 +89,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private void CreateMod()
     {
         var vm = new ModCreationViewModel(_dialogService, _settingService);
-        _dialogService.ShowDialog(vm);
-        if (!vm.Result)
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -119,38 +118,37 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private void ImportMod()
     {
         var vm = new ModImportViewModel(_dialogService);
-        _dialogService.ShowDialog(vm);
-        if (!vm.Result)
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
-            _dialogService.ProgressDialog(progress =>
-            {
-                progress.Report(new ProgressInfo("Importing mod..."));
-                try
-                {
-                    _modService.Import(vm.File);
-
-                }
-                catch (Exception e)
-                {
-                    _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                        title: "Error Importing Mod",
-                        message: e.Message,
-                        type: MessageBoxType.Error
-                    ));
-                    return;
-                }
-                RefreshModItems();
-                RefreshOutdatedModsExist();
-                progress.Report(new ProgressInfo("Done!", 100));
-            });
+            return;
         }
+        _dialogService.ProgressDialog(progress =>
+        {
+            progress.Report(new ProgressInfo("Importing mod..."));
+            try
+            {
+                _modService.Import(vm.File);
+
+            }
+            catch (Exception e)
+            {
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                    title: "Error Importing Mod",
+                    message: e.Message,
+                    type: MessageBoxType.Error
+                ));
+                return;
+            }
+            RefreshModItems();
+            RefreshOutdatedModsExist();
+            progress.Report(new ProgressInfo("Done!", 100));
+        });
     }
 
     private void UpgradeOutdatedMods()
     {
         var vm = new ModUpgradeViewModel(_dialogService, _settingService);
-        _dialogService.ShowDialog(vm);
-        if (vm.Result)
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -180,8 +178,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private void PopulateGraphicsDefaults()
     {
         var vm = new PopulateDefaultSpriteViewModel(_dialogService, _settingService);
-        _dialogService.ShowDialog(vm);
-        if (!vm.Result)
+        if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
         }

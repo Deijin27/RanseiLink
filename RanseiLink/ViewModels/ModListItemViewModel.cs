@@ -148,7 +148,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Editing mod info..."));
-            _modService.Update(mod);
+            _modService.Update(vm.ModInfo);
             progress.Report(new ProgressInfo("Updating mod list...", 50));
             _parentVm.RefreshModItems();
             progress.Report(new ProgressInfo("Edit Complete!", 100));
