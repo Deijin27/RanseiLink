@@ -3,6 +3,7 @@ using RanseiLink.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 
@@ -149,11 +150,20 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         }
         else
         {
-            StringComparison comparison = MatchCase ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase;
+            var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+            // IgnoreNonSpace ignores accents
+            var options = CompareOptions.IgnoreNonSpace;
+            if (!MatchCase)
+            {
+                options |= CompareOptions.IgnoreCase;
+            }
             for (var i = 0; i < _allItems.Count; i++)
             {
                 var item = _allItems[i];
-                if (item.Text.Contains(searchTerm, comparison) || item.Context.Contains(searchTerm, comparison) || item.BoxConfig.Contains(searchTerm, comparison))
+                if (compareInfo.IndexOf(item.Text, searchTerm, options) != -1 
+                 || compareInfo.IndexOf(item.Context, searchTerm, options) != -1
+                 || compareInfo.IndexOf(item.BoxConfig, searchTerm, options) != -1
+                 )
                 {
                     Items.Add(item);
                     if (item.Context.Contains($"{{{PnaConstNames.MultiStart}:", StringComparison.InvariantCulture))

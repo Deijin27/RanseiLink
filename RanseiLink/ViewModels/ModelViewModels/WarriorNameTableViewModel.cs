@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 
 namespace RanseiLink.ViewModels;
 
@@ -67,10 +68,15 @@ public class WarriorNameTableViewModel : ViewModelBase
             }
         }
         Items.Clear();
-        
+
+        var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
+        // IgnoreNonSpace ignores accents
+        var options = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace;
+
         foreach (var item in _allItems)
         {
-            if (item.Name.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+            var index = compareInfo.IndexOf(item.Name, searchTerm, options);
+            if (index != -1)
             {
                 Items.Add(item);
             }
