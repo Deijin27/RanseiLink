@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace PartialTransferPlugin;
 
-[Plugin("Partial Transfer", "Deijin", "3.0")]
+[Plugin("Partial Transfer", "Deijin", "3.1")]
 public class PartialTransferPlugin : IPlugin
 {
     public void Run(IPluginContext context)
