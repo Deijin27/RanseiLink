@@ -2,6 +2,7 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Text;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -42,6 +43,15 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
 
     public void RebuildCache()
     {
+        if (_changeTrackedBlocks != null)
+        {
+            foreach (var block in _changeTrackedBlocks)
+            {
+                block.MessageAdded -= OnMessageAddedToBlock;
+                block.MessageRemoved -= OnMessageRemovedFromBlock;
+            }
+        }
+        
         _blocks = new List<Message>[_msgBlockService.BlockCount];
         _changeTrackedBlocks = new ChangeTrackedBlock[_msgBlockService.BlockCount];
         Parallel.For(0, _msgBlockService.BlockCount, i =>
@@ -50,9 +60,25 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
             _blocks[i] = block;
             _changeTrackedBlocks[i] = new ChangeTrackedBlock(block);
         });
+        foreach (var block in _changeTrackedBlocks)
+        {
+            block.MessageAdded += OnMessageAddedToBlock;
+            block.MessageRemoved += OnMessageRemovedFromBlock;
+        }
     }
 
-    
+    private void OnMessageAddedToBlock(object sender, MessageAddedToBlockArgs e)
+    {
+        var block = (ChangeTrackedBlock)sender;
+        MessageAdded?.Invoke(this, new MessageAddedArgs(e.Message, e.IndexInBlock, Array.IndexOf(_changeTrackedBlocks, block)));
+    }
+    private void OnMessageRemovedFromBlock(object sender, MessageRemovedFromBlockArgs e)
+    {
+        var block = (ChangeTrackedBlock)sender;
+        MessageRemoved?.Invoke(this, new MessageRemovedArgs(e.Message, Array.IndexOf(_changeTrackedBlocks, block)));
+    }
+    public event EventHandler<MessageAddedArgs> MessageAdded;
+    public event EventHandler<MessageRemovedArgs> MessageRemoved;
 
     private const string NotEditableMessage = "Outside of msg range";
 

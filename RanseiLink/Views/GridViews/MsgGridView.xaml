@@ -19,7 +19,8 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <DockPanel Margin="0,0,0,10">
-                <CheckBox Margin="10,0" Padding="5,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <CheckBox Margin="10,0" Padding="5,0" Content="Add/Remove" IsChecked="{Binding AddRemoveVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
@@ -50,9 +51,16 @@
                 <TextBox Text="{Binding ReplaceWith, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
                 </TextBox>
             </DockPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding AddRemoveVisible, Converter={StaticResource Converter.BoolToVis}}">
+                <TextBlock Margin="10,0,0,0">Select a message in a group containing multiple messages: </TextBlock>
+                <Button Command="{Binding AddCommand}" Content="Add New Message To Group" Margin="10,0" Padding="5,0" ToolTip="Only for messages in a group of multiple messages"/>
+                <Button Command="{Binding RemoveCommand}" Content="Delete Selected Message" Padding="5,0" ToolTip="Only for messages in a group of multiple messages"/>
+            </StackPanel>
         </StackPanel>
 
-        <DataGrid x:Name="msgDataGrid" Grid.Row="1" Grid.ColumnSpan="5" ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False">
+        <DataGrid x:Name="msgDataGrid" Grid.Row="1" Grid.ColumnSpan="5" 
+                  ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False"
+                  SelectedItem="{Binding SelectedItem}">
             <DataGrid.RowValidationRules>
                 <vm:WorkaroundValidationRule ValidationStep="UpdatedValue"/>
             </DataGrid.RowValidationRules>

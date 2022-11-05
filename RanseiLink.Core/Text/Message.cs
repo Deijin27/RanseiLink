@@ -21,5 +21,17 @@
                     && string.IsNullOrEmpty(BoxConfig);
             }
         }
+
+        public Message Clone()
+        {
+            return new Message
+            {
+                GroupId = GroupId,
+                ElementId = ElementId,
+                Text = Text,
+                Context = Context,
+                BoxConfig = BoxConfig,
+            };
+        }
     }
 }

@@ -25,8 +25,9 @@ public class MsgViewModel : INotifyDataErrorInfo
         _boxConfig = msg.BoxConfig;
     }
 
+    public ChangeTrackedBlock Block => _block;
     public int BlockId { get; }
-    public int Id { get; }
+    public int Id { get; set; }
 
     private string _text;
     public string Text

@@ -283,7 +283,8 @@ public class MsgGridEditorModule : EditorModule
         base.Initialise(modServices);
         _viewModel = modServices.Get<MsgGridViewModel>();
     }
-    public override void OnPluginComplete() => _viewModel.SearchCommand.Execute(null);
+    public override void OnPluginComplete() => _viewModel?.SearchCommand.Execute(null);
+    public override void Deactivate() => _viewModel?.UnhookEvents();
 }
 
 public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickService>

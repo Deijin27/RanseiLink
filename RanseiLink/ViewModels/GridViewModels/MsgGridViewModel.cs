@@ -29,6 +29,52 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         SearchCommand = new RelayCommand(Search, () => !_busy);
         ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !_busy);
         ClearCommand = new RelayCommand(() => SearchTerm = "", () => !_busy);
+        AddCommand = new RelayCommand(Add, CanAdd);
+        RemoveCommand = new RelayCommand(Remove, CanRemove);
+
+        _cachedMsgBlockService.MessageAdded += CachedMsgBlockService_MessageAdded;
+        _cachedMsgBlockService.MessageRemoved += CachedMsgBlockService_MessageRemoved;
+    }
+
+    private void CachedMsgBlockService_MessageRemoved(object sender, MessageRemovedArgs e)
+    {
+        var vmIndex = _allItems.FindIndex(x => x.Message == e.Message);
+        if (vmIndex != -1)
+        {
+            return;
+        }
+        var vm = _allItems[vmIndex];
+        _allItems.RemoveAt(vmIndex);
+        // Fixup index in block values
+        for (int i = vmIndex; i < _allItems.Count; i++)
+        {
+            var item = _allItems[i];
+            if (item.BlockId != e.BlockId)
+            {
+                break;
+            }
+            item.Id--;
+        }
+        Search();
+    }
+
+    private void CachedMsgBlockService_MessageAdded(object sender, MessageAddedArgs e)
+    {
+        var vm = new MsgViewModel(e.BlockId, e.IndexInBlock, _cachedMsgBlockService.Retrieve(e.BlockId));
+        var indexToInsert = _allItems.FindIndex(x => x.BlockId == e.BlockId && x.Id == e.IndexInBlock);
+        _allItems.Insert(indexToInsert, vm);
+        // Fixup index in block values
+        for (int i = indexToInsert + 1; i < _allItems.Count; i++)
+        {
+            var item = _allItems[i];
+            if (item.BlockId != e.BlockId)
+            {
+                break;
+            }
+            item.Id++;
+        }
+        
+        Search();
     }
 
     private bool _matchCase = false;
@@ -58,18 +104,18 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         }
     }
 
+    private bool _addRemoveVisible = false;
+    public bool AddRemoveVisible
+    {
+        get => _addRemoveVisible;
+        set => RaiseAndSetIfChanged(ref _addRemoveVisible, value);
+    }
 
     private bool _replaceVisible = false;
     public bool ReplaceVisible
     {
         get => _replaceVisible;
-        set
-        {
-            if (RaiseAndSetIfChanged(ref _replaceVisible, value))
-            {
-                Search();
-            }
-        }
+        set => RaiseAndSetIfChanged(ref _replaceVisible, value);
     }
 
     private string _searchTerm = "";
@@ -101,11 +147,65 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     private readonly List<MsgViewModel> _allItems = new();
 
+    private MsgViewModel _selectedItem;
+    public MsgViewModel SelectedItem
+    {
+        get => _selectedItem;
+        set => RaiseAndSetIfChanged(ref _selectedItem, value);
+    }
+
+    public ICommand AddCommand { get; }
+    public ICommand RemoveCommand { get; }
+    private bool CanAdd()
+    {
+        if (_busy)
+        {
+            return false;
+        }
+        if (SelectedItem == null)
+        {
+            return false;
+        }
+        if (!SelectedItem.Block.CanAdd(SelectedItem.GroupId))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private bool CanRemove()
+    {
+        if (_busy)
+        {
+            return false;
+        }
+        if (SelectedItem == null)
+        {
+            return false;
+        }
+        if (!SelectedItem.Block.CanRemove(SelectedItem.GroupId))
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private void Remove()
+    {
+        SelectedItem.Block.Remove(SelectedItem.Message);
+    }
+
+    private void Add()
+    {
+        SelectedItem.Block.Add(SelectedItem.GroupId);
+    }
+
     public ICommand SearchCommand { get; }
     public ICommand ClearCommand { get; }
     public ICommand ReplaceAllCommand { get; }
 
     private bool _busy;
+
     private void Search()
     {
         _busy = true;
@@ -241,4 +341,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         }
     }
 
+    public void UnhookEvents()
+    {
+        _cachedMsgBlockService.MessageAdded -= CachedMsgBlockService_MessageAdded;
+        _cachedMsgBlockService.MessageRemoved -= CachedMsgBlockService_MessageRemoved;
+    }
 }
