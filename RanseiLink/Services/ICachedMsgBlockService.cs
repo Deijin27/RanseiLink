@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Text;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace RanseiLink.Services;
 
@@ -85,6 +86,15 @@ public class ChangeTrackedBlock
         var secondToLastMessage = _blockInternal[lastIndex - 1];
         var lastMessage = _blockInternal[lastIndex];
         var newMessage = secondToLastMessage.Clone();
+        // increment the speaker ids if present
+        newMessage.Context = Regex.Replace(newMessage.Context, "{" + PnaConstNames.SpeakerId + /* language=regex */ @":(?<speakerId>\d+)}", new MatchEvaluator(match =>
+        {
+            var lastSpeakerCurrently = int.Parse(match.Groups["speakerId"].Value);
+            var newLastSpeakerNumber = lastSpeakerCurrently + 1;
+            var replaceWith = $"{{{PnaConstNames.SpeakerId}:{newLastSpeakerNumber}}}";
+            return replaceWith;
+        }));
+        // increment the element ids where necessary
         newMessage.ElementId++;
         lastMessage.ElementId++;
         var newIndex = lastIndex; // not lastIndex+1 because there is a dummy item at the end of the group which should be ignored
