@@ -14,6 +14,11 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
 
         public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
         {
+            if (!patchOptions.HasFlag(PatchOptions.IncludeSprites))
+            {
+                return;
+            }
+
             foreach (var file in _overrideProvider.GetAllDataFilesInFolder(Path.Combine("graphics", "ikusa_map")))
             {
                 if (file.IsOverride)
