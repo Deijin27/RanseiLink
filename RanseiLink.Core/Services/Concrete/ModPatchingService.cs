@@ -38,7 +38,7 @@ namespace RanseiLink.Core.Services.Concrete
                 {
                     return new CanPatchResult(false, CannotPatchCategory.RomGameCodeNotValid, $"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
                 }
-                if (modInfo.GameCode.IsCompatibleWith(romGameCode))
+                if (!modInfo.GameCode.IsCompatibleWith(romGameCode))
                 {
                     return new CanPatchResult(false, CannotPatchCategory.ModGameCodeNotCompatibleWithRom, $"Game code of mod '{modInfo.GameCode}' is not compatible with game code of rom '{romGameCode}'");
                 }
