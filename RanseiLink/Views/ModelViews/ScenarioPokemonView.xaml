@@ -84,7 +84,18 @@
             <TextBlock Padding="5,0,0,0" DockPanel.Dock="Right" Width="132" Text="{Binding ApproximateLink, StringFormat='Approx. Link = {0}%'}" d:Text="Approx. Link = 100%"/>
             <controls:NumberBox  Value="{Binding Exp, UpdateSourceTrigger=PropertyChanged}" Max="65535" Increment="10"/>
         </DockPanel>
-        <Button Grid.Row="7" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
+
+        <TextBlock Text="Exact Link Exps" Grid.Row="7" ToolTip="Set to exact values that have been tested in game"/>
+        <controls:NumberButtonPanel 
+            Grid.Row="7" 
+            Grid.Column="1" 
+            Value="{Binding ApproximateLink}" 
+            DockPanel.Dock="Right" 
+            Items="{Binding KnownLinkItems}" 
+            Margin="1,0,-1,0"
+            />
+
+        <Button Grid.Row="8" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
                     Command="{Binding JumpToFirstWarriorCommand}" />
 
     </Grid>

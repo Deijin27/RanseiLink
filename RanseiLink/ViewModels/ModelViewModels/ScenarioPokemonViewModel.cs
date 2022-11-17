@@ -20,8 +20,8 @@ public class ScenarioPokemonViewModel : ViewModelBase
     private readonly List<SelectorComboBoxItem> _allAbilityItems;
 
     public ScenarioPokemonViewModel(
-        IJumpService jumpService, 
-        IScenarioWarriorService scenarioWarriorService, 
+        IJumpService jumpService,
+        IScenarioWarriorService scenarioWarriorService,
         IIdToNameService idToNameService,
         IPokemonService pokemonService)
     {
@@ -96,7 +96,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
     {
         get => (int)_model.Pokemon;
         set
-        { 
+        {
             if (RaiseAndSetIfChanged(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v))
             {
                 ReloadAbilities();
@@ -146,5 +146,11 @@ public class ScenarioPokemonViewModel : ViewModelBase
         }
     }
 
-    public string ApproximateLink => LinkCalculator.CalculateLink(_model.Exp).ToString("0.00");
+    public string ApproximateLink
+    {
+        get => LinkCalculator.CalculateLink(_model.Exp).ToString("0.00");
+        set => Exp = LinkCalculator.CalculateExp(double.Parse(value));
+    }
+
+    public string KnownLinkItems => string.Join(',', LinkCalculator.KnownLinkToExp.Keys.Select(x => x.ToString()));
 }

@@ -116,7 +116,7 @@
                 
             </GroupBox>
             
-            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="8" Padding="5" IsEnabled="{Binding ScenarioPokemonVm, Mode=OneWay, Converter={StaticResource Converter.NotNull}}">
+            <GroupBox Header="Edit Selected Scenario Pokemon" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Padding="5" IsEnabled="{Binding ScenarioPokemonVm, Mode=OneWay, Converter={StaticResource Converter.NotNull}}">
                 <views:ScenarioPokemonView DataContext="{Binding ScenarioPokemonVm}" />
             </GroupBox>
 
