@@ -303,7 +303,9 @@ public class MapViewModel : ViewModelBase
         }
 
         _selectedGimmick = SelectedCell.Gimmicks.FirstOrDefault();
+        _selectedPokemonPosition = SelectedCell.Pokemon.FirstOrDefault();
         RaisePropertyChanged(nameof(SelectedGimmick));
+        RaisePropertyChanged(nameof(SelectedPokemonPosition));
     }
 
     private void RemoveSelectedGimmick()
