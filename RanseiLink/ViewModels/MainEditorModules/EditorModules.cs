@@ -388,6 +388,8 @@ public class MapSelectorEditorModule : EditorModule
         base.Initialise(modServices);
         _service = modServices.Get<IMapService>();
         _nestedVm = modServices.Get<MapViewModel>();
+        _currentMap = null;
+        _currentId = null;
         var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
         _viewModel = new SelectorViewModelWithoutScroll(mapComboItems, _nestedVm, id =>
         {
