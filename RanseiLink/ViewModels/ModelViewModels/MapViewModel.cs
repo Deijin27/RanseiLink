@@ -269,6 +269,8 @@ public class MapViewModel : ViewModelBase
         var newGimmick = new MapGimmickViewModel(this, mapGimmickItem);
         Gimmicks.Add(newGimmick);
         SelectedGimmick = newGimmick;
+        var sourceCell = Matrix[newGimmick.X][newGimmick.Y];
+        sourceCell.AddGimmick(newGimmick);
         return newGimmick;
     }
 
@@ -310,6 +312,8 @@ public class MapViewModel : ViewModelBase
         {
             Map.GimmickSection.Items.Remove(_selectedGimmick.GimmickItem);
             Gimmicks.Remove(_selectedGimmick);
+            var sourceCell = Matrix[_selectedGimmick.X][_selectedGimmick.Y];
+            sourceCell.RemoveGimmick(_selectedGimmick);
             _selectedGimmick = null;
         }
     }
