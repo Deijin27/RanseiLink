@@ -22,7 +22,7 @@ public class MapPokemonPositionViewModel : ViewModelBase
 
         IncrementXCommand = new RelayCommand(() =>
         {
-            if (X < _parent.Width)
+            if (X < _parent.Width - 1)
             {
                 ChangePosition(() => X++);
             }
@@ -36,7 +36,7 @@ public class MapPokemonPositionViewModel : ViewModelBase
         });
         IncrementYCommand = new RelayCommand(() =>
         {
-            if (Y < _parent.Height)
+            if (Y < _parent.Height - 1)
             {
                 ChangePosition(() => Y++);
             }

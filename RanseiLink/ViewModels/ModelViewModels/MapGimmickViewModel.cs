@@ -21,7 +21,7 @@ public class MapGimmickViewModel : ViewModelBase
 
         IncrementXCommand = new RelayCommand(() =>
         {
-            if (X < _parent.Width)
+            if (X < _parent.Width - 1)
             {
                 ChangePosition(() => X++);
             }
@@ -35,7 +35,7 @@ public class MapGimmickViewModel : ViewModelBase
         });
         IncrementYCommand = new RelayCommand(() =>
         {
-            if (Y < _parent.Height)
+            if (Y < _parent.Height - 1)
             {
                 ChangePosition(() => Y++);
             }
