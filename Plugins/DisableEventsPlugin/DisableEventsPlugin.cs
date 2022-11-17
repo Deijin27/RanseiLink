@@ -6,7 +6,7 @@ using static RanseiLink.Core.RomFs.RomFsNameTable;
 
 namespace DisableEventsPlugin;
 
-[Plugin("Disable Events", "Deijin", "1.1")]
+[Plugin("Disable Events", "Deijin", "1.2")]
 public class DisableEventsPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -100,7 +100,7 @@ public class DisableEventsPlugin : IPlugin
         else
         {
             dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                "Success", "The events have been " + options.Action == ConstOptions.DisableEvents ? "disabled" : "enabled"
+                "Success", "The events have been " + (options.Action == ConstOptions.DisableEvents ? "disabled" : "enabled")
                 ));
         }
     }
