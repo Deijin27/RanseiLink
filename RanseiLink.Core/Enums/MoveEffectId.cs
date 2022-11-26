@@ -72,9 +72,9 @@ namespace RanseiLink.Core.Enums
         Hits2Times,
 
         /// <summary>
-        /// Is in the unused effect3 for Hits2To5Times and Hits4To5Times moves
+        /// Always hits 5 times in one turn.
         /// </summary>
-        Multihit_Unused,
+        Hits5Times,
 
         /// <summary>
         /// Hits 2 to 3 times in one turn. User has 0 range on its next turn.

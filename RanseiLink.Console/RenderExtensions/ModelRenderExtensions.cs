@@ -128,7 +128,7 @@ public static partial class RenderExtensions
             case MoveEffectId.HotSpring_WaterBucket_RevivalNode:
             case MoveEffectId.Unused_18:
             case MoveEffectId.Unused_19:
-            case MoveEffectId.Multihit_Unused:
+            
             case MoveEffectId.Unused_1:
                 return $"({value}?) ";
 
@@ -150,6 +150,7 @@ public static partial class RenderExtensions
             case MoveEffectId.Hits2To3Times:
             case MoveEffectId.Hits2To5Times:
             case MoveEffectId.Hits4To5Times:
+            case MoveEffectId.Hits5Times:
             case MoveEffectId.VanishesAndHitsStartOfNextTurn:
             case MoveEffectId.VanishesWithTargetAndHitsStartOfNextTurn:
             case MoveEffectId.HitsStartOfTurnAfterNext:
