@@ -32,11 +32,15 @@ public partial class NumberButtonPanel : UserControl
     private static void OnItemsPropertyChanged(NumberButtonPanel target, DependencyPropertyChangedEventArgs<string> e)
     {
         List<int> values = new();
-        foreach (var item in e.NewValue?.ToString().Split(','))
+        var split = e.NewValue?.ToString()?.Split(',');
+        if (split != null)
         {
-            if (int.TryParse(item, out int value))
+            foreach (var item in split)
             {
-                values.Add(value);
+                if (int.TryParse(item, out int value))
+                {
+                    values.Add(value);
+                }
             }
         }
         target.ItemsControl.ItemsSource = values;
