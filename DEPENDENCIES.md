@@ -4,7 +4,7 @@
 
 - AmbitionConquest under [MIT](https://github.com/pleonex/AmbitionConquest/blob/main/LICENSE)
 - ImageSharp under [Apache 2.0](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE)
-- Autofac under [MIT](https://github.com/autofac/Autofac/blob/develop/LICENSE)
+- DryIoc under [MIT](https://github.com/dadhi/DryIoc/blob/master/LICENSE.txt)
 
 ## Console-Only
 
