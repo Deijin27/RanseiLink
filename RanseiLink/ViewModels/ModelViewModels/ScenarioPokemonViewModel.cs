@@ -19,6 +19,14 @@ public class ScenarioPokemonViewModel : ViewModelBase
     private ScenarioId _scenario;
     private readonly List<SelectorComboBoxItem> _allAbilityItems;
 
+    private static int _linkNum;
+    public int LinkNum
+    {
+        get => _linkNum;
+        set => RaiseAndSetIfChanged(ref _linkNum, value);
+    }
+    public ICommand SetExactLinkCommand { get; }
+
     public ScenarioPokemonViewModel(
         IJumpService jumpService,
         IScenarioWarriorService scenarioWarriorService,
@@ -26,8 +34,9 @@ public class ScenarioPokemonViewModel : ViewModelBase
         IPokemonService pokemonService)
     {
         _pokemonService = pokemonService;
-        _model = new ScenarioPokemon(); ;
+        _model = new ScenarioPokemon();
 
+        SetExactLinkCommand = new RelayCommand(() => Exp = LinkCalculator.CalculateExp(LinkNum));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
         JumpToFirstWarriorCommand = new RelayCommand(() =>
@@ -151,6 +160,4 @@ public class ScenarioPokemonViewModel : ViewModelBase
         get => LinkCalculator.CalculateLink(_model.Exp).ToString("0.00");
         set => Exp = LinkCalculator.CalculateExp(double.Parse(value));
     }
-
-    public string KnownLinkItems => string.Join(',', LinkCalculator.KnownLinkToExp.Keys.Select(x => x.ToString()));
 }

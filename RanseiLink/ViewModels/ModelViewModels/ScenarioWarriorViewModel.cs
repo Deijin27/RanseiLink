@@ -4,6 +4,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -103,10 +104,11 @@ public class ScenarioWarriorViewModel : ViewModelBase
     {
         _scenario = scenario;
         _model = model;
+        Pokemon.Clear();
         for (int i = 0; i < 8; i++)
         {
             var swp = new ScenarioWarriorPokemonViewModel(i, _model, this);
-            Pokemon[i] = swp;
+            Pokemon.Add(swp);
         }
 
         SelectedPokemon = Pokemon[0];
@@ -154,7 +156,7 @@ public class ScenarioWarriorViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
-    public ScenarioWarriorPokemonViewModel[] Pokemon { get; } = new ScenarioWarriorPokemonViewModel[8];
+    public ObservableCollection<ScenarioWarriorPokemonViewModel> Pokemon { get; } = new ObservableCollection<ScenarioWarriorPokemonViewModel>();
 
     public ScenarioWarriorPokemonViewModel SelectedPokemon
     {
@@ -165,7 +167,11 @@ public class ScenarioWarriorViewModel : ViewModelBase
             {
                 _selectedPokemon = value;
                 RaisePropertyChanged();
-                UpdateEmbedded(value.Id);
+                if (_selectedPokemon != null)
+                {
+                    UpdateEmbedded(value.Id);
+                }
+                
             }
         }
     }
