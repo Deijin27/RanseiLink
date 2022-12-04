@@ -97,6 +97,7 @@ public class WpfModServiceModule : IModule
         builder.Register<PokemonViewModel>();
         builder.Register<ScenarioAppearPokemonViewModel>();
         builder.Register<ScenarioKingdomViewModel>();
+        builder.Register<ScenarioBuildingViewModel>();
         builder.Register<ScenarioPokemonViewModel>();
         builder.Register<ScenarioWarriorViewModel>();
         builder.Register<SpriteTypeViewModel>();

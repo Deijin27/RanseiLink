@@ -122,6 +122,10 @@
                 <views:ScenarioKingdomView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:ScenarioBuildingViewModel}">
+                <views:ScenarioBuildingView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type vm:ItemViewModel}">
                 <views:ItemView/>
             </DataTemplate>

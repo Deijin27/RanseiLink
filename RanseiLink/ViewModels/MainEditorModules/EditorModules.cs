@@ -232,6 +232,19 @@ public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<ISce
     }
 }
 
+public class ScenarioBuildingSelectorEditorModule : BaseSelectorEditorModule<IScenarioBuildingService>
+{
+    public const string Id = "scenario_building_selector";
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Building";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<ScenarioBuildingViewModel>();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
+    }
+}
+
 public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventSpeakerService>
 {
     public const string Id = "event_speaker_selector";

@@ -8,8 +8,8 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
 
-[Command("scenariokingdom", Description = "Get evolution table data.")]
-public class ScenarioKingdomCommand : ICommand
+[Command("scenariokingdom", Description = "Get information on kingdom army assignments.")]
+public partial class ScenarioKingdomCommand : ICommand
 {
     private readonly ICurrentModService _currentModService;
     public ScenarioKingdomCommand(ICurrentModService currentModService)

@@ -22,6 +22,7 @@ namespace RanseiLink.Core.Services.Concrete
         private readonly Lazy<IBaseWarriorService> _baseWarrior;
         private readonly Lazy<IScenarioAppearPokemonService> _scenarioAppearPokemon;
         private readonly Lazy<IScenarioKingdomService> _scenarioKingdom;
+        private readonly Lazy<IScenarioBuildingService> _scenarioBuilding;
         private readonly Lazy<IMsgBlockService> _msg;
         private readonly Lazy<IBattleConfigService> _battleConfig;
         private readonly Lazy<IMoveAnimationService> _moveAnimation;
@@ -49,6 +50,7 @@ namespace RanseiLink.Core.Services.Concrete
             _baseWarrior = new Lazy<IBaseWarriorService>(() => modServices.Get<IBaseWarriorService>());
             _scenarioAppearPokemon = new Lazy<IScenarioAppearPokemonService>(() => modServices.Get<IScenarioAppearPokemonService>());
             _scenarioKingdom = new Lazy<IScenarioKingdomService>(() => modServices.Get<IScenarioKingdomService>());
+            _scenarioBuilding = new Lazy<IScenarioBuildingService>(() => modServices.Get<IScenarioBuildingService>());
             _msg = new Lazy<IMsgBlockService>(() => modServices.Get<IMsgBlockService>());
             _battleConfig = new Lazy<IBattleConfigService>(() => modServices.Get<IBattleConfigService>());
             _moveAnimation = new Lazy<IMoveAnimationService>(() => modServices.Get<IMoveAnimationService>());
@@ -75,6 +77,7 @@ namespace RanseiLink.Core.Services.Concrete
         public IBaseWarriorService BaseWarrior => _baseWarrior.Value;
         public IScenarioAppearPokemonService ScenarioAppearPokemon => _scenarioAppearPokemon.Value;
         public IScenarioKingdomService ScenarioKingdom => _scenarioKingdom.Value;
+        public IScenarioBuildingService ScenarioBuilding => _scenarioBuilding.Value;
         public IMsgBlockService Msg => _msg.Value;
         public IBattleConfigService BattleConfig => _battleConfig.Value;
         public IMoveAnimationService MoveAnimation => _moveAnimation.Value;

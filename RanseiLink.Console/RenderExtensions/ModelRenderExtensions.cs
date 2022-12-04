@@ -388,6 +388,19 @@ public static partial class RenderExtensions
         }
     }
 
+    public static void Render(this IConsole console, ScenarioBuilding model, ScenarioId id)
+    {
+        console.WriteTitle($"{id} (Scenario Building)");
+        foreach (var k in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+        {
+            console.WriteTitle(k.ToString());
+            for (int i = 0; i < ScenarioBuilding.SlotCount; i++)
+            {
+                console.WriteProperty(i, $"InitExp: {model.GetInitialExp(k, i)}, Unknown2: {model.GetUnknown2(k, i)}");
+            }
+        }
+    }
+
     public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
     {
         console.WriteTitle($"{id}");

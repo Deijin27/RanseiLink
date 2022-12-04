@@ -88,6 +88,7 @@ namespace RanseiLink.Core.Services
             builder.Register<IPokemonService, PokemonService>(Reuse.Singleton);
             builder.Register<IScenarioAppearPokemonService, ScenarioAppearPokemonService>(Reuse.Singleton);
             builder.Register<IScenarioKingdomService, ScenarioKingdomService>(Reuse.Singleton);
+            builder.Register<IScenarioBuildingService, ScenarioBuildingService>(Reuse.Singleton);
             builder.Register<IScenarioPokemonService, ScenarioPokemonService>(Reuse.Singleton);
             builder.Register<IScenarioWarriorService, ScenarioWarriorService>(Reuse.Singleton);
             builder.Register<IWarriorSkillService, WarriorSkillService>(Reuse.Singleton);

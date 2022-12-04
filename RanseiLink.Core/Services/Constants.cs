@@ -76,6 +76,7 @@ namespace RanseiLink.Core.Services
         public static string ScenarioWarriorPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBushou.dat");
         public static string ScenarioAppearPokemonPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioAppearPokemon.dat");
         public static string ScenarioKingdomPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioKuni.dat");
+        public static string ScenarioBuildingPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBuilding.dat");
         #endregion
 
     }

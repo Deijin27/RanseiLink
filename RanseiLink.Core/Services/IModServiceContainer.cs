@@ -23,6 +23,7 @@ namespace RanseiLink.Core.Services
         IBaseWarriorService BaseWarrior { get; }
         IScenarioAppearPokemonService ScenarioAppearPokemon { get; }
         IScenarioKingdomService ScenarioKingdom { get; }
+        IScenarioBuildingService ScenarioBuilding { get; }
         IMsgBlockService Msg { get; }
         IBattleConfigService BattleConfig { get; }
         IMapService Map { get; }
