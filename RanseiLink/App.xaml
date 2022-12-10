@@ -138,6 +138,10 @@
                 <views:EpisodeView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorWorkspaceViewModel}">
+                <views:ScenarioWarriorWorkspaceView/>
+            </DataTemplate>
+
             <!--<DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
                 <views:ModelGridView/>
             </DataTemplate>-->

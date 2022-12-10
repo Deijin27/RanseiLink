@@ -6,6 +6,7 @@ using DryIoc;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.Dialogs;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Services;
 
@@ -103,6 +104,7 @@ public class WpfModServiceModule : IModule
         builder.Register<SpriteTypeViewModel>();
         builder.Register<WarriorNameTableViewModel>();
         builder.Register<WarriorSkillViewModel>();
+        builder.Register<ScenarioWarriorWorkspaceViewModel>();
 
         builder.Register<MsgGridViewModel>();
         builder.Register<ScenarioWarriorGridViewModel>();
@@ -115,6 +117,31 @@ public class WpfModServiceModule : IModule
                     context.Resolve<IOverrideDataProvider>(),
                     context.Resolve<IDialogService>()
             )));
+
+        builder.RegisterDelegate(context =>
+            new ScenarioWarriorMiniViewModelFactory((sw, id, parent) =>
+                new ScenarioWarriorMiniViewModel(
+                    sw, 
+                    id, 
+                    parent,
+                    context.Resolve<IScenarioPokemonService>(),
+                    context.Resolve<IBaseWarriorService>(),
+                    context.Resolve<IOverrideDataProvider>(),
+                    context.Resolve<IPokemonService>()
+                    )));
+
+        builder.RegisterDelegate(context =>
+            new ScenarioWarriorKingdomMiniViewModelFactory((s, k) =>
+                new ScenarioWarriorKingdomMiniViewModel(
+                    s,
+                    k,
+                    context.Resolve<IScenarioKingdomService>(),
+                    context.Resolve<IBaseWarriorService>(),
+                    context.Resolve<IScenarioWarriorService>(),
+                    context.Resolve<IScenarioPokemonService>(),
+                    context.Resolve<IOverrideDataProvider>(),
+                    context.Resolve<IPokemonService>()
+                    )));
 
         builder.Register<BannerViewModel>();
     }

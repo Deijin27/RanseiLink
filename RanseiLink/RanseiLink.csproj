@@ -7,7 +7,7 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
-    <VersionPrefix>5.2</VersionPrefix>
+    <VersionPrefix>5.3-alpha1</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
@@ -101,6 +101,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\GimmickView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModelViews\ScenarioWarriorKingdomMiniView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspaceView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\ScenarioBuildingView.xaml.cs">
@@ -261,6 +267,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ModelViews\GimmickView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\ScenarioWarriorKingdomMiniView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\ScenarioWarriorWorkspaceView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
