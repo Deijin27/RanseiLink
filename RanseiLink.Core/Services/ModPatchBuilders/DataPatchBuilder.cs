@@ -41,6 +41,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                 dataRomPaths.Add(Constants.ScenarioWarriorPathFromId((int)i));
                 dataRomPaths.Add(Constants.ScenarioAppearPokemonPathFromId((int)i));
                 dataRomPaths.Add(Constants.ScenarioKingdomPathFromId((int)i));
+                dataRomPaths.Add(Constants.ScenarioBuildingPathFromId((int)i));
             }
 
             filesToPatch.Add(new FileToPatch(Constants.PokemonRomPath, Path.Combine(_mod.FolderPath, Constants.PokemonRomPath), FilePatchOptions.VariableLength));

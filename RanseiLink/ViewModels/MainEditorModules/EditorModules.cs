@@ -219,18 +219,19 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     }
 }
 
-public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
-{
-    public const string Id = "scenario_warrior_workspace";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Warrior (Workspace)";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel((ScenarioId)id, _service.Retrieve(id)));
-    }
-}
+// Temporarily commented for release
+//public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
+//{
+//    public const string Id = "scenario_warrior_workspace";
+//    public override string UniqueId => Id;
+//    public override string ListName => "Scenario Warrior (Workspace)";
+//    public override void Initialise(IServiceGetter modServices)
+//    {
+//        base.Initialise(modServices);
+//        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
+//        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel((ScenarioId)id, _service.Retrieve(id)));
+//    }
+//}
 
 public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<IScenarioKingdomService>
 {
