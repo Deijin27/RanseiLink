@@ -4,10 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
+             xmlns:enums="clr-namespace:RanseiLink.Core.Enums;assembly=RanseiLink.Core"
              xmlns:local="clr-namespace:RanseiLink.Views"
              d:DataContext="{d:DesignInstance vm:ScenarioWarriorMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" Width="163">
     <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}">
+        <!--<Button.Style>
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Class}" Value="{x:Static enums:WarriorClassId.ArmyLeader}">
+                        <Setter Property="Background" Value="#797252"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Class}" Value="{x:Static enums:WarriorClassId.ArmyMember}">
+                        <Setter Property="Background" Value="#534462"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Button.Style>-->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="32"/>
@@ -33,6 +47,12 @@
                    />
             <Rectangle Grid.Column="3" Fill="{DynamicResource ControlBorderBrush}"/>
             <TextBlock Grid.Column="4" d:Text="Kamanosuke" Text="{Binding WarriorName}" Margin="2,0,0,0" />
+            <Border Grid.Column="4" Width="16" Background="{Binding Class, Converter={x:Static conv:WarriorClassToBrushConverter.Instance}}" 
+                    d:Background="#B2A771"
+                    HorizontalAlignment="Right" Height="10" VerticalAlignment="Top"
+                    BorderBrush="{DynamicResource ControlBorderBrush}"
+                    BorderThickness="1,0,0,0" CornerRadius="0,4,0,0"
+            />
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" 
                     Grid.Column="4" Background="Black" BorderBrush="{DynamicResource ControlBorderBrush}" 
                     BorderThickness="1,1,0,0" CornerRadius="4,0,4,0" Height="14" Padding="1,0,1,0" Width="24">
