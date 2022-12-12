@@ -94,8 +94,8 @@
                 </Grid>
             </GroupBox>
 
-            <TextBlock Text="Building Level" Grid.Row="12" ToolTip="The level the building must be for this item to be craftable / purchasable"/>
-            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding BuildingLevel}" Max="4"/>
+            <TextBlock Text="Purchase Method" Grid.Row="12" ToolTip="The level the building must be for this item to be craftable / purchasable"/>
+            <ComboBox Grid.Row="12" Grid.Column="1" SelectedItem="{Binding PurchaseMethod}" ItemsSource="{x:Static const:EnumProvider.PurchaseMethodItems}"/>
 
             <TextBlock Text="Shop Price Multiplier" Grid.Row="13" ToolTip="Max shop price / 100" />
             <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="511"/>

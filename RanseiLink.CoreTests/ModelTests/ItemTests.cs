@@ -24,7 +24,7 @@ public class ItemTests
         });
 
         a.Name.Should().Be("Potion");
-        a.BuildingLevel.Should().Be(0);
+        a.PurchaseMethod.Should().Be(0);
         a.Category.Should().Be(ItemCategoryId.Consumable);
         a.Effect.Should().Be(ItemEffectId.IncreaseMaxHp);
         a.EffectDuration.Should().Be(0);
@@ -46,7 +46,7 @@ public class ItemTests
         Item a = new Item
         {
             Name = "Potion",
-            BuildingLevel = 2,
+            PurchaseMethod = PurchaseMethodId.BuildingLevel2,
             Category = ItemCategoryId.Equipment,
             Effect = ItemEffectId.EasierToLinkWithPokemon,
             EffectDuration = 5,
@@ -63,7 +63,7 @@ public class ItemTests
         a.SetPurchasable(KingdomId.Dragnor, false);
 
         a.Name.Should().Be("Potion");
-        a.BuildingLevel.Should().Be(2);
+        a.PurchaseMethod.Should().Be(PurchaseMethodId.BuildingLevel2);
         a.Category.Should().Be(ItemCategoryId.Equipment);
         a.Effect.Should().Be(ItemEffectId.EasierToLinkWithPokemon);
         a.EffectDuration.Should().Be(5);

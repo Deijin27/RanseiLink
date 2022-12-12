@@ -17,10 +17,10 @@ namespace RanseiLink.Core.Models
             set => SetPaddedUtf8String(0, 20, value);
         }
 
-        public int BuildingLevel
+        public PurchaseMethodId PurchaseMethod
         {
-            get => GetInt(5, 16, 2);
-            set => SetInt(5, 16, 2, value);
+            get => (PurchaseMethodId)GetInt(5, 16, 3);
+            set => SetInt(5, 16, 3, (int)value);
         }
 
         public ItemCategoryId Category

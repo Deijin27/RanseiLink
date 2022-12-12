@@ -277,7 +277,7 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Name", item.Name);
-        console.WriteProperty("Building Level", item.BuildingLevel);
+        console.WriteProperty("Purchase Method", item.PurchaseMethod);
         console.WriteProperty("Category", item.Category);
         console.WriteProperty("Effect", item.Effect);
         console.WriteProperty("Effect Duration", item.EffectDuration);

@@ -155,6 +155,7 @@ public class ScenarioWarriorKingdomMiniViewModel : ViewModelBase
         IOverrideDataProvider dataProvider, 
         IPokemonService pokemonService)
     {
+        _scenario = scenario;
         _kingdom = kingdom;
         _spriteProvider = dataProvider;
         _scenarioKingdom = scenarioKingdomService.Retrieve((int)scenario);

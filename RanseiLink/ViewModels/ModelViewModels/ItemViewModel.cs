@@ -40,10 +40,10 @@ public class ItemViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public int BuildingLevel
+    public PurchaseMethodId PurchaseMethod
     {
-        get => _model.BuildingLevel;
-        set => RaiseAndSetIfChanged(_model.BuildingLevel, value, v => _model.BuildingLevel = v);
+        get => _model.PurchaseMethod;
+        set => RaiseAndSetIfChanged(_model.PurchaseMethod, value, v => _model.PurchaseMethod = v);
     }
 
     public ItemCategoryId Category
