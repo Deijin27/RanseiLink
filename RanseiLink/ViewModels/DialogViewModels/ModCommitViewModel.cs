@@ -27,6 +27,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
         };
 
         File = _recentCommitRomSetting.Value;
+        _includeSprites = _patchSpritesSetting.Value;
 
         FilePickerCommand = new RelayCommand(() =>
         {
