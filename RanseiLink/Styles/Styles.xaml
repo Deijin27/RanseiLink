@@ -10,6 +10,7 @@
         <ResourceDictionary Source="MenuToggleButtonStyle.xaml"/>
         <ResourceDictionary Source="HyperlinkButtonStyle.xaml"/>
         <ResourceDictionary Source="VirtualizingItemsControlStyle.xaml"/>
+        <ResourceDictionary Source="TagToggleButtonStyle.xaml"/>
 
         <ResourceDictionary Source="ListViewStyle1.xaml"/>
 

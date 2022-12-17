@@ -7,6 +7,7 @@ using RanseiLink.Services;
 using RanseiLink.ValueConverters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -77,52 +78,140 @@ public class ScenarioWarriorPokemonViewModel : ViewModelBase
 
 public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 {
-    private readonly IScenarioWarriorService _scenarioWarriorService;
-    private readonly ScenarioWarriorMiniViewModelFactory _itemFactory;
-    private readonly ScenarioWarriorKingdomMiniViewModelFactory _kingdomItemFactory;
+    private bool _loading;
+    private readonly SwMiniViewModelFactory _itemFactory;
+    private readonly SwKingdomMiniViewModelFactory _kingdomItemFactory;
+    private readonly SwSimpleKingdomMiniViewModelFactory _simpleKingdomItemFactory;
+    private static bool _showArmy = true;
+    private static bool _showFree = false;
+    private static bool _showUnassigned = false;
+    private SwMiniViewModel _selectedItem;
+
     public ScenarioWarriorWorkspaceViewModel(
-        IScenarioWarriorService scenarioWarriorService, 
-        ScenarioWarriorMiniViewModelFactory itemFactory,
-        ScenarioWarriorKingdomMiniViewModelFactory kingdomItemFactory)
+        SwMiniViewModelFactory itemFactory,
+        SwKingdomMiniViewModelFactory kingdomItemFactory,
+        SwSimpleKingdomMiniViewModelFactory simpleKingdomItemFactory,
+        IIdToNameService idToNameService)
     {
-        _scenarioWarriorService = scenarioWarriorService;
         _itemFactory = itemFactory;
         _kingdomItemFactory = kingdomItemFactory;
+        _simpleKingdomItemFactory = simpleKingdomItemFactory;
         ItemDragHandler = new DragHandlerPro();
+        ItemDropHandler = new DropHandlerPro();
+        ItemClickedCommand = new RelayCommand<object>(ItemClicked);
+
+        WarriorItems = idToNameService.GetComboBoxItemsExceptDefault<IBaseWarriorService>();
+        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+        ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
+
+        Items.CollectionChanged += Items_CollectionChanged;
+    }
+
+    private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (_loading)
+        {
+            return;
+        }
+
+        if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            var newItem = (SwMiniViewModel)e.NewItems[0];
+            var newIndex = e.NewStartingIndex;
+        }
+    }
+
+    private SwKingdomMiniViewModel GetKingdom(int index)
+    {
+        // walk up the list from this index.
+        return null;
     }
 
     public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childScenarioWarriorService)
     {
+        _loading = true;
+
         Items.Clear();
+        UnassignedItems.Clear();
+        WildItems.Clear();
         foreach (var group in childScenarioWarriorService.Enumerate().GroupBy(x => x.Kingdom).OrderBy(x => x.Key))
         {
             Items.Add(_kingdomItemFactory(scenario, group.Key));
+            WildItems.Add(_simpleKingdomItemFactory(group.Key));
             foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
             {
                 var item = _itemFactory(scenarioWarrior, scenario, this);
-                if (scenarioWarrior.ScenarioPokemonIsDefault(0))
+                switch (scenarioWarrior.Class)
                 {
-                    UnassignedItems.Add(item);
+                    case WarriorClassId.ArmyLeader:
+                    case WarriorClassId.ArmyMember:
+                        Items.Add(item);
+                        break;
+                    case WarriorClassId.FreeWarrior:
+                    case WarriorClassId.Unknown_3:
+                    case WarriorClassId.Unknown_4:
+                        WildItems.Add(item);
+                        break;
+                    case WarriorClassId.Default:
+                        UnassignedItems.Add(item);
+                        break;
+                    default:
+                        throw new System.Exception("Unexpected warrior class id");
                 }
-                else
-                {
-                    Items.Add(item);
-                }
-                
+
             }
         }
+        SelectedItem = Items.OfType<SwMiniViewModel>().FirstOrDefault();
+
+        _loading = false;
     }
 
     public ObservableCollection<object> Items { get; } = new();
+    public ObservableCollection<object> WildItems { get; } = new();
     public ObservableCollection<object> UnassignedItems { get; } = new();
     public DragHandlerPro ItemDragHandler { get; }
+    public DropHandlerPro ItemDropHandler { get; }
+    public ICommand ItemClickedCommand { get; }
+    public List<SelectorComboBoxItem> WarriorItems { get; }
+    public List<SelectorComboBoxItem> KingdomItems { get; }
+    public List<SelectorComboBoxItem> ItemItems { get; }
+
+    public bool ShowArmy
+    {
+        get => _showArmy;
+        set => RaiseAndSetIfChanged(ref _showArmy, value);
+    }
+    public bool ShowFree
+    {
+        get => _showFree;
+        set => RaiseAndSetIfChanged(ref _showFree, value);
+    }
+    public bool ShowUnassigned
+    {
+        get => _showUnassigned;
+        set => RaiseAndSetIfChanged(ref _showUnassigned, value);
+    }
+    public SwMiniViewModel SelectedItem
+    {
+        get => _selectedItem;
+        set => RaiseAndSetIfChanged(ref _selectedItem, value);
+    }
+
+    private void ItemClicked(object sender)
+    {
+        if (sender is not SwMiniViewModel clickedVm)
+        {
+            return;
+        }
+        SelectedItem = clickedVm;
+    }
 }
 
 public class DragHandlerPro : DefaultDragHandler 
 {
     public override bool CanStartDrag(IDragInfo dragInfo)
     {
-        if (dragInfo.SourceItem is ScenarioWarriorMiniViewModel)
+        if (dragInfo.SourceItem is SwMiniViewModel)
         {
             return base.CanStartDrag(dragInfo);
         }
@@ -133,38 +222,33 @@ public class DragHandlerPro : DefaultDragHandler
     }
 }
 
-public delegate ScenarioWarriorMiniViewModel ScenarioWarriorMiniViewModelFactory(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent);
-
-public delegate ScenarioWarriorKingdomMiniViewModel ScenarioWarriorKingdomMiniViewModelFactory(ScenarioId scenario, KingdomId kingdom);
-
-public class ScenarioWarriorKingdomMiniViewModel : ViewModelBase
+public class DropHandlerPro : DefaultDropHandler
 {
-    private readonly ScenarioId _scenario;
-    private readonly KingdomId _kingdom;
-    private readonly ScenarioKingdom _scenarioKingdom;
-    private readonly IOverrideDataProvider _spriteProvider;
-    private readonly IBaseWarriorService _baseWarriorService;
-    private readonly IChildScenarioWarriorService _scenarioWarriorService;
-    private readonly IPokemonService _pokemonService;
-    private readonly IChildScenarioPokemonService _scenarioPokemonService;
-    public ScenarioWarriorKingdomMiniViewModel(ScenarioId scenario, KingdomId kingdom,
-        IScenarioKingdomService scenarioKingdomService,
-        IBaseWarriorService baseWarriorService,
-        IScenarioWarriorService scenarioWarriorService,
-        IScenarioPokemonService scenarioPokemonService,
-        IOverrideDataProvider dataProvider, 
-        IPokemonService pokemonService)
+    public override void DragOver(IDropInfo dropInfo)
     {
-        _scenario = scenario;
+        if (dropInfo.InsertIndex == 0)
+        {
+            return;
+        }
+        base.DragOver(dropInfo);
+    }
+}
+
+public delegate SwMiniViewModel SwMiniViewModelFactory(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent);
+
+public delegate SwKingdomMiniViewModel SwKingdomMiniViewModelFactory(ScenarioId scenario, KingdomId kingdom);
+
+public delegate SwSimpleKingdomMiniViewModel SwSimpleKingdomMiniViewModelFactory(KingdomId kingdom);
+
+public class SwSimpleKingdomMiniViewModel : ViewModelBase
+{
+    private readonly KingdomId _kingdom;
+    protected readonly IOverrideDataProvider _spriteProvider;
+    public SwSimpleKingdomMiniViewModel(KingdomId kingdom, IOverrideDataProvider spriteProvider)
+    {
         _kingdom = kingdom;
-        _spriteProvider = dataProvider;
-        _scenarioKingdom = scenarioKingdomService.Retrieve((int)scenario);
-        _baseWarriorService = baseWarriorService;
-        _scenarioWarriorService = scenarioWarriorService.Retrieve((int)scenario);
-        _pokemonService = pokemonService;
-        _scenarioPokemonService = scenarioPokemonService.Retrieve((int)scenario);
+        _spriteProvider = spriteProvider;
         UpdateKingdomImage();
-        UpdateWarriorImage();
     }
 
     private void UpdateKingdomImage()
@@ -183,6 +267,33 @@ public class ScenarioWarriorKingdomMiniViewModel : ViewModelBase
     {
         get => _KingdomImage;
         set => RaiseAndSetIfChanged(ref _KingdomImage, value);
+    }
+}
+
+public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
+{
+    private readonly KingdomId _kingdom;
+    private readonly ScenarioKingdom _scenarioKingdom;
+    
+    private readonly IBaseWarriorService _baseWarriorService;
+    private readonly IChildScenarioWarriorService _scenarioWarriorService;
+    private readonly IPokemonService _pokemonService;
+    private readonly IChildScenarioPokemonService _scenarioPokemonService;
+    public SwKingdomMiniViewModel(ScenarioId scenario, KingdomId kingdom,
+        IScenarioKingdomService scenarioKingdomService,
+        IBaseWarriorService baseWarriorService,
+        IScenarioWarriorService scenarioWarriorService,
+        IScenarioPokemonService scenarioPokemonService,
+        IOverrideDataProvider dataProvider, 
+        IPokemonService pokemonService) : base(kingdom, dataProvider)
+    {
+        _kingdom = kingdom;
+        _scenarioKingdom = scenarioKingdomService.Retrieve((int)scenario);
+        _baseWarriorService = baseWarriorService;
+        _scenarioWarriorService = scenarioWarriorService.Retrieve((int)scenario);
+        _pokemonService = pokemonService;
+        _scenarioPokemonService = scenarioPokemonService.Retrieve((int)scenario);
+        UpdateWarriorImage();
     }
 
     private ImageSource _warriorImage;
@@ -267,7 +378,7 @@ public class ScenarioWarriorKingdomMiniViewModel : ViewModelBase
     }
 }
 
-public class ScenarioWarriorMiniViewModel : ViewModelBase
+public class SwMiniViewModel : ViewModelBase
 {
     private readonly ScenarioId _scenario;
     private readonly ScenarioWarrior _model;
@@ -275,14 +386,16 @@ public class ScenarioWarriorMiniViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
+    private ScenarioWarriorWorkspaceViewModel _parent;
 
-    public ScenarioWarriorMiniViewModel(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent,
+    public SwMiniViewModel(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent,
         IScenarioPokemonService scenarioPokemonService, 
         IBaseWarriorService baseWarriorService, 
         IOverrideDataProvider dataProvider,
         IPokemonService pokemonService)
     {
         _model = model;
+        _parent = parent;
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = dataProvider;
         _scenario = scenario;
@@ -290,15 +403,11 @@ public class ScenarioWarriorMiniViewModel : ViewModelBase
         _pokemonService = pokemonService;
         UpdatePokemonImage();
         UpdateWarriorImage();
-        SelectCommand = new RelayCommand(Select);
     }
 
-    public ICommand SelectCommand { get; }
-
-    private void Select()
-    {
-
-    }
+    public ICommand SelectCommand => _parent.ItemClickedCommand;
+    public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
+    public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;
 
     public string WarriorName => _baseWarriorService.IdToName(Warrior);
 

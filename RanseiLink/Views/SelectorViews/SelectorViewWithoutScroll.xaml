@@ -8,10 +8,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="24"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Margin="10,10,10,0">
+        <DockPanel Margin="10,0,10,0">
             <ComboBox Grid.Row="0" Height="20" 
                       ItemsSource="{Binding DisplayItems}" 
                       SelectedValue="{Binding Selected, Mode=TwoWay}"

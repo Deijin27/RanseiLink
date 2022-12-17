@@ -7,9 +7,9 @@
              xmlns:conv="clr-namespace:RanseiLink.ValueConverters"
              xmlns:enums="clr-namespace:RanseiLink.Core.Enums;assembly=RanseiLink.Core"
              xmlns:local="clr-namespace:RanseiLink.Views"
-             d:DataContext="{d:DesignInstance vm:ScenarioWarriorMiniViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vm:SwMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" Width="163">
-    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}">
+    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
         <!--<Button.Style>
             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
                 <Style.Triggers>

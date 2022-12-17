@@ -15,20 +15,25 @@ public partial class ScenarioWarriorWorkspaceView : UserControl
     }
 }
 
-public class ScenarioWarriorWorkspaceItemDataTemplateSelector : DataTemplateSelector
+public class SwWorkspaceItemDataTemplateSelector : DataTemplateSelector
 {
     public DataTemplate WarriorTemplate { get; set; }
     public DataTemplate KingdomTemplate { get; set; }
+    public DataTemplate KingdomSimpleTemplate { get; set; }
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
-        if (item is ScenarioWarriorMiniViewModel)
+        if (item is SwMiniViewModel)
         {
             return WarriorTemplate;
         }
-        if (item is ScenarioWarriorKingdomMiniViewModel)
+        if (item is SwKingdomMiniViewModel)
         {
             return KingdomTemplate;
+        }
+        else if (item is SwSimpleKingdomMiniViewModel)
+        {
+            return KingdomSimpleTemplate;
         }
         return null;
     }

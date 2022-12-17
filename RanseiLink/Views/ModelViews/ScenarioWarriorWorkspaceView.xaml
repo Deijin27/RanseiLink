@@ -4,6 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
+             xmlns:controls="clr-namespace:RanseiLink.Controls"
+             xmlns:vc="clr-namespace:RanseiLink.ValueConverters"
              xmlns:local="clr-namespace:RanseiLink.Views"
              xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" 
@@ -19,26 +22,104 @@
             <local:ScenarioWarriorKingdomMiniView Margin="2"/>
         </DataTemplate>
 
-        <local:ScenarioWarriorWorkspaceItemDataTemplateSelector 
+        <DataTemplate x:Key="miniSimpleKingdomTemplate">
+            <local:SwSimpleKingdomMiniView Margin="2"/>
+        </DataTemplate>
+
+        <local:SwWorkspaceItemDataTemplateSelector 
             x:Key="miniTemplateSelector"
             KingdomTemplate="{StaticResource miniKingdomTemplate}"
+            KingdomSimpleTemplate="{StaticResource miniSimpleKingdomTemplate}"
             WarriorTemplate="{StaticResource miniWarriorTemplate}"
             />
     </UserControl.Resources>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-        <ItemsControl  
-            Margin="10" 
-            ItemsSource="{Binding Items}" 
-            Style="{StaticResource ItemsControlVirtualizedStyle}"
-            ItemTemplateSelector="{StaticResource miniTemplateSelector}"
-            dd:DragDrop.IsDragSource="True"
-            dd:DragDrop.IsDropTarget="True"
-            dd:DragDrop.DragHandler="{Binding ItemDragHandler}"
-            dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
-        </ItemsControl>
-        <ItemsControl HorizontalAlignment="Left" Margin="0,10,10,10" ItemsSource="{Binding UnassignedItems}" 
-                      Style="{StaticResource ItemsControlVirtualizedStyle}"
-                      ItemTemplateSelector="{StaticResource miniTemplateSelector}">
-        </ItemsControl>
-    </StackPanel>
+    <DockPanel Margin="10,5,10,10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmy}">Army</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowFree}">Free</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowUnassigned}">Unassigned</ToggleButton>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Left">
+            <ItemsControl
+                Margin="0,0,10,0"
+                Visibility="{Binding ShowArmy, Converter={StaticResource bool2VisibilityConverter}}"
+                ItemsSource="{Binding Items}" 
+                Style="{StaticResource ItemsControlVirtualizedStyle}"
+                ItemTemplateSelector="{StaticResource miniTemplateSelector}"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True"
+                dd:DragDrop.DragHandler="{Binding ItemDragHandler}"
+                dd:DragDrop.DropHandler="{Binding ItemDropHandler}"
+                dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
+            </ItemsControl>
+            <ItemsControl  
+                Visibility="{Binding ShowFree, Converter={StaticResource bool2VisibilityConverter}}"
+                Margin="0,0,10,0"
+                ItemsSource="{Binding WildItems}" 
+                Style="{StaticResource ItemsControlVirtualizedStyle}"
+                ItemTemplateSelector="{StaticResource miniTemplateSelector}"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True"
+                dd:DragDrop.DragHandler="{Binding ItemDragHandler}"
+                dd:DragDrop.DropHandler="{Binding ItemDropHandler}"
+                dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
+            </ItemsControl>
+            <ItemsControl 
+                Visibility="{Binding ShowUnassigned, Converter={StaticResource bool2VisibilityConverter}}"
+                HorizontalAlignment="Left" 
+                Margin="0,0,10,0"
+                ItemsSource="{Binding UnassignedItems}" 
+                Style="{StaticResource ItemsControlVirtualizedStyle}"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True"
+                ItemTemplateSelector="{StaticResource miniTemplateSelector}"
+                dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
+            </ItemsControl>
+        </StackPanel>
+        <Grid DataContext="{Binding SelectedItem}">
+            <Grid.Resources>
+                <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
+                <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
+                <vc:NotNullConverter x:Key="Converter.NotNull"/>
+
+                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+                <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
+                    Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
+            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedValue="{Binding Warrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1"/>
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Item" Grid.Row="2" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Item}"/>
+            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Item, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
+                      Grid.Column="1" Grid.Row="2"/>
+
+            <Button Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
+                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
+        </Grid>
+    </DockPanel>
+    
 </UserControl>

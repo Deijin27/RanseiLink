@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace ChangelistPlugin;
 
-[Plugin("Changelist", "Deijin", "2.3")]
+[Plugin("Changelist", "Deijin", "2.4")]
 public class ChangelistPlugin : IPlugin
 {
     public void Run(IPluginContext context)
@@ -68,9 +68,21 @@ public class ChangelistPlugin : IPlugin
         var changedMod = modDict[options.ChangedMod];
 
         var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
+        bool shouldDisposeUnchanged = false;
+        bool shouldDisposeChanged = false;
+        IServiceGetter unchangedServices = context.Services;
+        IServiceGetter changedServices = context.Services;
 
-        using var unchangedServices = unchangedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(unchangedMod);
-        using var changedServices = changedMod.FolderPath == activeMod.FolderPath ? context.Services : kernelFactory.Create(changedMod);
+        if (unchangedMod.FolderPath != activeMod.FolderPath)
+        {
+            shouldDisposeUnchanged = true;
+            unchangedServices = kernelFactory.Create(unchangedMod);
+        }
+        if (changedMod.FolderPath != activeMod.FolderPath)
+        {
+            shouldDisposeChanged = true;
+            changedServices = kernelFactory.Create(changedMod);
+        }
 
         var changelist = BuildChangelist(options, unchangedServices, changedServices);
 
@@ -92,6 +104,15 @@ public class ChangelistPlugin : IPlugin
         {
             OutputTsv(file, changelist);
             dialogService.ShowMessageBox(MessageBoxSettings.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
+        }
+
+        if (shouldDisposeUnchanged)
+        {
+            unchangedServices.Dispose();
+        }
+        if (shouldDisposeChanged)
+        {
+            changedServices.Dispose();
         }
     }
 

@@ -119,8 +119,8 @@ public class WpfModServiceModule : IModule
             )));
 
         builder.RegisterDelegate(context =>
-            new ScenarioWarriorMiniViewModelFactory((sw, id, parent) =>
-                new ScenarioWarriorMiniViewModel(
+            new SwMiniViewModelFactory((sw, id, parent) =>
+                new SwMiniViewModel(
                     sw, 
                     id, 
                     parent,
@@ -131,8 +131,8 @@ public class WpfModServiceModule : IModule
                     )));
 
         builder.RegisterDelegate(context =>
-            new ScenarioWarriorKingdomMiniViewModelFactory((s, k) =>
-                new ScenarioWarriorKingdomMiniViewModel(
+            new SwKingdomMiniViewModelFactory((s, k) =>
+                new SwKingdomMiniViewModel(
                     s,
                     k,
                     context.Resolve<IScenarioKingdomService>(),
@@ -141,6 +141,13 @@ public class WpfModServiceModule : IModule
                     context.Resolve<IScenarioPokemonService>(),
                     context.Resolve<IOverrideDataProvider>(),
                     context.Resolve<IPokemonService>()
+                    )));
+
+        builder.RegisterDelegate(context =>
+            new SwSimpleKingdomMiniViewModelFactory(k =>
+                new SwSimpleKingdomMiniViewModel(
+                    k,
+                    context.Resolve<IOverrideDataProvider>()
                     )));
 
         builder.Register<BannerViewModel>();

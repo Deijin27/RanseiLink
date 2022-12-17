@@ -13,7 +13,7 @@
         <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
     </UserControl.Resources>
     <DockPanel>
-        <Border Width="200" BorderThickness="0">
+        <Border Width="180" BorderThickness="0">
             <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
                 <StackPanel Margin="10">
                     <StackPanel.Resources>

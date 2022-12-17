@@ -19,10 +19,10 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <DockPanel Margin="0,0,0,10">
-                <CheckBox Margin="10,0" Padding="5,0" Content="Add/Remove" IsChecked="{Binding AddRemoveVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                <CheckBox Margin="10,0,0,0" Padding="5,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,10,0" Content="Add/Remove" IsChecked="{Binding AddRemoveVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="10,0,0,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
                 <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Search" Command="{Binding SearchCommand}" DockPanel.Dock="Right"/>
 

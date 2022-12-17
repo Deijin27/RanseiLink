@@ -21,7 +21,7 @@
     </UserControl.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -42,14 +42,15 @@
                   Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
                   ItemsSource="{Binding ListItems}"
                   SelectedItem="{Binding SelectedModuleItem}"
-                  
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Visible"
                   dd:DragDrop.IsDragSource="True"
                   dd:DragDrop.IsDropTarget="True"
                   dd:DragDrop.ShowAlwaysDropTargetAdorner="True">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid Height="30">
-                        <TextBlock Text="{Binding DisplayName}" Padding="10,0,0,0" VerticalAlignment="Center"/>
+                    <Grid Height="20">
+                        <TextBlock Text="{Binding DisplayName}" Padding="3,0,0,0" VerticalAlignment="Center"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:RanseiLink.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Views"
-             d:DataContext="{d:DesignInstance vm:ScenarioWarriorKingdomMiniViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vm:SwKingdomMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" Width="163">
     <Button Background="#E4E3D0" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
         <Grid>
