@@ -44,63 +44,65 @@
             
         </Border>
 
-        <ScrollViewer d:Background="{DynamicResource WindowBackgroundBrush}">
-            <ItemsControl ItemsSource="{Binding ModItems}" Margin="10">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
-                        <Button HorizontalContentAlignment="Left"
+        <ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5" d:Background="{DynamicResource WindowBackgroundBrush}" 
+                      Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
+                    <Button HorizontalContentAlignment="Left"
                                 CommandParameter="{Binding Mod}" 
                                 Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
-                            <Button.Style>
-                                <Style TargetType="Button" BasedOn="{StaticResource RoundedGrayHoverButtonStyle}">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                            <Button.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}" Icon="{StaticResource CommitRomIcon}"/>
-                                    <MenuItem Header="Export mod" Command="{Binding ExportModCommand}" Icon="{StaticResource ExportModIcon}"/>
-                                    <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
-                                    <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
-                                    <Separator/>
-                                    <MenuItem Header="Plugins" Icon="{StaticResource PluginIcon}" ItemsSource="{Binding PluginItems}">
-                                        <MenuItem.ItemContainerStyle>
-                                            <Style TargetType="{x:Type MenuItem}">
-                                                <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
-                                                <Setter Property="CommandParameter" Value="{Binding}"/>
-                                                <Setter Property="HeaderTemplate">
-                                                    <Setter.Value>
-                                                        <DataTemplate>
-                                                            <TextBlock>
-                                                                <TextBlock.Text>
-                                                                    <MultiBinding StringFormat="{}{0} v{1} by {2}">
-                                                                        <Binding Path="Name" />
-                                                                        <Binding Path="Version" />
-                                                                        <Binding Path="Author" />
-                                                                    </MultiBinding>
-                                                                </TextBlock.Text>
-                                                            </TextBlock>
-                                                        </DataTemplate>
-                                                        
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </MenuItem.ItemContainerStyle>
-                                    </MenuItem>
-                                    <Separator/>
-                                    <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" />
-                                    <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}"/>
-                                </ContextMenu>
-                            </Button.ContextMenu>
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource RoundedGrayHoverButtonStyle}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}" Icon="{StaticResource CommitRomIcon}"/>
+                                <MenuItem Header="Export mod" Command="{Binding ExportModCommand}" Icon="{StaticResource ExportModIcon}"/>
+                                <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
+                                <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
+                                <Separator/>
+                                <MenuItem Header="Plugins" Icon="{StaticResource PluginIcon}" ItemsSource="{Binding PluginItems}">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
+                                            <Setter Property="CommandParameter" Value="{Binding}"/>
+                                            <Setter Property="HeaderTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <TextBlock>
+                                                            <TextBlock.Text>
+                                                                <MultiBinding StringFormat="{}{0} v{1} by {2}">
+                                                                    <Binding Path="Name" />
+                                                                    <Binding Path="Version" />
+                                                                    <Binding Path="Author" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </DataTemplate>
+
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" />
+                                <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <DockPanel>
+                            <Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                             <controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                        </DockPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </DockPanel>
 </UserControl>

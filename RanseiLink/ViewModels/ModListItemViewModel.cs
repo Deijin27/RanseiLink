@@ -2,10 +2,13 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
+using RanseiLink.ValueConverters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
@@ -43,6 +46,11 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         Mod = mod;
         PluginItems = pluginLoader.LoadPlugins(out var _);
 
+        if (PathToImageSourceConverter.TryConvert(Path.Combine(mod.FolderPath, Core.Services.Constants.BannerImageFile), out var img))
+        {
+            Banner = img;
+        }
+
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
         EditModInfoCommand = new RelayCommand(() => EditModInfo(Mod));
@@ -54,7 +62,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             System.Diagnostics.Process.Start("explorer.exe", Mod.FolderPath);
         });
     }
-
+    public ImageSource Banner { get; }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ModInfo Mod { get; }
     public ICommand PatchRomCommand { get; }
