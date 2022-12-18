@@ -105,26 +105,77 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
 
         Items.CollectionChanged += Items_CollectionChanged;
+        WildItems.CollectionChanged += Items_CollectionChanged;
+        UnassignedItems.CollectionChanged += Items_CollectionChanged;
     }
 
     private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_loading)
+        if (_loading || !(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Move) || sender is not IList<object> items)
         {
             return;
         }
 
-        if (e.Action == NotifyCollectionChangedAction.Add)
+        var newItem = (SwMiniViewModel)e.NewItems[0];
+        var oldClass = newItem.Class;
+
+        // put into unassigned items list, change the army to default
+        if (items == UnassignedItems)
         {
-            var newItem = (SwMiniViewModel)e.NewItems[0];
+            newItem.Army = 17;
+            newItem.Class = WarriorClassId.Default;
+        }
+        else
+        {
+            // find the new kingdom and army
             var newIndex = e.NewStartingIndex;
+            var newKingdom = GetKingdom(newIndex, items);
+            newItem.Kingdom = (int)newKingdom.Kingdom;
+            newItem.Army = newKingdom.Army;
+
+            if (items == WildItems)
+            {
+                if (newItem.Class != WarriorClassId.FreeWarrior || newItem.Class != WarriorClassId.Unknown_3 || newItem.Class != WarriorClassId.Unknown_4)
+                {
+                    newItem.Class = WarriorClassId.FreeWarrior;
+                }
+            }
+            else if (items == Items)
+            {
+                if (newItem.Class != WarriorClassId.ArmyLeader || newItem.Class != WarriorClassId.ArmyMember)
+                {
+                    newItem.Class = WarriorClassId.ArmyMember;
+                }
+            }
+        }
+
+        // update the strengths of armies
+        UpdateStrengths();
+        if (newItem.Class != oldClass)
+        {
+            // TODO: handle updating of leader
         }
     }
 
-    private SwKingdomMiniViewModel GetKingdom(int index)
+    private static SwSimpleKingdomMiniViewModel GetKingdom(int index, IList<object> items)
     {
         // walk up the list from this index.
-        return null;
+        for (int i = index - 1; i >= 0; i--)
+        {
+            if (items[i] is SwSimpleKingdomMiniViewModel vm)
+            {
+                return vm;
+            }
+        }
+        throw new System.Exception("SwWorkspace: Something has gone wrong. Kingdom not found.");
+    }
+
+    private void UpdateStrengths()
+    {
+        foreach (var i in Items.OfType<SwKingdomMiniViewModel>())
+        {
+            i.UpdateStrength();
+        }
     }
 
     public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childScenarioWarriorService)
@@ -268,6 +319,14 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
         get => _KingdomImage;
         set => RaiseAndSetIfChanged(ref _KingdomImage, value);
     }
+
+    public KingdomId Kingdom => _kingdom;
+
+    public virtual int Army
+    {
+        get => 17;
+        set { }
+    }
 }
 
 public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
@@ -353,6 +412,16 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         }
     }
 
+    public void UpdateStrength()
+    {
+        RaisePropertyChanged(nameof(Strength));
+    }
+
+    public void UpdateLeader()
+    {
+        UpdateWarriorImage();
+    }
+
     private int CalculateStrength(int ScenarioPokemon)
     {
         var sp = _scenarioPokemonService.Retrieve(ScenarioPokemon);
@@ -365,7 +434,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         return StrengthCalculator.CalculateStrength(pokemon, (double)LinkCalculator.CalculateLink(sp.Exp));
     }
 
-    public int Army
+    public override int Army
     {
         get => _kingdom == KingdomId.Default ? -1 : _scenarioKingdom.GetArmy(_kingdom);
         set 
@@ -386,7 +455,7 @@ public class SwMiniViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
-    private ScenarioWarriorWorkspaceViewModel _parent;
+    private readonly ScenarioWarriorWorkspaceViewModel _parent;
 
     public SwMiniViewModel(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent,
         IScenarioPokemonService scenarioPokemonService, 

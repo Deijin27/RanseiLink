@@ -35,7 +35,7 @@
     </UserControl.Resources>
     <DockPanel Margin="10,5,10,10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmy}">Army</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmy}" d:IsChecked="True">Army</ToggleButton>
             <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowFree}">Free</ToggleButton>
             <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowUnassigned}">Unassigned</ToggleButton>
         </StackPanel>
@@ -122,6 +122,9 @@
 
             <Button Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
                     Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
+
+            <TextBlock Grid.Row="4" Text="{Binding Army, StringFormat='Army: {0}'}"/>
+            <TextBlock Grid.Row="5" Text="{Binding Kingdom, StringFormat='Kingdom: {0}'}"/>
         </Grid>
     </DockPanel>
     
