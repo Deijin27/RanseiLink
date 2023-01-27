@@ -25,6 +25,7 @@
         <ResourceDictionary Source="ControlStyles/ToolTip.xaml"/>
         <ResourceDictionary Source="ControlStyles/DataGrid.xaml"/>
         <ResourceDictionary Source="ControlStyles/TabControl.xaml"/>
+        <ResourceDictionary Source="ControlStyles/ProgressBar.xaml"/>
 
     </ResourceDictionary.MergedDictionaries>
 
