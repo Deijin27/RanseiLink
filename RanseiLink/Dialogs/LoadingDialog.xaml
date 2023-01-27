@@ -12,11 +12,11 @@
         xmlns:vm="clr-namespace:RanseiLink.ViewModels"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
-        Title="ModCreationDialog" Height="100" Width="300" Background="Transparent">
+        Title="ModCreationDialog" Background="Transparent" Width="445" Height="100">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}">
-        <StackPanel>
-            <TextBlock x:Name="HeaderTextBlock" Margin="20" FontSize="18" FontWeight="DemiBold" HorizontalAlignment="Center" d:Text="Header Text"/>
-            <ProgressBar x:Name="ProgressBar" Height="7" Margin="10" Value="0" Foreground="{DynamicResource AccentBrush}"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="HeaderTextBlock" Margin="0,0,0,20" FontSize="18" FontWeight="DemiBold" HorizontalAlignment="Center" d:Text="Header Text"/>
+            <ProgressBar x:Name="ProgressBar" Width="400" Height="10" Value="0" />
         </StackPanel>
     </Border>
 </Window>
