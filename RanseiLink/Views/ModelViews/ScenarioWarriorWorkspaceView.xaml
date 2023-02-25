@@ -15,7 +15,7 @@
     <UserControl.Resources>
 
         <DataTemplate x:Key="miniWarriorTemplate">
-            <local:ScenarioWarriorMiniView Margin="2"/>
+            <local:ScenarioWarriorMiniView Margin="2" Width="163"/>
         </DataTemplate>
 
         <DataTemplate x:Key="miniKingdomTemplate">
@@ -96,35 +96,71 @@
                 </Style>
             </Grid.Resources>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="260"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="0" ToolTip="Jump to selected warrior" 
+
+
+            <local:ScenarioWarriorMiniView Margin="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,50,0">
+                <TextBlock Text="{Binding Army, StringFormat='Army: {0}'}" d:Text="Army: 0" Margin="2,0,0,0"/>
+                <TextBlock Text="{Binding Kingdom, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: 0" Margin="2,0,0,0"/>
+            </StackPanel>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="1" ToolTip="Jump to selected warrior" 
                     Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
-            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedValue="{Binding Warrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1"/>
+            <DockPanel Grid.Row="1" Grid.Column="1">
+                <Button DockPanel.Dock="Right" Style="{StaticResource HyperlinkButtonStyle}" Content="Max Link" Margin="5,0,0,0"
+                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}" ToolTip="Jump to max link table for warrior"/>
+                <ComboBox ItemsSource="{Binding WarriorItems}" SelectedValue="{Binding Warrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
+                      />
+            </DockPanel>
+            
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Class"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Class"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Item" Grid.Row="2" ToolTip="Jump to selected item" 
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Item" Grid.Row="3" ToolTip="Jump to selected item" 
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Item}"/>
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Item, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
-                      Grid.Column="1" Grid.Row="2"/>
+                      Grid.Column="1" Grid.Row="3"/>
 
-            <Button Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to max link table for selected warrior"
-                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}"/>
-
-            <TextBlock Grid.Row="4" Text="{Binding Army, StringFormat='Army: {0}'}"/>
-            <TextBlock Grid.Row="5" Text="{Binding Kingdom, StringFormat='Kingdom: {0}'}"/>
+            <TabControl Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" >
+                <TabControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
+                        <Image Stretch="None" Height="19" Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
+                               />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
+                        <DockPanel>
+                            <ComboBox DockPanel.Dock="Top"/>
+                            <ContentPresenter Content="{Binding NestedVm}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+                
+                <!--<TabItem>
+                    <TabItem.Header>
+                        <Image Stretch="None" Height="19" Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
+                               />
+                    </TabItem.Header>
+                    <DockPanel>
+                        <ComboBox DockPanel.Dock="Top"/>
+                        <local:ScenarioPokemonView Margin="2,0,2,0"/>
+                    </DockPanel>
+                    
+                </TabItem>-->
+            </TabControl>
         </Grid>
     </DockPanel>
     

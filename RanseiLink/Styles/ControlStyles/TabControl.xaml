@@ -7,15 +7,17 @@
                 <ControlTemplate TargetType="{x:Type TabItem}">
                     <Grid>
                         <Border 
+                                CornerRadius="3,3,0,0"
                                 Name="Border"
-                                Margin="0,0,-4,0" 
+                                Margin="0,0,-1,0" 
                                 Background="{DynamicResource WindowBackgroundBrush}"
-                                BorderThickness="0">
+                                BorderBrush="{DynamicResource WindowBorderBrush}"
+                                BorderThickness="1,1,1,0">
                             <ContentPresenter x:Name="ContentSite"
                                     VerticalAlignment="Center"
                                     HorizontalAlignment="Center"
                                     ContentSource="Header"
-                                    Margin="12,2,12,2"
+                                    Margin="4,2,4,2"
                                     RecognizesAccessKey="True"/>
                         </Border>
                     </Grid>
@@ -23,6 +25,9 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Panel.ZIndex" Value="100" />
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource WindowTransparentBackgroundBrush}" />
+                            <!--<Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0"/>-->
+                            <Setter TargetName="Border" Property="Margin" Value="-2,-2,-1,-1"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -31,6 +36,46 @@
     </Style>
     <Style TargetType="TabControl">
         <Setter Property="Background" Value="{DynamicResource WindowTransparentBackgroundBrush}" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}"/>
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid KeyboardNavigation.TabNavigation="Local">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TabPanel 
+                            x:Name="HeaderPanel"
+                            Grid.Row="0"
+                            Panel.ZIndex="1"
+                            Margin="6,0,6,0"
+                            IsItemsHost="True"
+                            KeyboardNavigation.TabIndex="1"
+                            Background="Transparent" />
+                        <Border 
+                            x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Grid.Row="1"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3"
+                            KeyboardNavigation.TabNavigation="Local"
+                            KeyboardNavigation.DirectionalNavigation="Contained"
+                            KeyboardNavigation.TabIndex="2">
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" />
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

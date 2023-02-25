@@ -11,6 +11,8 @@ using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
 
+public delegate ScenarioPokemonViewModel ScenarioPokemonViewModelFactory();
+
 public class ScenarioPokemonViewModel : ViewModelBase
 {
     private IPokemonService _pokemonService;

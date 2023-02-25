@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="RanseiLink.Views.ScenarioWarriorMiniView"
+﻿<UserControl x:Class="RanseiLink.Views.ScenarioPokemonMiniView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
              xmlns:enums="clr-namespace:RanseiLink.Core.Enums;assembly=RanseiLink.Core"
              xmlns:local="clr-namespace:RanseiLink.Views"
              d:DataContext="{d:DesignInstance vm:SwMiniViewModel, IsDesignTimeCreatable=False}"
-             mc:Ignorable="d" HorizontalAlignment="Stretch">
+             mc:Ignorable="d" HorizontalAlignment="Stretch" d:Width="140">
     <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
         <!--<Button.Style>
             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
@@ -26,27 +26,20 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="32"/>
                 <ColumnDefinition Width="1"/>
-                <ColumnDefinition Width="32"/>
-                <ColumnDefinition Width="1"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
             <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19"
-                d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_busho_s\StlBushouSTex-Pngs\0000.png"
-                   Source="{Binding WarriorImage}">
+                d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png"
+                   Source="{Binding PokemonImage}">
                 <Image.Clip>
                     <RectangleGeometry RadiusX="3.5" RadiusY="3.5" Rect="0,0,35,19"/>
                 </Image.Clip>
             </Image>
             <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
-            <Image Grid.Column="2" Grid.Row="0" Stretch="None" Height="19"
-                   Source="{Binding PokemonImage}"
-                   d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
-                   />
-            <Rectangle Grid.Column="3" Fill="{DynamicResource ControlBorderBrush}"/>
-            <TextBlock Grid.Column="4" d:Text="Kamanosuke" Text="{Binding WarriorName}" Margin="2,0,0,0" />
+            <TextBlock Grid.Column="4" d:Text="Eevee" Text="{Binding Name}" Margin="2,0,0,0" />
             <Border Grid.Column="4" Width="16" Background="{Binding Class, Converter={x:Static conv:WarriorClassToBrushConverter.Instance}}" 
                     d:Background="#B2A771"
                     HorizontalAlignment="Right" Height="10" VerticalAlignment="Top"

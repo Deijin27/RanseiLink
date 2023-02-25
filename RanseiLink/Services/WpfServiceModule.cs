@@ -118,17 +118,10 @@ public class WpfModServiceModule : IModule
                     context.Resolve<IDialogService>()
             )));
 
-        builder.RegisterDelegate(context =>
-            new SwMiniViewModelFactory((sw, id, parent) =>
-                new SwMiniViewModel(
-                    sw, 
-                    id, 
-                    parent,
-                    context.Resolve<IScenarioPokemonService>(),
-                    context.Resolve<IBaseWarriorService>(),
-                    context.Resolve<IOverrideDataProvider>(),
-                    context.Resolve<IPokemonService>()
-                    )));
+        builder.RegisterDelegate(context => new SwMiniViewModelFactory(() => context.Resolve<SwMiniViewModel>()), Reuse.Singleton);
+        builder.RegisterDelegate<SwMiniViewModelFactory>(context => () => context.Resolve<SwMiniViewModel>(), Reuse.Singleton);
+        builder.RegisterDelegate<SwMiniViewModelFactory>(context => () => context.Resolve<SwMiniViewModel>(), Reuse.Singleton);
+        builder.Register(Made.Of(() => new SwMiniViewModelFactory(() => Arg.Of<SwMiniViewModel>())), Reuse.Singleton);
 
         builder.RegisterDelegate(context =>
             new SwKingdomMiniViewModelFactory((s, k) =>
