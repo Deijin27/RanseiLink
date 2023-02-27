@@ -137,7 +137,7 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<MaxLinkViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }
 
