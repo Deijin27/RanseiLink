@@ -133,17 +133,17 @@
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Item, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
                       Grid.Column="1" Grid.Row="3"/>
 
-            <TabControl Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" >
+            <TabControl SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding ScenarioPokemonSlots}" Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" >
                 <TabControl.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
-                        <Image Stretch="None" Height="19" Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
+                        <Image Stretch="None" Width="32" Height="19" Source="{Binding PokemonImage}" 
                                />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
                     <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
                         <DockPanel>
-                            <ComboBox DockPanel.Dock="Top"/>
+                            <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding ScenarioPokemonItems}" SelectedValue="{Binding ScenarioPokemonId, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
                             <ContentPresenter Content="{Binding NestedVm}"/>
                         </DockPanel>
                     </DataTemplate>

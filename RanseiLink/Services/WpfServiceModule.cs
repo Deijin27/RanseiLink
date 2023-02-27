@@ -7,6 +7,7 @@ using RanseiLink.PluginModule.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.Dialogs;
 using RanseiLink.Core.Services.ModelServices;
+using System.Reflection;
 
 namespace RanseiLink.Services;
 
@@ -45,7 +46,7 @@ public class WpfServiceModule : IModule
         // editor modules
         foreach (var type in GetType().Assembly.GetTypes())
         {
-            if (typeof(EditorModule).IsAssignableFrom(type) && !type.IsAbstract)
+            if (typeof(EditorModule).IsAssignableFrom(type) && !type.IsAbstract && type.GetCustomAttribute<EditorModuleAttribute>() != null)
             {
                 builder.Register(typeof(EditorModule), type);
             }
@@ -109,39 +110,16 @@ public class WpfModServiceModule : IModule
         builder.Register<MsgGridViewModel>();
         builder.Register<ScenarioWarriorGridViewModel>();
 
-        builder.RegisterDelegate(context =>
-            new SpriteItemViewModelFactory(file =>
-                new SpriteItemViewModel(
-                    file,
-                    context.Resolve<ISpriteManager>(),
-                    context.Resolve<IOverrideDataProvider>(),
-                    context.Resolve<IDialogService>()
-            )));
+        builder.Register<SpriteItemViewModel>();
+        builder.Register<SwMiniViewModel>();
+        builder.Register<SwKingdomMiniViewModel>();
+        builder.Register<SwSimpleKingdomMiniViewModel>();
 
-        builder.RegisterDelegate(context => new SwMiniViewModelFactory(() => context.Resolve<SwMiniViewModel>()), Reuse.Singleton);
-        builder.RegisterDelegate<SwMiniViewModelFactory>(context => () => context.Resolve<SwMiniViewModel>(), Reuse.Singleton);
-        builder.RegisterDelegate<SwMiniViewModelFactory>(context => () => context.Resolve<SwMiniViewModel>(), Reuse.Singleton);
-        builder.Register(Made.Of(() => new SwMiniViewModelFactory(() => Arg.Of<SwMiniViewModel>())), Reuse.Singleton);
-
-        builder.RegisterDelegate(context =>
-            new SwKingdomMiniViewModelFactory((s, k) =>
-                new SwKingdomMiniViewModel(
-                    s,
-                    k,
-                    context.Resolve<IScenarioKingdomService>(),
-                    context.Resolve<IBaseWarriorService>(),
-                    context.Resolve<IScenarioWarriorService>(),
-                    context.Resolve<IScenarioPokemonService>(),
-                    context.Resolve<IOverrideDataProvider>(),
-                    context.Resolve<IPokemonService>()
-                    )));
-
-        builder.RegisterDelegate(context =>
-            new SwSimpleKingdomMiniViewModelFactory(k =>
-                new SwSimpleKingdomMiniViewModel(
-                    k,
-                    context.Resolve<IOverrideDataProvider>()
-                    )));
+        builder.RegisterDelegate(context => new ScenarioPokemonViewModel.Factory(() => context.Resolve<ScenarioPokemonViewModel>()), Reuse.Singleton);
+        builder.RegisterDelegate(context => new SpriteItemViewModel.Factory(() => context.Resolve<SpriteItemViewModel>()), Reuse.Singleton);
+        builder.RegisterDelegate(context => new SwMiniViewModel.Factory(() => context.Resolve<SwMiniViewModel>()), Reuse.Singleton);
+        builder.RegisterDelegate(context => new SwKingdomMiniViewModel.Factory(() => context.Resolve<SwKingdomMiniViewModel>()), Reuse.Singleton);
+        builder.RegisterDelegate(context => new SwSimpleKingdomMiniViewModel.Factory(() => context.Resolve<SwSimpleKingdomMiniViewModel>()), Reuse.Singleton);
 
         builder.Register<BannerViewModel>();
     }

@@ -3,6 +3,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.ValueConverters;
+using System.Collections.Generic;
 using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
@@ -18,11 +19,13 @@ public class SwPokemonSlotViewModel : ViewModelBase
     private readonly IChildScenarioPokemonService _spService;
     private ImageSource _pokemonImage;
     private readonly IOverrideDataProvider _spriteProvider;
+    private readonly SwMiniViewModel _parent;
 
-    public SwPokemonSlotViewModel(ScenarioId scenario, ScenarioWarrior warrior, int slot, ScenarioPokemonViewModel scenarioPokemonVm, 
+    public SwPokemonSlotViewModel(SwMiniViewModel parent, ScenarioId scenario, ScenarioWarrior warrior, int slot, ScenarioPokemonViewModel scenarioPokemonVm, 
         IChildScenarioPokemonService spService, 
         IOverrideDataProvider spriteProvider)
     {
+        _parent = parent;
         _slot = slot;
         _scenario = scenario;
         _warrior = warrior;
@@ -44,6 +47,8 @@ public class SwPokemonSlotViewModel : ViewModelBase
         }
     }
 
+    public List<SelectorComboBoxItem> ScenarioPokemonItems => _parent.ScenarioPokemonItems;
+
     public bool IsSelected
     {
         get => _isSelected;
@@ -64,11 +69,12 @@ public class SwPokemonSlotViewModel : ViewModelBase
             if (RaiseAndSetIfChanged(ScenarioPokemonId, value, v => _warrior.SetScenarioPokemon(_slot, value)))
             {
                 UpdateNested();
+                UpdatePokemonImage();
             }
         }
     }
 
-    private void UpdateNested()
+    public void UpdateNested()
     {
         if (_warrior.ScenarioPokemonIsDefault(_slot))
         {

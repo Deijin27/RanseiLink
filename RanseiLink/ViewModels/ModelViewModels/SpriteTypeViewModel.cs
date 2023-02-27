@@ -12,14 +12,14 @@ namespace RanseiLink.ViewModels;
 
 public class SpriteTypeViewModel : ViewModelBase
 {
-    private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
+    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
     private readonly ISpriteManager _spriteManager;
     private string _dimensionInfo;
     private bool _canAddNew;
 
-    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModelFactory spriteItemVmFactory)
+    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;
@@ -101,7 +101,7 @@ public class SpriteTypeViewModel : ViewModelBase
             List<SpriteItemViewModel> newItems = new();
             foreach (var i in files)
             {
-                var item = _spriteItemVmFactory(i);
+                var item = _spriteItemVmFactory().Init(i);
                 item.SpriteModified += OnSpriteModified;
                 newItems.Add(item);
                 progress.Report(new ProgressInfo(progress: ++count));
@@ -119,7 +119,7 @@ public class SpriteTypeViewModel : ViewModelBase
             if (SetOverride(id, $"Pick a file to add in slot '{id}' "))
             {
                 var spriteFile = _spriteProvider.GetSpriteFile(SelectedType, id);
-                var item = _spriteItemVmFactory(spriteFile);
+                var item = _spriteItemVmFactory().Init(spriteFile);
                 item.SpriteModified += OnSpriteModified;
                 Items.Add(item);
                 UpdateInfo(SelectedType);

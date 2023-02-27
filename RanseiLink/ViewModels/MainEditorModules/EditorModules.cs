@@ -7,6 +7,7 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
+[EditorModule]
 public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonService>
 {
     public const string Id = "pokemon_selector";
@@ -34,6 +35,7 @@ public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonServ
 //    }
 //}
 
+[EditorModule]
 public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
 {
     public const string Id = "ability_selector";
@@ -47,6 +49,7 @@ public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityServ
     }
 }
 
+[EditorModule]
 public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarriorSkillService>
 {
     public const string Id = "warrior_skill_selector";
@@ -60,6 +63,7 @@ public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarrio
     }
 }
 
+[EditorModule]
 public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRangeService>
 {
     public const string Id = "move_range_selector";
@@ -73,6 +77,7 @@ public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRange
     }
 }
 
+[EditorModule]
 public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
 {
     public const string Id = "move_selector";
@@ -86,6 +91,7 @@ public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
     }
 }
 
+[EditorModule]
 public class WarriorNameTableEditorModule : EditorModule
 {
     public const string Id = "warrior_name_table";
@@ -107,6 +113,7 @@ public class WarriorNameTableEditorModule : EditorModule
     public override void OnPluginComplete() => _viewModel.SetModel(_service.NameTable);
 }
 
+[EditorModule]
 public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWarriorService>
 {
     public const string Id = "base_warrior_selector";
@@ -120,6 +127,7 @@ public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWar
     }
 }
 
+[EditorModule]
 public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkService>
 {
     public const string Id = "max_link_selector";
@@ -206,6 +214,7 @@ public class ScenarioPokemonSelectorEditorModule : BaseSelectorEditorModule<ISce
     }
 }
 
+[EditorModule]
 public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModule<IScenarioAppearPokemonService>
 {
     public const string Id = "scenario_appear_pokemon_selector";
@@ -219,6 +228,7 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     }
 }
 
+[EditorModule]
 public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
 {
     public const string Id = "scenario_warrior_workspace";
@@ -228,10 +238,13 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
     {
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel((ScenarioId)id, _service.Retrieve(id)));
+        var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, 
+            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), modServices.Get<IScenarioPokemonService>().Retrieve(id), spVm));
     }
 }
 
+[EditorModule]
 public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<IScenarioKingdomService>
 {
     public const string Id = "scenario_kingdom_selector";
@@ -245,6 +258,7 @@ public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<ISce
     }
 }
 
+[EditorModule]
 public class ScenarioBuildingSelectorEditorModule : BaseSelectorEditorModule<IScenarioBuildingService>
 {
     public const string Id = "scenario_building_selector";
@@ -258,6 +272,7 @@ public class ScenarioBuildingSelectorEditorModule : BaseSelectorEditorModule<ISc
     }
 }
 
+[EditorModule]
 public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventSpeakerService>
 {
     public const string Id = "event_speaker_selector";
@@ -271,6 +286,7 @@ public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventS
     }
 }
 
+[EditorModule]
 public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
 {
     public const string Id = "item_selector";
@@ -284,6 +300,7 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
     }
 }
 
+[EditorModule]
 public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingService>
 {
     public const string Id = "building_selector";
@@ -297,6 +314,7 @@ public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingSe
     }
 }
 
+[EditorModule]
 public class MsgGridEditorModule : EditorModule
 {
     public const string Id = "msg_grid";
@@ -313,6 +331,7 @@ public class MsgGridEditorModule : EditorModule
     public override void Deactivate() => _viewModel?.UnhookEvents();
 }
 
+[EditorModule]
 public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickService>
 {
     public const string Id = "gimmick_selector";
@@ -326,6 +345,7 @@ public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickServ
     }
 }
 
+[EditorModule]
 public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeService>
 {
     public const string Id = "episode_selector";
@@ -345,6 +365,7 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
     }
 }
 
+[EditorModule]
 public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomService>
 {
     public const string Id = "kingdom_selector";
@@ -358,6 +379,7 @@ public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomServ
     }
 }
 
+[EditorModule]
 public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattleConfigService>
 {
     public const string Id = "battle_config_selector";
@@ -371,6 +393,7 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
     }
 }
 
+[EditorModule]
 public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmickRangeService>
 {
     public const string Id = "gimmick_range_selector";
@@ -397,6 +420,7 @@ public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmic
 //    }
 //}
 
+[EditorModule]
 public class MapSelectorEditorModule : EditorModule
 {
     public const string Id = "map_selector";
@@ -478,6 +502,7 @@ public class MapSelectorEditorModule : EditorModule
     }
 }
 
+[EditorModule]
 public class SpriteEditorModule : EditorModule
 {
     public const string Id = "sprites";
@@ -493,6 +518,7 @@ public class SpriteEditorModule : EditorModule
     }
 }
 
+[EditorModule]
 public class BannerEditorModule : EditorModule
 {
     public const string Id = "banner";

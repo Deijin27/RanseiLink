@@ -7,38 +7,45 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
-
-public delegate SwKingdomMiniViewModel SwKingdomMiniViewModelFactory(ScenarioId scenario, KingdomId kingdom);
-
 public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 {
-    private readonly KingdomId _kingdom;
-    private readonly ScenarioKingdom _scenarioKingdom;
-    
+    public new delegate SwKingdomMiniViewModel Factory();
+
+    private int _scenario;
+    private KingdomId _kingdom;
+    private ScenarioKingdom _scenarioKingdom;
+
+    private readonly IScenarioKingdomService _scenarioKingdomService;
+    private readonly IScenarioWarriorService _scenarioWarriorService;
+    private readonly IScenarioPokemonService _scenarioPokemonService;
     private readonly IBaseWarriorService _baseWarriorService;
-    private readonly IChildScenarioWarriorService _scenarioWarriorService;
     private readonly IPokemonService _pokemonService;
-    private readonly IChildScenarioPokemonService _scenarioPokemonService;
-    public SwKingdomMiniViewModel(ScenarioId scenario, KingdomId kingdom,
+    public SwKingdomMiniViewModel(
         IScenarioKingdomService scenarioKingdomService,
         IBaseWarriorService baseWarriorService,
         IScenarioWarriorService scenarioWarriorService,
         IScenarioPokemonService scenarioPokemonService,
         IOverrideDataProvider dataProvider, 
-        IPokemonService pokemonService) : base(kingdom, dataProvider)
+        IPokemonService pokemonService) : base(dataProvider)
     {
-        _kingdom = kingdom;
-        _scenarioKingdom = scenarioKingdomService.Retrieve((int)scenario);
+        _scenarioKingdomService = scenarioKingdomService;
         _baseWarriorService = baseWarriorService;
-        _scenarioWarriorService = scenarioWarriorService.Retrieve((int)scenario);
+        _scenarioWarriorService = scenarioWarriorService;
+        _scenarioPokemonService = scenarioPokemonService;
         _pokemonService = pokemonService;
-        _scenarioPokemonService = scenarioPokemonService.Retrieve((int)scenario);
-        UpdateWarriorImage();
     }
 
-    public void Init()
+    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom)
     {
+        base.Init(kingdom);
+        _kingdom = kingdom;
+        _scenario = (int)scenario;
 
+        _scenarioKingdom = _scenarioKingdomService.Retrieve((int)scenario);
+
+        UpdateWarriorImage();
+
+        return this;
     }
 
     private ImageSource _warriorImage;
@@ -51,7 +58,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
     private void UpdateWarriorImage()
     {
         int warrior = -1;
-        foreach (var w in _scenarioWarriorService.Enumerate())
+        foreach (var w in _scenarioWarriorService.Retrieve(_scenario).Enumerate())
         {
             if (w.Class == WarriorClassId.ArmyLeader && w.Army == Army)
             {
@@ -80,7 +87,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         get
         {
             int strength = 0;
-            foreach (var warrior in _scenarioWarriorService.Enumerate())
+            foreach (var warrior in _scenarioWarriorService.Retrieve(_scenario).Enumerate())
             {
                 if (warrior.Kingdom == _kingdom 
                     && warrior.Army == Army 
@@ -110,7 +117,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 
     private int CalculateStrength(int ScenarioPokemon)
     {
-        var sp = _scenarioPokemonService.Retrieve(ScenarioPokemon);
+        var sp = _scenarioPokemonService.Retrieve(_scenario).Retrieve(ScenarioPokemon);
         int pokemonId = (int)sp.Pokemon;
         if (!_pokemonService.ValidateId(pokemonId))
         {

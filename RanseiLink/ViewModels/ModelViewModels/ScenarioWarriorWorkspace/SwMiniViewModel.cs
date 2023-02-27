@@ -2,6 +2,7 @@
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Services;
 using RanseiLink.ValueConverters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,10 +11,10 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
-public delegate SwMiniViewModel SwMiniViewModelFactory();
-
 public class SwMiniViewModel : ViewModelBase
 {
+    public delegate SwMiniViewModel Factory();
+
     private ScenarioId _scenario;
     private ScenarioWarrior _model;
     private readonly IScenarioPokemonService _scenarioPokemonService;
@@ -21,36 +22,55 @@ public class SwMiniViewModel : ViewModelBase
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
     private ScenarioWarriorWorkspaceViewModel _parent;
+    private readonly ScenarioPokemonViewModel.Factory _spVmFactory;
 
     public SwMiniViewModel(
-        IScenarioPokemonService scenarioPokemonService, 
-        IBaseWarriorService baseWarriorService, 
+        IScenarioPokemonService scenarioPokemonService,
+        IBaseWarriorService baseWarriorService,
         IOverrideDataProvider dataProvider,
-        IPokemonService pokemonService)
+        IPokemonService pokemonService,
+        IJumpService jumpService,
+        ScenarioPokemonViewModel.Factory spVmFactory)
     {
+        _spVmFactory = spVmFactory;
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = dataProvider;
         _baseWarriorService = baseWarriorService;
-        _pokemonService = pokemonService;        
+        _pokemonService = pokemonService;
+
+        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
+        JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
     }
 
-    public void Init(ScenarioWarrior Model, ScenarioId Scenario, ScenarioWarriorWorkspaceViewModel Parent, ScenarioPokemonViewModel SpVm)
+    public SwMiniViewModel Init(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent, ScenarioPokemonViewModel spVm)
     {
-        _model = Model;
-        _parent = Parent;
-        _scenario = Scenario;
-        UpdatePokemonImage();
+        _model = model;
+        _parent = parent;
+        _scenario = scenario;
+        _suppressUpdateNested = true;
+
         UpdateWarriorImage();
 
+        ScenarioPokemonSlots.Clear();
         for (int i = 0; i < 8; i++)
         {
-            ScenarioPokemonSlots.Add(new SwPokemonSlotViewModel(Scenario, Model, i, SpVm, _scenarioPokemonService.Retrieve((int)Scenario), _spriteProvider));
+            ScenarioPokemonSlots.Add(new SwPokemonSlotViewModel(this, scenario, model, i, spVm, _scenarioPokemonService.Retrieve((int)scenario), _spriteProvider));
         }
+        SelectedItem = ScenarioPokemonSlots[0];
+
+        _suppressUpdateNested = false;
+
+        return this;
     }
 
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToMaxLinkCommand { get; }
+    public ICommand JumpToItemCommand { get; }
     public ICommand SelectCommand => _parent.ItemClickedCommand;
     public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
     public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;
+    public List<SelectorComboBoxItem> ScenarioPokemonItems => _parent.ScenarioPokemonItems;
 
     public string WarriorName => _baseWarriorService.IdToName(Warrior);
 
@@ -144,31 +164,6 @@ public class SwMiniViewModel : ViewModelBase
         WarriorImage = img;
     }
 
-    private ImageSource _pokemonImage;
-    public ImageSource PokemonImage
-    {
-        get => _pokemonImage;
-        set => RaiseAndSetIfChanged(ref _pokemonImage, value);
-    }
-
-    private void UpdatePokemonImage()
-    {
-        if (_model.ScenarioPokemonIsDefault(0))
-        {
-            PokemonImage = null;
-            return;
-        }
-        int image = (int)_scenarioPokemonService.Retrieve((int)_scenario).Retrieve(ScenarioPokemon).Pokemon;
-        string spriteFile = _spriteProvider.GetSpriteFile(SpriteType.StlPokemonS, image).File;
-        if (!PathToImageSourceConverter.TryConvert(spriteFile, out var img))
-        {
-            PokemonImage = null;
-            return;
-        }
-        
-        PokemonImage = img;
-    }
-
     public int ScenarioPokemon
     {
         get => _model.GetScenarioPokemon(0);
@@ -178,8 +173,24 @@ public class SwMiniViewModel : ViewModelBase
             {
                 _model.SetScenarioPokemon(0, value);
                 RaisePropertyChanged();
-                UpdatePokemonImage();
                 _parent.UpdateStrengths();
+            }
+        }
+    }
+
+    bool _suppressUpdateNested = false;
+    private SwPokemonSlotViewModel _selectedItem;
+    public SwPokemonSlotViewModel SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _selectedItem, value))
+            {
+                if (!_suppressUpdateNested)
+                {
+                    value.UpdateNested();
+                }
             }
         }
     }

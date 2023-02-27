@@ -14,26 +14,23 @@ namespace RanseiLink.ViewModels;
 public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 {
     private bool _loading;
-    private readonly SwMiniViewModelFactory _itemFactory;
-    private readonly SwKingdomMiniViewModelFactory _kingdomItemFactory;
-    private readonly SwSimpleKingdomMiniViewModelFactory _simpleKingdomItemFactory;
-    private readonly ScenarioPokemonViewModelFactory _spVmFactory;
+    private readonly SwMiniViewModel.Factory _itemFactory;
+    private readonly SwKingdomMiniViewModel.Factory _kingdomItemFactory;
+    private readonly SwSimpleKingdomMiniViewModel.Factory _simpleKingdomItemFactory;
     private static bool _showArmy = true;
     private static bool _showFree = false;
     private static bool _showUnassigned = false;
     private SwMiniViewModel _selectedItem;
 
     public ScenarioWarriorWorkspaceViewModel(
-        SwMiniViewModelFactory itemFactory,
-        SwKingdomMiniViewModelFactory kingdomItemFactory,
-        SwSimpleKingdomMiniViewModelFactory simpleKingdomItemFactory,
-        ScenarioPokemonViewModelFactory spVmFactory,
+        SwMiniViewModel.Factory itemFactory,
+        SwKingdomMiniViewModel.Factory kingdomItemFactory,
+        SwSimpleKingdomMiniViewModel.Factory simpleKingdomItemFactory,
         IIdToNameService idToNameService)
     {
         _itemFactory = itemFactory;
         _kingdomItemFactory = kingdomItemFactory;
         _simpleKingdomItemFactory = simpleKingdomItemFactory;
-        _spVmFactory = spVmFactory;
         ItemDragHandler = new DragHandlerPro();
         ItemDropHandler = new DropHandlerPro();
         ItemClickedCommand = new RelayCommand<object>(ItemClicked);
@@ -130,21 +127,22 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
-    public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childScenarioWarriorService)
+    public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childSwService, IChildScenarioPokemonService childSpService, ScenarioPokemonViewModel spVm)
     {
         _loading = true;
+        ScenarioPokemonItems = childSpService.GetComboBoxItemsExceptDefault();
+        ScenarioPokemonItems.Insert(0, new SelectorComboBoxItem(1100, "No Pokemon"));
 
         Items.Clear();
         UnassignedItems.Clear();
         WildItems.Clear();
-        foreach (var group in childScenarioWarriorService.Enumerate().GroupBy(x => x.Kingdom).OrderBy(x => x.Key))
+        foreach (var group in childSwService.Enumerate().GroupBy(x => x.Kingdom).OrderBy(x => x.Key))
         {
-            Items.Add(_kingdomItemFactory(scenario, group.Key));
-            WildItems.Add(_simpleKingdomItemFactory(group.Key));
+            Items.Add(_kingdomItemFactory().Init(scenario, group.Key));
+            WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
             foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
             {
-                var item = _itemFactory();
-                item.Init(scenarioWarrior, scenario, this, _spVmFactory()); // <-- TODO: share a single spvm?
+                var item = _itemFactory().Init(scenarioWarrior, scenario, this, spVm); // <-- TODO: share a single spvm?
                 switch (scenarioWarrior.Class)
                 {
                     case WarriorClassId.ArmyLeader:
@@ -176,6 +174,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public DragHandlerPro ItemDragHandler { get; }
     public DropHandlerPro ItemDropHandler { get; }
     public ICommand ItemClickedCommand { get; }
+    public List<SelectorComboBoxItem> ScenarioPokemonItems { get; private set; }
     public List<SelectorComboBoxItem> WarriorItems { get; }
     public List<SelectorComboBoxItem> KingdomItems { get; }
     public List<SelectorComboBoxItem> ItemItems { get; }
@@ -198,7 +197,13 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public SwMiniViewModel SelectedItem
     {
         get => _selectedItem;
-        set => RaiseAndSetIfChanged(ref _selectedItem, value);
+        set 
+        {
+            if (RaiseAndSetIfChanged(ref _selectedItem, value))
+            {
+                value.SelectedItem?.UpdateNested();
+            }
+        }
     }
 
     private void ItemClicked(object sender)

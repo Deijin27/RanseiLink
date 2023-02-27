@@ -9,24 +9,29 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
-public delegate SpriteItemViewModel SpriteItemViewModelFactory(SpriteFile sprite);
-
 public class SpriteItemViewModel : ViewModelBase
 {
+    public delegate SpriteItemViewModel Factory();
+
     private readonly IDialogService _dialogService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ISpriteManager _spriteManager;
-    private readonly SpriteType _spriteType;
+    private SpriteType _spriteType;
     private bool _isOverride;
     private string _displayFile;
     private ImageSource _displayImage;
 
-    public SpriteItemViewModel(SpriteFile sprite, ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
+    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
     {
         _dialogService = dialogService;
         _spriteProvider = spriteProvider;
         _spriteManager = spriteManager;
+    }
+
+    public SpriteItemViewModel Init(SpriteFile sprite)
+    {
         Id = sprite.Id;
+
         _spriteType = sprite.Type;
         _isOverride = sprite.IsOverride;
         _displayFile = sprite.File;
@@ -36,13 +41,15 @@ public class SpriteItemViewModel : ViewModelBase
         SetOverrideCommand = new RelayCommand(SetOverride);
 
         UpdateDisplayImage();
+
+        return this;
     }
 
-    public ICommand SetOverrideCommand { get; }
-    public ICommand ExportCommand { get; }
-    public ICommand RevertCommand { get; }
+    public ICommand SetOverrideCommand { get; private set; }
+    public ICommand ExportCommand { get; private set; }
+    public ICommand RevertCommand { get; private set; }
 
-    public int Id { get; }
+    public int Id { get; private set; }
     public bool IsOverride => _isOverride;
 
     public ImageSource DisplayImage

@@ -5,10 +5,10 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
-public delegate SwSimpleKingdomMiniViewModel SwSimpleKingdomMiniViewModelFactory();
-
 public class SwSimpleKingdomMiniViewModel : ViewModelBase
 {
+    public delegate SwSimpleKingdomMiniViewModel Factory();
+
     private KingdomId _kingdom;
     protected readonly IOverrideDataProvider _spriteProvider;
     public SwSimpleKingdomMiniViewModel(IOverrideDataProvider spriteProvider)
@@ -16,10 +16,12 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
         _spriteProvider = spriteProvider;
     }
 
-    public void Init(KingdomId kingdom)
+    public SwSimpleKingdomMiniViewModel Init(KingdomId kingdom)
     {
         _kingdom = kingdom;
         UpdateKingdomImage();
+
+        return this;
     }
 
     private void UpdateKingdomImage()

@@ -42,7 +42,7 @@
             </Image>
             <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
             <Image Grid.Column="2" Grid.Row="0" Stretch="None" Height="19"
-                   Source="{Binding PokemonImage}"
+                   Source="{Binding ScenarioPokemonSlots[0].PokemonImage}"
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
                    />
             <Rectangle Grid.Column="3" Fill="{DynamicResource ControlBorderBrush}"/>

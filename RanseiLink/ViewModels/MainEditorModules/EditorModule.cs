@@ -1,8 +1,13 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using System.Collections.Generic;
+using System;
 
 namespace RanseiLink.ViewModels;
+
+public class EditorModuleAttribute : Attribute
+{
+
+}
 
 public abstract class EditorModule
 {
