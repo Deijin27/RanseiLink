@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Resources;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,9 @@ namespace RanseiLink.Core.Services.Concrete
     {
         private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly ModInfo _mod;
+
+        public event EventHandler<SpriteModifiedArgs> SpriteModified;
+
         public OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, ModInfo mod)
         {
             _mod = mod;
@@ -22,6 +26,7 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 File.Delete(file);
             }
+            SpriteModified?.Invoke(this, new SpriteModifiedArgs(type, id));
         }
 
         public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
@@ -85,6 +90,7 @@ namespace RanseiLink.Core.Services.Concrete
             string targetFile = GetSpriteFilePathWithoutFallback(type, id).File;
             Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
             File.Copy(file, targetFile, overwrite: true);
+            SpriteModified?.Invoke(this, new SpriteModifiedArgs(type, id));
         }
 
         private DataFile GetDataFilePathWithoutFallback(string pathInRom)

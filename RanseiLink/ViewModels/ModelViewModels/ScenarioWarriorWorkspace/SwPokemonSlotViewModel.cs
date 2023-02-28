@@ -2,7 +2,7 @@
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.ValueConverters;
+using RanseiLink.Services;
 using System.Collections.Generic;
 using System.Windows.Media;
 
@@ -18,12 +18,12 @@ public class SwPokemonSlotViewModel : ViewModelBase
     private readonly ScenarioId _scenario;
     private readonly IChildScenarioPokemonService _spService;
     private ImageSource _pokemonImage;
-    private readonly IOverrideDataProvider _spriteProvider;
+    private readonly ICachedSpriteProvider _spriteProvider;
     private readonly SwMiniViewModel _parent;
 
     public SwPokemonSlotViewModel(SwMiniViewModel parent, ScenarioId scenario, ScenarioWarrior warrior, int slot, ScenarioPokemonViewModel scenarioPokemonVm, 
         IChildScenarioPokemonService spService, 
-        IOverrideDataProvider spriteProvider)
+        ICachedSpriteProvider spriteProvider)
     {
         _parent = parent;
         _slot = slot;
@@ -107,13 +107,6 @@ public class SwPokemonSlotViewModel : ViewModelBase
             return;
         }
         int image = (int)_spService.Retrieve(ScenarioPokemonId).Pokemon;
-        string spriteFile = _spriteProvider.GetSpriteFile(SpriteType.StlPokemonS, image).File;
-        if (!PathToImageSourceConverter.TryConvert(spriteFile, out var img))
-        {
-            PokemonImage = null;
-            return;
-        }
-
-        PokemonImage = img;
+        PokemonImage = _spriteProvider.GetSprite(SpriteType.StlPokemonS, image);
     }
 }

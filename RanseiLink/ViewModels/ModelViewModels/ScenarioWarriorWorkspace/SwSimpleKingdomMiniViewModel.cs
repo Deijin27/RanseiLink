@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
-using RanseiLink.ValueConverters;
+using RanseiLink.Services;
 using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
@@ -10,8 +10,8 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
     public delegate SwSimpleKingdomMiniViewModel Factory();
 
     private KingdomId _kingdom;
-    protected readonly IOverrideDataProvider _spriteProvider;
-    public SwSimpleKingdomMiniViewModel(IOverrideDataProvider spriteProvider)
+    protected readonly ICachedSpriteProvider _spriteProvider;
+    public SwSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider)
     {
         _spriteProvider = spriteProvider;
     }
@@ -26,13 +26,7 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
 
     private void UpdateKingdomImage()
     {
-        string spriteFile = _spriteProvider.GetSpriteFile(SpriteType.StlCastleIcon, (int)_kingdom).File;
-        if (!PathToImageSourceConverter.TryConvert(spriteFile, out var img))
-        {
-            KingdomImage = null;
-            return;
-        }
-        KingdomImage = img;
+        KingdomImage = _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
     }
 
     private ImageSource _KingdomImage;

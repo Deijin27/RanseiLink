@@ -2,7 +2,7 @@
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.ValueConverters;
+using RanseiLink.Services;
 using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
@@ -20,13 +20,14 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
     private readonly IScenarioPokemonService _scenarioPokemonService;
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
+    
     public SwKingdomMiniViewModel(
         IScenarioKingdomService scenarioKingdomService,
         IBaseWarriorService baseWarriorService,
         IScenarioWarriorService scenarioWarriorService,
         IScenarioPokemonService scenarioPokemonService,
-        IOverrideDataProvider dataProvider, 
-        IPokemonService pokemonService) : base(dataProvider)
+        ICachedSpriteProvider spriteProvider, 
+        IPokemonService pokemonService) : base(spriteProvider)
     {
         _scenarioKingdomService = scenarioKingdomService;
         _baseWarriorService = baseWarriorService;
@@ -73,13 +74,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
             return;
         }
         int image = _baseWarriorService.Retrieve(warrior).Sprite;
-        string spriteFile = _spriteProvider.GetSpriteFile(SpriteType.StlBushouS, image).File;
-        if (!PathToImageSourceConverter.TryConvert(spriteFile, out var img))
-        {
-            WarriorImage = null;
-            return;
-        }
-        WarriorImage = img;
+        WarriorImage = _spriteProvider.GetSprite(SpriteType.StlBushouS, image);
     }
 
     public int Strength

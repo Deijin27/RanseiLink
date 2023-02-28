@@ -81,6 +81,7 @@ public class WpfModServiceModule : IModule
         builder.Register<ICachedMsgBlockService, CachedMsgBlockService>(Reuse.Singleton);
         builder.Register<IIdToNameService, IdToNameService>(Reuse.Singleton);
         builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
+        builder.Register<ICachedSpriteProvider, CachedSpriteProvider>(Reuse.Singleton);
         builder.Register<IMapManager, MapManager>(Reuse.Singleton);
 
         builder.Register<AbilityViewModel>();
@@ -93,7 +94,8 @@ public class WpfModServiceModule : IModule
         builder.Register<ItemViewModel>();
         builder.Register<KingdomViewModel>();
         builder.Register<MapViewModel>();
-        builder.Register<MaxLinkViewModel>();
+        builder.Register<MaxLinkWarriorViewModel>();
+        builder.Register<MaxLinkPokemonViewModel>();
         builder.Register<MoveRangeViewModel>();
         builder.Register<MoveViewModel>();
         builder.Register<PokemonViewModel>();

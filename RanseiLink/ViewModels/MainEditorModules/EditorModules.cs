@@ -132,12 +132,29 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
 {
     public const string Id = "max_link_selector";
     public override string UniqueId => Id;
-    public override string ListName => "Max Link";
+    public override string ListName => "Max Link (Warrior)";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<MaxLinkViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
+        var vm = modServices.Get<MaxLinkWarriorViewModel>();
+        var items = modServices.Get<IBaseWarriorService>().GetComboBoxItemsExceptDefault();
+        _viewModel = new SelectorViewModelWithoutScroll(items, vm, id => vm.SetModel(id, _service.Retrieve(id)), _service.ValidateId);
+    }
+}
+
+[EditorModule]
+public class MaxLinkPokemonSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkService>
+{
+    public const string Id = "max_link_pokemon_selector";
+    public override string UniqueId => Id;
+    public override string ListName => "Max Link (Pokemon)";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<MaxLinkPokemonViewModel>();
+        var pokemonService = modServices.Get<IPokemonService>();
+        var items = pokemonService.GetComboBoxItemsExceptDefault();
+        _viewModel = new SelectorViewModelWithoutScroll(items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId);
     }
 }
 

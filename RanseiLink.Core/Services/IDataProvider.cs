@@ -80,8 +80,20 @@ namespace RanseiLink.Core.Services
         List<DataFile> GetAllDataFilesInFolder(ConquestGameCode gc, string pathOfFolderInRom);
     }
 
+    public class SpriteModifiedArgs
+    {
+        public SpriteType Type { get; }
+        public int Id { get; }
+        public SpriteModifiedArgs(SpriteType type, int id)
+        {
+            Type = type;
+            Id = id;
+        }   
+    }
+
     public interface IOverrideDataProvider
     {
+        event EventHandler<SpriteModifiedArgs> SpriteModified;
         bool IsDefaultsPopulated();
         void SetOverride(SpriteType type, int id, string file);
         void ClearOverride(SpriteType type, int id);

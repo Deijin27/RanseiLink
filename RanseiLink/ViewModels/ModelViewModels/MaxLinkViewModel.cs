@@ -9,29 +9,35 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
 public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
-    private readonly PokemonId _pokemonId;
-    public WarriorMaxLinkListItem(PokemonId pokemon, MaxLink model, string pokemonName)
+
+    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, ImageSource sprite)
     {
         _model = model;
-        _pokemonId = pokemon;
-        Pokemon = pokemonName;
+        Id = pokemonId;
+        Name = name;
+        Sprite = sprite;
     }
     public int MaxLinkValue
     {
-        get => _model.GetMaxLink(_pokemonId);
-        set => RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v));
+        get => _model.GetMaxLink(Id);
+        set => RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(Id, v));
     }
 
-    public PokemonId Id => _pokemonId;
+    public int Id { get; }
 
-    public string Pokemon { get; }
+    public string Name { get; }
+
+    public ImageSource Sprite { get; }
 }
+
+
 
 public enum MaxLinkSortMode
 {
@@ -40,15 +46,22 @@ public enum MaxLinkSortMode
     Link
 }
 
-public class MaxLinkViewModel : ViewModelBase
+public abstract class MaxLinkViewModelBase : ViewModelBase
 {
-    private int _id;
-    private readonly IIdToNameService _idToNameService;
-    private readonly IOverrideDataProvider _spriteProvider;
-    private readonly ICollectionView _itemsView;
-    public MaxLinkViewModel(IIdToNameService idToNameService, IOverrideDataProvider spriteProvider)
+
+    protected readonly IIdToNameService _idToNameService;
+    protected readonly IOverrideDataProvider _overrideDataProvider;
+    protected readonly ICachedSpriteProvider _spriteProvider;
+
+    protected readonly ICollectionView _itemsView;
+    protected int _id;
+
+    protected MaxLinkViewModelBase(IIdToNameService idToNameService,
+        IOverrideDataProvider overrideDataProvider,
+        ICachedSpriteProvider spriteProvider)
     {
         _spriteProvider = spriteProvider;
+        _overrideDataProvider = overrideDataProvider;
         _idToNameService = idToNameService;
 
         _itemsView = CollectionViewSource.GetDefaultView(Items);
@@ -64,7 +77,7 @@ public class MaxLinkViewModel : ViewModelBase
         }
         else if (mode == MaxLinkSortMode.Name)
         {
-            _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.Pokemon), ListSortDirection.Ascending));
+            _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.Name), ListSortDirection.Ascending));
         }
         else if (mode == MaxLinkSortMode.Link)
         {
@@ -72,20 +85,9 @@ public class MaxLinkViewModel : ViewModelBase
         }
     }
 
-    public void SetModel(int id, MaxLink model)
-    {
-        _id = id;
-        Items.Clear();
-        foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
-        {
-            Items.Add(new WarriorMaxLinkListItem(pid, model, _idToNameService.IdToName<IPokemonService>((int)pid)));
-        }
-        RaisePropertyChanged(nameof(SmallSpritePath));
-    }
-
     public List<MaxLinkSortMode> SortItems { get; }
 
-    private MaxLinkSortMode _selectedSortItem = MaxLinkSortMode.Id;
+    private static MaxLinkSortMode _selectedSortItem = MaxLinkSortMode.Id;
     public MaxLinkSortMode SelectedSortItem
     {
         get => _selectedSortItem;
@@ -98,7 +100,65 @@ public class MaxLinkViewModel : ViewModelBase
         }
     }
 
-    public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouM, _id).File;
-
     public ObservableCollection<WarriorMaxLinkListItem> Items { get; } = new ObservableCollection<WarriorMaxLinkListItem>();
+
+    public abstract string SmallSpritePath { get; }
+}
+
+public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
+{
+    public MaxLinkWarriorViewModel(IIdToNameService idToNameService,
+        IOverrideDataProvider overrideDataProvider,
+        ICachedSpriteProvider spriteProvider
+        ) : base(idToNameService, overrideDataProvider, spriteProvider)
+    {
+        
+    }
+
+    public void SetModel(int id, MaxLink model)
+    {
+        _id = id;
+        Items.Clear();
+        foreach (PokemonId pid in EnumUtil.GetValuesExceptDefaults<PokemonId>())
+        {
+            var pidInt = (int)pid;
+            var name = _idToNameService.IdToName<IPokemonService>(pidInt);
+            var sprite = _spriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
+            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite));
+        }
+        RaisePropertyChanged(nameof(SmallSpritePath));
+    }
+
+    public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlBushouM, _id).File;
+}
+
+public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
+{
+    private readonly IBaseWarriorService _baseWarriorService;
+    public MaxLinkPokemonViewModel(IIdToNameService idToNameService,
+        IOverrideDataProvider overrideDataProvider,
+        ICachedSpriteProvider spriteProvider,
+        IBaseWarriorService baseWarriorService
+        ) : base(idToNameService, overrideDataProvider, spriteProvider)
+    {
+        _baseWarriorService = baseWarriorService;
+    }
+
+    public void SetModel(int id, IMaxLinkService maxLinkService)
+    {
+        _id = id;
+        Items.Clear();
+        foreach (WarriorId wid in EnumUtil.GetValuesExceptDefaults<WarriorId>())
+        {
+            var widInt = (int)wid;
+            var warrior = _baseWarriorService.Retrieve(widInt);
+            var name = _baseWarriorService.IdToName(widInt);
+            var sprite = _spriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
+            var model = maxLinkService.Retrieve(widInt);
+            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite));
+        }
+        RaisePropertyChanged(nameof(SmallSpritePath));
+    }
+
+    public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlPokemonM, _id).File;
 }

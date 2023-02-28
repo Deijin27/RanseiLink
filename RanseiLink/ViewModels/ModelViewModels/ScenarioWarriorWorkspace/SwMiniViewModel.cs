@@ -3,7 +3,6 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
-using RanseiLink.ValueConverters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -18,7 +17,7 @@ public class SwMiniViewModel : ViewModelBase
     private ScenarioId _scenario;
     private ScenarioWarrior _model;
     private readonly IScenarioPokemonService _scenarioPokemonService;
-    private readonly IOverrideDataProvider _spriteProvider;
+    private readonly ICachedSpriteProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
     private ScenarioWarriorWorkspaceViewModel _parent;
@@ -27,14 +26,14 @@ public class SwMiniViewModel : ViewModelBase
     public SwMiniViewModel(
         IScenarioPokemonService scenarioPokemonService,
         IBaseWarriorService baseWarriorService,
-        IOverrideDataProvider dataProvider,
+        ICachedSpriteProvider spriteProvider,
         IPokemonService pokemonService,
         IJumpService jumpService,
         ScenarioPokemonViewModel.Factory spVmFactory)
     {
         _spVmFactory = spVmFactory;
         _scenarioPokemonService = scenarioPokemonService;
-        _spriteProvider = dataProvider;
+        _spriteProvider = spriteProvider;
         _baseWarriorService = baseWarriorService;
         _pokemonService = pokemonService;
 
@@ -53,9 +52,10 @@ public class SwMiniViewModel : ViewModelBase
         UpdateWarriorImage();
 
         ScenarioPokemonSlots.Clear();
+        var spService = _scenarioPokemonService.Retrieve((int)scenario);
         for (int i = 0; i < 8; i++)
         {
-            ScenarioPokemonSlots.Add(new SwPokemonSlotViewModel(this, scenario, model, i, spVm, _scenarioPokemonService.Retrieve((int)scenario), _spriteProvider));
+            ScenarioPokemonSlots.Add(new SwPokemonSlotViewModel(this, scenario, model, i, spVm, spService, _spriteProvider));
         }
         SelectedItem = ScenarioPokemonSlots[0];
 
@@ -155,13 +155,7 @@ public class SwMiniViewModel : ViewModelBase
             return;
         }
         int image = _baseWarriorService.Retrieve(Warrior).Sprite;
-        string spriteFile = _spriteProvider.GetSpriteFile(SpriteType.StlBushouS, image).File;
-        if (!PathToImageSourceConverter.TryConvert(spriteFile, out var img))
-        {
-            WarriorImage = null;
-            return;
-        }
-        WarriorImage = img;
+        WarriorImage = _spriteProvider.GetSprite(SpriteType.StlBushouS, image);
     }
 
     public int ScenarioPokemon

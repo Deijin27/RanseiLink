@@ -94,7 +94,11 @@
                 <views:ScenarioWarriorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MaxLinkViewModel}">
+            <DataTemplate DataType="{x:Type vm:MaxLinkWarriorViewModel}">
+                <views:MaxLinkView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MaxLinkPokemonViewModel}">
                 <views:MaxLinkView/>
             </DataTemplate>
 
