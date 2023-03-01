@@ -21,17 +21,14 @@ public class SwMiniViewModel : ViewModelBase
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
     private ScenarioWarriorWorkspaceViewModel _parent;
-    private readonly ScenarioPokemonViewModel.Factory _spVmFactory;
 
     public SwMiniViewModel(
         IScenarioPokemonService scenarioPokemonService,
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider spriteProvider,
         IPokemonService pokemonService,
-        IJumpService jumpService,
-        ScenarioPokemonViewModel.Factory spVmFactory)
+        IJumpService jumpService)
     {
-        _spVmFactory = spVmFactory;
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = spriteProvider;
         _baseWarriorService = baseWarriorService;

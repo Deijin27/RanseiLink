@@ -51,6 +51,7 @@
                 dd:DragDrop.IsDropTarget="True"
                 dd:DragDrop.DragHandler="{Binding ItemDragHandler}"
                 dd:DragDrop.DropHandler="{Binding ItemDropHandler}"
+                dd:DragDrop.DragAdornerTranslation="80,15"
                 dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
             </ItemsControl>
             <ItemsControl  
@@ -64,6 +65,7 @@
                 dd:DragDrop.IsDropTarget="True"
                 dd:DragDrop.DragHandler="{Binding ItemDragHandler}"
                 dd:DragDrop.DropHandler="{Binding ItemDropHandler}"
+                dd:DragDrop.DragAdornerTranslation="80,15"
                 dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
             </ItemsControl>
             <ItemsControl 
@@ -75,6 +77,7 @@
                 VirtualizingPanel.ScrollUnit="Pixel"
                 dd:DragDrop.IsDragSource="True"
                 dd:DragDrop.IsDropTarget="True"
+                dd:DragDrop.DragAdornerTranslation="80,15"
                 ItemTemplateSelector="{StaticResource miniTemplateSelector}"
                 dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
             </ItemsControl>

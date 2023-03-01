@@ -17,19 +17,25 @@ public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
 
-    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, ImageSource sprite)
+    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, ImageSource sprite, int itemId)
     {
         _model = model;
-        Id = pokemonId;
+        _pokemonId = pokemonId;
         Name = name;
         Sprite = sprite;
+        Id = itemId;
     }
     public int MaxLinkValue
     {
-        get => _model.GetMaxLink(Id);
-        set => RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(Id, v));
+        get => _model.GetMaxLink(_pokemonId);
+        set => RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v));
     }
 
+    private int _pokemonId;
+
+    /// <summary>
+    /// This ID is sortable
+    /// </summary>
     public int Id { get; }
 
     public string Name { get; }
@@ -68,8 +74,17 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         SortItems = EnumUtil.GetValues<MaxLinkSortMode>().ToList();
     }
 
-    private void Sort(MaxLinkSortMode mode)
+    protected void OnSetModel()
     {
+        if (_selectedSortItem == MaxLinkSortMode.Link)
+        {
+            Sort();
+        }
+    }
+
+    private void Sort()
+    {
+        var mode = _selectedSortItem;
         _itemsView.SortDescriptions.Clear();
         if (mode == MaxLinkSortMode.Id)
         {
@@ -83,6 +98,10 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         {
             _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.MaxLinkValue), ListSortDirection.Descending));
         }
+
+        // this is always present, either for ID-only sorting
+        // or as a "ThenBy" sort to give a consistent order to Name and MaxLinkValue sort value conflicts
+        _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.Id), ListSortDirection.Ascending));
     }
 
     public List<MaxLinkSortMode> SortItems { get; }
@@ -95,7 +114,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         {
             if (RaiseAndSetIfChanged(ref _selectedSortItem, value))
             {
-                Sort(_selectedSortItem);
+                Sort();
             }
         }
     }
@@ -124,9 +143,10 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
             var pidInt = (int)pid;
             var name = _idToNameService.IdToName<IPokemonService>(pidInt);
             var sprite = _spriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
-            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite));
+            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
+        OnSetModel();
     }
 
     public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlBushouM, _id).File;
@@ -155,9 +175,10 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
             var name = _baseWarriorService.IdToName(widInt);
             var sprite = _spriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
             var model = maxLinkService.Retrieve(widInt);
-            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite));
+            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
+        OnSetModel();
     }
 
     public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlPokemonM, _id).File;

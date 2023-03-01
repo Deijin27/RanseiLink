@@ -87,14 +87,12 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
         // update the strengths of armies
         UpdateStrengths();
-        if (newItem.Class == oldClass)
+
+        // updating of leader
+        // if the class is leader, and hasn't changed (changing class would have already done the updates)
+        if (newItem.Class == WarriorClassId.ArmyLeader && oldClass == WarriorClassId.ArmyLeader)
         {
-            return;
-        }
-        // TODO: handle updating of leader
-        if ((newItem.Class == WarriorClassId.ArmyLeader || oldClass == WarriorClassId.ArmyLeader) && newItem.Army != oldArmy)
-        {
-            newItem.Class = WarriorClassId.ArmyMember;
+            UpdateLeaders();
         }
     }
 

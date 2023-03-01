@@ -91,8 +91,8 @@
             <controls:NumberBox Value="{Binding LinkNum}" Min="0" Max="100"/>
         </DockPanel>
 
-        <Button Grid.Row="8" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
-                    Command="{Binding JumpToFirstWarriorCommand}" />
+        <!--<Button Grid.Row="8" Grid.ColumnSpan="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Jump to first warrior with this pokemon"
+                    Command="{Binding JumpToFirstWarriorCommand}" />-->
 
     </Grid>
 </UserControl>
