@@ -171,6 +171,38 @@ public class ScenarioWarriorGridSelectorEditorModule : BaseSelectorEditorModule<
     }
 }
 
+[EditorModule]
+public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
+{
+    public const string Id = "scenario_warrior_workspace";
+    public override string UniqueId => Id;
+    public override string ListName => "Scenario Warrior (Workspace)";
+
+    private IScenarioPokemonService _scenarioPokemonService;
+
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
+        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
+        var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
+        _viewModel = new SelectorViewModelWithoutScroll(_service, vm,
+            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), modServices.Get<IScenarioPokemonService>().Retrieve(id), spVm));
+    }
+
+    public override void OnPatchingRom()
+    {
+        base.OnPatchingRom();
+        _scenarioPokemonService?.Save();
+    }
+
+    public override void Deactivate()
+    {
+        base.Deactivate();
+        _scenarioPokemonService?.Save();
+    }
+}
+
 public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
 {
     public const string Id = "scenario_warrior_selector";
@@ -242,22 +274,6 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioAppearPokemonViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
-    }
-}
-
-[EditorModule]
-public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
-{
-    public const string Id = "scenario_warrior_workspace";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Warrior (Workspace)";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
-        var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, 
-            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), modServices.Get<IScenarioPokemonService>().Retrieve(id), spVm));
     }
 }
 
