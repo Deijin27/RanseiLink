@@ -26,7 +26,19 @@ internal class DialogService : IDialogService
     }
 
     private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
-    private Window MainWindow => System.Windows.Application.Current.MainWindow;
+    private Window MainWindow
+    {
+        get 
+        {
+            var mw = System.Windows.Application.Current.MainWindow as MainWindow;
+            if (mw != null && mw.Shown)
+            {
+                return mw;
+            }
+            return null;
+
+        }
+    }
 
     public void ShowDialog(object dialogViewModel)
     {

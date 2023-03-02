@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
+using System;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -10,16 +11,19 @@ public class MainWindowViewModel : ViewModelBase
     private readonly IThemeService _themeService;
     private readonly IModSelectionViewModel _modSelectionVm;
     private readonly IMainEditorViewModel _mainEditorViewModel;
+    private readonly IFallbackSpriteManager _fallbackManager;
     private object _currentVm;
     private bool _backButtonVisible;
 
     public MainWindowViewModel(
-        IDialogService dialogService, 
+        IDialogService dialogService,
         IPluginLoader pluginLoader, 
         IThemeService themeService,
         IModSelectionViewModel modSelectionViewModel,
-        IMainEditorViewModel mainEditorViewModel)
+        IMainEditorViewModel mainEditorViewModel,
+        IFallbackSpriteManager fallbackManager)
     {
+        _fallbackManager = fallbackManager;
         _themeService = themeService;
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
@@ -40,6 +44,11 @@ public class MainWindowViewModel : ViewModelBase
 
         BackButtonCommand = new RelayCommand(OnBackButtonPressed);
         ToggleThemeCommand = new RelayCommand(ToggleTheme);
+    }
+
+    internal void OnWindowShown()
+    {
+        _fallbackManager.CheckDefaultsPopulated();
     }
 
     public object CurrentVm

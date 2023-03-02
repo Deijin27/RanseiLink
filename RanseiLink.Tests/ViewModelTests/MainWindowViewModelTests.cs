@@ -13,19 +13,22 @@ public class MainWindowViewModelTests
     private readonly Mock<IModSelectionViewModel> _mockModSelectionVm;
     private readonly Mock<IMainEditorViewModel> _mockMainEditorVm;
     private readonly Mock<IThemeService> _mockThemeService;
+    private readonly Mock<IFallbackSpriteManager> _mockFallbackSpriteManager;
 
     public MainWindowViewModelTests()
     {
         _mockModSelectionVm = new Mock<IModSelectionViewModel>();
         _mockMainEditorVm = new Mock<IMainEditorViewModel>();
         _mockThemeService = new Mock<IThemeService>();
+        _mockFallbackSpriteManager = new Mock<IFallbackSpriteManager>();
 
         _mainWindowVm = new MainWindowViewModel(
             new Mock<IDialogService>().Object,
             new Mock<IPluginLoader>().Object,
             _mockThemeService.Object,
             _mockModSelectionVm.Object,
-            _mockMainEditorVm.Object
+            _mockMainEditorVm.Object,
+            _mockFallbackSpriteManager.Object
             );
     }
 

@@ -1,4 +1,5 @@
 ﻿using RanseiLink.ViewModels;
+using System;
 using System.Windows;
 
 namespace RanseiLink;
@@ -37,5 +38,18 @@ public partial class MainWindow : Window
             ? WindowState.Normal
             : WindowState.Maximized;
     }
+
+    protected override void OnContentRendered(EventArgs e)
+    {
+        base.OnContentRendered(e);
+
+        if (!Shown)
+        {
+            ViewModel.OnWindowShown();
+        }
+        Shown = true;
+    }
+
+    public bool Shown { get; private set; }
 
 }

@@ -21,6 +21,7 @@ public class WpfServiceModule : IModule
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
         builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
+        builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
 
         builder.Register<MainWindowViewModel>(Reuse.Singleton);
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);

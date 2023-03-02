@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Data;
 using RanseiLink.Core.Settings;
+using RanseiLink.Services;
 
 namespace RanseiLink.ViewModels;
 
@@ -20,7 +21,6 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly IDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
-    private readonly IFallbackDataProvider _fallbackSpriteProvider;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
 
@@ -45,13 +45,12 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         IDialogService dialogService,
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
-        IFallbackDataProvider fallbackSpriteProvider)
+        IFallbackSpriteManager fallbackManager)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
-        _fallbackSpriteProvider = fallbackSpriteProvider;
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 
@@ -61,7 +60,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         CreateModCommand = new RelayCommand(CreateMod);
         ImportModCommand = new RelayCommand(ImportMod);
         UpgradeOutdatedModsCommand = new RelayCommand(UpgradeOutdatedMods);
-        PopulateGraphicsDefaultsCommand = new RelayCommand(PopulateGraphicsDefaults);
+        PopulateGraphicsDefaultsCommand = new RelayCommand(fallbackManager.PopulateGraphicsDefaults);
 
         ModItemClicked = new RelayCommand<ModInfo>(mi =>
         {
@@ -173,44 +172,5 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             RefreshOutdatedModsExist();
             progress.Report(new ProgressInfo("Done!", 100));
         });
-    }
-
-    private void PopulateGraphicsDefaults()
-    {
-        var vm = new PopulateDefaultSpriteViewModel(_dialogService, _settingService);
-        if (!_dialogService.ShowDialogWithResult(vm))
-        {
-            return;
-        }
-        Exception error = null;
-        PopulateResult result = null;
-        _dialogService.ProgressDialog(progress =>
-        {
-            try
-            {
-                result = _fallbackSpriteProvider.Populate(vm.File, progress);
-            }
-            catch (Exception e)
-            {
-                error = e;
-            }
-        });
-
-        if (error != null)
-        {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                title: "Error Populating Default Sprites",
-                message: error.ToString(),
-                type: MessageBoxType.Error
-                ));
-        }
-        else if (!result.Success)
-        {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                title: "Failed to Populate Default Sprites",
-                message: result.FailureReason,
-                type: MessageBoxType.Error
-                ));
-        }
     }
 }
