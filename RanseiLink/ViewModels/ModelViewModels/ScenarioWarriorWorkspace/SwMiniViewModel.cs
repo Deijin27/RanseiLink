@@ -78,7 +78,7 @@ public class SwMiniViewModel : ViewModelBase
         {
             if (RaiseAndSetIfChanged(_model.Warrior, (WarriorId)value, v => _model.Warrior = v))
             {
-                RaisePropertyChanged(WarriorName);
+                RaisePropertyChanged(nameof(WarriorName));
                 UpdateWarriorImage();
             }
         }
@@ -164,9 +164,20 @@ public class SwMiniViewModel : ViewModelBase
             {
                 _model.SetScenarioPokemon(0, value);
                 RaisePropertyChanged();
-                _parent.UpdateStrengths();
+                UpdateStrength();
             }
         }
+    }
+
+    public void UpdateStrength()
+    {
+        RaisePropertyChanged(nameof(Strength));
+        _parent.UpdateKingdomStrengths();
+    }
+
+    public void UpdateScenarioPokemonComboItemName(int id)
+    {
+        _parent.UpdateScenarioPokemonComboItemName(id);
     }
 
     bool _suppressUpdateNested = false;

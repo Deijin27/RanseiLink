@@ -35,16 +35,6 @@ public class SwPokemonSlotViewModel : ViewModelBase
 
         UpdateNested();
         UpdatePokemonImage();
-
-        _scenarioPokemonVm.PropertyChanged += ScenarioPokemonVm_PropertyChanged;
-    }
-
-    private void ScenarioPokemonVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == nameof(ScenarioPokemonViewModel.Pokemon))
-        {
-            UpdatePokemonImage();
-        }
     }
 
     public List<SelectorComboBoxItem> ScenarioPokemonItems => _parent.ScenarioPokemonItems;
@@ -70,6 +60,8 @@ public class SwPokemonSlotViewModel : ViewModelBase
             {
                 UpdateNested();
                 UpdatePokemonImage();
+                _parent.UpdateStrength();
+                _parent.UpdateScenarioPokemonComboItemName(value);
             }
         }
     }
@@ -99,7 +91,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _pokemonImage, value);
     }
 
-    private void UpdatePokemonImage()
+    public void UpdatePokemonImage()
     {
         if (_warrior.ScenarioPokemonIsDefault(_slot))
         {

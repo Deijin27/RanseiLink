@@ -4,19 +4,29 @@ using System.Linq;
 
 namespace RanseiLink.ViewModels;
 
-public class SelectorComboBoxItem
+public class SelectorComboBoxItem : ViewModelBase
 {
+    private string _name;
+    private string _idAndName;
     public SelectorComboBoxItem(int id, string name)
     {
         Id = id;
         IdString = id.ToString().PadLeft(3, '0');
-        IdAndName = $"{IdString} - {name}";
-        Name = name;
+        _idAndName = $"{IdString} - {name}";
+        _name = name;
     }
     public int Id { get; }
     public string IdString { get; }
-    public string IdAndName { get; }
-    public string Name { get; }
+    public string IdAndName => _idAndName;
+    public string Name => _name;
+
+    public void UpdateName(string newValue)
+    {
+        _name = newValue;
+        _idAndName = $"{IdString} - {newValue}";
+        RaisePropertyChanged(nameof(Name));
+        RaisePropertyChanged(nameof(IdAndName));
+    }
 }
 
 public static class SelectorComboBoxItemExtensions

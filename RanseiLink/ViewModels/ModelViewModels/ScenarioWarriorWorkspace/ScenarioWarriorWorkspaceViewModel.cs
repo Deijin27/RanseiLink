@@ -86,7 +86,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
 
         // update the strengths of armies
-        UpdateStrengths();
+        UpdateKingdomStrengths();
 
         // updating of leader
         // if the class is leader, and hasn't changed (changing class would have already done the updates)
@@ -109,7 +109,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         throw new System.Exception("SwWorkspace: Something has gone wrong. Kingdom not found.");
     }
 
-    public void UpdateStrengths()
+    public void UpdateKingdomStrengths()
     {
         foreach (var i in Items.OfType<SwKingdomMiniViewModel>())
         {
@@ -125,9 +125,31 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
+    private ScenarioPokemonViewModel _spVm;
+
+    public void UpdateScenarioPokemonComboItemName(int id)
+    {
+        if (_childSpService.ValidateId(id))
+        {
+            var item = ScenarioPokemonItems.First(x => x.Id == id);
+            item.UpdateName(_childSpService.IdToName(id));
+        }
+    }
+
+    private IChildScenarioPokemonService _childSpService;
+
     public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childSwService, IChildScenarioPokemonService childSpService, ScenarioPokemonViewModel spVm)
     {
         _loading = true;
+
+        if (_spVm != null)
+        {
+            _spVm.PropertyChanged -= SpVm_PropertyChanged;
+        }
+        _spVm = spVm;
+        _spVm.PropertyChanged += SpVm_PropertyChanged;
+
+        _childSpService = childSpService;
         ScenarioPokemonItems = childSpService.GetComboBoxItemsExceptDefault();
         ScenarioPokemonItems.Insert(0, new SelectorComboBoxItem(1100, "No Pokemon"));
 
@@ -140,7 +162,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
             WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
             foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
             {
-                var item = _itemFactory().Init(scenarioWarrior, scenario, this, spVm); // <-- TODO: share a single spvm?
+                var item = _itemFactory().Init(scenarioWarrior, scenario, this, spVm);
                 switch (scenarioWarrior.Class)
                 {
                     case WarriorClassId.ArmyLeader:
@@ -165,6 +187,29 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
         _loading = false;
     }
+
+    private void SpVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ScenarioPokemonViewModel.Pokemon))
+        {
+            var spid = SelectedItem.SelectedItem.ScenarioPokemonId;
+            UpdateScenarioPokemonComboItemName(spid);
+            foreach (var item in AllWarriors.Where(x => x.ScenarioPokemon == spid))
+            {
+                item.UpdateStrength();
+                item.SelectedItem.UpdatePokemonImage();
+            }
+            // the update pokemon image only applies to slot0, this may apply to other slots
+            // but doesn't affect the images used in any other context.
+            SelectedItem.SelectedItem.UpdatePokemonImage(); 
+            UpdateKingdomStrengths();
+        }
+    }
+
+    private IEnumerable<SwMiniViewModel> AllWarriors => 
+        Items.OfType<SwMiniViewModel>()
+        .Concat(WildItems.OfType<SwMiniViewModel>())
+        .Concat(UnassignedItems.OfType<SwMiniViewModel>());
 
     public ObservableCollection<object> Items { get; } = new();
     public ObservableCollection<object> WildItems { get; } = new();
