@@ -58,14 +58,17 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
     protected readonly IIdToNameService _idToNameService;
     protected readonly IOverrideDataProvider _overrideDataProvider;
     protected readonly ICachedSpriteProvider _spriteProvider;
+    protected readonly IBaseWarriorService _baseWarriorService;
 
     protected readonly ICollectionView _itemsView;
     protected int _id;
 
     protected MaxLinkViewModelBase(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
-        ICachedSpriteProvider spriteProvider)
+        ICachedSpriteProvider spriteProvider,
+        IBaseWarriorService baseWarriorService)
     {
+        _baseWarriorService = baseWarriorService;
         _spriteProvider = spriteProvider;
         _overrideDataProvider = overrideDataProvider;
         _idToNameService = idToNameService;
@@ -128,8 +131,9 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
 {
     public MaxLinkWarriorViewModel(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
-        ICachedSpriteProvider spriteProvider
-        ) : base(idToNameService, overrideDataProvider, spriteProvider)
+        ICachedSpriteProvider spriteProvider,
+        IBaseWarriorService baseWarriorService
+        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService)
     {
         
     }
@@ -149,19 +153,29 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
         OnSetModel();
     }
 
-    public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlBushouM, _id).File;
+    public override string SmallSpritePath 
+    { 
+        get
+        {
+            if (!_baseWarriorService.ValidateId(_id))
+            {
+                return null;
+            }
+            var spriteId = _baseWarriorService.Retrieve(_id).Sprite;
+            return _overrideDataProvider.GetSpriteFile(SpriteType.StlBushouM, spriteId).File;
+        } 
+    }
+    
 }
 
 public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
 {
-    private readonly IBaseWarriorService _baseWarriorService;
     public MaxLinkPokemonViewModel(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
         ICachedSpriteProvider spriteProvider,
         IBaseWarriorService baseWarriorService
-        ) : base(idToNameService, overrideDataProvider, spriteProvider)
+        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService)
     {
-        _baseWarriorService = baseWarriorService;
     }
 
     public void SetModel(int id, IMaxLinkService maxLinkService)
