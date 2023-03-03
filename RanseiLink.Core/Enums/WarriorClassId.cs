@@ -5,9 +5,9 @@ namespace RanseiLink.Core.Enums
     {
         ArmyLeader,
         ArmyMember,
-        FreeWarrior,
-        Unknown_3,
-        Unknown_4,
+        FreeWarrior_1,
+        FreeWarrior_2,
+        FreeWarrior_3,
         Default
     }
 }

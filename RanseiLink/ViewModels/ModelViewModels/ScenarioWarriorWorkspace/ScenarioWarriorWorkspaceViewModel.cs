@@ -1,6 +1,4 @@
-﻿using GongSolutions.Wpf.DragDrop;
-using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
@@ -20,13 +18,14 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     private static bool _showArmy = true;
     private static bool _showFree = false;
     private static bool _showUnassigned = false;
-    private SwMiniViewModel _selectedItem;
+    private object _selectedItem;
 
     public ScenarioWarriorWorkspaceViewModel(
         SwMiniViewModel.Factory itemFactory,
         SwKingdomMiniViewModel.Factory kingdomItemFactory,
         SwSimpleKingdomMiniViewModel.Factory simpleKingdomItemFactory,
-        IIdToNameService idToNameService)
+        IIdToNameService idToNameService,
+        IJumpService jumpService)
     {
         _itemFactory = itemFactory;
         _kingdomItemFactory = kingdomItemFactory;
@@ -38,6 +37,9 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         WarriorItems = idToNameService.GetComboBoxItemsExceptDefault<IBaseWarriorService>();
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
+        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
+        JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
 
         Items.CollectionChanged += Items_CollectionChanged;
         WildItems.CollectionChanged += Items_CollectionChanged;
@@ -71,9 +73,9 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
             if (items == WildItems)
             {
-                if (newItem.Class != WarriorClassId.FreeWarrior && newItem.Class != WarriorClassId.Unknown_3 && newItem.Class != WarriorClassId.Unknown_4)
+                if (newItem.Class != WarriorClassId.FreeWarrior_1 && newItem.Class != WarriorClassId.FreeWarrior_2 && newItem.Class != WarriorClassId.FreeWarrior_3)
                 {
-                    newItem.Class = WarriorClassId.FreeWarrior;
+                    newItem.Class = WarriorClassId.FreeWarrior_1;
                 }
             }
             else if (items == Items)
@@ -157,13 +159,19 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         {
             warrior.PropertyChanged -= WarriorItem_PropertyChanged;
         }
+        foreach (var kingdomItem in Items.OfType<SwKingdomMiniViewModel>())
+        {
+            kingdomItem.PropertyChanged -= KingdomItem_PropertyChanged;
+        }
 
         Items.Clear();
         UnassignedItems.Clear();
         WildItems.Clear();
         foreach (var group in childSwService.Enumerate().GroupBy(x => x.Kingdom).OrderBy(x => x.Key))
         {
-            Items.Add(_kingdomItemFactory().Init(scenario, group.Key));
+            var kingdomItem = _kingdomItemFactory().Init(scenario, group.Key, ItemClickedCommand);
+            kingdomItem.PropertyChanged += KingdomItem_PropertyChanged;
+            Items.Add(kingdomItem);
             WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
             foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
             {
@@ -175,9 +183,9 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
                     case WarriorClassId.ArmyMember:
                         Items.Add(item);
                         break;
-                    case WarriorClassId.FreeWarrior:
-                    case WarriorClassId.Unknown_3:
-                    case WarriorClassId.Unknown_4:
+                    case WarriorClassId.FreeWarrior_1:
+                    case WarriorClassId.FreeWarrior_2:
+                    case WarriorClassId.FreeWarrior_3:
                         WildItems.Add(item);
                         break;
                     case WarriorClassId.Default:
@@ -192,6 +200,25 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         SelectedItem = Items.OfType<SwMiniViewModel>().FirstOrDefault();
 
         _loading = false;
+    }
+
+    private void KingdomItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        // update the army of the warriors in a kingdom
+        // to keep in sync with the army of the kingdom
+        if (e.PropertyName == nameof(SwKingdomMiniViewModel.Army))
+        {
+            var kingdomItem = (SwKingdomMiniViewModel)sender;
+            // only need to recurse ones that will have an army
+            foreach (var warrior in Items.OfType<SwMiniViewModel>().Where(x => x.Kingdom == (int)kingdomItem.Kingdom))
+            {
+                warrior.Army = kingdomItem.Army;
+            }
+
+            // since the army has changed, the leader of this kingdom could have changed
+            // and if this kingdom contains a leader, the leader of other kingdoms could have changed too.
+            UpdateLeaders();
+        }
     }
 
     private void WarriorItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -209,7 +236,13 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
             return;
         }
 
-        var spid = SelectedItem.SelectedItem.ScenarioPokemonId;
+        if (SelectedItem is not SwMiniViewModel selectedSw)
+        {
+            // this should never be the case
+            return;
+        }
+
+        var spid = selectedSw.SelectedItem.ScenarioPokemonId;
         UpdateScenarioPokemonComboItemName(spid);
         foreach (var item in AllWarriors.Where(x => x.ScenarioPokemon == spid))
         {
@@ -227,7 +260,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         // the update pokemon image only applies to slot0, this may apply to other slots
         // but doesn't affect the images used in any other context.
         // the first image has already been updated above
-        foreach (var slot in SelectedItem.ScenarioPokemonSlots.Skip(1).Where(x => x.ScenarioPokemonId == spid))
+        foreach (var slot in selectedSw.ScenarioPokemonSlots.Skip(1).Where(x => x.ScenarioPokemonId == spid))
         {
             slot.UpdatePokemonImage();
         }
@@ -251,6 +284,10 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public List<SelectorComboBoxItem> KingdomItems { get; }
     public List<SelectorComboBoxItem> ItemItems { get; }
 
+    public ICommand JumpToBaseWarriorCommand { get; }
+    public ICommand JumpToMaxLinkCommand { get; }
+    public ICommand JumpToItemCommand { get; }
+
     public bool ShowArmy
     {
         get => _showArmy;
@@ -266,24 +303,31 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         get => _showUnassigned;
         set => RaiseAndSetIfChanged(ref _showUnassigned, value);
     }
-    public SwMiniViewModel SelectedItem
+    public object SelectedItem
     {
         get => _selectedItem;
         set 
         {
             if (RaiseAndSetIfChanged(ref _selectedItem, value))
             {
-                value.SelectedItem?.UpdateNested();
+                if (value is SwMiniViewModel spVm)
+                {
+                    spVm.SelectedItem.UpdateNested();
+                }
             }
         }
     }
 
     private void ItemClicked(object sender)
     {
-        if (sender is not SwMiniViewModel clickedVm)
+        if (sender is SwMiniViewModel)
         {
-            return;
+            SelectedItem = sender;
         }
-        SelectedItem = clickedVm;
+        else if (sender is SwKingdomMiniViewModel swkvm && swkvm.Kingdom != KingdomId.Default)
+        {
+            // default kingdom doesn't have a ScenarioKingdom slot value to be modified
+            SelectedItem = sender;
+        }
     }
 }

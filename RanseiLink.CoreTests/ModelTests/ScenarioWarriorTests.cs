@@ -37,7 +37,7 @@ public class ScenarioWarriorTests
         ScenarioWarrior a = new ScenarioWarrior
         {
             Warrior = WarriorId.Nobuchika,
-            Class = WarriorClassId.FreeWarrior,
+            Class = WarriorClassId.FreeWarrior_1,
             Kingdom = KingdomId.Valora,
             Army = 5,
             Item = ItemId.DoublePlay
@@ -46,7 +46,7 @@ public class ScenarioWarriorTests
 
         a.Warrior.Should().Be(WarriorId.Nobuchika);
         a.GetScenarioPokemon(0).Should().Be(57);
-        a.Class.Should().Be(WarriorClassId.FreeWarrior);
+        a.Class.Should().Be(WarriorClassId.FreeWarrior_1);
         a.Kingdom.Should().Be(KingdomId.Valora);
         a.Army.Should().Be(5);
         a.Item.Should().Be(ItemId.DoublePlay);

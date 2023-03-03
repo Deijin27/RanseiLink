@@ -27,25 +27,19 @@ public class SwMiniViewModel : ViewModelBase
         IScenarioPokemonService scenarioPokemonService,
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider spriteProvider,
-        IPokemonService pokemonService,
-        IJumpService jumpService)
+        IPokemonService pokemonService)
     {
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = spriteProvider;
         _baseWarriorService = baseWarriorService;
         _pokemonService = pokemonService;
-
-        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
-        JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
-        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
     }
 
     public SwMiniViewModel Init(
         ScenarioWarrior model, 
         ScenarioId scenario, 
         ScenarioWarriorWorkspaceViewModel parent, 
-        ScenarioPokemonViewModel spVm
-        )
+        ScenarioPokemonViewModel spVm)
     {
         _model = model;
         _parent = parent;
@@ -79,9 +73,9 @@ public class SwMiniViewModel : ViewModelBase
         }
     }
 
-    public ICommand JumpToBaseWarriorCommand { get; }
-    public ICommand JumpToMaxLinkCommand { get; }
-    public ICommand JumpToItemCommand { get; }
+    public ICommand JumpToBaseWarriorCommand => _parent.JumpToBaseWarriorCommand;
+    public ICommand JumpToMaxLinkCommand => _parent.JumpToMaxLinkCommand;
+    public ICommand JumpToItemCommand => _parent.JumpToItemCommand;
     public ICommand SelectCommand => _parent.ItemClickedCommand;
     public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
     public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;

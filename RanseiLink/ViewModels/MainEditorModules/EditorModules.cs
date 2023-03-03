@@ -176,14 +176,16 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
 {
     public const string Id = "scenario_warrior_workspace";
     public override string UniqueId => Id;
-    public override string ListName => "Scenario Warrior (Workspace)";
+    public override string ListName => "Scenario Warrior";
 
     private IScenarioPokemonService _scenarioPokemonService;
+    private IScenarioKingdomService _scenarioKingdomService;
 
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
+        _scenarioKingdomService = modServices.Get<IScenarioKingdomService>();
         var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
         var spService = modServices.Get<IScenarioPokemonService>();
@@ -196,12 +198,14 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
     {
         base.OnPatchingRom();
         _scenarioPokemonService?.Save();
+        _scenarioKingdomService?.Save();
     }
 
     public override void Deactivate()
     {
         base.Deactivate();
         _scenarioPokemonService?.Save();
+        _scenarioKingdomService?.Save();
     }
 }
 
@@ -279,7 +283,6 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     }
 }
 
-[EditorModule]
 public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<IScenarioKingdomService>
 {
     public const string Id = "scenario_kingdom_selector";

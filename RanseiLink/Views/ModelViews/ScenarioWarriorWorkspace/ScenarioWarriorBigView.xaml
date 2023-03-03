@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="RanseiLink.Views.ScenarioWarriorBigView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiLink.Views"
+             xmlns:const="clr-namespace:RanseiLink.Constants"
+             xmlns:vm="clr-namespace:RanseiLink.ViewModels"
+             xmlns:vc="clr-namespace:RanseiLink.ValueConverters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:SwMiniViewModel, IsDesignTimeCreatable=False}">
+    <Grid>
+        <Grid.Resources>
+            <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
+            <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
+            <vc:NotNullConverter x:Key="Converter.NotNull"/>
+
+            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="Height" Value="20"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="260"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <local:ScenarioWarriorMiniView Margin="2" VerticalAlignment="Center" Grid.ColumnSpan="2" IsEnabled="False"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,50,0">
+            <TextBlock Text="{Binding Army, StringFormat='Army: {0}  |  '}" d:Text="Army: 0  |  " Margin="2,0,0,0"/>
+            <TextBlock Text="{Binding Kingdom, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: 0" Margin="2,0,0,0"/>
+        </StackPanel>
+
+        <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="1" ToolTip="Jump to selected warrior" 
+                    Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding Warrior}"/>
+        <DockPanel Grid.Row="1" Grid.Column="1">
+            <Button DockPanel.Dock="Right" Style="{StaticResource HyperlinkButtonStyle}" Content="Max Link" Margin="5,0,0,0"
+                    Command="{Binding JumpToMaxLinkCommand}" CommandParameter="{Binding Warrior}" ToolTip="Jump to max link table for warrior"/>
+            <ComboBox ItemsSource="{Binding WarriorItems}" SelectedValue="{Binding Warrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
+                      />
+        </DockPanel>
+
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Class"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.WarriorClassItems}" SelectedItem="{Binding Class, Mode=TwoWay}" />
+
+        <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Item" Grid.Row="3" ToolTip="Jump to selected item" 
+                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Item}"/>
+        <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Item, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" 
+                      Grid.Column="1" Grid.Row="3"/>
+
+        <TabControl SelectedItem="{Binding SelectedItem}" ItemsSource="{Binding ScenarioPokemonSlots}" Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Grid.RowSpan="2" >
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
+                    <Image Stretch="None" Width="32" Height="19" Source="{Binding PokemonImage}" 
+                               />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
+                    <DockPanel>
+                        <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding ScenarioPokemonItems}" SelectedValue="{Binding ScenarioPokemonId, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                        <ContentPresenter Content="{Binding NestedVm}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</UserControl>

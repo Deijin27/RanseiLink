@@ -3,6 +3,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
@@ -36,9 +37,12 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         _pokemonService = pokemonService;
     }
 
-    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom)
+    public ICommand SelectCommand { get; private set; }
+
+    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom, ICommand itemClickedCommand)
     {
         base.Init(kingdom);
+        SelectCommand = itemClickedCommand;
         _kingdom = kingdom;
         _scenario = (int)scenario;
 
