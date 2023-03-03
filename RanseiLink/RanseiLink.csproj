@@ -103,9 +103,6 @@
     <Compile Update="Views\ModelViews\GimmickView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\ModelViews\SwSimpleKingdomMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -273,10 +270,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ModelViews\GimmickView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonMiniView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
