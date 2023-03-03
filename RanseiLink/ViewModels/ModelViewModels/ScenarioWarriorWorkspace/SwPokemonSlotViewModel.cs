@@ -19,13 +19,17 @@ public class SwPokemonSlotViewModel : ViewModelBase
     private readonly IChildScenarioPokemonService _spService;
     private ImageSource _pokemonImage;
     private readonly ICachedSpriteProvider _spriteProvider;
-    private readonly SwMiniViewModel _parent;
 
-    public SwPokemonSlotViewModel(SwMiniViewModel parent, ScenarioId scenario, ScenarioWarrior warrior, int slot, ScenarioPokemonViewModel scenarioPokemonVm, 
+    public SwPokemonSlotViewModel(
+        List<SelectorComboBoxItem> scenarioPokemonItems, 
+        ScenarioId scenario, 
+        ScenarioWarrior warrior, 
+        int slot, 
+        ScenarioPokemonViewModel scenarioPokemonVm, 
         IChildScenarioPokemonService spService, 
         ICachedSpriteProvider spriteProvider)
     {
-        _parent = parent;
+        ScenarioPokemonItems = scenarioPokemonItems;
         _slot = slot;
         _scenario = scenario;
         _warrior = warrior;
@@ -37,7 +41,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
         UpdatePokemonImage();
     }
 
-    public List<SelectorComboBoxItem> ScenarioPokemonItems => _parent.ScenarioPokemonItems;
+    public List<SelectorComboBoxItem> ScenarioPokemonItems { get; }
 
     public bool IsSelected
     {
@@ -60,8 +64,6 @@ public class SwPokemonSlotViewModel : ViewModelBase
             {
                 UpdateNested();
                 UpdatePokemonImage();
-                _parent.UpdateStrength();
-                _parent.UpdateScenarioPokemonComboItemName(value);
             }
         }
     }

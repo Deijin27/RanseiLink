@@ -138,20 +138,25 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
     private IChildScenarioPokemonService _childSpService;
 
-    public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childSwService, IChildScenarioPokemonService childSpService, ScenarioPokemonViewModel spVm)
+    public ScenarioWarriorWorkspaceViewModel Init(ScenarioPokemonViewModel spVm)
     {
-        _loading = true;
-
-        if (_spVm != null)
-        {
-            _spVm.PropertyChanged -= SpVm_PropertyChanged;
-        }
         _spVm = spVm;
         _spVm.PropertyChanged += SpVm_PropertyChanged;
+        return this;
+    }
+
+    public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childSwService, IChildScenarioPokemonService childSpService)
+    {
+        _loading = true;
 
         _childSpService = childSpService;
         ScenarioPokemonItems = childSpService.GetComboBoxItemsExceptDefault();
         ScenarioPokemonItems.Insert(0, new SelectorComboBoxItem(1100, "No Pokemon"));
+
+        foreach (var warrior in AllWarriors)
+        {
+            warrior.PropertyChanged -= WarriorItem_PropertyChanged;
+        }
 
         Items.Clear();
         UnassignedItems.Clear();
@@ -162,7 +167,8 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
             WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
             foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
             {
-                var item = _itemFactory().Init(scenarioWarrior, scenario, this, spVm);
+                var item = _itemFactory().Init(scenarioWarrior, scenario, this, _spVm);
+                item.PropertyChanged += WarriorItem_PropertyChanged;
                 switch (scenarioWarrior.Class)
                 {
                     case WarriorClassId.ArmyLeader:
@@ -188,22 +194,45 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         _loading = false;
     }
 
-    private void SpVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void WarriorItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ScenarioPokemonViewModel.Pokemon))
+        if (e.PropertyName == nameof(SwMiniViewModel.Strength))
         {
-            var spid = SelectedItem.SelectedItem.ScenarioPokemonId;
-            UpdateScenarioPokemonComboItemName(spid);
-            foreach (var item in AllWarriors.Where(x => x.ScenarioPokemon == spid))
-            {
-                item.UpdateStrength();
-                item.SelectedItem.UpdatePokemonImage();
-            }
-            // the update pokemon image only applies to slot0, this may apply to other slots
-            // but doesn't affect the images used in any other context.
-            SelectedItem.SelectedItem.UpdatePokemonImage(); 
             UpdateKingdomStrengths();
         }
+    }
+
+    private void SpVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(ScenarioPokemonViewModel.Pokemon))
+        {
+            return;
+        }
+
+        var spid = SelectedItem.SelectedItem.ScenarioPokemonId;
+        UpdateScenarioPokemonComboItemName(spid);
+        foreach (var item in AllWarriors.Where(x => x.ScenarioPokemon == spid))
+        {
+            // if it's slot0 scenario pokemon matches, strength needs updating
+            // avoid updating kingdom strengths multiple times by unsubscribing from this temporarily
+            // while we do the strength update
+            item.PropertyChanged -= WarriorItem_PropertyChanged;
+            item.UpdateStrength();
+            // we also update the first slot's image
+            // this may need updating for multiple warriors
+            // since the first pokemon of a warrior is always visible
+            item.ScenarioPokemonSlots[0].UpdatePokemonImage();
+            item.PropertyChanged += WarriorItem_PropertyChanged;
+        }
+        // the update pokemon image only applies to slot0, this may apply to other slots
+        // but doesn't affect the images used in any other context.
+        // the first image has already been updated above
+        foreach (var slot in SelectedItem.ScenarioPokemonSlots.Skip(1).Where(x => x.ScenarioPokemonId == spid))
+        {
+            slot.UpdatePokemonImage();
+        }
+
+        UpdateKingdomStrengths();
     }
 
     private IEnumerable<SwMiniViewModel> AllWarriors => 

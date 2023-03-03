@@ -184,10 +184,12 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
     {
         base.Initialise(modServices);
         _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
-        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>();
         var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
+        var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
+        var spService = modServices.Get<IScenarioPokemonService>();
+
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm,
-            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), modServices.Get<IScenarioPokemonService>().Retrieve(id), spVm));
+            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), spService.Retrieve(id)));
     }
 
     public override void OnPatchingRom()

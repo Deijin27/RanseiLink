@@ -3,6 +3,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
@@ -39,7 +40,12 @@ public class SwMiniViewModel : ViewModelBase
         JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
     }
 
-    public SwMiniViewModel Init(ScenarioWarrior model, ScenarioId scenario, ScenarioWarriorWorkspaceViewModel parent, ScenarioPokemonViewModel spVm)
+    public SwMiniViewModel Init(
+        ScenarioWarrior model, 
+        ScenarioId scenario, 
+        ScenarioWarriorWorkspaceViewModel parent, 
+        ScenarioPokemonViewModel spVm
+        )
     {
         _model = model;
         _parent = parent;
@@ -52,7 +58,9 @@ public class SwMiniViewModel : ViewModelBase
         var spService = _scenarioPokemonService.Retrieve((int)scenario);
         for (int i = 0; i < 8; i++)
         {
-            ScenarioPokemonSlots.Add(new SwPokemonSlotViewModel(this, scenario, model, i, spVm, spService, _spriteProvider));
+            var slotVm = new SwPokemonSlotViewModel(_parent.ScenarioPokemonItems, scenario, model, i, spVm, spService, _spriteProvider);
+            slotVm.PropertyChanged += SlotVm_PropertyChanged;
+            ScenarioPokemonSlots.Add(slotVm);
         }
         SelectedItem = ScenarioPokemonSlots[0];
 
@@ -61,13 +69,22 @@ public class SwMiniViewModel : ViewModelBase
         return this;
     }
 
+    private void SlotVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SwPokemonSlotViewModel.ScenarioPokemonId))
+        {
+            var slotVm = (SwPokemonSlotViewModel)sender;
+            UpdateStrength();
+            _parent.UpdateScenarioPokemonComboItemName(slotVm.ScenarioPokemonId);
+        }
+    }
+
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToMaxLinkCommand { get; }
     public ICommand JumpToItemCommand { get; }
     public ICommand SelectCommand => _parent.ItemClickedCommand;
     public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
     public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;
-    public List<SelectorComboBoxItem> ScenarioPokemonItems => _parent.ScenarioPokemonItems;
 
     public string WarriorName => _baseWarriorService.IdToName(Warrior);
 
@@ -172,12 +189,6 @@ public class SwMiniViewModel : ViewModelBase
     public void UpdateStrength()
     {
         RaisePropertyChanged(nameof(Strength));
-        _parent.UpdateKingdomStrengths();
-    }
-
-    public void UpdateScenarioPokemonComboItemName(int id)
-    {
-        _parent.UpdateScenarioPokemonComboItemName(id);
     }
 
     bool _suppressUpdateNested = false;
