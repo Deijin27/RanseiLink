@@ -103,16 +103,16 @@
     <Compile Update="Views\ModelViews\GimmickView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioPokemonMiniView.xaml.cs">
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\SwSimpleKingdomMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioWarriorKingdomMiniView.xaml.cs">
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioWarriorKingdomMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspaceView.xaml.cs">
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioWarriorWorkspaceView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\ScenarioBuildingView.xaml.cs">
@@ -276,7 +276,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioPokemonMiniView.xaml">
+    <Page Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonMiniView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -284,11 +284,11 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioWarriorKingdomMiniView.xaml">
+    <Page Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioWarriorKingdomMiniView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioWarriorWorkspaceView.xaml">
+    <Page Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioWarriorWorkspaceView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
