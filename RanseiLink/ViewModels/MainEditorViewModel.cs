@@ -332,9 +332,13 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void RunPlugin(PluginInfo chosen)
     {
+        Deactivate();
         try
         {
-            chosen.Plugin.Run(new PluginContext(_modServiceGetter));
+            using (var services = _modKernelFactory.Create(Mod))
+            {
+                chosen.Plugin.Run(new PluginContext(services));
+            }
         }
         catch (Exception e)
         {
@@ -344,7 +348,6 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
                 type: MessageBoxType.Error
                 ));
         }
-        Deactivate();
         SetMod(Mod);
     }
 
