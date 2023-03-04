@@ -167,17 +167,17 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         Items.Clear();
         UnassignedItems.Clear();
         WildItems.Clear();
-        foreach (var group in childSwService.Enumerate().GroupBy(x => x.Kingdom).OrderBy(x => x.Key))
+        foreach (var group in childSwService.Enumerate().Select((warrior, id) => (warrior, id)).GroupBy(x => x.warrior.Kingdom).OrderBy(x => x.Key))
         {
             var kingdomItem = _kingdomItemFactory().Init(scenario, group.Key, ItemClickedCommand);
             kingdomItem.PropertyChanged += KingdomItem_PropertyChanged;
             Items.Add(kingdomItem);
             WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
-            foreach (var scenarioWarrior in group.OrderBy(x => x.Class))
+            foreach (var scenarioWarrior in group.OrderBy(x => x.warrior.Class))
             {
-                var item = _itemFactory().Init(scenarioWarrior, scenario, this, _spVm);
+                var item = _itemFactory().Init(scenarioWarrior.id, scenarioWarrior.warrior, scenario, this, _spVm);
                 item.PropertyChanged += WarriorItem_PropertyChanged;
-                switch (scenarioWarrior.Class)
+                switch (scenarioWarrior.warrior.Class)
                 {
                     case WarriorClassId.ArmyLeader:
                     case WarriorClassId.ArmyMember:

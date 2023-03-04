@@ -40,9 +40,12 @@
 
         <local:ScenarioWarriorMiniView Margin="2" VerticalAlignment="Center" Grid.ColumnSpan="2" IsEnabled="False"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,50,0">
-            <TextBlock Text="{Binding Army, StringFormat='Army: {0}  |  '}" d:Text="Army: 0  |  " Margin="2,0,0,0"/>
-            <TextBlock Text="{Binding Kingdom, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: 0" Margin="2,0,0,0"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" 
+                    VerticalAlignment="Center" HorizontalAlignment="Right" 
+                    Margin="0,0,35,0" Height="15">
+            <TextBlock FontSize="10" Text="{Binding Id, StringFormat='ID: {0} | '}" d:Text="ID: 200 | "/>
+            <TextBlock FontSize="10" Text="{Binding Army, StringFormat='Army: {0} | '}" d:Text="Army: 14 | "/>
+            <TextBlock FontSize="10" Text="{Binding KingdomName, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: Dragnor" Margin="2,0,0,0"/>
         </StackPanel>
 
         <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior" Grid.Row="1" ToolTip="Jump to selected warrior" 

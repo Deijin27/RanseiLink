@@ -21,14 +21,17 @@ public class SwMiniViewModel : ViewModelBase
     private readonly ICachedSpriteProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
     private readonly IPokemonService _pokemonService;
+    private readonly IKingdomService _kingdomService;
     private ScenarioWarriorWorkspaceViewModel _parent;
 
     public SwMiniViewModel(
         IScenarioPokemonService scenarioPokemonService,
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider spriteProvider,
-        IPokemonService pokemonService)
+        IPokemonService pokemonService,
+        IKingdomService kingdomService)
     {
+        _kingdomService = kingdomService;
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = spriteProvider;
         _baseWarriorService = baseWarriorService;
@@ -36,11 +39,13 @@ public class SwMiniViewModel : ViewModelBase
     }
 
     public SwMiniViewModel Init(
+        int id,
         ScenarioWarrior model, 
         ScenarioId scenario, 
         ScenarioWarriorWorkspaceViewModel parent, 
         ScenarioPokemonViewModel spVm)
     {
+        Id = id;
         _model = model;
         _parent = parent;
         _scenario = scenario;
@@ -62,6 +67,8 @@ public class SwMiniViewModel : ViewModelBase
 
         return this;
     }
+
+    public int Id { get; private set; }
 
     private void SlotVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
@@ -133,7 +140,25 @@ public class SwMiniViewModel : ViewModelBase
     public int Kingdom
     {
         get => (int)_model.Kingdom;
-        set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
+            {
+                RaisePropertyChanged(nameof(KingdomName));
+            }
+        }
+    }
+
+    public string KingdomName
+    {
+        get
+        {
+            if (_kingdomService.ValidateId(Kingdom))
+            {
+                return _kingdomService.IdToName(Kingdom);
+            }
+            return "Default";
+        }
     }
 
     public int Army
