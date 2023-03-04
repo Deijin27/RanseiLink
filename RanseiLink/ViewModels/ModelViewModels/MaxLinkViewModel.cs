@@ -4,6 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -16,13 +17,13 @@ namespace RanseiLink.ViewModels;
 public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
-
-    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, ImageSource sprite, int itemId)
+    private readonly Func<ImageSource> _sprite;
+    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<ImageSource> sprite, int itemId)
     {
         _model = model;
         _pokemonId = pokemonId;
         Name = name;
-        Sprite = sprite;
+        _sprite = sprite;
         Id = itemId;
     }
     public int MaxLinkValue
@@ -40,7 +41,7 @@ public class WarriorMaxLinkListItem : ViewModelBase
 
     public string Name { get; }
 
-    public ImageSource Sprite { get; }
+    public ImageSource Sprite => _sprite();
 }
 
 
@@ -57,7 +58,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
 
     protected readonly IIdToNameService _idToNameService;
     protected readonly IOverrideDataProvider _overrideDataProvider;
-    protected readonly ICachedSpriteProvider _spriteProvider;
+    protected readonly ICachedSpriteProvider _cachedSpriteProvider;
     protected readonly IBaseWarriorService _baseWarriorService;
 
     protected readonly ICollectionView _itemsView;
@@ -69,7 +70,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         IBaseWarriorService baseWarriorService)
     {
         _baseWarriorService = baseWarriorService;
-        _spriteProvider = spriteProvider;
+        _cachedSpriteProvider = spriteProvider;
         _overrideDataProvider = overrideDataProvider;
         _idToNameService = idToNameService;
 
@@ -146,7 +147,7 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
         {
             var pidInt = (int)pid;
             var name = _idToNameService.IdToName<IPokemonService>(pidInt);
-            var sprite = _spriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
+            var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
             Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
@@ -187,7 +188,7 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
             var widInt = (int)wid;
             var warrior = _baseWarriorService.Retrieve(widInt);
             var name = _baseWarriorService.IdToName(widInt);
-            var sprite = _spriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
+            var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
             var model = maxLinkService.Retrieve(widInt);
             Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt));
         }

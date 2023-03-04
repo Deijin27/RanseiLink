@@ -8,11 +8,12 @@ public class SpriteManager : ISpriteManager
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
-
-    public SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService)
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    public SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, ICachedSpriteProvider cachedSpriteProvider)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;
+        _cachedSpriteProvider = cachedSpriteProvider;
     }
 
     public bool SetOverride(SpriteType type, int id, string requestFileMsg)

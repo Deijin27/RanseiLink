@@ -69,69 +69,60 @@ public class PartialTransferPlugin : IPlugin
             progress.Report(new ProgressInfo(statusText: "Preparing...", isIndeterminate:true));
 
             var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
-            bool shouldDisposeSource = false;
-            bool shouldDisposeDestination = false;
             IServiceGetter sourceServices = context.Services;
             IServiceGetter destinationServices = context.Services;
-            IServiceGetter requiresReload = null;
 
             if (destinationMod.FolderPath != activeMod.FolderPath)
             {
-                shouldDisposeDestination = true;
                 destinationServices = kernelFactory.Create(destinationMod);
-            }
-            else
-            {
-                requiresReload = destinationServices;
             }
             if (sourceMod.FolderPath != activeMod.FolderPath)
             {
-                shouldDisposeSource = true;
                 sourceServices = kernelFactory.Create(sourceMod);
             }
             
-            List<(string file, IModelService serviceToReload)> filesToTransfer = new();
-            List<(string folder, IModelService serviceToReload)> dirsToTransfer = new();
+            List<string> filesToTransfer = new();
+            List<string> dirsToTransfer = new();
             List<Action> actionsToDo = new();
 
             if (options.BattleConfigs)
-                filesToTransfer.Add((Constants.BattleConfigRomPath, requiresReload?.Get<IBattleConfigService>()));
+                filesToTransfer.Add(Constants.BattleConfigRomPath);
             if (options.Episode)
-                filesToTransfer.Add((Constants.EpisodeRomPath, requiresReload?.Get<IEpisodeService>()));
+                filesToTransfer.Add(Constants.EpisodeRomPath);
             if (options.Maps)
-                dirsToTransfer.Add((Constants.MapFolderPath, null));
+                dirsToTransfer.Add(Constants.MapFolderPath);
             if (options.MaxLink)
-                filesToTransfer.Add((Constants.MaxLinkRomPath, requiresReload?.Get<IMaxLinkService>()));
+                filesToTransfer.Add(Constants.MaxLinkRomPath);
             if (options.MoveRange)
-                filesToTransfer.Add((Constants.MoveRangeRomPath, requiresReload?.Get<IMoveRangeService>()));
+                filesToTransfer.Add(Constants.MoveRangeRomPath);
 
             if (options.TransferNames)
             {
                 // data same in all game codes
                 if (options.Ability)
-                    filesToTransfer.Add((Constants.AbilityRomPath, requiresReload?.Get<IAbilityService>()));
+                    filesToTransfer.Add(Constants.AbilityRomPath);
                 if (options.Item)
-                    filesToTransfer.Add((Constants.ItemRomPath, requiresReload?.Get<IItemService>()));
+                    filesToTransfer.Add(Constants.ItemRomPath);
                 if (options.Move)
-                    filesToTransfer.Add((Constants.MoveRomPath, requiresReload?.Get<IMoveService>()));
+                    filesToTransfer.Add(Constants.MoveRomPath);
                 if (options.Pokemon)
-                    filesToTransfer.Add((Constants.PokemonRomPath, requiresReload?.Get<IPokemonService>()));
+                    filesToTransfer.Add(Constants.PokemonRomPath);
                 if (options.BaseWarrior)
-                    filesToTransfer.Add((Constants.BaseBushouRomPath, requiresReload?.Get<IBaseWarriorService>()));
+                    filesToTransfer.Add(Constants.BaseBushouRomPath);
 
                 // data varies per game code
                 if (sourceMod.GameCode == destinationMod.GameCode)
                 {
                     if (options.Building)
-                        filesToTransfer.Add((Constants.BuildingRomPath, requiresReload?.Get<IBuildingService>()));
+                        filesToTransfer.Add(Constants.BuildingRomPath);
                     if (options.EventSpeaker)
-                        filesToTransfer.Add((Constants.EventSpeakerRomPath, requiresReload?.Get<IEventSpeakerService>()));
+                        filesToTransfer.Add(Constants.EventSpeakerRomPath);
                     if (options.Gimmicks)
-                        filesToTransfer.Add((Constants.GimmickRomPath, requiresReload?.Get<IGimmickService>()));
+                        filesToTransfer.Add(Constants.GimmickRomPath);
                     if (options.Kingdoms)
-                        filesToTransfer.Add((Constants.KingdomRomPath, requiresReload?.Get<IKingdomService>()));
+                        filesToTransfer.Add(Constants.KingdomRomPath);
                     if (options.WarriorSkill)
-                        filesToTransfer.Add((Constants.WarriorSkillRomPath, requiresReload?.Get<IWarriorSkillService>()));
+                        filesToTransfer.Add(Constants.WarriorSkillRomPath);
                 }
             }
             else
@@ -167,33 +158,22 @@ public class PartialTransferPlugin : IPlugin
             foreach (var i in EnumUtil.GetValues<ScenarioId>())
             {
                 if (options.ScenarioPokemon)
-                    filesToTransfer.Add((Constants.ScenarioPokemonPathFromId((int)i), null));
+                    filesToTransfer.Add(Constants.ScenarioPokemonPathFromId((int)i));
                 if (options.ScenarioWarrior)
-                    filesToTransfer.Add((Constants.ScenarioWarriorPathFromId((int)i), null));
+                    filesToTransfer.Add(Constants.ScenarioWarriorPathFromId((int)i));
                 if (options.ScenarioAppearPokemon)
-                    filesToTransfer.Add((Constants.ScenarioAppearPokemonPathFromId((int)i), null));
+                    filesToTransfer.Add(Constants.ScenarioAppearPokemonPathFromId((int)i));
                 if (options.ScenarioKingdom)
-                    filesToTransfer.Add((Constants.ScenarioKingdomPathFromId((int)i), null));
+                    filesToTransfer.Add(Constants.ScenarioKingdomPathFromId((int)i));
             }
-            if (options.ScenarioPokemon)
-                requiresReload?.Get<IScenarioPokemonService>().Reload();
-            if (options.ScenarioWarrior)
-                requiresReload?.Get<IScenarioWarriorService>().Reload();
-            if (options.ScenarioAppearPokemon)
-                requiresReload?.Get<IScenarioAppearPokemonService>().Reload();
-            if (options.ScenarioKingdom)
-                requiresReload?.Get<IScenarioKingdomService>().Reload();
-
             if (options.Sprites)
-                dirsToTransfer.Add((Constants.GraphicsFolderPath, null));
+                dirsToTransfer.Add(Constants.GraphicsFolderPath);
 
             if (sourceMod.GameCode == destinationMod.GameCode)
             {
                 if (options.Text)
                 {
-                    dirsToTransfer.Add((Constants.MsgFolderPath, null));
-                    //requiresReload.Get<ICachedMsgBlockService>().RebuildCache();
-                    // ^^^ requires ranseilink update to make the msggridviewmodel update correctly.
+                    dirsToTransfer.Add(Constants.MsgFolderPath);
                 }
             }
 
@@ -206,16 +186,15 @@ public class PartialTransferPlugin : IPlugin
                 count++;
                 progress.Report(new ProgressInfo(progress: count));
             }
-            foreach (var (file, serviceToReload) in filesToTransfer)
+            foreach (var file in filesToTransfer)
             {
                 string sourcePath = Path.Combine(sourceMod.FolderPath, file);
                 string destinationPath = Path.Combine(destinationMod.FolderPath, file);
                 File.Copy(sourcePath, destinationPath, true);
-                serviceToReload?.Reload();
                 count++;
                 progress.Report(new ProgressInfo(progress:count));
             }
-            foreach(var (dir, serviceToReload) in dirsToTransfer)
+            foreach(var dir in dirsToTransfer)
             {
                 string sourcePath = Path.Combine(sourceMod.FolderPath, dir);
                 string destinationPath = Path.Combine(destinationMod.FolderPath, dir);
@@ -225,20 +204,13 @@ public class PartialTransferPlugin : IPlugin
                 }
                 Directory.CreateDirectory(destinationPath);
                 FileUtil.CopyFilesRecursively(sourcePath, destinationPath);
-                serviceToReload?.Reload();
                 count++;
                 progress.Report(new ProgressInfo(progress: count));
             }
             progress.Report(new ProgressInfo(statusText:"Transfer Complete!"));
 
-            if (shouldDisposeSource)
-            {
-                sourceServices.Dispose();
-            }
-            if (shouldDisposeDestination)
-            {
-                destinationServices.Dispose();
-            }
+            sourceServices.Dispose();
+            destinationServices.Dispose();
         });
     }
 

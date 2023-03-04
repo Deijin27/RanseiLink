@@ -297,70 +297,96 @@ public class Randomizer
         return true;
     }
 
+    private static HashSet<MoveEffectId> _multiHitEffects = new HashSet<MoveEffectId>
+    { MoveEffectId.Hits2Times, MoveEffectId.Hits2To3Times, MoveEffectId.Hits2To5Times, MoveEffectId.Hits4To5Times, MoveEffectId.Hits5Times };
+
+    private bool IsMultiHit(Move move)
+    {
+        foreach (var effect in new[] { move.Effect1, move.Effect2 })
+        {
+            if (_multiHitEffects.Contains(effect))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private bool ValidateTutorialMatchup(ScenarioPokemon attackingScenarioPokemon, ScenarioPokemon targetScenarioPokemon, bool oichisPokemon = false)
     {
         var attackingPokemon = _pokemonService.Retrieve((int)attackingScenarioPokemon.Pokemon);
         var targetPokemon = _pokemonService.Retrieve((int)targetScenarioPokemon.Pokemon);
         var move = _moveService.Retrieve((int)attackingPokemon.Move);
 
-        // Moves always hit during the tutorial, so this doesn't matter
-        //if (move.Accuracy != 100)
-        //{
-        //    return false;
-        //}
-        if ((_options.Moves || _options.ScenarioPokemon) && move.Power < 30)
+        if ((_options.Moves || _options.ScenarioPokemon))
         {
-            return false;
-        }
-        if (move.Power < 60 && targetPokemon.Resists(move.Type))
-        {
-            return false;
-        }
-        if (!_moveRangeService.Retrieve((int)move.Range).GetInRange(1))
-        {
-            return false;
-        }
-        if (oichisPokemon && _moveRangeService.Retrieve((int)move.Range).GetInRange(24))
-        {
-            return false;
-        }
-        if (new[] { move.Effect1, move.Effect2 }.Any(i => invalidEffects.Contains(i)))
-        {
-            return false;
-        }
-        if (targetPokemon.IsImmuneTo(move.Type))
-        {
-            return false;
-        }
-        if (targetScenarioPokemon.Ability == AbilityId.Sturdy)
-        {
-            return false;
-        }
-        if (!MoldBreakerAbilitys.Contains(attackingScenarioPokemon.Ability))
-        {
-            switch (targetScenarioPokemon.Ability)
+            // Moves always hit during the tutorial, so this doesn't matter
+            //if (move.Accuracy != 100)
+            //{
+            //    return false;
+            //}
+            bool isMultiHit = IsMultiHit(move);
+            if (!isMultiHit)
             {
-                case AbilityId.Levitate:
-                    if (move.Type == TypeId.Ground)
-                        return false;
-                    break;
-                case AbilityId.WaterAbsorb:
-                    if (move.Type == TypeId.Water)
-                        return false;
-                    break;
-                case AbilityId.FlashFire:
-                    if (move.Type == TypeId.Fire)
-                        return false;
-                    break;
-                case AbilityId.VoltAbsorb:
-                case AbilityId.Lightningrod:
-                case AbilityId.MotorDrive:
-                    if (move.Type == TypeId.Electric)
-                        return false;
-                    break;
+                if (move.Power < 30)
+                {
+                    return false;
+                }
+                if (move.Power < 60 && targetPokemon.Resists(move.Type) && !isMultiHit)
+                {
+                    return false;
+                }
+            }
+            if (!_moveRangeService.Retrieve((int)move.Range).GetInRange(1))
+            {
+                return false;
+            }
+            if (oichisPokemon && _moveRangeService.Retrieve((int)move.Range).GetInRange(24))
+            {
+                return false;
+            }
+            if (new[] { move.Effect1, move.Effect2 }.Any(i => invalidEffects.Contains(i)))
+            {
+                return false;
+            }
+            if (targetPokemon.IsImmuneTo(move.Type))
+            {
+                return false;
             }
         }
-
+        
+        if (_options.Abilities || _options.ScenarioPokemon)
+        {
+            if (targetScenarioPokemon.Ability == AbilityId.Sturdy)
+            {
+                return false;
+            }
+            if (!MoldBreakerAbilitys.Contains(attackingScenarioPokemon.Ability))
+            {
+                switch (targetScenarioPokemon.Ability)
+                {
+                    case AbilityId.Levitate:
+                        if (move.Type == TypeId.Ground)
+                            return false;
+                        break;
+                    case AbilityId.WaterAbsorb:
+                        if (move.Type == TypeId.Water)
+                            return false;
+                        break;
+                    case AbilityId.FlashFire:
+                        if (move.Type == TypeId.Fire)
+                            return false;
+                        break;
+                    case AbilityId.VoltAbsorb:
+                    case AbilityId.Lightningrod:
+                    case AbilityId.MotorDrive:
+                        if (move.Type == TypeId.Electric)
+                            return false;
+                        break;
+                }
+            }
+        }
+        
         return true;
     }
 

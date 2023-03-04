@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Text;
 using RanseiLink.Services;
 using System;
 using System.Collections;

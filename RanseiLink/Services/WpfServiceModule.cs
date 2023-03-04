@@ -79,7 +79,6 @@ public class WpfModServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.Register<ICachedMsgBlockService, CachedMsgBlockService>(Reuse.Singleton);
         builder.Register<IIdToNameService, IdToNameService>(Reuse.Singleton);
         builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
         builder.Register<ICachedSpriteProvider, CachedSpriteProvider>(Reuse.Singleton);

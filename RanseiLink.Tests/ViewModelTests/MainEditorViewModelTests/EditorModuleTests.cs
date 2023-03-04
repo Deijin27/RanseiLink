@@ -211,29 +211,4 @@ public class EditorModuleTests
         _moduleB.Verify(i => i.OnPatchingRom(), Times.Once());
         _moduleD.Verify(i => i.OnPatchingRom(), Times.Once());
     }
-
-    [Fact]
-    public void ShouldInformModulesOfPluginCompletion()
-    {
-        // initialise module b and d
-        _mainEditorVm.CurrentModuleId = "test_module_b";
-        _moduleB.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
-        _mainEditorVm.CurrentModuleId = "test_module_d";
-        _moduleD.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Once());
-
-        // assert that others arent initialised
-        _moduleA.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
-        _moduleC.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
-
-        _mainEditorVm.PluginPopupOpen = true;
-        var plugin = new Mock<IPlugin>();
-        _mainEditorVm.SelectedPlugin = new PluginInfo(plugin.Object, null, null, null);
-
-        plugin.Verify(i => i.Run(It.IsAny<IPluginContext>()), Times.Once());
-
-        _moduleA.Verify(i => i.OnPluginComplete(), Times.Never());
-        _moduleC.Verify(i => i.OnPluginComplete(), Times.Never());
-        _moduleB.Verify(i => i.OnPluginComplete(), Times.Once());
-        _moduleD.Verify(i => i.OnPluginComplete(), Times.Once());
-    }
 }

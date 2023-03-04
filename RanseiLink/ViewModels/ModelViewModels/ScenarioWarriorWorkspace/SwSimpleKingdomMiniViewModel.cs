@@ -19,22 +19,11 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
     public SwSimpleKingdomMiniViewModel Init(KingdomId kingdom)
     {
         _kingdom = kingdom;
-        UpdateKingdomImage();
 
         return this;
     }
 
-    private void UpdateKingdomImage()
-    {
-        KingdomImage = _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
-    }
-
-    private ImageSource _KingdomImage;
-    public ImageSource KingdomImage
-    {
-        get => _KingdomImage;
-        set => RaiseAndSetIfChanged(ref _KingdomImage, value);
-    }
+    public ImageSource KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
 
     public KingdomId Kingdom => _kingdom;
 

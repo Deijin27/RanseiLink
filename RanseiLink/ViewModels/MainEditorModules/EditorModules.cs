@@ -2,7 +2,6 @@
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Services;
 using System.Linq;
 
 namespace RanseiLink.ViewModels;
@@ -110,7 +109,6 @@ public class WarriorNameTableEditorModule : EditorModule
     }
     public override void Deactivate() => _service.Save();
     public override void OnPatchingRom() => _service.Save();
-    public override void OnPluginComplete() => _viewModel.SetModel(_service.NameTable);
 }
 
 [EditorModule]
@@ -365,7 +363,6 @@ public class MsgGridEditorModule : EditorModule
         base.Initialise(modServices);
         _viewModel = modServices.Get<MsgGridViewModel>();
     }
-    public override void OnPluginComplete() => _viewModel?.SearchCommand.Execute(null);
     public override void Deactivate() => _viewModel?.UnhookEvents();
 }
 
@@ -521,13 +518,6 @@ public class MapSelectorEditorModule : EditorModule
         if (_currentMap != null)
         {
             _service.Save((MapId)_viewModel.Selected, _currentMap);
-        }
-    }
-    public override void OnPluginComplete()
-    {
-        if (_currentMap != null)
-        {
-            _nestedVm.SetModel((MapId)_viewModel.Selected, _currentMap);
         }
     }
 

@@ -68,19 +68,15 @@ public class ChangelistPlugin : IPlugin
         var changedMod = modDict[options.ChangedMod];
 
         var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
-        bool shouldDisposeUnchanged = false;
-        bool shouldDisposeChanged = false;
         IServiceGetter unchangedServices = context.Services;
         IServiceGetter changedServices = context.Services;
 
         if (unchangedMod.FolderPath != activeMod.FolderPath)
         {
-            shouldDisposeUnchanged = true;
             unchangedServices = kernelFactory.Create(unchangedMod);
         }
         if (changedMod.FolderPath != activeMod.FolderPath)
         {
-            shouldDisposeChanged = true;
             changedServices = kernelFactory.Create(changedMod);
         }
 
@@ -106,14 +102,8 @@ public class ChangelistPlugin : IPlugin
             dialogService.ShowMessageBox(MessageBoxSettings.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
         }
 
-        if (shouldDisposeUnchanged)
-        {
-            unchangedServices.Dispose();
-        }
-        if (shouldDisposeChanged)
-        {
-            changedServices.Dispose();
-        }
+        unchangedServices.Dispose();
+        changedServices.Dispose();
     }
 
     private static void OutputXml(string file, IEnumerable<ChangeInfo> changelist)

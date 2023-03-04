@@ -17,7 +17,6 @@ public class SwPokemonSlotViewModel : ViewModelBase
     private readonly ScenarioWarrior _warrior;
     private readonly ScenarioId _scenario;
     private readonly IChildScenarioPokemonService _spService;
-    private ImageSource _pokemonImage;
     private readonly ICachedSpriteProvider _spriteProvider;
 
     public SwPokemonSlotViewModel(
@@ -87,20 +86,18 @@ public class SwPokemonSlotViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _nestedVm, value);
     }
 
-    public ImageSource PokemonImage
-    {
-        get => _pokemonImage;
-        set => RaiseAndSetIfChanged(ref _pokemonImage, value);
-    }
-
+    public ImageSource PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
+    private int _pokemonImageId;
     public void UpdatePokemonImage()
     {
         if (_warrior.ScenarioPokemonIsDefault(_slot))
         {
-            PokemonImage = null;
-            return;
+            _pokemonImageId = -1;
         }
-        int image = (int)_spService.Retrieve(ScenarioPokemonId).Pokemon;
-        PokemonImage = _spriteProvider.GetSprite(SpriteType.StlPokemonS, image);
+        else
+        {
+            _pokemonImageId = (int)_spService.Retrieve(ScenarioPokemonId).Pokemon;
+        }
+        RaisePropertyChanged(nameof(PokemonImage));
     }
 }

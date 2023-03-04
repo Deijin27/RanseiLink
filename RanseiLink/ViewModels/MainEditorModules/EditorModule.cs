@@ -50,12 +50,6 @@ public abstract class EditorModule
     {
     }
 
-    /// <summary>
-    /// Do actions after completion of a plugin run
-    /// </summary>
-    public virtual void OnPluginComplete()
-    {
-    }
 }
 
 public abstract class BaseSelectorEditorModule<TService> : EditorModule where TService : IModelService
@@ -77,6 +71,5 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule where TS
 
     public override void Deactivate() => _service?.Save();
     public override void OnPatchingRom() => _service.Save();
-    public override void OnPluginComplete() => _viewModel.UpdateNestedViewModel();
 }
 

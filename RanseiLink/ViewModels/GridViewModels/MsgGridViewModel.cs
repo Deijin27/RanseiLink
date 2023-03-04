@@ -1,5 +1,5 @@
-﻿using RanseiLink.Core.Text;
-using RanseiLink.Services;
+﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,15 +16,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     public MsgGridViewModel(ICachedMsgBlockService cachedMsgBlockService)
     {
         _cachedMsgBlockService = cachedMsgBlockService;
-        for (int i = 0; i < _cachedMsgBlockService.BlockCount; i++)
-        {
-            var block = _cachedMsgBlockService.Retrieve(i);
-            for (int j = 0; j < block.Count; j++)
-            {
-                _allItems.Add(new MsgViewModel(i, j, block));
-            }
-        }
-        Items = new ObservableCollection<MsgViewModel>(_allItems);
+        
+        Items = new ObservableCollection<MsgViewModel>();
+        Reload();
 
         SearchCommand = new RelayCommand(Search, () => !_busy);
         ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !_busy);
@@ -34,6 +28,20 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
         _cachedMsgBlockService.MessageAdded += CachedMsgBlockService_MessageAdded;
         _cachedMsgBlockService.MessageRemoved += CachedMsgBlockService_MessageRemoved;
+    }
+
+    public void Reload()
+    {
+        _allItems.Clear();
+        for (int i = 0; i < _cachedMsgBlockService.BlockCount; i++)
+        {
+            var block = _cachedMsgBlockService.Retrieve(i);
+            for (int j = 0; j < block.Count; j++)
+            {
+                _allItems.Add(new MsgViewModel(i, j, block));
+            }
+        }
+        Search();
     }
 
     private void CachedMsgBlockService_MessageRemoved(object sender, MessageRemovedArgs e)

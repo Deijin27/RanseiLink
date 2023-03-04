@@ -2,7 +2,6 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Services;
 using RanseiLink.Settings;
 using System;
 using System.Collections.Generic;
@@ -255,6 +254,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
         _editorModuleOrderSetting.Value = ListItems.Select(i => i.ModuleId).ToArray();
         _settingService.Save();
+        _modServiceGetter?.Dispose();
+        _modServiceGetter = null;
     }
 
     #region Rom
@@ -343,10 +344,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
                 type: MessageBoxType.Error
                 ));
         }
-        foreach (var module in InitialisedModules.Values)
-        {
-            module.OnPluginComplete();
-        }
+        Deactivate();
+        SetMod(Mod);
     }
 
     #endregion

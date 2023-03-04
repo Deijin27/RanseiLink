@@ -29,6 +29,10 @@ public class CachedSpriteProvider : ICachedSpriteProvider
 
     public ImageSource GetSprite(SpriteType type, int id)
     {
+        if (id < 0)
+        {
+            return null;
+        }
         var file = _overrideDataProvider.GetSpriteFile(type, id);
         PathToImageSourceConverter.TryConvert(file.File, out var imageSource);
         _cache[ResolveKey(type, id)] = imageSource;

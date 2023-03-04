@@ -68,6 +68,7 @@ namespace RanseiLink.Core.Services
     {
         public void Load(IRegistrator builder)
         {
+            builder.Register<ICachedMsgBlockService, CachedMsgBlockService>(Reuse.Singleton);
             builder.Register<IAbilityService, AbilityService>(Reuse.Singleton);
             builder.Register<IBaseWarriorService, BaseWarriorService>(Reuse.Singleton);
             builder.Register<IBattleConfigService, BattleConfigService>(Reuse.Singleton);

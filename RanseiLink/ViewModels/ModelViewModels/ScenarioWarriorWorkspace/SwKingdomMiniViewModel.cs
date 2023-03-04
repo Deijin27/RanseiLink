@@ -53,12 +53,9 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         return this;
     }
 
-    private ImageSource _warriorImage;
-    public ImageSource WarriorImage
-    {
-        get => _warriorImage;
-        set => RaiseAndSetIfChanged(ref _warriorImage, value);
-    }
+    public ImageSource WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+
+    private int _warriorImageId;
 
     private void UpdateWarriorImage()
     {
@@ -74,11 +71,13 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 
         if (!_baseWarriorService.ValidateId(warrior))
         {
-            WarriorImage = null;
-            return;
+            _warriorImageId = -1;
         }
-        int image = _baseWarriorService.Retrieve(warrior).Sprite;
-        WarriorImage = _spriteProvider.GetSprite(SpriteType.StlBushouS, image);
+        else
+        {
+            _warriorImageId = _baseWarriorService.Retrieve(warrior).Sprite;
+        }
+        RaisePropertyChanged(nameof(WarriorImage));
     }
 
     public int Strength

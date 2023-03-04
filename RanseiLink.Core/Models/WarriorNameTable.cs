@@ -12,13 +12,19 @@ namespace RanseiLink.Core.Models
 
         public string GetEntry(int id)
         {
-            ValidateIdWithThrow(id);
+            if (!ValidateId(id))
+            {
+                return "";
+            }
             return GetPaddedUtf8String(EntryLength * (int)id, 10);
         }
 
         public void SetEntry(int id, string value)
         {
-            ValidateIdWithThrow(id);
+            if (!ValidateId(id))
+            {
+                return;
+            }
             SetPaddedUtf8String(EntryLength * (int)id, 10, value);
         }
 
