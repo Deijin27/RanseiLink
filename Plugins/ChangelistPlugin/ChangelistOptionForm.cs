@@ -60,6 +60,9 @@ public class ChangelistOptionForm : IPluginForm
     [BoolOption("Gimmicks", group: WhatChangelists)]
     public bool Gimmicks { get; set; }
 
+    [BoolOption("Gimmick Ranges", group: WhatChangelists)]
+    public bool GimmickRange { get; set; }
+
     [BoolOption("Items", group: WhatChangelists)]
     public bool Item { get; set; }
 
@@ -69,6 +72,9 @@ public class ChangelistOptionForm : IPluginForm
     [BoolOption("Moves", group: WhatChangelists)]
     public bool Move { get; set; }
 
+    [BoolOption("Move Ranges", group: WhatChangelists)]
+    public bool MoveRange { get; set; }
+
     [BoolOption("Pokemon", group: WhatChangelists)]
     public bool Pokemon { get; set; }
 
@@ -77,6 +83,9 @@ public class ChangelistOptionForm : IPluginForm
 
     [BoolOption("Scenario Warriors", group: WhatChangelists)]
     public bool ScenarioWarrior { get; set; }
+
+    [BoolOption("Scenario Buildings", group: WhatChangelists)]
+    public bool ScenarioBuilding { get; set; }
 
     [BoolOption("Text", group: WhatChangelists)]
     public bool Text { get; set; }

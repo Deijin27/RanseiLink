@@ -122,11 +122,14 @@ public class ChangelistPlugin : IPlugin
 
                 foreach (var changeInfo in groupByObjectId)
                 {
-                    var propertyElement = new XElement("property", new XAttribute("name", changeInfo.PropertyName),
+                    if (!string.IsNullOrEmpty(changeInfo.PropertyName))
+                    {
+                        var propertyElement = new XElement("property", new XAttribute("name", changeInfo.PropertyName),
                         new XElement("before", changeInfo.OldValue),
                         new XElement("after_", changeInfo.NewValue)
                         );
-                    objectIdElement.Add(propertyElement);
+                        objectIdElement.Add(propertyElement);
+                    }
                 }
 
                 typeNameElement.Add(objectIdElement);
@@ -189,6 +192,10 @@ public class ChangelistPlugin : IPlugin
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IGimmickService>(), changedServices.Get<IGimmickService>()));
         }
+        if (options.GimmickRange)
+        {
+            changelist.AddRange(GenericGetBinaryDiff(unchangedServices.Get<IGimmickRangeService>(), changedServices.Get<IGimmickRangeService>()));
+        }
         if (options.Item)
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IItemService>(), changedServices.Get<IItemService>()));
@@ -200,6 +207,10 @@ public class ChangelistPlugin : IPlugin
         if (options.Move)
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IMoveService>(), changedServices.Get<IMoveService>()));
+        }
+        if (options.MoveRange)
+        {
+            changelist.AddRange(GenericGetBinaryDiff(unchangedServices.Get<IMoveRangeService>(), changedServices.Get<IMoveRangeService>()));
         }
         if (options.Pokemon)
         {
@@ -220,6 +231,10 @@ public class ChangelistPlugin : IPlugin
         if (options.WarriorSkill)
         {
             changelist.AddRange(GenericGetChangelist(unchangedServices.Get<IWarriorSkillService>(), changedServices.Get<IWarriorSkillService>()));
+        }
+        if (options.ScenarioBuilding)
+        {
+            changelist.AddRange(GetScenarioBuildingChangelist(unchangedServices.Get<IScenarioBuildingService>(), changedServices.Get<IScenarioBuildingService>()));
         }
 
         return changelist;
@@ -243,6 +258,33 @@ public class ChangelistPlugin : IPlugin
                 if (!beforeVal.Equals(afterVal))
                 {
                     changelist.Add(new(typeof(TModel).Name, afterService.IdToName(id), prop.Name, beforeVal.ToString(), afterVal.ToString()));
+                }
+            }
+            id++;
+        }
+        return changelist;
+    }
+
+    /// <summary>
+    /// Gets whether two datawrappers differ, without specifics
+    /// </summary>
+    private static IEnumerable<ChangeInfo> GenericGetBinaryDiff<TModel>(
+        IModelService<TModel> beforeService,
+        IModelService<TModel> afterService) where TModel : IDataWrapper
+    {
+        List<ChangeInfo> changelist = new();
+
+        int id = 0;
+        foreach (var (beforeObj, afterObj) in beforeService.Enumerate().Zip(afterService.Enumerate()))
+        {
+            for (int i = 0; i < beforeObj.Data.Length; i++)
+            {
+                var beforeVal = beforeObj.Data[i];
+                var afterVal = afterObj.Data[i];
+                if (beforeVal != afterVal)
+                {
+                    changelist.Add(new(typeof(TModel).Name, afterService.IdToName(id), string.Empty, string.Empty, string.Empty));
+                    return changelist;
                 }
             }
             id++;
@@ -304,6 +346,35 @@ public class ChangelistPlugin : IPlugin
         }
 
         return changelist;
+    }
+
+    private static IEnumerable<ChangeInfo> GetScenarioBuildingChangelist(IScenarioBuildingService unchanged, IScenarioBuildingService changed)
+    {
+        foreach (var id in unchanged.ValidIds())
+        {
+            var unchangedItem = unchanged.Retrieve(id);
+            var changedItem = changed.Retrieve(id);
+            foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+            {
+                for (int slot = 0; slot < ScenarioBuilding.SlotCount; slot++)
+                {
+                    var unchangedInitExp = unchangedItem.GetInitialExp(kingdom, slot);
+                    var changedInitExp = changedItem.GetInitialExp(kingdom, slot);
+                    if (unchangedInitExp != changedInitExp)
+                    {
+                        yield return new ChangeInfo("ScenarioBuilding", $"Kingdom_{kingdom}_Slot_{slot}", "InitExp",
+                            unchangedInitExp.ToString(), changedInitExp.ToString());
+                    }
+                    var unchangedUnk = unchangedItem.GetUnknown2(kingdom, slot);
+                    var changedUnk = changedItem.GetUnknown2(kingdom, slot);
+                    if (unchangedUnk != changedUnk)
+                    {
+                        yield return new ChangeInfo("ScenarioBuilding", $"Kingdom_{kingdom}_Slot_{slot}", "Unknown2",
+                            unchangedUnk.ToString(), changedUnk.ToString());
+                    }
+                }
+            }
+        }
     }
 
     private static IEnumerable<ChangeInfo> GetTextChangelist(IMsgBlockService unchangedService, IMsgBlockService changedService)

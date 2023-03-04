@@ -95,7 +95,9 @@ public class PartialTransferPlugin : IPlugin
                 filesToTransfer.Add(Constants.MaxLinkRomPath);
             if (options.MoveRange)
                 filesToTransfer.Add(Constants.MoveRangeRomPath);
-
+            if (options.GimmickRange)
+                filesToTransfer.Add(Constants.GimmickRangeRomPath);
+            
             if (options.TransferNames)
             {
                 // data same in all game codes
@@ -157,14 +159,18 @@ public class PartialTransferPlugin : IPlugin
 
             foreach (var i in EnumUtil.GetValues<ScenarioId>())
             {
-                if (options.ScenarioPokemon)
-                    filesToTransfer.Add(Constants.ScenarioPokemonPathFromId((int)i));
                 if (options.ScenarioWarrior)
+                {
+                    filesToTransfer.Add(Constants.ScenarioPokemonPathFromId((int)i));
                     filesToTransfer.Add(Constants.ScenarioWarriorPathFromId((int)i));
+                    filesToTransfer.Add(Constants.ScenarioKingdomPathFromId((int)i));
+                }
                 if (options.ScenarioAppearPokemon)
                     filesToTransfer.Add(Constants.ScenarioAppearPokemonPathFromId((int)i));
-                if (options.ScenarioKingdom)
-                    filesToTransfer.Add(Constants.ScenarioKingdomPathFromId((int)i));
+
+                if (options.ScenarioBuilding)
+                    filesToTransfer.Add(Constants.ScenarioBuildingPathFromId((int)i));
+                    
             }
             if (options.Sprites)
                 dirsToTransfer.Add(Constants.GraphicsFolderPath);
@@ -175,6 +181,11 @@ public class PartialTransferPlugin : IPlugin
                 {
                     dirsToTransfer.Add(Constants.MsgFolderPath);
                 }
+            }
+
+            if (options.Banner)
+            {
+                actionsToDo.Add(TransferBanner(sourceServices.Get<IBannerService>(), destinationServices.Get<IBannerService>()));
             }
 
             progress.Report(new ProgressInfo(statusText:"Transferring...", maxProgress:filesToTransfer.Count+dirsToTransfer.Count+actionsToDo.Count, isIndeterminate:false));
@@ -235,6 +246,21 @@ public class PartialTransferPlugin : IPlugin
                 nameProperty.SetValue(destinationModel, destName);
             }
             destinationService.Save();
+        };
+    }
+
+    private Action TransferBanner(IBannerService source, IBannerService destination)
+    {
+        return () =>
+        {
+            File.Copy(source.ImagePath, destination.ImagePath, true);
+            destination.BannerInfo.JapaneseTitle = source.BannerInfo.JapaneseTitle;
+            destination.BannerInfo.EnglishTitle = source.BannerInfo.EnglishTitle;
+            destination.BannerInfo.FrenchTitle = source.BannerInfo.FrenchTitle;
+            destination.BannerInfo.GermanTitle = source.BannerInfo.GermanTitle;
+            destination.BannerInfo.ItalianTitle = source.BannerInfo.ItalianTitle;
+            destination.BannerInfo.SpanishTitle = source.BannerInfo.SpanishTitle;
+            destination.Save();
         };
     }
 }

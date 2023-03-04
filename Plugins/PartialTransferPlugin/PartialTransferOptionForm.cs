@@ -29,6 +29,9 @@ public class PartialTransferOptionForm : IPluginForm
     [BoolOption("Abilities", group: What)]
     public bool Ability { get; set; }
 
+    [BoolOption("Banner", group: What)]
+    public bool Banner { get; set; }
+
     [BoolOption("Base Warriors", group: What)]
     public bool BaseWarrior { get; set; }
 
@@ -46,6 +49,9 @@ public class PartialTransferOptionForm : IPluginForm
 
     [BoolOption("Gimmicks", group: What)]
     public bool Gimmicks { get; set; }
+
+    [BoolOption("Gimmick Ranges", group: What)]
+    public bool GimmickRange { get; set; }
 
     [BoolOption("Items", group: What)]
     public bool Item { get; set; }
@@ -71,13 +77,10 @@ public class PartialTransferOptionForm : IPluginForm
     [BoolOption("Scenario Appear Pokemon", group: What)]
     public bool ScenarioAppearPokemon { get; set; }
 
-    [BoolOption("Scenario Kingdoms", group: What)]
-    public bool ScenarioKingdom { get; set; }
+    [BoolOption("Scenario Buildings", group: What)]
+    public bool ScenarioBuilding { get; set; }
 
-    [BoolOption("Scenario Pokemon", group: What)]
-    public bool ScenarioPokemon { get; set; }
-
-    [BoolOption("Scenario Warriors", group: What)]
+    [BoolOption("Scenario Warriors/Pokemon/Armies", group: What)]
     public bool ScenarioWarrior { get; set; }
 
     [BoolOption("Sprites", group: What)]
