@@ -16,7 +16,7 @@ public delegate IModListItemViewModel ModListItemViewModelFactory(IModSelectionV
 
 public interface IModListItemViewModel
 {
-
+    void UpdateBanner();
 }
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
@@ -46,10 +46,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         Mod = mod;
         PluginItems = pluginLoader.LoadPlugins(out var _);
 
-        if (PathToImageSourceConverter.TryConvert(Path.Combine(mod.FolderPath, Core.Services.Constants.BannerImageFile), out var img))
-        {
-            Banner = img;
-        }
+        UpdateBanner();
 
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
@@ -62,7 +59,25 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             System.Diagnostics.Process.Start("explorer.exe", Mod.FolderPath);
         });
     }
-    public ImageSource Banner { get; }
+
+    public void UpdateBanner()
+    {
+        if (PathToImageSourceConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile), out var img))
+        {
+            Banner = img;
+        }
+        else
+        {
+            Banner = null;
+        }
+    }
+
+    private ImageSource _banner;
+    public ImageSource Banner
+    {
+        get => _banner;
+        set => RaiseAndSetIfChanged(ref _banner, value);
+    }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ModInfo Mod { get; }
     public ICommand PatchRomCommand { get; }
