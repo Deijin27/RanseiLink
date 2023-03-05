@@ -1,13 +1,10 @@
-﻿using Xunit;
-using System.IO;
+﻿using System.IO;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Enums;
 using System;
-using Moq;
 using RanseiLink.Console.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Models;
-using FluentAssertions;
 
 namespace RanseiLink.ConsoleTests.ScriptTests;
 

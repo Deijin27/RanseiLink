@@ -1,7 +1,5 @@
-﻿using FluentAssertions;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using Xunit;
 
 namespace RanseiLink.CoreTests.ModelTests;
 

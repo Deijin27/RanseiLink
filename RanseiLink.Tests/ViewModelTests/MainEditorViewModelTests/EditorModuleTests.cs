@@ -1,15 +1,10 @@
-﻿using FluentAssertions;
-using Moq;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
-using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Services;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
 using System;
 using System.Linq;
-using Xunit;
 
 namespace RanseiLink.Tests.ViewModelTests.MainEditorViewModelTests;
 

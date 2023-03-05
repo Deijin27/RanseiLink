@@ -1,12 +1,10 @@
-﻿using FluentAssertions;
-using RanseiLink.Core;
+﻿using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Graphics.ExternalFormats;
 using SixLabors.ImageSharp;
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using Xunit;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
 

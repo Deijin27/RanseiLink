@@ -2,8 +2,6 @@
 using RanseiLink.ValueConverters;
 using System.Windows.Data;
 using System.Windows.Media;
-using Xunit;
-using FluentAssertions;
 
 namespace RanseiLink.Tests.ConverterTests;
 

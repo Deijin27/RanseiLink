@@ -1,6 +1,4 @@
-﻿using Xunit;
-using FluentAssertions;
-using RanseiLink.Core.Graphics;
+﻿using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
 

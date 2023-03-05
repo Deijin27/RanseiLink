@@ -1,5 +1,4 @@
 ﻿using CliFx.Infrastructure;
-using Xunit;
 using RanseiLink.Console;
 using RanseiLink.Core.Models;
 

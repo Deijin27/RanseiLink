@@ -1,7 +1,5 @@
 ﻿using RanseiLink.Core.Models;
 using System;
-using Xunit;
-using FluentAssertions;
 
 namespace RanseiLink.CoreTests.ModelTests;
 
