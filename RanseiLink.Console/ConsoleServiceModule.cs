@@ -1,11 +1,13 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using DryIoc;
+using RanseiLink.Console.Services;
+using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using System.Reflection;
 
-namespace RanseiLink.Console.Services;
+namespace RanseiLink.Console;
 
 public class ConsoleServiceModule : IModule
 {

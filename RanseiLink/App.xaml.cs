@@ -1,7 +1,6 @@
 ﻿using DryIoc;
-using RanseiLink.Core.Services;
-using RanseiLink.PluginModule.Services;
-using RanseiLink.Services;
+using RanseiLink.Core;
+using RanseiLink.PluginModule;
 using RanseiLink.ViewModels;
 using System;
 using System.Diagnostics;

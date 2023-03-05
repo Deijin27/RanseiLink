@@ -6,16 +6,17 @@ using DryIoc;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.Dialogs;
-using RanseiLink.Core.Services.ModelServices;
 using System.Reflection;
+using RanseiLink.Services;
+using RanseiLink.Core;
 
-namespace RanseiLink.Services;
+namespace RanseiLink;
 
 public class WpfServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.RegisterInstance<IDialogLocator>(CreateDialogLocator());
+        builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);

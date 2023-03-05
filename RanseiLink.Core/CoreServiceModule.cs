@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using RanseiLink.Core.RomFs;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Services.ModelServices;
@@ -7,7 +8,7 @@ using RanseiLink.Core.Services.ModPatchBuilders;
 using RanseiLink.Core.Settings;
 using System.IO;
 
-namespace RanseiLink.Core.Services
+namespace RanseiLink.Core
 {
 
     public interface IModule

@@ -1,8 +1,9 @@
 ﻿using DryIoc;
-using RanseiLink.Core.Services;
+using RanseiLink.Core;
+using RanseiLink.PluginModule.Services;
 using RanseiLink.PluginModule.Services.Concrete;
 
-namespace RanseiLink.PluginModule.Services;
+namespace RanseiLink.PluginModule;
 
 public class PluginServiceModule : IModule
 {

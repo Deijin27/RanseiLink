@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CliFx;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Reflection;
 using DryIoc;
+using RanseiLink.Core;
 
 namespace RanseiLink.Console;
 
