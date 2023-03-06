@@ -8,6 +8,7 @@ using System.Windows.Media;
 
 namespace RanseiLink.ViewModels;
 
+[System.Diagnostics.DebuggerDisplay("SwKingdomMiniViewModel: {_kingdom}")]
 public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 {
     public new delegate SwKingdomMiniViewModel Factory();

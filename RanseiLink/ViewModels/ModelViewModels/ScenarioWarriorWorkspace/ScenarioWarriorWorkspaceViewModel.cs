@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
 using System.Collections.Generic;
@@ -167,12 +168,14 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         Items.Clear();
         UnassignedItems.Clear();
         WildItems.Clear();
-        foreach (var group in childSwService.Enumerate().Select((warrior, id) => (warrior, id)).GroupBy(x => x.warrior.Kingdom).OrderBy(x => x.Key))
+
+        foreach (var kingdom in EnumUtil.GetValues<KingdomId>())
         {
-            var kingdomItem = _kingdomItemFactory().Init(scenario, group.Key, ItemClickedCommand);
+            var group = childSwService.Enumerate().Select((warrior, id) => (warrior, id)).Where(x => x.warrior.Kingdom == kingdom);
+            var kingdomItem = _kingdomItemFactory().Init(scenario, kingdom, ItemClickedCommand);
             kingdomItem.PropertyChanged += KingdomItem_PropertyChanged;
             Items.Add(kingdomItem);
-            WildItems.Add(_simpleKingdomItemFactory().Init(group.Key));
+            WildItems.Add(_simpleKingdomItemFactory().Init(kingdom));
             foreach (var scenarioWarrior in group.OrderBy(x => x.warrior.Class))
             {
                 var item = _itemFactory().Init(scenarioWarrior.id, scenarioWarrior.warrior, scenario, this, _spVm);
