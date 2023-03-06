@@ -2,6 +2,7 @@
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Services;
 using RanseiLink.ViewModels;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.Tests.ViewModelTests;
 public class MainWindowViewModelTests
@@ -52,13 +53,14 @@ public class MainWindowViewModelTests
     {
         SelectingModShouldLoadMainEditorWithMod();
 
+        _mockModSelectionVm.Setup(x => x.ModItems).Returns(new ObservableCollection<IModListItemViewModel>());
+
         _mainWindowVm.BackButtonCommand?.Execute(null);
 
         _mockMainEditorVm.Verify(i => i.Deactivate(), Times.Once());
 
         _mainWindowVm.CurrentVm.Should().Be(_mockModSelectionVm.Object);
         _mainWindowVm.BackButtonVisible.Should().BeFalse();
-
     }
 
     [Fact]
