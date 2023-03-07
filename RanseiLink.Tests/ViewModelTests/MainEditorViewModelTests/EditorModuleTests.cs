@@ -1,9 +1,11 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Settings;
 using RanseiLink.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RanseiLink.Tests.ViewModelTests.MainEditorViewModelTests;
@@ -31,6 +33,9 @@ public class EditorModuleTests
     private readonly Mock<EditorModule> _moduleB;
     private readonly Mock<EditorModule> _moduleC;
     private readonly Mock<EditorModule> _moduleD;
+
+    private List<Mock<IServiceGetter>> _modServiceGetters = new List<Mock<IServiceGetter>>();
+
     public EditorModuleTests()
     {
         _editorModuleOrderSetting = new EditorModuleOrderSetting()
@@ -205,5 +210,22 @@ public class EditorModuleTests
         _moduleC.Verify(i => i.OnPatchingRom(), Times.Never());
         _moduleB.Verify(i => i.OnPatchingRom(), Times.Once());
         _moduleD.Verify(i => i.OnPatchingRom(), Times.Once());
+    }
+
+    [Fact]
+    public void RunPlugin()
+    {
+        _mainEditorVm.PluginPopupOpen = true;
+        _mainEditorVm.PluginPopupOpen.Should().BeTrue();
+        _modServiceGetterFactory.Verify(x => x.Create(It.IsAny<ModInfo>()), Times.Exactly(1));
+
+        var plugin = new Mock<IPlugin>();
+        _mainEditorVm.SelectedPlugin = new PluginInfo(plugin.Object, "Name", "Author", "Version");
+
+        _mainEditorVm.PluginPopupOpen.Should().BeFalse();
+        plugin.Verify(x => x.Run(It.IsAny<IPluginContext>()), Times.Once());
+        _mockModServiceGetter.Verify(x => x.Dispose(), Times.Exactly(2));
+        _modServiceGetterFactory.Verify(x => x.Create(It.IsAny<ModInfo>()), Times.Exactly(3));
+
     }
 }

@@ -95,6 +95,8 @@ namespace RanseiLink.Core
             builder.Register<IScenarioWarriorService, ScenarioWarriorService>(Reuse.Singleton);
             builder.Register<IWarriorSkillService, WarriorSkillService>(Reuse.Singleton);
 
+            builder.Register<IStrengthService, StrengthService>();
+
             builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
 
             builder.Register<IPatchBuilder, GraphicsPatchBuilder>(Reuse.Singleton);

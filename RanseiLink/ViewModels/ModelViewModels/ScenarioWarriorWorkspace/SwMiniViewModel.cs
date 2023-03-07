@@ -20,22 +20,22 @@ public class SwMiniViewModel : ViewModelBase
     private readonly IScenarioPokemonService _scenarioPokemonService;
     private readonly ICachedSpriteProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
-    private readonly IPokemonService _pokemonService;
     private readonly IKingdomService _kingdomService;
+    private readonly IStrengthService _strengthService;
     private ScenarioWarriorWorkspaceViewModel _parent;
 
     public SwMiniViewModel(
         IScenarioPokemonService scenarioPokemonService,
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider spriteProvider,
-        IPokemonService pokemonService,
-        IKingdomService kingdomService)
+        IKingdomService kingdomService,
+        IStrengthService strengthService)
     {
         _kingdomService = kingdomService;
         _scenarioPokemonService = scenarioPokemonService;
         _spriteProvider = spriteProvider;
         _baseWarriorService = baseWarriorService;
-        _pokemonService = pokemonService;
+        _strengthService = strengthService;
     }
 
     public SwMiniViewModel Init(
@@ -102,24 +102,7 @@ public class SwMiniViewModel : ViewModelBase
         }
     }
 
-    public int Strength
-    {
-        get
-        {
-            if (_model.ScenarioPokemonIsDefault(0))
-            {
-                return 0;
-            }
-            var sp = _scenarioPokemonService.Retrieve((int)_scenario).Retrieve(ScenarioPokemon);
-            int pokemonId = (int)sp.Pokemon;
-            if (!_pokemonService.ValidateId(pokemonId))
-            {
-                return 0;
-            }
-            var pokemon = _pokemonService.Retrieve(pokemonId);
-            return StrengthCalculator.CalculateStrength(pokemon, (double)LinkCalculator.CalculateLink(sp.Exp));
-        }
-    }
+    public int Strength => _strengthService.CalculateScenarioWarriorStrength(_scenario, _model);
 
     public WarriorClassId Class
     {

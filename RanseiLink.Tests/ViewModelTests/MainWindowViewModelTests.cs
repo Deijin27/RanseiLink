@@ -53,7 +53,8 @@ public class MainWindowViewModelTests
     {
         SelectingModShouldLoadMainEditorWithMod();
 
-        _mockModSelectionVm.Setup(x => x.ModItems).Returns(new ObservableCollection<IModListItemViewModel>());
+        var mockModItem = new Mock<IModListItemViewModel>();
+        _mockModSelectionVm.Setup(x => x.ModItems).Returns(new ObservableCollection<IModListItemViewModel>() { mockModItem.Object });
 
         _mainWindowVm.BackButtonCommand?.Execute(null);
 
@@ -61,6 +62,7 @@ public class MainWindowViewModelTests
 
         _mainWindowVm.CurrentVm.Should().Be(_mockModSelectionVm.Object);
         _mainWindowVm.BackButtonVisible.Should().BeFalse();
+        mockModItem.Verify(x => x.UpdateBanner(), Times.Once());
     }
 
     [Fact]

@@ -14,28 +14,25 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
     public new delegate SwKingdomMiniViewModel Factory();
 
     private int _scenario;
-    private KingdomId _kingdom;
     private ScenarioKingdom _scenarioKingdom;
 
     private readonly IScenarioKingdomService _scenarioKingdomService;
     private readonly IScenarioWarriorService _scenarioWarriorService;
-    private readonly IScenarioPokemonService _scenarioPokemonService;
     private readonly IBaseWarriorService _baseWarriorService;
-    private readonly IPokemonService _pokemonService;
-    
+    private readonly IStrengthService _strengthService;
+
+
     public SwKingdomMiniViewModel(
         IScenarioKingdomService scenarioKingdomService,
         IBaseWarriorService baseWarriorService,
         IScenarioWarriorService scenarioWarriorService,
-        IScenarioPokemonService scenarioPokemonService,
-        ICachedSpriteProvider spriteProvider, 
-        IPokemonService pokemonService) : base(spriteProvider)
+        ICachedSpriteProvider spriteProvider,
+        IStrengthService strengthService) : base(spriteProvider)
     {
         _scenarioKingdomService = scenarioKingdomService;
         _baseWarriorService = baseWarriorService;
         _scenarioWarriorService = scenarioWarriorService;
-        _scenarioPokemonService = scenarioPokemonService;
-        _pokemonService = pokemonService;
+        _strengthService = strengthService;
     }
 
     public ICommand SelectCommand { get; private set; }
@@ -44,7 +41,6 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
     {
         base.Init(kingdom);
         SelectCommand = itemClickedCommand;
-        _kingdom = kingdom;
         _scenario = (int)scenario;
 
         _scenarioKingdom = _scenarioKingdomService.Retrieve((int)scenario);
@@ -81,28 +77,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         RaisePropertyChanged(nameof(WarriorImage));
     }
 
-    public int Strength
-    {
-        get
-        {
-            int strength = 0;
-            foreach (var warrior in _scenarioWarriorService.Retrieve(_scenario).Enumerate())
-            {
-                if (warrior.Kingdom == _kingdom 
-                    && warrior.Army == Army 
-                    && (warrior.Class == WarriorClassId.ArmyLeader || warrior.Class == WarriorClassId.ArmyMember)
-                    )
-                {
-                    if (warrior.ScenarioPokemonIsDefault(0))
-                    {
-                        continue;
-                    }
-                    strength += CalculateStrength(warrior.GetScenarioPokemon(0));
-                }
-            }
-            return strength;
-        }
-    }
+    public int Strength => _strengthService.CalculateScenarioKingdomStrength((ScenarioId)_scenario, Kingdom, Army);
 
     public void UpdateStrength()
     {
@@ -114,26 +89,14 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         UpdateWarriorImage();
     }
 
-    private int CalculateStrength(int ScenarioPokemon)
-    {
-        var sp = _scenarioPokemonService.Retrieve(_scenario).Retrieve(ScenarioPokemon);
-        int pokemonId = (int)sp.Pokemon;
-        if (!_pokemonService.ValidateId(pokemonId))
-        {
-            return 0;
-        }
-        var pokemon = _pokemonService.Retrieve(pokemonId);
-        return StrengthCalculator.CalculateStrength(pokemon, (double)LinkCalculator.CalculateLink(sp.Exp));
-    }
-
     public override int Army
     {
-        get => _kingdom == KingdomId.Default ? -1 : _scenarioKingdom.GetArmy(_kingdom);
+        get => Kingdom == KingdomId.Default ? -1 : _scenarioKingdom.GetArmy(Kingdom);
         set 
         {
-            if (_kingdom != KingdomId.Default)
+            if (Kingdom != KingdomId.Default)
             {
-                RaiseAndSetIfChanged(Army, value, v => _scenarioKingdom.SetArmy(_kingdom, v));
+                RaiseAndSetIfChanged(Army, value, v => _scenarioKingdom.SetArmy(Kingdom, v));
             }
         }
     }
