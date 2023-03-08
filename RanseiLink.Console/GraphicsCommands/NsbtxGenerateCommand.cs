@@ -4,6 +4,7 @@ using CliFx.Infrastructure;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Services;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -41,8 +42,13 @@ public class NsbtxGenerateCommand : ICommand
         foreach ( var file in files)
         {
             var res = ModelExtractorGenerator.LoadTextureFromImage(file, TransparencyFormat, OpacityFormat, SemiTransparencyFormat);
-            tex0.Textures.Add(res.Texture);
-            tex0.Palettes.Add(res.Palette);
+            if (res.IsFailed)
+            {
+                console.Output.WriteLine("Failed to load texture from image: {0}", res);
+                return default;
+            }
+            tex0.Textures.Add(res.Value.Texture);
+            tex0.Palettes.Add(res.Value.Palette);
         }
         var btx0 = new NSBTX { Texture = tex0 };
         btx0.WriteTo(DestinationFile);

@@ -55,9 +55,9 @@ public class NsbmdGenerateCommand : ICommand
 
         var result = ModelExtractorGenerator.GenerateModel(settings);
 
-        if (result.Success == false)
+        if (result.IsSuccess == false)
         {
-            console.Output.WriteLine($"Generation Failed: {result.FailureReason}");
+            console.Output.WriteLine($"Generation Failed: {result}");
         }
         else
         {

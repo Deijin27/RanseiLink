@@ -123,7 +123,7 @@ public class MapManager : IMapManager
             };
 
             var result = ModelExtractorGenerator.GenerateModel(settings);
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 PAC.Pack(tempFolder, tempPac);
                 _overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), tempPac);
@@ -131,7 +131,7 @@ public class MapManager : IMapManager
             }
             else
             {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error importing map", $"{result.FailureReason}", MessageBoxType.Error));
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error importing map", result.ToString(), MessageBoxType.Error));
             }
         }
         catch (Exception ex)
@@ -167,9 +167,9 @@ public class MapManager : IMapManager
         try
         {
             var result = ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, exportFolder);
-            if (!result.Success)
+            if (result.IsFailed)
             {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error exporting map as obj", $"{result.FailureReason}", MessageBoxType.Error));
+                _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error exporting map as obj", result.ToString(), MessageBoxType.Error));
                 return false;
             }
         }
