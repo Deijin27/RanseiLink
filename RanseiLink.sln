@@ -33,7 +33,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B705FFD9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.CoreTests", "RanseiLink.CoreTests\RanseiLink.CoreTests.csproj", "{777843B1-4E57-4709-9479-9BA3311F98F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisableEventsPlugin", "Plugins\DisableEventsPlugin\DisableEventsPlugin.csproj", "{D8F12761-7B5D-4800-A4C3-A08863547B2B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisableEventsPlugin", "Plugins\DisableEventsPlugin\DisableEventsPlugin.csproj", "{D8F12761-7B5D-4800-A4C3-A08863547B2B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29910CB7-F216-44CB-AB5E-F0C83E8875AA}"
+	ProjectSection(SolutionItems) = preProject
+		DEPENDENCIES.md = DEPENDENCIES.md
+		gather_console_publish.ps1 = gather_console_publish.ps1
+		gather_gui_publish.ps1 = gather_gui_publish.ps1
+		gather_plugin_debug.ps1 = gather_plugin_debug.ps1
+		gather_plugin_publish.ps1 = gather_plugin_publish.ps1
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
