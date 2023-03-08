@@ -1,18 +1,12 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Graphics.Conquest;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows.Input;
-using System.Xml.Linq;
 
 namespace RanseiLink.ViewModels;
 
@@ -25,11 +19,20 @@ public class PokemonViewModel : ViewModelBase
     private readonly IItemService _itemService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
+    private readonly IPokemonAnimationService _animationService;
     private PokemonId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
-    public PokemonViewModel(IJumpService jumpService, IIdToNameService idToNameService, IKingdomService kingdomService, IItemService itemService, 
-        IOverrideDataProvider spriteProvider, SpriteItemViewModel.Factory spriteItemVmFactory, IDialogService dialogService)
+    public PokemonViewModel(
+        IJumpService jumpService, 
+        IIdToNameService idToNameService, 
+        IKingdomService kingdomService, 
+        IItemService itemService, 
+        IOverrideDataProvider spriteProvider, 
+        SpriteItemViewModel.Factory spriteItemVmFactory, 
+        IDialogService dialogService, 
+        IPokemonAnimationService animationService)
     {
+        _animationService = animationService;
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
@@ -371,7 +374,7 @@ public class PokemonViewModel : ViewModelBase
 
     private void ImportAnimation()
     {
-        var result = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        var file = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
         {
             Title = "Select the raw pattern animation library file",
             Filters = new List<FileDialogFilter>
@@ -384,126 +387,18 @@ public class PokemonViewModel : ViewModelBase
             }
         });
 
-        if (string.IsNullOrEmpty(result))
+        if (string.IsNullOrEmpty(file))
         {
             return;
         }
-
-        var temp1 = Path.GetTempFileName();
-        var temp2 = Path.GetTempFileName();
-        try
+        var result = _animationService.ImportAnimation(_id, file);
+        if (result.IsFailed)
         {
-            NSPAT nspat;
-            NSPAT nspatRaw;
-
-            var doc = XDocument.Load(result);
-            if (doc.Root.Name != PatternGroupElementName)
-            {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                    "File invalid",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {PatternGroupElementName})",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-            var nonRawEl = doc.Root.Element(NSPAT.RootElementName);
-            if (nonRawEl == null)
-            {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                    "File invalid",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT.RootElementName})",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-            var rawEl = doc.Root.Element(NSPAT_RAW.RootElementName);
-            if (nonRawEl == null)
-            {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                    "File invalid",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT_RAW.RootElementName})",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-            nspat = NSPAT.Deserialize(nonRawEl);
-            if (nspat == null)
-            {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                    "File invalid",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT.RootElementName}",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-            nspatRaw = NSPAT.Deserialize(rawEl);
-            if (nspatRaw == null)
-            {
-                _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
-                    "File invalid",
-                    $"Failed to load the document because it doesn't match what is expected for a pattern animation (failed to deserialize element: {NSPAT_RAW.RootElementName}",
-                    MessageBoxType.Warning
-                    ));
-                return;
-            }
-
-            // raw
-            NSPAT_RAW.WriteTo(nspat, temp1);
-            var nspatRawFile = ResolveRelativeAnimPath(true);
-            _spriteProvider.SetOverride(nspatRawFile, temp1);
-
-            // non raw
-            // need to make sure the natdex number is correct
-            foreach (var anim in nspat.PatternAnimations)
-            {
-                var name = anim.Name;
-                var end = name.Substring(name.Length - 5);
-                var num = NationalPokedexNumber.ToString().PadLeft(3, '0');
-                anim.Name = $"POKEMON{num}{end}";
-            }
-            new NSBTP { PatternAnimations = nspat }.WriteTo(temp2);
-            var nsbtpFile = ResolveRelativeAnimPath(false);
-            _spriteProvider.SetOverride(nsbtpFile, temp2);
-
-            AsymmetricBattleSprite = bool.TryParse(doc.Root.Attribute(AsymmetricalAttributeName)?.Value, out var asv) && asv;
-            LongAttackAnimation = bool.TryParse(doc.Root.Attribute(LongAttackAttributeName)?.Value, out var lav) && lav;
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
+            return;
         }
-        catch (Exception ex)
-        {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to import file due to error", ex.ToString(), MessageBoxType.Warning));
-        }
-        finally
-        {
-            File.Delete(temp1);
-            File.Delete(temp2);
-            // update ui
-            RaisePropertyChanged(nameof(IsAnimationOverwritten));
-        }
-
-        return;
-
-    }
-
-    public bool IsAnimationOverwritten => _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false)).IsOverride || _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true)).IsOverride;
- 
-    private void RevertAnimation()
-    {
-        string nonRawFile = ResolveRelativeAnimPath(false);
-        _spriteProvider.ClearOverride(nonRawFile);
-
-        var rawFile = ResolveRelativeAnimPath(true);
-        _spriteProvider.ClearOverride(rawFile);
 
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
-    }
-
-    private string ResolveRelativeAnimPath(bool raw)
-    {
-        var info = (PkmdlConstants)GraphicsInfoResource.Get(SpriteType.ModelPokemon);
-        var pacLinkRelative = info.PACLinkFolder;
-        string fileName = ((int)_id).ToString().PadLeft(4, '0');
-        string pacUnpackedFolder = Path.Combine(pacLinkRelative, fileName + "-Unpacked");
-        return Path.Combine(pacUnpackedFolder, raw ? "0002" : "0001");
     }
 
     private void ExportAnimations()
@@ -517,7 +412,7 @@ public class PokemonViewModel : ViewModelBase
         {
             Title = "Export animation file",
             DefaultExtension = ".xml",
-            InitialFileName = $"{(int)_id}_{Name}_NSPAT.xml",
+            InitialFileName = $"{(int)_id}_{_model.Name}_NSPAT.xml",
             Filters = new()
             {
                 new()
@@ -533,23 +428,18 @@ public class PokemonViewModel : ViewModelBase
             return;
         }
 
-        dest = FileUtil.MakeUniquePath(dest);
-        var file = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(false));
-        var rawfile = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(true));
-
-        var nsbtp = new NSBTP(file.File);
-        var nspat = NSPAT_RAW.Load(rawfile.File);
-        var doc = new XDocument(new XElement(PatternGroupElementName,
-            new XAttribute(LongAttackAttributeName, LongAttackAnimation),
-            new XAttribute(AsymmetricalAttributeName, AsymmetricBattleSprite),
-            nsbtp.PatternAnimations.Serialize(),
-            nspat.SerializeRaw()
-            ));
-        doc.Save(dest);
+        var result = _animationService.ExportAnimations(_id, dest);
+        if (result.IsFailed)
+        {
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
+        }
     }
 
-    private const string LongAttackAttributeName = "long_attack";
-    private const string AsymmetricalAttributeName = "asymmetrical";
-    private const string PatternGroupElementName = "library_collection";
-}
+    private void RevertAnimation()
+    {
+        _animationService.RevertAnimation(_id);
+        RaisePropertyChanged(nameof(IsAnimationOverwritten));
+    }
 
+    public bool IsAnimationOverwritten => _animationService.IsAnimationOverwritten(_id);
+}

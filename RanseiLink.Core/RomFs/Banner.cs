@@ -199,7 +199,7 @@ namespace RanseiLink.Core.RomFs
 
         public static void SaveImageToPng(this Banner banner, string file)
         {
-            var imageInfo = new ImageInfo(
+            var imageInfo = new SpriteImageInfo(
                 pixels: banner.ImagePixels,
                 palette: RawPalette.To32bitColors(banner.ImagePalette),
                 width: 32,

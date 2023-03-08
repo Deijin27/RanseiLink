@@ -237,7 +237,7 @@ namespace RanseiLink.Core.Graphics
                 file: saveFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                new ImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
+                new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
                 debug: debug,
                 tiled: tiled
                 );

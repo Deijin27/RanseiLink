@@ -95,7 +95,8 @@ namespace RanseiLink.Core
             builder.Register<IScenarioWarriorService, ScenarioWarriorService>(Reuse.Singleton);
             builder.Register<IWarriorSkillService, WarriorSkillService>(Reuse.Singleton);
 
-            builder.Register<IStrengthService, StrengthService>();
+            builder.Register<IStrengthService, StrengthService>(Reuse.Singleton);
+            builder.Register<IPokemonAnimationService, PokemonAnimationService>(Reuse.Singleton);
 
             builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
 

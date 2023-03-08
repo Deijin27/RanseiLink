@@ -190,7 +190,7 @@ namespace RanseiLink.Core.Graphics
         {
             ImageUtil.SaveAsPng(
                 file: saveFile,
-                new ImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
+                new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
                 tiled: tiled
                 );
         }

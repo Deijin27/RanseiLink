@@ -74,7 +74,7 @@ public class NsbtxExtractCommand : ICommand
                 convPal[0] = SixLabors.ImageSharp.Color.Transparent;
             }
             ImageUtil.SaveAsPng(Path.Combine(DestinationFolder, tex.Name + ".png"), 
-                new ImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
+                new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
                 tiled: false,
                 format: tex.Format);
         }

@@ -2,6 +2,7 @@
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
+//using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.IO;
@@ -62,19 +63,19 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
 
                 // generate images
                 var texImg = ImageUtil.ToImage(
-                    new ImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
+                    new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
                     PointUtil.GetPoint
                     );
 
                 byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
                 var atxImg = ImageUtil.ToImage(
-                    new ImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth),
+                    new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth),
                     PointUtil.GetPoint
                     );
 
                 byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
                 var dtxImg = ImageUtil.ToImage(
-                    new ImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth),
+                    new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth),
                     PointUtil.GetPoint
                     );
 
@@ -84,7 +85,7 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
                 PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
                 byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
                 var pacImg = ImageUtil.ToImage(
-                    new ImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth),
+                    new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth),
                     PointUtil.GetPoint
                     );
 

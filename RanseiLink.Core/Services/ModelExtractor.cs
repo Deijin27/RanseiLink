@@ -104,10 +104,10 @@ namespace RanseiLink.Core.Services
             var convPal = RawPalette.To32bitColors(pal.PaletteData);
             if (tex.Color0Transparent)
             {
-                convPal[0] = SixLabors.ImageSharp.Color.Transparent;
+                convPal[0] = Color.Transparent;
             }
             ImageUtil.SaveAsPng(Path.Combine(destinationFolder, texFileNameWithExt),
-                new ImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
+                new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
                 tiled: false,
                 format: tex.Format);
         }
@@ -241,7 +241,7 @@ namespace RanseiLink.Core.Services
             }
             image.Dispose();
 
-            var imgInfo = new ImageInfo(pixels, palette.ToArray(), width, height);
+            var imgInfo = new SpriteImageInfo(pixels, palette.ToArray(), width, height);
 
             string texName = Path.GetFileNameWithoutExtension(file);
             if (texName.Length > 13) // 14 to allow the palette to add the _pl

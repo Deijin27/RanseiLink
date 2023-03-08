@@ -61,7 +61,7 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
                 file: pngFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                imageInfo: new ImageInfo(
+                imageInfo: new SpriteImageInfo(
                     pixels: ncgr.Pixels.Data, 
                     palette: RawPalette.To32bitColors(nclr.Palettes.Palette), 
                     width: width,
@@ -88,7 +88,7 @@ namespace RanseiLink.Core.Services.DefaultPopulaters
 
             ImageUtil.SaveAsPng(
                 file: pngFile,
-                imageInfo: new ImageInfo(
+                imageInfo: new SpriteImageInfo(
                     pixels: ncgr.Pixels.Data,
                     palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
                     width: ncgr.Pixels.TilesPerRow * 8,

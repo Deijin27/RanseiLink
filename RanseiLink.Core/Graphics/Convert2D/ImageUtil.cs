@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace RanseiLink.Core.Graphics
 {
-    public class ImageInfo
+    public class SpriteImageInfo
     {
-        public ImageInfo(byte[] pixels, Rgba32[] palette, int width, int height)
+        public SpriteImageInfo(byte[] pixels, Rgba32[] palette, int width, int height)
         {
             Pixels = pixels;
             Palette = palette;
@@ -32,7 +32,7 @@ namespace RanseiLink.Core.Graphics
 
     public static class ImageUtil
     {
-        public static void SaveAsPng(string file, ImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
+        public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
         {
             using (var img = ToImage(imageInfo, tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint), format))
             {
@@ -40,7 +40,7 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        public static Image<Rgba32> ToImage(ImageInfo imageInfo, PointGetter pointGetter, TexFormat format = TexFormat.Pltt16)
+        public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, PointGetter pointGetter, TexFormat format = TexFormat.Pltt16)
         {
             var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
@@ -110,7 +110,7 @@ namespace RanseiLink.Core.Graphics
             return img;
         }
 
-        public static ImageInfo LoadPng(string file, bool tiled = false, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
+        public static SpriteImageInfo LoadPng(string file, bool tiled = false, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
         {
             Image<Rgba32> image;
             try
@@ -141,7 +141,7 @@ namespace RanseiLink.Core.Graphics
             }
             image.Dispose();
 
-            return new ImageInfo(pixels, palette.ToArray(), width, height);
+            return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
         }
 
         public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
@@ -259,7 +259,7 @@ namespace RanseiLink.Core.Graphics
             return pixels;
         }
 
-        public static void SaveAsPng(string file, Cell[] bank, uint blockSize, ImageInfo imageInfo, bool tiled = false, bool debug = false)
+        public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false)
         {
             int minY = bank.Min(i => i.YOffset);
             int yShift = minY < 0 ? -minY : 0;
@@ -297,7 +297,7 @@ namespace RanseiLink.Core.Graphics
                     var startByte = tileOffset * 0x20 + bankDataOffset;
                     byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
 
-                    using (var cellImg = ToImage(new ImageInfo(cellPixels, palette32, cell.Width, cell.Height), pointGetter))
+                    using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), pointGetter))
                     {
                         cellImg.Mutate(g =>
                         {
@@ -334,7 +334,7 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        public static ImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled = false)
+        public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled = false)
         {
             IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
 
@@ -399,7 +399,7 @@ namespace RanseiLink.Core.Graphics
 
             image.Dispose();
 
-            return new ImageInfo(pixelArray, palette32.ToArray(), width, height);
+            return new SpriteImageInfo(pixelArray, palette32.ToArray(), width, height);
         }
     }
 }
