@@ -14,7 +14,7 @@ See the [Wiki](https://github.com/Deijin27/RanseiLink/wiki) for documentation, t
 
 [Installation Guide](https://github.com/Deijin27/RanseiLink/wiki/RanseiLink-Installation-Guide)
 
-![](https://i.imgur.com/ZHQ6yyN.png)
+![Screenshot 2023-03-09 211557](https://user-images.githubusercontent.com/40903783/224161794-a331991d-6d62-4e62-adc0-421b2d43dc3e.png)
 
 How to use:
 
