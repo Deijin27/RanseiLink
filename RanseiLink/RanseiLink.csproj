@@ -8,7 +8,7 @@
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
     <VersionPrefix>5.4</VersionPrefix>
-	<VersionSuffix>beta2</VersionSuffix>
+	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
