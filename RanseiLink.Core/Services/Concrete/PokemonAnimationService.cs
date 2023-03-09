@@ -33,17 +33,19 @@ namespace RanseiLink.Core.Services.Concrete
                 NSPAT nspatRaw;
 
                 var doc = XDocument.Load(result);
-                if (doc.Root.Name != PatternGroupElementName)
+
+                var root = doc.Element(PatternGroupElementName);
+                if (root == null)
                 {
-                    return Result.Fail($"Failed to load the document because it doesn't match what is expected for a pattern animation (found: {doc.Root.Name}, expected: {PatternGroupElementName})");
+                    return Result.Fail($"Failed to load the document because it doesn't match what is expected for a pattern animation (expected root element: {PatternGroupElementName})");
                 }
-                var nonRawEl = doc.Root.Element(NSPAT.RootElementName);
+                var nonRawEl = root.Element(NSPAT.RootElementName);
                 if (nonRawEl == null)
                 {
                     return Result.Fail($"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT.RootElementName})");
                 }
-                var rawEl = doc.Root.Element(NSPAT_RAW.RootElementName);
-                if (nonRawEl == null)
+                var rawEl = root.Element(NSPAT_RAW.RootElementName);
+                if (rawEl == null)
                 {
                     return Result.Fail($"Failed to load the document because it doesn't match what is expected for a pattern animation (element not found: {NSPAT_RAW.RootElementName})");
                 }
@@ -77,8 +79,8 @@ namespace RanseiLink.Core.Services.Concrete
                 var nsbtpFile = ResolveRelativeAnimPath(id, false);
                 _spriteProvider.SetOverride(nsbtpFile, temp2);
 
-                pokemon.AsymmetricBattleSprite = bool.TryParse(doc.Root.Attribute(AsymmetricalAttributeName)?.Value, out var asv) && asv;
-                pokemon.LongAttackAnimation = bool.TryParse(doc.Root.Attribute(LongAttackAttributeName)?.Value, out var lav) && lav;
+                pokemon.AsymmetricBattleSprite = bool.TryParse(root.Attribute(AsymmetricalAttributeName)?.Value, out var asv) && asv;
+                pokemon.LongAttackAnimation = bool.TryParse(root.Attribute(LongAttackAttributeName)?.Value, out var lav) && lav;
             }
             catch (Exception ex)
             {

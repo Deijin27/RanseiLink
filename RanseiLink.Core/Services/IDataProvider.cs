@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿using FluentResults;
+using RanseiLink.Core.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -58,22 +59,10 @@ namespace RanseiLink.Core.Services
         }
     }
 
-    public class PopulateResult
-    {
-        public PopulateResult(bool success, string failureReason)
-        {
-            Success = success;
-            FailureReason = failureReason;
-        }
-
-        public bool Success { get; }
-        public string FailureReason { get; }
-    }
-
     public interface IFallbackDataProvider
     {
         bool IsDefaultsPopulated(ConquestGameCode gc);
-        PopulateResult Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
+        Result Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
         List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type);
         SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id);
         DataFile GetDataFile(ConquestGameCode gc, string pathInRom);

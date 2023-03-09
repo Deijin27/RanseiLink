@@ -40,9 +40,9 @@ public class CommitModCommand : ICommand
         }
 
         var canPatch = _modPatcher.CanPatch(currentMod, Path, patchOpt);
-        if (!canPatch.CanPatch)
+        if (canPatch.IsFailed)
         {
-            console.Output.WriteLine(canPatch.ReasonCannotPatch);
+            console.Output.WriteLine(canPatch.ToString());
             return default;
         }
 

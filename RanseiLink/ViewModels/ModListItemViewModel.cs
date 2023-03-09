@@ -100,9 +100,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         }
 
         var canPatch = _modPatcher.CanPatch(mod, vm.File, vm.PatchOpt);
-        if (!canPatch.CanPatch)
+        if (canPatch.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ReasonCannotPatch));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ToString()));
             return;
         }
 

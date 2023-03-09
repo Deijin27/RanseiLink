@@ -1,4 +1,5 @@
 ﻿//#define PATCHER_BUG_FIXING
+using FluentResults;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services.ModPatchBuilders;
@@ -24,11 +25,11 @@ namespace RanseiLink.Core.Services.Concrete
             _modServiceGetterFactory = modServiceGetterFactory;
         }
 
-        public CanPatchResult CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions)
+        public Result CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions)
         {
             if (!File.Exists(romPath))
             {
-                return new CanPatchResult(false, CannotPatchCategory.RomFileDoesntExist, $"Rom file '{romPath}' does not exist.");
+                return Result.Fail($"Rom file '{romPath}' does not exist.");
             }
 
             using (var br = new BinaryReader(File.OpenRead(romPath)))
@@ -36,11 +37,11 @@ namespace RanseiLink.Core.Services.Concrete
                 var header = new NdsHeader(br);
                 if (!Enum.TryParse(header.GameCode, out ConquestGameCode romGameCode))
                 {
-                    return new CanPatchResult(false, CannotPatchCategory.RomGameCodeNotValid, $"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
+                    return Result.Fail($"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
                 }
                 if (!modInfo.GameCode.IsCompatibleWith(romGameCode))
                 {
-                    return new CanPatchResult(false, CannotPatchCategory.ModGameCodeNotCompatibleWithRom, $"Game code of mod '{modInfo.GameCode}' is not compatible with game code of rom '{romGameCode}'");
+                    return Result.Fail($"Game code of mod '{modInfo.GameCode}' is not compatible with game code of rom '{romGameCode}'");
                 }
             }
 
@@ -48,11 +49,11 @@ namespace RanseiLink.Core.Services.Concrete
             {
                 if (!_fallbackSpriteProvider.IsDefaultsPopulated(modInfo.GameCode))
                 {
-                    return new CanPatchResult(false, CannotPatchCategory.GraphicsDefaultsNotPopulated, "Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
+                    return Result.Fail("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
                 }
             }
 
-            return new CanPatchResult(true);
+            return Result.Ok();
         }
 
         public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo> progress = null)

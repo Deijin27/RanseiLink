@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using FluentResults;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
@@ -171,7 +172,7 @@ public class EditorModuleTests
         _settingService.Setup(i => i.Get<RecentCommitRomSetting>()).Returns(new RecentCommitRomSetting());
         _settingService.Setup(i => i.Get<PatchSpritesSetting>()).Returns(new PatchSpritesSetting());
         _dialogService.Setup(i => i.ShowDialog(It.IsAny<ModCommitViewModel>())).Callback((object vm) => ((ModCommitViewModel)vm).OnClosing(true));
-        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), It.IsAny<string>(), It.IsAny<PatchOptions>())).Returns(new CanPatchResult(true));
+        _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), It.IsAny<string>(), It.IsAny<PatchOptions>())).Returns(Result.Ok());
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
             .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));

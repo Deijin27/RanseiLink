@@ -24,13 +24,13 @@ public class PopulateGraphicsDefaultsCommand : ICommand
 
         var result = _fallbackSpriteProvider.Populate(Path);
 
-        if (result.Success)
+        if (result.IsSuccess)
         {
             console.Output.WriteLine("Done!");
         }
         else
         {
-            console.Output.WriteLine($"Population Failed: {result.FailureReason}");
+            console.Output.WriteLine($"Population Failed: {result}");
         }
         
         return default;

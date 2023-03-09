@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿using FluentResults;
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
@@ -29,7 +30,7 @@ public class FallbackSpriteManager : IFallbackSpriteManager
             return;
         }
         Exception error = null;
-        PopulateResult result = null;
+        Result result = null;
         _dialogService.ProgressDialog(progress =>
         {
             try
@@ -50,11 +51,11 @@ public class FallbackSpriteManager : IFallbackSpriteManager
                 type: MessageBoxType.Error
                 ));
         }
-        else if (!result.Success)
+        else if (!result.IsSuccess)
         {
             _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Failed to Populate Default Sprites",
-                message: result.FailureReason,
+                message: result.ToString(),
                 type: MessageBoxType.Error
                 ));
         }

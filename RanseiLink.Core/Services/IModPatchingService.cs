@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentResults;
+using System;
 
 namespace RanseiLink.Core.Services
 {
@@ -23,39 +24,9 @@ namespace RanseiLink.Core.Services
         }
     }
 
-    public enum CannotPatchCategory
-    {
-        RomFileDoesntExist,
-        GraphicsDefaultsNotPopulated,
-        ModGameCodeNotCompatibleWithRom,
-        RomGameCodeNotValid,
-
-        Default = -1
-    }
-
-    public class CanPatchResult
-    {
-        public CanPatchResult(bool canPatch, CannotPatchCategory cannotPatchCategory, string reasonCannotPatch)
-        {
-            CanPatch = canPatch;
-            CannotPatchCategory = cannotPatchCategory;
-            ReasonCannotPatch = reasonCannotPatch;
-        }
-
-        public CanPatchResult(bool canPatch)
-        {
-            CanPatch = canPatch;
-        }
-
-        public bool CanPatch { get; }
-        public CannotPatchCategory CannotPatchCategory { get; }
-        public string ReasonCannotPatch { get; }
-
-    }
-
     public interface IModPatchingService
     {
-        CanPatchResult CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions);
+        Result CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions);
         void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo> progress = null);
     }
 }

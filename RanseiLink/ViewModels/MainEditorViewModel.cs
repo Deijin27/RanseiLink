@@ -271,9 +271,9 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         }
 
         var canPatch = _modPatcher.CanPatch(Mod, vm.File, vm.PatchOpt);
-        if (!canPatch.CanPatch)
+        if (canPatch.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ReasonCannotPatch));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ToString()));
             return;
         }
 
