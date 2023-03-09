@@ -10,7 +10,7 @@
         AllowsTransparency="True"
         mc:Ignorable="d"
         Height="400" Width="600" Background="Transparent">
-    <Border x:Name="DialogWindowBorder" BorderThickness="1" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}" Padding="5">
+    <Border x:Name="DialogWindowBorder" BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}" Padding="5">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
