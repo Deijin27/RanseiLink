@@ -190,10 +190,16 @@ public class PokemonViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
     }
 
-    public int UnknownValue2
+    public int BattleIntroSpriteOffset
     {
-        get => _model.UnknownValue2;
-        set => RaiseAndSetIfChanged(_model.UnknownValue2, value, v => _model.UnknownValue2 = v);
+        get => _model.BattleIntroSpriteOffset;
+        set => RaiseAndSetIfChanged(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
+    }
+
+    public int Weight
+    {
+        get => _model.Weight;
+        set => RaiseAndSetIfChanged(_model.Weight, value, v => _model.Weight = v);
     }
 
     public bool AsymmetricBattleSprite

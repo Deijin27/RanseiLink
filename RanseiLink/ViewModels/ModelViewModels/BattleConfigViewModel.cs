@@ -40,6 +40,24 @@ public class BattleConfigViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.MapId, value, v => _model.MapId = value);
     }
 
+    public int Minimap
+    {
+        get => _model.Minimap;
+        set => RaiseAndSetIfChanged(_model.Minimap, value, v => _model.Minimap = value);
+    }
+
+    public int MinimapVariant
+    {
+        get => _model.MinimapVariant;
+        set => RaiseAndSetIfChanged(_model.MinimapVariant, value, v => _model.MinimapVariant = value);
+    }
+
+    public int Unknown
+    {
+        get => _model.Unknown;
+        set => RaiseAndSetIfChanged(_model.Unknown, value, v => _model.Unknown = v);
+    }
+
     public int NumberOfTurns
     {
         get => _model.NumberOfTurns;

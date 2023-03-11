@@ -23,12 +23,7 @@ namespace RanseiLink.Core.Models
 
         public static int GetMask(int bitCount)
         {
-            int mask = 0;
-            for (int i = 0; i < bitCount; i++)
-            {
-                mask = (mask << 1) | 1;
-            }
-            return mask;
+            return ~(-1 << bitCount);
         }
 
         public byte GetByte(int offset) => Data[offset];

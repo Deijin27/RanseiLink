@@ -171,7 +171,15 @@
                 </StackPanel>
             </GroupBox>
 
-            
+            <TextBlock Grid.Row="12">Minimap</TextBlock>
+            <controls:NumberBox Value="{Binding Minimap}" Grid.Row="12" Grid.Column="1"/>
+
+            <TextBlock Grid.Row="13">Minimap Variant</TextBlock>
+            <controls:NumberBox Value="{Binding MinimapVariant}" Grid.Row="13" Grid.Column="1"/>
+
+            <TextBlock Grid.Row="14">Unknown</TextBlock>
+            <controls:NumberBox Value="{Binding Unknown}" Grid.Row="14" Grid.Column="1"/>
+
         </Grid>
     </WrapPanel>
 </UserControl>

@@ -153,8 +153,11 @@
             <TextBlock Text="Unknown Anim. Val." Grid.Row="24" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="24" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
 
-            <TextBlock Text="Unknown Value 2" Grid.Row="25" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="25" Grid.Column="1" Value="{Binding UnknownValue2}"/>
+            <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="25" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="25" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}"/>
+
+            <TextBlock Text="Unknown ?Weight?" Grid.Row="26" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="26" Grid.Column="1" Value="{Binding Weight}"/>
 
         </Grid>
 

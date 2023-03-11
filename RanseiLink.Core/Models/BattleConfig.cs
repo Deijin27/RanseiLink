@@ -32,6 +32,24 @@ namespace RanseiLink.Core.Models
             }
         }
 
+        public int Minimap
+        {
+            get => GetInt(2, 13, 5);
+            set => SetInt(2, 13, 5, value);
+        }
+
+        public int MinimapVariant
+        {
+            get => GetInt(2, 10, 3);
+            set => SetInt(2, 10, 3, value);
+        }
+
+        public int Unknown
+        {
+            get => GetInt(2, 18, 6);
+            set => SetInt(2, 18, 6, value);
+        }
+
         public Rgb15 UpperAtmosphereColor
         {
             get => Rgb15.From((ushort)GetInt(0, 11, 15));

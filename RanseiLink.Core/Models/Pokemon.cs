@@ -168,10 +168,16 @@ namespace RanseiLink.Core.Models
             set => SetInt(3, 18, 4, value);
         }
 
-        public int UnknownValue2
+        public int BattleIntroSpriteOffset
         {
-            get => GetInt(3, 23, 6);
-            set => SetInt(3, 23, 6, value);
+            get => GetInt(3, 23, 3);
+            set => SetInt(3, 23, 3, value);
+        }
+
+        public int Weight
+        {
+            get => GetInt(3, 26, 3);
+            set => SetInt(3, 26, 3, value);
         }
 
         public bool GetEncounterable(KingdomId kingdom, bool requiresLevel2)
