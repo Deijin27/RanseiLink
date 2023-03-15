@@ -327,8 +327,8 @@ public class MapViewModel : ViewModelBase
         {
             return;
         }
-        ushort height = vm.Height;
-        ushort width = vm.Width;
+        ushort height = (ushort)vm.Height;
+        ushort width = (ushort)vm.Width;
         var matrix = Map.TerrainSection.MapMatrix;
         // modify column size
         while (matrix.Count > height)

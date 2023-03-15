@@ -2,7 +2,7 @@
 
 namespace RanseiLink.ViewModels;
 
-public class ModifyMapDimensionsViewModel : IModalDialogViewModel<bool>
+public class ModifyMapDimensionsViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     public ModifyMapDimensionsViewModel(ushort width, ushort height)
     {
@@ -10,8 +10,18 @@ public class ModifyMapDimensionsViewModel : IModalDialogViewModel<bool>
         Height = height;
     }
 
-    public ushort Width { get; }
-    public ushort Height { get; }
+    private int _width;
+    private int _height;
+    public int Width
+    {
+        get => _width;
+        set => RaiseAndSetIfChanged(ref _width, value);
+    }
+    public int Height
+    {
+        get => _height;
+        set => RaiseAndSetIfChanged(ref _height, value);
+    }
 
     public bool Result { get; private set; }
     public void OnClosing(bool result)
