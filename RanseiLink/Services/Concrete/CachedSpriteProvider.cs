@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿#nullable enable
+using RanseiLink.Core.Services;
 using RanseiLink.ValueConverters;
 using System.Collections.Generic;
 using System.Windows.Media;
@@ -17,7 +18,7 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         _overrideDataProvider.SpriteModified += OverrideDataProvider_SpriteModified;
     }
 
-    private void OverrideDataProvider_SpriteModified(object sender, SpriteModifiedArgs e)
+    private void OverrideDataProvider_SpriteModified(object? sender, SpriteModifiedArgs e)
     {
         _cache.Remove(ResolveKey(e.Type, e.Id));
     }
@@ -27,7 +28,7 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         return (int)type << 16 | id;
     }
 
-    public ImageSource GetSprite(SpriteType type, int id)
+    public ImageSource? GetSprite(SpriteType type, int id)
     {
         if (id < 0)
         {

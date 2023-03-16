@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.RomFs;
+﻿#nullable enable
+using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace RanseiLink.Core.Services.Concrete
         }
         public bool IsDefaultsPopulated(ConquestGameCode gameCode) => Directory.Exists(Path.Combine(Constants.DefaultDataFolder(gameCode), Constants.GraphicsFolderPath));
 
-        public Result Populate(string ndsFile, IProgress<ProgressInfo> progress = null)
+        public Result Populate(string ndsFile, IProgress<ProgressInfo>? progress = null)
         {
             ConquestGameCode gc;
             using (var br = new BinaryReader(File.OpenRead(ndsFile)))

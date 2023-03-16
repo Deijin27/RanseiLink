@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿#nullable enable
+using FluentResults;
 using RanseiLink.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -62,7 +63,7 @@ namespace RanseiLink.Core.Services
     public interface IFallbackDataProvider
     {
         bool IsDefaultsPopulated(ConquestGameCode gc);
-        Result Populate(string ndsFile, IProgress<ProgressInfo> progress = null);
+        Result Populate(string ndsFile, IProgress<ProgressInfo>? progress = null);
         List<SpriteFile> GetAllSpriteFiles(ConquestGameCode gc, SpriteType type);
         SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id);
         DataFile GetDataFile(ConquestGameCode gc, string pathInRom);
@@ -82,7 +83,7 @@ namespace RanseiLink.Core.Services
 
     public interface IOverrideDataProvider
     {
-        event EventHandler<SpriteModifiedArgs> SpriteModified;
+        event EventHandler<SpriteModifiedArgs>? SpriteModified;
         bool IsDefaultsPopulated();
         void SetOverride(SpriteType type, int id, string file);
         void ClearOverride(SpriteType type, int id);

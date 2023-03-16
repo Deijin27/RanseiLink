@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Resources;
+﻿#nullable enable
+using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace RanseiLink.Core.Services.Concrete
         private readonly IFallbackDataProvider _fallbackSpriteProvider;
         private readonly ModInfo _mod;
 
-        public event EventHandler<SpriteModifiedArgs> SpriteModified;
+        public event EventHandler<SpriteModifiedArgs>? SpriteModified;
 
         public OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, ModInfo mod)
         {
@@ -88,7 +89,7 @@ namespace RanseiLink.Core.Services.Concrete
         public void SetOverride(SpriteType type, int id, string file)
         {
             string targetFile = GetSpriteFilePathWithoutFallback(type, id).File;
-            Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
+            Directory.CreateDirectory(Path.GetDirectoryName(targetFile)!);
             File.Copy(file, targetFile, overwrite: true);
             SpriteModified?.Invoke(this, new SpriteModifiedArgs(type, id));
         }
@@ -101,7 +102,7 @@ namespace RanseiLink.Core.Services.Concrete
         public void SetOverride(string pathInRom, string file)
         {
             string targetFile = GetDataFilePathWithoutFallback(pathInRom).File;
-            Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
+            Directory.CreateDirectory(Path.GetDirectoryName(targetFile)!);
             File.Copy(file, targetFile, overwrite: true);
         }
 

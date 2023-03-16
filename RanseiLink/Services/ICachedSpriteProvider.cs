@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿#nullable enable
+using RanseiLink.Core.Services;
 using System.Windows.Media;
 
 namespace RanseiLink.Services;
@@ -9,5 +10,5 @@ namespace RanseiLink.Services;
 /// </summary>
 public interface ICachedSpriteProvider
 {
-    ImageSource GetSprite(SpriteType type, int id);
+    ImageSource? GetSprite(SpriteType type, int id);
 }
