@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
 using System.IO.Compression;
@@ -30,7 +31,7 @@ namespace RanseiLink.Core.Services.Concrete
         public string Export(ModInfo modInfo, string destinationFolder)
         {
             Directory.CreateDirectory(destinationFolder);
-            string exportFileName = modInfo.Name;
+            string? exportFileName = modInfo.Name;
             if (string.IsNullOrEmpty(exportFileName))
             {
                 exportFileName = "UnnamedMod";
@@ -43,10 +44,10 @@ namespace RanseiLink.Core.Services.Concrete
 
         public ModInfo Import(string modPath)
         {
-            ModInfo modInfo;
+            ModInfo? modInfo;
             using (ZipArchive zip = ZipFile.OpenRead(modPath))
             {
-                ZipArchiveEntry entry = zip.GetEntry(ModInfoFileName);
+                ZipArchiveEntry? entry = zip.GetEntry(ModInfoFileName);
                 if (entry == null)
                 {
                     throw new Exception("Failed to load mod because ModInfoFile not found.");
@@ -80,7 +81,7 @@ namespace RanseiLink.Core.Services.Concrete
             foreach (string folder in Directory.GetDirectories(_modFolder))
             {
                 string modInfoPath = Path.Combine(folder, ModInfoFileName);
-                if (File.Exists(modInfoPath) && ModInfo.TryLoadFrom(XDocument.Load(modInfoPath), out ModInfo info))
+                if (File.Exists(modInfoPath) && ModInfo.TryLoadFrom(XDocument.Load(modInfoPath), out ModInfo? info))
                 {
                     info.FolderPath = folder;
                     modInfos.Add(info);

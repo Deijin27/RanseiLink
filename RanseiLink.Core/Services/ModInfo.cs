@@ -1,5 +1,7 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services
@@ -18,15 +20,15 @@ namespace RanseiLink.Core.Services
         /// <summary>
         /// Name given by user to mod
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
         /// <summary>
         /// Version given by user to mod
         /// </summary>
-        public string Version { get; set; }
+        public string? Version { get; set; }
         /// <summary>
         /// Author given by user to mod
         /// </summary>
-        public string Author { get; set; }
+        public string? Author { get; set; }
         /// <summary>
         /// Mod version for knowing how to load it
         /// </summary>
@@ -35,13 +37,18 @@ namespace RanseiLink.Core.Services
         /// <summary>
         /// Do not serialize
         /// </summary>
-        public string FolderPath { get; set; }
+        public string FolderPath { get; set; } = string.Empty;
 
         public ConquestGameCode GameCode { get; set; }
 
-        public static bool TryLoadFrom(XDocument doc, out ModInfo modInfo)
+        public static bool TryLoadFrom(XDocument doc, [NotNullWhen(true)] out ModInfo? modInfo)
         {
-            var element = doc.Root;
+            var element = doc.Element(ElementNames.ModInfo);
+            if (element == null)
+            {
+                modInfo = null;
+                return false;
+            }
             modInfo = new ModInfo
             {
                 Name = element.Element(ElementNames.Name)?.Value,
@@ -50,7 +57,7 @@ namespace RanseiLink.Core.Services
                 GameCode = Enum.TryParse(element.Element(ElementNames.GameCode)?.Value, out ConquestGameCode culture) ? culture : ConquestGameCode.VPYT
             };
 
-            string version = element.Attribute(ElementNames.RLModVersion)?.Value;
+            string? version = element.Attribute(ElementNames.RLModVersion)?.Value;
             if (!uint.TryParse(version, out uint versionVal))
             {
                 return false;
