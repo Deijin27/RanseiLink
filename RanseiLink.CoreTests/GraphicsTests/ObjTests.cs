@@ -48,41 +48,36 @@ public class ObjTests
         expected.MaterialLib = testMtl;
         expected.Groups.AddRange(new List<OBJ.Group>
         {
-            new OBJ.Group
+            new OBJ.Group("polygon")
             {
-                Name = "polygon",
                 Vertices = new List<Vector3> { new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
                 Normals = new List<Vector3> { new Vector3(7, 8, 9), new Vector3(10, 11, 12), new Vector3(1.4f, 1.5f, 1.6f) },
                 TextureVertices = new List<Vector2> { new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f) },
                 Faces = new List<OBJ.Face>
                 {
-                    new OBJ.Face
+                    new OBJ.Face("material1")
                     {
-                        MaterialName = "material1",
                         VertexIndices = new List<int> { 0, 1, 2 },
                         NormalIndices = new List<int> { 0, 1, 2 },
                         TexCoordIndices = new List<int> { 0, 1, 2 },
                     }
                 }
             },
-            new OBJ.Group
+            new OBJ.Group("polygon1")
             {
-                Name = "polygon1",
                 Vertices = new List<Vector3> { new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f), new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
                 Normals = new List<Vector3> { new Vector3(7, 8, 9), new Vector3(10, 11, 12), new Vector3(1.4f, 1.5f, 1.6f), new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
                 TextureVertices = new List<Vector2> { new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f), new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f) },
                 Faces = new List<OBJ.Face>
                 {
-                    new OBJ.Face
+                    new OBJ.Face("material2")
                     {
-                        MaterialName = "material2",
                         VertexIndices = new List<int> { 0, 1, 2 },
                         NormalIndices = new List<int> { 0, 1, 2 },
                         TexCoordIndices = new List<int> { 0, 1, 2 },
                     },
-                     new OBJ.Face
+                    new OBJ.Face("material2")
                     {
-                        MaterialName = "material2",
                         VertexIndices = new List<int> { 3, 4, 5 },
                         NormalIndices = new List<int> { 3, 4, 5 },
                         TexCoordIndices = new List<int> { 3, 4, 5 },

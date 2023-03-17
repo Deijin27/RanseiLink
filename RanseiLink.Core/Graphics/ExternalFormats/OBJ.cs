@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿#nullable enable
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +13,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
     {
         private static readonly IFormatProvider _provider = new CultureInfo("en-US");
 
-        public MTL MaterialLib { get; set; }
+        public MTL? MaterialLib { get; set; }
         public List<Group> Groups { get; set; } = new List<Group>();
 
         public OBJ()
@@ -24,10 +25,10 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             using (StreamReader sr = File.OpenText(file))
             {
                 string currentMtl = "";
-                Group defaultGroup = new Group() { Name = "default" };
+                Group defaultGroup = new Group("default");
                 Group group = defaultGroup;
 
-                string untrimmedLine;
+                string? untrimmedLine;
                 while ((untrimmedLine = sr.ReadLine()) != null)
                 {
                     string line = untrimmedLine.Trim();
@@ -45,14 +46,17 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                     switch (lineParts[0])
                     {
                         case "mtllib":
-                            MaterialLib = new MTL(Path.Combine(Path.GetDirectoryName(file), line.Substring(lineParts[0].Length + 1).Trim()));
+                            var dir = Path.GetDirectoryName(file);
+                            if (!string.IsNullOrEmpty(dir))
+                            {
+                                MaterialLib = new MTL(Path.Combine(dir, line.Substring(lineParts[0].Length + 1).Trim()));
+                            }
                             break;
-
                         case "g":
                         case "o":
                             if (lineParts.Length >= 2)
                             {
-                                group = new Group { Name = lineParts[1] };
+                                group = new Group(lineParts[1]);
                                 Groups.Add(group);
                             }
                             break;
@@ -97,10 +101,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                             {
                                 break;
                             }
-                            var face = new Face
-                            {
-                                MaterialName = currentMtl
-                            };
+                            var face = new Face(currentMtl);
                             for (int index = 0; index < lineParts.Length - 1; ++index)
                             {
                                 string[] indecesParts = lineParts[index + 1].Split('/');
@@ -252,6 +253,10 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
 
         public class Face
         {
+            public Face(string materialName)
+            {
+                MaterialName = materialName;
+            }
             public string MaterialName { get; set; }
             public List<int> VertexIndices { get; set; } = new List<int>();
             public List<int> NormalIndices { get; set; } = new List<int>();
@@ -261,6 +266,10 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
 
         public class Group
         {
+            public Group(string name)
+            {
+                Name = name;
+            }
             public string Name { get; set; }
 
             /// <summary>

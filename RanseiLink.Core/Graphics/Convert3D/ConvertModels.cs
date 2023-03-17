@@ -110,10 +110,7 @@ namespace RanseiLink.Core.Graphics
 
             foreach (var bmdGroup in bmdGroupSet)
             {
-                var objGroup = new OBJ.Group
-                {
-                    Name = bmdGroup.Name,
-                };
+                var objGroup = new OBJ.Group(bmdGroup.Name);
 
                 foreach (var polygon in bmdGroup.Polygons)
                 {
@@ -126,7 +123,7 @@ namespace RanseiLink.Core.Graphics
                         case PolygonType.TRI:
                             for (int j = 0; j < polygon.Vertices.Count; j += 3)
                             {
-                                var face = new OBJ.Face { MaterialName = bmdGroup.MaterialName };
+                                var face = new OBJ.Face(bmdGroup.MaterialName);
                                 for (int i = 0; i < 3; i++)
                                 {
                                     face.VertexIndices.Add(vertexId);
@@ -141,7 +138,7 @@ namespace RanseiLink.Core.Graphics
                         case PolygonType.QUAD:
                             for (int j = 0; j < polygon.Vertices.Count; j += 4)
                             {
-                                var face = new OBJ.Face { MaterialName = bmdGroup.MaterialName };
+                                var face = new OBJ.Face(bmdGroup.MaterialName);
                                 for (int i = 0; i < 4; i++)
                                 {
                                     face.VertexIndices.Add(vertexId);

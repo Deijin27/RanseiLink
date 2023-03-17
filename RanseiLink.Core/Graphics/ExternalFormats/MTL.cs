@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿#nullable enable
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -47,7 +48,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             }
             else
             {
-                return Path.Combine(Path.GetDirectoryName(mtlFile), file);
+                return Path.Combine(Path.GetDirectoryName(mtlFile)!, file);
             }
         }
 
@@ -55,8 +56,9 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
         {
             using (StreamReader sr = File.OpenText(file))
             {
-                Material material = null;
-                string untrimmedLine;
+                bool anyMaterials = false;
+                Material material = new Material();
+                string? untrimmedLine;
                 while ((untrimmedLine = sr.ReadLine()) != null)
                 {
                     string line = untrimmedLine.Trim();
@@ -84,12 +86,12 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                         case "newmtl":
                             if (lineParts.Length >= 2)
                             {
-                                if (material != null)
+                                if (anyMaterials)
                                 {
                                     // add the last loaded material because we are beginning a new one
                                     Materials.Add(material);
                                 }
-
+                                anyMaterials = true;
                                 material = new Material() { Name = lineParts[1] };
                             }
                             break;
@@ -165,7 +167,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
 
         public void Save(string file)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(file));
+            Directory.CreateDirectory(Path.GetDirectoryName(file)!);
 
             using (StreamWriter sw = File.CreateText(file))
             {
@@ -204,7 +206,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             /// <summary>
             /// Name of the material
             /// </summary>
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             /// <summary>
             /// Ka: specifies ambient color, to account for light that is scattered about the entire scene [see Wikipedia entry for Phong Reflection Model] using values between 0 and 1 for the RGB components.
@@ -229,22 +231,22 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             /// <summary>
             /// map_Ka: specifies a color texture file to be applied to the ambient reflectivity of the material. During rendering, map_Ka values are multiplied by the Ka values to derive the RGB components.
             /// </summary>
-            public string AmbientTextureMapFile { get; set; }
+            public string? AmbientTextureMapFile { get; set; }
 
             /// <summary>
             /// map_Kd: specifies a color texture file to be applied to the diffuse reflectivity of the material. During rendering, map_Kd values are multiplied by the Kd values to derive the RGB components.
             /// </summary>
-            public string DiffuseTextureMapFile { get; set; }
+            public string? DiffuseTextureMapFile { get; set; }
 
             /// <summary>
             /// map_Ks: specifies a color texture file to be applied to the specular reflectivity of the material. During rendering, map_Ks values are multiplied by the Ks values to derive the RGB components.
             /// </summary>
-            public string SpecularTextureMapFile { get; set; }
+            public string? SpecularTextureMapFile { get; set; }
 
             /// <summary>
             /// map_d
             /// </summary>
-            public string DissolveTextureMapFile { get; set; }
+            public string? DissolveTextureMapFile { get; set; }
 
            
         }
