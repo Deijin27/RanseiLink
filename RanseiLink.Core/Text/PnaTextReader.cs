@@ -1,4 +1,5 @@
-﻿// PnaTextReader.cs
+﻿#nullable enable
+// PnaTextReader.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com> (small modifications by Deijin)
@@ -37,10 +38,10 @@ namespace RanseiLink.Core.Text
 
         readonly BinaryReader stream;
 
-        StringBuilder textBuilder;
-        StringBuilder contextBuilder;
-        StringBuilder boxBuilder;
-        StringBuilder builder;
+        StringBuilder textBuilder = null!;
+        StringBuilder contextBuilder = null!;
+        StringBuilder boxBuilder = null!;
+        StringBuilder builder = null!;
         bool kanjiSingleByteMode;
         bool kanjiPage2Mode;
         bool furiganaMode;
@@ -67,12 +68,11 @@ namespace RanseiLink.Core.Text
                     ParseJapaneseText(data);
             }
 
-            Message msg = new Message
-            {
-                Text = textBuilder.ToString(),
-                Context = contextBuilder.ToString(),
-                BoxConfig = boxBuilder.ToString(),
-            };
+            Message msg = new Message(
+                text: textBuilder.ToString(),
+                context: contextBuilder.ToString(),
+                boxConfig: boxBuilder.ToString()
+            );
 
             return msg;
         }

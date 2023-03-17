@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿#nullable enable
+using System.Text;
 
 namespace RanseiLink.Core.Text
 {

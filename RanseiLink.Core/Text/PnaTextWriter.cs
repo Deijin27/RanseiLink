@@ -1,4 +1,5 @@
-﻿// PnaTextWriter.cs
+﻿#nullable enable
+// PnaTextWriter.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com> (small modifications by Deijin)
@@ -37,7 +38,7 @@ namespace RanseiLink.Core.Text
 
         readonly BinaryWriter writer;
 
-        string message;
+        string message = null!;
         int pos;
         bool everKanjiPage2Mode;
         bool kanjiPage2Mode;

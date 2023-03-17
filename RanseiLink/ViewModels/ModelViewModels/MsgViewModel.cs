@@ -109,14 +109,13 @@ public class MsgViewModel : INotifyDataErrorInfo
     private string _error;
     private void Validate()
     {
-        var testMsg = new Message()
-        {
-            Text = Text,
-            BoxConfig = BoxConfig,
-            GroupId = GroupId,
-            ElementId = ElementId,
-            Context = Context,
-        };
+        var testMsg = new Message(
+            text: Text, 
+            context: Context, 
+            boxConfig: BoxConfig,
+            groupId: GroupId,
+            elementId: ElementId
+            );
         var stream = new BinaryWriter(new MemoryStream());
 
         try

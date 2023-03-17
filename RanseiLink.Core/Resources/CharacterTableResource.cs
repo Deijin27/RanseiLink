@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -8,25 +9,19 @@ namespace RanseiLink.Core.Resources
     {
         static CharacterTableResource()
         {
-            InitializeTables();
-        }
-
-        const string _tablePath = "RanseiLink.Core.Resources.CharacterTable.tbl";
-
-        private static void InitializeTables()
-        {
+            // Initialize Tables
             LoadTable = new Dictionary<string, string>();
             SaveTable = new Dictionary<string, string>();
-            Stream stream = null;
+            Stream? stream = null;
             try
             {
                 stream = Assembly.GetExecutingAssembly()
                     .GetManifestResourceStream(_tablePath);
-                var reader = new StreamReader(stream);
+                var reader = new StreamReader(stream!);
 
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string? line = reader.ReadLine();
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
                     if (line[0] == '#')
@@ -42,6 +37,8 @@ namespace RanseiLink.Core.Resources
                 stream?.Dispose();
             }
         }
+
+        const string _tablePath = "RanseiLink.Core.Resources.CharacterTable.tbl";
 
         public static Dictionary<string, string> LoadTable { get; private set; }
         public static Dictionary<string, string> SaveTable { get; private set; }

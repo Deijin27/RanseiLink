@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Resources;
+﻿#nullable enable
+using RanseiLink.Core.Resources;
 
 namespace RanseiLink.Core.Text
 {
