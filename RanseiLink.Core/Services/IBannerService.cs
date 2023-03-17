@@ -25,7 +25,7 @@ namespace RanseiLink.Core.Services
         private BannerInfo GetBannerInfo()
         {
             var info = new BannerInfo();
-            if (!(File.Exists(_infoXmlPath) && info.TryLoadInfoFromXml(_infoXmlPath, out _)))
+            if (!(File.Exists(_infoXmlPath) && info.TryLoadInfoFromXml(_infoXmlPath).IsSuccess))
             {
                 // set defaults if file is not present.
                 info.SetAllTitles("Pokémon Conquest\nNintendo");

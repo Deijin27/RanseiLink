@@ -186,7 +186,7 @@ public class ModManager : IModManager
     private void AdvanceVersion1To2(ModInfo modInfo, IRomFs nds)
     {
         string msgPath = Path.Combine(modInfo.FolderPath, Constants.MsgRomPath);
-        nds.ExtractCopyOfFile(Constants.MsgRomPath, Path.GetDirectoryName(msgPath));
+        nds.ExtractCopyOfFile(Constants.MsgRomPath, Path.GetDirectoryName(msgPath)!);
         _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
         File.Delete(msgPath);
         modInfo.RLModVersion = 2;

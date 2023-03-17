@@ -1,6 +1,5 @@
-﻿
-namespace RanseiLink.Core.RomFs
-{
+﻿#nullable enable
+namespace RanseiLink.Core.RomFs;
 
-    public delegate IRomFs RomFsFactory(string romPath);
-}
+
+public delegate IRomFs RomFsFactory(string romPath);

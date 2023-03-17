@@ -160,14 +160,14 @@ namespace RanseiLink.Core.Services.Concrete
             
             if (File.Exists(bannerInfoFile))
             {
-                if (!banner.TryLoadInfoFromXml(bannerInfoFile, out _))
+                if (banner.TryLoadInfoFromXml(bannerInfoFile).IsFailed)
                 {
                     return;
                 }
             }
             if (File.Exists(bannerImageFile))
             {
-                if (!banner.TryLoadImageFromPng(bannerImageFile, out _))
+                if (banner.TryLoadImageFromPng(bannerImageFile).IsFailed)
                 {
                     return;
                 }
