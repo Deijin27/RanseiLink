@@ -1,32 +1,33 @@
-﻿using DryIoc;
+﻿#nullable enable
+using DryIoc;
 using System;
 
-namespace RanseiLink.Core.Services
+namespace RanseiLink.Core.Services;
+
+/// <summary>
+/// Wrapper for whatever IOC is used
+/// </summary>
+public interface IServiceGetter : IDisposable
 {
-    /// <summary>
-    /// Wrapper for whatever IOC is used
-    /// </summary>
-    public interface IServiceGetter : IDisposable
+    T Get<T>();
+}
+
+public class ServiceGetter : IServiceGetter
+{
+    private readonly IContainer _services;
+    public ServiceGetter(IContainer services)
     {
-        T Get<T>();
+        _services = services;
     }
 
-    public class ServiceGetter : IServiceGetter
+    public void Dispose()
     {
-        public IContainer Services { get; set; }
-        public ServiceGetter()
-        {
-        }
+        _services.Dispose();
+        GC.SuppressFinalize(this);
+    }
 
-        public void Dispose()
-        {
-            Services.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
-        public T Get<T>()
-        {
-            return Services.Resolve<T>();
-        }
+    public T Get<T>()
+    {
+        return _services.Resolve<T>();
     }
 }
