@@ -104,7 +104,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         // TEX ------------------------------------------------------------------------------------------------------
 
                         string texTemp = Path.GetTempFileName();
-                        NSBTX btx0 = new NSBTX { Texture = new NSTEX() };
+                        NSBTX btx0 = new NSBTX(new NSTEX());
                         int texHeight = _pokemonSpriteHeight * _texSpriteCount;
                         using (var texImg = combinedImage.Clone(g =>
                         {
@@ -122,9 +122,11 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                                     destinationIndex: 0,
                                     length: _pokemonSpriteHeight * _pokemonSpriteWidth
                                     );
-                                btx0.Texture.Textures.Add(new NSTEX.Texture
+                                btx0.Texture.Textures.Add(new NSTEX.Texture(
+                                    name: "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
+                                    textureData: subArray
+                                    )
                                 {
-                                    Name = "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
                                     Height = _pokemonSpriteHeight,
                                     Width = _pokemonSpriteWidth,
                                     Format = TexFormat.Pltt16,
@@ -133,7 +135,7 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                                     RepeatX = false,
                                     RepeatY = false,
                                     Color0Transparent = true,
-                                    TextureData = subArray
+                                    
                                 });
                             }
                         }
@@ -207,8 +209,8 @@ namespace RanseiLink.Core.Services.ModPatchBuilders
                         resizedPalette[0] = Color.FromRgb(120, 120, 120);
 
                         var convertedPalette = RawPalette.From32bitColors(resizedPalette);
-                        btx0.Texture.Palettes.Add(new NSTEX.Palette { Name = "base_fix_f_pl" , PaletteData = convertedPalette });
-                        btx0.Texture.Palettes.Add(new NSTEX.Palette { Name = "base_fix_b_pl", PaletteData = convertedPalette });
+                        btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_f_pl", paletteData: convertedPalette));
+                        btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_b_pl", paletteData: convertedPalette));
                         btx0.WriteTo(texTemp);
                         texLinkFiles[i] = texTemp;
                     }

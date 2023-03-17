@@ -1,54 +1,54 @@
-﻿using System.IO;
+﻿#nullable enable
+using System.IO;
 
-namespace RanseiLink.Core.Graphics
+namespace RanseiLink.Core.Graphics;
+
+public struct NitroFileHeader
 {
-    public struct NitroFileHeader
+    public string MagicNumber;
+    public ushort ByteOrderMarker;
+    public ushort Version;
+    public uint FileLength;
+    public ushort HeaderLength;
+    public ushort ChunkCount;
+
+    public NitroFileHeader(BinaryReader br)
     {
-        public string MagicNumber;
-        public ushort ByteOrderMarker;
-        public ushort Version;
-        public uint FileLength;
-        public ushort HeaderLength;
-        public ushort ChunkCount;
-
-        public NitroFileHeader(BinaryReader br)
-        {
-            MagicNumber = br.ReadMagicNumber();
-            ByteOrderMarker = br.ReadUInt16();
-            Version = br.ReadUInt16();
-            FileLength = br.ReadUInt32();
-            HeaderLength = br.ReadUInt16();
-            ChunkCount = br.ReadUInt16();
-        }
-
-        public void WriteTo(BinaryWriter bw)
-        {
-            bw.WriteMagicNumber(MagicNumber);
-            bw.Write(ByteOrderMarker);
-            bw.Write(Version);
-            bw.Write(FileLength);
-            bw.Write(HeaderLength);
-            bw.Write(ChunkCount);
-        }
+        MagicNumber = br.ReadMagicNumber();
+        ByteOrderMarker = br.ReadUInt16();
+        Version = br.ReadUInt16();
+        FileLength = br.ReadUInt32();
+        HeaderLength = br.ReadUInt16();
+        ChunkCount = br.ReadUInt16();
     }
 
-    public struct NitroChunkHeader
+    public void WriteTo(BinaryWriter bw)
     {
-        public const int Length = 8;
+        bw.WriteMagicNumber(MagicNumber);
+        bw.Write(ByteOrderMarker);
+        bw.Write(Version);
+        bw.Write(FileLength);
+        bw.Write(HeaderLength);
+        bw.Write(ChunkCount);
+    }
+}
 
-        public string MagicNumber;
-        public uint ChunkLength;
+public struct NitroChunkHeader
+{
+    public const int Length = 8;
 
-        public NitroChunkHeader(BinaryReader br)
-        {
-            MagicNumber = br.ReadMagicNumber();
-            ChunkLength = br.ReadUInt32();
-        }
+    public string MagicNumber;
+    public uint ChunkLength;
 
-        public void WriteTo(BinaryWriter bw)
-        {
-            bw.WriteMagicNumber(MagicNumber);
-            bw.Write(ChunkLength);
-        }
+    public NitroChunkHeader(BinaryReader br)
+    {
+        MagicNumber = br.ReadMagicNumber();
+        ChunkLength = br.ReadUInt32();
+    }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        bw.WriteMagicNumber(MagicNumber);
+        bw.Write(ChunkLength);
     }
 }

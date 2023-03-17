@@ -58,7 +58,7 @@ public class NsbptGenerateCommand : ICommand
         }
         else
         {
-            var nsbtp = new NSBTP() { PatternAnimations = nspat };
+            var nsbtp = new NSBTP(nspat);
             nsbtp.WriteTo(DestinationFile);
         }
 

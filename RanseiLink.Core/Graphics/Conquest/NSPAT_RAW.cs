@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿#nullable enable
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -49,14 +50,14 @@ namespace RanseiLink.Core.Graphics.Conquest
             var start = br.BaseStream.Position;
             for (int i = 0; i < kfCounts.Length; i++)
             {
-                var anim = new NSPAT.PatternAnimation() { Name = _animNames[i] };
+                var anim = new NSPAT.PatternAnimation(_animNames[i]);
                 result.PatternAnimations.Add(anim);
                 var track = new NSPAT.PatternAnimationTrack();
                 anim.Tracks.Add(track);
                 br.BaseStream.Seek(start + 0x40 * i, SeekOrigin.Begin);
                 for (int j = 0; j < kfCounts[i] - 1; j++) // the last one is numframes
                 {
-                    track.KeyFrames.Add(new NSPAT.KeyFrame { Frame = br.ReadUInt16() });
+                    track.KeyFrames.Add(new NSPAT.KeyFrame(frame: br.ReadUInt16(), string.Empty, string.Empty));
                 }
                 anim.NumFrames = br.ReadUInt16(); // the last one is the number of frames
             }

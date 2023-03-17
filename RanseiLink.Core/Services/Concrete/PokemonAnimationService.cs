@@ -76,7 +76,7 @@ public class PokemonAnimationService : IPokemonAnimationService
                 var num = pokemon.NationalPokedexNumber.ToString().PadLeft(3, '0');
                 anim.Name = $"POKEMON{num}{end}";
             }
-            new NSBTP { PatternAnimations = nspat }.WriteTo(temp2);
+            new NSBTP(nspat).WriteTo(temp2);
             var nsbtpFile = ResolveRelativeAnimPath(id, false);
             _spriteProvider.SetOverride(nsbtpFile, temp2);
 

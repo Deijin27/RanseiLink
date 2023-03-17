@@ -242,9 +242,10 @@ namespace RanseiLink.Core.Services
                 return Result.Fail<TextureLoadResult>("Texture name is too long. Max length is 13");
             }
             var texResult = new NSTEX.Texture
+            (
+                name: texName,
+                textureData: pixels)
             {
-                Name = texName,
-                TextureData = pixels,
                 Color0Transparent = colorZeroTransparent,
                 Format = format,
                 Width = width,
@@ -252,7 +253,7 @@ namespace RanseiLink.Core.Services
             };
             var outPal = RawPalette.From32bitColors(palette);
             Array.Resize(ref outPal, format.PaletteSize());
-            var palResult = new NSTEX.Palette { Name = texName + "_pl", PaletteData = outPal };
+            var palResult = new NSTEX.Palette(name: texName + "_pl", paletteData: outPal);
 
             return Result.Ok(new TextureLoadResult { Texture = texResult, Palette = palResult });
         }
@@ -438,17 +439,16 @@ namespace RanseiLink.Core.Services
 
             // save model
 
-            var nsbtx = new NSBTX { Texture = tex };
+            var nsbtx = new NSBTX(tex);
 
             nsbtx.WriteTo(nsbtxFile);
 
-            var nsbmd = new NSBMD
-            {
-                Model = new NSMDL
+            var nsbmd = new NSBMD(
+                new NSMDL
                 {
                     Models = new List<NSMDL.Model> { model }
                 }
-            };
+            );
 
             nsbmd.WriteTo(nsbmdFile);
 

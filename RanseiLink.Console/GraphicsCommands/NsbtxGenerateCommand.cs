@@ -50,7 +50,7 @@ public class NsbtxGenerateCommand : ICommand
             tex0.Textures.Add(res.Value.Texture);
             tex0.Palettes.Add(res.Value.Palette);
         }
-        var btx0 = new NSBTX { Texture = tex0 };
+        var btx0 = new NSBTX(tex0);
         btx0.WriteTo(DestinationFile);
 
         return default;

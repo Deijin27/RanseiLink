@@ -1,87 +1,83 @@
-﻿using System.IO;
+﻿#nullable enable
+using System.IO;
 
-namespace RanseiLink.Core.Graphics
+namespace RanseiLink.Core.Graphics;
+
+/// <summary>
+/// Model and material file
+/// </summary>
+public class NSBMD
 {
-    /// <summary>
-    /// Model and material file
-    /// </summary>
-    public class NSBMD
+    public const string MagicNumber = "BMD0";
+    public const string FileExtension = ".nsbmd";
+    public static readonly string[] FileExtensions = new[] { ".nsbmd", ".bmd0", ".bmd" };
+
+    public NSMDL Model { get; set; }
+
+    public NSBMD(NSMDL model)
     {
-        public const string MagicNumber = "BMD0";
-        public const string FileExtension = ".nsbmd";
-        public static readonly string[] FileExtensions = new[] { ".nsbmd", ".bmd0", ".bmd" };
+        Model = model;
+    }
 
-        public NSMDL Model { get; set; }
+    public NSBMD(string file)
+    {
+        using var br = new BinaryReader(File.OpenRead(file));
 
-        public NSBMD()
+        // first a typical file header
+        var header = new NitroFileHeader(br);
+
+        if (header.MagicNumber != MagicNumber)
         {
-
+            throw new InvalidDataException($"Unexpected magic number in file header '{header.MagicNumber}' (expected: {MagicNumber})");
         }
 
-        public NSBMD(string file)
+        // thing that this format does that other formats don't seem to do.
+        uint[] chunkOffsets = new uint[header.ChunkCount];
+        for (int i = 0; i < header.ChunkCount; i++)
         {
-            using (var br = new BinaryReader(File.OpenRead(file)))
-            {
-
-                // first a typical file header
-                var header = new NitroFileHeader(br);
-
-                if (header.MagicNumber != MagicNumber)
-                {
-                    throw new InvalidDataException($"Unexpected magic number in file header '{header.MagicNumber}' (expected: {MagicNumber})");
-                }
-
-                // thing that this format does that other formats don't seem to do.
-                uint[] chunkOffsets = new uint[header.ChunkCount];
-                for (int i = 0; i < header.ChunkCount; i++)
-                {
-                    chunkOffsets[i] = br.ReadUInt32();
-                }
-
-                // read MDL
-                br.BaseStream.Position = chunkOffsets[0];
-                Model = new NSMDL(br);
-            }
+            chunkOffsets[i] = br.ReadUInt32();
         }
 
-        public void WriteTo(string file)
+        // read MDL
+        br.BaseStream.Position = chunkOffsets[0];
+        Model = new NSMDL(br);
+    }
+
+    public void WriteTo(string file)
+    {
+        using var bw = new BinaryWriter(File.OpenWrite(file));
+        WriteTo(bw);
+    }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        var header = new NitroFileHeader
         {
-            using (var bw = new BinaryWriter(File.OpenWrite(file)))
-            {
-                WriteTo(bw);
-            }
-        }
+            MagicNumber = MagicNumber,
+            ByteOrderMarker = 0xFEFF,
+            Version = 2,
+            ChunkCount = 1,
+            HeaderLength = 0x10
+        };
 
-        public void WriteTo(BinaryWriter bw)
+        // skip header section, to be written later
+        bw.BaseStream.Seek(header.HeaderLength + 4 * header.ChunkCount, SeekOrigin.Begin);
+
+        uint[] chunkOffsets = new uint[header.ChunkCount];
+
+        // write MDL
+        chunkOffsets[0] = (uint)(bw.BaseStream.Position);
+        Model.WriteTo(bw);
+
+        // return to start to write header
+        var endOffset = bw.BaseStream.Position;
+        bw.BaseStream.Position = 0;
+
+        header.FileLength = (uint)endOffset;
+        header.WriteTo(bw);
+        foreach (var chunkOffset in chunkOffsets)
         {
-            var header = new NitroFileHeader
-            {
-                MagicNumber = MagicNumber,
-                ByteOrderMarker = 0xFEFF,
-                Version = 2,
-                ChunkCount = 1,
-                HeaderLength = 0x10
-            };
-
-            // skip header section, to be written later
-            bw.BaseStream.Seek(header.HeaderLength + 4 * header.ChunkCount, SeekOrigin.Begin);
-
-            uint[] chunkOffsets = new uint[header.ChunkCount];
-
-            // write MDL
-            chunkOffsets[0] = (uint)(bw.BaseStream.Position);
-            Model.WriteTo(bw);
-
-            // return to start to write header
-            var endOffset = bw.BaseStream.Position;
-            bw.BaseStream.Position = 0;
-
-            header.FileLength = (uint)endOffset;
-            header.WriteTo(bw);
-            foreach (var chunkOffset in chunkOffsets)
-            {
-                bw.Write(chunkOffset);
-            }
+            bw.Write(chunkOffset);
         }
     }
 }
