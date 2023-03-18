@@ -1,123 +1,124 @@
-﻿namespace RanseiLink.Core.Graphics
+﻿#nullable enable
+namespace RanseiLink.Core.Graphics
 {
     public static class RenderCommandGenerator
     {
         public static RenderCommand NOP()
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.NOP
-            };
+            (
+                opCode: RenderOpCode.NOP
+            );
         }
 
         public static RenderCommand END()
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.END
-            };
+            (
+                opCode: RenderOpCode.END
+            );
         }
 
         public static RenderCommand VISIBILITY(int polymeshId, bool isVisible)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.VISIBILITY,
-                Parameters = new byte[] { (byte)polymeshId, (byte)(isVisible ? 1 : 0) }
-            };
+            (
+                opCode: RenderOpCode.VISIBILITY,
+                parameters: new byte[] { (byte)polymeshId, (byte)(isVisible ? 1 : 0) }
+            );
         }
     
         public static RenderCommand MTX_RESTORE(int stackIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_RESTORE,
-                Parameters = new byte[] { (byte)stackIndex }
-            };
+            (
+                opCode: RenderOpCode.MTX_RESTORE,
+                parameters: new byte[] { (byte)stackIndex }
+            );
         }
 
         public static RenderCommand BIND_MATERIAL(int materialIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.BIND_MATERIAL,
-                Parameters = new byte[] { (byte)materialIndex }
-            };
+            (
+                opCode: RenderOpCode.BIND_MATERIAL,
+                parameters: new byte[] { (byte)materialIndex }
+            );
         }
     
         public static RenderCommand DRAW_MESH(int polygonIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.DRAW_MESH,
-                Parameters = new byte[] { (byte)polygonIndex }
-            };
+            (
+                opCode: RenderOpCode.DRAW_MESH,
+                parameters: new byte[] { (byte)polygonIndex }
+            );
         }
 
         public static RenderCommand MTX_MULT(int polymeshId, int parentId, int unknown)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_MULT,
-                Flags = 0,
-                Parameters = new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown }
-            };
+            (
+                opCode: RenderOpCode.MTX_MULT,
+                flags: 0,
+                parameters: new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown }
+            );
         }
 
         public static RenderCommand MTX_MULT_STORE(int polymeshId, int parentId, int unknown, int storeIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_MULT,
-                Flags = 1,
-                Parameters = new byte[]  { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)storeIndex }
-            };
+            (
+                opCode: RenderOpCode.MTX_MULT,
+                flags: 1,
+                parameters: new byte[]  { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)storeIndex }
+            );
         }
 
         public static RenderCommand MTX_MULT_RESTORE(int polymeshId, int parentId, int unknown, int restoreIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_MULT,
-                Flags = 2,
-                Parameters = new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)restoreIndex }
-            };
+            (
+                opCode: RenderOpCode.MTX_MULT,
+                flags: 2,
+                parameters: new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)restoreIndex }
+            );
         }
 
         public static RenderCommand MTX_MULT_STORE_RESTORE(int polymeshId, int parentId, int unknown, int storeIndex, int restoreIndex)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_MULT,
-                Flags = 3,
-                Parameters = new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)storeIndex, (byte)restoreIndex }
-            };
+            (
+                opCode: RenderOpCode.MTX_MULT,
+                flags: 3,
+                parameters: new byte[] { (byte)polymeshId, (byte)parentId, (byte)unknown, (byte)storeIndex, (byte)restoreIndex }
+            );
         }
 
         public static RenderCommand MTX_SCALE_DOWN()
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_SCALE,
-                Flags = 1
-            };
+            (
+                opCode: RenderOpCode.MTX_SCALE,
+                flags: 1
+            );
         }
 
         public static RenderCommand MTX_SCALE_UP()
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.MTX_SCALE
-            };
+            (
+                opCode: RenderOpCode.MTX_SCALE
+            );
         }
 
         public static RenderCommand UNKNOWN_7(int polymeshId)
         {
             return new RenderCommand
-            {
-                OpCode = RenderOpCode.UNKNOWN_7,
-                Parameters = new byte[] { (byte)polymeshId }
-            };
+            (
+                opCode: RenderOpCode.UNKNOWN_7,
+                parameters: new byte[] { (byte)polymeshId }
+            );
         }
     }
 

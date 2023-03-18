@@ -29,7 +29,7 @@ namespace RanseiLink.Core.Graphics
 
         GpuState gpu;
         PolygonType polygonType = PolygonType.NONE;
-        readonly Group group = new Group();
+        readonly Group group = new Group(string.Empty, string.Empty);
         Vector3 vertex;
         Vector3 normal = new Vector3(float.NaN, 0, 0);
         Vector2 texCoord = new Vector2(float.NaN, 0);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace RanseiLink.Core.Graphics
@@ -6,12 +7,14 @@ namespace RanseiLink.Core.Graphics
 
     public class PolygonGenerator
     {
-        private PolygonGenerator() { }
+        private PolygonGenerator(InverseGpuState gpu)
+        {
+            this.gpu = gpu;
+        }
 
         public static List<PolygonDisplayCommand> Generate(Group group, InverseGpuState gpu)
         {
-            var state = new PolygonGenerator();
-            state.gpu = gpu;
+            var state = new PolygonGenerator(gpu);
             foreach (Polygon p in group.Polygons)
             {
                 state.ProcessPolygon(p);
@@ -47,7 +50,7 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        InverseGpuState gpu;
+        readonly InverseGpuState gpu;
         private Vector2 previousTexCoord;
         private Vector3 previousNormal;
         private Vector3 previousVertex;

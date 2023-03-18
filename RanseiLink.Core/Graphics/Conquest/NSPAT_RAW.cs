@@ -52,7 +52,7 @@ namespace RanseiLink.Core.Graphics.Conquest
             {
                 var anim = new NSPAT.PatternAnimation(_animNames[i]);
                 result.PatternAnimations.Add(anim);
-                var track = new NSPAT.PatternAnimationTrack();
+                var track = new NSPAT.PatternAnimationTrack(string.Empty);
                 anim.Tracks.Add(track);
                 br.BaseStream.Seek(start + 0x40 * i, SeekOrigin.Begin);
                 for (int j = 0; j < kfCounts[i] - 1; j++) // the last one is numframes

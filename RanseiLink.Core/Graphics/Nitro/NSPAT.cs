@@ -154,7 +154,7 @@ public class NSPAT
 
             for (int i = 0; i < radix.Names.Count; i++)
             {
-                var track = new PatternAnimationTrack { Material = radix.Names[i], Unknown = radix.Data[i].Unknown };
+                var track = new PatternAnimationTrack(material: radix.Names[i], unknown: radix.Data[i].Unknown);
                 Tracks.Add(track);
                 var trackKeyFrameInfos = perTrackKeyFrameInfos[i];
                 foreach (var info in trackKeyFrameInfos)
@@ -298,7 +298,12 @@ public class NSPAT
 
     public class PatternAnimationTrack
     {
-        public string? Material { get; set; }
+        public PatternAnimationTrack(string material, float unknown = 0)
+        {
+            Material = material;
+            Unknown = unknown;
+        }
+        public string Material { get; set; }
         public float Unknown { get; set; }
         public List<KeyFrame> KeyFrames { get; set; } = new List<KeyFrame>();
 
@@ -321,10 +326,10 @@ public class NSPAT
         public static PatternAnimationTrack Deserialize(XElement element)
         {
             var result = new PatternAnimationTrack
-            {
-                Material = element.Attribute("material")?.Value,
-                Unknown = float.TryParse(element.Attribute("unknown")?.Value, out var unk) ? unk : 0
-            };
+            (
+                material: element.Attribute("material")?.Value ?? string.Empty,
+                unknown: float.TryParse(element.Attribute("unknown")?.Value, out var unk) ? unk : 0
+            );
 
             foreach (var keyFrameElement in element.Elements("key_frame"))
             {

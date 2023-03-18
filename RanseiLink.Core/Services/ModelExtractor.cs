@@ -308,7 +308,7 @@ namespace RanseiLink.Core.Services
             foreach (var material in mtl.Materials)
             {
                 var texInf = texInfos.Find(x => x.PngFile == material.DiffuseTextureMapFile);
-                var nsmtl = new NSMDL.Model.Material
+                var nsmtl = new NSMDL.Model.Material(texInf.Texture.Name, texInf.Palette.Name, material.Name)
                 {
                     ItemTag = 0,
                     Diffuse = RawPalette.From32BitColor(material.DiffuseColor),
@@ -327,10 +327,6 @@ namespace RanseiLink.Core.Services
                     OrigHeight = (ushort)texInf.Texture.Height,
                     MagWidth = 1,
                     MagHeight = 1,
-
-                    Texture = texInf.Texture.Name,
-                    Palette = texInf.Palette.Name,
-                    Name = material.Name
                 };
 
                 if (nsmtl.OrigWidth == nsmtl.OrigHeight)
@@ -356,7 +352,7 @@ namespace RanseiLink.Core.Services
 
             // output
             public string DestinationFolder;
-            public ModelGenerator ModelGenerator;
+            public IModelGenerator ModelGenerator;
         }
 
         public static Result GenerateModel(GenerationSettings settings)
@@ -422,7 +418,7 @@ namespace RanseiLink.Core.Services
 
             // generate model
 
-            NSMDL.Model model = new NSMDL.Model() { Name = settings.ModelName };
+            NSMDL.Model model = new NSMDL.Model(settings.ModelName);
             NSTEX tex = new NSTEX();
 
             var genRes = ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, pat, 
@@ -445,9 +441,9 @@ namespace RanseiLink.Core.Services
 
             var nsbmd = new NSBMD(
                 new NSMDL
-                {
-                    Models = new List<NSMDL.Model> { model }
-                }
+                (
+                    models: new List<NSMDL.Model> { model }
+                )
             );
 
             nsbmd.WriteTo(nsbmdFile);
