@@ -62,31 +62,32 @@ public class SpriteTypeViewModel : ViewModelBase
 
     public void UpdateInfo(SpriteType type)
     {
-        IGraphicsInfo info = GraphicsInfoResource.Get(type);
+        IGraphicsInfo basicInfo = GraphicsInfoResource.Get(type);
 
-        _canAddNew = !info.FixedAmount;
+        _canAddNew = !basicInfo.FixedAmount;
 
-        if (info is MiscConstants)
+        if (basicInfo is IGroupedGraphicsInfo info)
         {
-            DimensionInfo = "";
-            return;
-        }
+            string dimensionInfo = "";
+            if (info.Width != null)
+            {
+                dimensionInfo += $"width={info.Width} ";
+            }
+            if (info.Height != null)
+            {
+                dimensionInfo += $"height={info.Height} ";
+            }
+            dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
 
-        string dimensionInfo = "";
-        if (info.Width != null)
+            int numberOverriden = _spriteProvider.GetAllSpriteFiles(SelectedType).Where(x => x.IsOverride).Count();
+            dimensionInfo += $"number-overriden={numberOverriden} ";
+
+            DimensionInfo = dimensionInfo;
+        }
+        else
         {
-            dimensionInfo += $"width={info.Width} ";
+            DimensionInfo = string.Empty;
         }
-        if (info.Height != null)
-        {
-            dimensionInfo += $"height={info.Height} ";
-        }
-        dimensionInfo += $"palette-capacity={info.PaletteCapacity} ";
-
-        int numberOverriden = _spriteProvider.GetAllSpriteFiles(SelectedType).Where(x => x.IsOverride).Count();
-        dimensionInfo += $"number-overriden={numberOverriden} ";
-
-        DimensionInfo = dimensionInfo;
     }
 
     private void UpdateList()

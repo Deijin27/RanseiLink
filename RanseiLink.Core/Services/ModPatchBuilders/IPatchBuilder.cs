@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿#nullable enable
+using System.Collections.Concurrent;
 
-namespace RanseiLink.Core.Services.ModPatchBuilders
+namespace RanseiLink.Core.Services.ModPatchBuilders;
+
+public interface IPatchBuilder
 {
-    public interface IPatchBuilder
-    {
-        void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions);
-    }
+    void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions);
 }

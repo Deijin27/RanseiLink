@@ -1,10 +1,10 @@
-﻿using RanseiLink.Core.Resources;
+﻿#nullable enable
+using RanseiLink.Core.Resources;
 using System.Collections.Concurrent;
 
-namespace RanseiLink.Core.Services.ModPatchBuilders
+namespace RanseiLink.Core.Services.ModPatchBuilders;
+
+public interface IGraphicTypePatchBuilder
 {
-    public interface IGraphicTypePatchBuilder
-    {
-        void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo);
-    }
+    void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo);
 }

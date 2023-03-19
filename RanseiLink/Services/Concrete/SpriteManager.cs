@@ -39,25 +39,25 @@ public class SpriteManager : ISpriteManager
 
         IGraphicsInfo gInfo = GraphicsInfoResource.Get(type);
 
-        if (gInfo.Width != null && gInfo.Height != null)
+        if (gInfo is IGroupedGraphicsInfo groupedGInfo && groupedGInfo.Width != null && groupedGInfo.Height != null)
         {
-            int width = (int)gInfo.Width;
-            int height = (int)gInfo.Height;
+            int width = (int)groupedGInfo.Width;
+            int height = (int)groupedGInfo.Height;
 
             if (!Core.Graphics.ImageSimplifier.ImageMatchesSize(file, width, height))
             {
-                if (gInfo.StrictHeight || gInfo.StrictWidth)
+                if (groupedGInfo.StrictHeight || groupedGInfo.StrictWidth)
                 {
                     _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                         "Invalid dimensions",
-                        $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nFor this image type it is a strict requirement."
+                        $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nFor this image type it is a strict requirement."
                         ));
                     return false;
                 }
 
                 var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
                     title: "Invalid dimensions",
-                    message: $"The dimensions of this image should be {gInfo.Width}x{gInfo.Height}.\nIf will work if they are different, but may look weird in game.",
+                    message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
                     buttons: new[]
                     {
                         new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
@@ -82,15 +82,7 @@ public class SpriteManager : ISpriteManager
         }
 
 
-        int paletteCapacity;
-        if (gInfo is MiscConstants miscInfo)
-        {
-            paletteCapacity = miscInfo.Items[id].PaletteCapacity;
-        }
-        else
-        {
-            paletteCapacity = gInfo.PaletteCapacity;
-        }
+        int paletteCapacity = gInfo.GetPaletteCapacity(id);
 
         if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
         {

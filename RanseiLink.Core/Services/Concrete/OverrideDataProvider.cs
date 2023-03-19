@@ -55,9 +55,9 @@ internal class OverrideDataProvider : IOverrideDataProvider
                 }
             }
         }
-        else
+        else if (info is IGroupedGraphicsInfo groupedInfo)
         {
-            string overrideFolder = Path.Combine(_mod.FolderPath, info.PngFolder);
+            string overrideFolder = Path.Combine(_mod.FolderPath, groupedInfo.PngFolder);
             if (Directory.Exists(overrideFolder))
             {
                 foreach (var i in Directory.GetFiles(overrideFolder).Select(i => new SpriteFile(type: type, id: int.Parse(Path.GetFileNameWithoutExtension(i)), file: i, isOverride: true)))
@@ -67,13 +67,17 @@ internal class OverrideDataProvider : IOverrideDataProvider
             }
             
         }
+        else
+        {
+            throw new Exception("Unhandled graphics info type");
+        }
 
         return dict.Values.ToList();
     }
 
     private SpriteFile GetSpriteFilePathWithoutFallback(SpriteType type, int id)
     {
-        return new SpriteFile(type, id, Path.Combine(_mod.FolderPath, GraphicsInfoResource.GetRelativeSpritePath(type, id)), true);
+        return new SpriteFile(type, id, Path.Combine(_mod.FolderPath, GraphicsInfoResource.Get(type).GetRelativeSpritePath(id)), true);
     }
 
     public SpriteFile GetSpriteFile(SpriteType type, int id)

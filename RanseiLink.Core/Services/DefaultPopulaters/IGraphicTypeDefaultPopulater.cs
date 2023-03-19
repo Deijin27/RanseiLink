@@ -1,9 +1,9 @@
-﻿using RanseiLink.Core.Resources;
+﻿#nullable enable
+using RanseiLink.Core.Resources;
 
-namespace RanseiLink.Core.Services.DefaultPopulaters
+namespace RanseiLink.Core.Services.DefaultPopulaters;
+
+public interface IGraphicTypeDefaultPopulater
 {
-    public interface IGraphicTypeDefaultPopulater
-    {
-        void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo);
-    }
+    void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo);
 }

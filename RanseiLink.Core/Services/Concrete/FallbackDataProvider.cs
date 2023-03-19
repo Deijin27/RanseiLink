@@ -82,9 +82,9 @@ public class FallbackDataProvider : IFallbackDataProvider
             }
             return result;
         }
-        else
+        else if (info is IGroupedGraphicsInfo groupedInfo)
         {
-            string dir = Path.Combine(defaultDataFolder, info.PngFolder);
+            string dir = Path.Combine(defaultDataFolder, groupedInfo.PngFolder);
             if (!Directory.Exists(dir))
             {
                 return new List<SpriteFile>();
@@ -93,13 +93,17 @@ public class FallbackDataProvider : IFallbackDataProvider
                 .Select(i => new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), i, isOverride: false))
                 .ToList();
         }
+        else
+        {
+            throw new Exception("Unhandled graphics info type");
+        }
         
     }
 
     public SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id)
     {
         string defaultDataFolder = Constants.DefaultDataFolder(gc);
-        return new SpriteFile(type, id, Path.Combine(defaultDataFolder, GraphicsInfoResource.GetRelativeSpritePath(type, id)), false);
+        return new SpriteFile(type, id, Path.Combine(defaultDataFolder, GraphicsInfoResource.Get(type).GetRelativeSpritePath(id)), false);
     }
 
     public DataFile GetDataFile(ConquestGameCode gc, string pathInRom)
