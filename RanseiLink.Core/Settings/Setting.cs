@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
@@ -9,12 +10,12 @@ namespace RanseiLink.Core.Settings
     {
         #region NotifyPropertyChanged
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged([CallerMemberName] string name = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void RaisePropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-        protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
+        protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string? name = null)
         {
             if (!EqualityComparer<T>.Default.Equals(property, newValue))
             {
@@ -30,14 +31,16 @@ namespace RanseiLink.Core.Settings
         private bool _isDefault;
         private TSettingValue _value;
 
-        protected Setting(string uniqueElementName)
+        protected Setting(string uniqueElementName, TSettingValue defaultValue)
         {
+            _default = defaultValue;
+            _value = defaultValue;
             UniqueElementName = uniqueElementName;
         }
 
         public string UniqueElementName { get; }
-        public string Name { get; protected set; }
-        public string Description { get; protected set; }
+        public string Name { get; protected set; } = string.Empty;
+        public string Description { get; protected set; } = string.Empty;
         public bool IsHidden { get; protected set; }
 
         public bool IsDefault

@@ -1,10 +1,11 @@
-﻿using System.Xml.Linq;
+﻿#nullable enable
+using System.Xml.Linq;
 
 namespace RanseiLink.Core.Settings
 {
     public abstract class StringSetting : Setting<string>
     {
-        protected StringSetting(string uniqueElementName) : base(uniqueElementName) { }
+        protected StringSetting(string uniqueElementName) : base(uniqueElementName, string.Empty) { }
 
         public override void Deserialize(XElement element)
         {

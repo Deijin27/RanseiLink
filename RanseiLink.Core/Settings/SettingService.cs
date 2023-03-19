@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
@@ -20,8 +21,11 @@ namespace RanseiLink.Core.Settings
                 try
                 {
                     _doc = XDocument.Load(_settingsFilePath);
-                    _docRoot = _doc.Root;
-                    return;
+                    if (_doc.Root != null)
+                    {
+                        _docRoot = _doc.Root;
+                        return;
+                    }
                 }
                 catch
                 {
