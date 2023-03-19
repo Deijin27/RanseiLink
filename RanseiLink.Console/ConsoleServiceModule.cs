@@ -3,8 +3,6 @@ using CliFx.Attributes;
 using DryIoc;
 using RanseiLink.Console.Services;
 using RanseiLink.Core;
-using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.Concrete;
 using System.Reflection;
 
 namespace RanseiLink.Console;
@@ -25,16 +23,5 @@ public class ConsoleServiceModule : IModule
                 builder.Register(type);
             }
         }
-
-        ContainerProvider.ModServiceGetterFactory.AddModule(new ConsoleModServiceModule());
-    }
-}
-
-public class ConsoleModServiceModule : IModule
-{
-    public void Load(IRegistrator builder)
-    {
-        builder.Register<IModServiceContainer, ModServiceContainer>(Reuse.Singleton);
-        builder.Register<ILuaService, LuaService>(Reuse.Singleton);
     }
 }

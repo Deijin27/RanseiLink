@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CliFx;
-using RanseiLink.Console.Services;
 using System.Reflection;
 using DryIoc;
 using RanseiLink.Core;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.Console;
 
@@ -15,8 +15,11 @@ internal class Program
         var builder = new Container();
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new ConsoleServiceModule());
-        var container = builder;
-        ContainerProvider.Container = container;
+
+        var modServiceGetter = new ModServiceGetterFactory(builder);
+        modServiceGetter.AddModule(new CoreModServiceModule());
+        modServiceGetter.AddModule(new ConsoleModServiceModule());
+        builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 
         // build application with clifx
         return await new CliApplicationBuilder()
@@ -24,7 +27,7 @@ internal class Program
            .SetTitle("RanseiLink Console")
            .SetDescription("Pokemon Conquest ROM Editor")
            .AddCommandsFromThisAssembly()
-           .UseTypeActivator(t => container.Resolve(t))
+           .UseTypeActivator(t => builder.Resolve(t))
            .Build()
            .RunAsync();
     }

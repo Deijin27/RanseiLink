@@ -12,11 +12,6 @@ namespace RanseiLink.Core.Services;
 public interface IModServiceGetterFactory
 {
     /// <summary>
-    /// Adds a module that should be included in the kernel on creation
-    /// </summary>
-    /// <param name="module"></param>
-    void AddModule(IModule module);
-    /// <summary>
     /// Creates a new child kernel of the global kernel, with the mod services included
     /// </summary>
     /// <param name="mod"></param>
@@ -24,12 +19,22 @@ public interface IModServiceGetterFactory
     IServiceGetter Create(ModInfo mod);
 }
 
-public class ModServiceGetterFactory : IModServiceGetterFactory
+public interface IModServiceRegistrator
+{
+    /// <summary>
+    /// Adds a module that should be included in the kernel on creation
+    /// </summary>
+    /// <param name="module"></param>
+    void AddModule(IModule module);
+}
+
+public class ModServiceGetterFactory : IModServiceGetterFactory, IModServiceRegistrator
 {
     private readonly List<IModule> _modules = new List<IModule>();
-
-    public ModServiceGetterFactory()
+    private readonly IContainer _container;
+    public ModServiceGetterFactory(IContainer container)
     {
+        _container = container;
     }
 
     public void AddModule(IModule module)
@@ -41,7 +46,7 @@ public class ModServiceGetterFactory : IModServiceGetterFactory
     {
         // RegistrySharing.CloneButKeepCache important to make the child container disposable
         // childDefaultServiceKey=null important because with a value multiple registrations to the same interface dont work
-        var builder = ContainerProvider.Container.CreateChild(RegistrySharing.CloneButKeepCache, null);
+        var builder = _container.CreateChild(RegistrySharing.CloneButKeepCache, null);
         builder.RegisterInstance(mod);
 
         var serviceGetter = new ServiceGetter(builder);

@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using RanseiLink.Core;
+using RanseiLink.Core.Services;
 using RanseiLink.PluginModule;
 using RanseiLink.ViewModels;
 using System;
@@ -16,7 +17,9 @@ namespace RanseiLink;
 public partial class App : Application
 {
     public static readonly string Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-    public MainWindowViewModel GetMainWindowViewModel() => ContainerProvider.Container.Resolve<MainWindowViewModel>();
+    public MainWindowViewModel GetMainWindowViewModel() => _mainWindowViewModel;
+    private MainWindowViewModel _mainWindowViewModel;
+
 
     public App()
     {
@@ -32,8 +35,13 @@ public partial class App : Application
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new PluginServiceModule());
         builder.RegisterModule(new WpfServiceModule());
-        var container = builder;
-        ContainerProvider.Container = container;
+
+        var modServiceGetter = new ModServiceGetterFactory(builder);
+        modServiceGetter.AddModule(new CoreModServiceModule());
+        modServiceGetter.AddModule(new WpfModServiceModule());
+        builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
+
+        _mainWindowViewModel = builder.Resolve<MainWindowViewModel>();
 
         base.OnStartup(e);
     }

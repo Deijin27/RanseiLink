@@ -28,8 +28,6 @@ public class WpfServiceModule : IModule
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
 
-        ContainerProvider.ModServiceGetterFactory.AddModule(new WpfModServiceModule());
-
         builder.RegisterDelegate(context =>
             new ModListItemViewModelFactory((parent, mod) =>
                 new ModListItemViewModel(
