@@ -1,4 +1,4 @@
-﻿
+﻿#nullable enable
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ namespace RanseiLink.Core.Services
     {
         void ShowDialog(object dialogViewModel);
         MessageBoxResult ShowMessageBox(MessageBoxSettings options);
-        string[] ShowOpenFileDialog(OpenFileDialogSettings settings);
-        string ShowSaveFileDialog(SaveFileDialogSettings settings);
-        string ShowOpenFolderDialog(OpenFolderDialogSettings settings);
+        string[]? ShowOpenFileDialog(OpenFileDialogSettings settings);
+        string? ShowSaveFileDialog(SaveFileDialogSettings settings);
+        string? ShowOpenFolderDialog(OpenFolderDialogSettings settings);
         void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
     }
 
@@ -28,14 +28,14 @@ namespace RanseiLink.Core.Services
 
     public interface IDialogLocator
     {
-        Type Locate(object viewModel);
+        Type? Locate(object viewModel);
     }
 
     public class NamingConventionLocator : IDialogLocator
     {
-        public Type Locate(object viewModel)
+        public Type? Locate(object viewModel)
         {
-            var viewModelName = viewModel.GetType().FullName;
+            var viewModelName = viewModel.GetType().FullName ?? throw new Exception("Cannot get type name for viewModel type");
             var name = viewModelName.Replace("ViewModel", "Dialog");
             return Type.GetType(name);
         }
@@ -45,7 +45,7 @@ namespace RanseiLink.Core.Services
     {
         private readonly ConcurrentDictionary<Type, Type> _registry = new ConcurrentDictionary<Type, Type>();
 
-        public Type Locate(object viewModel)
+        public Type? Locate(object viewModel)
         {
             if (viewModel == null)
             {
@@ -67,11 +67,11 @@ namespace RanseiLink.Core.Services
 
     public class ProgressInfo
     {
-        public string StatusText { get; }
+        public string? StatusText { get; }
         public int? Progress { get; }
         public int? MaxProgress { get; }
         public bool? IsIndeterminate { get; }
-        public ProgressInfo(string statusText = null, int? progress = null, int? maxProgress = null, bool? isIndeterminate = null)
+        public ProgressInfo(string? statusText = null, int? progress = null, int? maxProgress = null, bool? isIndeterminate = null)
         {
             StatusText = statusText;
             Progress = progress;
@@ -95,7 +95,7 @@ namespace RanseiLink.Core.Services
     public class SaveFileDialogSettings : FileDialogSettings
     {
         public SaveFileDialogSettings() { }
-        public string DefaultExtension { get; set; }
+        public string DefaultExtension { get; set; } = string.Empty;
     }
 
     public class OpenFileDialogSettings : FileDialogSettings
@@ -148,7 +148,7 @@ namespace RanseiLink.Core.Services
             return dialogViewModel.Result;
         }
 
-        public static string RequestRomFile(this IDialogService dialogService)
+        public static string? RequestRomFile(this IDialogService dialogService)
         {
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
@@ -160,7 +160,7 @@ namespace RanseiLink.Core.Services
             });
         }
 
-        public static string RequestModFile(this IDialogService dialogService)
+        public static string? RequestModFile(this IDialogService dialogService)
         {
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
@@ -172,7 +172,7 @@ namespace RanseiLink.Core.Services
             });
         }
 
-        public static string ShowOpenSingleFileDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        public static string? ShowOpenSingleFileDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
         {
             settings.AllowMultiple = false;
             var result = dialogService.ShowOpenFileDialog(settings);
@@ -184,7 +184,7 @@ namespace RanseiLink.Core.Services
             return file;
         }
 
-        public static string[] ShowOpenMultipleFilesDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        public static string[]? ShowOpenMultipleFilesDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
         {
             settings.AllowMultiple = true;
             return dialogService.ShowOpenFileDialog(settings);
