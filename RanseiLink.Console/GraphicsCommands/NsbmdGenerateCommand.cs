@@ -44,14 +44,14 @@ public class NsbmdGenerateCommand : ICommand
         Directory.CreateDirectory(DestinationFolder);
 
         var settings = new ModelExtractorGenerator.GenerationSettings
-        {
-            ObjFile = SourceFile,
-            DestinationFolder = DestinationFolder,
-            TransparencyFormat = TransparencyFormat,
-            OpacityFormat = OpacityFormat,
-            SemiTransparencyFormat = SemiTransparencyFormat,
-            ModelGenerator = new MapModelGenerator()
-        };
+        (
+            ObjFile: SourceFile,
+            DestinationFolder: DestinationFolder,
+            TransparencyFormat: TransparencyFormat,
+            OpacityFormat: OpacityFormat,
+            SemiTransparencyFormat: SemiTransparencyFormat,
+            ModelGenerator: new MapModelGenerator()
+        );
 
         var result = ModelExtractorGenerator.GenerateModel(settings);
 

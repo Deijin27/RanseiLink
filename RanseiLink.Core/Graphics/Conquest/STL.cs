@@ -8,15 +8,16 @@ namespace RanseiLink.Core.Graphics
 {
     public class STLCollection
     {
-        public List<STL> Items { get; set; }
+        public List<STL?> Items { get; set; }
 
-        public STLCollection()
+        public STLCollection(List<STL?> items)
         {
+            Items = items;
         }
 
         public static STLCollection Load(string stlDataFile, string stlInfoFile)
         {
-            var stls = new List<STL>();
+            var stls = new List<STL?>();
             using (var dataBr = new BinaryReader(File.OpenRead(stlDataFile)))
             {
                 using (var infoBr = new BinaryReader(File.OpenRead(stlInfoFile)))
@@ -38,7 +39,7 @@ namespace RanseiLink.Core.Graphics
                         }
                     }
 
-                    return new STLCollection { Items = stls };
+                    return new STLCollection(stls);
                 }
             }
         }
@@ -99,7 +100,7 @@ namespace RanseiLink.Core.Graphics
                 .ToArray();
 
             int maxNum = stlFiles.Max(i => i.num);
-            var stls = new STL[maxNum + 1];
+            var stls = new STL?[maxNum + 1];
             Parallel.For(0, stlFiles.Length, i =>
             {
                 var (file, num) = stlFiles[i];
@@ -112,7 +113,7 @@ namespace RanseiLink.Core.Graphics
                     stls[num] = STL.LoadPng(ncer, file, tiled);
                 }
             });
-            return new STLCollection { Items = stls.ToList() };
+            return new STLCollection(stls.ToList());
         }
 
         public void SaveAsPngs(string outputFolder, NCER ncer, bool tiled = false)
@@ -188,23 +189,27 @@ namespace RanseiLink.Core.Graphics
         public const int PaletteDataLength = 0x200;
         public const int PaddingLength = 0x60;
 
-        private STL()
+        private STL(int width, int height, Rgb15[] palette, byte[] pixels)
         {
-
+            Width = width;
+            Height = height;
+            Palette = palette;
+            Pixels = pixels;
         }
 
         public static STL Load(BinaryReader br)
         {
             var header = new Header(br);
-            var stl = new STL
-            {
-                Width = header.Width,
-                Height = header.Height,
-                Palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength)),
-                Pixels = br.ReadBytes(header.Width * header.Height)
-            };
+            var palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength));
+            var pixels = br.ReadBytes(header.Width * header.Height);
             br.Skip(PaddingLength);
-            return stl;
+            return new STL
+            (
+                width: header.Width,
+                height: header.Height,
+                palette: palette,
+                pixels: pixels
+            );
         }
 
         public void WriteTo(BinaryWriter bw)
@@ -252,13 +257,13 @@ namespace RanseiLink.Core.Graphics
                 tiled: tiled
                 );
 
-            return new STL()
-            {
-                Width = imageInfo.Width,
-                Height = imageInfo.Height,
-                Pixels = imageInfo.Pixels,
-                Palette = RawPalette.From32bitColors(imageInfo.Palette),
-            };
+            return new STL
+            (
+                width: imageInfo.Width,
+                height: imageInfo.Height,
+                pixels: imageInfo.Pixels,
+                palette: RawPalette.From32bitColors(imageInfo.Palette)
+            );
         }
     }
 }

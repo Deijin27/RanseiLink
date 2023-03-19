@@ -115,12 +115,12 @@ public class MapManager : IMapManager
         try
         {
             var settings = new ModelExtractorGenerator.GenerationSettings
-            {
-                ObjFile = objFile,
-                ModelName = ResolveMapModelFileNameWithoutExt(id),
-                DestinationFolder = tempFolder,
-                ModelGenerator = new MapModelGenerator()
-            };
+            (
+                ObjFile: objFile,
+                ModelName: ResolveMapModelFileNameWithoutExt(id),
+                DestinationFolder: tempFolder,
+                ModelGenerator: new MapModelGenerator()
+            );
 
             var result = ModelExtractorGenerator.GenerateModel(settings);
             if (result.IsSuccess)

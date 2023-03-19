@@ -7,7 +7,7 @@ namespace RanseiLink.Settings;
 
 internal class ThemeSetting : Setting<Theme>
 {
-    public ThemeSetting() : base("Theme") 
+    public ThemeSetting() : base("Theme", Theme.Dark) 
     {
         _default = Theme.Dark;
         Name = "Theme";

@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using System;
 using System.IO;
@@ -16,7 +17,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class ScenarioWarriorService : BaseModelService<IChildScenarioWarriorService>, IScenarioWarriorService
     {
-        public ScenarioWarriorService(ModInfo mod, IBaseWarriorService baseWarriorService) : base(null, 0, 10)
+        public ScenarioWarriorService(ModInfo mod, IBaseWarriorService baseWarriorService) : base(string.Empty, 0, 10)
         {
             for (int i = _minId; i <= _maxId; i++)
             {

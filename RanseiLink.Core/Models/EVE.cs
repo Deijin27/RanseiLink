@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,11 +9,11 @@ namespace RanseiLink.Core.Models
 {
     public class EVE
     {
-        public static void Unpack(string filePath, string outFolder = null)
+        public static void Unpack(string filePath, string? outFolder = null)
         {
             var eve = new EVE(filePath);
 
-            outFolder = outFolder ?? FileUtil.MakeUniquePath(Path.Combine(Path.GetDirectoryName(filePath), Path.GetFileNameWithoutExtension(filePath)));
+            outFolder = outFolder ?? FileUtil.MakeUniquePath(Path.Combine(Path.GetDirectoryName(filePath)!, Path.GetFileNameWithoutExtension(filePath)));
             Directory.CreateDirectory(outFolder);
 
             {
@@ -61,7 +62,7 @@ namespace RanseiLink.Core.Models
             }
         }
 
-        public static void Pack(string EveFolder, string outFile = null)
+        public static void Pack(string EveFolder, string? outFile = null)
         {
             var eve = new EVE();
 
@@ -83,7 +84,7 @@ namespace RanseiLink.Core.Models
                 {
                     var eventFile = eventFiles[i];
                     var binFile = binFiles[i];
-                    var e = new EVE.Event() { AllData = File.ReadAllBytes(eventFile) };
+                    var e = new EVE.Event(File.ReadAllBytes(eventFile));
                     var bin = File.ReadAllBytes(binFile);
                     Debug.Assert(bin.Length == 0x40);
                     lst.Add((bin, e));
@@ -99,7 +100,7 @@ namespace RanseiLink.Core.Models
                 var lst = new List<EVE.Event>();
                 foreach (var eventFile in Directory.GetFiles(eventGroupFolder, "*.psle"))
                 {
-                    var e = new EVE.Event() { AllData = File.ReadAllBytes(eventFile) };
+                    var e = new EVE.Event(File.ReadAllBytes(eventFile));
                     lst.Add(e);
                 }
                 eve.EventGroupsB.Add(lst);
@@ -446,9 +447,9 @@ namespace RanseiLink.Core.Models
                 }
             }
 
-            public Event()
+            public Event(byte[] allData)
             {
-
+                AllData = allData;
             }
             public Event(BinaryReader br)
             {

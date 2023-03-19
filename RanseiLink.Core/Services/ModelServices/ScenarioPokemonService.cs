@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using System;
 using System.IO;
@@ -16,7 +17,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
     public class ScenarioPokemonService : BaseModelService<IChildScenarioPokemonService>, IScenarioPokemonService
     {
-        public ScenarioPokemonService(ModInfo mod, IPokemonService pokemonService) : base(null, 0, 10)
+        public ScenarioPokemonService(ModInfo mod, IPokemonService pokemonService) : base(string.Empty, 0, 10)
         {
             for (int i = _minId; i <= _maxId; i++)
             {

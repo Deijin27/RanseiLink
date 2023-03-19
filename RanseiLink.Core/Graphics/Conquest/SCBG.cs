@@ -8,11 +8,16 @@ namespace RanseiLink.Core.Graphics
 {
     public class SCBGCollection
     {
-        public List<SCBG> Items { get; set; }
+        public List<SCBG?> Items { get; set; }
+
+        public SCBGCollection(List<SCBG?> items)
+        {
+            Items = items;
+        }
 
         public static SCBGCollection Load(string scbgDataFile, string scbgInfoFile)
         {
-            var scbgs = new List<SCBG>();
+            var scbgs = new List<SCBG?>();
             using (var dataBr = new BinaryReader(File.OpenRead(scbgDataFile)))
             {
                 using (var infoBr = new BinaryReader(File.OpenRead(scbgInfoFile)))
@@ -34,7 +39,7 @@ namespace RanseiLink.Core.Graphics
                         }
                     }
 
-                    return new SCBGCollection { Items = scbgs };
+                    return new SCBGCollection(scbgs);
                 }
             }
         }
@@ -95,7 +100,7 @@ namespace RanseiLink.Core.Graphics
                 .ToArray();
 
             int maxNum = scbgFiles.Max(i => i.num);
-            var scbg = new SCBG[maxNum + 1];
+            var scbg = new SCBG?[maxNum + 1];
             Parallel.For(0, scbgFiles.Length, i =>
             {
                 var (file, num) = scbgFiles[i];
@@ -109,7 +114,7 @@ namespace RanseiLink.Core.Graphics
                     scbg[num] = SCBG.LoadPng(file, tiled);
                 }
             });
-            return new SCBGCollection { Items = scbg.ToList() };
+            return new SCBGCollection(scbg.ToList());
         }
 
         public void SaveAsPngs(string outputFolder, bool tiled = true)
@@ -147,27 +152,27 @@ namespace RanseiLink.Core.Graphics
         public Rgb15[] Palette { get; set; }
         public byte[] Pixels { get; set; }
 
-        private SCBG()
+        private SCBG(ushort width, ushort height, Rgb15[] palette, byte[] pixels)
         {
-
+            Width = width;
+            Height = height;
+            Palette = palette;
+            Pixels = pixels;
         }
 
         public static SCBG Load(BinaryReader br)
         {
-            var scbg = new SCBG();
-
             var magicNumber = br.ReadMagicNumber();
             if (magicNumber != MagicNumber)
             {
                 throw new InvalidDataException($"Unexpected magic number '{magicNumber}'. (expected: {MagicNumber})");
             }
-            scbg.Width = br.ReadUInt16();
-            scbg.Height = br.ReadUInt16();
 
-            scbg.Palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength));
-            scbg.Pixels = br.ReadBytes(scbg.Width * scbg.Height);
-
-            return scbg;
+            ushort width = br.ReadUInt16();
+            ushort height = br.ReadUInt16();
+            var palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength));
+            var pixels = br.ReadBytes(width * height);
+            return new SCBG(width, height, palette, pixels);
         }
 
         public void WriteTo(BinaryWriter bw)
@@ -200,12 +205,12 @@ namespace RanseiLink.Core.Graphics
             var imageInfo = ImageUtil.LoadPng(file, tiled);
 
             return new SCBG
-            {
-                Width = (ushort)imageInfo.Width,
-                Height = (ushort)imageInfo.Height,
-                Palette = RawPalette.From32bitColors(imageInfo.Palette),
-                Pixels = imageInfo.Pixels,
-            };
+            (
+                width: (ushort)imageInfo.Width,
+                height: (ushort)imageInfo.Height,
+                palette: RawPalette.From32bitColors(imageInfo.Palette),
+                pixels: imageInfo.Pixels
+            );
         }
 
     }

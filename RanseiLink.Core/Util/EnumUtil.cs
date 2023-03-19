@@ -29,7 +29,7 @@ namespace RanseiLink.Core
                 throw new Exception($"Attribute {nameof(DefaultValuesAttribute)} not found on {typeof(T).Name}");
             }
 
-            return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i));
+            return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i!));
         }
 
         public static IEnumerable<T> GetValuesExceptDefaultsWithFallback<T>()
@@ -39,7 +39,7 @@ namespace RanseiLink.Core
                 return GetValues<T>();
             }
 
-            return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i));
+            return GetValues<T>().Where(i => !attr.DefaultValues.Contains(i!));
         }
     }
 }

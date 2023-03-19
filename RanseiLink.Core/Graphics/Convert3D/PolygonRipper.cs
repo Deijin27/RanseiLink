@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -6,15 +7,14 @@ namespace RanseiLink.Core.Graphics
 {
     public class PolygonRipper
     {
-        private PolygonRipper()
+        private PolygonRipper(GpuState gpu)
         {
-
+            this.gpu = gpu;
         }
 
         public static Group Rip(IEnumerable<PolygonDisplayCommand> commands, GpuState gpu)
         {
-            var state = new PolygonRipper();
-            state.gpu = gpu;
+            var state = new PolygonRipper(gpu);
             state.Process(commands);
             return state.group;
         }

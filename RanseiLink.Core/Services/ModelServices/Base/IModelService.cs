@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -100,7 +101,7 @@ namespace RanseiLink.Core.Services.ModelServices
             return _cache[id];
         }
 
-        public object RetrieveObject(int id) => Retrieve(id);
+        public object RetrieveObject(int id) => Retrieve(id)!;
 
         public abstract string IdToName(int id);
 

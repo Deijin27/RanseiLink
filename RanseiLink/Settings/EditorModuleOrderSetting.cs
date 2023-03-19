@@ -7,11 +7,11 @@ namespace RanseiLink.Settings;
 
 public class EditorModuleOrderSetting : Setting<IReadOnlyCollection<string>>
 {
-    public EditorModuleOrderSetting() : base("EditorModuleOrder") 
+    public EditorModuleOrderSetting() : base("EditorModuleOrder", Array.Empty<string>()) 
     {
         _default = Array.Empty<string>();
-        Name = "Theme";
-        Description = "The visual theme of the application";
+        Name = "Editor module order";
+        Description = "The order of the tab items in the list at the side of the main editor page";
     }
 
     public override void Deserialize(XElement element)

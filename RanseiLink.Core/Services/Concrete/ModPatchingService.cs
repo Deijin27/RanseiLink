@@ -1,4 +1,5 @@
-﻿//#define PATCHER_BUG_FIXING
+﻿#nullable enable
+//#define PATCHER_BUG_FIXING
 using FluentResults;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.RomFs;
@@ -56,12 +57,12 @@ namespace RanseiLink.Core.Services.Concrete
             return Result.Ok();
         }
 
-        public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo> progress = null)
+        public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo>? progress = null)
         {
             progress?.Report(new ProgressInfo(statusText: "Preparing to patch...", isIndeterminate: true));
 
             ConcurrentBag<FileToPatch> filesToPatch = new ConcurrentBag<FileToPatch>();
-            Exception exception = null;
+            Exception? exception = null;
             try
             {
                 using (var services = _modServiceGetterFactory.Create(modInfo))

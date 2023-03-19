@@ -46,7 +46,7 @@ namespace RanseiLink.Core.Services.ModelServices
             }
         }
 
-        public WarriorNameTable NameTable { get; private set; }
+        public WarriorNameTable NameTable { get; private set; } = null!;
 
 
         public override string IdToName(int id)
