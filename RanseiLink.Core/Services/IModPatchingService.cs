@@ -1,5 +1,4 @@
-﻿#nullable enable
-using FluentResults;
+﻿using FluentResults;
 using System;
 
 namespace RanseiLink.Core.Services;

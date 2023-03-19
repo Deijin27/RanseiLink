@@ -1,5 +1,4 @@
-﻿#nullable enable
-using DryIoc;
+﻿using DryIoc;
 using System;
 
 namespace RanseiLink.Core.Services;

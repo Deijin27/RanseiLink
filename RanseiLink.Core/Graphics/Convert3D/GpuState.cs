@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Numerics;
 
 namespace RanseiLink.Core.Graphics;

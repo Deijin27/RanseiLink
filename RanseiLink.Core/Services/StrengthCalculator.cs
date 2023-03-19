@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Services;
+﻿namespace RanseiLink.Core.Services;
 
 public static class StrengthCalculator
 {

@@ -1,5 +1,4 @@
-﻿#nullable enable
-
+﻿
 namespace RanseiLink.Core.Resources
 {
     public enum MetaSpriteType

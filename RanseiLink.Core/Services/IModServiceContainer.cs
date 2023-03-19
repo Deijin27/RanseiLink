@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Services.ModelServices;
+﻿using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Core.Services;
 

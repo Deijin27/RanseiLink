@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using System.Xml.Linq;
 using System;
 

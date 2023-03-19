@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Text
+﻿namespace RanseiLink.Core.Text
 {
     public static class PnaConstNames
     {

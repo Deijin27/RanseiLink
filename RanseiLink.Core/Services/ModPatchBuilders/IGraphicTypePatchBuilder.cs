@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Resources;
+﻿using RanseiLink.Core.Resources;
 using System.Collections.Concurrent;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;

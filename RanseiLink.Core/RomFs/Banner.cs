@@ -1,5 +1,4 @@
-﻿#nullable enable
-using FluentResults;
+﻿using FluentResults;
 using RanseiLink.Core.Graphics;
 using System;
 using System.IO;

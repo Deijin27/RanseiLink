@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Maps;
+﻿namespace RanseiLink.Core.Maps;
 
 public enum TerrainId : byte
 {

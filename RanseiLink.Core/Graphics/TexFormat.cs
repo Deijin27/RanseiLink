@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 public enum TexFormat
 {

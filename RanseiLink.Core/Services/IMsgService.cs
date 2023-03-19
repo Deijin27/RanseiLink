@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Text;
 using System.Collections.Generic;
 
 namespace RanseiLink.Core.Services;

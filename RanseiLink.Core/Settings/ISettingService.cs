@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Settings;
+﻿namespace RanseiLink.Core.Settings;
 
 public interface ISettingService
 {

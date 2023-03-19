@@ -1,5 +1,4 @@
-﻿#nullable enable
-using SixLabors.ImageSharp.PixelFormats;
+﻿using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

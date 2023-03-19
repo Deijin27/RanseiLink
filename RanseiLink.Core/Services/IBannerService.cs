@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.RomFs;
+﻿using RanseiLink.Core.RomFs;
 using System.IO;
 
 namespace RanseiLink.Core.Services;

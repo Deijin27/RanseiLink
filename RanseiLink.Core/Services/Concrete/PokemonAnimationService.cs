@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics.Conquest;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;

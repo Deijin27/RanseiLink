@@ -1,5 +1,4 @@
-﻿#nullable enable
-using DryIoc;
+﻿using DryIoc;
 
 namespace RanseiLink.Core;
 public interface IModule

@@ -1,5 +1,4 @@
-﻿#nullable enable
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 
 namespace RanseiLink.Core.Graphics;
 

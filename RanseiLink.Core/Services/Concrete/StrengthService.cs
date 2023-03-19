@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 

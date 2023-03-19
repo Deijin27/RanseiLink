@@ -1,5 +1,4 @@
-﻿#nullable enable
-using DryIoc;
+﻿using DryIoc;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.ModelServices;

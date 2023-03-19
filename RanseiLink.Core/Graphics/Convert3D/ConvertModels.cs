@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Graphics.ExternalFormats;
+﻿using RanseiLink.Core.Graphics.ExternalFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;

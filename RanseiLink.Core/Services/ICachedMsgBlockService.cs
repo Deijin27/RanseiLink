@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Text;
+﻿using RanseiLink.Core.Text;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;

@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace RanseiLink.Core.Util;
+﻿namespace RanseiLink.Core.Util;
 
 public static class BitUtil
 {

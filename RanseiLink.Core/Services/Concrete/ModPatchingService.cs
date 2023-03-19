@@ -1,5 +1,4 @@
-﻿#nullable enable
-//#define PATCHER_BUG_FIXING
+﻿//#define PATCHER_BUG_FIXING
 using FluentResults;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.RomFs;

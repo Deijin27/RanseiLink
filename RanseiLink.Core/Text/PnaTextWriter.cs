@@ -1,5 +1,4 @@
-﻿#nullable enable
-// PnaTextWriter.cs
+﻿// PnaTextWriter.cs
 //
 // Author:
 //       Benito Palacios Sanchez <benito356@gmail.com> (small modifications by Deijin)

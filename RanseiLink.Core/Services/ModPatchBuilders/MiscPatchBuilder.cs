@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Archive;
+﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using System;

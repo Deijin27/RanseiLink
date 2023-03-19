@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace RanseiLink.Core.Settings
 {

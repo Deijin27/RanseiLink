@@ -1,5 +1,4 @@
-﻿#nullable enable
-using FluentResults;
+﻿using FluentResults;
 using RanseiLink.Core.Enums;
 using System;
 using System.Collections.Generic;
