@@ -117,9 +117,8 @@ namespace RanseiLink.Core.Services
             {
                 NSMDL.Model.Material material = model.Materials[i];
 
-                var m = new MTL.Material
+                var m = new MTL.Material(material.Name)
                 {
-                    Name = material.Name,
                     AmbientColor = RawPalette.To32BitColor(material.Ambient),
                     DiffuseColor = RawPalette.To32BitColor(material.Diffuse),
                     SpecularColor = RawPalette.To32BitColor(material.Specular),
@@ -233,9 +232,13 @@ namespace RanseiLink.Core.Services
             var imgInfo = new SpriteImageInfo(pixels, palette.ToArray(), width, height);
 
             string texName = Path.GetFileNameWithoutExtension(file);
-            if (texName.Length > 13) // 14 to allow the palette to add the _pl
+            if (string.IsNullOrEmpty(texName))
             {
-                return Result.Fail<TextureLoadResult>("Texture name is too long. Max length is 13");
+                return Result.Fail($"Texture name of file '{file}' is empty");
+            }
+            if (texName.Length > RadixName.Length - 3) // to allow the palette to add the _pl
+            {
+                return Result.Fail($"Texture name '{texName}' is too long. Max length is {RadixName.Length - 3}");
             }
             var texResult = new NSTEX.Texture
             (
@@ -315,9 +318,13 @@ namespace RanseiLink.Core.Services
                 {
                     return Result.Fail($"Material uses undefined texture '{material.DissolveTextureMapFile}'");
                 }
-                if (material.Name == null)
+                if (string.IsNullOrEmpty(material.Name))
                 {
                     return Result.Fail("One of the materials does not have a name");
+                }
+                if (material.Name.Length > RadixName.Length)
+                {
+                    return Result.Fail($"Material name '{material.Name}' is longer than the maximum 16 characters");
                 }
                 var nsmtl = new NSMDL.Model.Material(texInf.Texture.Name, texInf.Palette.Name, material.Name)
                 {
@@ -423,6 +430,8 @@ namespace RanseiLink.Core.Services
                 return Result.Fail("Could not resolve MTL file");
             }
 
+            FixMaya(Path.GetFileNameWithoutExtension(settings.ObjFile), obj);
+
             // load pattern animation if exists
             var patternAnimation = settings.PatternAnimation;
             if (patternAnimation == null)
@@ -473,6 +482,32 @@ namespace RanseiLink.Core.Services
             nsbmd.WriteTo(nsbmdFile);
 
             return Result.Ok();
+        }
+
+        /// <summary>
+        /// Maya adds some prefixes to the material names, which makes them too long.
+        /// This is annoying to fix manually, so this here does it automatically.
+        /// </summary>
+        static void FixMaya(string objName, OBJ obj)
+        {
+            string prefixName = objName + ":";
+            foreach (var face in obj.Groups.SelectMany(x => x.Faces))
+            {
+                if (face.MaterialName.StartsWith(prefixName))
+                {
+                    face.MaterialName = face.MaterialName.Substring(prefixName.Length);
+                }
+            }
+            if (obj.MaterialLib != null)
+            {
+                foreach (var material in obj.MaterialLib.Materials)
+                {
+                    if (material.Name.StartsWith(prefixName))
+                    {
+                        material.Name = material.Name.Substring(prefixName.Length);
+                    }
+                }
+            }
         }
     }
 }

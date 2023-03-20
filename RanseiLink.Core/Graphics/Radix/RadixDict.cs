@@ -130,7 +130,7 @@ public class RadixDict<TRadixData> where TRadixData : IRadixData, new()
             + RawRadixNode.Length * (numEntries + 1)
             + HeaderB.Length
             + new TRadixData().Length * numEntries
-            + NameLength * numEntries;
+            + RadixName.Length * numEntries;
 
     }
 
@@ -168,12 +168,20 @@ public class RadixDict<TRadixData> where TRadixData : IRadixData, new()
         // read names
         for (int i = 0; i < headerA.EntryCount; i++)
         {
-            Names.Add(ReadName(br));
+            Names.Add(RadixName.ReadName(br));
         }
     }
 
     public void WriteTo(BinaryWriter bw)
     {
+        foreach (var name in Names)
+        {
+            if (name.Length > RadixName.Length)
+            {
+                throw new Exception("RadixDict Entry Name cannot be longer than 16 characters.");
+            }
+        }
+
         // create headers
         var headerA = new HeaderA
         {
@@ -213,7 +221,7 @@ public class RadixDict<TRadixData> where TRadixData : IRadixData, new()
         headerB.NamesOffset = (ushort)(bw.BaseStream.Position - headerBOffset);
         foreach (var name in Names)
         {
-            WriteName(bw, name);
+            RadixName.WriteName(bw, name);
         }
 
         // write headers
@@ -229,16 +237,21 @@ public class RadixDict<TRadixData> where TRadixData : IRadixData, new()
         bw.BaseStream.Position = endOffset;
     }
 
-    public const int NameLength = 16;
+    
+}
+
+public static class RadixName
+{
+    public const int Length = 16;
     public static string ReadName(BinaryReader br)
     {
-        return Encoding.UTF8.GetString(br.ReadBytes(NameLength)).TrimEnd('\x0');
+        return Encoding.UTF8.GetString(br.ReadBytes(Length)).TrimEnd('\x0');
     }
 
     public static void WriteName(BinaryWriter bw, string name)
     {
         var bytes = Encoding.UTF8.GetBytes(name);
-        Array.Resize(ref bytes, NameLength);
+        Array.Resize(ref bytes, Length);
         bw.Write(bytes);
     }
 }

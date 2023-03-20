@@ -56,7 +56,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
             using (StreamReader sr = File.OpenText(file))
             {
                 bool anyMaterials = false;
-                Material material = new Material();
+                Material material = new Material(string.Empty);
                 string? untrimmedLine;
                 while ((untrimmedLine = sr.ReadLine()) != null)
                 {
@@ -91,7 +91,7 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
                                     Materials.Add(material);
                                 }
                                 anyMaterials = true;
-                                material = new Material() { Name = lineParts[1] };
+                                material = new Material(lineParts[1]);
                             }
                             break;
 
@@ -202,10 +202,14 @@ namespace RanseiLink.Core.Graphics.ExternalFormats
 
         public class Material
         {
+            public Material(string name)
+            {
+                Name = name;
+            }
             /// <summary>
             /// Name of the material
             /// </summary>
-            public string? Name { get; set; }
+            public string Name { get; set; }
 
             /// <summary>
             /// Ka: specifies ambient color, to account for light that is scattered about the entire scene [see Wikipedia entry for Phong Reflection Model] using values between 0 and 1 for the RGB components.

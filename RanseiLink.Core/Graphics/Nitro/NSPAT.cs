@@ -142,13 +142,13 @@ public class NSPAT
             var textureNames = new string[header.NumTextures];
             for (int i = 0; i < header.NumTextures; i++)
             {
-                textureNames[i] = RadixDict<TrackRadixData>.ReadName(br);
+                textureNames[i] = RadixName.ReadName(br);
             }
 
             var paletteNames = new string[header.NumPalettes];
             for (int i = 0; i < header.NumPalettes; i++)
             {
-                paletteNames[i] = RadixDict<TrackRadixData>.ReadName(br);
+                paletteNames[i] = RadixName.ReadName(br);
             }
 
             for (int i = 0; i < radix.Names.Count; i++)
@@ -240,13 +240,13 @@ public class NSPAT
             header.TexturesOffset = (ushort)(bw.BaseStream.Position - initOffset);
             foreach (var texture in textures)
             {
-                RadixDict<TrackRadixData>.WriteName(bw, texture);
+                RadixName.WriteName(bw, texture);
             }
 
             header.PalettesOffset = (ushort)(bw.BaseStream.Position - initOffset);
             foreach (var palette in palettes)
             {
-                RadixDict<TrackRadixData>.WriteName(bw, palette);
+                RadixName.WriteName(bw, palette);
             }
 
 
