@@ -156,19 +156,6 @@ public class MaxLinkPokemonSelectorEditorModule : BaseSelectorEditorModule<IMaxL
     }
 }
 
-public class ScenarioWarriorGridSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
-{
-    public const string Id = "scenario_warrior_grid";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Warrior (Grid)";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<ScenarioWarriorGridViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
-    }
-}
-
 [EditorModule]
 public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
 {
@@ -207,66 +194,6 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
     }
 }
 
-public class ScenarioWarriorSelectorEditorModule : BaseSelectorEditorModule<IScenarioWarriorService>
-{
-    public const string Id = "scenario_warrior_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Warrior";
-    private IChildScenarioWarriorService _childScenarioWarriorService;
-    private IScenarioPokemonService _scenarioPokemonService;
-    private int _scenario;
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
-        var vm = modServices.Get<ScenarioWarriorViewModel>();
-        _childScenarioWarriorService = _service.Retrieve(0);
-        var innerSelector = new SelectorViewModel(_childScenarioWarriorService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioWarriorService.Retrieve(id)));
-        _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
-        {
-            _scenario = id;
-            _childScenarioWarriorService = _service.Retrieve(id);
-            innerSelector.SetDisplayItems(_childScenarioWarriorService.GetComboBoxItemsExceptDefault());
-            vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioWarriorService.Retrieve(innerSelector.Selected));
-        });
-    }
-
-    public override void OnPatchingRom()
-    {
-        base.OnPatchingRom();
-        _scenarioPokemonService?.Save();
-    }
-
-    public override void Deactivate()
-    {
-        base.Deactivate();
-        _scenarioPokemonService?.Save();
-    }
-}
-
-public class ScenarioPokemonSelectorEditorModule : BaseSelectorEditorModule<IScenarioPokemonService>
-{
-    public const string Id = "scenario_pokemon_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Pokemon";
-    private IChildScenarioPokemonService _childScenarioPokemonService;
-    private int _scenario;
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<ScenarioPokemonViewModel>();
-        _childScenarioPokemonService = _service.Retrieve(0);
-        var innerSelector = new SelectorViewModel(_childScenarioPokemonService, vm, id => vm.SetModel((ScenarioId)_scenario, id, _childScenarioPokemonService.Retrieve(id)));
-        _viewModel = new SelectorViewModelWithoutScroll(_service, innerSelector, id =>
-        {
-            _scenario = id;
-            _childScenarioPokemonService = _service.Retrieve(id);
-            innerSelector.SetDisplayItems(_childScenarioPokemonService.GetComboBoxItemsExceptDefault());
-            vm.SetModel((ScenarioId)_scenario, innerSelector.Selected, _childScenarioPokemonService.Retrieve(innerSelector.Selected));
-        });
-    }
-}
-
 [EditorModule]
 public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModule<IScenarioAppearPokemonService>
 {
@@ -278,19 +205,6 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioAppearPokemonViewModel>();
         _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
-    }
-}
-
-public class ScenarioKingdomSelectorEditorModule : BaseSelectorEditorModule<IScenarioKingdomService>
-{
-    public const string Id = "scenario_kingdom_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Scenario Kingdom";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<ScenarioKingdomViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }
 

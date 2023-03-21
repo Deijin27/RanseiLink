@@ -115,34 +115,22 @@
     <Compile Update="Views\ModelViews\ScenarioBuildingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioKingdomView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\ModelViews\ScenarioAppearPokemonView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\WarriorNameTableView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioWarriorView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\ModelViews\MaxLinkView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\ScenarioPokemonView.xaml.cs">
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\BaseWarriorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\ItemView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\SelectorViews\ScenarioSelectorView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\GridViews\ScenarioWarriorGridView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\SelectorViews\SelectorView.xaml.cs">
@@ -289,10 +277,6 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioKingdomView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Views\ModelViews\ScenarioAppearPokemonView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -301,15 +285,11 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioWarriorView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Views\ModelViews\MaxLinkView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\ScenarioPokemonView.xaml">
+    <Page Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
@@ -318,14 +298,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ModelViews\ItemView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\SelectorViews\ScenarioSelectorView.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\GridViews\ScenarioWarriorGridView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

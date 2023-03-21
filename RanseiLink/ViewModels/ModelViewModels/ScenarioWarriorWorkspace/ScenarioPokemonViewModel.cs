@@ -4,10 +4,8 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace RanseiLink.ViewModels;
@@ -16,7 +14,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
 {
     public delegate ScenarioPokemonViewModel Factory();
 
-    private IPokemonService _pokemonService;
+    private readonly IPokemonService _pokemonService;
     private ScenarioPokemon _model;
     private int _id;
     private ScenarioId _scenario;
@@ -32,7 +30,6 @@ public class ScenarioPokemonViewModel : ViewModelBase
 
     public ScenarioPokemonViewModel(
         IJumpService jumpService,
-        IScenarioWarriorService scenarioWarriorService,
         IIdToNameService idToNameService,
         IPokemonService pokemonService)
     {
@@ -42,19 +39,6 @@ public class ScenarioPokemonViewModel : ViewModelBase
         SetExactLinkCommand = new RelayCommand(() => Exp = LinkCalculator.CalculateExp(LinkNum));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
-        JumpToFirstWarriorCommand = new RelayCommand(() =>
-        {
-            int i = 0;
-            foreach (var sw in scenarioWarriorService.Retrieve((int)_scenario).Enumerate())
-            {
-                if (!sw.ScenarioPokemonIsDefault(0) && sw.GetScenarioPokemon(0) == _id)
-                {
-                    jumpService.JumpToNested(ScenarioWarriorSelectorEditorModule.Id, (int)_scenario, i);
-                    return;
-                }
-                i++;
-            }
-        });
 
         PokemonItems = idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
         PokemonItems.Add(new SelectorComboBoxItem(511, "Default"));
@@ -95,11 +79,6 @@ public class ScenarioPokemonViewModel : ViewModelBase
 
     public ICommand JumpToPokemonCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
-
-    /// <summary>
-    /// Jump to first scenario warrior with this scenario pokemon
-    /// </summary>
-    public ICommand JumpToFirstWarriorCommand { get; }
 
     public List<SelectorComboBoxItem> PokemonItems { get; }
     public ObservableCollection<SelectorComboBoxItem> AbilityItems { get; } = new ObservableCollection<SelectorComboBoxItem>();

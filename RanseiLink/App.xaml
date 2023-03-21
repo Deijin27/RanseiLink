@@ -41,12 +41,6 @@
             <DataTemplate DataType="{x:Type vm:SelectorViewModelWithoutScroll}">
                 <views:SelectorViewWithoutScroll/>
             </DataTemplate>
-            
-            <!-- Registerd Grid View Models-->
-
-            <DataTemplate DataType="{x:Type vm:ScenarioWarriorGridViewModel}">
-                <views:ScenarioWarriorGridView/>
-            </DataTemplate>
 
             <!-- Register View Models -->
 
@@ -90,10 +84,6 @@
                 <views:ScenarioPokemonView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:ScenarioWarriorViewModel}">
-                <views:ScenarioWarriorView/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type vm:MaxLinkWarriorViewModel}">
                 <views:MaxLinkView/>
             </DataTemplate>
@@ -120,10 +110,6 @@
 
             <DataTemplate DataType="{x:Type vm:KingdomViewModel}">
                 <views:KingdomView/>
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:ScenarioKingdomViewModel}">
-                <views:ScenarioKingdomView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ScenarioBuildingViewModel}">
