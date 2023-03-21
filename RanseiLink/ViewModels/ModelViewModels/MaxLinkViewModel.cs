@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -125,7 +126,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
 
     public ObservableCollection<WarriorMaxLinkListItem> Items { get; } = new ObservableCollection<WarriorMaxLinkListItem>();
 
-    public abstract string SmallSpritePath { get; }
+    public abstract string? SmallSpritePath { get; }
 }
 
 public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
@@ -154,7 +155,7 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
         OnSetModel();
     }
 
-    public override string SmallSpritePath 
+    public override string? SmallSpritePath 
     { 
         get
         {
@@ -196,5 +197,5 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
         OnSetModel();
     }
 
-    public override string SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlPokemonM, _id).File;
+    public override string? SmallSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlPokemonM, _id).File;
 }

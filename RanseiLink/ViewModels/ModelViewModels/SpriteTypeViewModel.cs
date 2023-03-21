@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
@@ -16,7 +17,7 @@ public class SpriteTypeViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IDialogService _dialogService;
     private readonly ISpriteManager _spriteManager;
-    private string _dimensionInfo;
+    private string _dimensionInfo = null!;
     private bool _canAddNew;
 
     public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
@@ -128,11 +129,15 @@ public class SpriteTypeViewModel : ViewModelBase
         }
     }
 
-    private void OnSpriteModified(object sender, SpriteFile file)
+    private void OnSpriteModified(object? sender, SpriteFile file)
     {
+        if (sender is not SpriteItemViewModel spriteItemViewModel)
+        {
+            return;
+        }
         if (!File.Exists(file.File))
         {
-            Items.Remove((SpriteItemViewModel)sender);
+            Items.Remove(spriteItemViewModel);
         }
         UpdateInfo(SelectedType);
     }

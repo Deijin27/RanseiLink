@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Models;
+﻿#nullable enable
+using RanseiLink.Core.Models;
 
 namespace RanseiLink.ViewModels;
 

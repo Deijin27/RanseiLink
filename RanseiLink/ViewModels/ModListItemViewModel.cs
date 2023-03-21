@@ -62,14 +62,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     public void UpdateBanner()
     {
-        if (PathToImageSourceConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile), out var img))
-        {
-            Banner = img;
-        }
-        else
-        {
-            Banner = null;
-        }
+        Banner = PathToImageSourceConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
     }
 
     private ImageSource _banner;

@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -75,8 +76,6 @@ public class PokemonViewModel : ViewModelBase
     }
 
     public ICommand ImportAnimationCommand { get; }
-    public ICommand ImportRawAnimationCommand { get; }
-    public ICommand RevertRawAnimationCommand { get; }
     public ICommand RevertAnimationCommand { get; }
     public ICommand ExportAnimationsCommand { get; }
     public ICommand JumpToMoveCommand { get; }

@@ -9,7 +9,7 @@ namespace RanseiLink.Services.Concrete;
 public class CachedSpriteProvider : ICachedSpriteProvider
 {
     private readonly IOverrideDataProvider _overrideDataProvider;
-    private readonly Dictionary<int, ImageSource> _cache = new();
+    private readonly Dictionary<int, ImageSource?> _cache = new();
 
     public CachedSpriteProvider(IOverrideDataProvider overrideDataProvider)
     {
@@ -35,7 +35,7 @@ public class CachedSpriteProvider : ICachedSpriteProvider
             return null;
         }
         var file = _overrideDataProvider.GetSpriteFile(type, id);
-        PathToImageSourceConverter.TryConvert(file.File, out var imageSource);
+        var imageSource = PathToImageSourceConverter.TryConvert(file.File);
         _cache[ResolveKey(type, id)] = imageSource;
         return imageSource;
     }

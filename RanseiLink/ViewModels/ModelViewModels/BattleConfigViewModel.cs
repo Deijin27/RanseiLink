@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Graphics;
 using System.Collections.Generic;

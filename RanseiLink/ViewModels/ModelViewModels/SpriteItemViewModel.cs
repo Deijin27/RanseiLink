@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
 using RanseiLink.ValueConverters;
@@ -18,14 +19,18 @@ public class SpriteItemViewModel : ViewModelBase
     private readonly ISpriteManager _spriteManager;
     private SpriteType _spriteType;
     private bool _isOverride;
-    private string _displayFile;
-    private ImageSource _displayImage;
+    private string _displayFile = null!;
+    private ImageSource? _displayImage;
 
     public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
     {
         _dialogService = dialogService;
         _spriteProvider = spriteProvider;
         _spriteManager = spriteManager;
+
+        RevertCommand = new RelayCommand(Revert, () => _isOverride);
+        ExportCommand = new RelayCommand(Export);
+        SetOverrideCommand = new RelayCommand(SetOverride);
     }
 
     public SpriteItemViewModel Init(SpriteFile sprite)
@@ -35,10 +40,6 @@ public class SpriteItemViewModel : ViewModelBase
         _spriteType = sprite.Type;
         _isOverride = sprite.IsOverride;
         _displayFile = sprite.File;
-
-        RevertCommand = new RelayCommand(Revert, () => _isOverride);
-        ExportCommand = new RelayCommand(Export);
-        SetOverrideCommand = new RelayCommand(SetOverride);
 
         UpdateDisplayImage();
 
@@ -52,7 +53,7 @@ public class SpriteItemViewModel : ViewModelBase
     public int Id { get; private set; }
     public bool IsOverride => _isOverride;
 
-    public ImageSource DisplayImage
+    public ImageSource? DisplayImage
     {
         get => _displayImage;
         private set => RaiseAndSetIfChanged(ref _displayImage, value);  
@@ -60,14 +61,7 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void UpdateDisplayImage()
     {
-        if (PathToImageSourceConverter.TryConvert(_displayFile, out var img))
-        {
-            DisplayImage = img;
-        }
-        else
-        {
-            DisplayImage = null;
-        }
+        DisplayImage = PathToImageSourceConverter.TryConvert(_displayFile);
     }
 
     private void Revert()
@@ -120,5 +114,5 @@ public class SpriteItemViewModel : ViewModelBase
         SpriteModified?.Invoke(this, new SpriteFile(_spriteType, Id, _displayFile, IsOverride));
     }
 
-    public event EventHandler<SpriteFile> SpriteModified;
+    public event EventHandler<SpriteFile>? SpriteModified;
 }

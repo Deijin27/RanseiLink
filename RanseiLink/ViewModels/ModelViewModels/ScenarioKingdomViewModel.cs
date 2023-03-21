@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -33,7 +34,7 @@ public class ScenarioKingdomItem : ViewModelBase
 
     public ICommand ShowSummaryCommand { get; }
 
-    public event Action<int> ShowArmySummary;
+    public event Action<int>? ShowArmySummary;
     
 }
 public class ScenarioKingdomViewModel : ViewModelBase

@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Services;
@@ -117,15 +118,15 @@ public class GimmickViewModel : ViewModelBase
 
 
 
-    private string _currentPreviewAnimationUri;
-    public string CurrentPreviewAnimationUri
+    private string? _currentPreviewAnimationUri;
+    public string? CurrentPreviewAnimationUri
     {
         get => _currentPreviewAnimationUri;
         set => RaiseAndSetIfChanged(ref _currentPreviewAnimationUri, value);
     }
 
-    private string _currentPreviewAnimationName;
-    public string CurrentPreviewAnimationName
+    private string? _currentPreviewAnimationName;
+    public string? CurrentPreviewAnimationName
     {
         get => _currentPreviewAnimationName;
         set => RaiseAndSetIfChanged(ref _currentPreviewAnimationName, value);

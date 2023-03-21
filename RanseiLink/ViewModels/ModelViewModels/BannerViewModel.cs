@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
@@ -13,9 +14,9 @@ public class BannerViewModel : ViewModelBase
 {
     private readonly IDialogService _dialogService;
     private readonly IBannerService _bannerService;
-    private ImageSource _displayImage;
+    private ImageSource? _displayImage;
     private readonly BannerInfo _bannerInfo;
-    private string _allTitles;
+    private string _allTitles = string.Empty;
 
     public BannerViewModel(IDialogService dialogService, IBannerService bannerService)
     {
@@ -35,7 +36,7 @@ public class BannerViewModel : ViewModelBase
     public string AllTitles
     {
         get => _allTitles;
-        set => RaiseAndSetIfChanged(ref _allTitles, value);
+        set => RaiseAndSetIfChanged(ref _allTitles, value ?? string.Empty);
     }
 
     public string JapaneseTitle
@@ -74,7 +75,7 @@ public class BannerViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
     }
 
-    public ImageSource DisplayImage
+    public ImageSource? DisplayImage
     {
         get => _displayImage;
         private set => RaiseAndSetIfChanged(ref _displayImage, value);
@@ -82,14 +83,7 @@ public class BannerViewModel : ViewModelBase
 
     private void UpdateDisplayImage()
     {
-        if (PathToImageSourceConverter.TryConvert(_bannerService.ImagePath, out var img))
-        {
-            DisplayImage = img;
-        }
-        else
-        {
-            DisplayImage = null;
-        }
+        DisplayImage = PathToImageSourceConverter.TryConvert(_bannerService.ImagePath);
     }
 
     private void ReplaceImage()
