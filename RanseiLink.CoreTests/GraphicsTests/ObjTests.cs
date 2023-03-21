@@ -18,9 +18,8 @@ public class ObjTests
         var testMtl = new MTL();
         testMtl.Materials.AddRange(new List<MTL.Material>
         {
-            new MTL.Material
+            new MTL.Material("material1")
             {
-                Name = "material1",
                 SpecularColor = Color.Red,
                 DiffuseColor = Color.Blue,
                 AmbientColor = Color.Green,
@@ -30,9 +29,8 @@ public class ObjTests
                 SpecularTextureMapFile = "texSpecular1.png",
                 DiffuseTextureMapFile = "texDiffuse1.png,"
             },
-            new MTL.Material
+            new MTL.Material("material2")
             {
-                Name = "material2",
                 SpecularColor = Color.White,
                 DiffuseColor = Color.Black,
                 AmbientColor = Color.White,
@@ -103,7 +101,7 @@ public class ObjTests
     private void AssertMaterialIdentical(OBJ expected, OBJ actual)
     {
         actual.MaterialLib.Should().NotBeNull();
-        actual.MaterialLib.Materials.Should().NotBeNull().And.HaveCount(expected.MaterialLib.Materials.Count);
+        actual.MaterialLib!.Materials.Should().NotBeNull().And.HaveCount(expected.MaterialLib!.Materials.Count);
         for (int i = 0; i < expected.MaterialLib.Materials.Count; i++)
         {
             var inputMat = expected.MaterialLib.Materials[i];
