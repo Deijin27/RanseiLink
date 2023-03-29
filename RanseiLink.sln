@@ -46,6 +46,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.View3D", "RanseiLink.View3D\RanseiLink.View3D.csproj", "{53F31038-F3DA-4AA7-8804-D9ED31E150DE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.StandaloneModelViewer", "RanseiLink.StandaloneModelViewer\RanseiLink.StandaloneModelViewer.csproj", "{0DE9658D-A05E-4243-A8AB-507F80D50BC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +112,14 @@ Global
 		{D8F12761-7B5D-4800-A4C3-A08863547B2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8F12761-7B5D-4800-A4C3-A08863547B2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8F12761-7B5D-4800-A4C3-A08863547B2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53F31038-F3DA-4AA7-8804-D9ED31E150DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53F31038-F3DA-4AA7-8804-D9ED31E150DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53F31038-F3DA-4AA7-8804-D9ED31E150DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53F31038-F3DA-4AA7-8804-D9ED31E150DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE9658D-A05E-4243-A8AB-507F80D50BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE9658D-A05E-4243-A8AB-507F80D50BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE9658D-A05E-4243-A8AB-507F80D50BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE9658D-A05E-4243-A8AB-507F80D50BC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

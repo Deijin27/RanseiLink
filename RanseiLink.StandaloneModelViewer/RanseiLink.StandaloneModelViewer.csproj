@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+	<Nullable>disable</Nullable>
+    <RootNamespace>RanseiLink.StandaloneModelViewer</RootNamespace>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK.GLWpfControl" Version="4.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
+    <ProjectReference Include="..\RanseiLink.View3D\RanseiLink.View3D.csproj" />
+  </ItemGroup>
+
+</Project>
