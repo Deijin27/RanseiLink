@@ -1,13 +1,20 @@
-# RanseiLink
+<div align="center">
 
-Pokemon Conquest Rom Editor. A windows app, as well as a netcore console app.
+<img align="center" src="https://user-images.githubusercontent.com/40903783/228619480-1f170269-c5e2-4a17-ab6c-c41671cbf93c.png" height=50/>
 
-[![GitHub license](https://img.shields.io/github/license/Deijin27/RanseiLink)](https://github.com/Deijin27/RanseiLink/blob/master/LICENSE)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/Deijin27/RanseiLink)](https://github.com/Deijin27/RanseiLink/releases/latest)
+<h1 align="center">RanseiLink</h1>
+
+Pokemon Conquest Rom Editor
+
+[![License](https://img.shields.io/github/license/Deijin27/RanseiLink?color=8a66ad&style=flat)](https://github.com/Deijin27/RanseiLink/blob/master/LICENSE)
+[![Release (latest by date)](https://img.shields.io/github/v/release/Deijin27/RanseiLink?color=755396&style=flat)](https://github.com/Deijin27/RanseiLink/releases/latest)
+[![Download count](https://img.shields.io/github/downloads/Deijin27/RanseiLink/total.svg?color=563973&style=flat)](https://github.com/Deijin27/RanseiLink/releases/latest)
+
+[Wiki](https://github.com/Deijin27/RanseiLink/wiki) | [Download](https://github.com/Deijin27/RanseiLink/releases/latest)
 
 ![In-Game Preview](https://user-images.githubusercontent.com/40903783/170891118-ba350d40-5eeb-46fd-86ce-2bff6bdce1d4.png)
 
-See the [Wiki](https://github.com/Deijin27/RanseiLink/wiki) for documentation, tutorials and more.
+</div>
 
 ## Windows App
 

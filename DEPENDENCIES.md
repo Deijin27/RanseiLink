@@ -17,6 +17,8 @@
 - GongWPF under [BSD 3-Clause](https://github.com/punker76/gong-wpf-dragdrop/blob/develop/LICENSE)
 - PixiEditor.ColorPicker under [MIT](https://github.com/PixiEditor/PixiEditor/blob/master/LICENSE)
 - WpfAnimatedGif under [Apache 2.0](https://github.com/XamlAnimatedGif/WpfAnimatedGif/blob/master/LICENSE.txt)
+- OpenTK under [MIT](https://github.com/opentk/opentk/blob/master/LICENSE.md)
+- GlWpfControl under [MIT](https://github.com/opentk/GLWpfControl/blob/master/LICENSE.md)
 
 ## Tests-Only
 
