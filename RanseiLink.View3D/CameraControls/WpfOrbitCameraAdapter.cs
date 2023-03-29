@@ -34,6 +34,7 @@ public class WpfOrbitCameraAdapter
         {
             return;
         }
+        
         var ev = e.GetPosition(_openTkControl);
         _mouseStartX = ev.X;
         _mouseStartY = ev.Y;
@@ -41,11 +42,13 @@ public class WpfOrbitCameraAdapter
         _polarAngleStart = _cameraController.PolarAngle;
         _openTkControl.MouseMove += OpenTkControl_MouseMove;
         _openTkControl.MouseUp += OpenTkControl_MouseUp;
+        _openTkControl.CaptureMouse();
     }
     private void OpenTkControl_MouseUp(object sender, MouseEventArgs e)
     {
         _openTkControl.MouseMove -= OpenTkControl_MouseMove;
         _openTkControl.MouseUp -= OpenTkControl_MouseUp;
+        _openTkControl.ReleaseMouseCapture();
     }
     private void OpenTkControl_MouseMove(object sender, MouseEventArgs e)
     {
@@ -67,5 +70,5 @@ public class WpfOrbitCameraAdapter
         CameraUpdated?.Invoke(this, EventArgs.Empty);
     }
 
-    public event EventHandler CameraUpdated;
+    public event EventHandler? CameraUpdated;
 }

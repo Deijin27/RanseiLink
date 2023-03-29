@@ -23,7 +23,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public PSLM Retrieve(MapId id)
         {
-            string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
+            string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
             using (var br = new BinaryReader(File.OpenRead(file)))
             {
                 return new PSLM(br);
@@ -32,7 +32,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public void Save(MapId id, PSLM model)
         {
-            string file = Path.Combine(MapFolderPath, id.ToInternalFileName());
+            string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
             using (var bw = new BinaryWriter(File.Create(file)))
             {
                 model.WriteTo(bw);
@@ -58,7 +58,7 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public string GetFilePath(MapId mapId)
         {
-            return Path.Combine(MapFolderPath, mapId.ToInternalFileName());
+            return Path.Combine(MapFolderPath, mapId.ToInternalPslmName());
         }
     }
 }

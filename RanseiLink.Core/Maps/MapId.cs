@@ -1,8 +1,9 @@
-﻿using System;
+﻿using RanseiLink.Core.Archive;
+using System;
 
 namespace RanseiLink.Core.Maps;
 
-public struct MapId : IEquatable<MapId>
+public readonly struct MapId : IEquatable<MapId>
 {
     public int Map { get; }
     public int Variant { get; }
@@ -13,25 +14,31 @@ public struct MapId : IEquatable<MapId>
     }
     public override string ToString()
     {
-        return $"map{Map.ToString().PadLeft(2, '0')}_{Variant.ToString().PadLeft(2, '0')}";
+        return $"map{Map:00}_{Variant:00}";
     }
 
     /// <summary>
-    /// To file name used in game, i.e. ends in '.bin'
+    /// To file name used in game for PSLM, i.e. 'map00_00.bin'
     /// </summary>
-    /// <returns></returns>
-    public string ToInternalFileName()
+    public string ToInternalPslmName()
     {
         return $"{this}.bin";
     }
 
     /// <summary>
-    /// To file name used for exporting, i.e. ends in '.pslm'
+    /// To file name used for exporting PSLM, i.e. 'map00_00.pslm'
     /// </summary>
-    /// <returns></returns>
-    public string ToExternalFileName()
+    public string ToExternalPslmName()
     {
         return $"{this}{PSLM.ExternalFileExtension}";
+    }
+
+    /// <summary>
+    /// The file name used in game for 3D models, i.e. 'MAP00_00.pac'
+    /// </summary>
+    public string ToInternalModelPacName()
+    {
+        return $"MAP{Map:00}_{Variant:00}{PAC.FileExtension}";
     }
 
     public static bool TryParseInternalFileName(string fileName, out MapId result)

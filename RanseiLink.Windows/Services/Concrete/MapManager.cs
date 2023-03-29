@@ -194,7 +194,7 @@ public class MapManager : IMapManager
         }
 
         var internalFile = _mapService.GetFilePath(id);
-        string exportTo = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, id.ToExternalFileName()));
+        string exportTo = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, id.ToExternalPslmName()));
 
         File.Copy(internalFile, exportTo);
 

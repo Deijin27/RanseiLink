@@ -16,11 +16,6 @@ public static class ModelRenderer
 {
     public static void Draw(NSMDL.Model model, ModelRenderOptions options = 0)
     {
-        if (options.HasFlag(ModelRenderOptions.Grid))
-        {
-            GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), OpenTK.Mathematics.Vector3.Zero, 100, 15);
-        }
-
         // No idea what of this actually gets the textures to work
         GL.Enable(EnableCap.Lighting);
         GL.Enable(EnableCap.DepthTest);
@@ -48,8 +43,6 @@ public static class ModelRenderer
         GL.Disable(EnableCap.AlphaTest);
         GL.Disable(EnableCap.Blend);
         GL.Enable(EnableCap.CullFace);
-
-        GL.Finish();
     }
 
     public static void ProcessCommand(GpuState gpu, NSMDL.Model model, RenderCommand command)

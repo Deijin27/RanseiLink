@@ -13,18 +13,21 @@ using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
 using System.Linq;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
+using System.Collections.Generic;
 
 namespace RanseiLink.View3D;
+
+public record SceneRendererState(NSBMD Nsbmd, BattleConfig Bc, PSLM Pslm, Dictionary<GimmickId, NSBMD> GimmickModels);
 
 public class SceneRenderer
 {
     private readonly IFallbackDataProvider _fallback;
     private readonly IBattleConfigService _battleConfigService;
+    private readonly IMapService _mapService;
+    private readonly IGimmickService _gimmickService;
 
-    private NSBMD _nsbmd;
-    private NSBTX _nsbtx;
-    private bool _isDrawing = false;
-    private BattleConfig _bc;
+    private SceneRendererState? _state;
     
     public SceneRenderer()
     {
@@ -34,48 +37,101 @@ public class SceneRenderer
         _fallback = new FallbackDataProvider(fact, Array.Empty<IGraphicTypeDefaultPopulater>());
         var mod = mm.GetAllModInfo().First();
         _battleConfigService = new BattleConfigService(mod);
+        _mapService = new MapService(mod);
+        _gimmickService = new GimmickService(mod);
     }
 
     public void LoadScene(BattleConfigId id)
     {
-        var bc = _battleConfigService.Retrieve((int)id);
-        LoadScene(bc);
-    }
+        _state = null;
 
-    public void LoadScene(BattleConfig bc)
-    {
-        _isDrawing = false;
         MaterialRegistry.UnloadMaterials();
 
-        _bc = bc;
-        var map = bc.MapId;
-        string mapRomPath = Path.Combine("graphics", "ikusa_map", $"MAP{map.Map:00}_{map.Variant:00}.pac");
+        var bc = _battleConfigService.Retrieve((int)id);
+
+        var mapId = bc.MapId;
+        string mapRomPath = Path.Combine("graphics", "ikusa_map", mapId.ToInternalModelPacName());
         var pac = _fallback.GetDataFile(ConquestGameCode.VPYT, mapRomPath).File;
 
         var tempFolder = FileUtil.GetTemporaryDirectory();
         PAC.Unpack(pac, tempFolder, true, 4);
 
-        _nsbmd = new NSBMD(Path.Combine(tempFolder, "0000.nsbmd"));
-        _nsbtx = new NSBTX(Path.Combine(tempFolder, "0001.nsbtx"));
+        var nsbmd = new NSBMD(Path.Combine(tempFolder, "0000.nsbmd"));
+        var nsbtx = new NSBTX(Path.Combine(tempFolder, "0001.nsbtx"));
 
         Directory.Delete(tempFolder, true);
 
-        MaterialRegistry.LoadMaterials(_nsbmd, _nsbtx);
+        MaterialRegistry.LoadMaterials(nsbmd, nsbtx);
 
-        _isDrawing = true;
+        var pslm = _mapService.Retrieve(mapId);
+        var gimmickModels = new Dictionary<GimmickId, NSBMD>();
+        foreach (var gimmickId in pslm.GimmickSection.Items.Select(x => x.Gimmick).Distinct())
+        {
+            var gimmick = _gimmickService.Retrieve((int)gimmickId);
+            var gimmickObject = (int)gimmick.State1Object;
+            if (gimmickObject > 97)
+            {
+                continue;
+            }
+            var gimRomPath = Path.Combine("graphics", "ikusa_obj", $"OBJ{gimmickObject:000}_{0:00}.pac");
+            var gimPac = _fallback.GetDataFile(ConquestGameCode.VPYT, gimRomPath).File;
+            var gimTempFolder = FileUtil.GetTemporaryDirectory();
+            PAC.Unpack(gimPac, gimTempFolder, true, 4);
+
+            var gimNsbmd = new NSBMD(Path.Combine(gimTempFolder, "0000.nsbmd"));
+            var gimNsbtx = new NSBTX(Path.Combine(gimTempFolder, "0001.nsbtx"));
+            gimmickModels[gimmickId] = gimNsbmd;
+
+            Directory.Delete(gimTempFolder, true);
+
+            MaterialRegistry.LoadMaterials(gimNsbmd, gimNsbtx);
+        }
+
+        _state = new SceneRendererState(nsbmd, bc, pslm, gimmickModels);
     }
 
     public void Render()
     {
-        if (!_isDrawing)
+        if (_state == null)
         {
             return;
         }   
         GL.ClearColor(Color4.Gray);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        VerticalGradientBackground(_bc);
+        VerticalGradientBackground(_state.Bc);
+        
+        ModelRenderer.Draw(_state.Nsbmd.Model.Models[0]);
 
-        ModelRenderer.Draw(_nsbmd.Model.Models[0]);
+        var mapGridHeight = _state.Pslm.TerrainSection.MapMatrix.Count;
+        var mapGridWidth = _state.Pslm.TerrainSection.MapMatrix[0].Count;
+
+        foreach (var gimmick in _state.Pslm.GimmickSection.Items)
+        {
+            if (!_state.GimmickModels.TryGetValue(gimmick.Gimmick, out var gimmickModel))
+            {
+                continue;
+            }
+            var model = gimmickModel.Model.Models[0];
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.PushMatrix();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PushMatrix();
+
+            // get the elevation in the middle of the cell
+            var elevation = _state.Pslm.TerrainSection.MapMatrix[gimmick.Position.Y][gimmick.Position.X].SubCellZValues[4];
+            GL.Translate((-mapGridWidth / 2 + gimmick.Position.X) * 100, elevation, (-mapGridHeight / 2 + gimmick.Position.Y) * 100);
+            ModelRenderer.Draw(model);
+
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.PopMatrix();
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.PopMatrix();
+
+            //break;
+        }
+
+        
+        GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), Vector3.Zero, 100, mapGridHeight);
     }
 
     private static Color4 ConvertColor(Rgb15 color)

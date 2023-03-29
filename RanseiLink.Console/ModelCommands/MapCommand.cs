@@ -55,7 +55,7 @@ public class MapCommand : ICommand
         }
         var mapName = mapNames.First();
 
-        string file = Path.Combine(mapService.MapFolderPath, mapName.ToInternalFileName());
+        string file = Path.Combine(mapService.MapFolderPath, mapName.ToInternalPslmName());
 
         PSLM.Header header;
         PSLM map;

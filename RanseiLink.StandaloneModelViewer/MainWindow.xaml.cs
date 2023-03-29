@@ -4,6 +4,7 @@ using System.Windows;
 using RanseiLink.Core.Enums;
 using RanseiLink.View3D.CameraControls;
 using RanseiLink.View3D;
+using OpenTK.Graphics.OpenGL;
 
 namespace RanseiLink.StandaloneModelViewer;
 /// <summary>
@@ -23,7 +24,7 @@ public partial class MainWindow : Window
         var settings = new GLWpfControlSettings
         {
             MajorVersion = 2,
-            MinorVersion = 1
+            MinorVersion = 1,
         };
         OpenTkControl.Start(settings);
         _camera = new Camera();
@@ -47,6 +48,10 @@ public partial class MainWindow : Window
         _camera.AspectRatio = (float)(OpenTkControl.ActualWidth / OpenTkControl.ActualHeight);
         CameraUtil.GLLoadMatrix(_camera);
         _scene.Render();
+
+        // doing GL.Finish() once at the end of render seems to help performance
+        // doing it multiple times harms performance
+        GL.Finish(); 
     }
 
     private void UpdateTitle()
