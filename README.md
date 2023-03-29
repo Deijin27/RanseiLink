@@ -4,7 +4,6 @@ Pokemon Conquest Rom Editor. A netcore windows app, as well as a netcore console
 
 [![GitHub license](https://img.shields.io/github/license/Deijin27/RanseiLink)](https://github.com/Deijin27/RanseiLink/blob/master/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/Deijin27/RanseiLink)](https://github.com/Deijin27/RanseiLink/releases/latest)
-[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/Deijin27/RanseiLink?include_prereleases)](https://github.com/Deijin27/RanseiLink/releases)
 
 ![In-Game Preview](https://user-images.githubusercontent.com/40903783/170891118-ba350d40-5eeb-46fd-86ce-2bff6bdce1d4.png)
 
