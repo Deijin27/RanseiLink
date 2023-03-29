@@ -1,4 +1,7 @@
 <div align="center">
+
+<img src="https://user-images.githubusercontent.com/40903783/228619480-1f170269-c5e2-4a17-ab6c-c41671cbf93c.png" height=50/>
+
 <h1>RanseiLink</h1>
 
 Pokemon Conquest Rom Editor
