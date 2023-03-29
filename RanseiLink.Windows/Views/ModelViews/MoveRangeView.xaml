@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.MoveRangeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:MoveRangeViewModel, IsDesignTimeCreatable=False}"
+             d:Background="{DynamicResource WindowBackgroundBrush}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="OffScreenStyle" TargetType="ToggleButton">
+            <Setter Property="Background" Value="IndianRed"/>
+        </Style>
+        <Style x:Key="OnScreenTile" TargetType="ToggleButton">
+            <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock  VerticalAlignment="Center" TextWrapping="Wrap" Margin="10">
+            The red zone will not be visible in the small preview on the top screen for moves.<LineBreak/>
+            Behavior of the rest is correct on the aformentioned preview, but certain configurations can be inconsistent in battle.<LineBreak/>
+            It is recommended that you test any changes you make in-game.
+        </TextBlock>
+
+        <Grid Grid.Row="1" Width="200" Height="250">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ToggleButton Grid.Column="0" Grid.Row="0" IsChecked="{Binding Row0Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="0" IsChecked="{Binding Row0Col1, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="0" IsChecked="{Binding Row0Col2, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="3" Grid.Row="0" IsChecked="{Binding Row0Col3, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="0" IsChecked="{Binding Row0Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+
+            <ToggleButton Grid.Column="0" Grid.Row="1" IsChecked="{Binding Row1Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="1" IsChecked="{Binding Row1Col1, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="1" IsChecked="{Binding Row1Col2, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="3" Grid.Row="1" IsChecked="{Binding Row1Col3, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="1" IsChecked="{Binding Row1Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+
+            <ToggleButton Grid.Column="0" Grid.Row="2" IsChecked="{Binding Row2Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="2" IsChecked="{Binding Row2Col1, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="2" IsChecked="{Binding Row2Col2, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="3" Grid.Row="2" IsChecked="{Binding Row2Col3, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="2" IsChecked="{Binding Row2Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+
+            <ToggleButton Grid.Column="0" Grid.Row="3" IsChecked="{Binding Row3Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="3" IsChecked="{Binding Row3Col1, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="3" IsChecked="{Binding Row3Col2, Mode=TwoWay}" Style="{StaticResource OnScreenTile}">
+                <ToggleButton.Content>
+                    <Path Stroke="{DynamicResource ForegroundBrush}" StrokeThickness="3" Data="M 0 10 l 9 -10 9 10"/>
+                </ToggleButton.Content>
+            </ToggleButton>
+            <ToggleButton Grid.Column="3" Grid.Row="3" IsChecked="{Binding Row3Col3, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="3" IsChecked="{Binding Row3Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+
+            <ToggleButton Grid.Column="0" Grid.Row="4" IsChecked="{Binding Row4Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="4" IsChecked="{Binding Row4Col1, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="4" IsChecked="{Binding Row4Col2, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="3" Grid.Row="4" IsChecked="{Binding Row4Col3, Mode=TwoWay}" Style="{StaticResource OnScreenTile}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="4" IsChecked="{Binding Row4Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+
+            <ToggleButton Grid.Column="0" Grid.Row="5" IsChecked="{Binding Row5Col0, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="1" Grid.Row="5" IsChecked="{Binding Row5Col1, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="2" Grid.Row="5" IsChecked="{Binding Row5Col2, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="3" Grid.Row="5" IsChecked="{Binding Row5Col3, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+            <ToggleButton Grid.Column="4" Grid.Row="5" IsChecked="{Binding Row5Col4, Mode=TwoWay}" Style="{StaticResource OffScreenStyle}"/>
+        </Grid>
+    </Grid>
+    
+</UserControl>

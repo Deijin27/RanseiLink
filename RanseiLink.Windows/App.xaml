@@ -1,0 +1,170 @@
+﻿<Application x:Class="RanseiLink.Windows.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:views="clr-namespace:RanseiLink.Windows.Views"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="ThemeResourceDictionary">
+                    <ResourceDictionary.MergedDictionaries>
+                        <!-- Theme resource dictionary -->
+                        <ResourceDictionary Source="Styles/Colors/Dark.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+                </ResourceDictionary>
+               
+                <ResourceDictionary Source="Styles/Icons.xaml"/>
+                <ResourceDictionary Source="Styles/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Fonts -->
+            <FontFamily x:Key="SegoeMDL2Assets">pack://application:,,,/Fonts/#Segoe MDL2 Assets</FontFamily>
+            
+            <!-- Register Main View Models -->
+
+            <DataTemplate DataType="{x:Type vm:ModSelectionViewModel}">
+                <views:ModSelectionView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MainEditorViewModel}">
+                <views:MainEditorView/>
+            </DataTemplate>
+
+            <!-- Register Selector View Models -->
+            
+            <DataTemplate DataType="{x:Type vm:SelectorViewModel}">
+                <views:SelectorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SelectorViewModelWithoutScroll}">
+                <views:SelectorViewWithoutScroll/>
+            </DataTemplate>
+
+            <!-- Register View Models -->
+
+            <DataTemplate DataType="{x:Type vm:BannerViewModel}">
+                <views:BannerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MapViewModel}">
+                <views:MapView/>
+            </DataTemplate>
+            
+            <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
+                <views:PokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveViewModel}">
+                <views:MoveView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:GimmickViewModel}">
+                <views:GimmickView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
+                <views:AbilityView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BattleConfigViewModel}">
+                <views:BattleConfigView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">
+                <views:WarriorSkillView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
+                <views:MoveRangeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioPokemonViewModel}">
+                <views:ScenarioPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MaxLinkWarriorViewModel}">
+                <views:MaxLinkView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:MaxLinkPokemonViewModel}">
+                <views:MaxLinkView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:WarriorNameTableViewModel}">
+                <views:WarriorNameTableView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BaseWarriorViewModel}">
+                <views:BaseWarriorView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonViewModel}">
+                <views:ScenarioAppearPokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EventSpeakerViewModel}">
+                <views:EventSpeakerView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:KingdomViewModel}">
+                <views:KingdomView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioBuildingViewModel}">
+                <views:ScenarioBuildingView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ItemViewModel}">
+                <views:ItemView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BuildingViewModel}">
+                <views:BuildingView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:EpisodeViewModel}">
+                <views:EpisodeView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:ScenarioWarriorWorkspaceViewModel}">
+                <views:ScenarioWarriorWorkspaceView/>
+            </DataTemplate>
+
+            <!--<DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
+                <views:ModelGridView/>
+            </DataTemplate>-->
+
+            <DataTemplate DataType="{x:Type vm:MsgGridViewModel}">
+                <views:MsgGridView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:SpriteTypeViewModel}">
+                <views:SpriteTypeView/>
+            </DataTemplate>
+
+            <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="IdAndName"/>
+                <Setter Property="TextSearch.TextPath" Value="Name"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+
+            <Style x:Key="SelectorComboBoxStyleIdOnly" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="IdString"/>
+                <Setter Property="TextSearch.TextPath" Value="IdString"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+
+            <Style x:Key="SelectorComboBoxStyleNameOnly" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="SelectedValuePath" Value="Id"/>
+                <Setter Property="DisplayMemberPath" Value="Name"/>
+                <Setter Property="TextSearch.TextPath" Value="Name"/>
+                <Setter Property="Height" Value="20"/>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

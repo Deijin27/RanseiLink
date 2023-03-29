@@ -1,0 +1,36 @@
+﻿<Window x:Class="RanseiLink.Windows.Dialogs.ModifyMapDimensionsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        WindowStyle="None"
+        WindowStartupLocation="CenterOwner"
+        AllowsTransparency="True"
+        mc:Ignorable="d"
+        xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        d:DataContext="{d:DesignInstance vm:ModifyMapDimensionsViewModel, IsDesignTimeCreatable=False}"
+        Title="Patch rom" Height="200" Width="350" Background="{DynamicResource WindowBackgroundBrush}">
+    <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
+        <DockPanel>
+            <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Apply Changes" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+                    <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
+                <StackPanel>
+                    <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Modify map dimensions</TextBlock>
+                    <TextBlock Margin="10" TextWrapping="Wrap">Reducing the dimensions will permanently remove outer cell data</TextBlock>
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock Margin="5">Width</TextBlock>
+                        <controls:NumberBox Value="{Binding Width}" Margin="5" Width="100" Min="1" Max="65535"/>
+                        <TextBlock Margin="5">Height</TextBlock>
+                        <controls:NumberBox Value="{Binding Height}" Margin="5" Width="100" Min="1" Max="65535"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DockPanel>
+    </Border>
+</Window>

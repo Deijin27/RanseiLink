@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Core", "RanseiLi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Console", "RanseiLink.Console\RanseiLink.Console.csproj", "{28427EFB-E508-48E9-BA4B-F99961A737D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink", "RanseiLink\RanseiLink.csproj", "{A2E613A5-5D71-4E70-B516-55577BC2703F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Windows", "RanseiLink.Windows\RanseiLink.Windows.csproj", "{A2E613A5-5D71-4E70-B516-55577BC2703F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Tests", "RanseiLink.Tests\RanseiLink.Tests.csproj", "{371EB778-CD47-47E1-BB33-786679FBF944}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.WindowsTests", "RanseiLink.WindowsTests\RanseiLink.WindowsTests.csproj", "{371EB778-CD47-47E1-BB33-786679FBF944}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.PluginModule", "RanseiLink.PluginModule\RanseiLink.PluginModule.csproj", "{A0B3B21C-6F24-4F2B-AA71-DBD7917A45E4}"
 EndProject

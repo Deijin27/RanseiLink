@@ -8,8 +8,8 @@ param([string] $Destination=$pwd)
 
 # Establish file paths
 $rlRootDir = "${env:USERPROFILE}\source\repos\RanseiLink"
-$rlReleaseDir = "$rlRootDir\RanseiLink\bin\Release\net6.0-windows\publish\win-x64"
-$csproj = "$rlRootDir\RanseiLink\RanseiLink.csproj"
+$rlReleaseDir = "$rlRootDir\RanseiLink.Windows\bin\Release\net6.0-windows\publish\win-x64"
+$csproj = "$rlRootDir\RanseiLink.Windows\RanseiLink.Windows.csproj"
 
 # Read version from csproj
 $csprojXml = [xml](Get-Content $csproj)
@@ -31,7 +31,7 @@ Write-Host "Publishing to directory '${rlExportDir}'"
 Copy-Item -Path $RlReleaseDir -Destination $RlExportDir -Exclude *.pdb -Recurse
 
 # Rename the exe to contain the version number
-Rename-Item -Path "$rlExportDir\RanseiLink.exe" -NewName "RanseiLink-${version}.exe" 
+Rename-Item -Path "$rlExportDir\RanseiLink.Windows.exe" -NewName "RanseiLink-${version}.exe" 
 
 # Copy latest plugins
 #Copy-Item -Path "$Destination\LatestPlugins" -Destination "$rlExportDir\Plugins" -Recurse

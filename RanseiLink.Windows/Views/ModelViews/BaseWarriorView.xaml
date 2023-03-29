@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.BaseWarriorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d:Background="{DynamicResource WindowBackgroundBrush}"
+             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
+             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             d:DataContext="{d:DesignInstance Type=vm:BaseWarriorViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Height" Value="20"/>
+        </Style>
+        <vc:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
+    </UserControl.Resources>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Warrior Name Entry" Grid.Row="0" />
+            <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1">
+                <controls:NumberBox Width="80"  Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
+                <TextBlock Text="{Binding WarriorNameValue}"/>
+            </UniformGrid>
+            
+
+            <TextBlock Text="Sprite" Grid.Row="1"/>
+            <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
+                <controls:NumberBox  Value="{Binding Sprite}"/>
+                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+            </UniformGrid>
+
+            <Button Grid.Row="2" Grid.ColumnSpan="2" Content="View Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Speaker ID" Grid.Row="3" ToolTip="Jump messages filtered to this speaker" 
+                    Command="{Binding JumpToSpeakerMessagesCommand}" />
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding SpeakerItems}" SelectedValue="{Binding SpeakerId, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyleIdOnly}"/>
+
+            <TextBlock Text="Speciality 1" Grid.Row="4" />
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality1, Mode=TwoWay}"/>
+
+            <TextBlock Text="Speciality 2" Grid.Row="5" />
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Speciality2, Mode=TwoWay}"/>
+
+            <TextBlock Text="Weakness 1" Grid.Row="6" />
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness1, Mode=TwoWay}"/>
+
+            <TextBlock Text="Weakness 2" Grid.Row="7" />
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Weakness2, Mode=TwoWay}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Skill" Grid.Row="8" ToolTip="Jump to selected warrior skill" 
+                    Command="{Binding JumpToWarriorSkillCommand}" CommandParameter="{Binding Skill}"/>
+            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems}" SelectedValue="{Binding Skill, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+            <TextBlock Text="Power" Grid.Row="9" />
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
+
+            <TextBlock Text="Wisdom" Grid.Row="10" />
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
+
+            <TextBlock Text="Charisma" Grid.Row="11" />
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
+
+            <TextBlock Text="Capacity" Grid.Row="12" />
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="8"/>
+
+            <TextBlock Text="Gender" Grid.Row="13"/>
+            <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GenderItems}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
+
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Into" ToolTip="Jump to selected warrior" 
+                    Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding RankUp}"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BaseWarriorItems}" SelectedValue="{Binding RankUp, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 1" Grid.Row="1" ToolTip="Jump to selected pokemon" 
+                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon1}"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon1, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 2" Grid.Row="2" ToolTip="Jump to selected pokemon" 
+                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon2}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+            <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="100"/>
+
+            <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition2}" Grid.ColumnSpan="2"/>
+                    <controls:NumberBox Value="{Binding Quantity1ForRankUpCondition}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding Quantity1ForRankUpConditionName}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding Quantity2ForRankUpCondition}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding Quantity2ForRankUpConditionName}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Header="Alt Rank Up Condition (probably unused)">
+                <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition1}"/>
+            </GroupBox>
+
+        </Grid>
+    </WrapPanel>
+</UserControl>

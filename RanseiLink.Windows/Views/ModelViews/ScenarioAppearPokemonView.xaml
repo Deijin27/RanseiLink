@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.ScenarioAppearPokemonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance vm:ScenarioAppearPokemonViewModel, IsDesignTimeCreatable=False}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ItemsControl Margin="10" ItemsSource="{Binding AppearItems, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:AppearItem}">
+                    <CheckBox Margin="2" IsChecked="{Binding CanAppear, Mode=TwoWay}" Content="{Binding Pokemon}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>
