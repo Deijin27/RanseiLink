@@ -6,18 +6,18 @@ using RanseiLink.View3D.CameraControls;
 using RanseiLink.View3D;
 using OpenTK.Graphics.OpenGL;
 
-namespace RanseiLink.StandaloneModelViewer;
+namespace RanseiLink.Windows.Views.ModelViews.Map;
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaction logic for Map3DWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class Map3DWindow : Window
 {
     private readonly WpfOrbitCameraAdapter _cameraAdapter;
     private readonly OrbitCameraController _cameraController;
     private readonly Camera _camera;
     private readonly ISceneRenderer _scene;
 
-    public MainWindow()
+    public Map3DWindow(ISceneRenderer scene)
     {
         InitializeComponent();
 
@@ -33,7 +33,7 @@ public partial class MainWindow : Window
         _cameraAdapter.CameraUpdated += (_, __) => UpdateTitle();
         UpdateTitle();
 
-        _scene = ((App)App.Current).Scene ?? throw new Exception("Appication hasn't initialized services yet");
+        _scene = scene;
         _scene.LoadScene(BattleConfigId.Aurora);
 
         this.Loaded += MainWindow_Loaded;
@@ -52,14 +52,14 @@ public partial class MainWindow : Window
 
         // doing GL.Finish() once at the end of render seems to help performance
         // doing it multiple times harms performance
-        GL.Finish(); 
+        GL.Finish();
     }
 
     private void UpdateTitle()
     {
-        Title = $"Azimuth: {_cameraController.AzimuthalAngle:0.0} | " + 
-                $"Polar: {_cameraController.PolarAngle:0.0} | " + 
-                $"Radius: {_cameraController.RadialDistance:0.0000} | " + 
+        Title = $"Azimuth: {_cameraController.AzimuthalAngle:0.0} | " +
+                $"Polar: {_cameraController.PolarAngle:0.0} | " +
+                $"Radius: {_cameraController.RadialDistance:0.0000} | " +
                 $"Pos: {_camera.Position}";
     }
 }

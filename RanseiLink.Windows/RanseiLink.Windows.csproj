@@ -25,6 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
+    <ProjectReference Include="..\RanseiLink.View3D\RanseiLink.View3D.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,7 +83,7 @@
     <Compile Update="Views\ModelViews\EpisodeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\MapView.xaml.cs">
+    <Compile Update="Views\ModelViews\Map\MapView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\BattleConfigView.xaml.cs">
@@ -233,7 +234,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\MapView.xaml">
+    <Page Update="Views\ModelViews\Map\MapView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

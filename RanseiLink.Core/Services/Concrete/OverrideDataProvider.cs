@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-internal class OverrideDataProvider : IOverrideDataProvider
+public class OverrideDataProvider : IOverrideDataProvider
 {
     private readonly IFallbackDataProvider _fallbackSpriteProvider;
     private readonly ModInfo _mod;

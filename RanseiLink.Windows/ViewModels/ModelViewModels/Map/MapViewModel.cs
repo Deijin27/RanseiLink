@@ -1,7 +1,9 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.View3D;
 using RanseiLink.Windows.Services;
+using RanseiLink.Windows.Views.ModelViews.Map;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,6 +36,7 @@ public class MapViewModel : ViewModelBase
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
+    private readonly ISceneRenderer _sceneRenderer;
     private MapId _id;
 
     public event EventHandler RequestSave;
@@ -41,12 +44,18 @@ public class MapViewModel : ViewModelBase
 
     public PSLM Map { get; set; }
 
-    public MapViewModel(IDialogService dialogService, IGimmickService gimmickService, IOverrideDataProvider overrideSpriteProvider, IMapManager mapManager)
+    public MapViewModel(
+        IDialogService dialogService, 
+        IGimmickService gimmickService, 
+        IOverrideDataProvider overrideSpriteProvider, 
+        IMapManager mapManager,
+        ISceneRenderer sceneRenderer)
     {
         _mapManager = mapManager;
         _dialogService = dialogService;
         _gimmickService = gimmickService;
         _spriteProvider = overrideSpriteProvider;
+        _sceneRenderer = sceneRenderer;
         
         RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
         ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
@@ -58,6 +67,7 @@ public class MapViewModel : ViewModelBase
         ExportPslmCommand = new RelayCommand(ExportPslm);
         RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
         ModifyElevationToPaintCommand = new RelayCommand<string>(diff => ElevationToPaint += float.Parse(diff));
+        View3DModelCommand = new RelayCommand(View3DModel);
     }
 
     public void SetModel(MapId id, PSLM model)
@@ -91,6 +101,7 @@ public class MapViewModel : ViewModelBase
 
     public ICommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
+    public ICommand View3DModelCommand { get; }
     public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
     public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; } = new();
 
@@ -378,6 +389,20 @@ public class MapViewModel : ViewModelBase
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
         
+    }
+
+    public void View3DModel()
+    {
+        _sceneRenderer.Configure(0);
+        
+        var window = new Map3DWindow(_sceneRenderer);
+        var result = _sceneRenderer.LoadScene(_id);
+        if (result.IsFailed)
+        {
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
+            return;
+        }
+        window.ShowDialog();
     }
 
     public void Revert3dModel()

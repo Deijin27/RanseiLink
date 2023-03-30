@@ -6,7 +6,7 @@ public class OrbitCameraController
 {
     private double _polarAngle = -45;
     private double _radialDistance = 10;
-    private double _azimuthalAngle = 0;
+    private double _azimuthalAngle = 90;
 
     public double AzimuthalAngle
     {

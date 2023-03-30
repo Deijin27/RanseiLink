@@ -156,6 +156,12 @@
                         <TextBlock Margin="6,0,0,0">Modify Dimensions</TextBlock>
                     </DockPanel>
                 </Button>
+                <Button Padding="4,0" Command="{Binding View3DModelCommand}" Margin="10,0">
+                    <DockPanel>
+                        <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE124;"/>
+                        <TextBlock Margin="6,0,0,0">View 3D Model</TextBlock>
+                    </DockPanel>
+                </Button>
             </StackPanel>
 
             <TabControl Margin="0,20,0,0">

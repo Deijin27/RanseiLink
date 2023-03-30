@@ -1,20 +1,13 @@
-﻿using OpenTK.Mathematics;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using RanseiLink.Core.Graphics;
 using Vector3 = System.Numerics.Vector3;
 using Matrix4x4 = System.Numerics.Matrix4x4;
 
 namespace RanseiLink.View3D;
 
-public enum ModelRenderOptions
-{
-    Wireframe = 1,
-    Grid = 2
-}
-
 public static class ModelRenderer
 {
-    public static void Draw(NSMDL.Model model, ModelRenderOptions options = 0)
+    public static void Draw(NSMDL.Model model, SceneRenderOptions options = 0)
     {
         // No idea what of this actually gets the textures to work
         GL.Enable(EnableCap.Lighting);
@@ -26,7 +19,7 @@ public static class ModelRenderer
         GL.Enable(EnableCap.Blend);
         GL.AlphaFunc(AlphaFunction.Greater, 0f);
         GL.Disable(EnableCap.CullFace);
-        GL.PolygonMode(MaterialFace.FrontAndBack, options.HasFlag(ModelRenderOptions.Wireframe) ? PolygonMode.Line : PolygonMode.Fill);
+        GL.PolygonMode(MaterialFace.FrontAndBack, options.HasFlag(SceneRenderOptions.Wireframe) ? PolygonMode.Line : PolygonMode.Fill);
         // Textures don't show without this:
         GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
 

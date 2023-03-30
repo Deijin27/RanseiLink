@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-	<Nullable>disable</Nullable>
+	<Nullable>enable</Nullable>
     <RootNamespace>RanseiLink.StandaloneModelViewer</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>

@@ -1,57 +1,81 @@
 ﻿using OpenTK.Mathematics;
-using System;
 using OpenTK.Graphics.OpenGL;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core;
 using System.IO;
-using RanseiLink.Core.Services.Concrete;
-using RanseiLink.Core.RomFs;
-using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
 using System.Linq;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using System.Collections.Generic;
+using FluentResults;
 
 namespace RanseiLink.View3D;
 
-public record SceneRendererState(NSBMD Nsbmd, BattleConfig Bc, PSLM Pslm, Dictionary<GimmickId, NSBMD> GimmickModels);
+public record SceneRendererState(NSBMD Nsbmd, BattleConfig? Bc, PSLM Pslm, Dictionary<GimmickId, NSBMD> GimmickModels);
 
-public class SceneRenderer
+public interface ISceneRenderer
 {
-    private readonly IFallbackDataProvider _fallback;
+    void Configure(SceneRenderOptions options);
+    Result LoadScene(BattleConfigId id);
+    Result LoadScene(MapId mapId);
+    void Render();
+}
+
+public class SceneRenderer : ISceneRenderer
+{
+    private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IBattleConfigService _battleConfigService;
     private readonly IMapService _mapService;
     private readonly IGimmickService _gimmickService;
+    private SceneRenderOptions _options;
 
     private SceneRendererState? _state;
-    
-    public SceneRenderer()
+
+    public SceneRenderer(
+        IOverrideDataProvider overrideDataProvider,
+        IBattleConfigService battleConfigService,
+        IMapService mapService,
+        IGimmickService gimmickService)
     {
-        RomFsFactory fact = f => new RomFs(f);
-        var msg = new MsgService();
-        var mm = new ModManager(@"C:\Users\Mia\AppData\Local\RanseiLink\Mods", fact, msg);
-        _fallback = new FallbackDataProvider(fact, Array.Empty<IGraphicTypeDefaultPopulater>());
-        var mod = mm.GetAllModInfo().First();
-        _battleConfigService = new BattleConfigService(mod);
-        _mapService = new MapService(mod);
-        _gimmickService = new GimmickService(mod);
+        _overrideDataProvider = overrideDataProvider;
+        _battleConfigService = battleConfigService;
+        _mapService = mapService;
+        _gimmickService = gimmickService;
     }
 
-    public void LoadScene(BattleConfigId id)
+    public void Configure(SceneRenderOptions options)
+    {
+        _options = options;
+    }
+
+    public Result LoadScene(MapId mapId)
     {
         _state = null;
+        return LoadSceneInternal(mapId, null);
+    }
 
+    public Result LoadScene(BattleConfigId id)
+    {
+        _state = null;
+        var bc = _battleConfigService.Retrieve((int)id);
+        var mapId = bc.MapId;
+        return LoadSceneInternal(mapId, bc);
+    }
+
+    private Result LoadSceneInternal(MapId mapId, BattleConfig? bc)
+    {
         MaterialRegistry.UnloadMaterials();
 
-        var bc = _battleConfigService.Retrieve((int)id);
-
-        var mapId = bc.MapId;
         string mapRomPath = Path.Combine("graphics", "ikusa_map", mapId.ToInternalModelPacName());
-        var pac = _fallback.GetDataFile(ConquestGameCode.VPYT, mapRomPath).File;
+        var pac = _overrideDataProvider.GetDataFile(mapRomPath).File;
+        if (!File.Exists(pac))
+        {
+            return Result.Fail($"Specified 3D model '{mapRomPath}' does not exist in game data. This is not a bug, it just isn't there.");
+        }
 
         var tempFolder = FileUtil.GetTemporaryDirectory();
         PAC.Unpack(pac, tempFolder, true, 4);
@@ -65,29 +89,34 @@ public class SceneRenderer
 
         var pslm = _mapService.Retrieve(mapId);
         var gimmickModels = new Dictionary<GimmickId, NSBMD>();
-        foreach (var gimmickId in pslm.GimmickSection.Items.Select(x => x.Gimmick).Distinct())
+        if (_options.HasFlag(SceneRenderOptions.ShowGimmicks))
         {
-            var gimmick = _gimmickService.Retrieve((int)gimmickId);
-            var gimmickObject = (int)gimmick.State1Object;
-            if (gimmickObject > 97)
+            foreach (var gimmickId in pslm.GimmickSection.Items.Select(x => x.Gimmick).Distinct())
             {
-                continue;
+                var gimmick = _gimmickService.Retrieve((int)gimmickId);
+                var gimmickObject = (int)gimmick.State1Object;
+                if (gimmickObject > 97)
+                {
+                    continue;
+                }
+                var gimRomPath = Path.Combine("graphics", "ikusa_obj", $"OBJ{gimmickObject:000}_{0:00}.pac");
+                var gimPac = _overrideDataProvider.GetDataFile(gimRomPath).File;
+                var gimTempFolder = FileUtil.GetTemporaryDirectory();
+                PAC.Unpack(gimPac, gimTempFolder, true, 4);
+
+                var gimNsbmd = new NSBMD(Path.Combine(gimTempFolder, "0000.nsbmd"));
+                var gimNsbtx = new NSBTX(Path.Combine(gimTempFolder, "0001.nsbtx"));
+                gimmickModels[gimmickId] = gimNsbmd;
+
+                Directory.Delete(gimTempFolder, true);
+
+                MaterialRegistry.LoadMaterials(gimNsbmd, gimNsbtx);
             }
-            var gimRomPath = Path.Combine("graphics", "ikusa_obj", $"OBJ{gimmickObject:000}_{0:00}.pac");
-            var gimPac = _fallback.GetDataFile(ConquestGameCode.VPYT, gimRomPath).File;
-            var gimTempFolder = FileUtil.GetTemporaryDirectory();
-            PAC.Unpack(gimPac, gimTempFolder, true, 4);
-
-            var gimNsbmd = new NSBMD(Path.Combine(gimTempFolder, "0000.nsbmd"));
-            var gimNsbtx = new NSBTX(Path.Combine(gimTempFolder, "0001.nsbtx"));
-            gimmickModels[gimmickId] = gimNsbmd;
-
-            Directory.Delete(gimTempFolder, true);
-
-            MaterialRegistry.LoadMaterials(gimNsbmd, gimNsbtx);
         }
 
         _state = new SceneRendererState(nsbmd, bc, pslm, gimmickModels);
+
+        return Result.Ok();
     }
 
     public void Render()
@@ -95,43 +124,51 @@ public class SceneRenderer
         if (_state == null)
         {
             return;
-        }   
+        }
         GL.ClearColor(Color4.Gray);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-        VerticalGradientBackground(_state.Bc);
-        
+        if (_state.Bc != null)
+        {
+            VerticalGradientBackground(_state.Bc);
+        }
+
         ModelRenderer.Draw(_state.Nsbmd.Model.Models[0]);
 
         var mapGridHeight = _state.Pslm.TerrainSection.MapMatrix.Count;
         var mapGridWidth = _state.Pslm.TerrainSection.MapMatrix[0].Count;
 
-        foreach (var gimmick in _state.Pslm.GimmickSection.Items)
+        if (_options.HasFlag(SceneRenderOptions.ShowGimmicks))
         {
-            if (!_state.GimmickModels.TryGetValue(gimmick.Gimmick, out var gimmickModel))
+            foreach (var gimmick in _state.Pslm.GimmickSection.Items)
             {
-                continue;
+                if (!_state.GimmickModels.TryGetValue(gimmick.Gimmick, out var gimmickModel))
+                {
+                    continue;
+                }
+                var model = gimmickModel.Model.Models[0];
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.PushMatrix();
+                GL.MatrixMode(MatrixMode.Modelview);
+                GL.PushMatrix();
+
+                // get the elevation in the middle of the cell
+                var elevation = _state.Pslm.TerrainSection.MapMatrix[gimmick.Position.Y][gimmick.Position.X].SubCellZValues[4];
+                GL.Translate((-mapGridWidth / 2 + gimmick.Position.X) * 100, elevation, (-mapGridHeight / 2 + gimmick.Position.Y) * 100);
+                ModelRenderer.Draw(model);
+
+                GL.MatrixMode(MatrixMode.Projection);
+                GL.PopMatrix();
+                GL.MatrixMode(MatrixMode.Modelview);
+                GL.PopMatrix();
+
+                //break;
             }
-            var model = gimmickModel.Model.Models[0];
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PushMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.PushMatrix();
-
-            // get the elevation in the middle of the cell
-            var elevation = _state.Pslm.TerrainSection.MapMatrix[gimmick.Position.Y][gimmick.Position.X].SubCellZValues[4];
-            GL.Translate((-mapGridWidth / 2 + gimmick.Position.X) * 100, elevation, (-mapGridHeight / 2 + gimmick.Position.Y) * 100);
-            ModelRenderer.Draw(model);
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.PopMatrix();
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.PopMatrix();
-
-            //break;
         }
-
         
-        GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), Vector3.Zero, 100, mapGridHeight);
+        if (_options.HasFlag(SceneRenderOptions.DrawGrid))
+        {
+            GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), Vector3.Zero, 100, mapGridHeight);
+        }
     }
 
     private static Color4 ConvertColor(Rgb15 color)

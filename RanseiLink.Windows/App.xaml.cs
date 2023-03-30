@@ -2,6 +2,7 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule;
+using RanseiLink.View3D;
 using RanseiLink.Windows.ViewModels;
 using System;
 using System.Diagnostics;
@@ -38,6 +39,7 @@ public partial class App : Application
 
         var modServiceGetter = new ModServiceGetterFactory(builder);
         modServiceGetter.AddModule(new CoreModServiceModule());
+        modServiceGetter.AddModule(new View3DModServiceModule());
         modServiceGetter.AddModule(new WpfModServiceModule());
         builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 

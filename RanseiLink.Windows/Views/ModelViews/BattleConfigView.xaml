@@ -51,9 +51,17 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
+            
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Map File" Grid.Row="0" ToolTip="Jump to selected map" 
                     Command="{Binding JumpToMapCommand}" CommandParameter="{Binding Map}"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
+            <DockPanel Grid.Row="0" Grid.Column="1">
+                <Button ToolTip="View 3D Model" DockPanel.Dock="Right" Padding="4,0" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" Height="20">
+                    <TextBlock VerticalAlignment="Center" Height="12" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE124;"/>
+                </Button>
+                <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
+                
+            </DockPanel>
+            
 
             <TextBlock Text="Number of Turns" Grid.Row="1"/>
             <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="31"/>
