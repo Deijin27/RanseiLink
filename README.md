@@ -35,9 +35,9 @@ These include a randomizer, checker for your mods, quick actions and more.
 
 ## Console App
 
-Within the console, navigate to the folder containing `RanseiLink.Console.dll`.
+Within the console, navigate to the folder containing `RanseiLink.Console.exe`.
 
-Run `dotnet RanseiLink.Console.dll -h` to view the command options.
+Run `.\RanseiLink.Console.exe -h` to view the command options.
 
 The console app supports scripting using Lua, see: https://github.com/Deijin27/RanseiLink/wiki/Sample-Lua-Scripts
 
