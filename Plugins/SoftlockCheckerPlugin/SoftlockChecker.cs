@@ -22,6 +22,7 @@ internal class SoftlockChecker
     private IMoveService _moveService;
     private IMoveRangeService _moveRangeService;
     private IMaxLinkService _maxLinkService;
+    private IBaseWarriorService _baseWarriorService;
 
     private int PlayersScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(0).GetScenarioPokemon(0);
     private int OichisScenarioPokemonId => _scenarioWarriorService.Retrieve(0).Retrieve(2).GetScenarioPokemon(0);
@@ -38,6 +39,7 @@ internal class SoftlockChecker
     /// </summary>
     private void Init(IServiceGetter services)
     {
+        _baseWarriorService = services.Get<IBaseWarriorService>();
         _moveService = services.Get<IMoveService>();
         _moveRangeService = services.Get<IMoveRangeService>();
         _pokemonService = services.Get<IPokemonService>();
@@ -53,10 +55,6 @@ internal class SoftlockChecker
     public void Run(IPluginContext context)
     {
         _reportBuilder = new();
-        guaranteedCount = 0;
-        conditionalCount = 0;
-        probableCount = 0;
-        probableConditionalCount = 0;
         Init(context.Services);
         Validate();
         _dialogService = context.Services.Get<IDialogService>();
@@ -68,7 +66,7 @@ internal class SoftlockChecker
     /// </summary>
     private void NotifyUserIfNecessary()
     {
-        int totalCount = guaranteedCount + conditionalCount + probableCount + probableConditionalCount + suggestionCount;
+        int totalCount = _guaranteed.Count + _conditional.Count + _probable.Count + _probableConditional.Count + _suggestion.Count;
         if (totalCount <= 0)
         {
             _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
@@ -81,11 +79,11 @@ internal class SoftlockChecker
         string result = new StringBuilder()
             .AppendLine($"Total softlock/crash causes found: {totalCount}")
             .AppendLine()
-            .AppendLine($"Guaranteed: {guaranteedCount}")
-            .AppendLine($"Conditional: {conditionalCount}")
-            .AppendLine($"Probable: {probableCount}")
-            .AppendLine($"ProbableConditional: {probableConditionalCount}")
-            .AppendLine($"Suggestion: {suggestionCount}")
+            .AppendLine($"Guaranteed: {_guaranteed.Count}")
+            .AppendLine($"Conditional: {_conditional.Count}")
+            .AppendLine($"Probable: {_probable.Count}")
+            .AppendLine($"ProbableConditional: {_probableConditional.Count}")
+            .AppendLine($"Suggestion: {_suggestion.Count}")
             .AppendLine()
             .AppendLine(_reportBuilder.ToString())
             .ToString();
@@ -99,11 +97,12 @@ internal class SoftlockChecker
     }
 
     private StringBuilder _reportBuilder;
-    private int guaranteedCount = 0;
-    private int conditionalCount = 0;
-    private int probableCount = 0;
-    private int probableConditionalCount = 0;
-    private int suggestionCount = 0;
+
+    private HashSet<string> _guaranteed = new();
+    private HashSet<string> _conditional = new();
+    private HashSet<string> _probable = new();
+    private HashSet<string> _probableConditional = new();
+    private HashSet<string> _suggestion = new();
 
     /// <summary>
     /// A softlock that is guaranteed to happen to someone in their playthrough
@@ -111,7 +110,11 @@ internal class SoftlockChecker
     /// <param name="description"></param>
     private void ReportGuaranteed(string description)
     {
-        guaranteedCount++;
+        if (_guaranteed.Contains(description))
+        {
+            return;
+        }
+        _guaranteed.Add(description);
         _reportBuilder.Append("[Guaranteed] ");
         _reportBuilder.AppendLine(description);
     }
@@ -121,7 +124,11 @@ internal class SoftlockChecker
     /// <param name="description"></param>
     private void ReportConditional(string description)
     {
-        conditionalCount++;
+        if (_conditional.Contains(description))
+        {
+            return;
+        }
+        _conditional.Add(description);
         _reportBuilder.Append("[Conditional] ");
         _reportBuilder.AppendLine(description);
     }
@@ -131,7 +138,11 @@ internal class SoftlockChecker
     /// <param name="description"></param>
     private void ReportProbable(string description)
     {
-        probableCount++;
+        if (_probable.Contains(description))
+        {
+            return;
+        }
+        _probable.Add(description);
         _reportBuilder.Append("[Probable] ");
         _reportBuilder.AppendLine(description);
     }
@@ -141,14 +152,22 @@ internal class SoftlockChecker
     /// <param name="description"></param>
     private void ReportProbableConditional(string description)
     {
-        probableConditionalCount++;
+        if (_probableConditional.Contains(description))
+        {
+            return;
+        }
+        _probableConditional.Add(description);
         _reportBuilder.Append("[ProbableConditional] ");
         _reportBuilder.AppendLine(description);
     }
 
     private void ReportSuggestion(string description)
     {
-        suggestionCount++;
+        if (_suggestion.Contains(description))
+        {
+            return;
+        }
+        _suggestion.Add(description);
         _reportBuilder.Append("[Suggestion] ");
         _reportBuilder.AppendLine(description);
     }
@@ -196,7 +215,7 @@ internal class SoftlockChecker
         }
     }
 
-    private void GetEvolutions(PokemonId pokemonId, HashSet<PokemonId> evolutions)
+    private void GetEvolutions(PokemonId pokemonId, List<PokemonId> evolutions)
     {
         if (evolutions.Contains(pokemonId) || pokemonId == PokemonId.Default) // prevent infinite loops
         {
@@ -210,8 +229,95 @@ internal class SoftlockChecker
         }
     }
 
+    private void GetEvolutions(PokemonId pokemonId, List<PokemonId> evolutions, Dictionary<PokemonId, PokemonId> evolvesFrom)
+    {
+        if (evolutions.Contains(pokemonId) || pokemonId == PokemonId.Default) // prevent infinite loops
+        {
+            return;
+        }
+        evolutions.Add(pokemonId);
+        var pokemon = _pokemonService.Retrieve((int)pokemonId);
+        foreach (var evolution in pokemon.Evolutions)
+        {
+            evolvesFrom[evolution] = pokemonId;
+            GetEvolutions(evolution, evolutions, evolvesFrom);
+        }
+    }
+
+    private void GetRankups(WarriorId warriorId, List<WarriorId> rankups)
+    {
+        if (rankups.Contains(warriorId) || warriorId == WarriorId.NoWarrior)
+        {
+            return;
+        }
+        rankups.Add(warriorId);
+        var warrior = _baseWarriorService.Retrieve((int)warriorId);
+        GetRankups(warrior.RankUp, rankups);
+    }
+
+    private void GetRankups(WarriorId warriorId, List<WarriorId> rankups, Dictionary<WarriorId, WarriorId> ranksUpFrom)
+    {
+        if (rankups.Contains(warriorId) || warriorId == WarriorId.NoWarrior)
+        {
+            return;
+        }
+        rankups.Add(warriorId);
+        var warrior = _baseWarriorService.Retrieve((int)warriorId);
+        ranksUpFrom[warrior.RankUp] = warriorId;
+        GetRankups(warrior.RankUp, rankups, ranksUpFrom);
+    }
+
     private void ValidateLinkPairs()
     {
+        // Scenario-Independent
+        foreach (var warrior in EnumUtil.GetValuesExceptDefaults<WarriorId>())
+        {
+            var rankupTree = new List<WarriorId>();
+            var ranksUpFrom = new Dictionary<WarriorId, WarriorId>();
+            GetRankups(warrior, rankupTree, ranksUpFrom);
+            foreach (var rankup in rankupTree)
+            {
+                var warriorMaxLinks = _maxLinkService.Retrieve((int)rankup);
+
+                foreach (var pokemonId in EnumUtil.GetValuesExceptDefaults<PokemonId>())
+                {
+                    // gather all the pokemon that evolve from the warriors starter pokemon
+                    var evolutionTree = new List<PokemonId>();
+                    var evolvesFrom = new Dictionary<PokemonId, PokemonId>();
+                    GetEvolutions(pokemonId, evolutionTree, evolvesFrom);
+
+                    foreach (var evolution in evolutionTree)
+                    {
+                        var link = warriorMaxLinks.GetMaxLink(evolution);
+
+                        if (evolvesFrom.TryGetValue(evolution, out var evolvesFromPoke))
+                        {
+                            var minLinkRequired = warriorMaxLinks.GetMaxLink(evolvesFromPoke);
+                            if (link < minLinkRequired)
+                            {
+                                var poke = _pokemonService.Retrieve((int)evolution);
+                                ReportSuggestion($"Warrior {(int)rankup} ({_baseWarriorService.IdToName((int)rankup)}) has max link '{link}' with pokemon '{poke.Name}'"
+                                    + $" which is less than the link value '{minLinkRequired}' with it's pre-evolution '{_pokemonService.Retrieve((int)evolvesFromPoke).Name}'");
+                            }
+                        }
+                        if (ranksUpFrom.TryGetValue(rankup, out var ranksUpFromWarrior))
+                        {
+                            var xWarriorMinLink = _maxLinkService.Retrieve((int)ranksUpFromWarrior).GetMaxLink(evolution);
+
+                            if (link < xWarriorMinLink)
+                            {
+                                var poke = _pokemonService.Retrieve((int)evolution);
+                                ReportSuggestion($"Warrior {(int)rankup} ({_baseWarriorService.IdToName((int)rankup)}) has max link '{link}' with pokemon '{poke.Name}'"
+                                    + $" which is less than the link value '{xWarriorMinLink}' with a lower rank of this warrior ({(int)ranksUpFromWarrior})");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        // Scenario-Dependent
         foreach (ScenarioId scenario in EnumUtil.GetValues<ScenarioId>())
         {
             int id = 0;
@@ -223,23 +329,34 @@ internal class SoftlockChecker
                 }
                 var scenarioPokemon = _scenarioPokemonService.Retrieve((int)scenario).Retrieve(scenarioWarrior.GetScenarioPokemon(0));
 
-                // gather all the pokemon that evolve from the warriors starter pokemon
-                var evolutionTree = new HashSet<PokemonId>();
-                GetEvolutions(scenarioPokemon.Pokemon, evolutionTree);
-
-                var warriorMaxLinks = _maxLinkService.Retrieve((int)scenarioWarrior.Warrior);
-                foreach (var pokemon in evolutionTree)
+                var rankupTree = new List<WarriorId>();
+                GetRankups(scenarioWarrior.Warrior, rankupTree);
+                var pokemonId = scenarioPokemon.Pokemon;
+                foreach (var rankup in rankupTree)
                 {
-                    if (warriorMaxLinks.GetMaxLink(pokemon) == 0)
+                    var warriorMaxLinks = _maxLinkService.Retrieve((int)scenarioWarrior.Warrior);
+                    
+                    // gather all the pokemon that evolve from the warriors starter pokemon
+                    var evolutionTree = new List<PokemonId>();
+                    GetEvolutions(pokemonId, evolutionTree);
+
+                    foreach (var evolution in evolutionTree)
                     {
-                        var poke = _pokemonService.Retrieve((int)pokemon);
-                        ReportSuggestion($"In scenario '{scenario}' scenario warrior '{id}' ({scenarioWarrior.Warrior}) has max link 0 with pokemon '{poke.Name}'"
-                            + " which is the, or an evolution of their scenario pokemon.");
+                        var link = warriorMaxLinks.GetMaxLink(evolution);
+                        if (pokemonId == scenarioPokemon.Pokemon && link == 0)
+                        {
+                            var poke = _pokemonService.Retrieve((int)evolution);
+                            ReportSuggestion($"In scenario '{scenario}' warrior {(int)rankup} ({_baseWarriorService.IdToName((int)rankup)}) (ScenarioWarrior={id}) has max link 0 with pokemon '{poke.Name}'"
+                                + " which is the, or an evolution of their scenario pokemon.");
+                        }
                     }
                 }
+
                 id++;
             }
         }
+    
+    
     }
 
     private void ValidateMoves()

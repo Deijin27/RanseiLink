@@ -2,7 +2,7 @@
 
 namespace SoftlockCheckerPlugin;
 
-[Plugin("Softlock Checker", "Deijin", "2.3")]
+[Plugin("Softlock Checker", "Deijin", "2.4")]
 public class SoftlockCheckerPlugin : IPlugin
 {
     public void Run(IPluginContext context)
