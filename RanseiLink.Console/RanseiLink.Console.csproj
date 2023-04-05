@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <VersionPrefix>5.4</VersionPrefix>
+    <VersionPrefix>5.5</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
   </PropertyGroup>
 

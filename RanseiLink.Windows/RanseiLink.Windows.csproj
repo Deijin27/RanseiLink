@@ -7,7 +7,7 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
-    <VersionPrefix>5.4</VersionPrefix>
+    <VersionPrefix>5.5</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
