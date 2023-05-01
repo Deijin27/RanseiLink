@@ -59,5 +59,19 @@ namespace RanseiLink.Core.Models
             set => SetUInt16(2, value);
         }
 
+        /// <summary>
+        /// In memory: For wild pokemon this seems to store hp, but not for players pokemon
+        /// </summary>
+        public byte U1
+        {
+            get => GetByte(1);
+            set => SetByte(1, value);
+        }
+
+        public EnergyId Energy
+        {
+            get => (EnergyId)GetInt(1, 29, 3);
+            set => SetInt(1, 29, 3, (int)value);
+        }
     }
 }
