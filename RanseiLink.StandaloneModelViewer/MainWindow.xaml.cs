@@ -34,6 +34,7 @@ public partial class MainWindow : Window
         UpdateTitle();
 
         _scene = ((App)App.Current).Scene ?? throw new Exception("Appication hasn't initialized services yet");
+        _scene.Configure(SceneRenderOptions.ShowGimmicks);
         _scene.LoadScene(BattleConfigId.Aurora);
 
         this.Loaded += MainWindow_Loaded;
@@ -52,7 +53,7 @@ public partial class MainWindow : Window
 
         // doing GL.Finish() once at the end of render seems to help performance
         // doing it multiple times harms performance
-        GL.Finish(); 
+        GL.Finish();
     }
 
     private void UpdateTitle()

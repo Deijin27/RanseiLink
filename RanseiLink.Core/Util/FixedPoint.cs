@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RanseiLink.Core.Util;
 
@@ -39,10 +38,6 @@ public static class FixedPoint
 
     public static float Fix(int value, int signBits, int intBits, int fracBits)
     {
-        Debug.Assert(signBits == 0 || signBits == 1);
-        Debug.Assert(intBits + fracBits >= 0);
-        Debug.Assert(signBits + intBits + fracBits <= 32);
-
         double result;
 
         if (signBits == 0)
@@ -62,15 +57,11 @@ public static class FixedPoint
             }
         }
 
-        return (float)(result * Math.Pow(0.5, fracBits));
+        return (float)(result / (1 << fracBits));
     }
 
     public static int InverseFix(float value, int signBits, int intBits, int fracBits)
     {
-        Debug.Assert(signBits == 0 || signBits == 1);
-        Debug.Assert(intBits + fracBits >= 0);
-        Debug.Assert(signBits + intBits + fracBits <= 32);
-
         // coerce value into correct range (i know the implementation is slow, but it doesn't matter
         var min = MinValue(signBits, intBits, fracBits);
         if (value < min)
@@ -87,7 +78,7 @@ public static class FixedPoint
         }
 
         // calculate result
-        double dbl = value * Math.Pow(2, fracBits);
+        double dbl = value * (1 << fracBits);
 
         int result = (int)Math.Round(dbl);
         if (signBits != 0 && value < 0 && result != 0)
