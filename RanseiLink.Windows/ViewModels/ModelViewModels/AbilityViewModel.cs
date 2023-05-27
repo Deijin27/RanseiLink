@@ -2,6 +2,12 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Windows.Services;
+using RanseiLink.Windows.Services.Concrete;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -9,15 +15,27 @@ public class AbilityViewModel : ViewModelBase
 {
     private Ability _model;
     private readonly ICachedMsgBlockService _msgService;
+    private readonly IPokemonService _pokemonService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    private AbilityId _id;
 
-    public AbilityViewModel(ICachedMsgBlockService msgService)
+    public AbilityViewModel(
+        ICachedMsgBlockService msgService,
+        IJumpService jumpService,
+        IPokemonService pokemonService,
+        ICachedSpriteProvider cachedSpriteProvider)
     {
+        _pokemonService = pokemonService;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _msgService = msgService;
         _model = new Ability();
+
+        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => jumpService.JumpTo(PokemonSelectorEditorModule.Id, pk.Id));
     }
 
     public void SetModel(AbilityId id, Ability model)
     {
+        _id = id;
         Id = (int)id;
         _model = model;
         RaiseAllPropertiesChanged();
@@ -71,5 +89,24 @@ public class AbilityViewModel : ViewModelBase
     {
         get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
+    }
+
+    private readonly ICommand _selectPokemonCommand;
+
+    public List<PokemonMiniViewModel> PokemonWithAbility
+    {
+        get
+        {
+            var list = new List<PokemonMiniViewModel>();
+            foreach (var id in _pokemonService.ValidIds())
+            {
+                var pokemon = _pokemonService.Retrieve(id);
+                if (pokemon.Ability1 == _id || pokemon.Ability2 == _id || pokemon.Ability3 == _id)
+                {
+                    list.Add(new PokemonMiniViewModel(_cachedSpriteProvider, pokemon, id, _selectPokemonCommand));
+                }
+            }
+            return list;
+        }
     }
 }

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
              xmlns:views="clr-namespace:RanseiLink.Windows.Views"
+             xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -164,6 +165,9 @@
                 <Setter Property="TextSearch.TextPath" Value="Name"/>
                 <Setter Property="Height" Value="20"/>
             </Style>
+
+            <vc:PokemonTypeToBrushConverter x:Key="Converter.PokemonTypeToBrush"/>
+            <BooleanToVisibilityConverter x:Key="Converter.BoolToVisibility"/>
 
         </ResourceDictionary>
     </Application.Resources>

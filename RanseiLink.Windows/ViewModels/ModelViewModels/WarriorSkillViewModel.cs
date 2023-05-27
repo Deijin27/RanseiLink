@@ -2,23 +2,39 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Windows.Services;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 
 public class WarriorSkillViewModel : ViewModelBase
 {
-    public WarriorSkill _model;
-
+    private WarriorSkill _model;
+    private WarriorSkillId _id;
     private readonly ICachedMsgBlockService _msgService;
+    private readonly IBaseWarriorService _baseWarriorService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
 
-    public WarriorSkillViewModel(ICachedMsgBlockService msgService)
+    public WarriorSkillViewModel(
+        ICachedMsgBlockService msgService, 
+        IBaseWarriorService baseWarriorService,
+        ICachedSpriteProvider cachedSpriteProvider,
+        IJumpService jumpService)
     {
         _msgService = msgService;
+        _baseWarriorService = baseWarriorService;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _model = new WarriorSkill();
+
+        _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, wa.Id));
     }
 
     public void SetModel(WarriorSkillId id, WarriorSkill model)
     {
+        _id = id;   
         Id = (int)id;
         _model = model;
         RaiseAllPropertiesChanged();
@@ -90,6 +106,25 @@ public class WarriorSkillViewModel : ViewModelBase
     {
         get => _msgService.GetMsgOfType(MsgShortcut.WarriorSkillDescription, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.WarriorSkillDescription, Id, value);
+    }
+
+    private readonly ICommand _selectWarriorCommand;
+
+    public List<WarriorMiniViewModel> WarriorsWithSkill
+    {
+        get
+        {
+            var list = new List<WarriorMiniViewModel>();
+            foreach (var id in _baseWarriorService.ValidIds())
+            {
+                var warrior = _baseWarriorService.Retrieve(id);
+                if (warrior.Skill == _id)
+                {
+                    list.Add(new WarriorMiniViewModel(_cachedSpriteProvider, _baseWarriorService, warrior, id, _selectWarriorCommand));
+                }
+            }
+            return list;
+        }
     }
 
 }

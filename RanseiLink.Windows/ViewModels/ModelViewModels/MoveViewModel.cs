@@ -2,7 +2,9 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Windows.Services;
+using System.Collections.Generic;
 using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -18,13 +20,24 @@ public enum MoveAnimationPreviewMode
 
 public class MoveViewModel : ViewModelBase
 {
+    private MoveId _id;
     private Move _model;
     private readonly ICachedMsgBlockService _msgService;
     private readonly IExternalService _externalService;
-    public MoveViewModel(ICachedMsgBlockService msgService, IExternalService externalService, IJumpService jumpService)
+    private readonly IPokemonService _pokemonService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
+
+    public MoveViewModel(
+        ICachedMsgBlockService msgService, 
+        IExternalService externalService, 
+        IJumpService jumpService, 
+        IPokemonService pokemonService,
+        ICachedSpriteProvider cachedSpriteProvider)
     {
         _msgService = msgService;
         _externalService = externalService;
+        _pokemonService = pokemonService;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _model = new Move();
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
@@ -35,10 +48,12 @@ public class MoveViewModel : ViewModelBase
         UpdatePreviewAnimation();
 
         JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
+        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => jumpService.JumpTo(PokemonSelectorEditorModule.Id, pk.Id));
     }
 
     public void SetModel(MoveId id, Move model)
     {
+        _id = id;
         Id = (int)id;
         _model = model;
         UpdatePreviewAnimation(true);
@@ -289,5 +304,24 @@ public class MoveViewModel : ViewModelBase
     private string GetAnimationUri(MoveAnimationId id)
     {
         return _externalService.GetMoveAnimationUri(id);
+    }
+
+    private readonly ICommand _selectPokemonCommand;
+
+    public List<PokemonMiniViewModel> PokemonWithMove
+    {
+        get
+        {
+            var list = new List<PokemonMiniViewModel>();
+            foreach (var id in _pokemonService.ValidIds())
+            {
+                var pokemon = _pokemonService.Retrieve(id);
+                if (pokemon.Move == _id)
+                {
+                    list.Add(new PokemonMiniViewModel(_cachedSpriteProvider, pokemon, id, _selectPokemonCommand));
+                }
+            }
+            return list;
+        }
     }
 }

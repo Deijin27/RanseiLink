@@ -104,6 +104,9 @@
     <Compile Update="Views\ModelViews\GimmickView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\WarriorMiniView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\SwSimpleKingdomMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

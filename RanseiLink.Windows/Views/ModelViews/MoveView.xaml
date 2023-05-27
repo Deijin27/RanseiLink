@@ -12,7 +12,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              d:DataContext="{d:DesignInstance Type=vm:MoveViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="800">
+             d:DesignHeight="800" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:MoveEffectIdToQuantityNameConverter x:Key="moveEffectIdToQuantityNameConverter"/>
 
@@ -42,6 +42,11 @@
                 <ColumnDefinition Width="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -121,82 +126,99 @@
             <TextBlock Grid.Row="19" Grid.Column="0" Text="Unknown Value 6_28_4" />
             <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding UnknownValue_6_28_4, Mode=TwoWay}"/>
 
-        </Grid>
-        <Grid Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="130"/>
-                <ColumnDefinition Width="170"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-            </Grid.RowDefinitions>
-
-            <TextBlock Text="Movement Animation" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
-
-            <DockPanel Grid.Row="0" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Movement}"/>
-                <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveMovementAnimationItems}" SelectedItem="{Binding MovementAnimation}"/>
-            </DockPanel>
-
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup Animation"/>
-            <DockPanel Grid.Row="1" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Startup}"/>
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding StartupAnimation}"/>
-            </DockPanel>
-
-
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Projectile Animation"/>
-            <DockPanel Grid.Row="2" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Projectile}"/>
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding ProjectileAnimation}"/>
-            </DockPanel>
-
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Impact Animation"/>
-            <DockPanel Grid.Row="3" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Impact}"/>
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding ImpactAnimation}"/>
-            </DockPanel>
-
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Additional Animation"/>
-            <DockPanel Grid.Row="4" Grid.Column="1">
-                <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Additional}"/>
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding AdditionalAnimation}"/>
-            </DockPanel>
-
-            <GroupBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" FontSize="10" Text="{Binding CurrentPreviewAnimationName, StringFormat='Previewing {0}'}"/>
-                    <Grid>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Requires Internet Connection</TextBlock>
-                        <Image Width="270" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                       gif:ImageBehavior.AnimatedSource="{Binding CurrentPreviewAnimationUri}" />
-                    </Grid>
-
-                </DockPanel>
-            </GroupBox>
-
-            <GroupBox Header="Description" Grid.Row="14" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <GroupBox Header="Description" Grid.Row="20" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
             </GroupBox>
 
         </Grid>
+        <TabControl Margin="10">
+            <TabItem Header="Pokemon">
+                <ItemsControl VerticalAlignment="Top" Width="300" Height="400" Margin="10" ItemsSource="{Binding PokemonWithMove}" Style="{StaticResource ItemsControlVirtualizedStyle}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:PokemonMiniView Margin="2" Width="163" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </TabItem>
+            <TabItem Header="Animation">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="170"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Movement Animation" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
+
+                    <DockPanel Grid.Row="0" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Movement}"/>
+                        <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveMovementAnimationItems}" SelectedItem="{Binding MovementAnimation}"/>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup Animation"/>
+                    <DockPanel Grid.Row="1" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Startup}"/>
+                        <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding StartupAnimation}"/>
+                    </DockPanel>
+
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Projectile Animation"/>
+                    <DockPanel Grid.Row="2" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Projectile}"/>
+                        <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding ProjectileAnimation}"/>
+                    </DockPanel>
+
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Impact Animation"/>
+                    <DockPanel Grid.Row="3" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Impact}"/>
+                        <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding ImpactAnimation}"/>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Additional Animation"/>
+                    <DockPanel Grid.Row="4" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PreviewButtonStyle}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Additional}"/>
+                        <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding AdditionalAnimation}"/>
+                    </DockPanel>
+
+                    <GroupBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Top" FontSize="10" Text="{Binding CurrentPreviewAnimationName, StringFormat='Previewing {0}'}"/>
+                            <Grid>
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Requires Internet Connection</TextBlock>
+                                <Image Width="270" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                       gif:ImageBehavior.AnimatedSource="{Binding CurrentPreviewAnimationUri}" />
+                            </Grid>
+
+                        </DockPanel>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
     </WrapPanel>
 </UserControl>
