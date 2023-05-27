@@ -1,4 +1,6 @@
-﻿using RanseiLink.Windows.ViewModels;
+﻿using RanseiLink.Core.Settings;
+using RanseiLink.Windows.Settings;
+using RanseiLink.Windows.ViewModels;
 using System;
 using System.Windows;
 
@@ -16,13 +18,50 @@ public partial class MainWindow : Window
         // Ensure maximized window doesn't cover taskbar
         MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
 
-        DataContext = ((App)Application.Current).GetMainWindowViewModel();
+        var app = (App)Application.Current;
+        RestoreDimensions(app.SettingService);
+        
+        DataContext = app.GetMainWindowViewModel();
+    }
+
+    private void RestoreDimensions(ISettingService settingService)
+    {
+        var dims = settingService.Get<WindowDimensionsSetting>().Value;
+        if (dims.X > 0)
+        {
+            this.Left = dims.X;
+        }
+        if (dims.Y > 0)
+        {
+            this.Top = dims.Y;
+        }
+        if (dims.Width > 0)
+        {
+            this.Width = dims.Width;
+        }
+        if (dims.Height > 0)
+        {
+            this.Height = dims.Height;
+        }
+        if (dims.State == WindowState.Normal || dims.State == WindowState.Maximized)
+        {
+            this.WindowState = dims.State;
+        }
+    }
+
+    private void SaveDimensions(ISettingService settingService)
+    {
+        var dimSetting = settingService.Get<WindowDimensionsSetting>();
+        dimSetting.Value = new WindowDimensions(Left, Top, Width, Height, WindowState);
+        settingService.Save();
     }
 
     private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
 
     private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
     {
+        var app = (App)Application.Current;
+        SaveDimensions(app.SettingService);
         ViewModel.OnShutdown();
         App.Current.Shutdown();
     }

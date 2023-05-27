@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Settings;
 using RanseiLink.PluginModule;
 using RanseiLink.View3D;
 using RanseiLink.Windows.ViewModels;
@@ -20,7 +21,8 @@ public partial class App : Application
     public static readonly string Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     public MainWindowViewModel GetMainWindowViewModel() => _mainWindowViewModel;
     private MainWindowViewModel _mainWindowViewModel;
-
+    public ISettingService SettingService { get; private set; }
+    
 
     public App()
     {
@@ -44,6 +46,7 @@ public partial class App : Application
         builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 
         _mainWindowViewModel = builder.Resolve<MainWindowViewModel>();
+        SettingService = builder.Resolve<ISettingService>();
 
         base.OnStartup(e);
     }
