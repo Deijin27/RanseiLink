@@ -84,12 +84,12 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        public static SCBGCollection LoadPngs(string inputFolder, bool tiled = true)
+        public static SCBGCollection LoadPngs(string inputFolder, bool tiled)
         {
             return LoadPngs(Directory.GetFiles(inputFolder, "*.png"), tiled);
         }
 
-        public static SCBGCollection LoadPngs(string[] files, bool tiled = true)
+        public static SCBGCollection LoadPngs(string[] files, bool tiled)
         {
             var scbgFiles = (
                 from filePath in files
@@ -117,7 +117,7 @@ namespace RanseiLink.Core.Graphics
             return new SCBGCollection(scbg.ToList());
         }
 
-        public void SaveAsPngs(string outputFolder, bool tiled = true)
+        public void SaveAsPngs(string outputFolder, bool tiled)
         {
             Directory.CreateDirectory(outputFolder);
             Parallel.For(0, Items.Count, i =>
@@ -191,18 +191,19 @@ namespace RanseiLink.Core.Graphics
             bw.Write(Pixels);
         }
 
-        public void SaveAsPng(string saveFile, bool tiled = true)
+        public void SaveAsPng(string saveFile, bool tiled)
         {
             ImageUtil.SaveAsPng(
                 file: saveFile,
                 new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
-                tiled: tiled
+                tiled: tiled,
+                format: TexFormat.Pltt256
                 );
         }
 
-        public static SCBG LoadPng(string file, bool tiled = true)
+        public static SCBG LoadPng(string file, bool tiled)
         {
-            var imageInfo = ImageUtil.LoadPng(file, tiled);
+            var imageInfo = ImageUtil.LoadPng(file, tiled, TexFormat.Pltt256, color0ToTransparent: true);
 
             return new SCBG
             (

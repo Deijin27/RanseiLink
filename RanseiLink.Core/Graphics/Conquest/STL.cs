@@ -84,12 +84,12 @@ namespace RanseiLink.Core.Graphics
             }
         }
 
-        public static STLCollection LoadPngs(string inputFolder, NCER ncer, bool tiled = false)
+        public static STLCollection LoadPngs(string inputFolder, NCER ncer, bool tiled)
         {
             return LoadPngs(Directory.GetFiles(inputFolder, "*.png"), ncer, tiled);
         }
 
-        public static STLCollection LoadPngs(string[] files, NCER ncer, bool tiled = false)
+        public static STLCollection LoadPngs(string[] files, NCER ncer, bool tiled)
         {
             var stlFiles = (
                 from filePath in files
@@ -116,7 +116,7 @@ namespace RanseiLink.Core.Graphics
             return new STLCollection(stls.ToList());
         }
 
-        public void SaveAsPngs(string outputFolder, NCER ncer, bool tiled = false)
+        public void SaveAsPngs(string outputFolder, NCER ncer, bool tiled)
         {
             Directory.CreateDirectory(outputFolder);
             Parallel.For(0, Items.Count, i =>
@@ -236,25 +236,27 @@ namespace RanseiLink.Core.Graphics
             bw.Pad(PaddingLength);
         }
 
-        public void SaveAsPng(NCER ncer, string saveFile, bool debug = false, bool tiled = false)
+        public void SaveAsPng(NCER ncer, string saveFile, bool tiled, bool debug = false)
         {
             ImageUtil.SaveAsPng(
                 file: saveFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
                 new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
-                debug: debug,
-                tiled: tiled
+                tiled: tiled,
+                format: TexFormat.Pltt256,
+                debug: debug
                 );
         }
 
-        public static STL LoadPng(NCER ncer, string pngFile, bool tiled = false)
+        public static STL LoadPng(NCER ncer, string pngFile, bool tiled)
         {
             var imageInfo = ImageUtil.LoadPng(
                 file: pngFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                tiled: tiled
+                tiled: tiled,
+                format: TexFormat.Pltt256
                 );
 
             return new STL

@@ -101,7 +101,8 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
                 width: ncgr.Pixels.TilesPerRow * 8,
                 height: ncgr.Pixels.TilesPerColumn * 8
                 ),
-            tiled: true
+            tiled: ncgr.Pixels.IsTiled,
+            format: ncgr.Pixels.Format
             );
     }
 }

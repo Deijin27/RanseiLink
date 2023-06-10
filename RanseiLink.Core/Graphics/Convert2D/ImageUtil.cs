@@ -16,7 +16,7 @@ public class InvalidPaletteException : Exception
 
 public static class ImageUtil
 {
-    public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
+    public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled, TexFormat format)
     {
         using (var img = ToImage(imageInfo, tiled, format))
         {
@@ -24,7 +24,7 @@ public static class ImageUtil
         }
     }
 
-    public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
+    public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, bool tiled, TexFormat format)
     {
         var pointGetter = PointUtil.DecidePointGetter(tiled);
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
@@ -95,7 +95,7 @@ public static class ImageUtil
         return img;
     }
 
-    public static SpriteImageInfo LoadPng(string file, bool tiled = false, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
+    public static SpriteImageInfo LoadPng(string file, bool tiled, TexFormat format, bool color0ToTransparent)
     {
         Image<Rgba32> image;
         try
@@ -129,7 +129,7 @@ public static class ImageUtil
         return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
     }
 
-    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
+    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format, bool color0ToTransparent)
     {
         var indexGetter = PointUtil.DecideIndexGetter(tiled);
         int width = image.Width;
@@ -265,7 +265,7 @@ public static class ImageUtil
 
     private record BankDimensions(int MinX, int MinY, int XShift, int YShift, int Width, int Height);
 
-    public static Image<Rgba32> ToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    public static Image<Rgba32> ToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
@@ -332,13 +332,13 @@ public static class ImageUtil
         return graphic;
     }
 
-    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
-        using var graphic = ToImage(bank, blockSize, imageInfo, tiled, debug, format);
+        using var graphic = ToImage(bank, blockSize, imageInfo, tiled, format, debug);
         graphic.SaveAsPng(file);
     }
 
-    public static Image<Rgba32> ToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    public static Image<Rgba32> ToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
         if (banks.Count == 0)
         {
@@ -346,11 +346,11 @@ public static class ImageUtil
         }
         else if (banks.Count == 1)
         {
-            return ToImage(banks[0], blockSize, imageInfo, tiled, debug, format);
+            return ToImage(banks[0], blockSize, imageInfo, tiled, format, debug);
         }
         else
         {
-            var images = banks.Select(bank => ToImage(bank, blockSize, imageInfo, tiled, debug, format)).ToList();
+            var images = banks.Select(bank => ToImage(bank, blockSize, imageInfo, tiled, format, debug)).ToList();
 
             var fullHeight = images.Sum(x => x.Height);
             var fullWidth = images.Max(x => x.Width);
@@ -369,7 +369,7 @@ public static class ImageUtil
         }
     }
 
-    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format = TexFormat.Pltt256)
+    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
@@ -401,7 +401,7 @@ public static class ImageUtil
                     g.Flip(FlipMode.Vertical);
             }))
             {
-                byte[] cellPixels = FromImage(cellImg, workingPalette, tiled);
+                byte[] cellPixels = FromImage(cellImg, workingPalette, tiled, format, color0ToTransparent: true);
                 workingPixels.AddRange(cellPixels);
             }
         }
@@ -421,7 +421,7 @@ public static class ImageUtil
         return image;
     }
 
-    public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         if (bank.Length == 0)
         {
@@ -433,7 +433,7 @@ public static class ImageUtil
         return FromImage(image, bank, blockSize, tiled, format);
     }
 
-    public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         var width = image.Width;
         var height = image.Height;
@@ -453,7 +453,7 @@ public static class ImageUtil
         return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
     }
 
-    public static SpriteImageInfo LoadMutiBankCellSpriteFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    public static SpriteImageInfo LoadMutiBankCellSpriteFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
     {
         if (banks.Any(x => x.Length == 0))
         {
@@ -465,7 +465,7 @@ public static class ImageUtil
         return FromImage(image, banks, blockSize, tiled, format);
     }
 
-    public static SpriteImageInfo FromImage(Image<Rgba32> image, IList<Cell[]> banks, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    public static SpriteImageInfo FromImage(Image<Rgba32> image, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
     {
         if (banks.Count == 0)
         {

@@ -30,7 +30,7 @@ public class NcerWarriorBattleIntroTests
             new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
             ncgr.Pixels.IsTiled,
             debug: false,
-            ncgr.Pixels.Format
+            format: ncgr.Pixels.Format
             );
 
         using var expectedImage = Image.Load<Rgba32>(png);
@@ -53,7 +53,7 @@ public class NcerWarriorBattleIntroTests
             new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
             ncgr.Pixels.IsTiled,
             debug: false,
-            ncgr.Pixels.Format
+            format: ncgr.Pixels.Format
             );
 
         var info = ImageUtil.FromImage(

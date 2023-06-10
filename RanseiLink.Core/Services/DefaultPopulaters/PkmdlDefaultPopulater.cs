@@ -63,23 +63,27 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             }
 
             const bool isTiled = false;
+            const TexFormat texFormat = TexFormat.Pltt16;
 
             // generate images
             var texImg = ImageUtil.ToImage(
                 new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
-                isTiled
+                isTiled,
+                texFormat
                 );
 
             byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
             var atxImg = ImageUtil.ToImage(
                 new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth),
-                isTiled
+                isTiled,
+                texFormat
                 );
 
             byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
             var dtxImg = ImageUtil.ToImage(
                 new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth),
-                isTiled
+                isTiled,
+                texFormat
                 );
 
 
@@ -89,7 +93,8 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
             var pacImg = ImageUtil.ToImage(
                 new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth),
-                isTiled
+                isTiled,
+                texFormat
                 );
 
             var totalWidth = texImg.Width + atxImg.Width + dtxImg.Width + pacImg.Width;
