@@ -221,7 +221,7 @@ namespace RanseiLink.Core.Services
             byte[] pixels;
             try
             {
-                pixels = ImageUtil.FromImage(image, palette, PointUtil.GetIndex, format, colorZeroTransparent);
+                pixels = ImageUtil.FromImage(image, palette, PointUtil.DecideIndexGetter(isTiled: false), format, colorZeroTransparent);
             }
             catch (Exception e)
             {

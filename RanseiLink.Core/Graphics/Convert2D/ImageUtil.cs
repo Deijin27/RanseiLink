@@ -6,7 +6,6 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using System.Collections.Generic;
 using System.Linq;
-using static RanseiLink.Core.Graphics.NSTEX;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -35,7 +34,7 @@ public static class ImageUtil
 {
     public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
     {
-        using (var img = ToImage(imageInfo, tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint), format))
+        using (var img = ToImage(imageInfo, PointUtil.DecidePointGetter(tiled), format))
         {
             img.SaveAsPng(file);
         }
@@ -134,7 +133,7 @@ public static class ImageUtil
         byte[] pixels;
         try
         {
-            pixels = FromImage(image, palette, tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex), format, color0ToTransparent);
+            pixels = FromImage(image, palette, PointUtil.DecideIndexGetter(tiled), format, color0ToTransparent);
         }
         catch (Exception e)
         {
@@ -284,7 +283,7 @@ public static class ImageUtil
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
-        PointGetter pointGetter = tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint);
+        PointGetter pointGetter = PointUtil.DecidePointGetter(isTiled: tiled);
 
         Rgba32[] palette32 = imageInfo.Palette;
         palette32[0] = Color.Transparent;
@@ -452,7 +451,7 @@ public static class ImageUtil
 
     public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
     {
-        IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
+        IndexGetter indexGetter = PointUtil.DecideIndexGetter(tiled);
 
         var width = image.Width;
         var height = image.Height;
@@ -495,7 +494,7 @@ public static class ImageUtil
             return FromImage(image, banks[0], blockSize, tiled, format);
         }
 
-        IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
+        IndexGetter indexGetter = PointUtil.DecideIndexGetter(tiled);
 
         var width = image.Width;
         var height = image.Height;

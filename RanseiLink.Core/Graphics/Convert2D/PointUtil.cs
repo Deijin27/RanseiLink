@@ -4,17 +4,27 @@ namespace RanseiLink.Core.Graphics;
 
 public static class PointUtil
 {
-    public static Point GetPoint(int index, int imageWidth)
+    public static PointGetter DecidePointGetter(bool isTiled)
+    {
+        return isTiled ? GetPointTiled8 : GetPoint;
+    }
+
+    public static IndexGetter DecideIndexGetter(bool isTiled)
+    {
+        return isTiled ? GetIndexTiled8 : GetIndex;
+    }
+
+    private static Point GetPoint(int index, int imageWidth)
     {
         return new Point(index % imageWidth, index / imageWidth);
     }
 
-    public static int GetIndex(Point point, int imageWidth)
+    private static int GetIndex(Point point, int imageWidth)
     {
         return point.Y * imageWidth + point.X;
     }
 
-    public static Point GetPointTiled(int index, int imageWidth, int tileSize)
+    private static Point GetPointTiled(int index, int imageWidth, int tileSize)
     {
         int pixelsInTile = tileSize * tileSize;
         int tilesInRow = imageWidth / tileSize;
@@ -35,7 +45,7 @@ public static class PointUtil
         return new Point(x, y);
     }
 
-    public static int GetIndexTiled(Point point, int imageWidth, int tileSize)
+    private static int GetIndexTiled(Point point, int imageWidth, int tileSize)
     {
         int pixelsInTile = tileSize * tileSize;
         int tilesInRow = imageWidth / tileSize;
@@ -58,9 +68,9 @@ public static class PointUtil
         return index;
     }
 
-    public static Point GetPointTiled8(int index, int imageWidth) => GetPointTiled(index, imageWidth, 8);
+    private static Point GetPointTiled8(int index, int imageWidth) => GetPointTiled(index, imageWidth, 8);
 
-    public static int GetIndexTiled8(Point point, int imageWidth) => GetIndexTiled(point, imageWidth, 8);
+    private static int GetIndexTiled8(Point point, int imageWidth) => GetIndexTiled(point, imageWidth, 8);
 }
 
 public delegate Point PointGetter(int index, int imageWidth);

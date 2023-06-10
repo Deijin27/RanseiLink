@@ -105,6 +105,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
 
                     // TEX ------------------------------------------------------------------------------------------------------
 
+                    var nonTiledIndexGetter = PointUtil.DecideIndexGetter(isTiled: false);
                     string texTemp = Path.GetTempFileName();
                     NSBTX btx0 = new NSBTX(new NSTEX());
                     int texHeight = _pokemonSpriteHeight * _texSpriteCount;
@@ -113,7 +114,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                         g.Crop(new Rectangle(0, 0, _pokemonSpriteWidth, texHeight));
                     }))
                     {
-                        byte[] mergedPixels = ImageUtil.FromImage(texImg, palette, PointUtil.GetIndex, color0ToTransparent: true);
+                        byte[] mergedPixels = ImageUtil.FromImage(texImg, palette, nonTiledIndexGetter, color0ToTransparent: true);
                         for (int texNumber = 0; texNumber < _texSpriteCount; texNumber++)
                         {
                             var subArray = new byte[_pokemonSpriteWidth * _pokemonSpriteHeight];
@@ -152,7 +153,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string atxTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(atxTemp, RawChar.Compress(ImageUtil.FromImage(atxImg, palette, PointUtil.GetIndex)));
+                        File.WriteAllBytes(atxTemp, RawChar.Compress(ImageUtil.FromImage(atxImg, palette, nonTiledIndexGetter)));
                         atxLinkFiles[i] = atxTemp;
                     }
 
@@ -166,7 +167,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string dtxTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(dtxTemp, RawChar.Compress(ImageUtil.FromImage(dtxImg, palette, PointUtil.GetIndex)));
+                        File.WriteAllBytes(dtxTemp, RawChar.Compress(ImageUtil.FromImage(dtxImg, palette, nonTiledIndexGetter)));
                         dtxLinkFiles[i] = dtxTemp;
                     }
 
@@ -182,7 +183,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string pacCharTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(pacCharTemp, RawChar.Compress(ImageUtil.FromImage(pacImg, palette, PointUtil.GetIndex)));
+                        File.WriteAllBytes(pacCharTemp, RawChar.Compress(ImageUtil.FromImage(pacImg, palette, nonTiledIndexGetter)));
                         string pacTemp = Path.GetTempFileName();
                         string[] pacFiles = new string[]
                         {

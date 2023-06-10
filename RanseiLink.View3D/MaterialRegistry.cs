@@ -55,7 +55,7 @@ public static class MaterialRegistry
 
         return ImageUtil.ToImage(
             imageInfo: new SpriteImageInfo(pixels: tex.TextureData, palette: convPal, width: tex.Width, height: tex.Height),
-            pointGetter: PointUtil.GetPoint, // not tiled
+            pointGetter: PointUtil.DecidePointGetter(isTiled: false),
             format: tex.Format);
     }
 
