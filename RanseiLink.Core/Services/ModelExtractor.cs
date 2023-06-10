@@ -103,7 +103,7 @@ namespace RanseiLink.Core.Services
             {
                 convPal[0] = Color.Transparent;
             }
-            ImageUtil.SaveAsPng(Path.Combine(destinationFolder, texFileNameWithExt),
+            ImageUtil.SpriteToPng(Path.Combine(destinationFolder, texFileNameWithExt),
                 new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
                 tiled: false,
                 format: tex.Format);
@@ -221,7 +221,7 @@ namespace RanseiLink.Core.Services
             byte[] pixels;
             try
             {
-                pixels = ImageUtil.FromImage(image, palette, tiled: false, format, colorZeroTransparent);
+                pixels = ImageUtil.SharedPalettePixelsFromImage(image, palette, tiled: false, format, colorZeroTransparent);
             }
             catch (Exception e)
             {

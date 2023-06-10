@@ -53,7 +53,7 @@ public static class MaterialRegistry
             convPal[0] = SixLabors.ImageSharp.Color.Transparent;
         }
 
-        return ImageUtil.ToImage(
+        return ImageUtil.SpriteToImage(
             imageInfo: new SpriteImageInfo(pixels: tex.TextureData, palette: convPal, width: tex.Width, height: tex.Height),
             tiled: false,
             format: tex.Format);

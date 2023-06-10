@@ -193,7 +193,7 @@ namespace RanseiLink.Core.Graphics
 
         public void SaveAsPng(string saveFile, bool tiled)
         {
-            ImageUtil.SaveAsPng(
+            ImageUtil.SpriteToPng(
                 file: saveFile,
                 new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
                 tiled: tiled,
@@ -203,7 +203,7 @@ namespace RanseiLink.Core.Graphics
 
         public static SCBG LoadPng(string file, bool tiled)
         {
-            var imageInfo = ImageUtil.LoadPng(file, tiled, TexFormat.Pltt256, color0ToTransparent: true);
+            var imageInfo = ImageUtil.SpriteFromPng(file, tiled, TexFormat.Pltt256, color0ToTransparent: true);
 
             return new SCBG
             (

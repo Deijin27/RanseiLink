@@ -16,15 +16,15 @@ public class InvalidPaletteException : Exception
 
 public static class ImageUtil
 {
-    public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled, TexFormat format)
+    public static void SpriteToPng(string file, SpriteImageInfo imageInfo, bool tiled, TexFormat format)
     {
-        using (var img = ToImage(imageInfo, tiled, format))
+        using (var img = SpriteToImage(imageInfo, tiled, format))
         {
             img.SaveAsPng(file);
         }
     }
 
-    public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, bool tiled, TexFormat format)
+    public static Image<Rgba32> SpriteToImage(SpriteImageInfo imageInfo, bool tiled, TexFormat format)
     {
         var pointGetter = PointUtil.DecidePointGetter(tiled);
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
@@ -95,9 +95,9 @@ public static class ImageUtil
         return img;
     }
 
-    public static SpriteImageInfo LoadPng(string file, bool tiled, TexFormat format, bool color0ToTransparent)
+    public static SpriteImageInfo SpriteFromPng(string file, bool tiled, TexFormat format, bool color0ToTransparent)
     {
-        using var image = LoadPng(file);
+        using var image = LoadPngBetterError(file);
 
         int width = image.Width;
         int height = image.Height;
@@ -110,7 +110,7 @@ public static class ImageUtil
         byte[] pixels;
         try
         {
-            pixels = FromImage(image, palette, tiled, format, color0ToTransparent);
+            pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
         }
         catch (Exception e)
         {
@@ -120,7 +120,7 @@ public static class ImageUtil
         return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
     }
 
-    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format, bool color0ToTransparent)
+    public static byte[] SharedPalettePixelsFromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format, bool color0ToTransparent)
     {
         var indexGetter = PointUtil.DecideIndexGetter(tiled);
         int width = image.Width;
@@ -256,7 +256,7 @@ public static class ImageUtil
 
     private record BankDimensions(int MinX, int MinY, int XShift, int YShift, int Width, int Height);
 
-    public static Image<Rgba32> ToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static Image<Rgba32> SingleCebkToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
@@ -280,7 +280,7 @@ public static class ImageUtil
             }
             byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
 
-            using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), tiled, format))
+            using (var cellImg = SpriteToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), tiled, format))
             {
                 cellImg.Mutate(g =>
                 {
@@ -323,13 +323,13 @@ public static class ImageUtil
         return graphic;
     }
 
-    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static void SingleCebkToPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
-        using var graphic = ToImage(bank, blockSize, imageInfo, tiled, format, debug);
+        using var graphic = SingleCebkToImage(bank, blockSize, imageInfo, tiled, format, debug);
         graphic.SaveAsPng(file);
     }
 
-    public static Image<Rgba32> ToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static Image<Rgba32> MultiCebkToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
     {
         if (banks.Count == 0)
         {
@@ -337,11 +337,11 @@ public static class ImageUtil
         }
         else if (banks.Count == 1)
         {
-            return ToImage(banks[0], blockSize, imageInfo, tiled, format, debug);
+            return SingleCebkToImage(banks[0], blockSize, imageInfo, tiled, format, debug);
         }
         else
         {
-            var images = banks.Select(bank => ToImage(bank, blockSize, imageInfo, tiled, format, debug)).ToList();
+            var images = banks.Select(bank => SingleCebkToImage(bank, blockSize, imageInfo, tiled, format, debug)).ToList();
 
             var fullHeight = images.Sum(x => x.Height);
             var fullWidth = images.Max(x => x.Width);
@@ -360,7 +360,7 @@ public static class ImageUtil
         }
     }
 
-    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
+    private static void SharedPaletteCebkFromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
@@ -392,13 +392,13 @@ public static class ImageUtil
                     g.Flip(FlipMode.Vertical);
             }))
             {
-                byte[] cellPixels = FromImage(cellImg, workingPalette, tiled, format, color0ToTransparent: true);
+                byte[] cellPixels = SharedPalettePixelsFromImage(cellImg, workingPalette, tiled, format, color0ToTransparent: true);
                 workingPixels.AddRange(cellPixels);
             }
         }
     }
 
-    public static Image<Rgba32> LoadPng(string file)
+    public static Image<Rgba32> LoadPngBetterError(string file)
     {
         Image<Rgba32> image;
         try
@@ -412,19 +412,19 @@ public static class ImageUtil
         return image;
     }
 
-    public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
+    public static SpriteImageInfo SingleCebkFromPng(string file, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         if (bank.Length == 0)
         {
             throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
         }
 
-        using var image = LoadPng(file);
+        using var image = LoadPngBetterError(file);
 
-        return FromImage(image, bank, blockSize, tiled, format);
+        return SingleCebkFromImage(image, bank, blockSize, tiled, format);
     }
 
-    public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
+    public static SpriteImageInfo SingleCebkFromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
     {
         var width = image.Width;
         var height = image.Height;
@@ -436,7 +436,7 @@ public static class ImageUtil
 
         var workingPixels = new List<byte>();
 
-        FromImage(workingPixels, workingPalette, image, bank, blockSize, tiled, format);
+        SharedPaletteCebkFromImage(workingPixels, workingPalette, image, bank, blockSize, tiled, format);
 
         var pixelArray = workingPixels.ToArray();
         workingPalette[0] = Color.Magenta;
@@ -444,19 +444,19 @@ public static class ImageUtil
         return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
     }
 
-    public static SpriteImageInfo LoadMutiBankCellSpriteFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
+    public static SpriteImageInfo MultiCebkFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
     {
         if (banks.Any(x => x.Length == 0))
         {
             throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
         }
 
-        using var image = LoadPng(file);
+        using var image = LoadPngBetterError(file);
 
-        return FromImage(image, banks, blockSize, tiled, format);
+        return MultiCebkFromImage(image, banks, blockSize, tiled, format);
     }
 
-    public static SpriteImageInfo FromImage(Image<Rgba32> image, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
+    public static SpriteImageInfo MultiCebkFromImage(Image<Rgba32> image, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
     {
         if (banks.Count == 0)
         {
@@ -464,7 +464,7 @@ public static class ImageUtil
         }
         if (banks.Count == 1)
         {
-            return FromImage(image, banks[0], blockSize, tiled, format);
+            return SingleCebkFromImage(image, banks[0], blockSize, tiled, format);
         }
 
         var width = image.Width;
@@ -487,7 +487,7 @@ public static class ImageUtil
 
             }))
             {
-                FromImage(workingPixels, workingPalette, subImage, bank, blockSize, tiled, format);
+                SharedPaletteCebkFromImage(workingPixels, workingPalette, subImage, bank, blockSize, tiled, format);
             }
             cumulativeHeight += dims.Height;
         }

@@ -62,7 +62,7 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             height = ncgr.Pixels.TilesPerColumn * 8;
         }
 
-        using var image = ImageUtil.ToImage(
+        using var image = ImageUtil.MultiCebkToImage(
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             imageInfo: new SpriteImageInfo(
@@ -93,7 +93,7 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
         var ncgr = NCGR.Load(ncgrPath);
         var nclr = NCLR.Load(Path.Combine(defaultDataFolder, item.Nclr));
 
-        ImageUtil.SaveAsPng(
+        ImageUtil.SpriteToPng(
             file: pngFile,
             imageInfo: new SpriteImageInfo(
                 pixels: ncgr.Pixels.Data,

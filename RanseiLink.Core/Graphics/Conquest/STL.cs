@@ -238,7 +238,7 @@ namespace RanseiLink.Core.Graphics
 
         public void SaveAsPng(NCER ncer, string saveFile, bool tiled, bool debug = false)
         {
-            ImageUtil.SaveAsPng(
+            ImageUtil.SingleCebkToPng(
                 file: saveFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
@@ -251,7 +251,7 @@ namespace RanseiLink.Core.Graphics
 
         public static STL LoadPng(NCER ncer, string pngFile, bool tiled)
         {
-            var imageInfo = ImageUtil.LoadPng(
+            var imageInfo = ImageUtil.SingleCebkFromPng(
                 file: pngFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,

@@ -67,7 +67,7 @@ public class MiscPatchBuilder : IGraphicTypePatchBuilder
         var nclr = NCLR.Load(nclrPath);
 
         // load up the png and replace provider data with new image data
-        var imageInfo = ImageUtil.LoadMutiBankCellSpriteFromPng(
+        var imageInfo = ImageUtil.MultiCebkFromPng(
             file: pngFile, 
             banks: ncer.CellBanks.Banks, 
             blockSize: ncer.CellBanks.BlockSize, 
@@ -120,7 +120,7 @@ public class MiscPatchBuilder : IGraphicTypePatchBuilder
         var nclr = NCLR.Load(nclrPath);
 
         // load up the png and replace provider data with new image data
-        var imageInfo = ImageUtil.LoadPng(pngFile, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
+        var imageInfo = ImageUtil.SpriteFromPng(pngFile, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
         ncgr.Pixels.Data = imageInfo.Pixels;
         ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
         ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);

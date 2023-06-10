@@ -66,21 +66,21 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             const TexFormat texFormat = TexFormat.Pltt16;
 
             // generate images
-            var texImg = ImageUtil.ToImage(
+            var texImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
                 isTiled,
                 texFormat
                 );
 
             byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
-            var atxImg = ImageUtil.ToImage(
+            var atxImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth),
                 isTiled,
                 texFormat
                 );
 
             byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
-            var dtxImg = ImageUtil.ToImage(
+            var dtxImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth),
                 isTiled,
                 texFormat
@@ -91,7 +91,7 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
             byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
-            var pacImg = ImageUtil.ToImage(
+            var pacImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth),
                 isTiled,
                 texFormat

@@ -209,12 +209,12 @@ public static class BannerExtensions
             height: 32
             );
 
-        ImageUtil.SaveAsPng(file, imageInfo, tiled: true, format: TexFormat.Pltt16);
+        ImageUtil.SpriteToPng(file, imageInfo, tiled: true, format: TexFormat.Pltt16);
     }
 
     public static Result TryLoadImageFromPng(this Banner banner, string file)
     {
-        var imageInfo = ImageUtil.LoadPng(file, tiled: true, format: TexFormat.Pltt16, color0ToTransparent: true);
+        var imageInfo = ImageUtil.SpriteFromPng(file, tiled: true, format: TexFormat.Pltt16, color0ToTransparent: true);
         if (imageInfo.Width != 32 || imageInfo.Height != 32)
         {
             return Result.Fail("Invalid image dimensions. Should be 32x32 pixels");
