@@ -34,14 +34,15 @@ public static class ImageUtil
 {
     public static void SaveAsPng(string file, SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
     {
-        using (var img = ToImage(imageInfo, PointUtil.DecidePointGetter(tiled), format))
+        using (var img = ToImage(imageInfo, tiled, format))
         {
             img.SaveAsPng(file);
         }
     }
 
-    public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, PointGetter pointGetter, TexFormat format = TexFormat.Pltt16)
+    public static Image<Rgba32> ToImage(SpriteImageInfo imageInfo, bool tiled = false, TexFormat format = TexFormat.Pltt16)
     {
+        var pointGetter = PointUtil.DecidePointGetter(tiled);
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
         switch (format)
@@ -133,7 +134,7 @@ public static class ImageUtil
         byte[] pixels;
         try
         {
-            pixels = FromImage(image, palette, PointUtil.DecideIndexGetter(tiled), format, color0ToTransparent);
+            pixels = FromImage(image, palette, tiled, format, color0ToTransparent);
         }
         catch (Exception e)
         {
@@ -144,8 +145,9 @@ public static class ImageUtil
         return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
     }
 
-    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, IndexGetter indexGetter, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
+    public static byte[] FromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format = TexFormat.Pltt16, bool color0ToTransparent = true)
     {
+        var indexGetter = PointUtil.DecideIndexGetter(tiled);
         int width = image.Width;
         int height = image.Height;
         byte[] pixels = new byte[width * height];
@@ -283,8 +285,6 @@ public static class ImageUtil
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
-        PointGetter pointGetter = PointUtil.DecidePointGetter(isTiled: tiled);
-
         Rgba32[] palette32 = imageInfo.Palette;
         palette32[0] = Color.Transparent;
 
@@ -305,7 +305,7 @@ public static class ImageUtil
             }
             byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
 
-            using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), pointGetter))
+            using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), tiled, format))
             {
                 cellImg.Mutate(g =>
                 {
@@ -385,7 +385,7 @@ public static class ImageUtil
         }
     }
 
-    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, IndexGetter indexGetter, TexFormat format = TexFormat.Pltt256)
+    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format = TexFormat.Pltt256)
     {
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
@@ -417,7 +417,7 @@ public static class ImageUtil
                     g.Flip(FlipMode.Vertical);
             }))
             {
-                byte[] cellPixels = FromImage(cellImg, workingPalette, indexGetter);
+                byte[] cellPixels = FromImage(cellImg, workingPalette, tiled);
                 workingPixels.AddRange(cellPixels);
             }
         }
@@ -451,8 +451,6 @@ public static class ImageUtil
 
     public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
     {
-        IndexGetter indexGetter = PointUtil.DecideIndexGetter(tiled);
-
         var width = image.Width;
         var height = image.Height;
 
@@ -463,7 +461,7 @@ public static class ImageUtil
 
         var workingPixels = new List<byte>();
 
-        FromImage(workingPixels, workingPalette, image, bank, blockSize, indexGetter, format);
+        FromImage(workingPixels, workingPalette, image, bank, blockSize, tiled, format);
 
         var pixelArray = workingPixels.ToArray();
         workingPalette[0] = Color.Magenta;
@@ -494,8 +492,6 @@ public static class ImageUtil
             return FromImage(image, banks[0], blockSize, tiled, format);
         }
 
-        IndexGetter indexGetter = PointUtil.DecideIndexGetter(tiled);
-
         var width = image.Width;
         var height = image.Height;
 
@@ -516,7 +512,7 @@ public static class ImageUtil
 
             }))
             {
-                FromImage(workingPixels, workingPalette, subImage, bank, blockSize, indexGetter, format);
+                FromImage(workingPixels, workingPalette, subImage, bank, blockSize, tiled, format);
             }
             cumulativeHeight += dims.Height;
         }
