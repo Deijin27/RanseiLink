@@ -97,15 +97,7 @@ public static class ImageUtil
 
     public static SpriteImageInfo LoadPng(string file, bool tiled, TexFormat format, bool color0ToTransparent)
     {
-        Image<Rgba32> image;
-        try
-        {
-            image = Image.Load<Rgba32>(file);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{file}'");
-        }
+        using var image = LoadPng(file);
 
         int width = image.Width;
         int height = image.Height;
@@ -124,7 +116,6 @@ public static class ImageUtil
         {
             throw new Exception($"Error converting image '{file}'", e);
         }
-        image.Dispose();
 
         return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
     }
