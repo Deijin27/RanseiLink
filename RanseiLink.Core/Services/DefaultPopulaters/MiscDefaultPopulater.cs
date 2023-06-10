@@ -1,7 +1,11 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 
@@ -57,20 +61,22 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             width = ncgr.Pixels.TilesPerRow * 8;
             height = ncgr.Pixels.TilesPerColumn * 8;
         }
-        
-        ImageUtil.SaveAsPng(
-            file: pngFile,
-            bank: ncer.CellBanks.Banks[0],
+
+        using var image = ImageUtil.ToImage(
+            banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             imageInfo: new SpriteImageInfo(
-                pixels: ncgr.Pixels.Data, 
-                palette: RawPalette.To32bitColors(nclr.Palettes.Palette), 
+                pixels: ncgr.Pixels.Data,
+                palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
                 width: width,
                 height: height
                 ),
             debug: false,
-            tiled: ncgr.Pixels.IsTiled
+            tiled: ncgr.Pixels.IsTiled,
+            format: ncgr.Pixels.Format
             );
+
+        image.SaveAsPng(pngFile);
     }
 
     private void ProcessNscr(string defaultDataFolder, G2DRMiscItem item)

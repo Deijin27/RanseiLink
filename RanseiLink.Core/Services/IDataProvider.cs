@@ -28,7 +28,8 @@ public enum SpriteType
     StlPokemonWu,
     StlStaffRoll,
     StlStageObje,
-    Title
+    Title,
+    Minimap
 }
 
 public class SpriteFile

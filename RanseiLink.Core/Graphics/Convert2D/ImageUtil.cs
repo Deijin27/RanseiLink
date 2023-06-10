@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using System.Collections.Generic;
 using System.Linq;
+using static RanseiLink.Core.Graphics.NSTEX;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -259,15 +260,12 @@ public static class ImageUtil
         return pixels;
     }
 
-    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false)
+    private static BankDimensions InferDimensions(Cell[] bank, int width = -1, int height = -1)
     {
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
         int minX = bank.Min(i => i.XOffset);
         int xShift = minX < 0 ? -minX : 0;
-
-        var width = imageInfo.Width;
-        var height = imageInfo.Height;
 
         if (width < 0 || height < 0)
         {
@@ -277,91 +275,119 @@ public static class ImageUtil
             height = maxY - minY;
         }
 
+        return new BankDimensions(minX, minY, xShift, yShift, width, height);
+    }
+
+    private record BankDimensions(int MinX, int MinY, int XShift, int YShift, int Width, int Height);
+
+    public static Image<Rgba32> ToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    {
+        var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
+
         PointGetter pointGetter = tiled ? new PointGetter(PointUtil.GetPointTiled8) : new PointGetter(PointUtil.GetPoint);
 
         Rgba32[] palette32 = imageInfo.Palette;
         palette32[0] = Color.Transparent;
 
-        using (var graphic = new Image<Rgba32>(width, height))
+        var graphic = new Image<Rgba32>(dims.Width, dims.Height);
+        for (int i = 0; i < bank.Length; i++)
         {
+            Cell cell = bank[i];
 
-            for (int i = 0; i < bank.Length; i++)
+            if (cell.Width == 0x00 || cell.Height == 0x00)
+                continue;
+
+            int tileOffset = cell.TileOffset << (byte)blockSize;
+            int bankDataOffset = 0;
+            var startByte = tileOffset * 0x20 + bankDataOffset;
+            if (format == TexFormat.Pltt16)
             {
-                Cell cell = bank[i];
-
-                if (cell.Width == 0x00 || cell.Height == 0x00)
-                    continue;
-
-                int tileOffset = cell.TileOffset << (byte)blockSize;
-                int bankDataOffset = 0;
-                var startByte = tileOffset * 0x20 + bankDataOffset;
-                byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
-
-                using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), pointGetter))
-                {
-                    cellImg.Mutate(g =>
-                    {
-                        if (cell.FlipX)
-                            g.Flip(FlipMode.Horizontal);
-                        if (cell.FlipY)
-                            g.Flip(FlipMode.Vertical);
-                    });
-
-                    graphic.Mutate(g =>
-                    {
-                        g.DrawImage(
-                            image: cellImg,
-                            location: new Point(cell.XOffset + xShift, cell.YOffset + yShift),
-                            opacity: 1);
-                    }); 
-                }
+                startByte *= 2; // account for compression e.g. pokemon conquest minimaps
             }
+            byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
 
-            if (debug)
+            using (var cellImg = ToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), pointGetter))
             {
+                cellImg.Mutate(g =>
+                {
+                    if (cell.FlipX)
+                        g.Flip(FlipMode.Horizontal);
+                    if (cell.FlipY)
+                        g.Flip(FlipMode.Vertical);
+                });
+
                 graphic.Mutate(g =>
                 {
-                    for (int i = 0; i < bank.Length; i++)
-                    {
-                        var cell = bank[i];
-                        g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + xShift, cell.YOffset + 2 + yShift));
-                        g.Draw(new Pen(Color.Red, 1), new RectangleF(cell.XOffset + xShift, cell.YOffset + yShift, cell.Width, cell.Height));
-                    }
+                    g.DrawImage(
+                        image: cellImg,
+                        location: new Point(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift),
+                        opacity: 1);
                 });
             }
+        }
 
-            graphic.SaveAsPng(file); 
+        if (debug)
+        {
+            graphic.Mutate(g =>
+            {
+                for (int i = 0; i < bank.Length; i++)
+                {
+                    var cell = bank[i];
+
+                    // These two operations don't work until
+                    // imagesharp.drawing releases version
+                    // compatible with v3
+                    // but I needed to update for a new feature
+                    // to use in 3d model viewer
+                    // so these are out of comission for now
+                    g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + dims.XShift, cell.YOffset + 2 + dims.YShift));
+                    g.Draw(new Pen(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
+                }
+            });
+        }
+
+        return graphic;
+    }
+
+    public static void SaveAsPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    {
+        using var graphic = ToImage(bank, blockSize, imageInfo, tiled, debug, format);
+        graphic.SaveAsPng(file);
+    }
+
+    public static Image<Rgba32> ToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled = false, bool debug = false, TexFormat format = TexFormat.Pltt256)
+    {
+        if (banks.Count == 0)
+        {
+            throw new Exception("Can't load image with no cell banks");
+        }
+        else if (banks.Count == 1)
+        {
+            return ToImage(banks[0], blockSize, imageInfo, tiled, debug, format);
+        }
+        else
+        {
+            var images = banks.Select(bank => ToImage(bank, blockSize, imageInfo, tiled, debug, format)).ToList();
+
+            var fullHeight = images.Sum(x => x.Height);
+            var fullWidth = images.Max(x => x.Width);
+
+            var fullImage = new Image<Rgba32>(fullWidth, fullHeight);
+            var cumulativeHeight = 0;
+            foreach (var subImage in images)
+            {
+                fullImage.Mutate(g =>
+                {
+                    g.DrawImage(subImage, new Point(0, cumulativeHeight), 1);
+                });
+                cumulativeHeight += subImage.Height;
+            }
+            return fullImage;
         }
     }
 
-    public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled = false)
+    private static void FromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, IndexGetter indexGetter, TexFormat format = TexFormat.Pltt256)
     {
-        IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
-
-        if (bank.Length == 0)
-        {
-            throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
-        }
-
-        Image<Rgba32> image;
-        try
-        {
-            image = Image.Load<Rgba32>(file);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{file}'");
-        }
-        var width = image.Width;
-        var height = image.Height;
-
-        var palette32 = new List<Rgba32>
-    {
-        Color.Transparent
-    };
-
-        var pixels = new List<byte>();
-
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
         int minX = bank.Min(i => i.XOffset);
@@ -377,7 +403,10 @@ public static class ImageUtil
             int tileOffset = cell.TileOffset << (byte)blockSize;
             int bankDataOffset = 0;
             var startByte = tileOffset * 0x20 + bankDataOffset;
-            var endByte = startByte + cell.Width * cell.Height;
+            if (format == TexFormat.Pltt16)
+            {
+                startByte *= 2; // account for compression e.g. pokemon conquest minimaps
+            }
 
             using (var cellImg = image.Clone(g =>
             {
@@ -389,16 +418,113 @@ public static class ImageUtil
                     g.Flip(FlipMode.Vertical);
             }))
             {
-                byte[] cellPixels = FromImage(cellImg, palette32, indexGetter);
-                pixels.AddRange(cellPixels);
+                byte[] cellPixels = FromImage(cellImg, workingPalette, indexGetter);
+                workingPixels.AddRange(cellPixels);
             }
         }
+    }
 
-        var pixelArray = pixels.ToArray();
-        palette32[0] = Color.Magenta;
+    public static Image<Rgba32> LoadPng(string file)
+    {
+        Image<Rgba32> image;
+        try
+        {
+            image = Image.Load<Rgba32>(file);
+        }
+        catch (UnknownImageFormatException e)
+        {
+            throw new UnknownImageFormatException(e.Message + $" File='{file}'");
+        }
+        return image;
+    }
 
-        image.Dispose();
+    public static SpriteImageInfo LoadPng(string file, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    {
+        if (bank.Length == 0)
+        {
+            throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
+        }
 
-        return new SpriteImageInfo(pixelArray, palette32.ToArray(), width, height);
+        using var image = LoadPng(file);
+
+        return FromImage(image, bank, blockSize, tiled, format);
+    }
+
+    public static SpriteImageInfo FromImage(Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    {
+        IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
+
+        var width = image.Width;
+        var height = image.Height;
+
+        var workingPalette = new List<Rgba32>
+        {
+            Color.Transparent
+        };
+
+        var workingPixels = new List<byte>();
+
+        FromImage(workingPixels, workingPalette, image, bank, blockSize, indexGetter, format);
+
+        var pixelArray = workingPixels.ToArray();
+        workingPalette[0] = Color.Magenta;
+
+        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
+    }
+
+    public static SpriteImageInfo LoadMutiBankCellSpriteFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    {
+        if (banks.Any(x => x.Length == 0))
+        {
+            throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
+        }
+
+        using var image = LoadPng(file);
+
+        return FromImage(image, banks, blockSize, tiled, format);
+    }
+
+    public static SpriteImageInfo FromImage(Image<Rgba32> image, IList<Cell[]> banks, uint blockSize, bool tiled = false, TexFormat format = TexFormat.Pltt256)
+    {
+        if (banks.Count == 0)
+        {
+            throw new Exception("Can't load image with no cell banks");
+        }
+        if (banks.Count == 1)
+        {
+            return FromImage(image, banks[0], blockSize, tiled, format);
+        }
+
+        IndexGetter indexGetter = tiled ? new IndexGetter(PointUtil.GetIndexTiled8) : new IndexGetter(PointUtil.GetIndex);
+
+        var width = image.Width;
+        var height = image.Height;
+
+        var workingPalette = new List<Rgba32>
+        {
+            Color.Transparent
+        };
+
+        var workingPixels = new List<byte>();
+
+        var cumulativeHeight = 0;
+        foreach (var bank in banks)
+        {
+            var dims = InferDimensions(bank);
+            using (var subImage = image.Clone(g =>
+            {
+                g.Crop(new Rectangle(0, cumulativeHeight, dims.Width, dims.Height));
+
+            }))
+            {
+                FromImage(workingPixels, workingPalette, subImage, bank, blockSize, indexGetter, format);
+            }
+            cumulativeHeight += dims.Height;
+        }
+
+        var pixelArray = workingPixels.ToArray();
+        workingPalette[0] = Color.Magenta;
+
+        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -157,6 +158,7 @@ public struct BankInfo
 }
 
 
+[DebuggerDisplay("Cell: TileOff={TileOffset} XOff={XOffset}, YOff={YOffset}, W={Width}, H={Height}")]
 public struct Cell
 {
     public int Width;
@@ -339,7 +341,7 @@ public enum RotateScaleFlag
 /// </summary>
 public class LABL
 {
-    public string[] Names;
+    public string?[] Names;
 
     public const string MagicNumber = "LBAL";
 
@@ -352,17 +354,17 @@ public class LABL
             throw new InvalidDataException($"Unexpected magic number '{magicNumber}' at offset 0x{initOffset:X}. (expected: {MagicNumber})");
         }
         uint totalLength = br.ReadUInt32();
-
-        uint[] nameOffsets = new uint[numberOfBanks];
-        for (int i = 0; i < numberOfBanks; i++)
+        uint alwaysZero = br.ReadUInt32();
+        if (alwaysZero != 0)
         {
-            nameOffsets[i] = br.ReadUInt32();
+            throw new InvalidDataException("Unexpeced value in NCER LBAL!!!!!!");
         }
-        var nameStart = br.BaseStream.Position;
-        Names = new string[numberOfBanks];
-        for (int i = 0; i < numberOfBanks; i++)
+
+        int nameId = 0;
+        var endOffset = initOffset + totalLength;
+        Names = new string?[numberOfBanks];
+        while (nameId < numberOfBanks)
         {
-            br.BaseStream.Position = nameStart + nameOffsets[i];
             string name = "";
             byte b = br.ReadByte();
             while (b != 0)
@@ -370,10 +372,15 @@ public class LABL
                 name += (char)b;
                 b = br.ReadByte();
             }
-            Names[i] = name;
+            Names[nameId] = name;
+            if (br.BaseStream.Position >= endOffset)
+            {
+                // Sometimes more banks than names. Idk why
+                break;
+            }
         }
 
-        br.BaseStream.Position = initOffset + totalLength;
+        br.BaseStream.Position = endOffset;
     }
 }
 

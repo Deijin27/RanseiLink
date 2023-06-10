@@ -177,4 +177,30 @@
 		<NCER Link="graphics/title/gallery_top_stl_girl.G2DR"/>
 		<NCER Link="graphics/title/gallery_top_stl_poke.G2DR"/>
 	</Misc>
+
+	<Misc Id="Minimap" DisplayName="Minimap">
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap00_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap01_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap02_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap03_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap04_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap05_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap06_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap07_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap08_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap09_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap10_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap11_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap12_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap13_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap14_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap15_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap16_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap17_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap18_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap19_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap20_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap21_00up.G2DR" PaletteCapacity="16"/>
+		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap22_00up.G2DR" PaletteCapacity="16"/>
+	</Misc>
 </GraphicsInfo>
