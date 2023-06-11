@@ -203,10 +203,10 @@ public static class BannerExtensions
     public static void SaveImageToPng(this Banner banner, string file)
     {
         var imageInfo = new SpriteImageInfo(
-            pixels: banner.ImagePixels,
-            palette: RawPalette.To32bitColors(banner.ImagePalette),
-            width: 32,
-            height: 32
+            Pixels: banner.ImagePixels,
+            Palette: RawPalette.To32bitColors(banner.ImagePalette),
+            Width: 32,
+            Height: 32
             );
 
         ImageUtil.SpriteToPng(file, imageInfo, tiled: true, format: TexFormat.Pltt16);

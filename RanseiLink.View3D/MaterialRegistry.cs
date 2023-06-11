@@ -54,7 +54,7 @@ public static class MaterialRegistry
         }
 
         return ImageUtil.SpriteToImage(
-            imageInfo: new SpriteImageInfo(pixels: tex.TextureData, palette: convPal, width: tex.Width, height: tex.Height),
+            imageInfo: new SpriteImageInfo(Pixels: tex.TextureData, Palette: convPal, Width: tex.Width, Height: tex.Height),
             tiled: false,
             format: tex.Format);
     }

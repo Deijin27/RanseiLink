@@ -66,10 +66,10 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             imageInfo: new SpriteImageInfo(
-                pixels: ncgr.Pixels.Data,
-                palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
-                width: width,
-                height: height
+                Pixels: ncgr.Pixels.Data,
+                Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
+                Width: width,
+                Height: height
                 ),
             debug: false,
             tiled: ncgr.Pixels.IsTiled,
@@ -96,10 +96,10 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
         ImageUtil.SpriteToPng(
             file: pngFile,
             imageInfo: new SpriteImageInfo(
-                pixels: ncgr.Pixels.Data,
-                palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
-                width: ncgr.Pixels.TilesPerRow * 8,
-                height: ncgr.Pixels.TilesPerColumn * 8
+                Pixels: ncgr.Pixels.Data,
+                Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
+                Width: ncgr.Pixels.TilesPerRow * 8,
+                Height: ncgr.Pixels.TilesPerColumn * 8
                 ),
             tiled: ncgr.Pixels.IsTiled,
             format: ncgr.Pixels.Format
