@@ -11,6 +11,8 @@ using RanseiLink.Core.Services;
 using RanseiLink.Windows.Views.ModelViews.Map;
 using System.Security.Cryptography;
 using RanseiLink.View3D;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -19,18 +21,20 @@ public class BattleConfigViewModel : ViewModelBase
     private BattleConfig _model;
     private readonly ISceneRenderer _sceneRenderer;
     private readonly IDialogService _dialogService;
+    private readonly IOverrideDataProvider _overrideDataProvider;
 
     public BattleConfigViewModel(
         IMapService mapService, 
         IJumpService jumpService, 
         IIdToNameService idToNameService, 
         ISceneRenderer sceneRenderer,
-        IDialogService dialogService)
+        IDialogService dialogService,
+        IOverrideDataProvider overrideDataProvider)
     {
         _model = new BattleConfig();
         _sceneRenderer = sceneRenderer;
         _dialogService = dialogService;
-        
+        _overrideDataProvider = overrideDataProvider;
         MapItems = mapService.GetMapIds();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
@@ -38,7 +42,26 @@ public class BattleConfigViewModel : ViewModelBase
         JumpToMapCommand = new RelayCommand<MapId>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, (int)id));
         JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
         View3DModelCommand = new RelayCommand(View3DModel);
+
+        Minimaps = new List<MinimapInfo>();
+        
+        foreach (var spriteFile in _overrideDataProvider.GetAllSpriteFiles(SpriteType.Minimap))
+        {
+            var match = Regex.Match(spriteFile.File, @"minimap(\d\d)_(\d\d)");
+            if (match.Success)
+            {
+                Minimaps.Add(new MinimapInfo(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value)));
+            }
+            else
+            {
+                throw new System.Exception("Minimap file unexpected path");
+            }
+        }
     }
+
+    public record MinimapInfo(int Minimap, int MinimapVariant);
+
+    public List<MinimapInfo> Minimaps { get; }
 
     public void SetModel(BattleConfigId id, BattleConfig model)
     {
@@ -60,13 +83,38 @@ public class BattleConfigViewModel : ViewModelBase
     public int Minimap
     {
         get => _model.Minimap;
-        set => RaiseAndSetIfChanged(_model.Minimap, value, v => _model.Minimap = value);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Minimap, value, v => _model.Minimap = value))
+            {
+                RaisePropertyChanged(nameof(MinimapSpritePath));
+            }
+        }
     }
 
     public int MinimapVariant
     {
         get => _model.MinimapVariant;
-        set => RaiseAndSetIfChanged(_model.MinimapVariant, value, v => _model.MinimapVariant = value);
+        set 
+        { 
+            if (RaiseAndSetIfChanged(_model.MinimapVariant, value, v => _model.MinimapVariant = value)) 
+            {
+                RaisePropertyChanged(nameof(MinimapSpritePath));
+            } 
+        }
+    }
+
+    public string? MinimapSpritePath 
+    { 
+        get 
+        {
+            var idx = Minimaps.FindIndex(x => x.Minimap == Minimap && x.MinimapVariant == MinimapVariant);
+            if (idx < 0)
+            {
+                return null;
+            }
+            return _overrideDataProvider.GetSpriteFile(SpriteType.Minimap, idx).File; 
+        } 
     }
 
     public int Unknown

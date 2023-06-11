@@ -12,6 +12,7 @@
              d:DesignHeight="680" d:DesignWidth="800">
     <UserControl.Resources>
         <conv:Rgb555ToColorConverter x:Key="Converter.Rgb555ToColor"/>
+        <conv:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Height" Value="20"/>
@@ -148,13 +149,7 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
-                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <GroupBox Header="Victory Conditions" ToolTip="In addition to 'defeat all enemies'" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
@@ -188,6 +183,7 @@
             <TextBlock Grid.Row="14">Unknown</TextBlock>
             <controls:NumberBox Value="{Binding Unknown}" Grid.Row="14" Grid.Column="1"/>
 
+            <Image Grid.Row="15" Grid.ColumnSpan="2" Width="128" Height="96" Stretch="None" Source="{Binding MinimapSpritePath, Converter={StaticResource Converter.PathToImage}}"/>
         </Grid>
     </WrapPanel>
 </UserControl>
