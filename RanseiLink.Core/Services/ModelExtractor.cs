@@ -155,29 +155,7 @@ namespace RanseiLink.Core.Services
             return mtl;
         }
 
-        private static (bool hasTransparency, bool hasSemiTransparency) ImageHasTransparency(Image<Rgba32> image)
-        {
-            bool hasTransparency = false;
-            for (int x = 0; x < image.Width; x++)
-            {
-                for (int y = 0; y < image.Height; y++)
-                {
-                    var a = image[x, y].A;
-                    if (a != 255)
-                    {
-                        if (a != 0)
-                        {
-                            return (true, true);
-                        }
-                        else
-                        {
-                            hasTransparency = true;
-                        }
-                    }
-                }
-            }
-            return (hasTransparency, false);
-        }
+        
 
         public record TextureLoadResult(NSTEX.Texture Texture, NSTEX.Palette Palette);
 
@@ -193,7 +171,7 @@ namespace RanseiLink.Core.Services
                 return Result.Fail<TextureLoadResult>(e.Message + $" File='{file}'");
             }
 
-            var (imageHasTransparency, imageHasSemiTransparency) = ImageHasTransparency(image);
+            var (imageHasTransparency, imageHasSemiTransparency) = ImageUtil.ImageHasTransparency(image);
             TexFormat format;
             if (imageHasSemiTransparency)
             {
@@ -210,26 +188,7 @@ namespace RanseiLink.Core.Services
 
             var colorZeroTransparent = (imageHasTransparency || imageHasSemiTransparency) && (format == TexFormat.Pltt4 || format == TexFormat.Pltt16 || format == TexFormat.Pltt256);
 
-            int width = image.Width;
-            int height = image.Height;
-            var palette = new List<Rgba32>();
-            if (colorZeroTransparent)
-            {
-                palette.Add(Color.Transparent);
-            }
-
-            byte[] pixels;
-            try
-            {
-                pixels = ImageUtil.SharedPalettePixelsFromImage(image, palette, tiled: false, format, colorZeroTransparent);
-            }
-            catch (Exception e)
-            {
-                return Result.Fail<TextureLoadResult>($"Error converting image '{file}': {e}");
-            }
-            image.Dispose();
-
-            var imgInfo = new SpriteImageInfo(pixels, palette.ToArray(), width, height);
+            var imgInfo = ImageUtil.SpriteFromImage(image, tiled: false, format: format, color0ToTransparent: colorZeroTransparent);
 
             string texName = Path.GetFileNameWithoutExtension(file);
             if (string.IsNullOrEmpty(texName))
@@ -243,14 +202,14 @@ namespace RanseiLink.Core.Services
             var texResult = new NSTEX.Texture
             (
                 name: texName,
-                textureData: pixels)
+                textureData: imgInfo.Pixels)
             {
                 Color0Transparent = colorZeroTransparent,
                 Format = format,
-                Width = width,
-                Height = height,
+                Width = imgInfo.Width,
+                Height = imgInfo.Height,
             };
-            var outPal = RawPalette.From32bitColors(palette);
+            var outPal = RawPalette.From32bitColors(imgInfo.Palette);
             Array.Resize(ref outPal, format.PaletteSize());
             var palResult = new NSTEX.Palette(name: texName + "_pl", paletteData: outPal);
 

@@ -88,8 +88,19 @@ public static class ImageUtil
 
     public static SpriteImageInfo SpriteFromPng(string file, bool tiled, TexFormat format, bool color0ToTransparent)
     {
-        using var image = LoadPngBetterError(file);
+        try
+        {
+            using var image = LoadPngBetterError(file);
+            return SpriteFromImage(image, tiled, format, color0ToTransparent);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error converting image '{file}'", e);
+        }
+    }
 
+    public static SpriteImageInfo SpriteFromImage(Image<Rgba32> image, bool tiled, TexFormat format, bool color0ToTransparent)
+    {
         int width = image.Width;
         int height = image.Height;
         var palette = new List<Rgba32>();
@@ -98,15 +109,7 @@ public static class ImageUtil
             palette.Add(Color.Transparent);
         }
 
-        byte[] pixels;
-        try
-        {
-            pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error converting image '{file}'", e);
-        }
+        byte[] pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
 
         return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
     }
@@ -239,5 +242,29 @@ public static class ImageUtil
             throw new UnknownImageFormatException(e.Message + $" File='{file}'");
         }
         return image;
+    }
+
+    public static (bool hasTransparency, bool hasSemiTransparency) ImageHasTransparency(Image<Rgba32> image)
+    {
+        bool hasTransparency = false;
+        for (int x = 0; x < image.Width; x++)
+        {
+            for (int y = 0; y < image.Height; y++)
+            {
+                var a = image[x, y].A;
+                if (a != 255)
+                {
+                    if (a != 0)
+                    {
+                        return (true, true);
+                    }
+                    else
+                    {
+                        hasTransparency = true;
+                    }
+                }
+            }
+        }
+        return (hasTransparency, false);
     }
 }
