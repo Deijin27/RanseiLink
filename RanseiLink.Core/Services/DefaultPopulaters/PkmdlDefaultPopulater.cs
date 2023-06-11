@@ -67,24 +67,24 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
 
             // generate images
             var texImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth),
+                new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
                 texFormat
-                );
+                ));
 
             byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
             var atxImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth),
+                new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
                 texFormat
-                );
+                ));
 
             byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
             var dtxImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth),
+                new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
                 texFormat
-                );
+                ));
 
 
             string pacFile = Path.Combine(pacUnpacked, fileName);
@@ -92,10 +92,10 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
             byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
             var pacImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth),
+                new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
                 texFormat
-                );
+                ));
 
             var totalWidth = texImg.Width + atxImg.Width + dtxImg.Width + pacImg.Width;
             var maxHeight = 1024;

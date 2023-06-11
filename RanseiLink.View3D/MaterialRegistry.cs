@@ -54,9 +54,14 @@ public static class MaterialRegistry
         }
 
         return ImageUtil.SpriteToImage(
-            imageInfo: new SpriteImageInfo(Pixels: tex.TextureData, Palette: convPal, Width: tex.Width, Height: tex.Height),
-            tiled: false,
-            format: tex.Format);
+            imageInfo: new SpriteImageInfo(
+                Pixels: tex.TextureData, 
+                Palette: convPal, 
+                Width: tex.Width, 
+                Height: tex.Height,
+                IsTiled: false,
+                Format: tex.Format
+                ));
     }
 
     public static int RegisterTexture(Image<Rgba32> image)

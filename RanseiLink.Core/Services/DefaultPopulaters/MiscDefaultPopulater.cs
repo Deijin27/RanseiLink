@@ -69,11 +69,11 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
                 Pixels: ncgr.Pixels.Data,
                 Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
                 Width: width,
-                Height: height
+                Height: height,
+                IsTiled: ncgr.Pixels.IsTiled,
+                Format: ncgr.Pixels.Format
                 ),
-            debug: false,
-            tiled: ncgr.Pixels.IsTiled,
-            format: ncgr.Pixels.Format
+            debug: false
             );
 
         image.SaveAsPng(pngFile);
@@ -99,10 +99,9 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
                 Pixels: ncgr.Pixels.Data,
                 Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
                 Width: ncgr.Pixels.TilesPerRow * 8,
-                Height: ncgr.Pixels.TilesPerColumn * 8
-                ),
-            tiled: ncgr.Pixels.IsTiled,
-            format: ncgr.Pixels.Format
-            );
+                Height: ncgr.Pixels.TilesPerColumn * 8,
+                IsTiled: ncgr.Pixels.IsTiled,
+                Format: ncgr.Pixels.Format
+            ));
     }
 }

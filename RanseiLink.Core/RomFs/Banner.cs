@@ -206,10 +206,12 @@ public static class BannerExtensions
             Pixels: banner.ImagePixels,
             Palette: RawPalette.To32bitColors(banner.ImagePalette),
             Width: 32,
-            Height: 32
+            Height: 32,
+            IsTiled: true,
+            Format: TexFormat.Pltt16
             );
 
-        ImageUtil.SpriteToPng(file, imageInfo, tiled: true, format: TexFormat.Pltt16);
+        ImageUtil.SpriteToPng(file, imageInfo);
     }
 
     public static Result TryLoadImageFromPng(this Banner banner, string file)

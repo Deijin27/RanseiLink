@@ -7,20 +7,20 @@ namespace RanseiLink.Core.Graphics;
 
 public static class ImageUtil
 {
-    public static void SpriteToPng(string file, SpriteImageInfo imageInfo, bool tiled, TexFormat format)
+    public static void SpriteToPng(string file, SpriteImageInfo imageInfo)
     {
-        using (var img = SpriteToImage(imageInfo, tiled, format))
+        using (var img = SpriteToImage(imageInfo))
         {
             img.SaveAsPng(file);
         }
     }
 
-    public static Image<Rgba32> SpriteToImage(SpriteImageInfo imageInfo, bool tiled, TexFormat format)
+    public static Image<Rgba32> SpriteToImage(SpriteImageInfo imageInfo)
     {
-        var pointGetter = PointUtil.DecidePointGetter(tiled);
+        var pointGetter = PointUtil.DecidePointGetter(imageInfo.IsTiled);
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
-        switch (format)
+        switch (imageInfo.Format)
         {
             case TexFormat.Pltt4:
             case TexFormat.Pltt16:
@@ -80,7 +80,7 @@ public static class ImageUtil
             case TexFormat.None:
             case TexFormat.Comp4x4:
             default:
-                throw new Exception($"Invalid tex format {format}");
+                throw new Exception($"Invalid tex format {imageInfo.Format}");
         }
 
         return img;
@@ -111,7 +111,7 @@ public static class ImageUtil
 
         byte[] pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
 
-        return new SpriteImageInfo(pixels, palette.ToArray(), width, height);
+        return new SpriteImageInfo(pixels, palette.ToArray(), width, height, tiled, format);
     }
 
     public static byte[] SharedPalettePixelsFromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format, bool color0ToTransparent)

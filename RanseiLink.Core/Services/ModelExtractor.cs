@@ -104,9 +104,9 @@ namespace RanseiLink.Core.Services
                 convPal[0] = Color.Transparent;
             }
             ImageUtil.SpriteToPng(Path.Combine(destinationFolder, texFileNameWithExt),
-                new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height),
-                tiled: false,
-                format: tex.Format);
+                new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height,
+                  IsTiled: false,
+                  Format: tex.Format));
         }
 
         public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX? btx, NSPAT? nspat, string destinationFolder)

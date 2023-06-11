@@ -6,5 +6,7 @@ public record SpriteImageInfo(
     byte[] Pixels, 
     Rgba32[] Palette, 
     int Width, 
-    int Height
+    int Height,
+    bool IsTiled,
+    TexFormat Format
     );

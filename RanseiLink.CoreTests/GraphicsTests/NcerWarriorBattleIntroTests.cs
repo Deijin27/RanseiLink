@@ -27,10 +27,8 @@ public class NcerWarriorBattleIntroTests
         using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,
             ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
-            ncgr.Pixels.IsTiled,
-            debug: false,
-            format: ncgr.Pixels.Format
+            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format),
+            debug: false
             );
 
         using var expectedImage = Image.Load<Rgba32>(png);
@@ -50,10 +48,8 @@ public class NcerWarriorBattleIntroTests
         using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,
             ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
-            ncgr.Pixels.IsTiled,
-            debug: false,
-            format: ncgr.Pixels.Format
+            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format), 
+            debug: false
             );
 
         var info = CellImageUtil.MultiBankFromImage(

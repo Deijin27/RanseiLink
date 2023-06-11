@@ -31,7 +31,7 @@ public static class CellImageUtil
 
     private record BankDimensions(int MinX, int MinY, int XShift, int YShift, int Width, int Height);
 
-    public static Image<Rgba32> SingleBankToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static Image<Rgba32> SingleBankToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
@@ -49,13 +49,13 @@ public static class CellImageUtil
             int tileOffset = cell.TileOffset << (byte)blockSize;
             int bankDataOffset = 0;
             var startByte = tileOffset * 0x20 + bankDataOffset;
-            if (format == TexFormat.Pltt16)
+            if (imageInfo.Format == TexFormat.Pltt16)
             {
                 startByte *= 2; // account for compression e.g. pokemon conquest minimaps
             }
             byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
 
-            using (var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height), tiled, format))
+            using (var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height, imageInfo.IsTiled, imageInfo.Format)))
             {
                 cellImg.Mutate(g =>
                 {
@@ -98,13 +98,13 @@ public static class CellImageUtil
         return graphic;
     }
 
-    public static void SingleBankToPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static void SingleBankToPng(string file, Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
     {
-        using var graphic = SingleBankToImage(bank, blockSize, imageInfo, tiled, format, debug);
+        using var graphic = SingleBankToImage(bank, blockSize, imageInfo, debug);
         graphic.SaveAsPng(file);
     }
 
-    public static Image<Rgba32> MultiBankToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool tiled, TexFormat format, bool debug = false)
+    public static Image<Rgba32> MultiBankToImage(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
     {
         if (banks.Count == 0)
         {
@@ -112,11 +112,11 @@ public static class CellImageUtil
         }
         else if (banks.Count == 1)
         {
-            return SingleBankToImage(banks[0], blockSize, imageInfo, tiled, format, debug);
+            return SingleBankToImage(banks[0], blockSize, imageInfo, debug);
         }
         else
         {
-            var images = banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, tiled, format, debug)).ToList();
+            var images = banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, debug)).ToList();
 
             var fullHeight = images.Sum(x => x.Height);
             var fullWidth = images.Max(x => x.Width);
@@ -202,7 +202,7 @@ public static class CellImageUtil
         var pixelArray = workingPixels.ToArray();
         workingPalette[0] = Color.Magenta;
 
-        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
+        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
     }
 
     public static SpriteImageInfo MultiBankFromPng(string file, IList<Cell[]> banks, uint blockSize, bool tiled, TexFormat format)
@@ -256,7 +256,7 @@ public static class CellImageUtil
         var pixelArray = workingPixels.ToArray();
         workingPalette[0] = Color.Magenta;
 
-        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height);
+        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
     }
 
 }

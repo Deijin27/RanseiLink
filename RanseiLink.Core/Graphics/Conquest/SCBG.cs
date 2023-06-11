@@ -195,10 +195,14 @@ namespace RanseiLink.Core.Graphics
         {
             ImageUtil.SpriteToPng(
                 file: saveFile,
-                new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height),
-                tiled: tiled,
-                format: TexFormat.Pltt256
-                );
+                new SpriteImageInfo(
+                    Pixels: Pixels, 
+                    Palette: RawPalette.To32bitColors(Palette), 
+                    Width: Width, 
+                    Height: Height,
+                    IsTiled: tiled,
+                    Format: TexFormat.Pltt256
+                    ));
         }
 
         public static SCBG LoadPng(string file, bool tiled)
