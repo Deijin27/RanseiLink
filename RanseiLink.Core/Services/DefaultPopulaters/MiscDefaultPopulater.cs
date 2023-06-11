@@ -62,7 +62,7 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             height = ncgr.Pixels.TilesPerColumn * 8;
         }
 
-        using var image = ImageUtil.MultiCebkToImage(
+        using var image = CellImageUtil.MultiBankToImage(
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             imageInfo: new SpriteImageInfo(

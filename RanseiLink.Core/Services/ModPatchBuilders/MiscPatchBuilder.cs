@@ -67,7 +67,7 @@ public class MiscPatchBuilder : IGraphicTypePatchBuilder
         var nclr = NCLR.Load(nclrPath);
 
         // load up the png and replace provider data with new image data
-        var imageInfo = ImageUtil.MultiCebkFromPng(
+        var imageInfo = CellImageUtil.MultiBankFromPng(
             file: pngFile, 
             banks: ncer.CellBanks.Banks, 
             blockSize: ncer.CellBanks.BlockSize, 

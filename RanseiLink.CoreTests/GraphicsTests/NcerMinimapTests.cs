@@ -22,7 +22,7 @@ public class NcerMinimapTests
         var oldPixels = ncgr.Pixels.Data;
         var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = ImageUtil.MultiCebkToImage(
+        using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,
             ncer.CellBanks.BlockSize,
             new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
@@ -45,7 +45,7 @@ public class NcerMinimapTests
         var oldPixels = ncgr.Pixels.Data;
         var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = ImageUtil.MultiCebkToImage(
+        using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,
             ncer.CellBanks.BlockSize,
             new SpriteImageInfo(oldPixels, oldPalette, -1, -1),
@@ -54,7 +54,7 @@ public class NcerMinimapTests
             format: ncgr.Pixels.Format
             );
 
-        var info = ImageUtil.MultiCebkFromImage(
+        var info = CellImageUtil.MultiBankFromImage(
             image, 
             ncer.CellBanks.Banks, 
             ncer.CellBanks.BlockSize, 
