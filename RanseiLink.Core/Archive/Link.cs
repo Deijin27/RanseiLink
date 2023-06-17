@@ -3,7 +3,6 @@ using System.IO;
 
 namespace RanseiLink.Core.Archive;
 
-
 /// <summary>
 /// Archive format used in Pokemon Conquest used to group related graphic resources. 
 /// No consistent file extension. ".G2DR" or ".ALL"
@@ -43,6 +42,7 @@ public static class LINK
     /// <param name="destinationFolder">Files are placed in this folder</param>
     /// <param name="detectExt">If true, tries to read magic number and sets it as the file extension of the exported file</param>
     /// <param name="zeroPadLength">Length to padleft with zeros to. 4 -> 0001, 0234</param>
+    /// <exception cref="InvalidDataException"/>
     public static void Unpack(string filePath, string? destinationFolder = null, bool detectExt = true, int zeroPadLength = 4)
     {
         using (var br = new BinaryReader(File.OpenRead(filePath)))
@@ -51,7 +51,7 @@ public static class LINK
             string magic = br.ReadMagicNumber();
             if (magic != MagicNumber)
             {
-                throw new Exception("Correct magic number not detected at start of file. Thus the file is incorret format.");
+                throw new InvalidDataException("Correct magic number not detected at start of file. Thus the file is incorret format.");
             }
 
             // Get destination folder
