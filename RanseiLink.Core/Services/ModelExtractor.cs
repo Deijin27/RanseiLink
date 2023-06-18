@@ -98,7 +98,7 @@ namespace RanseiLink.Core.Services
             var tex = nstex.Textures.First(x => x.Name == texName);
             var pal = nstex.Palettes.First(x => x.Name == palName);
 
-            var convPal = RawPalette.To32bitColors(pal.PaletteData);
+            var convPal = PaletteUtil.To32bitColors(pal.PaletteData);
             if (tex.Color0Transparent)
             {
                 convPal[0] = Color.Transparent;
@@ -119,9 +119,9 @@ namespace RanseiLink.Core.Services
 
                 var m = new MTL.Material(material.Name)
                 {
-                    AmbientColor = RawPalette.To32BitColor(material.Ambient),
-                    DiffuseColor = RawPalette.To32BitColor(material.Diffuse),
-                    SpecularColor = RawPalette.To32BitColor(material.Specular),
+                    AmbientColor = PaletteUtil.To32BitColor(material.Ambient),
+                    DiffuseColor = PaletteUtil.To32BitColor(material.Diffuse),
+                    SpecularColor = PaletteUtil.To32BitColor(material.Specular),
                     Dissolve = (material.PolyAttr >> 16 & 31) / 31f,
                 };
                 mtl.Materials.Add(m);
@@ -209,7 +209,7 @@ namespace RanseiLink.Core.Services
                 Width = imgInfo.Width,
                 Height = imgInfo.Height,
             };
-            var outPal = RawPalette.From32bitColors(imgInfo.Palette);
+            var outPal = PaletteUtil.From32bitColors(imgInfo.Palette);
             Array.Resize(ref outPal, format.PaletteSize());
             var palResult = new NSTEX.Palette(name: texName + "_pl", paletteData: outPal);
 
@@ -288,10 +288,10 @@ namespace RanseiLink.Core.Services
                 var nsmtl = new NSMDL.Model.Material(texInf.Texture.Name, texInf.Palette.Name, material.Name)
                 {
                     ItemTag = 0,
-                    Diffuse = RawPalette.From32BitColor(material.DiffuseColor),
+                    Diffuse = PaletteUtil.From32BitColor(material.DiffuseColor),
                     DiffuseIsDefaultVertexColor = true,
-                    Ambient = RawPalette.From32BitColor(material.AmbientColor),
-                    Specular = RawPalette.From32BitColor(material.SpecularColor),
+                    Ambient = PaletteUtil.From32BitColor(material.AmbientColor),
+                    Specular = PaletteUtil.From32BitColor(material.SpecularColor),
                     EnableShininessTable = false,
                     Emission = Rgb15.Black,
                     PolyAttr = 0x81 | ((uint)(material.Dissolve * 31) & 0b1_1111) << 16,

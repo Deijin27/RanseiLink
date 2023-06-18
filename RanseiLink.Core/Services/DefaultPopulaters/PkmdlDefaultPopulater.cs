@@ -50,7 +50,7 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
 
             NSBTX btx0 = new NSBTX(Path.Combine(texUnpacked, fileName));
 
-            Rgba32[] palette = RawPalette.To32bitColors(btx0.Texture.Palettes[0].PaletteData);
+            Rgba32[] palette = PaletteUtil.To32bitColors(btx0.Texture.Palettes[0].PaletteData);
             palette[0] = Color.Transparent;
 
             // merge individual TEX textures into one for speed
@@ -72,14 +72,14 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
                 texFormat
                 ));
 
-            byte[] atxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
+            byte[] atxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
             var atxImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
                 texFormat
                 ));
 
-            byte[] dtxPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
+            byte[] dtxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
             var dtxImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,
@@ -90,7 +90,7 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             string pacFile = Path.Combine(pacUnpacked, fileName);
             string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
-            byte[] pacPixelmap = RawChar.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
+            byte[] pacPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
             var pacImg = ImageUtil.SpriteToImage(
                 new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth,
                 isTiled,

@@ -20,7 +20,7 @@ public class NcerWarriorBattleIntroTests
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.png");
 
         var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
+        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         ncer.CellBanks.Banks.Should().HaveCount(1);
 
@@ -43,7 +43,7 @@ public class NcerWarriorBattleIntroTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.nclr"));
 
         var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
+        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,

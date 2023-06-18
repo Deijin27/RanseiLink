@@ -68,7 +68,7 @@ public class NsbtxExtractCommand : ICommand
                 console.Output.WriteLine($"- {nameof(tex.Color0Transparent)}: {tex.Color0Transparent}");
             }
 
-            var convPal = RawPalette.To32bitColors(pal.PaletteData);
+            var convPal = PaletteUtil.To32bitColors(pal.PaletteData);
             if (tex.Color0Transparent)
             {
                 convPal[0] = SixLabors.ImageSharp.Color.Transparent;

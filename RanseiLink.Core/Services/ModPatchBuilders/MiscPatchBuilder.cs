@@ -81,7 +81,7 @@ public class MiscPatchBuilder : IGraphicTypePatchBuilder
             ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
         }
 
-        var newPalette = RawPalette.From32bitColors(imageInfo.Palette);
+        var newPalette = PaletteUtil.From32bitColors(imageInfo.Palette);
         if (newPalette.Length > item.PaletteCapacity)
         {
             // this should not be hit because it should be filtered out by the palette simplifier
@@ -125,7 +125,7 @@ public class MiscPatchBuilder : IGraphicTypePatchBuilder
         ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
         ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
 
-        var newPalette = RawPalette.From32bitColors(imageInfo.Palette);
+        var newPalette = PaletteUtil.From32bitColors(imageInfo.Palette);
         if (newPalette.Length > item.PaletteCapacity)
         {
             // this should not be hit because it should be filtered out by the palette simplifier

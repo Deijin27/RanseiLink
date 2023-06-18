@@ -144,7 +144,7 @@ public class NCGR
             Data = br.ReadBytes(header.DataLength);
             if (header.Format == TexFormat.Pltt16)
             {
-                Data = RawChar.Decompress(Data);
+                Data = PixelUtil.Decompress(Data);
             }
             br.BaseStream.Position = initOffset + header.TotalLength;
         }
@@ -170,7 +170,7 @@ public class NCGR
             var data = Data;
             if (Format == TexFormat.Pltt16)
             {
-                data = RawChar.Compress(data);
+                data = PixelUtil.Compress(data);
             }
             bw.Write(data);
 

@@ -155,7 +155,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string atxTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(atxTemp, RawChar.Compress(ImageUtil.SharedPalettePixelsFromImage(atxImg, palette, isTiled, texFormat, color0Transparent)));
+                        File.WriteAllBytes(atxTemp, PixelUtil.Compress(ImageUtil.SharedPalettePixelsFromImage(atxImg, palette, isTiled, texFormat, color0Transparent)));
                         atxLinkFiles[i] = atxTemp;
                     }
 
@@ -169,7 +169,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string dtxTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(dtxTemp, RawChar.Compress(ImageUtil.SharedPalettePixelsFromImage(dtxImg, palette, isTiled, texFormat, color0Transparent)));
+                        File.WriteAllBytes(dtxTemp, PixelUtil.Compress(ImageUtil.SharedPalettePixelsFromImage(dtxImg, palette, isTiled, texFormat, color0Transparent)));
                         dtxLinkFiles[i] = dtxTemp;
                     }
 
@@ -185,7 +185,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }))
                     {
                         string pacCharTemp = Path.GetTempFileName();
-                        File.WriteAllBytes(pacCharTemp, RawChar.Compress(ImageUtil.SharedPalettePixelsFromImage(pacImg, palette, isTiled, texFormat, color0Transparent)));
+                        File.WriteAllBytes(pacCharTemp, PixelUtil.Compress(ImageUtil.SharedPalettePixelsFromImage(pacImg, palette, isTiled, texFormat, color0Transparent)));
                         string pacTemp = Path.GetTempFileName();
                         string[] pacFiles = new string[]
                         {
@@ -213,7 +213,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                     }
                     resizedPalette[0] = Color.FromRgb(120, 120, 120);
 
-                    var convertedPalette = RawPalette.From32bitColors(resizedPalette);
+                    var convertedPalette = PaletteUtil.From32bitColors(resizedPalette);
                     btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_f_pl", paletteData: convertedPalette));
                     btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_b_pl", paletteData: convertedPalette));
                     btx0.WriteTo(texTemp);

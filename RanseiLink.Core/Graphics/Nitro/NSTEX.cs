@@ -271,7 +271,7 @@ public class NSTEX
             var pixels = t.TextureData;
             if (t.Format == TexFormat.Pltt16)
             {
-                pixels = RawChar.Compress(pixels);
+                pixels = PixelUtil.Compress(pixels);
             }
 
             if (t.Format == TexFormat.Comp4x4)
@@ -309,7 +309,7 @@ public class NSTEX
             {
                 Offset = (int)(bw.BaseStream.Position - palStartOffset)
             });
-            bw.Write(RawPalette.Compress(p.PaletteData));
+            bw.Write(PaletteUtil.Compress(p.PaletteData));
         }
         palInfo.DataSize = (int)(bw.BaseStream.Position - palStartOffset);
 
@@ -357,7 +357,7 @@ public class NSTEX
 
             if (data.Format == TexFormat.Pltt16)
             {
-                pixels = RawChar.Decompress(pixels);
+                pixels = PixelUtil.Decompress(pixels);
             }
 
             Textures.Add(new Texture
@@ -392,7 +392,7 @@ public class NSTEX
                 offsetEnd = initOffset + palInfo.DataOffset + palRadixDict.Data[i + 1].Offset;
             }
             br.BaseStream.Position = offsetStart;
-            var palette = RawPalette.Decompress(br.ReadBytes((int)(offsetEnd - offsetStart)));
+            var palette = PaletteUtil.Decompress(br.ReadBytes((int)(offsetEnd - offsetStart)));
             Palettes.Add(new Palette(name, palette));
         }
     }

@@ -57,8 +57,8 @@ public class Banner : BannerInfo
         ushort crc = crc16.Calculate(br.ReadBytes(0x820));
         CRCCorrect = CRC == crc;
         br.BaseStream.Position = crcDataStart;
-        ImagePixels = RawChar.Decompress(br.ReadBytes(0x200));
-        _imagePalette = RawPalette.Decompress(br.ReadBytes(0x20));
+        ImagePixels = PixelUtil.Decompress(br.ReadBytes(0x200));
+        _imagePalette = PaletteUtil.Decompress(br.ReadBytes(0x20));
 
         JapaneseTitle = ReadTitle(br);
         EnglishTitle = ReadTitle(br);
@@ -75,8 +75,8 @@ public class Banner : BannerInfo
         bw.Pad(2);
         bw.Write(Reserved);
         var crcDataStart = bw.BaseStream.Position;
-        bw.Write(RawChar.Compress(ImagePixels));
-        bw.Write(RawPalette.Compress(ImagePalette));
+        bw.Write(PixelUtil.Compress(ImagePixels));
+        bw.Write(PaletteUtil.Compress(ImagePalette));
 
         WriteTitle(bw, JapaneseTitle);
         WriteTitle(bw, EnglishTitle);
@@ -204,7 +204,7 @@ public static class BannerExtensions
     {
         var imageInfo = new SpriteImageInfo(
             Pixels: banner.ImagePixels,
-            Palette: RawPalette.To32bitColors(banner.ImagePalette),
+            Palette: PaletteUtil.To32bitColors(banner.ImagePalette),
             Width: 32,
             Height: 32,
             IsTiled: true,
@@ -226,7 +226,7 @@ public static class BannerExtensions
             return Result.Fail("Invalid image palette. Should have at most 16 colors. You could use 'simplify palette' command");
         }
 
-        banner.ImagePalette = RawPalette.From32bitColors(imageInfo.Palette);
+        banner.ImagePalette = PaletteUtil.From32bitColors(imageInfo.Palette);
         banner.ImagePixels = imageInfo.Pixels;
 
         return Result.Ok();

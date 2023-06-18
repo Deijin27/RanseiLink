@@ -10,12 +10,12 @@ public class CharCompressionTests
     [Fact]
     public void Decompress()
     {
-        RawChar.Decompress(_compressed).Should().Equal(_uncompressed);
+        PixelUtil.Decompress(_compressed).Should().Equal(_uncompressed);
     }
 
     [Fact]
     public void Compress()
     {
-        RawChar.Compress(_uncompressed).Should().Equal(_compressed);
+        PixelUtil.Compress(_uncompressed).Should().Equal(_compressed);
     }
 }

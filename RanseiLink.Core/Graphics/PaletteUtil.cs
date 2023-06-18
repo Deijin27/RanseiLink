@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace RanseiLink.Core.Graphics;
 
-public static class RawPalette
+public static class PaletteUtil
 {
     public static Rgba32 To32BitColor(Rgb15 color)
     {

@@ -200,7 +200,7 @@ namespace RanseiLink.Core.Graphics
         public static STL Load(BinaryReader br)
         {
             var header = new Header(br);
-            var palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength));
+            var palette = PaletteUtil.Decompress(br.ReadBytes(PaletteDataLength));
             var pixels = br.ReadBytes(header.Width * header.Height);
             br.Skip(PaddingLength);
             return new STL
@@ -225,7 +225,7 @@ namespace RanseiLink.Core.Graphics
 
             header.WriteTo(bw);
             var posBeforePal = bw.BaseStream.Position;
-            bw.Write(RawPalette.Compress(Palette));
+            bw.Write(PaletteUtil.Compress(Palette));
             var posAfterPal = bw.BaseStream.Position;
             int palLen = (int)(posAfterPal - posBeforePal);
             if (palLen < PaletteDataLength)
@@ -242,7 +242,7 @@ namespace RanseiLink.Core.Graphics
                 file: saveFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                new SpriteImageInfo(Pixels, RawPalette.To32bitColors(Palette), Width, Height,
+                new SpriteImageInfo(Pixels, PaletteUtil.To32bitColors(Palette), Width, Height,
                     IsTiled: tiled,
                     Format: TexFormat.Pltt256),
                 debug: debug
@@ -264,7 +264,7 @@ namespace RanseiLink.Core.Graphics
                 width: imageInfo.Width,
                 height: imageInfo.Height,
                 pixels: imageInfo.Pixels,
-                palette: RawPalette.From32bitColors(imageInfo.Palette)
+                palette: PaletteUtil.From32bitColors(imageInfo.Palette)
             );
         }
     }

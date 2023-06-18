@@ -67,7 +67,7 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             blockSize: ncer.CellBanks.BlockSize,
             imageInfo: new SpriteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
+                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
                 Width: width,
                 Height: height,
                 IsTiled: ncgr.Pixels.IsTiled,
@@ -97,7 +97,7 @@ public class MiscDefaultPopulater : IGraphicTypeDefaultPopulater
             file: pngFile,
             imageInfo: new SpriteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: RawPalette.To32bitColors(nclr.Palettes.Palette),
+                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
                 Width: ncgr.Pixels.TilesPerRow * 8,
                 Height: ncgr.Pixels.TilesPerColumn * 8,
                 IsTiled: ncgr.Pixels.IsTiled,

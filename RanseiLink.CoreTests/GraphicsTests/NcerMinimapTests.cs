@@ -20,7 +20,7 @@ public class NcerMinimapTests
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.png");
 
         var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
+        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,
@@ -41,7 +41,7 @@ public class NcerMinimapTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.nclr"));
 
         var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = RawPalette.To32bitColors(nclr.Palettes.Palette);
+        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         using var image = CellImageUtil.MultiBankToImage(
             ncer.CellBanks.Banks,

@@ -23,24 +23,24 @@ public class PaletteConversionTests
     [Fact]
     public void Convert15To32()
     {
-        RawPalette.To32bitColors(_colorsRgb15).Should().Equal(_colorsRgba32);
+        PaletteUtil.To32bitColors(_colorsRgb15).Should().Equal(_colorsRgba32);
     }
 
     [Fact]
     public void Convert32To15()
     {
-        RawPalette.From32bitColors(_colorsRgba32).Should().Equal(_colorsRgb15);
+        PaletteUtil.From32bitColors(_colorsRgba32).Should().Equal(_colorsRgb15);
     }
 
     [Fact]
     public void Compress()
     {
-        RawPalette.Compress(_colorsRgb15).Should().Equal(_colorsRgb15Compressed);
+        PaletteUtil.Compress(_colorsRgb15).Should().Equal(_colorsRgb15Compressed);
     }
 
     [Fact]
     public void Decompress()
     {
-        RawPalette.Decompress(_colorsRgb15Compressed).Should().Equal(_colorsRgb15);
+        PaletteUtil.Decompress(_colorsRgb15Compressed).Should().Equal(_colorsRgb15);
     }
 }

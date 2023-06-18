@@ -170,7 +170,7 @@ namespace RanseiLink.Core.Graphics
 
             ushort width = br.ReadUInt16();
             ushort height = br.ReadUInt16();
-            var palette = RawPalette.Decompress(br.ReadBytes(PaletteDataLength));
+            var palette = PaletteUtil.Decompress(br.ReadBytes(PaletteDataLength));
             var pixels = br.ReadBytes(width * height);
             return new SCBG(width, height, palette, pixels);
         }
@@ -181,7 +181,7 @@ namespace RanseiLink.Core.Graphics
             bw.Write(Width);
             bw.Write(Height);
             var posBeforePal = bw.BaseStream.Position;
-            bw.Write(RawPalette.Compress(Palette));
+            bw.Write(PaletteUtil.Compress(Palette));
             var posAfterPal = bw.BaseStream.Position;
             int palLen = (int)(posAfterPal - posBeforePal);
             if (palLen < PaletteDataLength)
@@ -197,7 +197,7 @@ namespace RanseiLink.Core.Graphics
                 file: saveFile,
                 new SpriteImageInfo(
                     Pixels: Pixels, 
-                    Palette: RawPalette.To32bitColors(Palette), 
+                    Palette: PaletteUtil.To32bitColors(Palette), 
                     Width: Width, 
                     Height: Height,
                     IsTiled: tiled,
@@ -213,7 +213,7 @@ namespace RanseiLink.Core.Graphics
             (
                 width: (ushort)imageInfo.Width,
                 height: (ushort)imageInfo.Height,
-                palette: RawPalette.From32bitColors(imageInfo.Palette),
+                palette: PaletteUtil.From32bitColors(imageInfo.Palette),
                 pixels: imageInfo.Pixels
             );
         }

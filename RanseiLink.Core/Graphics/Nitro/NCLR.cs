@@ -3,6 +3,9 @@ using System.IO;
 
 namespace RanseiLink.Core.Graphics;
 
+/// <summary>
+/// Nitro Color Resource
+/// </summary>
 public class NCLR
 {
     public const string MagicNumber = "RLCN";
@@ -137,7 +140,7 @@ public class NCLR
         {
             var header = new Header(br);
             Format = header.Format;
-            Palette = RawPalette.Decompress(br.ReadBytes(header.DataLength));
+            Palette = PaletteUtil.Decompress(br.ReadBytes(header.DataLength));
         }
 
         public void WriteTo(BinaryWriter bw)
@@ -151,7 +154,7 @@ public class NCLR
 
             bw.Pad(Header.DataStartOffset + 8); // the data start offset is relative to the end of the generic chunk header which is magic num and total length i.e. 8
 
-            var data = RawPalette.Compress(Palette);
+            var data = PaletteUtil.Compress(Palette);
             header.DataLength = data.Length;
             bw.Write(data);
 
@@ -188,6 +191,7 @@ public class NCLR
                 TotalLength = br.ReadInt32();
                 NumberOfPalettes = br.ReadUInt16();
                 var beef = br.ReadUInt16();
+                // NB: BEEF often indicates dead memory
                 if (beef != Beef)
                 {
                     throw new InvalidDataException($"Unexpected PORK '0x{beef:X}' (expected 0xBEEF)");
