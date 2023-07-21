@@ -1,0 +1,27 @@
+name: Bug / Crash Report
+description: Report a problem
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of RanseiLink are you running?
+      placeholder: e.g. 5.5
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: Images
+      description: If this is a crash, please provide a screenshot of the error message box that shows up
