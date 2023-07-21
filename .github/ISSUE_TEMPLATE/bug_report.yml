@@ -1,5 +1,5 @@
 name: Bug / Crash Report
-description: Report a problem
+description: Report a problem with RanseiLink, or something unexpected in a mod you made
 body:
   - type: markdown
     attributes:
