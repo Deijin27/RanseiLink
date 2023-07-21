@@ -1,0 +1,14 @@
+name: Feature Request
+description: Propose a new feature for the RanseiLink tool or its modding capabilities
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to create a feature request!
+  - type: textarea
+    id: desc
+    attributes:
+      label: What would you like?
+      description: This can be something to make the tool nicer to use, or some modding capability you would like to see.
+    validations:
+      required: true
