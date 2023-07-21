@@ -19,6 +19,8 @@ public class ModManager : IModManager
     private readonly RomFsFactory _ndsFactory;
     private readonly IMsgService _msgService;
 
+    public string ModFolder => _modFolder;
+
     public ModManager(string modFolder, RomFsFactory ndsFactory, IMsgService msgService)
     {
         _msgService = msgService;

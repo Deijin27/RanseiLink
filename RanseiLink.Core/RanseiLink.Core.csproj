@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DryIoc.dll" Version="5.3.3" />
+    <PackageReference Include="DryIoc.dll" Version="5.4.1" />
     <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.0.0" />
 	<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />

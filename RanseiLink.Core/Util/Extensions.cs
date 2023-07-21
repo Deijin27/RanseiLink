@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RanseiLink.Core.Resources;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -6,7 +8,7 @@ namespace RanseiLink.Core;
 
 public static class Extensions
 {
-    internal static string ReadMagicNumber(this BinaryReader br)
+    public static string ReadMagicNumber(this BinaryReader br)
     {
         return Encoding.UTF8.GetString(br.ReadBytes(4));
     }
@@ -14,6 +16,34 @@ public static class Extensions
     internal static void WriteMagicNumber(this BinaryWriter bw, string magicNumber)
     {
         bw.Write(Encoding.UTF8.GetBytes(magicNumber));
+    }
+
+    /// <summary>
+    /// Read a utf8 string that ends with 0x00 from the stream.
+    /// </summary>
+    /// <remarks>
+    /// The length of the provided buffer is interpreted as the maximum length that the string can be.
+    /// It being an argument you pass has the additional benefit that it can be shared between 
+    /// synchronous reads with the same maximum length.
+    /// </remarks>
+    public static string ReadNullTerminatedString(this BinaryReader br, byte[] buffer)
+    {
+        int i;
+        for (i = 0; i < buffer.Length; i++)
+        {
+            buffer[i] = br.ReadByte();
+            if (buffer[i] == 0)
+            {
+                break;
+            }
+        }
+        return Encoding.UTF8.GetString(buffer, 0, i);
+    }
+
+    public static void WriteNullTerminatedString(this BinaryWriter bw, string value)
+    {
+        bw.Write(Encoding.UTF8.GetBytes(value));
+        bw.Write((byte)0);
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RanseiLink.Core.Archive;
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -59,7 +60,7 @@ namespace RanseiLink.Core.Resources
 
     public class G2DRMiscItem : MiscItem
     {
-        public string Link { get; set; }
+        public string Link { get; }
         public string LinkFolder { get; }
         public override string PngFile { get; }
 
@@ -79,6 +80,24 @@ namespace RanseiLink.Core.Resources
             NcgrAlt = Path.Combine(LinkFolder, "0003.ncgr");
             Nclr = Path.Combine(LinkFolder, "0004.nclr");
             Nscr = Path.Combine(LinkFolder, "0005.ncgr");
+        }
+    }
+
+    public class BuildingIconSmallMiscItem : MiscItem
+    {
+        public string ContainingFolder { get; }
+        public string Link { get; }
+
+        public string LinkFolder { get; }
+        public override string PngFile { get; }
+
+        public BuildingIconSmallMiscItem(MetaMiscItemId metaId, int id, XElement element) : base(metaId, id, element)
+        {
+            Link = element.Attribute("LinkPattern")!.Value;
+            LinkFolder = Path.Combine(Path.GetDirectoryName(Link)!, Path.GetFileNameWithoutExtension(Link) + "-Unpacked");
+            ContainingFolder = Path.GetDirectoryName(Link)!;
+
+            PngFile = Path.Combine(ContainingFolder, "Image.png");
         }
     }
 }

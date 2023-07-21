@@ -29,24 +29,54 @@ public class NCER
 
         // first a typical file header
         var header = new NitroFileHeader(br);
+        Version = header.Version;
 
         if (header.MagicNumber != MagicNumber)
         {
             throw new InvalidDataException($"Unexpected magic number in file header '{header.MagicNumber}' at offset 0x{initOffset:X} (expected: {MagicNumber})");
         }
 
+        if (header.ChunkCount != 3)
+        {
+            throw new Exception("Unexpected chunk count of NCER");
+        }
 
         // read 
         CellBanks = new CEBK(br);
-        Labels = new LABL(br, CellBanks.Banks.Count);
+        Labels = new LABL(br);
         Unknown = new UEXT(br);
 
         br.BaseStream.Position = initOffset + header.FileLength;
     }
 
+    public ushort Version { get; set; }
     public CEBK CellBanks { get; set; }
     public LABL Labels { get; set; }
     public UEXT Unknown { get; set; }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        var initOffset = bw.BaseStream.Position;
+        var header = new NitroFileHeader
+        {
+            MagicNumber = MagicNumber,
+            ByteOrderMarker = 0xFEFF,
+            Version = Version,
+            ChunkCount = 3,
+            HeaderLength = 0x10
+        };
+
+        bw.Pad(header.HeaderLength);
+
+        CellBanks.WriteTo(bw);
+        Labels.WriteTo(bw);
+        Unknown.WriteTo(bw);
+
+        var endOffset = bw.BaseStream.Position;
+        header.FileLength = (uint)(endOffset - initOffset);
+        bw.BaseStream.Position = initOffset;
+        header.WriteTo(bw);
+    }
 }
 
 /// <summary>
@@ -54,6 +84,9 @@ public class NCER
 /// </summary>
 public class CEBK
 {
+    public byte BlockSize { get; set; }
+    public List<Cell[]> Banks { get; set; }
+
     public struct Header
     {
         public const string MagicNumber = "KBEC";
@@ -82,8 +115,6 @@ public class CEBK
             br.Skip(8);
         }
     }
-
-    public byte BlockSize { get; set; }
 
     public CEBK(BinaryReader br)
     {
@@ -139,10 +170,16 @@ public class CEBK
         br.BaseStream.Position = initOffset + header.TotalLength;
     }
 
+    internal void WriteTo(BinaryWriter bw)
+    {
+        var initOffset = bw.BaseStream.Position;
 
+        var header = new Header
+        {
+        };
 
-    public List<Cell[]> Banks { get; set; }
-
+        throw new NotImplementedException();
+    }
 }
 
 public struct BankInfo
@@ -341,46 +378,73 @@ public enum RotateScaleFlag
 /// </summary>
 public class LABL
 {
-    public string?[] Names;
+    public List<string> Names { get; set; } = new List<string>();
 
     public const string MagicNumber = "LBAL";
 
-    public LABL(BinaryReader br, int numberOfBanks)
+    public LABL(BinaryReader br)
     {
         var initOffset = br.BaseStream.Position;
-        var magicNumber = br.ReadMagicNumber();
-        if (magicNumber != MagicNumber)
+        var header = new NitroChunkHeader(br);
+        if (header.MagicNumber != MagicNumber)
         {
-            throw new InvalidDataException($"Unexpected magic number '{magicNumber}' at offset 0x{initOffset:X}. (expected: {MagicNumber})");
+            throw new InvalidDataException($"Unexpected magic number '{header.MagicNumber}' at offset 0x{initOffset:X}. (expected: {MagicNumber})");
         }
-        uint totalLength = br.ReadUInt32();
-        uint alwaysZero = br.ReadUInt32();
-        if (alwaysZero != 0)
+        var endOffset = initOffset + header.ChunkLength;
+
+        // it's weird that they don't store the number of names
+        // it doesn't always correspond to the number of banks
+        // this is the bests I could come up with to consistently work
+        var labelOffsets = new List<uint>();
+        uint offset = br.ReadUInt32();
+        while (offset <= 0xFFFF)
         {
-            throw new InvalidDataException("Unexpeced value in NCER LBAL!!!!!!");
+            labelOffsets.Add(offset);
+            offset = br.ReadUInt32();
         }
 
-        int nameId = 0;
-        var endOffset = initOffset + totalLength;
-        Names = new string?[numberOfBanks];
-        while (nameId < numberOfBanks)
+        var nameStart = br.BaseStream.Position - 4;
+
+        var buffer = new byte[50];
+        // The labels are null-terminated strings
+        foreach (var lblOff in labelOffsets)
         {
-            string name = "";
-            byte b = br.ReadByte();
-            while (b != 0)
-            {
-                name += (char)b;
-                b = br.ReadByte();
-            }
-            Names[nameId] = name;
-            if (br.BaseStream.Position >= endOffset)
-            {
-                // Sometimes more banks than names. Idk why
-                break;
-            }
+            br.BaseStream.Position = nameStart + lblOff;
+            Names.Add(br.ReadNullTerminatedString(buffer));
         }
 
         br.BaseStream.Position = endOffset;
+    }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        var initOffset = bw.BaseStream.Position;
+        var header = new NitroChunkHeader
+        {
+            MagicNumber = MagicNumber,
+        };
+
+        bw.Pad(NitroChunkHeader.Length + Names.Count * 4);
+        uint[] nameOffsets = new uint[Names.Count];
+        var nameStart = bw.BaseStream.Position;
+        for (int i = 0; i < nameOffsets.Length; i++)
+        {
+            nameOffsets[i] = (uint)(bw.BaseStream.Position - nameStart);
+            bw.WriteNullTerminatedString(Names[i]);
+        }
+
+        var endOffset = bw.BaseStream.Position;
+        header.ChunkLength = (uint)(endOffset - initOffset);
+
+        // write header
+        bw.BaseStream.Position = initOffset;
+        header.WriteTo(bw);
+        foreach (uint name in nameOffsets)
+        {
+            bw.Write(name);
+        }
+
+        bw.BaseStream.Position = endOffset;
     }
 }
 
@@ -389,22 +453,32 @@ public class LABL
 /// </summary>
 public class UEXT
 {
-    public uint Unknown { get; }
+    public uint Unknown { get; set; }
 
     public const string MagicNumber = "TXEU";
 
     public UEXT(BinaryReader br)
     {
         var initOffset = br.BaseStream.Position;
-        var magicNumber = br.ReadMagicNumber();
-        if (magicNumber != MagicNumber)
+        var header = new NitroChunkHeader(br);
+        if (header.MagicNumber != MagicNumber)
         {
-            throw new InvalidDataException($"Unexpected magic number '{magicNumber}' at offset 0x{initOffset:X}. (expected: {MagicNumber})");
+            throw new InvalidDataException($"Unexpected magic number '{header.MagicNumber}' at offset 0x{initOffset:X}. (expected: {MagicNumber})");
         }
-        uint totalLength = br.ReadUInt32();
 
         Unknown = br.ReadUInt32();
 
-        br.BaseStream.Position = initOffset + totalLength;
+        br.BaseStream.Position = initOffset + header.ChunkLength;
+    }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        var header = new NitroChunkHeader
+        {
+            MagicNumber = MagicNumber,
+            ChunkLength = NitroChunkHeader.Length + 4
+        };
+        header.WriteTo(bw);
+        bw.Write(Unknown);
     }
 } 

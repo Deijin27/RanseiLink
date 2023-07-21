@@ -29,7 +29,11 @@ public enum SpriteType
     StlStaffRoll,
     StlStageObje,
     Title,
-    Minimap
+    Minimap,
+    IconInstS,
+    Castlemap,
+    KuniImage,
+    KuniImage2
 }
 
 public class SpriteFile

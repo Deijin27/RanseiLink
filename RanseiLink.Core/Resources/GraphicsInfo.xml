@@ -203,4 +203,78 @@
 		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap21_00up.G2DR" PaletteCapacity="16"/>
 		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap22_00up.G2DR" PaletteCapacity="16"/>
 	</Misc>
+
+	<!--
+	These all use the same single palette stored in 00
+	So they need a custom loader
+	Probably one that just puts them all into a single image
+	
+	<Misc Id="IconInstS" DisplayName="Building Icon Small">
+		<NCER Link="graphics/strategy/icon_inst_s/03_05_parts_shisetsuicon_s_00.G2DR"/>
+		<NCER Link="graphics/strategy/icon_inst_s/03_05_parts_shisetsuicon_s_83.G2DR"/>
+	</Misc>
+	
+	-->
+    
+	<!--
+	<Misc Id="Castlemap" DisplayName="Kingdom Internal Background">
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_00_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_01_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_02_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_03_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_04_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_05_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_06_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_07_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_08_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_09_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_10_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_11_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_12_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_13_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_14_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_15_lo.G2DR"/>
+		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_16_lo.G2DR"/>
+	</Misc>
+
+	<Misc Id="KuniImage" DisplayName="Kingdom Image Still">
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_00_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_01_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_02_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_03_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_04_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_05_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_06_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_07_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_08_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_09_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_10_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_11_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_12_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_13_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_14_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_15_up_full.G2DR"/>
+		<NCER Link="graphics/strategy/kuniimage/03_00_parts_kuniimage_16_up_full.G2DR"/>
+	</Misc>
+
+	<Misc Id="KuniImage2" DisplayName="Kingdom Image Animated">
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_00_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_01_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_02_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_03_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_04_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_05_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_06_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_07_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_08_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_09_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_10_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_11_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_12_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_13_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_14_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_15_up.G2DR"/>
+		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_16_up.G2DR"/>
+	</Misc>
+	-->
 </GraphicsInfo>
