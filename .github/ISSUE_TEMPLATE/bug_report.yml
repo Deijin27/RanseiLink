@@ -24,4 +24,4 @@ body:
     id: images
     attributes:
       label: Images
-      description: If this is a crash, please provide a screenshot of the error message box that shows up
+      description: If there is an error message box, please provide a screenshot of it
