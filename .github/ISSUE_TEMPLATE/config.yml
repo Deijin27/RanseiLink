@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Questions
+      url: https://github.com/Deijin27/RanseiLink/discussions/categories/q-a
+      about: Ask a question about RanseiLink or Conquest Modding
