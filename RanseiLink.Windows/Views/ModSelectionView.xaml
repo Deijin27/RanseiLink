@@ -39,6 +39,7 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
+                    <Button Command="{Binding ReportBugCommand}" Content="Report Bug"/>
                 </StackPanel>
             </Grid>
             

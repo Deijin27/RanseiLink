@@ -37,6 +37,8 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public ICommand ImportModCommand { get; }
     public ICommand UpgradeOutdatedModsCommand { get; }
     public ICommand PopulateGraphicsDefaultsCommand { get; }
+    public ICommand ReportBugCommand { get; }
+
 
     public event Action<ModInfo> ModSelected;
 
@@ -51,6 +53,8 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
+
+        ReportBugCommand = new RelayCommand(IssueReporter.ReportBug);
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 
