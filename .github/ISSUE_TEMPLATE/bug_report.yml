@@ -21,7 +21,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: images
+    id: error
     attributes:
-      label: Images
-      description: If there is an error message box, please provide a screenshot of it
+      label: Error Message
+      description: If there is an error message box, please provide text or a screenshot of it
