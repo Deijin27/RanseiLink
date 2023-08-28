@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace ChangelistPlugin;
@@ -17,7 +18,7 @@ namespace ChangelistPlugin;
 [Plugin("Changelist", "Deijin", "2.4")]
 public class ChangelistPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         Dictionary<string, ModInfo> modDict = new();
         var modService = context.Services.Get<IModManager>();
@@ -49,14 +50,14 @@ public class ChangelistPlugin : IPlugin
         var optionService = context.Services.Get<IPluginService>();
         do
         {
-            if (!optionService.RequestOptions(options))
+            if (!await optionService.RequestOptions(options))
             {
                 return;
             }
 
             if (options.UnchangedMod == options.ChangedMod)
             {
-                dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "Invalid Options",
                     "The source mod must be different to the destination mod"
                     ));
@@ -99,7 +100,7 @@ public class ChangelistPlugin : IPlugin
         else if (options.OutputType == OutputType.TSV)
         {
             OutputTsv(file, changelist);
-            dialogService.ShowMessageBox(MessageBoxSettings.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Generation complete", $"Changelist output to file:\n'{file}'"));
         }
 
         unchangedServices.Dispose();

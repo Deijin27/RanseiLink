@@ -5,6 +5,7 @@ using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.PluginModule.Api;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MassActionPlugin;
 
@@ -15,19 +16,19 @@ internal class MassAction
     private MassActionOptionForm options;
     private IServiceGetter _services;
 
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         _services = context.Services;
         var optionService = context.Services.Get<IPluginService>();
         options = new();
-        if (!optionService.RequestOptions(options))
+        if (!await optionService.RequestOptions(options))
         {
             return;
         }
 
         var dialogService = context.Services.Get<IDialogService>();
 
-        dialogService.ProgressDialog(progress =>
+        await dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo(isIndeterminate:true));
             if (options.Target == ConstOptions.MaxLink)

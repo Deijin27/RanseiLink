@@ -1,13 +1,14 @@
 ﻿using RanseiLink.PluginModule.Api;
+using System.Threading.Tasks;
 
 namespace SoftlockCheckerPlugin;
 
 [Plugin("Softlock Checker", "Deijin", "2.4")]
 public class SoftlockCheckerPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public Task Run(IPluginContext context)
     {
         var checker = new SoftlockChecker();
-        checker.Run(context);
+        return checker.Run(context);
     }
 }

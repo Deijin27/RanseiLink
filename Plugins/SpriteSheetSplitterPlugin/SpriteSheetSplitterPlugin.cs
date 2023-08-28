@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SpriteSheetSplitterPlugin;
 
@@ -16,12 +17,12 @@ public class SpriteSheetSplitterPlugin : IPlugin
 {
     private IDialogService _dialogService;
     private IPluginService _pluginService;
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         _dialogService ??= context.Services.Get<IDialogService>();
         _pluginService ??= context.Services.Get<IPluginService>();
 
-        var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
+        var result = await _dialogService.ShowMessageBox(new MessageBoxSettings(
             "Split or Create?",
             "Would you like to split a sprite sheet into it's constituent sprites, or create one from a folder of sprites?",
             new MessageBoxButton[]
@@ -35,10 +36,10 @@ public class SpriteSheetSplitterPlugin : IPlugin
         switch (result)
         {
             case MessageBoxResult.Yes:
-                Split();
+                await Split();
                 break;
             case MessageBoxResult.No:
-                Create();
+                await Create();
                 break;
             case MessageBoxResult.Cancel:
                 return;
@@ -47,16 +48,16 @@ public class SpriteSheetSplitterPlugin : IPlugin
         }
     }
 
-    private void Split()
+    private async Task Split()
     {
-        var file = _dialogService.ShowOpenSingleFileDialog(new("Select the sprite sheet", new FileDialogFilter("PNG Image (.png)", ".png")));
+        var file = await _dialogService.ShowOpenSingleFileDialog(new("Select the sprite sheet", new FileDialogFilter("PNG Image (.png)", ".png")));
         if (string.IsNullOrEmpty(file))
         {
             return;
         }
 
         var options = new SpriteSheetSplitterOptionForm();
-        if (!_pluginService.RequestOptions(options))
+        if (!await _pluginService.RequestOptions(options))
         {
             return;
         }
@@ -71,13 +72,13 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
         if (spriteSheet.Width % spriteWidth != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is width is not divisible by the provided sprite width"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is width is not divisible by the provided sprite width"));
             return;
         }
 
         if (spriteSheet.Height % spriteHeight != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is height is not divisible by the provided sprite height"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid dimensions", $"The sprite sheet is height is not divisible by the provided sprite height"));
             return;
         }
 
@@ -116,16 +117,16 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
     }
 
-    private void Create()
+    private async Task Create()
     {
-        string folder = _dialogService.ShowOpenFolderDialog(new("Select folder that contains sprites"));
+        string folder = await _dialogService.ShowOpenFolderDialog(new("Select folder that contains sprites"));
         if (string.IsNullOrEmpty(folder))
         {
             return;
         }
 
         var options = new SpriteSheetCreaterOptionForm();
-        if (!_pluginService.RequestOptions(options))
+        if (!await _pluginService.RequestOptions(options))
         {
             return;
         }
@@ -135,7 +136,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
         string[] files = Directory.GetFiles(folder);
         if (files.Length == 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Folder is empty", $"There are no files in the folder '{folder}'"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Folder is empty", $"There are no files in the folder '{folder}'"));
             return;
         }
 
@@ -151,7 +152,7 @@ public class SpriteSheetSplitterPlugin : IPlugin
         int spriteHeight = first.Height;
         if (!images.All(i => i.Width == first.Width && i.Height == first.Height))
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"All images must have the same dimensions"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"All images must have the same dimensions"));
             return;
         }
 
@@ -159,20 +160,20 @@ public class SpriteSheetSplitterPlugin : IPlugin
 
         if (spriteSheetWidth % first.Width != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The width you provided is not divisible by the widths of the sprites"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The width you provided is not divisible by the widths of the sprites"));
             return;
         }
 
         int spriteSheetHeight = options.SheetHeight;
         if (spriteSheetHeight % first.Height != 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The height you provided is not divisible by the height of the sprites"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The height you provided is not divisible by the height of the sprites"));
             return;
         }
 
         if (images.Count * spriteWidth * spriteHeight > spriteSheetHeight * spriteSheetWidth)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The sprites do not fit in the sheet size"));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Invalid images", $"The sprites do not fit in the sheet size"));
             return;
         }
 

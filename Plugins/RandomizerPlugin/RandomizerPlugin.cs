@@ -1,26 +1,27 @@
 ﻿
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Api;
+using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
 [Plugin("Randomizer", "Deijin", "3.1")]
 public class RandomizerPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         var randomizer = new Randomizer();
 
         var optionService = context.Services.Get<IPluginService>();
         var options = new RandomizationOptionForm();
-        if (!optionService.RequestOptions(options))
+        if (!await optionService.RequestOptions(options))
         {
             return;
         }
 
         var dialogService = context.Services.Get<IDialogService>();
 
-        dialogService.ProgressDialog(progress =>
+        await dialogService.ProgressDialog(progress =>
         {
             randomizer.Run(context, options, progress);
         });

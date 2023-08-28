@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SoftlockCheckerPlugin;
 
@@ -52,24 +53,24 @@ internal class SoftlockChecker
 
     private IDialogService _dialogService;
 
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         _reportBuilder = new();
         Init(context.Services);
         Validate();
         _dialogService = context.Services.Get<IDialogService>();
-        NotifyUserIfNecessary();
+        await NotifyUserIfNecessary();
     }
 
     /// <summary>
     /// If any softlocks exist, notify the user of them
     /// </summary>
-    private void NotifyUserIfNecessary()
+    private async Task NotifyUserIfNecessary()
     {
         int totalCount = _guaranteed.Count + _conditional.Count + _probable.Count + _probableConditional.Count + _suggestion.Count;
         if (totalCount <= 0)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Validation Passed",
                 "There is no known softlock causes in your mod!"
                 ));

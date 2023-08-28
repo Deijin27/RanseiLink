@@ -1,13 +1,14 @@
 ﻿using RanseiLink.PluginModule.Api;
+using System.Threading.Tasks;
 
 namespace MassActionPlugin;
 
 [Plugin("Mass Action", "Deijin", "2.1")]
 public class MassActionPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public Task Run(IPluginContext context)
     {
         var massAction = new MassAction();
-        massAction.Run(context);
+        return massAction.Run(context);
     }
 }

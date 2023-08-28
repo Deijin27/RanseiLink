@@ -9,13 +9,13 @@ namespace DisableEventsPlugin;
 [Plugin("Disable Events", "Deijin", "1.2")]
 public class DisableEventsPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         var dialogService = context.Services.Get<IDialogService>();
 
         var optionService = context.Services.Get<IPluginService>();
         var options = new DisableEventsOptionForm();
-        if (!optionService.RequestOptions(options))
+        if (!await optionService.RequestOptions(options))
         {
             return;
         }
@@ -27,7 +27,7 @@ public class DisableEventsPlugin : IPlugin
         string find64Alt = "10000064.eve";
         string find65Alt = "10000065.eve";
 
-        var result = dialogService.RequestRomFile();
+        var result = await dialogService.RequestRomFile();
         if (string.IsNullOrEmpty(result))
         {
             return;
@@ -93,13 +93,13 @@ public class DisableEventsPlugin : IPlugin
 
         if (!found64 && !found65)
         {
-            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Failed to locate event files", "", MessageBoxType.Error
                 ));
         }
         else
         {
-            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Success", "The events have been " + (options.Action == ConstOptions.DisableEvents ? "disabled" : "enabled")
                 ));
         }

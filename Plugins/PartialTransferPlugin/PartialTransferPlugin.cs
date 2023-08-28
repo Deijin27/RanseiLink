@@ -8,13 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PartialTransferPlugin;
 
 [Plugin("Partial Transfer", "Deijin", "3.2")]
 public class PartialTransferPlugin : IPlugin
 {
-    public void Run(IPluginContext context)
+    public async Task Run(IPluginContext context)
     {
         Dictionary<string, ModInfo> modDict = new();
         var modService = context.Services.Get<IModManager>();
@@ -45,14 +46,14 @@ public class PartialTransferPlugin : IPlugin
         var optionService = context.Services.Get<IPluginService>();
         do
         {
-            if (!optionService.RequestOptions(options))
+            if (!await optionService.RequestOptions(options))
             {
                 return;
             }
 
             if (options.SourceMod == options.DestinationMod)
             {
-                dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                     "Invalid Options",
                     "The source mod must be different to the destination mod"
                     ));
@@ -64,7 +65,7 @@ public class PartialTransferPlugin : IPlugin
         var sourceMod = modDict[options.SourceMod];
         var destinationMod = modDict[options.DestinationMod];
 
-        dialogService.ProgressDialog(progress =>
+        await dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo(statusText: "Preparing...", isIndeterminate:true));
 
