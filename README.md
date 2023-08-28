@@ -47,7 +47,7 @@ The console app supports scripting using Lua, see: https://github.com/Deijin27/R
 
 ## Special thanks
 
-- Baconfry (Testing, Encyclopedia (serebii.net eat your heart out), Bug hunter)
+- [Baconfry](https://github.com/Baconfry) (Testing, Encyclopedia (serebii.net eat your heart out), Bug hunter)
 - [Pleonex](https://github.com/pleonex) ([Text editing](https://github.com/pleonex/PokemonConquest))
 - [Scurest](https://github.com/scurest) (Their research and tool on NSBMDs was very useful)
 - [Snap](https://github.com/SnapSnarp) (Testing, [Written Guide](https://github.com/Deijin27/RanseiLink/wiki/Pokemon-Battle-Sprite-Creation-Process), [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
