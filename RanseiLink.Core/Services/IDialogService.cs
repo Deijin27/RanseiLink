@@ -2,17 +2,18 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services
 {
     public interface IDialogService
     {
-        void ShowDialog(object dialogViewModel);
-        MessageBoxResult ShowMessageBox(MessageBoxSettings options);
-        string[]? ShowOpenFileDialog(OpenFileDialogSettings settings);
-        string? ShowSaveFileDialog(SaveFileDialogSettings settings);
-        string? ShowOpenFolderDialog(OpenFolderDialogSettings settings);
-        void ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
+        Task ShowDialog(object dialogViewModel);
+        Task<MessageBoxResult> ShowMessageBox(MessageBoxSettings options);
+        Task<string[]> ShowOpenFileDialog(OpenFileDialogSettings settings);
+        Task<string?> ShowSaveFileDialog(SaveFileDialogSettings settings);
+        Task<string?> ShowOpenFolderDialog(OpenFolderDialogSettings settings);
+        Task ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
     }
 
     public interface IModalDialogViewModel
@@ -141,13 +142,13 @@ namespace RanseiLink.Core.Services
 
     public static class DialogServiceExtensions
     {
-        public static TDialogResult ShowDialogWithResult<TDialogResult>(this IDialogService dialogService, IModalDialogViewModel<TDialogResult> dialogViewModel)
+        public static async Task<TDialogResult> ShowDialogWithResult<TDialogResult>(this IDialogService dialogService, IModalDialogViewModel<TDialogResult> dialogViewModel)
         {
-            dialogService.ShowDialog(dialogViewModel);
+            await dialogService.ShowDialog(dialogViewModel);
             return dialogViewModel.Result;
         }
 
-        public static string? RequestRomFile(this IDialogService dialogService)
+        public static Task<string?> RequestRomFile(this IDialogService dialogService)
         {
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
@@ -159,7 +160,7 @@ namespace RanseiLink.Core.Services
             });
         }
 
-        public static string? RequestModFile(this IDialogService dialogService)
+        public static Task<string?> RequestModFile(this IDialogService dialogService)
         {
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
@@ -171,11 +172,11 @@ namespace RanseiLink.Core.Services
             });
         }
 
-        public static string? ShowOpenSingleFileDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        public static async Task<string?> ShowOpenSingleFileDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
         {
             settings.AllowMultiple = false;
-            var result = dialogService.ShowOpenFileDialog(settings);
-            var file = result?.FirstOrDefault();
+            var result = await dialogService.ShowOpenFileDialog(settings);
+            var file = result.FirstOrDefault();
             if (string.IsNullOrEmpty(file))
             {
                 file = null;
@@ -183,7 +184,7 @@ namespace RanseiLink.Core.Services
             return file;
         }
 
-        public static string[]? ShowOpenMultipleFilesDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
+        public static Task<string[]> ShowOpenMultipleFilesDialog(this IDialogService dialogService, OpenFileDialogSettings settings)
         {
             settings.AllowMultiple = true;
             return dialogService.ShowOpenFileDialog(settings);

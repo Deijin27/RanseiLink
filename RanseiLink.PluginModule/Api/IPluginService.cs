@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace RanseiLink.PluginModule.Api;
 
 /// <summary>
@@ -12,5 +14,5 @@ public interface IPluginService
     /// </summary>
     /// <param name="optionForm"></param>
     /// <returns>True if proceed button clicked, False if cancel button clicked</returns>
-    public bool RequestOptions(IPluginForm optionForm);
+    public Task<bool> RequestOptions(IPluginForm optionForm);
 }

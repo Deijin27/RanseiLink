@@ -1,0 +1,80 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="RanseiLink.XP.Views.PluginDialog"
+		Classes="dialog"
+		xmlns:vm="clr-namespace:RanseiLink.PluginModule.Services;assembly=RanseiLink.PluginModule"
+        Title="PluginDialog">
+	<Window.DataTemplates>
+		<DataTemplate DataType="{x:Type vm:BoolPluginFormItem}">
+			<CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding Value, Mode=TwoWay}" ToolTip.Tip="{Binding Description}"/>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:IntPluginFormItem}">
+			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
+				<NumericUpDown Grid.Column="1" Value="{Binding Value}" Maximum="{Binding MaxValue}" Minimum="{Binding MinValue}"/>
+			</Grid>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:StringPluginFormItem}">
+			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
+				<TextBox Grid.Column="1" Text="{Binding Value}" MaxLength="{Binding MaxLength}"/>
+			</Grid>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:CollectionPluginFormItem}">
+			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
+				<ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" />
+			</Grid>
+		</DataTemplate>
+
+		<DataTemplate DataType="{x:Type vm:TextPluginFormItem}">
+			<TextBlock Margin="0,5" Text="{Binding Value}" TextWrapping="Wrap"/>
+		</DataTemplate>
+	</Window.DataTemplates>
+	
+	<DockPanel>
+		<Grid DockPanel.Dock="Bottom">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
+				<Button Width="100" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click"/>
+				<Button Width="100" Content="{Binding Form.CancelButtonText}" Click="CancelButton_Click"/>
+			</StackPanel>
+		</Grid>
+		<TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18" FontWeight="DemiBold" Text="{Binding Form.Title}"/>
+		<ScrollViewer Margin="20,0">
+			<StackPanel Grid.IsSharedSizeScope="True">
+				<ItemsControl ItemsSource="{Binding UngroupedItems}"/>
+				<ItemsControl ItemsSource="{Binding Groups}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate DataType="{x:Type vm:PluginFormGroup}">
+							<Panel>
+								<TextBlock Text="{Binding GroupName}"/>
+								<Border>
+									<ItemsControl ItemsSource="{Binding Items}"/>
+								</Border>
+							</Panel>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+		</ScrollViewer>
+	</DockPanel>
+	
+</Window>

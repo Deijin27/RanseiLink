@@ -1,0 +1,20 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+		<Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+			<!-- Add Controls for Previewer Here -->
+			<Button Classes="Hover" Padding="10">Hello World</Button>
+		</Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+
+	<Style Selector="Button.Hover">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Background" Value="Transparent"/>
+	</Style>
+
+	<Style Selector="Button.Hover:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
+	</Style>
+</Styles>

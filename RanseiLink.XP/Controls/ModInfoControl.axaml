@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             x:Class="RanseiLink.XP.Controls.ModInfoControl">
+	<Grid Margin="8,5,5,5" RowDefinitions="18,15">
+		<TextBlock 
+			x:Name="NameTextBlock" 
+			FontWeight="SemiBold" 
+			FontSize="13" 
+			VerticalAlignment="Center" 
+			Grid.Column="0"
+			/>
+
+		<TextBlock 
+			x:Name="BottomTextBlock"
+			Foreground="{DynamicResource AltForegroundBrush}" 
+			FontSize="10" 
+			VerticalAlignment="Center" 
+			Grid.Row="1" 
+			Grid.Column="0" 
+			Grid.ColumnSpan="3"
+			/>
+	</Grid>
+</UserControl>

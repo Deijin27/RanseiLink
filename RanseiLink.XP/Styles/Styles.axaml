@@ -1,0 +1,43 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Styles.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<MergeResourceInclude Source="/Styles/Colors/Dark.axaml"/>
+				<MergeResourceInclude Source="/Styles/Icons.axaml"/>
+
+				<MergeResourceInclude Source="/Styles/Controls/TextBlock.axaml"/>
+				<MergeResourceInclude Source="/Styles/Controls/Button.axaml" />
+				<MergeResourceInclude Source="/Styles/Controls/ButtonSpinner.axaml" />
+				<MergeResourceInclude Source="/Styles/Controls/CheckBox.axaml" />
+				<MergeResourceInclude Source="/Styles/Controls/ComboBox.axaml"/>
+				<MergeResourceInclude Source="/Styles/Controls/ComboBoxItem.axaml"/>
+				<MergeResourceInclude Source="/Styles/Controls/TextBox.axaml"/>
+				<MergeResourceInclude Source="/Styles/Controls/NumericUpDown.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
+			<x:Double x:Key="ContentControlFontSize">12</x:Double>
+			
+		</ResourceDictionary>
+	</Styles.Resources>
+
+    <!-- Add Styles Here -->
+	<!--<StyleInclude Source="/Styles/Controls/Button.axaml"/>-->
+	<!--<StyleInclude Source="/Styles/Controls/CheckBox.axaml"/>-->
+	
+	
+	
+	<StyleInclude Source="/Styles/ControlsExtraStyles/HoverButton.axaml"/>
+
+	<Style Selector="Window.dialog">
+		<Setter Property="Icon" Value="/Assets/ranseilink-logo.ico"/>
+		<Setter Property="WindowStartupLocation" Value="CenterOwner"/>
+		<Setter Property="CanResize" Value="False"/>
+		<Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+	</Style>
+	
+	<!--UpArrow M 1.7458606,3.6541953 1.1230469,3.0313816 4.6876316,-0.53320312 8.2536286,3.0313816 7.630815,3.6541953 4.6876316,0.71101198 Z-->
+	<!--RightArrow M 2.5946385,-1.3819811 3.2174522,-2.0047948 6.782037,1.5597899 3.2174522,5.1257869 2.5946385,4.5029733 5.5378219,1.5597899 Z-->
+	<!--LeftArrow M 6.782037,-1.3819811 6.1592233,-2.0047948 2.5946385,1.5597899 6.1592233,5.1257869 6.782037,4.5029733 3.8388536,1.5597899 Z-->
+</Styles>

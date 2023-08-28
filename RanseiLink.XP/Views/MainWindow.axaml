@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:RanseiLink.XP.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Height="500" Width="900"
+        x:Class="RanseiLink.XP.Views.MainWindow"
+        Icon="/Assets/ranseilink-logo.ico"
+        Title="RanseiLink XP">
+	<Grid ColumnDefinitions="180,*">
+
+		<Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
+		<Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
+
+		<ContentControl Content="{Binding CurrentVm}" Grid.ColumnSpan="2"/>
+	</Grid>
+
+</Window>

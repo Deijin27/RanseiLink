@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		MaxHeight="400" MaxWidth="500"
+		SizeToContent="WidthAndHeight"
+		Classes="dialog"
+        x:Class="RanseiLink.XP.Dialogs.MessageBoxDialog"
+        Title="{Binding Title}">
+	<Grid RowDefinitions="Auto,*,Auto">
+		<ScrollViewer Grid.Row="1">
+			<TextBlock x:Name="MessageTextBlock" Margin="10" TextWrapping="Wrap"
+					   Text="{Binding Message}" />
+		</ScrollViewer>
+		<ItemsControl x:Name="ButtonsItemsControl" Grid.Row="2" ItemsSource="{Binding Buttons}">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<Button Height="20" Content="{Binding Text}" Click="Button_Click" Margin="10" Padding="5,0" MinWidth="100"/>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</Window>

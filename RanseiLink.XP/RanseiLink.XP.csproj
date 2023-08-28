@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
+    <TrimMode>copyused</TrimMode>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+	<Authors>Deijin</Authors>
+	<VersionPrefix>5.5</VersionPrefix>
+	<VersionSuffix></VersionSuffix>
+  </PropertyGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <None Remove=".gitignore" />
+    <None Remove="Assets\ranseilink-logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--This helps with theme dll-s trimming.
+	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
+	https://github.com/AvaloniaUI/Avalonia/issues/5593 -->
+    <TrimmableAssembly Include="Avalonia.Themes.Fluent" />
+    <TrimmableAssembly Include="Avalonia.Themes.Default" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+	<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.4" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.4" />
+    <PackageReference Include="DryIoc.dll" Version="5.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plugins\RandomizerPlugin\RandomizerPlugin.csproj" />
+    <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
+    <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Dialogs\LoadingDialog.axaml.cs">
+      <DependentUpon>LoadingDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModCreateBasedOnDialog.axaml.cs">
+      <DependentUpon>ModCreateBasedOnDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModUpgradeDialog.axaml.cs">
+      <DependentUpon>ModUpgradeDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModImportDialog.axaml.cs">
+      <DependentUpon>ModImportDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModExportDialog.axaml.cs">
+      <DependentUpon>ModExportDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModDeleteDialog.axaml.cs">
+      <DependentUpon>ModDeleteDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModCommitDialog.axaml.cs">
+      <DependentUpon>ModCommitDialog.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Dialogs\ModEditInfoDialog.axaml.cs">
+      <DependentUpon>ModEditInfoDialog.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

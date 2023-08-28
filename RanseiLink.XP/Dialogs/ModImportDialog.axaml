@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
+		Height="225" Width="550"
+		xmlns:dd="clr-namespace:RanseiLink.XP.DragDrop"
+        x:Class="RanseiLink.XP.Dialogs.ModImportDialog"
+		Classes="dialog"
+        Title="Import Mod">
+	<DockPanel>
+		<Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}"
+		  dd:DragDrop.IsDropTarget="True"
+		  dd:DragDrop.DropHandler="{Binding ModDropHandler}">
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Text="Drop the mod to&#x0a;import here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+				<ContentPresenter Height="50" ContentTemplate="{StaticResource LoadRomIcon}"/>
+				<TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
+				<Button Command="{Binding FilePickerCommand}" Width="150" Margin="10,0,10,0">Or use file picker</Button>
+			</StackPanel>
+		</Grid>
+		<Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
+				<Button Width="100" Content="Import" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+				<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
+			</StackPanel>
+		</Grid>
+		<Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Margin="10">
+				<TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Import mod</TextBlock>
+				<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
+			</StackPanel>
+		</Border>
+	</DockPanel>
+</Window>

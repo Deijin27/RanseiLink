@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		Classes="dialog"
+		xmlns:dd="clr-namespace:RanseiLink.XP.DragDrop"
+		Height="225" Width="550"
+        x:Class="RanseiLink.XP.Dialogs.ModCreationDialog"
+        Title="Create Mod">
+	<DockPanel>
+		<Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}"
+		  dd:DragDrop.IsDropTarget="True"
+		  dd:DragDrop.DropHandler="{Binding RomDropHandler}">
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Text="Drop an unchanged copy&#x0a; of the rom here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+				<ContentPresenter Height="50" ContentTemplate="{StaticResource LoadRomIcon}"/>
+				<TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
+				<Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
+			</StackPanel>
+		</Grid>
+		<Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
+				<Button Width="100" Content="Create" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+				<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
+			</StackPanel>
+		</Grid>
+		<Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
+			<Grid Grid.Column="1" Margin="20,20,20,0" 
+				  ColumnDefinitions="1*,2.5*"
+				  RowDefinitions="30,30,30">
+
+				<TextBlock  Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
+
+				<TextBlock Grid.Row="1" Grid.Column="0" Text="Version" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Version, Mode=TwoWay}"/>
+
+				<TextBlock Grid.Row="2" Grid.Column="0" Text="Author" VerticalAlignment="Center"/>
+				<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Author, Mode=TwoWay}"/>
+
+			</Grid>
+		</Border>
+	</DockPanel>
+</Window>

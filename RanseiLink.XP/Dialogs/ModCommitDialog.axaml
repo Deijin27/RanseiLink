@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		xmlns:dd="clr-namespace:RanseiLink.XP.DragDrop"
+		xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
+		Height="225" Width="550"
+        x:Class="RanseiLink.XP.Dialogs.ModCommitDialog"
+		Classes="dialog"
+        Title="Apply Mod to Rom">
+	<DockPanel>
+		<Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}"
+		  dd:DragDrop.IsDropTarget="True"
+		  dd:DragDrop.DropHandler="{Binding RomDropHandler}">
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Text="Drop the rom you&#x0a;want to write to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+				<ContentPresenter Height="50" ContentTemplate="{StaticResource LoadRomIcon}"/>
+				<TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
+				<Button Command="{Binding FilePickerCommand}" Width="150" Margin="10,0,10,0">Or use file picker</Button>
+			</StackPanel>
+		</Grid>
+		<Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
+				<Button Width="100" Content="Create" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+				<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
+			</StackPanel>
+		</Grid>
+		<Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Margin="10">
+				<TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Apply mod to rom</TextBlock>
+				<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
+				<CheckBox Margin="10" Content="Include sprites in patch" IsChecked="{Binding IncludeSprites}"
+						  ToolTip.Tip="If you change lots of sprites, you can speed up the patches by not including them every time."/>
+			</StackPanel>
+		</Border>
+	</DockPanel>
+</Window>

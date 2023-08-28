@@ -1,0 +1,82 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20" Background="#171717">
+            <!-- Add Controls for Previewer Here -->
+			<StackPanel Spacing="20">
+				<CheckBox IsChecked="False">Unchecked</CheckBox>
+				<CheckBox IsChecked="True">Checked</CheckBox>
+				<CheckBox IsThreeState="True" IsChecked="{x:Null}">Indeterminate</CheckBox>
+				<CheckBox Width="120">Checkbox should wrap its text</CheckBox>
+			</StackPanel>
+        </Border>
+    </Design.PreviewWith>
+	
+    <!-- Add Styles Here -->
+	<ControlTheme x:Key="{x:Type CheckBox}" TargetType="CheckBox">
+		<Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+		<Setter Property="CornerRadius" Value="2"/>
+		<Setter Property="Padding" Value="2"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Grid ColumnDefinitions="20,*">
+						<Border Name="PART_Border"
+							BorderThickness="{TemplateBinding BorderThickness}" 
+						    BorderBrush="{TemplateBinding BorderBrush}"
+							Background="{TemplateBinding Background}" 
+							CornerRadius="{TemplateBinding CornerRadius}" 
+							Padding="{TemplateBinding Padding}" 
+							Margin="1"
+							VerticalAlignment="Center" 
+							HorizontalAlignment="Center">
+							<Grid>
+								<Path x:Name="CheckGlyph" Opacity="0" Fill="#9d8abf" Data="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z "/>
+							</Grid>
+						</Border>
+						<ContentPresenter
+							Grid.Column="1"
+							Name="ContentPresenter"
+							TextWrapping="Wrap"
+                            Focusable="False"
+                            Margin="2"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+							/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+
+		<!-- Unchecked PointerOver State -->
+		<Style Selector="^:pointerover">
+
+			<Style Selector="^ /template/ Border#PART_Border">
+				<Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}" />
+			</Style>
+
+			<!--<Style Selector="^ /template/ Path#CheckGlyph">
+				<Setter Property="Data" Value="F1 M 9.97498,1.22334L 4.6983,9.09834L 4.52164,9.09834L 0,5.19331L 1.27664,3.52165L 4.255,6.08833L 8.33331,1.52588e-005L 9.97498,1.22334 Z"/>
+			</Style>-->
+		</Style>
+
+		<Style Selector="^:checked">
+			<!-- Checked Normal State -->
+
+			<Style Selector="^ /template/ Path#CheckGlyph">
+				<Setter Property="Opacity" Value="1" />
+			</Style>
+		</Style>
+
+		<Style Selector="^:pressed /template/ Border#PART_Border">
+			<Setter Property="RenderTransform" Value="scale(0.93)" />
+		</Style>
+		
+	</ControlTheme>
+</ResourceDictionary>

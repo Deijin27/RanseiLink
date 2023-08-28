@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<Design.PreviewWith>
+		<Border Padding="20" Background="#171717">
+			<!-- Add Controls for Previewer Here -->
+			<StackPanel Spacing="20">
+				<TextBlock>Hello There</TextBlock>
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+    <!-- Add Resources Here -->
+	<ControlTheme x:Key="{x:Type TextBlock}" TargetType="TextBlock">
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}"/>
+	</ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,174 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="using:System"
+                    xmlns:converters="using:Avalonia.Controls.Converters"
+                    x:ClassModifier="internal">
+	<Design.PreviewWith>
+		<Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+			<StackPanel Spacing="20">
+				<ButtonSpinner Content="Right spinner" />
+				<ButtonSpinner ButtonSpinnerLocation="Left"
+							   Content="Left spinner" />
+				<ButtonSpinner BorderThickness="2"
+							   BorderBrush="Blue"
+							   Content="Right Border" />
+				<ButtonSpinner ButtonSpinnerLocation="Left"
+							   BorderThickness="2"
+							   BorderBrush="Blue"
+							   Content="Left Border" />
+				<ButtonSpinner Content="Right disabled"
+							   AllowSpin="False"/>
+				<ButtonSpinner ButtonSpinnerLocation="Left"
+							   Content="Left disabled"
+							   AllowSpin="False"/>
+				<ButtonSpinner ShowButtonSpinner="False"
+							   Content="Hide spinner" />
+				<ButtonSpinner Content="Error">
+					<DataValidationErrors.Error>
+						<sys:Exception>
+							<x:Arguments>
+								<x:String>Error</x:String>
+							</x:Arguments>
+						</sys:Exception>
+					</DataValidationErrors.Error>
+				</ButtonSpinner>
+			</StackPanel>
+		</Border>
+	</Design.PreviewWith>
+
+	<converters:MarginMultiplierConverter x:Key="ButtonSpinnerLeftThickness" Indent="1" Left="True" />
+	<converters:MarginMultiplierConverter x:Key="ButtonSpinnerRightThickness" Indent="1" Right="True" />
+	<StreamGeometry x:Key="ButtonSpinnerIncreaseButtonIcon">M0,9 L10,0 20,9 19,10 10,2 1,10 z</StreamGeometry>
+	<StreamGeometry x:Key="ButtonSpinnerDecreaseButtonIcon">M0,1 L10,10 20,1 19,0 10,8 1,0 z</StreamGeometry>
+
+	<ControlTheme x:Key="FluentButtonSpinnerRepeatButton" TargetType="RepeatButton">
+		<Setter Property="MinWidth" Value="18" />
+		<Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<ContentPresenter x:Name="PART_ContentPresenter"
+								  Background="{TemplateBinding Background}"
+								  BorderBrush="{TemplateBinding BorderBrush}"
+								  CornerRadius="{TemplateBinding CornerRadius}"
+								  BorderThickness="{TemplateBinding BorderThickness}"
+								  Content="{TemplateBinding Content}"
+								  ContentTemplate="{TemplateBinding ContentTemplate}"
+								  Padding="{TemplateBinding Padding}"
+								  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+								  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ButtonMouseOverBrush}" />
+			<!--<Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}" />-->
+		</Style>
+
+		<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+		</Style>
+
+		<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
+		</Style>
+
+	</ControlTheme>
+
+	<ControlTheme x:Key="{x:Type ButtonSpinner}" TargetType="ButtonSpinner">
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}" />
+		<Setter Property="Padding" Value="10, 0" />
+		<Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
+		<Setter Property="BorderThickness" Value="1" />
+		<Setter Property="CornerRadius" Value="2" />
+		<Setter Property="MinHeight" Value="20" />
+		<Setter Property="MinWidth" Value="60" />
+		<Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}" />
+		<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Focusable" Value="True"/>
+		<Setter Property="Template">
+			<ControlTemplate>
+				<DataValidationErrors>
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							CornerRadius="{TemplateBinding CornerRadius}"
+							MinHeight="{TemplateBinding MinHeight}">
+						<DockPanel>
+							<StackPanel Name="PART_SpinnerPanel"
+										DockPanel.Dock="Right"
+										Orientation="Horizontal"
+										IsVisible="{TemplateBinding ShowButtonSpinner}">
+								<RepeatButton Name="PART_IncreaseButton"
+											  Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+											  BorderBrush="{TemplateBinding BorderBrush}"
+											  CornerRadius="0"
+											  Margin="0,-1,0,-1"
+											  BorderThickness="0,1,0,1"
+											  VerticalAlignment="Stretch"
+											  VerticalContentAlignment="Center"
+											  Foreground="{TemplateBinding Foreground}"
+											  FontSize="{TemplateBinding FontSize}"
+											  MinWidth="18">
+									<PathIcon Height="9.5"
+								              Width="9.5"
+											  Data="{StaticResource UpArrowGeometry}" />
+								</RepeatButton>
+
+								<RepeatButton Name="PART_DecreaseButton"
+											  Theme="{StaticResource FluentButtonSpinnerRepeatButton}"
+											  BorderBrush="{TemplateBinding BorderBrush}"
+											  CornerRadius="0,2,2,0"
+											  BorderThickness="1,1,1,1"
+											  Margin="0,-1,-1,-1"
+											  VerticalAlignment="Stretch"
+											  VerticalContentAlignment="Center"
+											  Foreground="{TemplateBinding Foreground}"
+											  FontSize="{TemplateBinding FontSize}"
+											  MinWidth="18">
+									<PathIcon Height="9.5"
+								              Width="9.5"
+											  Data="{StaticResource DownArrowGeometry}" />
+								</RepeatButton>
+							</StackPanel>
+
+							<ContentPresenter Name="PART_ContentPresenter"
+											  ContentTemplate="{TemplateBinding ContentTemplate}"
+											  Content="{TemplateBinding Content}"
+											  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+											  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+											  Padding="{TemplateBinding Padding}" />
+						</DockPanel>
+					</Border>
+				</DataValidationErrors>
+			</ControlTemplate>
+		</Setter>
+		<Style Selector="^:left">
+			<Style Selector="^ /template/ StackPanel#PART_SpinnerPanel">
+				<Setter Property="DockPanel.Dock" Value="Left"/>
+			</Style>
+			<Style Selector="^ /template/ RepeatButton#PART_IncreaseButton">
+				<Setter Property="BorderThickness" Value="1,1,1,1"/>
+				<Setter Property="CornerRadius" Value="2,0,0,2"/>
+				<Setter Property="Margin" Value="-1,-1,0,-1"/>
+			</Style>
+			<Style Selector="^ /template/ RepeatButton#PART_DecreaseButton">
+				<Setter Property="BorderThickness" Value="0,1,0,1"/>
+				<Setter Property="CornerRadius" Value="0"/>
+				<Setter Property="Margin" Value="0,-1,0,-1"/>
+			</Style>
+		</Style>
+		<Style Selector="^:error">
+			<Setter Property="BorderBrush" Value="#8e5454" />
+
+			<Style Selector="^ /template/ RepeatButton">
+				<Setter	Property="Background" Value="#3d2929"/>
+			</Style>
+
+			<!--<Style Selector="^:pointerover">
+				<Setter Property="BorderBrush" Value="#bc6d6d" />
+			</Style>-->
+		</Style>
+	</ControlTheme>
+
+</ResourceDictionary>
