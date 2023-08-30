@@ -19,14 +19,14 @@ internal class MassAction
     public async Task Run(IPluginContext context)
     {
         _services = context.Services;
-        var optionService = context.Services.Get<IPluginService>();
+        var optionService = context.Services.Get<IAsyncPluginService>();
         options = new();
         if (!await optionService.RequestOptions(options))
         {
             return;
         }
 
-        var dialogService = context.Services.Get<IDialogService>();
+        var dialogService = context.Services.Get<IAsyncDialogService>();
 
         await dialogService.ProgressDialog(progress =>
         {

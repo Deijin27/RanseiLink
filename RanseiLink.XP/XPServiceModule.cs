@@ -14,7 +14,7 @@ public class XPServiceModule : IModule
     public void Load(IRegistrator builder)
     {
         builder.RegisterInstance(CreateDialogLocator());
-        builder.Register<IDialogService, DialogService>(Reuse.Singleton);
+        builder.Register<IAsyncDialogService, DialogService>(Reuse.Singleton);
 
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
@@ -34,7 +34,7 @@ public class XPServiceModule : IModule
                     mod,
                     context.Resolve<IModManager>(),
                     context.Resolve<IModPatchingService>(),
-                    context.Resolve<IDialogService>(),
+                    context.Resolve<IAsyncDialogService>(),
                     context.Resolve<ISettingService>(),
                     context.Resolve<IPluginLoader>(),
                     context.Resolve<IModServiceGetterFactory>()

@@ -15,7 +15,7 @@ internal static class DialogLocatorExtensions
     }
 }
 
-internal class DialogService : IDialogService
+internal class DialogService : IAsyncDialogService
 {
     private readonly IDialogLocator _locator;
     public DialogService(IDialogLocator locator)

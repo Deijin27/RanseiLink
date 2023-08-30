@@ -15,7 +15,7 @@ public class MainWindowViewModel : ViewModelBase
     private bool _backButtonVisible;
 
     public MainWindowViewModel(
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         IPluginLoader pluginLoader,
         IThemeService themeService,
         IModSelectionViewModel modSelectionViewModel,

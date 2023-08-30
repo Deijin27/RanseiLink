@@ -10,7 +10,7 @@ public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    public ModUpgradeViewModel(IDialogService dialogService, ISettingService settingService)
+    public ModUpgradeViewModel(IAsyncDialogService dialogService, ISettingService settingService)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();

@@ -20,7 +20,7 @@ public interface IModSelectionViewModel
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private bool _outdatedModsExist;
@@ -47,7 +47,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public ModSelectionViewModel(
         IModManager modManager,
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteManager fallbackManager,

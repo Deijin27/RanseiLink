@@ -51,14 +51,14 @@ internal class SoftlockChecker
         _moveRangeService = services.Get<IMoveRangeService>();
     }
 
-    private IDialogService _dialogService;
+    private IAsyncDialogService _dialogService;
 
     public async Task Run(IPluginContext context)
     {
         _reportBuilder = new();
         Init(context.Services);
         Validate();
-        _dialogService = context.Services.Get<IDialogService>();
+        _dialogService = context.Services.Get<IAsyncDialogService>();
         await NotifyUserIfNecessary();
     }
 

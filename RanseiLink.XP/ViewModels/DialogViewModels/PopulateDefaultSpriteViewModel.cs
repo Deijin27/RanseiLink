@@ -10,7 +10,7 @@ public class PopulateDefaultSpriteViewModel : ViewModelBase, IModalDialogViewMod
 {
     private readonly ISettingService _settingService;
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    public PopulateDefaultSpriteViewModel(IDialogService dialogService, ISettingService settingService)
+    public PopulateDefaultSpriteViewModel(IAsyncDialogService dialogService, ISettingService settingService)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();

@@ -40,10 +40,10 @@ public class PartialTransferPlugin : IPlugin
             DestinationMod = currentKey
         };
 
-        var dialogService = context.Services.Get<IDialogService>();
+        var dialogService = context.Services.Get<IAsyncDialogService>();
 
 
-        var optionService = context.Services.Get<IPluginService>();
+        var optionService = context.Services.Get<IAsyncPluginService>();
         do
         {
             if (!await optionService.RequestOptions(options))

@@ -14,7 +14,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
     private readonly PatchSpritesSetting _patchSpritesSetting;
     private readonly ISettingService _settingService;
 
-    public ModCommitViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo)
+    public ModCommitViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo)
     {
         _settingService = settingService;
         _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();

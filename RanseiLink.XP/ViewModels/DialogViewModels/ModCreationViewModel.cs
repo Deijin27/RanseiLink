@@ -10,7 +10,7 @@ public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
     private readonly ISettingService _settingService;
-    public ModCreationViewModel(IDialogService dialogService, ISettingService settingService)
+    public ModCreationViewModel(IAsyncDialogService dialogService, ISettingService settingService)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();

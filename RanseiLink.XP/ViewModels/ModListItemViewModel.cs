@@ -23,7 +23,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
     private readonly IModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IModPatchingService _modPatcher;
@@ -33,7 +33,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         ModInfo mod,
         IModManager modManager,
         IModPatchingService modPatcher,
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory)

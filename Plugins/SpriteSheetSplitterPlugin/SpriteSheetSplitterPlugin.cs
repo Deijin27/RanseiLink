@@ -15,12 +15,12 @@ namespace SpriteSheetSplitterPlugin;
 [Plugin("Sprite Sheet Splitter", "Deijin", "1.2")]
 public class SpriteSheetSplitterPlugin : IPlugin
 {
-    private IDialogService _dialogService;
-    private IPluginService _pluginService;
+    private IAsyncDialogService _dialogService;
+    private IAsyncPluginService _pluginService;
     public async Task Run(IPluginContext context)
     {
-        _dialogService ??= context.Services.Get<IDialogService>();
-        _pluginService ??= context.Services.Get<IPluginService>();
+        _dialogService ??= context.Services.Get<IAsyncDialogService>();
+        _pluginService ??= context.Services.Get<IAsyncPluginService>();
 
         var result = await _dialogService.ShowMessageBox(new MessageBoxSettings(
             "Split or Create?",

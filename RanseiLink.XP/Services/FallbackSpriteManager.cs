@@ -20,11 +20,11 @@ public interface IFallbackSpriteManager
 
 public class FallbackSpriteManager : IFallbackSpriteManager
 {
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly IFallbackDataProvider _fallbackDataProvider;
 
-    public FallbackSpriteManager(IDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider)
+    public FallbackSpriteManager(IAsyncDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider)
     {
         _dialogService = dialogService;
         _settingService = settingService;

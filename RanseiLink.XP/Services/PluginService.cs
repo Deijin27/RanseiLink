@@ -4,7 +4,7 @@ using RanseiLink.XP.Views;
 using System.Threading.Tasks;
 
 namespace RanseiLink.XP.Services;
-public class PluginService : IPluginService
+public class PluginService : IAsyncPluginService
 {
     private readonly IPluginFormLoader _pluginFormLoader;
     public PluginService(IPluginFormLoader pluginFormLoader)

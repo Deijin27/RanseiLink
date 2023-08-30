@@ -11,8 +11,8 @@ namespace RanseiLink.XP.ViewModels;
 
 public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
-    private readonly IDialogService _dialogService;
-    public ModImportViewModel(IDialogService dialogService)
+    private readonly IAsyncDialogService _dialogService;
+    public ModImportViewModel(IAsyncDialogService dialogService)
     {
         _dialogService = dialogService;
         ModDropHandler = new ModDropHandler();

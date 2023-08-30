@@ -11,9 +11,9 @@ public class DisableEventsPlugin : IPlugin
 {
     public async Task Run(IPluginContext context)
     {
-        var dialogService = context.Services.Get<IDialogService>();
+        var dialogService = context.Services.Get<IAsyncDialogService>();
 
-        var optionService = context.Services.Get<IPluginService>();
+        var optionService = context.Services.Get<IAsyncPluginService>();
         var options = new DisableEventsOptionForm();
         if (!await optionService.RequestOptions(options))
         {

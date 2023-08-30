@@ -12,14 +12,14 @@ public class RandomizerPlugin : IPlugin
     {
         var randomizer = new Randomizer();
 
-        var optionService = context.Services.Get<IPluginService>();
+        var optionService = context.Services.Get<IAsyncPluginService>();
         var options = new RandomizationOptionForm();
         if (!await optionService.RequestOptions(options))
         {
             return;
         }
 
-        var dialogService = context.Services.Get<IDialogService>();
+        var dialogService = context.Services.Get<IAsyncDialogService>();
 
         await dialogService.ProgressDialog(progress =>
         {

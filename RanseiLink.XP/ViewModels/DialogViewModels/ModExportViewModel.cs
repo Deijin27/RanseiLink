@@ -10,7 +10,7 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
-    public ModExportViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo)
+    public ModExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo)
     {
         _settingService = settingService;
         _recentExportModFolderSetting = settingService.Get<RecentExportModFolderSetting>();
