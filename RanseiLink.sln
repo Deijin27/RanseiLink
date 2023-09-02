@@ -52,12 +52,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.StandaloneModelV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.XP", "RanseiLink.XP\RanseiLink.XP.csproj", "{214763BB-AB00-4658-85A2-993E45A84F2D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Build", "build\RanseiLink.Build.csproj", "{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -8,12 +8,19 @@
 	<Authors>Deijin</Authors>
 	<VersionPrefix>5.5</VersionPrefix>
 	<VersionSuffix></VersionSuffix>
+	<AssemblyName>RanseiLink</AssemblyName>
+	<ApplicationIcon>Assets\ranseilink-logo.ico</ApplicationIcon>
   </PropertyGroup>
-  <ItemGroup>
+
+	<ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
     <None Remove="Assets\ranseilink-logo.ico" />
   </ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Assets\ranseilink-logo.ico" />
+	</ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.
 	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
@@ -30,7 +37,6 @@
     <PackageReference Include="DryIoc.dll" Version="5.4.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\RandomizerPlugin\RandomizerPlugin.csproj" />
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>
