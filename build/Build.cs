@@ -63,6 +63,8 @@ class Build : NukeBuild
             const string mac_x64 = "osx-x64";
             const string linux_x64 = "linux-x64";
 
+            PublishConsole();
+            PublishWpfWindows(windows_x64);
             PublishWindows(windows_x64);
             PublishLinux(linux_x64);
             PublishMac(mac_x64);
@@ -70,13 +72,52 @@ class Build : NukeBuild
 
     AbsolutePath GetOutput(string version, string runtime)
     {
-        return ArtifactsDirectory / $"{RanseiLink}-{version}-{runtime}";;
-}
+        return ArtifactsDirectory / $"{RanseiLink}-XP-{version}-{runtime}";
+    }
+
+    private void PublishConsole()
+    {
+        var proj = Solution.RanseiLink_Console;
+        var version = GetVersion(proj);
+        var output = ArtifactsDirectory / $"{RanseiLink}-Console-{version}";
+
+        DotNetTasks.DotNetPublish(_ => _
+            .SetProject(proj)
+            .SetConfiguration(Configuration.Release)
+            .SetSelfContained(false)
+            .SetOutput(output)
+            .SetProperty("DebugType", "None")
+            .SetProperty("DebugSymbols", "false")
+        );
+        ZipFile.CreateFromDirectory(output, output + ".zip");
+    }
+
+    private void PublishWpfWindows(string runtime)
+    {
+        var proj = Solution.RanseiLink_Windows;
+        var version = GetVersion(proj);
+        var output = ArtifactsDirectory / $"{RanseiLink}-Windows-{version}";
+
+        DotNetTasks.DotNetPublish(_ => _
+            .SetProject(proj)
+            .SetConfiguration(Configuration.Release)
+            .SetRuntime(runtime)
+            .SetSelfContained(true)
+            .SetPublishSingleFile(true)
+            .SetOutput(output)
+            .SetProperty("DebugType", "None")
+            .SetProperty("DebugSymbols", "false")
+            .SetProperty("IncludeNativeLibrariesForSelfExtract", "true")
+        );
+        var exe = output / $"{RanseiLink}.Windows.exe";
+        exe.RenameWithoutExtension($"{RanseiLink}-5.5");
+        ZipFile.CreateFromDirectory(output, output + ".zip");
+    }
 
     private void PublishWindows(string runtime)
     {
         var proj = Solution.RanseiLink_XP;
-        var version = GetVersion(Solution.RanseiLink_XP);
+        var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
 
         DotNetTasks.DotNetPublish(_ => _
@@ -98,7 +139,7 @@ class Build : NukeBuild
     private void PublishLinux(string runtime)
     {
         var proj = Solution.RanseiLink_XP;
-        var version = GetVersion(Solution.RanseiLink_XP);
+        var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
 
         DotNetTasks.DotNetPublish(_ => _
@@ -120,7 +161,7 @@ class Build : NukeBuild
     private void PublishMac(string runtime)
     {
         var proj = Solution.RanseiLink_XP;
-        var version = GetVersion(Solution.RanseiLink_XP);
+        var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
         var appFolder = output / $"{RanseiLink}.app";
 
