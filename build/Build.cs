@@ -3,6 +3,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 using System.Xml;
 using Microsoft.Build.Tasks;
 using Nuke.Common;
@@ -68,7 +70,30 @@ class Build : NukeBuild
             PublishWindows(windows_x64);
             PublishLinux(linux_x64);
             PublishMac(mac_x64);
+            GetHashes();
         });
+
+    private void GetHashes()
+    {
+        using var sw = new StreamWriter(ArtifactsDirectory / "hashes.md");
+        sw.WriteLine("## SHA256 Hashes");
+        sw.WriteLine();
+        foreach (var zip in ArtifactsDirectory.GetFiles("*.zip"))
+        {
+            var hash = GetSha256Hash(zip);
+            sw.WriteLine($"- {zip.Name}: `{hash}`");
+        }
+    }
+
+    private string GetSha256Hash(AbsolutePath path)
+    {
+        Assert.True(path.FileExists());
+
+        using var md5 = SHA256.Create();
+        using var stream = File.OpenRead(path);
+        var hash = md5.ComputeHash(stream);
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+    }
 
     AbsolutePath GetOutput(string version, string runtime)
     {
