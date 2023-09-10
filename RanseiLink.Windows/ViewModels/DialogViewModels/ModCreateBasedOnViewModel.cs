@@ -6,6 +6,7 @@ public class ModCreateBasedOnViewModel : ViewModelBase, IModalDialogViewModel<bo
 {
     public ModCreateBasedOnViewModel(ModInfo baseMod)
     {
+        BaseMod = baseMod;
         ModInfo = new ModInfo() { Name = baseMod.Name, Version = baseMod.Version, Author = baseMod.Author };
     }
 
@@ -15,6 +16,8 @@ public class ModCreateBasedOnViewModel : ViewModelBase, IModalDialogViewModel<bo
     {
         Result = result;
     }
+
+    public ModInfo BaseMod { get; }
 
     public ModInfo ModInfo { get; }
 
