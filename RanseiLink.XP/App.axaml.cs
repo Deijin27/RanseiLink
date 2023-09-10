@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Styling;
 using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
@@ -9,10 +8,8 @@ using RanseiLink.PluginModule;
 using RanseiLink.XP.Services;
 using RanseiLink.XP.ViewModels;
 using RanseiLink.XP.Views;
-using System.Diagnostics;
-using System;
 using System.Reflection;
-using System.Threading.Tasks;
+using RanseiLink.Core.Settings;
 
 namespace RanseiLink.XP;
 public partial class App : Application
@@ -41,7 +38,7 @@ public partial class App : Application
             // Update Theme to match setting, this is done in construction
             builder.Resolve<IThemeService>();
 
-            desktop.MainWindow = MainWindow = new MainWindow
+            desktop.MainWindow = MainWindow = new MainWindow(builder.Resolve<ISettingService>())
             {
                 DataContext = builder.Resolve<MainWindowViewModel>(),
             };

@@ -64,11 +64,10 @@
 						<ComboBoxItem Content="Pikachu39"/>
 						<ComboBoxItem Content="Pikachu40"/>
 					</ComboBox>
-					<TextBox>Hello there</TextBox>
-					<NumericUpDown Value="420"/>
-					<CheckBox >Hello There</CheckBox>
-					<Button Command="{Binding UpgradeOutdatedModsCommand}">
-						<!--Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVis}}"-->
+					<TextBox>Pika pika pikachu</TextBox>
+					<NumericUpDown Value="100"/>
+					<CheckBox >Pikachuuuu</CheckBox>
+					<Button Command="{Binding UpgradeOutdatedModsCommand}" IsVisible="{Binding OutdatedModsExist}">
 						<TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
 							Upgrade Old Mods<LineBreak/>
 							<Run Classes="small">Some mods are outdated. Click here to upgrade them to the latest version and they will appear in the list.</Run>

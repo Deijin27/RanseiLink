@@ -8,7 +8,6 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
 	<Application.Resources>
-		
 	</Application.Resources>
     <Application.Styles>
         <fluent:FluentTheme />

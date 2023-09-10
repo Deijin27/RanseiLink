@@ -16,8 +16,8 @@
 			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 				<TextBlock Text="Drop a folder to&#x0a;export to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 				<ContentPresenter Height="50" ContentTemplate="{StaticResource LoadRomIcon}"/>
-				<TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
-				<Button Command="{Binding FilePickerCommand}" Width="150" Margin="10,0,10,0">Or use folder picker</Button>
+				<TextBlock Text="{Binding Folder, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
+				<Button Command="{Binding FolderPickerCommand}" Width="150" Margin="10,0,10,0">Or use folder picker</Button>
 			</StackPanel>
 		</Grid>
 		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
