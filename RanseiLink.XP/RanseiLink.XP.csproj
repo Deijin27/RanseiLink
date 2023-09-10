@@ -44,6 +44,9 @@
     <Compile Update="Dialogs\LoadingDialog.axaml.cs">
       <DependentUpon>LoadingDialog.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Dialogs\PopulateDefaultSpriteDialog.axaml.cs">
+      <DependentUpon>PopulateDefaultSpriteDialog.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Dialogs\ModCreateBasedOnDialog.axaml.cs">
       <DependentUpon>ModCreateBasedOnDialog.axaml</DependentUpon>
     </Compile>

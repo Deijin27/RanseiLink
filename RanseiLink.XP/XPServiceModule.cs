@@ -55,7 +55,7 @@ public class XPServiceModule : IModule
         //locator.Register<ModifyMapDimensionsDialog, ModifyMapDimensionsViewModel>();
         locator.Register<ModImportDialog, ModImportViewModel>();
         locator.Register<ModUpgradeDialog, ModUpgradeViewModel>();
-        //locator.Register<PopulateDefaultSpriteDialog, PopulateDefaultSpriteViewModel>();
+        locator.Register<PopulateDefaultSpriteDialog, PopulateDefaultSpriteViewModel>();
         //locator.Register<SimplifyPaletteDialog, SimplifyPaletteViewModel>();
 
         return locator;

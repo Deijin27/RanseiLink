@@ -20,17 +20,13 @@
 				<Button Command="{Binding FilePickerCommand}" Width="150" Margin="10,0,10,0">Or use folder picker</Button>
 			</StackPanel>
 		</Grid>
-		<Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
-				<Button Width="100" Content="Export" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
-				<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
-			</StackPanel>
-		</Grid>
-		<Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
-			<StackPanel Margin="10">
-				<TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Export mod</TextBlock>
-				<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
-			</StackPanel>
-		</Border>
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
+			<Button Width="100" Content="Export" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
+		</StackPanel>
+		<StackPanel Margin="10">
+			<TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Export mod</TextBlock>
+			<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
+		</StackPanel>
 	</DockPanel>
 </Window>

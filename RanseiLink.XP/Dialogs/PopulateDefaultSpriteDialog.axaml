@@ -6,29 +6,30 @@
 		xmlns:dd="clr-namespace:RanseiLink.XP.DragDrop"
 		xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
 		Height="225" Width="550"
-        x:Class="RanseiLink.XP.Dialogs.ModCommitDialog"
+        x:Class="RanseiLink.XP.Dialogs.PopulateDefaultSpriteDialog"
 		Classes="dialog"
-        Title="Apply Mod to Rom">
+        Title="Populate Graphics Defaults">
 	<DockPanel>
 		<Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}"
 		  dd:DragDrop.IsDropTarget="True"
 		  dd:DragDrop.DropHandler="{Binding RomDropHandler}">
 			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-				<TextBlock Text="Drop the rom you&#x0a;want to write to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+				<TextBlock Text="Drop an unchanged copy&#x0a;of the rom here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
 				<ContentPresenter Height="50" ContentTemplate="{StaticResource LoadRomIcon}"/>
 				<TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="40"/>
 				<Button Command="{Binding FilePickerCommand}" Width="150" Margin="10,0,10,0">Or use file picker</Button>
 			</StackPanel>
 		</Grid>
 		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
-			<Button Width="100" Content="Apply" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+			<Button Width="100" Content="Populate" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
 			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
 		</StackPanel>
 		<StackPanel Margin="20" Spacing="10">
-			<TextBlock FontSize="18" FontWeight="DemiBold">Apply mod to rom</TextBlock>
-			<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
-			<CheckBox Content="Include sprites in patch" IsChecked="{Binding IncludeSprites}"
-					  ToolTip.Tip="If you change lots of sprites, you can speed up the patches by not including them every time."/>
+			<TextBlock FontSize="18" FontWeight="DemiBold">Populate Graphics Defaults</TextBlock>
+			<TextBlock TextWrapping="Wrap">
+				A rom is necessary to provide the default images to use in mods.
+				You can then modify images in your mods
+			</TextBlock>
 		</StackPanel>
 	</DockPanel>
 </Window>
