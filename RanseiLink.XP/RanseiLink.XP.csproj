@@ -7,7 +7,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	<Authors>Deijin</Authors>
 	<VersionPrefix>6.0</VersionPrefix>
-	<VersionSuffix>alpha</VersionSuffix>
+	<VersionSuffix>alpha1</VersionSuffix>
 	<AssemblyName>RanseiLink</AssemblyName>
 	<ApplicationIcon>Assets\ranseilink-logo.ico</ApplicationIcon>
   </PropertyGroup>
