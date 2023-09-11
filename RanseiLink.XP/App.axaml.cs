@@ -17,6 +17,7 @@ public partial class App : Application
     public static readonly string Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
 
     public static MainWindow MainWindow { get; private set; }
+    public static ISettingService SettingService { get; private set; }   
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -38,7 +39,8 @@ public partial class App : Application
             // Update Theme to match setting, this is done in construction
             builder.Resolve<IThemeService>();
 
-            desktop.MainWindow = MainWindow = new MainWindow(builder.Resolve<ISettingService>())
+            SettingService = builder.Resolve<ISettingService>();
+            desktop.MainWindow = MainWindow = new MainWindow()
             {
                 DataContext = builder.Resolve<MainWindowViewModel>(),
             };

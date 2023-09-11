@@ -6,8 +6,8 @@
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	<Authors>Deijin</Authors>
-	<VersionPrefix>5.5</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
+	<VersionPrefix>6.0</VersionPrefix>
+	<VersionSuffix>alpha</VersionSuffix>
 	<AssemblyName>RanseiLink</AssemblyName>
 	<ApplicationIcon>Assets\ranseilink-logo.ico</ApplicationIcon>
   </PropertyGroup>

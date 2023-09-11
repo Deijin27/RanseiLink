@@ -7,9 +7,9 @@ public partial class MainWindow : Window
 {
     private readonly ISettingService _settingService;
 
-    public MainWindow(ISettingService settingService)
+    public MainWindow()
     {
-        _settingService = settingService;
+        _settingService = App.SettingService;
         InitializeComponent();
         Title = "RanseiLink XP " + App.Version;
 

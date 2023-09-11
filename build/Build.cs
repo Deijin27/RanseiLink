@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
@@ -65,13 +67,71 @@ class Build : NukeBuild
             const string mac_x64 = "osx-x64";
             const string linux_x64 = "linux-x64";
 
-            PublishConsole();
-            PublishWpfWindows(windows_x64);
-            PublishWindows(windows_x64);
+            //PublishConsole();
+            //PublishWpfWindows(windows_x64);
+            //PublishWindows(windows_x64);
             PublishLinux(linux_x64);
-            PublishMac(mac_x64);
+            //PublishMac(mac_x64);
             GetHashes();
         });
+
+
+    /// <summary>
+    /// Note: this actually seems to be unnecessary when I tested with wsl the file already has this permission
+    /// But let's do it just in case anyway.
+    /// </summary>
+    private void GiveUnixExecutePermission(AbsolutePath path)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            // TODO: should validate that wsl is installed somehow
+            using (var wd = path.Parent.SwitchWorkingDirectory())
+            {
+                // Switch working directory because the commands don't seem to like drive identifiers
+                // (may just be a result of the funky way we're running this command)
+                // Run the wsl command from outside of the linux file system using -e
+                var p = Process.Start("wsl", $"-e chmod +x \"{path.Name}\"");
+                p.WaitForExit();
+            }
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            var p = Process.Start("/bin/bash/", $"chmod +x \"{path}\"");
+            p.WaitForExit();
+        }
+        else
+        {
+            throw new Exception("I don't know how to chmod+x on this platform yet :(");
+        }
+
+    }
+
+    /// <summary>
+    /// If running on windows. Recursively zip directory using wsl to preserve permissions
+    /// c# zipping only preserves the execute permissions if ran from the linux environment it seems
+    /// therefore this is necessary on windows.
+    /// 
+    /// If not on windows this does a regular zipfile
+    /// </summary>
+    /// <remarks>
+    /// Requires running in wsl: sudo apt install zip
+    /// </remarks>
+    private void ZipPreservePermissions(AbsolutePath dirPath)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            using (var wd = dirPath.Parent.SwitchWorkingDirectory())
+            {
+                var p = Process.Start("wsl", $"-e zip -r {dirPath.Name}.zip {dirPath.Name}");
+                p.WaitForExit();
+            }
+        }
+        else
+        {
+            // Assuming this works properly in unix systems, haven't actually tested it yet
+            ZipFile.CreateFromDirectory(dirPath, dirPath + ".zip");
+        }
+    }
 
     private void GetHashes()
     {
@@ -135,7 +195,7 @@ class Build : NukeBuild
             .SetProperty("IncludeNativeLibrariesForSelfExtract", "true")
         );
         var exe = output / $"{RanseiLink}.Windows.exe";
-        exe.RenameWithoutExtension($"{RanseiLink}-5.5");
+        exe.RenameWithoutExtension($"{RanseiLink}-{version}");
         ZipFile.CreateFromDirectory(output, output + ".zip");
     }
 
@@ -157,7 +217,7 @@ class Build : NukeBuild
             .SetProperty("IncludeNativeLibrariesForSelfExtract", "true")
         );
         var exe = output / $"{RanseiLink}.exe";
-        exe.RenameWithoutExtension($"{RanseiLink}-5.5");
+        exe.RenameWithoutExtension($"{RanseiLink}-{version}");
         ZipFile.CreateFromDirectory(output, output + ".zip");
     }
 
@@ -179,8 +239,13 @@ class Build : NukeBuild
             .SetProperty("IncludeNativeLibrariesForSelfExtract", "true")
         );
         var exe = output / RanseiLink;
-        exe.RenameWithoutExtension($"{RanseiLink}-5.5");
-        ZipFile.CreateFromDirectory(output, output + ".zip");
+        var newExe = output / $"{RanseiLink}-{version}";
+        exe.RenameWithoutExtension($"{RanseiLink}-{version}");
+
+        // Give execute permission
+        GiveUnixExecutePermission(newExe);
+
+        ZipPreservePermissions(output);
     }
 
     private void PublishMac(string runtime)
@@ -211,7 +276,12 @@ class Build : NukeBuild
         var str = ReadResourceText("Resources.Info.plist");
         str = str.Replace("{version}", version);
         File.WriteAllText(appFolder / "Info.plist", str);
-        ZipFile.CreateFromDirectory(output, output + ".zip");
+
+        // Give execute permission
+        var exe = buildResultOutput / RanseiLink;
+        GiveUnixExecutePermission(exe);
+
+        ZipPreservePermissions(output);
     }
 
     private static string GetVersion(Project project)
