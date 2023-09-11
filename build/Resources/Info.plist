@@ -8,10 +8,10 @@
         <string>6.0</string>
 
         <key>CFBundleIconFile</key>
-        <string>RanseiLink</string>
+        <string>RanseiLink.icns</string>
 
         <key>CFBundleName</key>
-        <string>RanseiLink.icns</string>
+        <string>RanseiLink</string>
         <key>CFBundleExecutable</key>
         <string>RanseiLink</string>
         <key>CFBundleIdentifier</key>
@@ -23,7 +23,7 @@
         <string>{version}</string>
 
         <key>NSHighResolutionCapable</key>
-        <string>True</string>
+		<true/>
 
     </dict>
 </plist>

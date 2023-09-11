@@ -63,15 +63,21 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            const string windows_x64 = "win-x64";
+            const string win_x64 = "win-x64";
+            const string win_arm64 = "win-arm64";
             const string mac_x64 = "osx-x64";
+            const string mac_arm64 = "osx-arm64";
             const string linux_x64 = "linux-x64";
+            const string linux_arm64 = "linux-arm64";
 
-            //PublishConsole();
-            //PublishWpfWindows(windows_x64);
-            //PublishWindows(windows_x64);
+            PublishConsole();
+            PublishWpfWindows(win_x64);
+            PublishWindows(win_x64);
+            PublishWindows(win_arm64);
             PublishLinux(linux_x64);
-            //PublishMac(mac_x64);
+            PublishLinux(linux_arm64);
+            PublishMac(mac_x64);
+            PublishMac(mac_arm64);
             GetHashes();
         });
 
