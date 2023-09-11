@@ -5,7 +5,7 @@
         mc:Ignorable="d"
 		Classes="dialog"
 		xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
-		Height="200" Width="390"
+		Height="200" Width="450"
         x:Class="RanseiLink.XP.Dialogs.ModDeleteDialog"
         Title="Delete Mod">
 	<DockPanel>
@@ -13,8 +13,8 @@
 			<Button Width="100" Content="Delete" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
 			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
 		</StackPanel>
-		<StackPanel Margin="10">
-			<TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Are you sure you want to delete this mod?</TextBlock>
+		<StackPanel Margin="20" Spacing="10">
+			<TextBlock FontSize="18" FontWeight="DemiBold">Are you sure you want to delete this mod?</TextBlock>
 			<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
 		</StackPanel>
 	</DockPanel>
