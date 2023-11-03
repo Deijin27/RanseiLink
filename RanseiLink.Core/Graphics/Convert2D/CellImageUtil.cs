@@ -236,7 +236,28 @@ public static class CellImageUtil
             Color.Transparent
         };
 
+        var pixelArray = SharedPaletteMultiBankFromImage(image, banks, workingPalette, blockSize, tiled, format);
+        workingPalette[0] = Color.Magenta;
+
+        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
+    }
+
+    public static byte[] SharedPaletteMultiBankFromImage(Image<Rgba32> image, IList<Cell[]> banks, List<Rgba32> workingPalette, uint blockSize, bool tiled, TexFormat format)
+    {
+        if (banks.Count == 0)
+        {
+            throw new Exception("Can't load image with no cell banks");
+        }
         var workingPixels = new List<byte>();
+
+        if (banks.Count == 1)
+        {
+            SharedPaletteBankFromImage(workingPixels, workingPalette, image, banks[0], blockSize, tiled, format);
+            return workingPixels.ToArray();
+        }
+
+        var width = image.Width;
+        var height = image.Height;
 
         var cumulativeHeight = 0;
         foreach (var bank in banks)
@@ -254,9 +275,8 @@ public static class CellImageUtil
         }
 
         var pixelArray = workingPixels.ToArray();
-        workingPalette[0] = Color.Magenta;
 
-        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
+        return pixelArray;
     }
 
 }

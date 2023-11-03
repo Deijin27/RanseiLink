@@ -9,7 +9,8 @@ namespace RanseiLink.Core.Resources
     public enum MetaMiscItemId
     {
         NCER,
-        NSCR
+        NSCR,
+        IconInstS
     }
 
     public class MiscConstants : GraphicsInfo
@@ -25,7 +26,8 @@ namespace RanseiLink.Core.Resources
                 var metaId = Enum.Parse<MetaMiscItemId>(miscItemElement.Name.ToString());
                 return metaId switch
                 {
-                    MetaMiscItemId.NSCR or MetaMiscItemId.NCER => new G2DRMiscItem(metaId, id, miscItemElement),
+                    MetaMiscItemId.NSCR or MetaMiscItemId.NCER => (MiscItem)new G2DRMiscItem(metaId, id, miscItemElement),
+                    MetaMiscItemId.IconInstS => new BuildingIconSmallMiscItem(metaId, id, miscItemElement),
                     _ => throw new Exception("Invalid misc item element in GraphicsInfo.xml"),
                 };
             }).ToArray();
@@ -86,17 +88,11 @@ namespace RanseiLink.Core.Resources
     public class BuildingIconSmallMiscItem : MiscItem
     {
         public string ContainingFolder { get; }
-        public string Link { get; }
-
-        public string LinkFolder { get; }
         public override string PngFile { get; }
 
         public BuildingIconSmallMiscItem(MetaMiscItemId metaId, int id, XElement element) : base(metaId, id, element)
         {
-            Link = element.Attribute("LinkPattern")!.Value;
-            LinkFolder = Path.Combine(Path.GetDirectoryName(Link)!, Path.GetFileNameWithoutExtension(Link) + "-Unpacked");
-            ContainingFolder = Path.GetDirectoryName(Link)!;
-
+            ContainingFolder = element.Attribute("ContainingFolder")!.Value;
             PngFile = Path.Combine(ContainingFolder, "Image.png");
         }
     }

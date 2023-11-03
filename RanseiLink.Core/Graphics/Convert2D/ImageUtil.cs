@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,10 @@ public static class ImageUtil
 
     public static Image<Rgba32> SpriteToImage(SpriteImageInfo imageInfo)
     {
+        if (imageInfo.Width <= 0 || imageInfo.Height <= 0)
+        {
+            throw new ArgumentException($"Image width and height provied to {nameof(SpriteToImage)} must be greater than zero");
+        }
         var pointGetter = PointUtil.DecidePointGetter(imageInfo.IsTiled);
         var img = new Image<Rgba32>(imageInfo.Width, imageInfo.Height);
 
@@ -36,7 +41,7 @@ public static class ImageUtil
 
                         img[point.X, point.Y] = color;
                     }
-                    
+
                     break;
                 }
             case TexFormat.A3I5:
@@ -55,7 +60,7 @@ public static class ImageUtil
 
                         img[point.X, point.Y] = color;
                     }
-                    
+
                     break;
                 }
             case TexFormat.A5I3:
@@ -73,7 +78,7 @@ public static class ImageUtil
 
                         img[point.X, point.Y] = color;
                     }
-                    
+
                     break;
                 }
             case TexFormat.Direct:
@@ -218,7 +223,7 @@ public static class ImageUtil
                             pixels[indexGetter(new Point(x, y), width)] = (byte)pltIndex;
                         }
                     }
-                    
+
                     break;
                 }
             case TexFormat.Direct:
@@ -266,5 +271,37 @@ public static class ImageUtil
             }
         }
         return (hasTransparency, false);
+    }
+
+    /// <summary>
+    /// Creates a new images that is the <paramref name="images"/> vertically stacked.
+    /// The width of the resulting images is the same as the maximum of the constituent images.
+    /// </summary>
+    public static Image<TPixel> CombineImagesVertically<TPixel>(IReadOnlyCollection<Image<TPixel>> images) where TPixel : unmanaged, IPixel<TPixel>
+    {
+        int maxWidth = 0;
+        int totalHeight = 0;
+        foreach (var image in images)
+        {
+            maxWidth = Math.Max(maxWidth, image.Width);
+            totalHeight += image.Height;
+        }
+
+        var combinedImage = new Image<TPixel>(maxWidth, totalHeight);
+
+        combinedImage.Mutate(g =>
+        {
+            var cumulativeHeight = 0;
+            foreach (var image in images)
+            {
+                g.DrawImage(
+                    image: image,
+                    location: new Point(0, cumulativeHeight),
+                    opacity: 1
+                    );
+                cumulativeHeight += image.Height;
+            }
+        });
+        return combinedImage;
     }
 }

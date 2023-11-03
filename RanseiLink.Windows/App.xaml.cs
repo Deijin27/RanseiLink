@@ -45,11 +45,11 @@ public partial class App : Application
         modServiceGetter.AddModule(new CoreModServiceModule());
         modServiceGetter.AddModule(new View3DModServiceModule());
         modServiceGetter.AddModule(new WpfModServiceModule());
-        _dialogService = builder.Resolve<IDialogService>();
+        _dialogService = builder.Resolve<IDialogService>() ?? throw new Exception("Missing dialog service");
         builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 
-        _mainWindowViewModel = builder.Resolve<MainWindowViewModel>();
-        SettingService = builder.Resolve<ISettingService>();
+        _mainWindowViewModel = builder.Resolve<MainWindowViewModel>() ?? throw new Exception("Missing main window");
+        SettingService = builder.Resolve<ISettingService>() ?? throw new Exception("Missing setting service");
         
 
         base.OnStartup(e);

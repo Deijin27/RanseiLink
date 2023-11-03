@@ -51,4 +51,9 @@ public struct Rgb15 : IEquatable<Rgb15>
     {
         return ToUInt16();
     }
+
+    public override string ToString()
+    {
+        return $"Rgb15({R}, {G}, {B})";
+    }
 }

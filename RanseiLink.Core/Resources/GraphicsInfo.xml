@@ -204,17 +204,11 @@
 		<NCER Link="graphics/ikusa/minimap/04_00_parts_minimap22_00up.G2DR" PaletteCapacity="16"/>
 	</Misc>
 
-	<!--
-	These all use the same single palette stored in 00
-	So they need a custom loader
-	Probably one that just puts them all into a single image
-	
 	<Misc Id="IconInstS" DisplayName="Building Icon Small">
-		<NCER Link="graphics/strategy/icon_inst_s/03_05_parts_shisetsuicon_s_00.G2DR"/>
-		<NCER Link="graphics/strategy/icon_inst_s/03_05_parts_shisetsuicon_s_83.G2DR"/>
+		<IconInstS ContainingFolder="graphics/strategy/icon_inst_s"/>
 	</Misc>
 	
-	-->
+	
     
 	<!--
 	<Misc Id="Castlemap" DisplayName="Kingdom Internal Background">
