@@ -4,6 +4,7 @@ using System;
 
 namespace RanseiLink.Windows.ViewModels;
 
+[AttributeUsage(AttributeTargets.Class)]
 public class EditorModuleAttribute : Attribute
 {
 

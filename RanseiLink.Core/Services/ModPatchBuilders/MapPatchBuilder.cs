@@ -3,6 +3,7 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class MapPatchBuilder : IPatchBuilder
 {
     private readonly ModInfo _mod;

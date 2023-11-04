@@ -6,16 +6,22 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class GraphicsPatchBuilder : IPatchBuilder
 {
-    private readonly IEnumerable<IGraphicTypePatchBuilder> _builders;
+    private readonly Dictionary<MetaSpriteType, IGraphicTypePatchBuilder> _builders;
     private readonly IFallbackDataProvider _fallbackSpriteProvider;
     private readonly ModInfo _mod;
-    public GraphicsPatchBuilder(ModInfo mod, IEnumerable<IGraphicTypePatchBuilder> builders, IFallbackDataProvider fallbackSpriteProvider)
+    public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackDataProvider fallbackSpriteProvider)
     {
-        _builders = builders;
         _fallbackSpriteProvider = fallbackSpriteProvider;
         _mod = mod;
+
+        _builders = new();
+        foreach (var builder in builders)
+        {
+            _builders.Add(builder.Id, builder);
+        }
     }
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
@@ -32,10 +38,7 @@ public class GraphicsPatchBuilder : IPatchBuilder
 
         Parallel.ForEach(GraphicsInfoResource.All, gInfo =>
         {
-            foreach (var builder in _builders)
-            {
-                builder.GetFilesToPatch(filesToPatch, gInfo);
-            }
+            _builders[gInfo.MetaType].GetFilesToPatch(filesToPatch, gInfo);
         });
     }
 }

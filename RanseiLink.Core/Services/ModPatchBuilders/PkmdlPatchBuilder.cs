@@ -14,8 +14,11 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
 {
+    public MetaSpriteType Id => MetaSpriteType.PKMDL;
+
     private const int _numPokemon = 200;
     private const int _pokemonSpriteWidth = 32;
     private const int _pokemonSpriteHeight = 32;
@@ -34,11 +37,6 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)
     {
-        if (gInfo.MetaType != MetaSpriteType.PKMDL)
-        {
-            return;
-        }
-
         var pkmdlInfo = (PkmdlConstants)gInfo;
 
         var spriteFiles = _overrideSpriteProvider.GetAllSpriteFiles(pkmdlInfo.Type);

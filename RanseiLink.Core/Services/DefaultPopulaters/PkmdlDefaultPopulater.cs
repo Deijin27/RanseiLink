@@ -10,17 +10,15 @@ using System.Threading.Tasks;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 
+[DefaultPopulater]
 public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
 {
     private const int _pokemonSpriteWidth = 32;
 
+    public MetaSpriteType Id => MetaSpriteType.PKMDL;
+
     public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
     {
-        if (gInfo.MetaType != MetaSpriteType.PKMDL)
-        {
-            return;
-        }
-
         PkmdlConstants pkmdlInfo = (PkmdlConstants)gInfo;
 
         string texLink = Path.Combine(defaultDataFolder, pkmdlInfo.TEXLink);

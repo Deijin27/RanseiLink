@@ -4,14 +4,12 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 
+[DefaultPopulater]
 public class ScbgDefaultPopulater : IGraphicTypeDefaultPopulater
 {
+    public MetaSpriteType Id => MetaSpriteType.SCBG;
     public void ProcessExportedFiles(string defaultDataFolder, IGraphicsInfo gInfo)
     {
-        if (gInfo.MetaType != MetaSpriteType.SCBG)
-        {
-            return;
-        }
         var scbgInfo = (ScbgConstants)gInfo;
         string data = Path.Combine(defaultDataFolder, scbgInfo.Data);
         string info = Path.Combine(defaultDataFolder, scbgInfo.Info);

@@ -3,6 +3,7 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class MsgPatchBuilder : IPatchBuilder
 {
     private readonly IMsgService _msgService;

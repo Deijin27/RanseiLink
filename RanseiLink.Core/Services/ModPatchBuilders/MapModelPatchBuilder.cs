@@ -3,6 +3,7 @@ using System.IO;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class MapModelPatchBuilder : IPatchBuilder
 {
     private readonly IOverrideDataProvider _overrideProvider;

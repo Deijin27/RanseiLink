@@ -3,6 +3,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services.ModPatchBuilders;
+using System.Reflection;
 
 namespace RanseiLink.Core
 {
@@ -41,16 +42,25 @@ namespace RanseiLink.Core
 
             builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
 
-            builder.Register<IPatchBuilder, GraphicsPatchBuilder>(Reuse.Singleton);
-            builder.Register<IPatchBuilder, DataPatchBuilder>(Reuse.Singleton);
-            builder.Register<IPatchBuilder, MsgPatchBuilder>(Reuse.Singleton);
-            builder.Register<IPatchBuilder, MapPatchBuilder>(Reuse.Singleton);
-            builder.Register<IPatchBuilder, MapModelPatchBuilder>(Reuse.Singleton);
-
-            builder.Register<IGraphicTypePatchBuilder, StlPatchBuilder>(Reuse.Singleton);
-            builder.Register<IGraphicTypePatchBuilder, ScbgPatchBuilder>(Reuse.Singleton);
-            builder.Register<IGraphicTypePatchBuilder, PkmdlPatchBuilder>(Reuse.Singleton);
-            builder.Register<IGraphicTypePatchBuilder, MiscPatchBuilder>(Reuse.Singleton);
+            foreach (var type in GetType().Assembly.GetTypes())
+            {
+                if (type.IsAbstract || type.GetCustomAttribute<PatchBuilderAttribute>() == null)
+                {
+                    return;
+                }
+                if (typeof(IPatchBuilder).IsAssignableFrom(type))
+                {
+                    builder.Register(typeof(IPatchBuilder), type, Reuse.Singleton);
+                }
+                else if (typeof(IGraphicTypePatchBuilder).IsAssignableFrom(type))
+                {
+                    builder.Register(typeof(IGraphicTypePatchBuilder), type, Reuse.Singleton);
+                }
+                else if (typeof(IMiscItemPatchBuilder).IsAssignableFrom(type))
+                {
+                    builder.Register(typeof(IMiscItemPatchBuilder), type, Reuse.Singleton);
+                }
+            }
 
             builder.Register<IBannerService, BannerService>(Reuse.Singleton);
         }

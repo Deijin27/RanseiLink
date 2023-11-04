@@ -6,8 +6,11 @@ using System.Linq;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
+[PatchBuilder]
 public class StlPatchBuilder : IGraphicTypePatchBuilder
 {
+    public MetaSpriteType Id => MetaSpriteType.STL;
+
     private readonly IOverrideDataProvider _overrideSpriteProvider;
     private readonly string _graphicsProviderFolder;
     public StlPatchBuilder(ModInfo mod, IOverrideDataProvider overrideSpriteProvider)
