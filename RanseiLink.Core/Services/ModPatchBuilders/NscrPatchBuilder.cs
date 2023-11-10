@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Resources;
 using System;
 using System.Collections.Concurrent;
@@ -38,18 +39,7 @@ public class NscrPatchBuilder : IMiscItemPatchBuilder
         var nclr = NCLR.Load(nclrPath);
 
         // load up the png and replace provider data with new image data
-        var imageInfo = ImageUtil.SpriteFromPng(pngFile, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
-        ncgr.Pixels.Data = imageInfo.Pixels;
-        ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
-        ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
-
-        var newPalette = PaletteUtil.From32bitColors(imageInfo.Palette);
-        if (newPalette.Length > item.PaletteCapacity)
-        {
-            // this should not be hit because it should be filtered out by the palette simplifier
-            throw new Exception($"Invalid palette length for misc sprite {item.Id}");
-        }
-        newPalette.CopyTo(nclr.Palettes.Palette, 0);
+        NitroImageUtil.NcgrImport(ncgr, nclr, pngFile);
 
         // save the modified provider files
         ncgr.Save(ncgrPath);
