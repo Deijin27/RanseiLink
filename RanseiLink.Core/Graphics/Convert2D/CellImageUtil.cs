@@ -26,7 +26,7 @@ public static class CellImageUtil
         {
             int maxY = bank.Max(i => i.YOffset + i.Height);
             int maxX = bank.Max(i => i.XOffset + i.Width);
-            width = maxX + xShift; // maybe this is correct?
+            width = maxX + xShift;
             height = maxY + yShift;
         }
 
