@@ -13,6 +13,10 @@ public static class CellImageUtil
 {
     private static BankDimensions InferDimensions(Cell[] bank, int width = -1, int height = -1)
     {
+        if (bank.Length == 0)
+        {
+            return new BankDimensions(0, 0, 0, 0, width < 0 ? 1 : width, height < 0 ? 1 : height);
+        }
         int minY = bank.Min(i => i.YOffset);
         int yShift = minY < 0 ? -minY : 0;
         int minX = bank.Min(i => i.XOffset);
@@ -22,8 +26,8 @@ public static class CellImageUtil
         {
             int maxY = bank.Max(i => i.YOffset + i.Height);
             int maxX = bank.Max(i => i.XOffset + i.Width);
-            width = maxX - minX;
-            height = maxY - minY;
+            width = maxX + xShift; // maybe this is correct?
+            height = maxY + yShift;
         }
 
         return new BankDimensions(minX, minY, xShift, yShift, width, height);

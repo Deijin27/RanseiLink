@@ -2,7 +2,8 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "nsbtp generate \"C:\\Users\\Mia\\Desktop\\graphics\\model_pokemon\\POKEMON_PAC-Unpacked\\0000-Unpacked\\0002.xml\" --raw"
+      "commandLineArgs": "ncer extract 0002.ncer 0003.ncgr 0004.nclr -w 256 -e 120",
+      "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\strategy\\kuniimage2\\03_00_parts_kuniimage_00_up_anim-Unpacked"
     }
   }
 }

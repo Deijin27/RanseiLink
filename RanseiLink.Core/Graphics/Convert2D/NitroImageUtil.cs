@@ -21,9 +21,12 @@ public static class NitroImageUtil
         return (width, height);
     }
 
-    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr)
+    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1)
     {
-        var (width, height) = InferDimsTiled(ncgr, 8);
+        if (width < 0 || height < 0)
+        {
+            (width, height) = InferDimsTiled(ncgr, 8);
+        }
 
         return CellImageUtil.MultiBankToImage(
             banks: ncer.CellBanks.Banks,

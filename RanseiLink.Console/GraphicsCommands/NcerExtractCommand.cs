@@ -24,6 +24,12 @@ public class NcerExtractCommand : ICommand
     [CommandOption("destinationFile", 'd', Description = "Optional destination file; default is a file in the same location as the file.")]
     public string DestinationFile { get; set; }
 
+    [CommandOption("width", 'w', Description = "Explicit width of the image. By default this is inferred from the data, because cell images don't technically have a width and height.")]
+    public int Width { get; set; } = -1;
+
+    [CommandOption("height", 'e', Description = "Explicit height of the image. By default this is inferred from the data, because cell images don't technically have a width and height.")]
+    public int Height { get; set; } = -1;
+
     public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationFile == null)
@@ -34,7 +40,7 @@ public class NcerExtractCommand : ICommand
         var ncer = NCER.Load(Ncer);
         var ncgr = NCGR.Load(Ncgr);
         var nclr = NCLR.Load(Nclr);
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Width, Height);
         image.SaveAsPng(DestinationFile);
 
         return default;
