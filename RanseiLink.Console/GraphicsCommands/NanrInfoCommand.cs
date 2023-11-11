@@ -22,18 +22,21 @@ public class NanrInfoCommand : ICommand
         var nanr = NANR.Load(FilePath);
 
         var el = new XElement("AnimationBank",
-            new XElement("TFrames", nanr.AnimationBanks.TFrames),
+            new XAttribute("KeyFrameCount", nanr.AnimationBanks.KeyFrameCount),
             new XElement("Banks", nanr.AnimationBanks.Banks.Select(bank =>
                 new XElement("Bank",
                     new XElement("DataType", bank.DataType),
                     new XElement("Unknown1", bank.Unknown1),
                     new XElement("Unknown2", bank.Unknown2),
                     new XElement("Unknown3", bank.Unknown3),
-                    new XElement("Frames", bank.Frames.Select(frame =>
-                        new XElement("Frame", 
-                            new XElement("Unknown1", frame.Unknown1),
-                            new XElement("NumCell", frame.NumCell)
-            )))))));
+                    new XElement("KeyFrames", bank.KeyFrames.Select(frame =>
+                        new XElement("KeyFrame",
+                            new XAttribute("CellBank", frame.CellBank),
+                            new XAttribute("Duration", frame.Duration)
+                            
+                )))))),
+            new XElement("Labels", nanr.Labels.Names.Select(name => new XElement("Name", name)))
+            );
 
         console.Output.WriteLine(el.ToString());
 
