@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CliFx" Version="2.3.1" />
-    <PackageReference Include="DryIoc.dll" Version="5.4.1" />
-    <PackageReference Include="NLua" Version="1.6.2" />
+    <PackageReference Include="CliFx" Version="2.3.4" />
+    <PackageReference Include="DryIoc.dll" Version="5.4.2" />
+    <PackageReference Include="NLua" Version="1.6.3" />
   </ItemGroup>
 
   <ItemGroup>
