@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -282,57 +283,11 @@ public struct Cell
 
         // other
 
-        var size = CellSize(Shape, Scale);
+        var size = CellImageUtil.GetCellSize(Shape, Scale);
         Width = size.Width;
         Height = size.Height;
         CellId = 0;
 
-    }
-
-    private static Size CellSize(Shape shape, Scale scale)
-    {
-        switch (shape)
-        {
-            case Shape.Square:
-                switch (scale)
-                {
-                    case Scale.Small: return new Size(8, 8);
-                    case Scale.Medium: return new Size(16, 16);
-                    case Scale.Large: return new Size(32, 32);
-                    case Scale.XLarge: return new Size(64, 64);
-                    default: throw new ArgumentException($"Parameter {nameof(scale)} has invalid value {scale}");
-                }
-            case Shape.Wide: 
-                switch (scale)
-                {
-                    case Scale.Small: return new Size(16, 8);
-                    case Scale.Medium: return new Size(32, 8);
-                    case Scale.Large: return new Size(32, 16);
-                    case Scale.XLarge: return new Size(64, 32);
-                    default: throw new ArgumentException($"Parameter {nameof(scale)} has invalid value {scale}");
-                }
-            case Shape.Tall: 
-                switch (scale)
-                {
-                    case Scale.Small: return new Size(8, 16);
-                    case Scale.Medium: return new Size(8, 32);
-                    case Scale.Large: return new Size(16, 32);
-                    case Scale.XLarge: return new Size(32, 64);
-                    default: throw new ArgumentException($"Parameter {nameof(scale)} has invalid value {scale}");
-                }
-            default: throw new ArgumentException($"Parameter {nameof(shape)} has invalid value {shape}");
-        };
-    }
-
-    struct Size
-    {
-        public Size(int width, int height)
-        {
-            Width = width;
-            Height = height;
-        }
-        public int Width;
-        public int Height;
     }
 }
 

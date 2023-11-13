@@ -1,5 +1,6 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
+using System.Collections.Generic;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -21,7 +22,7 @@ public static class NitroImageUtil
         return (width, height);
     }
 
-    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1)
+    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1, bool debug = false)
     {
         if (width < 0 || height < 0)
         {
@@ -39,7 +40,40 @@ public static class NitroImageUtil
                 IsTiled: ncgr.Pixels.IsTiled,
                 Format: ncgr.Pixels.Format
                 ),
+            debug: debug
+            );
+    }
+
+    public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1)
+    {
+        return CellImageUtil.MultiBankToMultipleImages(
+            banks: ncer.CellBanks.Banks,
+            blockSize: ncer.CellBanks.BlockSize,
+            imageInfo: new SpriteImageInfo(
+                Pixels: ncgr.Pixels.Data,
+                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Width: width,
+                Height: height,
+                IsTiled: ncgr.Pixels.IsTiled,
+                Format: ncgr.Pixels.Format
+                ),
             debug: false
+            );
+    }
+
+    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> NcerToMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr)
+    {
+        return CellImageUtil.MultiBankToMultipleImageGroups(
+            banks: ncer.CellBanks.Banks,
+            blockSize: ncer.CellBanks.BlockSize,
+            imageInfo: new SpriteImageInfo(
+                Pixels: ncgr.Pixels.Data,
+                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Width: -1,
+                Height: -1,
+                IsTiled: ncgr.Pixels.IsTiled,
+                Format: ncgr.Pixels.Format
+                )
             );
     }
 

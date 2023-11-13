@@ -110,6 +110,8 @@ public class ABNK
         public uint BlockOffset_Anim;
         public uint BlockOffset_Frames;
         public uint BlockOffset_Cells;
+        public uint BlockOffset_Unknown;
+        public uint BlockOffset_UAAT;
 
         public SubHeader(BinaryReader br)
         {
@@ -118,11 +120,12 @@ public class ABNK
             BlockOffset_Anim = br.ReadUInt32();
             BlockOffset_Frames = br.ReadUInt32();
             BlockOffset_Cells = br.ReadUInt32();
-            var reserved = br.ReadUInt64();
-            if (reserved != 0)
+            BlockOffset_Unknown = br.ReadUInt32();
+            if (BlockOffset_Unknown != 0)
             {
-                throw new Exception("It isn't always zero !!! 0_0");
+                throw new Exception($"It isn't always zero !!! 0_0 (0x{BlockOffset_Unknown:X})");
             }
+            BlockOffset_UAAT = br.ReadUInt32(); // 00_05_parts_title_lo-Unpacked> ransei nanr info 0000.nanr
         }
 
         public void WriteTo(BinaryWriter bw)
@@ -132,7 +135,8 @@ public class ABNK
             bw.Write(BlockOffset_Anim);
             bw.Write(BlockOffset_Frames);
             bw.Write(BlockOffset_Cells);
-            bw.Write(0UL);
+            bw.Write(BlockOffset_Unknown);
+            bw.Write(BlockOffset_UAAT);
         }
     }
 
@@ -148,6 +152,11 @@ public class ABNK
 
         var subHeader = new SubHeader(br);
         KeyFrameCount = subHeader.KeyFrameCount;
+
+        if (subHeader.BlockOffset_UAAT != 0)
+        {
+            throw new NotImplementedException("UAAT section");
+        }
 
         Banks = new List<Anim>();
 

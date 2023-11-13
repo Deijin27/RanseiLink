@@ -35,12 +35,50 @@ public static class CellImageUtil
 
     private record BankDimensions(int MinX, int MinY, int XShift, int YShift, int Width, int Height);
 
+    public static Image<Rgba32> CellToImage(Cell cell, uint blockSize, SpriteImageInfo imageInfo)
+    {
+        int tileOffset = cell.TileOffset << (byte)blockSize;
+        int bankDataOffset = 0;
+        var startByte = tileOffset * 0x20 + bankDataOffset;
+        if (imageInfo.Format == TexFormat.Pltt16)
+        {
+            startByte *= 2; // account for compression e.g. pokemon conquest minimaps
+        }
+        byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
+
+        var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, imageInfo.Palette, cell.Width, cell.Height, imageInfo.IsTiled, imageInfo.Format));
+
+        cellImg.Mutate(g =>
+        {
+            if (cell.FlipX)
+                g.Flip(FlipMode.Horizontal);
+            if (cell.FlipY)
+                g.Flip(FlipMode.Vertical);
+        });
+
+        return cellImg;
+    }
+
+    public static IReadOnlyList<Image<Rgba32>> SingleBankToMultipleImages(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo)
+    {
+        var images = new Image<Rgba32>[bank.Length];
+
+        imageInfo.Palette[0] = Color.Transparent;
+
+        for (int i = 0; i < bank.Length; i++)
+        {
+            var cell = bank[i];
+            var image = CellToImage(cell, blockSize, imageInfo);
+            images[i] = image;
+        }
+        return images;
+    }
+
     public static Image<Rgba32> SingleBankToImage(Cell[] bank, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height);
 
-        Rgba32[] palette32 = imageInfo.Palette;
-        palette32[0] = Color.Transparent;
+        imageInfo.Palette[0] = Color.Transparent;
 
         var graphic = new Image<Rgba32>(dims.Width, dims.Height);
         for (int i = 0; i < bank.Length; i++)
@@ -50,25 +88,8 @@ public static class CellImageUtil
             if (cell.Width == 0x00 || cell.Height == 0x00)
                 continue;
 
-            int tileOffset = cell.TileOffset << (byte)blockSize;
-            int bankDataOffset = 0;
-            var startByte = tileOffset * 0x20 + bankDataOffset;
-            if (imageInfo.Format == TexFormat.Pltt16)
+            using (var cellImg = CellToImage(cell, blockSize, imageInfo))
             {
-                startByte *= 2; // account for compression e.g. pokemon conquest minimaps
-            }
-            byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
-
-            using (var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, palette32, cell.Width, cell.Height, imageInfo.IsTiled, imageInfo.Format)))
-            {
-                cellImg.Mutate(g =>
-                {
-                    if (cell.FlipX)
-                        g.Flip(FlipMode.Horizontal);
-                    if (cell.FlipY)
-                        g.Flip(FlipMode.Vertical);
-                });
-
                 graphic.Mutate(g =>
                 {
                     g.DrawImage(
@@ -87,14 +108,8 @@ public static class CellImageUtil
                 {
                     var cell = bank[i];
 
-                    // These two operations don't work until
-                    // imagesharp.drawing releases version
-                    // compatible with v3
-                    // but I needed to update for a new feature
-                    // to use in 3d model viewer
-                    // so these are out of comission for now
                     g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + dims.XShift, cell.YOffset + 2 + dims.YShift));
-                    g.Draw(new Pen(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
+                    g.Draw(Pens.Solid(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
                 }
             });
         }
@@ -120,23 +135,19 @@ public static class CellImageUtil
         }
         else
         {
-            var images = banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, debug)).ToList();
-
-            var fullHeight = images.Sum(x => x.Height);
-            var fullWidth = images.Max(x => x.Width);
-
-            var fullImage = new Image<Rgba32>(fullWidth, fullHeight);
-            var cumulativeHeight = 0;
-            foreach (var subImage in images)
-            {
-                fullImage.Mutate(g =>
-                {
-                    g.DrawImage(subImage, new Point(0, cumulativeHeight), 1);
-                });
-                cumulativeHeight += subImage.Height;
-            }
-            return fullImage;
+            var images = MultiBankToMultipleImages(banks, blockSize, imageInfo, debug);
+            return ImageUtil.CombineImagesVertically(images);
         }
+    }
+
+    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
+    {
+        return banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, debug)).ToList();
+    }
+
+    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiBankToMultipleImageGroups(IList<Cell[]> banks, uint blockSize, SpriteImageInfo imageInfo)
+    {
+        return banks.Select(bank => SingleBankToMultipleImages(bank, blockSize, imageInfo)).ToList();
     }
 
     private static void SharedPaletteBankFromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, Cell[] bank, uint blockSize, bool tiled, TexFormat format)
@@ -283,4 +294,49 @@ public static class CellImageUtil
         return pixelArray;
     }
 
+    public static CellSize GetCellSize(Shape shape, Scale scale)
+    {
+        var found = ValidCellSizes.FirstOrDefault(x => x.Shape == shape && x.Scale == scale);
+        if (found == null)
+        {
+            var foundShape = ValidCellSizes.First(x => x.Shape == shape);
+            if (foundShape == null)
+            {
+                throw new ArgumentException($"Invalid cell shape {shape}");
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid cell scale {scale}");
+            }
+        }
+        else
+        {
+            return found;
+        }
+    }
+
+    public static CellSize? GetCellSize(int width, int height)
+    {
+        return ValidCellSizes.FirstOrDefault(x => x.Width == width && x.Height == height);
+    }
+
+    public static CellSize[] ValidCellSizes { get; } = new[]
+    {
+        new CellSize(Shape.Square, Scale.Small, 8, 8),
+        new CellSize(Shape.Square, Scale.Medium, 16, 16),
+        new CellSize(Shape.Square, Scale.Large, 32, 32),
+        new CellSize(Shape.Square, Scale.XLarge, 64, 64),
+
+        new CellSize(Shape.Wide, Scale.Small, 16, 8),
+        new CellSize(Shape.Wide, Scale.Medium, 32, 8),
+        new CellSize(Shape.Wide, Scale.Large, 32, 16),
+        new CellSize(Shape.Wide, Scale.XLarge, 64, 32),
+
+        new CellSize(Shape.Tall, Scale.Small, 8, 16),
+        new CellSize(Shape.Tall, Scale.Medium, 8, 32),
+        new CellSize(Shape.Tall, Scale.Large, 16, 32),
+        new CellSize(Shape.Tall, Scale.XLarge, 32, 64),
+    };
 }
+
+public record CellSize(Shape Shape, Scale Scale, int Width, int Height);

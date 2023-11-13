@@ -30,6 +30,9 @@ public class NcerExtractCommand : ICommand
     [CommandOption("height", 'e', Description = "Explicit height of the image. By default this is inferred from the data, because cell images don't technically have a width and height.")]
     public int Height { get; set; } = -1;
 
+    [CommandOption("debug", 'b', Description = "Draw debug info on output image")]
+    public bool Debug { get; set; } = false;
+
     public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationFile == null)
@@ -40,7 +43,7 @@ public class NcerExtractCommand : ICommand
         var ncer = NCER.Load(Ncer);
         var ncgr = NCGR.Load(Ncgr);
         var nclr = NCLR.Load(Nclr);
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Width, Height);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Width, Height, debug: Debug);
         image.SaveAsPng(DestinationFile);
 
         return default;
