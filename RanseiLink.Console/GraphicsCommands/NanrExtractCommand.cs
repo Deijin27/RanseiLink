@@ -134,7 +134,7 @@ public class NanrExtractCommand : ICommand
             var name = anim.Labels.Names[i];
 
             var trackElem = new XElement("animation", new XAttribute("name", name));
-            foreach (var keyFrame in bank.KeyFrames)
+            foreach (var keyFrame in bank.Frames)
             {
                 trackElem.Add(new XElement("frame",
                     new XAttribute("image", keyFrame.CellBank),

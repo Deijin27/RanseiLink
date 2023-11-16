@@ -2,10 +2,7 @@
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Graphics;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -30,8 +27,8 @@ public class NanrInfoCommand : ICommand
                     new XElement("Unknown1", bank.Unknown1),
                     new XElement("Unknown2", bank.Unknown2),
                     new XElement("Unknown3", bank.Unknown3),
-                    new XElement("KeyFrames", bank.KeyFrames.Select(frame =>
-                        new XElement("KeyFrame",
+                    new XElement("Frames", bank.Frames.Select(frame =>
+                        new XElement("Frame",
                             new XAttribute("CellBank", frame.CellBank),
                             new XAttribute("Duration", frame.Duration)
                             

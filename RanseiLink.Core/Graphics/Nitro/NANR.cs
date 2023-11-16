@@ -174,9 +174,9 @@ public class ABNK
 
             for (int j = 0; j < numFrames; j++)
             {
-                br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Frames + offsetFrame + j * KeyFrame.DataLength_Frame;
-                var frame = new KeyFrame();
-                anim.KeyFrames.Add(frame);
+                br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Frames + offsetFrame + j * Frame.DataLength_Frame;
+                var frame = new Frame();
+                anim.Frames.Add(frame);
                 var frameOffsetData = br.ReadUInt32();
                 frame.Duration = br.ReadUInt16();
                 // Note: BEEF usually indicates dead memory
@@ -210,10 +210,10 @@ public class ABNK
         };
 
         subHeader.BlockOffset_Frames = (uint)(subHeader.BlockOffset_Anim + Anim.DataLength * Banks.Count);
-        var numFramesTotal = Banks.Sum(x => x.KeyFrames.Count);
-        subHeader.BlockOffset_Cells = (uint)(subHeader.BlockOffset_Frames + KeyFrame.DataLength_Frame * numFramesTotal);
+        var numFramesTotal = Banks.Sum(x => x.Frames.Count);
+        subHeader.BlockOffset_Cells = (uint)(subHeader.BlockOffset_Frames + Frame.DataLength_Frame * numFramesTotal);
 
-        header.ChunkLength = (uint)(subHeader.BlockOffset_Cells + KeyFrame.DataLength_Cell * numFramesTotal);
+        header.ChunkLength = (uint)(subHeader.BlockOffset_Cells + Frame.DataLength_Cell * numFramesTotal);
 
         header.WriteTo(bw);
         subHeader.WriteTo(bw);
@@ -222,23 +222,23 @@ public class ABNK
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
-            bw.Write((uint)anim.KeyFrames.Count);
+            bw.Write((uint)anim.Frames.Count);
             bw.Write(anim.DataType);
             bw.Write(anim.Unknown1);
             bw.Write(anim.Unknown2);
             bw.Write(anim.Unknown3);
-            bw.Write(KeyFrame.DataLength_Frame * cumulativeFrames);
-            cumulativeFrames += (uint)anim.KeyFrames.Count;
+            bw.Write(Frame.DataLength_Frame * cumulativeFrames);
+            cumulativeFrames += (uint)anim.Frames.Count;
         }
 
         cumulativeFrames = 0;
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
-            for (int j = 0; j < anim.KeyFrames.Count; j++)
+            for (int j = 0; j < anim.Frames.Count; j++)
             {
-                var frame = anim.KeyFrames[i];
-                bw.Write(KeyFrame.DataLength_Cell * cumulativeFrames);
+                var frame = anim.Frames[i];
+                bw.Write(Frame.DataLength_Cell * cumulativeFrames);
                 bw.Write(frame.Duration);
                 bw.Write((ushort)0xBEEF);
                 cumulativeFrames++;
@@ -248,9 +248,9 @@ public class ABNK
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
-            for (int j = 0; j < anim.KeyFrames.Count; j++)
+            for (int j = 0; j < anim.Frames.Count; j++)
             {
-                var frame = anim.KeyFrames[i];
+                var frame = anim.Frames[i];
                 bw.Write(frame.CellBank);
             }
         }
@@ -263,10 +263,10 @@ public class ABNK
         public ushort Unknown1 { get; set; }
         public ushort Unknown2 { get; set; }
         public ushort Unknown3 { get; set; }
-        public List<KeyFrame> KeyFrames { get; set; } = new List<KeyFrame>();
+        public List<Frame> Frames { get; set; } = new List<Frame>();
      }
 
-    public class KeyFrame
+    public class Frame
     {
         public const int DataLength_Frame = 0x8;
         public const int DataLength_Cell = 0x2;

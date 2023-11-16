@@ -196,7 +196,7 @@ public struct BankInfo
 }
 
 
-[DebuggerDisplay("Cell: TileOff={TileOffset} XOff={XOffset}, YOff={YOffset}, W={Width}, H={Height}")]
+[DebuggerDisplay("Cell: TileOff={TileOffset} X={XOffset}, Y={YOffset}, W={Width}, H={Height}")]
 public struct Cell
 {
     public int Width;
@@ -204,7 +204,7 @@ public struct Cell
     public ushort CellId;
 
     public int YOffset;
-    public RotateScaleFlag RotateScaleFlag;
+    public RotateOrScale RotateOrScale;
     public bool ObjDisable;
     public bool DoubleSize;
     public ObjMode ObjMode;
@@ -223,6 +223,33 @@ public struct Cell
     public byte Priority;
     public byte IndexPalette;
 
+    public Cell()
+    {
+        Width = 0;
+        Height = 0;
+        CellId = 0;
+
+        YOffset = 0;
+        RotateOrScale = RotateOrScale.Rotate;
+        ObjDisable = false;
+        DoubleSize = false;
+        ObjMode = ObjMode.Normal;
+        Mosaic = false;
+        Depth = BitDepth.e8Bit; // this is the only non-zero value that seems to be a default
+        Shape = Shape.Square;
+
+        XOffset = 0;
+        Unused = 0;
+        FlipX = false;
+        FlipY = false;
+        SelectParam = 0;
+        Scale = Scale.Small;
+
+        TileOffset = 0;
+        Priority = 0;
+        IndexPalette = 0;
+    }
+
     public Cell(BinaryReader br)
     {
         // first ushort
@@ -230,9 +257,9 @@ public struct Cell
         int value0 = br.ReadUInt16();
 
         YOffset = (sbyte)(value0 & 0xFF);
-        RotateScaleFlag = (RotateScaleFlag)((value0 >> 8) & 1);
+        RotateOrScale = (RotateOrScale)((value0 >> 8) & 1);
         bool nextFlag = ((value0 >> 9) & 1) == 1;
-        if (RotateScaleFlag == RotateScaleFlag.Scale)
+        if (RotateOrScale == RotateOrScale.Scale)
         {
             DoubleSize = nextFlag;
             ObjDisable = false;
@@ -257,7 +284,7 @@ public struct Cell
             XOffset -= 0x200;
         }
 
-        if (RotateScaleFlag == RotateScaleFlag.Rotate)
+        if (RotateOrScale == RotateOrScale.Rotate)
         {
             Unused = (byte)((value1 >> 9) & 3);
             FlipX = ((value1 >> 12) & 1) == 1;
@@ -320,7 +347,7 @@ public enum BitDepth
     e8Bit,
 }
 
-public enum RotateScaleFlag
+public enum RotateOrScale
 {
     Rotate,
     Scale,

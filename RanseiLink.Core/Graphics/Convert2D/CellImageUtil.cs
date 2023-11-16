@@ -296,47 +296,72 @@ public static class CellImageUtil
 
     public static CellSize GetCellSize(Shape shape, Scale scale)
     {
-        var found = ValidCellSizes.FirstOrDefault(x => x.Shape == shape && x.Scale == scale);
-        if (found == null)
+        if (!s_scaleShapeLookup.TryGetValue(shape, out var scaleDict))
         {
-            var foundShape = ValidCellSizes.First(x => x.Shape == shape);
-            if (foundShape == null)
-            {
-                throw new ArgumentException($"Invalid cell shape {shape}");
-            }
-            else
-            {
-                throw new ArgumentException($"Invalid cell scale {scale}");
-            }
+            throw new ArgumentException($"Invalid cell shape {shape}");
         }
-        else
+        if (!scaleDict.TryGetValue(scale, out var size))
         {
-            return found;
+            throw new ArgumentException($"Invalid cell scale {scale}");
         }
+        return size;
     }
 
     public static CellSize? GetCellSize(int width, int height)
     {
-        return ValidCellSizes.FirstOrDefault(x => x.Width == width && x.Height == height);
+        if (s_widthHeightLookup.TryGetValue(width, out var heightDict) && heightDict.TryGetValue(height, out var size))
+        {
+            return size;
+        }
+        return null;
     }
 
-    public static CellSize[] ValidCellSizes { get; } = new[]
+    private static readonly Dictionary<Shape, Dictionary<Scale, CellSize>> s_scaleShapeLookup;
+    private static readonly Dictionary<int, Dictionary<int, CellSize>> s_widthHeightLookup;
+
+    static CellImageUtil()
     {
-        new CellSize(Shape.Square, Scale.Small, 8, 8),
-        new CellSize(Shape.Square, Scale.Medium, 16, 16),
-        new CellSize(Shape.Square, Scale.Large, 32, 32),
-        new CellSize(Shape.Square, Scale.XLarge, 64, 64),
+        ValidCellSizes = new[]
+        {
+            new CellSize(Shape.Square, Scale.Small, 8, 8),
+            new CellSize(Shape.Square, Scale.Medium, 16, 16),
+            new CellSize(Shape.Square, Scale.Large, 32, 32),
+            new CellSize(Shape.Square, Scale.XLarge, 64, 64),
 
-        new CellSize(Shape.Wide, Scale.Small, 16, 8),
-        new CellSize(Shape.Wide, Scale.Medium, 32, 8),
-        new CellSize(Shape.Wide, Scale.Large, 32, 16),
-        new CellSize(Shape.Wide, Scale.XLarge, 64, 32),
+            new CellSize(Shape.Wide, Scale.Small, 16, 8),
+            new CellSize(Shape.Wide, Scale.Medium, 32, 8),
+            new CellSize(Shape.Wide, Scale.Large, 32, 16),
+            new CellSize(Shape.Wide, Scale.XLarge, 64, 32),
 
-        new CellSize(Shape.Tall, Scale.Small, 8, 16),
-        new CellSize(Shape.Tall, Scale.Medium, 8, 32),
-        new CellSize(Shape.Tall, Scale.Large, 16, 32),
-        new CellSize(Shape.Tall, Scale.XLarge, 32, 64),
-    };
+            new CellSize(Shape.Tall, Scale.Small, 8, 16),
+            new CellSize(Shape.Tall, Scale.Medium, 8, 32),
+            new CellSize(Shape.Tall, Scale.Large, 16, 32),
+            new CellSize(Shape.Tall, Scale.XLarge, 32, 64),
+        };
+
+        s_scaleShapeLookup = new();
+        s_widthHeightLookup = new();
+
+        foreach (var size in ValidCellSizes)
+        {
+            if (!s_scaleShapeLookup.TryGetValue(size.Shape, out var scaleDict))
+            {
+                scaleDict = new();
+                s_scaleShapeLookup[size.Shape] = scaleDict;
+            }
+            scaleDict[size.Scale] = size;
+
+            if (!s_widthHeightLookup.TryGetValue(size.Width, out var heightDict))
+            {
+                heightDict = new();
+                s_widthHeightLookup[size.Width] = heightDict;
+            }
+            heightDict[size.Height] = size;
+        }
+
+    }
+
+    public static CellSize[] ValidCellSizes { get; }
 }
 
 public record CellSize(Shape Shape, Scale Scale, int Width, int Height);
