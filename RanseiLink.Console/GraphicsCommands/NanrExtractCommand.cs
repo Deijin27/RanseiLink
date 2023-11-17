@@ -102,7 +102,7 @@ public class NanrExtractCommand : ICommand
         var cells = new XElement("cell_collection");
         for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
         {
-            Cell[] cellBank = ncer.CellBanks.Banks[i];
+            var cellBank = ncer.CellBanks.Banks[i];
             var groupElem = new XElement("image", new XAttribute("name", i), new XAttribute("file", NumToFileName(i)));
             foreach (var cell in cellBank)
             {

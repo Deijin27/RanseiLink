@@ -86,7 +86,8 @@ public class NCER
 public class CEBK
 {
     public byte BlockSize { get; set; }
-    public List<Cell[]> Banks { get; set; }
+    public ushort BankType { get; set; }
+    public List<CellBank> Banks { get; set; }
 
     public struct Header
     {
@@ -122,6 +123,7 @@ public class CEBK
         var initOffset = br.BaseStream.Position;
         var header = new Header(br);
         BlockSize = header.BlockSize;
+        BankType = header.BankType;
         if (header.PartitionDataOffset != 0)
         {
             throw new NotImplementedException("Partition data in NCER not supported");
@@ -131,39 +133,24 @@ public class CEBK
         var bankInfos = new BankInfo[header.NumberOfBanks];
         for (int i = 0; i < header.NumberOfBanks; i++)
         {
-            var bank = new BankInfo
-            {
-                NumberOfCells = br.ReadUInt16(),
-                ReadOnlyCellInfo = br.ReadUInt16(),
-                CellOffset = br.ReadUInt32()
-            };
-            if (header.BankType == 1)
-            {
-                bank.XMax = br.ReadUInt16();
-                bank.YMax = br.ReadUInt16();
-                bank.XMin = br.ReadUInt16();
-                bank.YMin = br.ReadUInt16();
-            }
-            bankInfos[i] = bank;
+            bankInfos[i] = new BankInfo(br, header.BankType);
         }
-        Banks = new List<Cell[]>(header.NumberOfBanks);
+        Banks = new List<CellBank>(header.NumberOfBanks);
         for (int i = 0; i < header.NumberOfBanks; i++)
         {
             var bankInfo = bankInfos[i];
-            var bank = new Cell[bankInfo.NumberOfCells];
-
-            for (int j = 0; j < bankInfo.NumberOfCells; j++)
+            var bank = new CellBank(bankInfo.NumberOfCells);
+            for (ushort j = 0; j < bankInfo.NumberOfCells; j++)
             {
                 var cell = new Cell(br)
                 {
-                    CellId = (ushort)j
+                    CellId = j
                 };
 
-                // Calculate the size
-                bank[j] = cell;
+                bank.Add(cell);
             }
 
-            bank = bank.OrderBy(x => x.Priority).ThenBy(x => x.CellId).ToArray();
+            bank = new CellBank(bank.OrderBy(x => x.Priority).ThenBy(x => x.CellId));
 
             Banks.Add(bank);
         }
@@ -193,35 +180,62 @@ public struct BankInfo
     public ushort YMax;
     public ushort XMin;
     public ushort YMin;
+
+    public BankInfo(BinaryReader br, ushort bankType)
+    {
+        NumberOfCells = br.ReadUInt16();
+        ReadOnlyCellInfo = br.ReadUInt16();
+        CellOffset = br.ReadUInt32();
+        if (bankType == 1)
+        {
+            XMax = br.ReadUInt16();
+            YMax = br.ReadUInt16();
+            XMin = br.ReadUInt16();
+            YMin = br.ReadUInt16();
+        }
+        else
+        {
+            XMax = 0;
+            YMax = 0;
+            XMin = 0;
+            YMin = 0;
+        }
+    }
 }
 
+public class CellBank : List<Cell>
+{
+    public CellBank() : base() { }
+    public CellBank(int capacity) : base(capacity) { }
+    public CellBank(IEnumerable<Cell> collection) : base(collection) { }
+}
 
 [DebuggerDisplay("Cell: TileOff={TileOffset} X={XOffset}, Y={YOffset}, W={Width}, H={Height}")]
-public struct Cell
+public class Cell
 {
-    public int Width;
-    public int Height;
-    public ushort CellId;
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public ushort CellId { get; set; }
 
-    public int YOffset;
-    public RotateOrScale RotateOrScale;
-    public bool ObjDisable;
-    public bool DoubleSize;
-    public ObjMode ObjMode;
-    public bool Mosaic;
-    public BitDepth Depth;
-    public Shape Shape;
+    public int YOffset { get; set; }
+    public RotateOrScale RotateOrScale { get; set; }
+    public bool ObjDisable { get; set; }
+    public bool DoubleSize { get; set; }
+    public ObjMode ObjMode { get; set; }
+    public bool Mosaic { get; set; }
+    public BitDepth Depth { get; set; }
+    public Shape Shape { get; set; }
 
-    public int XOffset;
-    public byte Unused;
-    public bool FlipX;
-    public bool FlipY;
-    public byte SelectParam;
-    public Scale Scale;
+    public int XOffset { get; set; }
+    public byte Unused { get; set; }
+    public bool FlipX { get; set; }
+    public bool FlipY { get; set; }
+    public byte SelectParam { get; set; }
+    public Scale Scale { get; set; }
 
-    public int TileOffset;
-    public byte Priority;
-    public byte IndexPalette;
+    public int TileOffset { get; set; }
+    public byte Priority { get; set; }
+    public byte IndexPalette { get; set; }
 
     public Cell()
     {

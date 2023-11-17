@@ -33,11 +33,11 @@ public class NcerTests
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
         File.Exists(file).Should().BeTrue();
 
-        var ncgr = NCER.Load(file);
+        var ncer = NCER.Load(file);
 
         var mem = new MemoryStream();
         var bw = new BinaryWriter(mem);
-        ncgr.WriteTo(bw);
+        ncer.WriteTo(bw);
         var data = mem.ToArray();
         mem.Dispose();
 

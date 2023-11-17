@@ -20,6 +20,7 @@ public class NcerInfoCommand : ICommand
 
         var el = new XElement("AnimationBank",
             new XAttribute("BlockSize", nanr.CellBanks.BlockSize),
+            new XAttribute("BankType", nanr.CellBanks.BankType),
             new XElement("Banks", nanr.CellBanks.Banks.Select(bank =>
                 new XElement("Bank", bank.Select(SerialiseCell)
 
