@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -77,6 +76,7 @@ public class NCER
         header.FileLength = (uint)(endOffset - initOffset);
         bw.BaseStream.Position = initOffset;
         header.WriteTo(bw);
+        bw.BaseStream.Position = endOffset;
     }
 }
 
@@ -85,43 +85,54 @@ public class NCER
 /// </summary>
 public class CEBK
 {
+    public const string MagicNumber = "KBEC";
+
     public byte BlockSize { get; set; }
     public ushort BankType { get; set; }
     public List<CellBank> Banks { get; set; }
 
-    public struct Header
+    public struct SubHeader
     {
-        public const string MagicNumber = "KBEC";
-        public uint TotalLength;
+        public const int Length = 24;
+        
         public ushort NumberOfBanks;
         public ushort BankType;
         public uint BankDataOffset;
         public byte BlockSize;
-        public uint PartitionDataOffset;
+        public uint PartitionDataOffset; // default 0 if none?
 
-        public Header(BinaryReader br)
+        public SubHeader(BinaryReader br)
         {
-            var magicNumber = br.ReadMagicNumber();
-            if (magicNumber != MagicNumber)
-            {
-                throw new InvalidDataException($"Unexpected magic number '{magicNumber}'. (expected: {MagicNumber})");
-            }
-
-            TotalLength = br.ReadUInt32();
-            NumberOfBanks = br.ReadUInt16(); // 1
-            BankType = br.ReadUInt16(); // 1
-            BankDataOffset = br.ReadUInt32(); // 0x18
-            BlockSize = br.ReadByte(); // 2
+            NumberOfBanks = br.ReadUInt16();
+            BankType = br.ReadUInt16();
+            BankDataOffset = br.ReadUInt32();
+            BlockSize = br.ReadByte();
             br.Skip(3);
-            PartitionDataOffset = br.ReadUInt32(); // 0
+            PartitionDataOffset = br.ReadUInt32();
             br.Skip(8);
+        }
+
+        public void WriteTo(BinaryWriter bw)
+        {
+            bw.Write(NumberOfBanks);
+            bw.Write(BankType);
+            bw.Write(BankDataOffset);
+            bw.Write(BlockSize);
+            bw.Pad(3);
+            bw.Write(PartitionDataOffset);
+            bw.Pad(8);
         }
     }
 
     public CEBK(BinaryReader br)
     {
         var initOffset = br.BaseStream.Position;
-        var header = new Header(br);
+        var nitroHeader = new NitroChunkHeader(br);
+        if (nitroHeader.MagicNumber != MagicNumber)
+        {
+            throw new InvalidDataException($"Unexpected magic number '{nitroHeader.MagicNumber}'. (expected: {MagicNumber})");
+        }
+        var header = new SubHeader(br);
         BlockSize = header.BlockSize;
         BankType = header.BankType;
         if (header.PartitionDataOffset != 0)
@@ -155,23 +166,71 @@ public class CEBK
             Banks.Add(bank);
         }
 
-        br.BaseStream.Position = initOffset + header.TotalLength;
+        br.BaseStream.Position = initOffset + nitroHeader.ChunkLength;
     }
 
     internal void WriteTo(BinaryWriter bw)
     {
         var initOffset = bw.BaseStream.Position;
 
-        var header = new Header
+        var nitroHeader = new NitroChunkHeader
         {
+            MagicNumber = MagicNumber
+        };
+        var header = new SubHeader
+        {
+            BankType = BankType,
+            BlockSize = BlockSize,
+            PartitionDataOffset = 0,
+            BankDataOffset = SubHeader.Length
         };
 
-        throw new NotImplementedException();
+        bw.Pad(NitroChunkHeader.Length + SubHeader.Length + Banks.Count * BankInfo.Length(BankType));
+
+        // write banks
+        var bankInfo = new BankInfo[Banks.Count];
+        for (var i = 0; i < Banks.Count; i++)
+        {
+            var bank = Banks[i];
+            var info = new BankInfo
+            {
+                NumberOfCells = (ushort)bank.Count
+            };
+
+            foreach (var cell in bank.OrderBy(x => x.CellId))
+            {
+                cell.WriteTo(bw);
+            }
+
+            bankInfo[i] = info;
+        }
+
+        // write header
+        var endOffset = bw.BaseStream.Position;
+        nitroHeader.ChunkLength = (uint)(endOffset - initOffset);
+        bw.BaseStream.Position = initOffset;
+        nitroHeader.WriteTo(bw);
+        header.WriteTo(bw);
+        foreach (var info in bankInfo)
+        {
+            info.WriteTo(bw, BankType);
+        }
+        bw.BaseStream.Position = endOffset;
     }
 }
 
 public struct BankInfo
 {
+    public static int Length(ushort bankType)
+    {
+        int length = 8;
+        if (bankType == 1)
+        {
+            length += 8;
+        }
+        return length;
+    }
+
     public ushort NumberOfCells;
     public ushort ReadOnlyCellInfo;
     public uint CellOffset;
@@ -199,6 +258,20 @@ public struct BankInfo
             YMax = 0;
             XMin = 0;
             YMin = 0;
+        }
+    }
+
+    public void WriteTo(BinaryWriter bw, ushort bankType)
+    {
+        bw.Write(NumberOfCells);
+        bw.Write(ReadOnlyCellInfo);
+        bw.Write(CellOffset);
+        if (bankType == 1)
+        {
+            bw.Write(XMax);
+            bw.Write(YMax); 
+            bw.Write(XMin);
+            bw.Write(YMin);
         }
     }
 }
@@ -329,6 +402,11 @@ public class Cell
         Height = size.Height;
         CellId = 0;
 
+    }
+
+    public void WriteTo(BinaryWriter bw)
+    {
+        throw new NotImplementedException();
     }
 }
 
