@@ -27,7 +27,7 @@ public class NclrInfoCommand : ICommand
             TexFormat.Pltt256 => 256,
             _ => throw new System.NotImplementedException()
         };
-        var palettes = c.Select(x => p.Palette[(16 * x)..(16 * x + 16)]).ToArray();
+        var palettes = c.Select(x => p.Palette[(paletteLen * x)..(paletteLen * x + paletteLen)]).ToArray();
 
         var el = new XElement("NCLR");
 

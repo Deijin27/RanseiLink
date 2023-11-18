@@ -226,10 +226,10 @@ public class CEBK
             };
             if (BankType == 1)
             {
-                info.XMax = (ushort)bank.XMax;
-                info.YMax = (ushort)bank.YMax;
-                info.XMin = (ushort)bank.XMin;
-                info.YMin = (ushort)bank.YMin;
+                info.XMax = (short)bank.XMax;
+                info.YMax = (short)bank.YMax;
+                info.XMin = (short)bank.XMin;
+                info.YMin = (short)bank.YMin;
             }
             
             foreach (var cell in bank.OrderBy(x => x.CellId))
@@ -344,10 +344,10 @@ public struct BankInfo
     public ushort ReadOnlyCellInfo;
     public uint CellOffset;
 
-    public ushort XMax;
-    public ushort YMax;
-    public ushort XMin;
-    public ushort YMin;
+    public short XMax;
+    public short YMax;
+    public short XMin;
+    public short YMin;
 
     public BankInfo(BinaryReader br, ushort bankType)
     {
@@ -356,10 +356,10 @@ public struct BankInfo
         CellOffset = br.ReadUInt32();
         if (bankType == 1)
         {
-            XMax = br.ReadUInt16();
-            YMax = br.ReadUInt16();
-            XMin = br.ReadUInt16();
-            YMin = br.ReadUInt16();
+            XMax = br.ReadInt16();
+            YMax = br.ReadInt16();
+            XMin = br.ReadInt16();
+            YMin = br.ReadInt16();
         }
         else
         {
