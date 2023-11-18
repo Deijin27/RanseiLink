@@ -41,7 +41,7 @@ public class NcerTests
         var data = mem.ToArray();
         mem.Dispose();
 
-        //File.WriteAllBytes(Path.Combine(FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
+        File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
 
         data.Should().Equal(File.ReadAllBytes(file));
     }

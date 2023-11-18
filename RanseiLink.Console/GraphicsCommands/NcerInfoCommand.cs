@@ -21,10 +21,7 @@ public class NcerInfoCommand : ICommand
         var el = new XElement("AnimationBank",
             new XAttribute("BlockSize", nanr.CellBanks.BlockSize),
             new XAttribute("BankType", nanr.CellBanks.BankType),
-            new XElement("Banks", nanr.CellBanks.Banks.Select(bank =>
-                new XElement("Bank", bank.Select(SerialiseCell)
-
-                ))),
+            new XElement("Banks", nanr.CellBanks.Banks.Select(SerialiseBank)),
             new XElement("Labels", nanr.Labels.Names.Select(name => new XElement("Name", name))),
             new XElement("Unknown", nanr.Unknown.Unknown)
             );
@@ -32,6 +29,17 @@ public class NcerInfoCommand : ICommand
         console.Output.WriteLine(el.ToString());
 
         return default;
+    }
+
+    private static XElement SerialiseBank(CellBank bank)
+    {
+        var e = new XElement("Bank", bank.Select(SerialiseCell));
+        e.Add(new XAttribute("ReadOnlyCellInfo", $"0x{bank.ReadOnlyCellInfo:X}"));
+        e.Add(new XAttribute("XMax", bank.XMax));
+        e.Add(new XAttribute("YMax", bank.YMax));
+        e.Add(new XAttribute("XMin", bank.XMin));
+        e.Add(new XAttribute("YMin", bank.YMin));
+        return e;
     }
 
     private static XElement SerialiseCell(Cell cell)

@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "ncer extract 0002.ncer 0003.ncgr 0004.nclr -w 256 -e 120",
+      "commandLineArgs": "ncer info \"C:\\Users\\Mia\\source\\repos\\RanseiLink\\RanseiLink.CoreTests\\TestData\\test_minimap_9.ncer\"",
       "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\strategy\\kuniimage2\\03_00_parts_kuniimage_00_up_anim-Unpacked"
     }
   }
