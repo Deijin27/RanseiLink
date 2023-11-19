@@ -249,6 +249,12 @@ public class CEBK
         // write header
         var endOffset = bw.BaseStream.Position;
         nitroHeader.ChunkLength = (uint)(endOffset - initOffset);
+        while (nitroHeader.ChunkLength % 4 != 0)
+        {
+            bw.Write((byte)0);
+            nitroHeader.ChunkLength++;
+            endOffset++;
+        }
         bw.BaseStream.Position = initOffset;
         nitroHeader.WriteTo(bw);
         header.WriteTo(bw);
