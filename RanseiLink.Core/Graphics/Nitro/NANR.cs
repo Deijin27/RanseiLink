@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using DryIoc.ImTools;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -162,7 +163,7 @@ public class ABNK
 
         for (int i = 0; i < subHeader.BankCount; i++)
         {
-            br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Anim + i * Anim.DataLength; // maybe not needed
+            br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Anim + i * Anim.DataLength;
             var anim = new Anim();
             Banks.Add(anim);
             var numFrames = br.ReadUInt32();
@@ -202,6 +203,8 @@ public class ABNK
             MagicNumber = MagicNumber
         };
 
+        var postNitroHeaderOffset = initOffset + NitroChunkHeader.Length;
+
         var subHeader = new SubHeader
         {
             BankCount = (ushort)Banks.Count,
@@ -209,16 +212,12 @@ public class ABNK
             BlockOffset_Anim = SubHeader.Length
         };
 
-        subHeader.BlockOffset_Frames = (uint)(subHeader.BlockOffset_Anim + Anim.DataLength * Banks.Count);
-        var numFramesTotal = Banks.Sum(x => x.Frames.Count);
-        subHeader.BlockOffset_Cells = (uint)(subHeader.BlockOffset_Frames + Frame.DataLength_Frame * numFramesTotal);
+        // skip headers for now
+        bw.Pad(NitroChunkHeader.Length + SubHeader.Length);
 
-        header.ChunkLength = (uint)(subHeader.BlockOffset_Cells + Frame.DataLength_Cell * numFramesTotal);
+        // Write animation banks
 
-        header.WriteTo(bw);
-        subHeader.WriteTo(bw);
-
-        uint cumulativeFrames = 0;
+        int cumulativeFrames = 0;
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
@@ -228,32 +227,49 @@ public class ABNK
             bw.Write(anim.Unknown2);
             bw.Write(anim.Unknown3);
             bw.Write(Frame.DataLength_Frame * cumulativeFrames);
-            cumulativeFrames += (uint)anim.Frames.Count;
+            cumulativeFrames += anim.Frames.Count;
         }
 
-        cumulativeFrames = 0;
+        // Write Frames
+
+        subHeader.BlockOffset_Frames = (uint)(bw.BaseStream.Position - postNitroHeaderOffset);
+
+        var distinctCells = new List<ushort>();
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
             for (int j = 0; j < anim.Frames.Count; j++)
             {
-                var frame = anim.Frames[i];
-                bw.Write(Frame.DataLength_Cell * cumulativeFrames);
+                var frame = anim.Frames[j];
+                // the cell values are not duplicated
+                var index = distinctCells.IndexOf(frame.CellBank);
+                if (index == -1)
+                {
+                    index = distinctCells.Count;
+                    distinctCells.Add(frame.CellBank);
+                }
+                bw.Write(Frame.DataLength_Cell * index);
                 bw.Write(frame.Duration);
                 bw.Write((ushort)0xBEEF);
-                cumulativeFrames++;
             }
         }
 
-        for (int i = 0; i < Banks.Count; i++)
+        // write cells
+
+        subHeader.BlockOffset_Cells = (uint)(bw.BaseStream.Position - postNitroHeaderOffset);
+
+        foreach (var cell in distinctCells) 
         {
-            var anim = Banks[i];
-            for (int j = 0; j < anim.Frames.Count; j++)
-            {
-                var frame = anim.Frames[i];
-                bw.Write(frame.CellBank);
-            }
+            bw.Write(cell);
         }
+
+        // write headers
+        var end = bw.BaseStream.Position;
+        header.ChunkLength = (uint)(end - initOffset);
+        bw.BaseStream.Position = initOffset;
+        header.WriteTo(bw);
+        subHeader.WriteTo(bw);
+        bw.BaseStream.Position = end;
     }
 
     public class Anim

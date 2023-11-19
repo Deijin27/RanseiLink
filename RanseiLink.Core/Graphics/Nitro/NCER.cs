@@ -413,6 +413,12 @@ public class CellBank : List<Cell>
     {
         XMax = 0;
         YMax = 0;
+        if (Count == 0)
+        {
+            XMin = 0;
+            YMin = 0;
+            return;
+        }
         XMin = int.MaxValue;
         YMin = int.MaxValue;
         foreach (var cell in this)
@@ -423,7 +429,7 @@ public class CellBank : List<Cell>
             {
                 XMax = cellXMax;
             }
-            if (cell.YOffset > YMax)
+            if (cellYMax > YMax)
             {
                 YMax = cellYMax;
             }
@@ -439,9 +445,13 @@ public class CellBank : List<Cell>
     }
 }
 
-[DebuggerDisplay("Cell: TileOff={TileOffset} X={XOffset}, Y={YOffset}, W={Width}, H={Height}")]
+[DebuggerDisplay("Cell(TileOff={TileOffset} X={XOffset}, Y={YOffset}, W={Width}, H={Height})")]
 public class Cell
 {
+    public override string ToString()
+    {
+        return $"Cell(TileOff={TileOffset} X={XOffset}, Y={YOffset}, W={Width}, H={Height})";
+    }
     public int Width { get; set; }
     public int Height { get; set; }
     public ushort CellId { get; set; }
