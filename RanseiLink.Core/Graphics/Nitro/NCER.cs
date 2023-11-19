@@ -23,6 +23,13 @@ public class NCER
         }
     }
 
+    public NCER()
+    {
+        CellBanks = new();
+        Labels = new();
+        Unknown = new();
+    }
+
     public NCER(BinaryReader br)
     {
         long initOffset = br.BaseStream.Position;
@@ -127,6 +134,11 @@ public class CEBK
             bw.Write(Unknown); 
             bw.Write(UcatDataOffset);
         }
+    }
+
+    public CEBK()
+    {
+        Banks = new();
     }
 
     public CEBK(BinaryReader br)
@@ -665,6 +677,11 @@ public class LABL
 
     public const string MagicNumber = "LBAL";
 
+    public LABL()
+    {
+
+    }
+
     public LABL(BinaryReader br)
     {
         var initOffset = br.BaseStream.Position;
@@ -739,6 +756,11 @@ public class UEXT
     public uint Unknown { get; set; }
 
     public const string MagicNumber = "TXEU";
+
+    public UEXT()
+    {
+
+    }
 
     public UEXT(BinaryReader br)
     {

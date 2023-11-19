@@ -5,9 +5,11 @@ using RanseiLink.Core;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using SixLabors.ImageSharp;
+using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using static RanseiLink.Core.Graphics.ABNK;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
@@ -38,15 +40,16 @@ public class NanrExtractCommand : ICommand
         var animLink = Path.Combine(temp, "anim");
         LINK.Unpack(AnimatedParts, animLink, true, 4);
 
-        var (width, height) = LoadBackground(bgLink, Path.Combine(DestinationFolder, "background.png"));
-        LoadAnim(animLink, DestinationFolder, width, height);
+        var (width, height) = LoadAndSerialiseBackground(bgLink, Path.Combine(DestinationFolder, "background.png"));
+        // force the images to have the same width and height as the background
+        ExportAnim(animLink, DestinationFolder, width, height);
 
         Directory.Delete(temp, true);
 
         return default;
     }
 
-    private static (int width, int height) LoadBackground(string sourceDir, string outputFile)
+    private static (int width, int height) LoadAndSerialiseBackground(string sourceDir, string outputFile)
     {
         var ncgrPath = Path.Combine(sourceDir, "0003.ncgr");
         if (new FileInfo(ncgrPath).Length == 0)
@@ -54,19 +57,20 @@ public class NanrExtractCommand : ICommand
             ncgrPath = Path.Combine(sourceDir, "0001.ncgr");
         }
 
-        using var image = NitroImageUtil.NcgrToImage(
-            NCGR.Load(ncgrPath),
-            NCLR.Load(Path.Combine(sourceDir, "0004.nclr"))
-            );
+        var ncgr = NCGR.Load(ncgrPath);
+        var nclr = NCLR.Load(Path.Combine(sourceDir, "0004.nclr"));
+
+        using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
 
         image.SaveAsPng(outputFile);
 
         return (image.Width, image.Height);
     }
 
-    private static void LoadAnim(string sourceDir, string outputFolder, int width, int height)
+
+    private static void ExportAnim(string sourceDir, string outputFolder, int width, int height)
     {
-        // get the images
+        // load the source files
 
         var ncgrPath = Path.Combine(sourceDir, "0003.ncgr");
         if (new FileInfo(ncgrPath).Length == 0)
@@ -75,80 +79,25 @@ public class NanrExtractCommand : ICommand
         }
 
         var ncer = NCER.Load(Path.Combine(sourceDir, "0002.ncer"));
+        var ncgr = NCGR.Load(ncgrPath);
+        var nclr = NCLR.Load(Path.Combine(sourceDir, "0004.nclr"));
+        var nanr = NANR.Load(Path.Combine(sourceDir, "0000.nanr"));
 
-        var images = NitroImageUtil.NcerToMultipleImages(
-            ncer,
-            NCGR.Load(ncgrPath),
-            NCLR.Load(Path.Combine(sourceDir, "0004.nclr")),
-            width, // force them to have the same width and height as the background
-            height
-            );
+        // save the images
+
+        var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height);
 
         for (int i = 0; i < images.Count; i++)
         {
             var cellImage = images[i];
-            cellImage.SaveAsPng(Path.Combine(outputFolder, NumToFileName(i)));
+            cellImage.SaveAsPng(Path.Combine(outputFolder, CellAnimationSerialiser.NumToFileName(i)));
         }
 
-        // get the animation
+        // save the animation file
 
-        var anim = NANR.Load(Path.Combine(sourceDir, "0000.nanr"));
-        var doc = SerialiseAnimation(anim, ncer);
+        var doc = CellAnimationSerialiser.SerialiseAnimationXml(nanr, ncer);
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
-    private static XDocument SerialiseAnimation(NANR anim, NCER ncer)
-    {
-        var cells = new XElement("cell_collection");
-        for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
-        {
-            var cellBank = ncer.CellBanks.Banks[i];
-            var groupElem = new XElement("image", new XAttribute("name", i), new XAttribute("file", NumToFileName(i)));
-            foreach (var cell in cellBank)
-            {
-                var cellElem = new XElement("cell",
-                    new XAttribute("x", cell.XOffset),
-                    new XAttribute("y", cell.YOffset),
-                    new XAttribute("width", cell.Width),
-                    new XAttribute("height", cell.Height)
-                    );
-
-                if (cell.FlipX)
-                {
-                    cellElem.Add(new XAttribute("flip_x", cell.FlipX));
-                }
-                if (cell.FlipY)
-                {
-                    cellElem.Add(new XAttribute("flip_y", cell.FlipY));
-                }
-
-                groupElem.Add(cellElem);    
-            }
-            cells.Add(groupElem);
-        }
-
-        var animations = new XElement("animation_collection");
-        for (int i = 0; i < anim.AnimationBanks.Banks.Count; i++)
-        {
-            var bank = anim.AnimationBanks.Banks[i];
-            var name = anim.Labels.Names[i];
-
-            var trackElem = new XElement("animation", new XAttribute("name", name));
-            foreach (var keyFrame in bank.Frames)
-            {
-                trackElem.Add(new XElement("frame",
-                    new XAttribute("image", keyFrame.CellBank),
-                    new XAttribute("duration", keyFrame.Duration)
-                    ));
-            }
-            animations.Add(trackElem);
-        }
-
-        return new XDocument(new XElement("nitro_cell_animation_resource", cells, animations));
-    }
-
-    private static string NumToFileName(int num)
-    {
-        return $"{num.ToString().PadLeft(4, '0')}.png";
-    }
+    
 }
