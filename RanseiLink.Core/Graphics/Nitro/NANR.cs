@@ -36,6 +36,11 @@ public class NANR
         }
     }
 
+    public NANR()
+    {
+        AnimationBanks = new();
+    }
+
     public NANR(BinaryReader br)
     {
         long initOffset = br.BaseStream.Position;
@@ -139,6 +144,11 @@ public class ABNK
             bw.Write(BlockOffset_Unknown);
             bw.Write(BlockOffset_UAAT);
         }
+    }
+
+    public ABNK()
+    {
+        Banks = new();
     }
 
     public ABNK(BinaryReader br)

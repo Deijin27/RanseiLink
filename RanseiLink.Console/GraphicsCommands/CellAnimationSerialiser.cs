@@ -1,5 +1,7 @@
-﻿using FluentResults;
+﻿#nullable enable
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Util;
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 
@@ -11,38 +13,31 @@ public static class CellAnimationSerialiser
     {
         var cellElem = SerialiseCells(ncer);
         var animationElem = SerialiseAnimations(anim);
-        return new XDocument(new XElement(nitro_cell_animation_resource, cellElem, animationElem));
+        return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
     }
 
-    private const string nitro_cell_animation_resource = nameof(nitro_cell_animation_resource);
-    private const string cell_collection = nameof(cell_collection);
-    private const string animation_collection = nameof(animation_collection);
-
-    private static Result<(NANR nanr, NCER ncer)> DeserialiseAnimationXml(XDocument doc)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="doc"></param>
+    /// <returns></returns>
+    /// <exception cref="XmlUtilException"/>
+    /// <exception cref="Exception"/>
+    public static (NANR nanr, NCER ncer) DeserialiseAnimationXml(XDocument doc)
     {
-        var element = doc.Element(nitro_cell_animation_resource);
-        if (element == null)
-        {
-            return Result.Fail($"Missing root element '{nitro_cell_animation_resource}' in animation xml document");
-        }
+        var element = doc.ElementRequired("nitro_cell_animation_resource");
 
-        var cellElement = element.Element(cell_collection);
-        if (cellElement == null)
-        {
-            return Result.Fail($"Missing '{cell_collection}' element in '{nitro_cell_animation_resource}'");
-        }
+        var cellElement = element.ElementRequired("cell_collection");
         var (ncer, nameToFile) = DeserialiseCells(cellElement);
 
-        var animElement = element.Element(animation_collection);
-        if (animElement == null)
-        {
-            return Result.Fail($"Missing '{animation_collection}' element in '{nitro_cell_animation_resource}'");
-        }
+        var animElement = element.ElementRequired("animation_collection");
+        var (nanr, imageToFrames) = DeserialiseAnimation(animElement);
+        return (nanr, ncer);
     }
 
     private static XElement SerialiseAnimations(NANR anim)
     {
-        var animations = new XElement(animation_collection);
+        var animations = new XElement("animation_collection");
         for (int i = 0; i < anim.AnimationBanks.Banks.Count; i++)
         {
             var bank = anim.AnimationBanks.Banks[i];
@@ -62,6 +57,34 @@ public static class CellAnimationSerialiser
         return animations;
     }
 
+    private static (NANR nanr, Dictionary<string, List<ABNK.Anim>> imageToFrames) DeserialiseAnimation(XElement element)
+    {
+        var nanr = new NANR();
+        var imageToFrames = new Dictionary<string, List<ABNK.Anim>>();
+        foreach (var animElem in element.Elements("animation"))
+        {
+            var anim = new ABNK.Anim();
+            nanr.AnimationBanks.Banks.Add(anim);
+            var name = animElem.AttributeStringNonEmpty("name");
+            nanr.Labels.Names.Add(name);
+            
+            foreach (var frameElem in animElem.Elements("frame"))
+            {
+                var frame = new ABNK.Frame();
+                anim.Frames.Add(frame);
+                var img = frameElem.AttributeStringNonEmpty("image");
+                if (!imageToFrames.TryGetValue(img, out var lst))
+                {
+                    lst = new();
+                }
+                lst.Add(anim);
+                var duration = frameElem.AttributeInt("duration");
+                frame.Duration = (ushort)duration;
+            }
+        }
+        return (nanr, imageToFrames);
+    }
+
     private static XElement SerialiseCells(NCER ncer)
     {
         var cells = new XElement("cell_collection");
@@ -79,53 +102,31 @@ public static class CellAnimationSerialiser
         return cells;
     }
 
-    private static Result<(NCER ncer, Dictionary<string, string> nameToFile)> DeserialiseCells(XElement element)
+    private static (NCER ncer, Dictionary<string, string> nameToFile) DeserialiseCells(XElement element)
     {
         var ncer = new NCER();
         Dictionary<string, string> nameToFile = new();
         foreach (var groupElem in element.Elements("image"))
         {
-            var nameAttr = groupElem.Attribute("name");
-            if (nameAttr == null)
-            {
-                return Result.Fail("image element missing 'name' attribute");
-            }
-            if (string.IsNullOrEmpty(nameAttr.Value))
-            {
-                return Result.Fail("image element 'name' attribute was empty");
-            }
-            var name = nameAttr.Value;
-
-            var fileAttr = groupElem.Attribute("file");
-            if (fileAttr == null)
-            {
-                return Result.Fail("image element missing 'file' attribute");
-            }
-            if (string.IsNullOrEmpty(fileAttr.Value))
-            {
-                return Result.Fail("image element 'file' attribute was empty");
-            }
+            var name = groupElem.AttributeStringNonEmpty("name");
+            var file = groupElem.AttributeStringNonEmpty("file");
 
             if (nameToFile.ContainsKey(name))
             {
-                return Result.Fail($"Duplicate 'name' attributes of images found: '{name}'");
+                throw new Exception($"Duplicate 'name' attributes of images found: '{name}'");
             }
-            nameToFile[name] = fileAttr.Value;
+            nameToFile[name] = file;
 
             var bank = new CellBank();
             foreach (var cellElement in element.Elements("cell"))
             {
-                var cellResult = DeserialiseCell(cellElement);
-                if (cellResult.IsFailed)
-                {
-                    return cellResult.ToResult();
-                }
-                bank.Add(cellResult.Value);
+                var cell = DeserialiseCell(cellElement);
+                bank.Add(cell);
             }
             ncer.CellBanks.Banks.Add(bank);
         }
 
-        return Result.Ok((ncer, nameToFile));
+        return (ncer, nameToFile);
     }
 
     private static XElement SerialiseCell(Cell cell)
@@ -149,80 +150,15 @@ public static class CellAnimationSerialiser
         return cellElem;
     }
 
-    private static Result<Cell> DeserialiseCell(XElement element)
+    private static Cell DeserialiseCell(XElement element)
     {
         var cell = new Cell();
-
-
-        var xAttr = element.Attribute("x");
-        if (xAttr == null)
-        {
-            return Result.Fail("Cell element missing 'x' attribute");
-        }
-        if (!int.TryParse(xAttr.Value, out var x))
-        {
-            return Result.Fail("Cell 'x' attribute did not have integer number value");
-        }
-        cell.XOffset = x;
-
-
-        var yAttr = element.Attribute("y");
-        if (yAttr == null)
-        {
-            return Result.Fail("Cell element missing 'y' attribute");
-        }
-        if (!int.TryParse(yAttr.Value, out var y))
-        {
-            return Result.Fail("Cell 'y' attribute did not have integer number value");
-        }
-        cell.YOffset = y;
-
-
-        var wAttr = element.Attribute("width");
-        if (wAttr == null)
-        {
-            return Result.Fail("Cell element missing 'width' attribute");
-        }
-        if (!int.TryParse(wAttr.Value, out var width) || width < 1)
-        {
-            return Result.Fail("Cell 'width' attribute did not have positive integer number value");
-        }
-        cell.Width = width;
-
-
-        var hAttr = element.Attribute("height");
-        if (hAttr == null)
-        {
-            return Result.Fail("Cell element missing 'height' attribute");
-        }
-        if (!int.TryParse(hAttr.Value, out var height) || height < 1)
-        {
-            return Result.Fail("Cell 'width' attribute did not have positive integer number value");
-        }
-
-
-        var flipXAttr = element.Attribute("flip_x");
-        if (flipXAttr != null)
-        {
-            if (!bool.TryParse(flipXAttr.Value, out var flipX))
-            {
-                return Result.Fail("Cell 'flip_x' did not have bool value");
-            }
-            cell.FlipX = flipX;
-        }
-
-
-        var flipYAttr = element.Attribute("flip_y");
-        if (flipYAttr != null)
-        {
-            if (!bool.TryParse(flipXAttr.Value, out var flipY))
-            {
-                return Result.Fail("Cell 'flip_y' did not have bool value");
-            }
-            cell.FlipY = flipY;
-        }
-
-
+        cell.XOffset = element.AttributeInt("x");
+        cell.YOffset = element.AttributeInt("y");
+        cell.Width = element.AttributeInt("width");
+        cell.Height = element.AttributeInt("height");
+        cell.FlipX = element.AttributeBool("flip_x", false);
+        cell.FlipY = element.AttributeBool("flip_y", false);
         return cell;
     }
 
@@ -231,3 +167,5 @@ public static class CellAnimationSerialiser
         return $"{num.ToString().PadLeft(4, '0')}.png";
     }
 }
+
+
