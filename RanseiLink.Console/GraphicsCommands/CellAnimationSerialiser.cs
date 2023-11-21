@@ -1,19 +1,69 @@
 ﻿#nullable enable
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
+using SixLabors.ImageSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
 public static class CellAnimationSerialiser
 {
-    public static XDocument SerialiseAnimationXml(NANR anim, NCER ncer)
+    public static void Serialise(string bgLinkFile, string animLinkFile, string outputFolder)
     {
-        var cellElem = SerialiseCells(ncer);
-        var animationElem = SerialiseAnimations(anim);
-        return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
+        var bg = G2DR.LoadImgFromFile(bgLinkFile);
+        var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, Path.Combine(outputFolder, "background.png"));
+
+        var anim = G2DR.LoadAnimFromFile(animLinkFile);
+        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height);
+    }
+
+    public static (int width, int height) SerialiseBackground(NCGR ncgr, NCLR nclr, string outputFolder)
+    {
+        using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
+
+        image.SaveAsPng(Path.Combine(outputFolder, "background.png"));
+
+        return (image.Width, image.Height);
+    }
+
+    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height)
+    {
+        // save the images
+
+        var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height);
+
+        for (int i = 0; i < images.Count; i++)
+        {
+            var cellImage = images[i];
+            cellImage.SaveAsPng(Path.Combine(outputFolder, CellAnimationSerialiser.NumToFileName(i)));
+            cellImage.Dispose();
+        }
+
+        // save the animation file
+
+        var cells = new List<CellImage>();
+        var anims = new List<Anim>();
+
+        for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
+        {
+            var anim = nanr.AnimationBanks.Banks[i];
+            var name = nanr.Labels.Names[i];
+            anims.Add(new Anim(name, anim.Frames.Select(x => new AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
+        }
+
+        for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
+        {
+            var cellBank = ncer.CellBanks.Banks[i];
+            cells.Add(new CellImage(cellBank, i.ToString(), NumToFileName(i)));
+        }
+
+        var doc = Serialise(cells, anims);
+
+        doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
     /// <summary>
@@ -25,108 +75,33 @@ public static class CellAnimationSerialiser
     /// <exception cref="Exception"/>
     public static (NANR nanr, NCER ncer) DeserialiseAnimationXml(XDocument doc)
     {
+        var (cells, animations) = Deseralise(doc);
+
+        var nanr = new NANR();
+        var ncer = new NCER();
+
+        foreach (var cellImage in cells)
+        {
+            
+        }
+    }
+
+    private static XDocument Serialise(List<CellImage> cells, List<Anim> animations)
+    {
+        var cellElem = new XElement("cell_collection", cells.Select(x => x.Serialise()));
+        var animationElem = new XElement("animation_collection", animations.Select(x => x.Serialise()));
+
+        return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
+    }
+
+    private static (List<CellImage> Cells, List<Anim> Animations) Deseralise(XDocument doc)
+    {
         var element = doc.ElementRequired("nitro_cell_animation_resource");
 
-        var cellElement = element.ElementRequired("cell_collection");
-        var (ncer, nameToFile) = DeserialiseCells(cellElement);
+        var cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellImage(x)).ToList();
+        var anims = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
 
-        var animElement = element.ElementRequired("animation_collection");
-        var (nanr, imageToFrames) = DeserialiseAnimation(animElement);
-        return (nanr, ncer);
-    }
-
-    private static XElement SerialiseAnimations(NANR anim)
-    {
-        var animations = new XElement("animation_collection");
-        for (int i = 0; i < anim.AnimationBanks.Banks.Count; i++)
-        {
-            var bank = anim.AnimationBanks.Banks[i];
-            var name = anim.Labels.Names[i];
-
-            var trackElem = new XElement("animation", new XAttribute("name", name));
-            foreach (var keyFrame in bank.Frames)
-            {
-                trackElem.Add(new XElement("frame",
-                    new XAttribute("image", keyFrame.CellBank),
-                    new XAttribute("duration", keyFrame.Duration)
-                    ));
-            }
-            animations.Add(trackElem);
-        }
-
-        return animations;
-    }
-
-    private static (NANR nanr, Dictionary<string, List<ABNK.Anim>> imageToFrames) DeserialiseAnimation(XElement element)
-    {
-        var nanr = new NANR();
-        var imageToFrames = new Dictionary<string, List<ABNK.Anim>>();
-        foreach (var animElem in element.Elements("animation"))
-        {
-            var anim = new ABNK.Anim();
-            nanr.AnimationBanks.Banks.Add(anim);
-            var name = animElem.AttributeStringNonEmpty("name");
-            nanr.Labels.Names.Add(name);
-            
-            foreach (var frameElem in animElem.Elements("frame"))
-            {
-                var frame = new ABNK.Frame();
-                anim.Frames.Add(frame);
-                var img = frameElem.AttributeStringNonEmpty("image");
-                if (!imageToFrames.TryGetValue(img, out var lst))
-                {
-                    lst = new();
-                }
-                lst.Add(anim);
-                var duration = frameElem.AttributeInt("duration");
-                frame.Duration = (ushort)duration;
-            }
-        }
-        return (nanr, imageToFrames);
-    }
-
-    private static XElement SerialiseCells(NCER ncer)
-    {
-        var cells = new XElement("cell_collection");
-        for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
-        {
-            var cellBank = ncer.CellBanks.Banks[i];
-            var groupElem = new XElement("image", new XAttribute("name", i), new XAttribute("file", NumToFileName(i)));
-            foreach (var cell in cellBank)
-            {
-                groupElem.Add(SerialiseCell(cell));
-            }
-            cells.Add(groupElem);
-        }
-
-        return cells;
-    }
-
-    private static (NCER ncer, Dictionary<string, string> nameToFile) DeserialiseCells(XElement element)
-    {
-        var ncer = new NCER();
-        Dictionary<string, string> nameToFile = new();
-        foreach (var groupElem in element.Elements("image"))
-        {
-            var name = groupElem.AttributeStringNonEmpty("name");
-            var file = groupElem.AttributeStringNonEmpty("file");
-
-            if (nameToFile.ContainsKey(name))
-            {
-                throw new Exception($"Duplicate 'name' attributes of images found: '{name}'");
-            }
-            nameToFile[name] = file;
-
-            var bank = new CellBank();
-            foreach (var cellElement in element.Elements("cell"))
-            {
-                var cell = DeserialiseCell(cellElement);
-                bank.Add(cell);
-            }
-            ncer.CellBanks.Banks.Add(bank);
-        }
-
-        return (ncer, nameToFile);
+        return (cells, anims);
     }
 
     private static XElement SerialiseCell(Cell cell)
@@ -165,6 +140,101 @@ public static class CellAnimationSerialiser
     public static string NumToFileName(int num)
     {
         return $"{num.ToString().PadLeft(4, '0')}.png";
+    }
+
+    private class Anim
+    {
+        public string Name { get; }
+        public List<AnimFrame> Frames { get; }
+
+        public Anim(string name, List<AnimFrame> frames)
+        {
+            Name = name;
+            Frames = frames;
+        }
+
+        public Anim(XElement animElem)
+        {
+            Name = animElem.AttributeStringNonEmpty("name");
+            Frames = new List<AnimFrame>();
+            foreach (var frameElem in animElem.Elements("frame"))
+            {
+                Frames.Add(new AnimFrame(frameElem));
+            }
+        }
+
+        public XElement Serialise()
+        {
+            var trackElem = new XElement("animation", new XAttribute("name", Name));
+            foreach (var keyFrame in Frames)
+            {
+                trackElem.Add(keyFrame.Serialise());
+            }
+            return trackElem;
+        }
+    }
+
+
+    private class AnimFrame
+    {
+        public string Image { get; }
+        public int Duration { get; }
+
+        public AnimFrame(string image, int duration)
+        {
+            Image = image;
+            Duration = duration;
+        }
+
+        public AnimFrame(XElement frameElem)
+        {
+            Image = frameElem.AttributeStringNonEmpty("image");
+            Duration = frameElem.AttributeInt("duration");
+        }
+
+        public XElement Serialise()
+        {
+            return new XElement("frame",
+                new XAttribute("image", Image),
+                new XAttribute("duration", Duration)
+                );
+        }
+    }
+
+    private class CellImage
+    {
+        public CellBank Cells { get; }
+        public string Name { get; }
+        public string File { get; }
+
+        public CellImage(XElement groupElem)
+        {
+            Name = groupElem.AttributeStringNonEmpty("name");
+            File = groupElem.AttributeStringNonEmpty("file");
+            Cells = new CellBank();
+            foreach (var cellElement in groupElem.Elements("cell"))
+            {
+                var cell = DeserialiseCell(cellElement);
+                Cells.Add(cell);
+            }
+        }
+
+        public CellImage(CellBank cells, string name, string file)
+        {
+            Cells = cells;
+            Name = name;
+            File = file;
+        }
+
+        public XElement Serialise()
+        {
+            var groupElem = new XElement("image", new XAttribute("name", Name), new XAttribute("file", File));
+            foreach (var cell in Cells)
+            {
+                groupElem.Add(SerialiseCell(cell));
+            }
+            return groupElem;
+        }
     }
 }
 
