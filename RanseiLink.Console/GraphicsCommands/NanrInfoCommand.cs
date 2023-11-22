@@ -19,7 +19,6 @@ public class NanrInfoCommand : ICommand
         var nanr = NANR.Load(FilePath);
 
         var el = new XElement("AnimationBank",
-            new XAttribute("KeyFrameCount", nanr.AnimationBanks.KeyFrameCount),
             new XElement("Banks", nanr.AnimationBanks.Banks.Select((bank, i) =>
                 new XElement("Bank",
                     new XAttribute("Name", nanr.Labels.Names[i]),

@@ -21,11 +21,6 @@ public static class G2DR
         return (ncgr, nclr);
     }
 
-    public static void SaveImgToFolder(string linkFolder, NCGR ncgr, NCLR nclr, bool useNcgrSlot1 = false)
-    {
-        File.Create("0000.nanr").Dispose();
-    }
-
     public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellFromFolder(string linkFolder)
     {
         var (ncgr, nclr) = LoadImgFromFolder(linkFolder);
@@ -38,6 +33,37 @@ public static class G2DR
         var (ncer, ncgr, nclr) = LoadCellFromFolder(linkFolder);
         var nanr = NANR.Load(Path.Combine(linkFolder, "0000.nanr"));
         return (nanr, ncer, ncgr, nclr);
+    }
+
+    private static void SaveImgToFolder(string linkFolder, NCGR ncgr, NCLR nclr, bool useNcgrSlot1 = false)
+    {
+        File.Create("0000.nanr").Dispose();
+        File.Create("0004.ncer").Dispose();
+        File.Create("0005.nscr").Dispose();
+
+        nclr.Save("0004.nclr");
+        if (useNcgrSlot1)
+        {
+            ncgr.Save("0001.ncgr");
+            File.Create("0003.ncgr").Dispose();
+        }
+        else
+        {
+            File.Create("0001.ncgr").Dispose();
+            ncgr.Save("0003.ncgr");
+        }
+    }
+
+    public static void SaveCellToFolder(string linkFolder, NCER ncer, NCGR ncgr, NCLR nclr, bool useNcgrSlot1 = false)
+    {
+        SaveImgToFolder(linkFolder, ncgr, nclr);
+        ncer.Save("0004.ncer");
+    }
+
+    public static void SaveAnimToFolder(string linkFolder, NCER ncer, NCGR ncgr, NCLR nclr, bool useNcgrSlot1 = false)
+    {
+        SaveImgToFolder(linkFolder, ncgr, nclr);
+        ncer.Save("0004.ncer");
     }
 
     public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFile(string linkFilePath)

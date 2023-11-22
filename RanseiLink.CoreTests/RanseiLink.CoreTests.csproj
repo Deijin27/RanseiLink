@@ -26,6 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\test_default.nanr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_ki2_aurora_anim.nanr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -84,6 +84,8 @@ public static class CellAnimationSerialiser
         {
             
         }
+
+        return (nanr, ncer);
     }
 
     private static XDocument Serialise(List<CellImage> cells, List<Anim> animations)

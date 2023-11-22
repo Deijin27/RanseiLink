@@ -36,9 +36,34 @@ public class NANR
         }
     }
 
+    /// <summary>
+    /// This is the default animation used in most places when a cell shouldn't be animated
+    /// </summary>
+    /// <returns></returns>
+    public static NANR Default(int bankCount = 1)
+    {
+        var nanr = new NANR();
+        for (int i = 0; i < bankCount; i++)
+        {
+            var anim = new ABNK.Anim();
+            anim.DataType = 0;
+            anim.Unknown1 = 1;
+            anim.Unknown2 = 2;
+            anim.Unknown3 = 0;
+            anim.Frames.Add(new ABNK.Frame() { CellBank = (ushort)i, Duration = 4 });
+            nanr.Labels.Names.Add($"CellAnime{i}");
+            nanr.AnimationBanks.Banks.Add(anim);
+        }
+        nanr.Unknown.Unknown = 0;
+        
+        return nanr;
+    }
+
     public NANR()
     {
         AnimationBanks = new();
+        Labels = new();
+        Unknown = new();
     }
 
     public NANR(BinaryReader br)
@@ -102,17 +127,13 @@ public class ABNK
     public const string MagicNumber = "KNBA";
 
     public List<Anim> Banks { get; set; }
-    /// <summary>
-    /// The total number of key frames across all banks. This includes the unused entries which seem to be set to 0xCCCC
-    /// </summary>
-    public ushort KeyFrameCount { get; set; }
 
     private struct SubHeader
     {
         public const int Length = 2 + 2 + 4 + 4 + 4 + 8;
 
         public ushort BankCount;
-        public ushort KeyFrameCount;
+        public ushort FrameCount;
         public uint BlockOffset_Anim;
         public uint BlockOffset_Frames;
         public uint BlockOffset_Cells;
@@ -122,7 +143,7 @@ public class ABNK
         public SubHeader(BinaryReader br)
         {
             BankCount = br.ReadUInt16();
-            KeyFrameCount = br.ReadUInt16();
+            FrameCount = br.ReadUInt16();
             BlockOffset_Anim = br.ReadUInt32();
             BlockOffset_Frames = br.ReadUInt32();
             BlockOffset_Cells = br.ReadUInt32();
@@ -137,7 +158,7 @@ public class ABNK
         public void WriteTo(BinaryWriter bw)
         {
             bw.Write(BankCount);
-            bw.Write(KeyFrameCount);
+            bw.Write(FrameCount);
             bw.Write(BlockOffset_Anim);
             bw.Write(BlockOffset_Frames);
             bw.Write(BlockOffset_Cells);
@@ -162,7 +183,6 @@ public class ABNK
         }
 
         var subHeader = new SubHeader(br);
-        KeyFrameCount = subHeader.KeyFrameCount;
 
         if (subHeader.BlockOffset_UAAT != 0)
         {
@@ -170,20 +190,21 @@ public class ABNK
         }
 
         Banks = new List<Anim>();
-
+        int tframes = 0;
         for (int i = 0; i < subHeader.BankCount; i++)
         {
             br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Anim + i * Anim.DataLength;
             var anim = new Anim();
             Banks.Add(anim);
-            var numFrames = br.ReadUInt32();
+            var numFrames = br.ReadInt32();
+            tframes += numFrames;
             anim.DataType = br.ReadUInt16();
             anim.Unknown1 = br.ReadUInt16();
             anim.Unknown2 = br.ReadUInt16();
             anim.Unknown3 = br.ReadUInt16();
             var offsetFrame = br.ReadUInt32();
 
-            for (int j = 0; j < numFrames; j++)
+            for (var j = 0; j < numFrames; j++)
             {
                 br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Frames + offsetFrame + j * Frame.DataLength_Frame;
                 var frame = new Frame();
@@ -200,6 +221,10 @@ public class ABNK
                 br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Cells + frameOffsetData;
                 frame.CellBank = br.ReadUInt16();
             }
+        }
+        if (tframes != subHeader.FrameCount)
+        {
+            throw new Exception("The frame count in the header does not match the number of frames specified in the animation banks");
         }
         br.BaseStream.Position = initOffset + header.ChunkLength;
     }
@@ -218,7 +243,7 @@ public class ABNK
         var subHeader = new SubHeader
         {
             BankCount = (ushort)Banks.Count,
-            KeyFrameCount = KeyFrameCount,
+            FrameCount = (ushort)Banks.Sum(x => x.Frames.Count),
             BlockOffset_Anim = SubHeader.Length
         };
 
@@ -268,11 +293,16 @@ public class ABNK
 
         subHeader.BlockOffset_Cells = (uint)(bw.BaseStream.Position - postNitroHeaderOffset);
 
+        // make it disisible by 4?
+        if (distinctCells.Count % 2 != 0)
+        {
+            distinctCells.Add(0xCCCC);
+        }
         foreach (var cell in distinctCells) 
         {
             bw.Write(cell);
         }
-
+        
         // write headers
         var end = bw.BaseStream.Position;
         header.ChunkLength = (uint)(end - initOffset);

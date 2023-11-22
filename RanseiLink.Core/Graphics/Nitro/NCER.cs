@@ -23,6 +23,14 @@ public class NCER
         }
     }
 
+    public void Save(string file)
+    {
+        using (var bw = new BinaryWriter(File.Create(file)))
+        {
+            WriteTo(bw);
+        }
+    }
+
     public NCER()
     {
         CellBanks = new();

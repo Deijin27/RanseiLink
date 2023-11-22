@@ -18,8 +18,6 @@ public class NanrTests
     {
         var nanr = NANR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_ki2_aurora_anim.nanr"));
 
-        nanr.AnimationBanks.KeyFrameCount.Should().Be(12);
-
         var banks = nanr.AnimationBanks.Banks;
 
         var bank0 = banks[0];
@@ -97,11 +95,31 @@ public class NanrTests
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
         File.Exists(file).Should().BeTrue();
 
-        var ncer = NANR.Load(file);
+        var nanr = NANR.Load(file);
 
         var mem = new MemoryStream();
         var bw = new BinaryWriter(mem);
-        ncer.WriteTo(bw);
+        nanr.WriteTo(bw);
+        var data = mem.ToArray();
+        mem.Dispose();
+
+        //File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
+
+        data.Should().Equal(File.ReadAllBytes(file));
+    }
+
+    [Fact]
+    public void SaveDefault()
+    {
+        var fileName = "test_default.nanr";
+        var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
+        File.Exists(file).Should().BeTrue();
+
+        var nanr = NANR.Default();
+
+        var mem = new MemoryStream();
+        var bw = new BinaryWriter(mem);
+        nanr.WriteTo(bw);
         var data = mem.ToArray();
         mem.Dispose();
 
