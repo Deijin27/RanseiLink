@@ -242,9 +242,9 @@ public static class ImageUtil
         {
             image = Image.Load<Rgba32>(file);
         }
-        catch (UnknownImageFormatException e)
+        catch (Exception e)
         {
-            throw new UnknownImageFormatException(e.Message + $" File='{file}'");
+            throw new Exception($"Error loading image file '{file}'", e);
         }
         return image;
     }

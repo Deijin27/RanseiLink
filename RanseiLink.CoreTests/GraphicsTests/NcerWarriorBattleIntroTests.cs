@@ -19,17 +19,9 @@ public class NcerWarriorBattleIntroTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.nclr"));
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.png");
 
-        var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
-
         ncer.CellBanks.Banks.Should().HaveCount(1);
 
-        using var image = CellImageUtil.MultiBankToImage(
-            ncer.CellBanks.Banks,
-            ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format),
-            debug: false
-            );
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
         using var expectedImage = Image.Load<Rgba32>(png);
         image.ShouldBeIdenticalTo(expectedImage);
@@ -42,15 +34,10 @@ public class NcerWarriorBattleIntroTests
         var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.ncgr"));
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.nclr"));
 
-        var oldPixels = ncgr.Pixels.Data;
+        var oldPixels = ncgr.Pixels.Data.ToArray();
         var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = CellImageUtil.MultiBankToImage(
-            ncer.CellBanks.Banks,
-            ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format), 
-            debug: false
-            );
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
         var info = CellImageUtil.MultiBankFromImage(
             image,

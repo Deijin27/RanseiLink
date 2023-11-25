@@ -75,14 +75,18 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
             using var subImage = image.Clone(g =>
                 g.Crop(new Rectangle(0, (id * height), width, height)));
 
-            var pixels = CellImageUtil.SharedPaletteMultiBankFromImage(
+            var workingPixels = new List<byte>();
+            CellImageUtil.SharedPaletteMultiBankFromImage(
                 image: subImage,
                 ncer.CellBanks.Banks,
+                workingPixels,
                 workingPalette,
                 ncer.CellBanks.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
                 format: ncgr.Pixels.Format
                 );
+
+            var pixels = workingPixels.ToArray();
 
             if (ncgr.Pixels.Data.Length != pixels.Length)
             {

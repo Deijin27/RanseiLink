@@ -1,6 +1,7 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using System.Collections.Generic;
+using System;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -95,13 +96,26 @@ public static class NitroImageUtil
     /// </summary>
     public static void NcerImport(NCER ncer, NCGR ncgr, NCLR nclr, string png)
     {
-        var imageInfo = CellImageUtil.MultiBankFromPng(
+        try
+        {
+            var imageInfo = CellImageUtil.MultiBankFromPng(
             file: png,
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             tiled: ncgr.Pixels.IsTiled,
             format: ncgr.Pixels.Format
             );
+            ProcessNcerImageInfo(imageInfo, ncgr, nclr);
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error importing to ncer image '{png}'", e);
+        }
+        
+    }
+
+    private static void ProcessNcerImageInfo(SpriteImageInfo imageInfo, NCGR ncgr, NCLR nclr)
+    {
         ncgr.Pixels.Data = imageInfo.Pixels;
         if (ncgr.Pixels.TilesPerColumn != -1)
         {
@@ -112,9 +126,22 @@ public static class NitroImageUtil
         var newPalette = PaletteUtil.From32bitColors(imageInfo.Palette);
         if (newPalette.Length > nclr.Palettes.Palette.Length)
         {
-            throw new InvalidPaletteException($"Palette length exceeds current palette when importing '{png}'");
+            throw new InvalidPaletteException($"Palette length exceeds current palette when importing image");
         }
         newPalette.CopyTo(nclr.Palettes.Palette, 0);
+    }
+
+    public static void NcerImportFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images)
+    {
+        var imageInfo = CellImageUtil.MultiBankFromMultipleImages(
+            images: images,
+            banks: ncer.CellBanks.Banks,
+            blockSize: ncer.CellBanks.BlockSize,
+            tiled: ncgr.Pixels.IsTiled,
+            format: ncgr.Pixels.Format
+            );
+
+        ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
 
     /// <summary>

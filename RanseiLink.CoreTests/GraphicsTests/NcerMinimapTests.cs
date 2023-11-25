@@ -19,15 +19,7 @@ public class NcerMinimapTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.nclr"));
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.png");
 
-        var oldPixels = ncgr.Pixels.Data;
-        var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
-
-        using var image = CellImageUtil.MultiBankToImage(
-            ncer.CellBanks.Banks,
-            ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format),
-            debug: false
-            );
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
         using var expectedImage = Image.Load<Rgba32>(png);
         image.ShouldBeIdenticalTo(expectedImage);
@@ -40,15 +32,10 @@ public class NcerMinimapTests
         var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.ncgr"));
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.nclr"));
 
-        var oldPixels = ncgr.Pixels.Data;
+        var oldPixels = ncgr.Pixels.Data.ToArray();
         var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = CellImageUtil.MultiBankToImage(
-            ncer.CellBanks.Banks,
-            ncer.CellBanks.BlockSize,
-            new SpriteImageInfo(oldPixels, oldPalette, -1, -1, ncgr.Pixels.IsTiled, ncgr.Pixels.Format), 
-            debug: false
-            );
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
         var info = CellImageUtil.MultiBankFromImage(
             image, 

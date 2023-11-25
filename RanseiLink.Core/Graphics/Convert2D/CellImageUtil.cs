@@ -15,6 +15,13 @@ public static class CellImageUtil
     {
         if (bank.Count == 0)
         {
+            // if the bank is empty, we still return bank dimensoins which are
+            // just the width and height with everything else as default
+            // The other values will not be used, so it doesn't matter
+            // The width and height should be the values passed in.
+            // this will lead to a transparent, blank placeholder image to be produced.
+            // but default the width and height to non-zero values
+            // for the case where the user doesn't provide them to remain valid image
             return new BankDimensions(0, 0, 0, 0, width < 0 ? 1 : width, height < 0 ? 1 : height);
         }
         int minY = bank.Min(i => i.YOffset);
@@ -38,8 +45,8 @@ public static class CellImageUtil
     public static Image<Rgba32> CellToImage(Cell cell, uint blockSize, SpriteImageInfo imageInfo)
     {
         int tileOffset = cell.TileOffset << (byte)blockSize;
-        int bankDataOffset = 0;
-        var startByte = tileOffset * 0x20 + bankDataOffset;
+
+        var startByte = tileOffset * 0x20;
         if (imageInfo.Format == TexFormat.Pltt16)
         {
             startByte *= 2; // account for compression e.g. pokemon conquest minimaps
@@ -48,14 +55,17 @@ public static class CellImageUtil
 
         var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, imageInfo.Palette, cell.Width, cell.Height, imageInfo.IsTiled, imageInfo.Format));
 
-        cellImg.Mutate(g =>
+        if (cell.FlipX || cell.FlipY)
         {
-            if (cell.FlipX)
-                g.Flip(FlipMode.Horizontal);
-            if (cell.FlipY)
-                g.Flip(FlipMode.Vertical);
-        });
-
+            cellImg.Mutate(g =>
+            {
+                if (cell.FlipX)
+                    g.Flip(FlipMode.Horizontal);
+                if (cell.FlipY)
+                    g.Flip(FlipMode.Vertical);
+            });
+        }
+        
         return cellImg;
     }
 
@@ -83,9 +93,6 @@ public static class CellImageUtil
         var graphic = new Image<Rgba32>(dims.Width, dims.Height);
         foreach (var cell in bank)
         {
-            if (cell.Width == 0x00 || cell.Height == 0x00)
-                continue;
-
             using (var cellImg = CellToImage(cell, blockSize, imageInfo))
             {
                 graphic.Mutate(g =>
@@ -121,6 +128,7 @@ public static class CellImageUtil
         graphic.SaveAsPng(file);
     }
 
+
     public static Image<Rgba32> MultiBankToImage(IReadOnlyList<CellBank> banks, uint blockSize, SpriteImageInfo imageInfo, bool debug = false)
     {
         if (banks.Count == 0)
@@ -148,42 +156,109 @@ public static class CellImageUtil
         return banks.Select(bank => SingleBankToMultipleImages(bank, blockSize, imageInfo)).ToList();
     }
 
-    private static void SharedPaletteBankFromImage(List<byte> workingPixels, List<Rgba32> workingPalette, Image<Rgba32> image, CellBank bank, uint blockSize, bool tiled, TexFormat format)
+    // dupe?
+    /// <summary>
+    /// Calculates the pixels, colors, and cell tile offset from an image. Requires some cell parameters, such as FlipX to be pre filled.
+    /// </summary>
+    public static void CellFromImage(Image<Rgba32> image, Cell cell, uint blockSize, List<byte> workingPixels, List<Rgba32> workingPalette,
+        bool tiled, TexFormat format)
     {
-        int minY = bank.Min(i => i.YOffset);
-        int yShift = minY < 0 ? -minY : 0;
-        int minX = bank.Min(i => i.XOffset);
-        int xShift = minX < 0 ? -minX : 0;
-
-        foreach (Cell cell in bank)
+        // mutate image based on pre-configured cell parameters
+        if (cell.FlipX || cell.FlipY)
         {
-            if (cell.Width == 0x00 || cell.Height == 0x00)
+            image.Mutate(g =>
             {
-                continue;
-            }
-
-            int tileOffset = cell.TileOffset << (byte)blockSize;
-            int bankDataOffset = 0;
-            var startByte = tileOffset * 0x20 + bankDataOffset;
-            if (format == TexFormat.Pltt16)
-            {
-                startByte *= 2; // account for compression e.g. pokemon conquest minimaps
-            }
-
-            using (var cellImg = image.Clone(g =>
-            {
-                g.Crop(new Rectangle(cell.XOffset + xShift, cell.YOffset + yShift, cell.Width, cell.Height));
-
                 if (cell.FlipX)
                     g.Flip(FlipMode.Horizontal);
                 if (cell.FlipY)
                     g.Flip(FlipMode.Vertical);
+            });
+        }
+
+        // work out tile offset
+        var startByte = workingPixels.Count;
+        if (format == TexFormat.Pltt16)
+        {
+            startByte /= 2; // account for compression
+        }
+        var tileOffset = startByte / 0x20;
+        cell.TileOffset = tileOffset >> (byte)blockSize;
+
+        // get pixels from image
+        var pixels = ImageUtil.SharedPalettePixelsFromImage(image, workingPalette, tiled, format, color0ToTransparent: true);
+        workingPixels.AddRange(pixels);
+    }
+    public static void SharedSingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, CellBank bank, uint blockSize,
+        List<byte> workingPixels, List<Rgba32> workingPalette,
+        bool tiled, TexFormat format)
+    {
+        if (images.Count != bank.Count)
+        {
+            throw new ArgumentException($"Images did not have the same number of items as cell bank ({images.Count} vs {bank.Count})");
+        }
+
+        for (int i = 0; i < bank.Count; i++)
+        {
+            var image = images[i];
+            var cell = bank[i];
+            CellFromImage(image, cell, blockSize, workingPixels, workingPalette, tiled, format);
+        }
+    }
+
+    public static SpriteImageInfo SingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, CellBank bank, uint blockSize,
+        bool tiled, TexFormat format)
+    {
+        var workingPixels = new List<byte>();
+        var workingPalette = new List<Rgba32>() { Color.Transparent };
+
+        SharedSingleBankFromMultipleImages(images, bank, blockSize, workingPixels, workingPalette, tiled, format);
+
+        return new SpriteImageInfo(
+            Pixels: workingPixels.ToArray(),
+            Palette: workingPalette.ToArray(),
+            Width: -1,
+            Height: -1,
+            IsTiled: tiled,
+            Format: format
+            );
+    }
+
+    public static void SharedSingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
+        List<byte> workingPixels, List<Rgba32> workingPalette,
+        bool tiled, TexFormat format)
+    {
+        var dims = InferDimensions(bank, image.Width, image.Height);
+
+        for (int i = 0; i < bank.Count; i++)
+        {
+            var cell = bank[i];
+            using (var cellImg = image.Clone(g =>
+            {
+                g.Crop(new Rectangle(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
             }))
             {
-                byte[] cellPixels = ImageUtil.SharedPalettePixelsFromImage(cellImg, workingPalette, tiled, format, color0ToTransparent: true);
-                workingPixels.AddRange(cellPixels);
+                CellFromImage(cellImg, cell, blockSize, workingPixels, workingPalette, tiled, format);
             }
         }
+    }
+
+    public static SpriteImageInfo SingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
+        bool tiled, TexFormat format)
+    {
+        var workingPixels = new List<byte>();
+        var workingPalette = new List<Rgba32>() { Color.Transparent };
+
+        SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format);
+
+        workingPalette[0] = Color.Magenta;
+        return new SpriteImageInfo(
+            Pixels: workingPixels.ToArray(),
+            Palette: workingPalette.ToArray(),
+            Width: -1,
+            Height: -1,
+            IsTiled: tiled,
+            Format: format
+            );
     }
 
     public static SpriteImageInfo SingleBankFromPng(string file, CellBank bank, uint blockSize, bool tiled, TexFormat format)
@@ -196,26 +271,6 @@ public static class CellImageUtil
         using var image = ImageUtil.LoadPngBetterError(file);
 
         return SingleBankFromImage(image, bank, blockSize, tiled, format);
-    }
-
-    public static SpriteImageInfo SingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize, bool tiled, TexFormat format)
-    {
-        var width = image.Width;
-        var height = image.Height;
-
-        var workingPalette = new List<Rgba32>
-        {
-            Color.Transparent
-        };
-
-        var workingPixels = new List<byte>();
-
-        SharedPaletteBankFromImage(workingPixels, workingPalette, image, bank, blockSize, tiled, format);
-
-        var pixelArray = workingPixels.ToArray();
-        workingPalette[0] = Color.Magenta;
-
-        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
     }
 
     public static SpriteImageInfo MultiBankFromPng(string file, IReadOnlyList<CellBank> banks, uint blockSize, bool tiled, TexFormat format)
@@ -248,25 +303,24 @@ public static class CellImageUtil
         {
             Color.Transparent
         };
+        var workingPixels = new List<byte>();
 
-        var pixelArray = SharedPaletteMultiBankFromImage(image, banks, workingPalette, blockSize, tiled, format);
+        SharedPaletteMultiBankFromImage(image, banks, workingPixels, workingPalette, blockSize, tiled, format);
         workingPalette[0] = Color.Magenta;
 
-        return new SpriteImageInfo(pixelArray, workingPalette.ToArray(), width, height, tiled, format);
+        return new SpriteImageInfo(workingPixels.ToArray(), workingPalette.ToArray(), width, height, tiled, format);
     }
 
-    public static byte[] SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, List<Rgba32> workingPalette, uint blockSize, bool tiled, TexFormat format)
+    public static void SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, List<byte> workingPixels, List<Rgba32> workingPalette, uint blockSize, bool tiled, TexFormat format)
     {
         if (banks.Count == 0)
         {
             throw new Exception("Can't load image with no cell banks");
         }
-        var workingPixels = new List<byte>();
 
         if (banks.Count == 1)
         {
-            SharedPaletteBankFromImage(workingPixels, workingPalette, image, banks[0], blockSize, tiled, format);
-            return workingPixels.ToArray();
+            SharedSingleBankFromImage(image, banks[0], blockSize, workingPixels, workingPalette, tiled, format);
         }
 
         var width = image.Width;
@@ -282,15 +336,43 @@ public static class CellImageUtil
 
             }))
             {
-                SharedPaletteBankFromImage(workingPixels, workingPalette, subImage, bank, blockSize, tiled, format);
+                SharedSingleBankFromImage(subImage, bank, blockSize, workingPixels, workingPalette, tiled, format);
             }
             cumulativeHeight += dims.Height;
         }
-
-        var pixelArray = workingPixels.ToArray();
-
-        return pixelArray;
     }
+    public static SpriteImageInfo MultiBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<CellBank> banks, uint blockSize, bool tiled, TexFormat format)
+    {
+        if (banks.Count == 0)
+        {
+            throw new ArgumentException("Can't load image with no cell banks");
+        }
+        if (banks.Count != images.Count)
+        {
+            throw new ArgumentException($"Images did not have the same number of items as banks ({images.Count} vs {banks.Count})");
+        }
+
+        var workingPalette = new List<Rgba32> { Color.Transparent };
+        var workingPixels = new List<byte>();
+        for (int i = 0; i < banks.Count; i++)
+        {
+            var bank = banks[i];
+            var image = images[i];
+            SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format);
+        }
+
+        workingPalette[0] = Color.Magenta;
+
+        return new SpriteImageInfo(
+            Pixels: workingPixels.ToArray(),
+            Palette: workingPalette.ToArray(),
+            Width: -1,
+            Height: -1,
+            IsTiled: tiled,
+            Format: format
+            );
+    }
+
 
     public static CellSize GetCellSize(Shape shape, Scale scale)
     {

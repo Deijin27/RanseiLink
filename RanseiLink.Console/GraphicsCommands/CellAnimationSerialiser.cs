@@ -2,6 +2,7 @@
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,25 +68,77 @@ public static class CellAnimationSerialiser
     }
 
     /// <summary>
-    /// 
+    /// Warning: will throw an exception on failure
     /// </summary>
-    /// <param name="doc"></param>
-    /// <returns></returns>
-    /// <exception cref="XmlUtilException"/>
-    /// <exception cref="Exception"/>
-    public static (NANR nanr, NCER ncer) DeserialiseAnimationXml(XDocument doc)
+    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr)
     {
-        var (cells, animations) = Deseralise(doc);
-
+        // nanr is the only one where all info is recreated
+        // however, i think ideally we have an intermediate "configuration" class which 
+        // can either be generated from the existing files,
+        // or created from scratch. Then the handling after that can be unified.
         var nanr = new NANR();
-        var ncer = new NCER();
 
+        var (cells, animations) = Deseralise(XDocument.Load(animationXmlFile));
+        var dir = Path.GetDirectoryName(animationXmlFile)!;
+        
+        // clear it ready for adding our own cell banks
+        ncer.CellBanks.Banks.Clear();
+        ncer.Labels.Names.Clear();
+
+        // load the cell info
+        var nameToCellBankId = new Dictionary<string, ushort>();
+        List<Image<Rgba32>> images = new();
         foreach (var cellImage in cells)
         {
-            
+            var bank = new CellBank();
+            // store the mapping of name to bank to use later when loading animations
+            nameToCellBankId.Add(cellImage.Name, (ushort)bank.Count);
+            ncer.CellBanks.Banks.Add(bank);
+
+            foreach (var cell in cellImage.Cells)
+            {
+                bank.Add(cell);
+            }
+
+            // image path is relative to the location of the xml file
+            var imgPath = Path.Combine(dir, cellImage.File);
+            images.Add(ImageUtil.LoadPngBetterError(imgPath));
+
+            bank.EstimateMinMaxValues();
+            // TODO: cellBank.ReadOnlyCellInfo = ?;
         }
 
-        return (nanr, ncer);
+        // import the image data
+        NitroImageUtil.NcerImportFromMultipleImages(ncer, ncgr, nclr, images);
+
+        // dispose of the images as we don't need them anymore
+        foreach (var image in images)
+        {
+            image.Dispose();
+        }
+
+        // load the animations
+        foreach (var anim in animations)
+        {
+            var targetAnim = new ABNK.Anim();
+            // TODO: set datatype, unknowns1,2,3
+            nanr.AnimationBanks.Banks.Add(targetAnim);
+            nanr.Labels.Names.Add(anim.Name);
+            ncer.Labels.Names.Add(anim.Name); // for some reason it stores animation names in here
+            foreach (var frame in anim.Frames)
+            {
+                var targetFrame = new ABNK.Frame();
+                targetAnim.Frames.Add(targetFrame);
+                if (!nameToCellBankId.TryGetValue(frame.Image, out  var bankId))
+                {
+                    throw new Exception($"Animation '{anim.Name}' references cellImage of name '{frame.Image}' which doesn't exist");
+                }
+                targetFrame.CellBank = bankId;
+                targetFrame.Duration = (ushort)frame.Duration;
+            }
+        }
+
+        return nanr;
     }
 
     private static XDocument Serialise(List<CellImage> cells, List<Anim> animations)
