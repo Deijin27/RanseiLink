@@ -39,7 +39,7 @@ public class NcerPatchBuilder : IMiscItemPatchBuilder
         var nclr = NCLR.Load(nclrPath);
 
         // load up the png and replace provider data with new image data
-        NitroImageUtil.NcerImport(ncer, ncgr, nclr, pngFile);
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, pngFile);
 
         // save the modified provider files
         ncgr.Save(ncgrPath);

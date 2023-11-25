@@ -94,7 +94,7 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncer. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcerImport(NCER ncer, NCGR ncgr, NCLR nclr, string png)
+    public static void NcerFromImage(NCER ncer, NCGR ncgr, NCLR nclr, string png)
     {
         try
         {
@@ -131,7 +131,7 @@ public static class NitroImageUtil
         newPalette.CopyTo(nclr.Palettes.Palette, 0);
     }
 
-    public static void NcerImportFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images)
+    public static void NcerFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images)
     {
         var imageInfo = CellImageUtil.MultiBankFromMultipleImages(
             images: images,
@@ -147,7 +147,7 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncgr. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcgrImport(NCGR ncgr, NCLR nclr, string png, bool color0ToTransparent = true)
+    public static void NcgrFromImage(NCGR ncgr, NCLR nclr, string png, bool color0ToTransparent = true)
     {
         var imageInfo = ImageUtil.SpriteFromPng(png, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: color0ToTransparent);
         ncgr.Pixels.Data = imageInfo.Pixels;

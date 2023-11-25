@@ -109,7 +109,7 @@ public static class CellAnimationSerialiser
         }
 
         // import the image data
-        NitroImageUtil.NcerImportFromMultipleImages(ncer, ncgr, nclr, images);
+        NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images);
 
         // dispose of the images as we don't need them anymore
         foreach (var image in images)
