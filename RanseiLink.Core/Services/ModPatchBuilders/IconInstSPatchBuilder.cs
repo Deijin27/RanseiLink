@@ -12,11 +12,6 @@ using System.Text.RegularExpressions;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
-/// <summary>
-/// TODO
-/// to maintain backwards compatibility, which keeping future options open to fill the 
-/// gaps which don't have a file, we gotta enfore the 32x32, then leave gaps of that for the missing images
-/// </summary>
 [PatchBuilder]
 public class IconInstSPatchBuilder : IMiscItemPatchBuilder
 {
@@ -35,7 +30,7 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
         var parentTempDir = FileUtil.GetTemporaryDirectory();
 
         var containingFolder = Path.Combine(_graphicsProviderFolder, item.ContainingFolder);
-        using var image = Image.Load<Rgba32>(pngFile);
+        using var image = ImageUtil.LoadPngBetterError(pngFile);
         var images = new List<Image<Rgba32>>();
 
         // Get the link files. If we supported adding additional files
@@ -44,7 +39,12 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
         var rx = new Regex(@"03_05_parts_shisetsuicon_s_(\d\d)\.G2DR");
         var linkFiles = Directory.GetFiles(containingFolder, "*.G2DR");
         var workingPalette = new List<Rgba32>() { Color.Transparent };
-        string? nclrPath = null;
+        string? nclrDir = null;
+
+        if (linkFiles.Length == 0)
+        {
+            throw new Exception($"no link files found at '{containingFolder}'");
+        }
 
         // Modify the ncgrs and build the shared palette
         foreach (var link in linkFiles)
@@ -100,12 +100,7 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
                 // this is the one where the palette is stored
                 // so we store a reference to it. The later, when we have calculated the
                 // full palette, we can write it to the file
-                var pal = Path.Combine(tempDir, "0004.nclr");
-                var palFileInfo = new FileInfo(pal);
-                if (palFileInfo.Exists && palFileInfo.Length > 0)
-                {
-                    nclrPath = pal;
-                }
+                nclrDir = tempDir;
             }
 
         }
@@ -114,11 +109,7 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
         // if the palette is too big this is an error
         // if the palette is too small it will be scaled to the right 
         // length via the Array.Copy
-        if (nclrPath == null)
-        {
-            throw new FileNotFoundException("Palette not found for IconInstS");
-        }
-        var nclr = NCLR.Load(nclrPath);
+        var nclr = G2DR.LoadPaletteFromFolder(nclrDir!);
         var newPalette = PaletteUtil.From32bitColors(workingPalette);
         if (newPalette.Length > nclr.Palettes.Palette.Length)
         {

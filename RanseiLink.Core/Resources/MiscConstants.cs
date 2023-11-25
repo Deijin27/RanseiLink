@@ -66,22 +66,11 @@ namespace RanseiLink.Core.Resources
         public string LinkFolder { get; }
         public override string PngFile { get; }
 
-        public string Ncgr { get; }
-        public string Ncer { get; }
-        public string NcgrAlt { get; }
-        public string Nclr { get; }
-        public string Nscr { get; }
-
         public G2DRMiscItem(MetaMiscItemId metaId, int id, XElement element) : base(metaId, id, element)
         {
             Link = element.Attribute("Link")!.Value;
             LinkFolder = Path.Combine(Path.GetDirectoryName(Link)!, Path.GetFileNameWithoutExtension(Link) + "-Unpacked");
             PngFile = Path.Combine(LinkFolder, "Image.png");
-            Ncgr = Path.Combine(LinkFolder, "0001.ncgr");
-            Ncer = Path.Combine(LinkFolder, "0002.ncer");
-            NcgrAlt = Path.Combine(LinkFolder, "0003.ncgr");
-            Nclr = Path.Combine(LinkFolder, "0004.nclr");
-            Nscr = Path.Combine(LinkFolder, "0005.ncgr");
         }
     }
 

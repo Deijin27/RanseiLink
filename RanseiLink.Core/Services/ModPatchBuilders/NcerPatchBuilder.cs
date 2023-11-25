@@ -26,24 +26,14 @@ public class NcerPatchBuilder : IMiscItemPatchBuilder
         File.Delete(Path.Combine(tempDir, Path.GetFileName(item.PngFile)));
 
         // load up provider data
-        var ncer = NCER.Load(Path.Combine(tempDir, Path.GetFileName(item.Ncer)));
-
-        var ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.Ncgr));
-        if (new FileInfo(ncgrPath).Length == 0)
-        {
-            ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.NcgrAlt));
-        }
-        var ncgr = NCGR.Load(ncgrPath);
-
-        var nclrPath = Path.Combine(tempDir, Path.GetFileName(item.Nclr));
-        var nclr = NCLR.Load(nclrPath);
+        var (ncer, ncgr, nclr) = G2DR.LoadCellImgFromFolder(tempDir, NcgrSlot.Infer);
 
         // load up the png and replace provider data with new image data
-        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, pngFile);
+        using var image = ImageUtil.LoadPngBetterError(pngFile);
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image);
 
         // save the modified provider files
-        ncgr.Save(ncgrPath);
-        nclr.Save(nclrPath);
+        G2DR.SaveImgToFolder(tempDir, ncgr, nclr, NcgrSlot.Infer);
 
         // make the link 
         var tempLink = Path.GetTempFileName();

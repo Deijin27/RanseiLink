@@ -37,16 +37,10 @@ public class NcerMinimapTests
 
         using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
-        var info = CellImageUtil.MultiBankFromImage(
-            image, 
-            ncer.CellBanks.Banks, 
-            ncer.CellBanks.BlockSize, 
-            ncgr.Pixels.IsTiled, 
-            ncgr.Pixels.Format
-            );
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image);
 
-        var newPixels = info.Pixels;
-        var newPalette = info.Palette;
+        var newPixels = ncgr.Pixels.Data;
+        var newPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         // Ensure palette has been maintained
         var oldPaletteSorted = oldPalette.Skip(1).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();

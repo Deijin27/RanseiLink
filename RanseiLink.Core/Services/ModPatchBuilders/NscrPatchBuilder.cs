@@ -27,23 +27,14 @@ public class NscrPatchBuilder : IMiscItemPatchBuilder
         FileUtil.CopyFilesRecursively(Path.Combine(_graphicsProviderFolder, item.LinkFolder), tempDir);
         File.Delete(Path.Combine(tempDir, Path.GetFileName(item.PngFile)));
 
-        // load up provider data
-        var ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.Ncgr));
-        if (new FileInfo(ncgrPath).Length == 0)
-        {
-            ncgrPath = Path.Combine(tempDir, Path.GetFileName(item.NcgrAlt));
-        }
-        var ncgr = NCGR.Load(ncgrPath);
-
-        var nclrPath = Path.Combine(tempDir, Path.GetFileName(item.Nclr));
-        var nclr = NCLR.Load(nclrPath);
+        var (ncgr, nclr) = G2DR.LoadImgFromFolder(tempDir);
 
         // load up the png and replace provider data with new image data
-        NitroImageUtil.NcgrFromImage(ncgr, nclr, pngFile);
+        using var image = ImageUtil.LoadPngBetterError(pngFile);
+        NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
 
         // save the modified provider files
-        ncgr.Save(ncgrPath);
-        nclr.Save(nclrPath);
+        G2DR.SaveImgToFolder(tempDir, ncgr, nclr, NcgrSlot.Infer);
 
         // make the link 
         var tempLink = Path.GetTempFileName();

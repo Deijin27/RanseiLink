@@ -15,18 +15,12 @@ public class NcerDefaultPopulater : IMiscItemDefaultPopulater
     {
         var item = (G2DRMiscItem)miscItem;
 
-        LINK.Unpack(Path.Combine(defaultDataFolder, item.Link), Path.Combine(defaultDataFolder, item.LinkFolder), true, 4);
-        var ncgrPath = Path.Combine(defaultDataFolder, item.Ncgr);
-        if (new FileInfo(ncgrPath).Length == 0)
-        {
-            ncgrPath = Path.Combine(defaultDataFolder, item.NcgrAlt);
-        }
+        string outFolder = Path.Combine(defaultDataFolder, item.LinkFolder);
+        LINK.Unpack(Path.Combine(defaultDataFolder, item.Link), outFolder);
 
-        using var image = NitroImageUtil.NcerToImage(
-            ncer: NCER.Load(Path.Combine(defaultDataFolder, item.Ncer)),
-            ncgr: NCGR.Load(ncgrPath),
-            nclr: NCLR.Load(Path.Combine(defaultDataFolder, item.Nclr))
-            );
+        var (ncer, ncgr, nclr) = G2DR.LoadCellImgFromFolder(outFolder, NcgrSlot.Infer);
+
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
 
         image.SaveAsPng(Path.Combine(defaultDataFolder, item.PngFile));
     }

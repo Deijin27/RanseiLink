@@ -15,18 +15,11 @@ public class NscrDefaultPopulater : IMiscItemDefaultPopulater
     {
         var item = (G2DRMiscItem)miscItem;
 
-        LINK.Unpack(Path.Combine(defaultDataFolder, item.Link), Path.Combine(defaultDataFolder, item.LinkFolder), true, 4);
+        var outFolder = Path.Combine(defaultDataFolder, item.LinkFolder);
+        LINK.Unpack(Path.Combine(defaultDataFolder, item.Link), outFolder);
 
-        var ncgrPath = Path.Combine(defaultDataFolder, item.Ncgr);
-        if (new FileInfo(ncgrPath).Length == 0)
-        {
-            ncgrPath = Path.Combine(defaultDataFolder, item.NcgrAlt);
-        }
-
-        using var image = NitroImageUtil.NcgrToImage(
-            ncgr: NCGR.Load(ncgrPath), 
-            nclr: NCLR.Load(Path.Combine(defaultDataFolder, item.Nclr))
-            );
+        var (ncgr, nclr) = G2DR.LoadImgFromFolder(outFolder);
+        using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
 
         image.SaveAsPng(Path.Combine(defaultDataFolder, item.PngFile));
     }

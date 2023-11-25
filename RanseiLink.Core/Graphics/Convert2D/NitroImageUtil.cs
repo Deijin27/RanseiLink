@@ -94,24 +94,16 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncer. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcerFromImage(NCER ncer, NCGR ncgr, NCLR nclr, string png)
+    public static void NcerFromImage(NCER ncer, NCGR ncgr, NCLR nclr, Image<Rgba32> image)
     {
-        try
-        {
-            var imageInfo = CellImageUtil.MultiBankFromPng(
-            file: png,
-            banks: ncer.CellBanks.Banks,
-            blockSize: ncer.CellBanks.BlockSize,
-            tiled: ncgr.Pixels.IsTiled,
-            format: ncgr.Pixels.Format
-            );
-            ProcessNcerImageInfo(imageInfo, ncgr, nclr);
-        }
-        catch (Exception e)
-        {
-            throw new Exception($"Error importing to ncer image '{png}'", e);
-        }
-        
+        var imageInfo = CellImageUtil.MultiBankFromImage(
+                image: image,
+                banks: ncer.CellBanks.Banks,
+                blockSize: ncer.CellBanks.BlockSize,
+                tiled: ncgr.Pixels.IsTiled,
+                format: ncgr.Pixels.Format
+                );
+        ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
 
     private static void ProcessNcerImageInfo(SpriteImageInfo imageInfo, NCGR ncgr, NCLR nclr)
@@ -147,9 +139,9 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncgr. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcgrFromImage(NCGR ncgr, NCLR nclr, string png, bool color0ToTransparent = true)
+    public static void NcgrFromImage(NCGR ncgr, NCLR nclr, Image<Rgba32> image, bool color0ToTransparent = true)
     {
-        var imageInfo = ImageUtil.SpriteFromPng(png, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: color0ToTransparent);
+        var imageInfo = ImageUtil.SpriteFromImage(image, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: color0ToTransparent);
         ncgr.Pixels.Data = imageInfo.Pixels;
         ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
         ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
@@ -158,7 +150,7 @@ public static class NitroImageUtil
         if (newPalette.Length > nclr.Palettes.Palette.Length)
         {
             // this should not be hit because it should be filtered out by the palette simplifier
-            throw new InvalidPaletteException($"Palette length exceeds current palette when importing '{png}'");
+            throw new InvalidPaletteException($"Palette length exceeds current palette when importing image {newPalette.Length} vs {nclr.Palettes.Palette.Length}");
         }
         newPalette.CopyTo(nclr.Palettes.Palette, 0);
     }

@@ -41,7 +41,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
             }
             var id = int.Parse(match.Groups[1].Value);
 
-            LINK.Unpack(link, linkFolder, true, 4);
+            LINK.Unpack(link, linkFolder);
             linkFolders.Add(id, linkFolder);
         }
 
@@ -51,18 +51,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
         {
             throw new Exception("Palette folder not found for IconInstS");
         }
-        var pal = Path.Combine(palFolder, "0004.nclr");
-        var palFileInfo = new FileInfo(pal);
-        string? nclrPath = null;
-        if (palFileInfo.Exists && palFileInfo.Length > 0)
-        {
-            nclrPath = pal;
-        }
-        else
-        {
-            throw new Exception("Palette not found in its folder for IconInstS");
-        }
-        var nclr = NCLR.Load(nclrPath);
+        var nclr = G2DR.LoadPaletteFromFolder(palFolder);
         var palette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         // Load the ncer and ncgrs, then load all the images
@@ -74,8 +63,8 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
         {
             foreach (var (linkId, linkFolder) in linkFolders)
             {
-                var ncer = NCER.Load(Path.Combine(linkFolder, "0002.ncer"));
-                var ncgr = NCGR.Load(Path.Combine(linkFolder, "0003.ncgr"));
+                var ncgr = G2DR.LoadPixelsFromFolder(linkFolder, NcgrSlot.Slot3);
+                var ncer = G2DR.LoadCellFromFolder(linkFolder);
 
                 // Not all building ids have icons
                 // to facilitate potentially filling in these gaps in the future,
@@ -85,7 +74,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
                    blockSize: ncer.CellBanks.BlockSize,
                    imageInfo: new SpriteImageInfo(
                        Pixels: ncgr.Pixels.Data,
-                       Palette: palette,
+                       Palette: palette, // <-- it's probably worth using this over NitroImageUtil because we can load the palette only once
                        Width: width,
                        Height: height,
                        IsTiled: ncgr.Pixels.IsTiled,
