@@ -9,14 +9,14 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace RanseiLink.Console.GraphicsCommands;
+namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
     public static void Serialise(string bgLinkFile, string animLinkFile, string outputFolder)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
-        var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, Path.Combine(outputFolder, "background.png"));
+        var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, outputFolder);
 
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
         SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height);
