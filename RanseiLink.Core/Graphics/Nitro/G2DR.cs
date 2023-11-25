@@ -154,7 +154,7 @@ public static class G2DR
         SaveCellToFolder(linkFolder, ncer, ncgr, nclr, ncgrSlot);
     }
 
-    public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFile(string linkFilePath, NcgrSlot ncgrSlot)
+    public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var temp = FileUtil.GetTemporaryDirectory();
         try
@@ -168,7 +168,7 @@ public static class G2DR
         }
     }
 
-    public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellFromFile(string linkFilePath, NcgrSlot ncgrSlot)
+    public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var temp = FileUtil.GetTemporaryDirectory();
         try
@@ -182,7 +182,7 @@ public static class G2DR
         }
     }
 
-    public static (NANR Nanr, NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadAnimFromFile(string linkFilePath, NcgrSlot ncgrSlot)
+    public static (NANR Nanr, NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadAnimFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var temp = FileUtil.GetTemporaryDirectory();
         try
