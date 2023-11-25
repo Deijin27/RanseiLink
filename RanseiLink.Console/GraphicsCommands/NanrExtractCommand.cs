@@ -14,7 +14,7 @@ public class NanrExtractCommand : ICommand
     [CommandParameter(0, Description = "Path of G2DR which contains the nscr background", Name = "background")]
     public string Background { get; set; }
 
-    [CommandParameter(1, Description = "Path of G2DR which contains the ncer parts and nanr animation", Name = "anim")]
+    [CommandParameter(1, Description = "Path of G2DR which contains the ncer parts and nanr animation", Name = "anim", IsRequired = false)]
     public string AnimatedParts { get; set; }
 
     [CommandOption("destinationFile", 'd', Description = "Optional destination folder; default is a dir in the same location as the file.")]
@@ -28,7 +28,7 @@ public class NanrExtractCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
-        CellAnimationSerialiser.Serialise(Background, AnimatedParts, DestinationFolder);
+        CellAnimationSerialiser.Serialise(DestinationFolder, Background, AnimatedParts);
 
         return default;
     }

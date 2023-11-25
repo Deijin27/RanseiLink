@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -24,6 +25,11 @@ public class NCGR
         {
             WriteTo(bw);
         }
+    }
+
+    public NCGR()
+    {
+        Pixels = new();
     }
 
     public NCGR(BinaryReader br)
@@ -130,6 +136,11 @@ public class NCGR
         public bool IsTiled { get; set; }
 
         public byte[] Data { get; set; }
+
+        public CHAR()
+        {
+            Data = Array.Empty<byte>();
+        }
 
         public CHAR(BinaryReader br)
         {

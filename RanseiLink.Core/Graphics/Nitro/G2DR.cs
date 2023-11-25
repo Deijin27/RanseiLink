@@ -54,6 +54,11 @@ public static class G2DR
         return NCER.Load(Path.Combine(linkFolder, _ncerFile));
     }
 
+    public static NANR LoadAnimFromFolder(string linkFolder)
+    {
+        return NANR.Load(Path.Combine(linkFolder, _nanrFile));
+    }
+
     public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var nclr = LoadPaletteFromFolder(linkFolder);
@@ -68,10 +73,10 @@ public static class G2DR
         return (ncer, img.Ncgr, img.Nclr);
     }
 
-    public static (NANR Nanr, NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadAnimFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
+    public static (NANR Nanr, NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadAnimImgFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var cell = LoadCellImgFromFolder(linkFolder, ncgrSlot);
-        var nanr = NANR.Load(Path.Combine(linkFolder, _nanrFile));
+        var nanr = LoadAnimFromFolder(linkFolder);
         return (nanr, cell.Ncer, cell.Ncgr, cell.Nclr);
     }
 
@@ -168,7 +173,7 @@ public static class G2DR
         }
     }
 
-    public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
+    public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellImgFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
         var temp = FileUtil.GetTemporaryDirectory();
         try
@@ -188,7 +193,7 @@ public static class G2DR
         try
         {
             LINK.Unpack(linkFilePath, temp);
-            return LoadAnimFromFolder(temp, ncgrSlot);
+            return LoadAnimImgFromFolder(temp, ncgrSlot);
         }
         finally
         {

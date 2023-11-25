@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RanseiLink.Core.Graphics;
@@ -30,6 +31,10 @@ public class NCLR
         }
     }
 
+    public NCLR()
+    {
+        Palettes = new();
+    }
     public NCLR(BinaryReader br)
     {
         long initOffset = br.BaseStream.Position;
@@ -134,6 +139,11 @@ public class NCLR
                 bw.Write(DataLength);
                 bw.Write(DataStartOffset);
             }
+        }
+
+        public PLTT()
+        {
+            Palette = Array.Empty<Rgb15>();
         }
 
         public PLTT(BinaryReader br)

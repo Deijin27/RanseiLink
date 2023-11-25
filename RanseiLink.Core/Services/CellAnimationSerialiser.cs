@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
@@ -7,20 +8,101 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
-    public static void Serialise(string bgLinkFile, string animLinkFile, string outputFolder)
+    public static void Serialise(string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
         var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, outputFolder);
 
-        var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height);
+        if (animLinkFile != null)
+        {
+            var anim = G2DR.LoadAnimFromFile(animLinkFile);
+            SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height);
+        }
     }
+
+    // We will always have a background file to use, and we will always have the default of another anim to use
+    // but it may be nice if we can generate without one to base it on. it's just more work.
+    public static void Deserialise(string inputFolder, string bgLinkFile, string outputBgLinkFile, string? animLinkFile = null, string? outputAnimLinkFile = null)
+    {
+        // load background
+        var tempBg = FileUtil.GetTemporaryDirectory();
+        try
+        {
+            LINK.Unpack(bgLinkFile, tempBg);
+            var bg = G2DR.LoadImgFromFolder(bgLinkFile);
+            var (width, height) = DeserialiseBackground(inputFolder, bg.Ncgr, bg.Nclr);
+            G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
+            LINK.Pack(tempBg, outputBgLinkFile);
+        }
+        finally
+        {
+            Directory.Delete(tempBg, true);
+        }
+        
+        // load animation
+        if (animLinkFile != null && outputAnimLinkFile != null)
+        {
+            var tempAnim = FileUtil.GetTemporaryDirectory();
+            try
+            {
+                LINK.Unpack(animLinkFile, tempAnim);
+                var anim = G2DR.LoadCellImgFromFolder(tempAnim);
+                var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), anim.Ncer, anim.Ncgr, anim.Nclr);
+                G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+                LINK.Pack(tempAnim, outputAnimLinkFile);
+            }
+            finally
+            {
+                Directory.Delete(tempAnim, true);
+            }
+        }
+    }
+    /*
+    public static void DeserialiseFromScratch(string inputFolder, string outputBgLinkFile, string? outputAnimLinkFile = null)
+    {
+        // technically we will always have the background file default to work off of
+        var tempBg = FileUtil.GetTemporaryDirectory();
+        try
+        {
+            var ncgr = new NCGR();
+            var nclr = new NCLR();
+            
+            // TODO: set up the ncgr and nclr properly
+            var (width, height) = DeserialiseBackground(inputFolder, ncgr, nclr);
+            // G2DR.SaveScreenToFile(tempBg, nscr, ncgr, nclr, NcgrSlot.Slot1);
+        }
+        finally
+        {
+            Directory.Delete(tempBg, true);
+        }
+
+        // load animation
+        if (outputAnimLinkFile != null)
+        {
+            var tempAnim = FileUtil.GetTemporaryDirectory();
+            try
+            {
+                var ncer = new NCER();
+                var ncgr = new NCGR();
+                var nclr = new NCLR();
+                // TODO: set up the nanr, ncgr and nclr properly
+                var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), ncer, ncgr, nclr);
+                // G2DR.SaveAnimToFile(tempAnim, nanr, ncer, ncgr, nclr, NcgrSlot.Slot1);
+            }
+            finally
+            {
+                Directory.Delete(tempAnim, true);
+            }
+        }
+    }
+    */
 
     public static (int width, int height) SerialiseBackground(NCGR ncgr, NCLR nclr, string outputFolder)
     {
@@ -28,6 +110,13 @@ public static class CellAnimationSerialiser
 
         image.SaveAsPng(Path.Combine(outputFolder, "background.png"));
 
+        return (image.Width, image.Height);
+    }
+
+    public static (int width, int height) DeserialiseBackground(string inputFolder, NCGR ncgr, NCLR nclr)
+    {
+        using var image = ImageUtil.LoadPngBetterError(Path.Combine(inputFolder, "background.png"));
+        NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
         return (image.Width, image.Height);
     }
 
