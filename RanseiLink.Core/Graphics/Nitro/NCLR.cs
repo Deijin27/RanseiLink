@@ -17,10 +17,18 @@ public class NCLR
 
     public static NCLR Load(string file)
     {
-        using (var br = new BinaryReader(File.OpenRead(file)))
+        try
         {
-            return new NCLR(br);
-        } 
+            using (var br = new BinaryReader(File.OpenRead(file)))
+            {
+                return new NCLR(br);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error loading file '{file}'", e);
+        }
+        
     }
 
     public void Save(string file)

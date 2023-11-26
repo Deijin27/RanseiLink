@@ -13,9 +13,16 @@ public class NCGR
 
     public static NCGR Load(string file)
     {
-        using (var br = new BinaryReader(File.OpenRead(file)))
+        try
         {
-            return new NCGR(br);
+            using (var br = new BinaryReader(File.OpenRead(file)))
+            {
+                return new NCGR(br);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error loading file '{file}'", e);
         }
     }
 

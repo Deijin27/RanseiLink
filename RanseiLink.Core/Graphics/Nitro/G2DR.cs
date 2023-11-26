@@ -94,11 +94,11 @@ public static class G2DR
         }
         else if (ncgrInfo1.Length == 0)
         {
-            return NcgrSlot.Slot1;
+            return NcgrSlot.Slot3;
         }
         else if (ncgrInfo3.Length == 0)
         {
-            return NcgrSlot.Slot3;
+            return NcgrSlot.Slot1;
         }
         else
         {

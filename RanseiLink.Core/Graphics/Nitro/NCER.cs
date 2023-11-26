@@ -17,9 +17,16 @@ public class NCER
 
     public static NCER Load(string file)
     {
-        using (var br = new BinaryReader(File.OpenRead(file)))
+        try
         {
-            return new NCER(br);
+            using (var br = new BinaryReader(File.OpenRead(file)))
+            {
+                return new NCER(br);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error loading file '{file}'", e);
         }
     }
 

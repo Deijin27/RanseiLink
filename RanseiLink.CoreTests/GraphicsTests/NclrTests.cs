@@ -46,6 +46,8 @@ public class NclrTests
     [Theory]
     [InlineData("test_single.nclr")]
     [InlineData("test_multi.nclr")]
+    [InlineData("test_cma_ignis.nclr")]
+    [InlineData("test_ki2_aurora_anim.nclr")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);

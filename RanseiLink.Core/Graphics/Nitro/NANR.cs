@@ -22,9 +22,16 @@ public class NANR
 
     public static NANR Load(string file)
     {
-        using (var br = new BinaryReader(File.OpenRead(file)))
+        try
         {
-            return new NANR(br);
+            using (var br = new BinaryReader(File.OpenRead(file)))
+            {
+                return new NANR(br);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Error loading file '{file}'", e);
         }
     }
 

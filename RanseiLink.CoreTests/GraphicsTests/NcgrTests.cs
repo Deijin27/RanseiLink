@@ -52,6 +52,8 @@ public class NcgrTests
     [Theory]
     [InlineData("test_screen.ncgr")]
     [InlineData("test_parts.ncgr")]
+    [InlineData("test_cma_ignis.ncgr")]
+    [InlineData("test_ki2_aurora_anim.ncgr")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);

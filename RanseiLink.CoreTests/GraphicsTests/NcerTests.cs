@@ -97,6 +97,7 @@ public class NcerTests
     [InlineData("test_minimap_9.ncer")]
     [InlineData("test_warriorbattleintro.ncer")]
     [InlineData("test_ki2_aurora_anim.ncer")]
+    [InlineData("test_cma_ignis.ncer")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);

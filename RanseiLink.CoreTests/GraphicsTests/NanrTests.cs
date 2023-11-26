@@ -90,6 +90,7 @@ public class NanrTests
 
     [Theory]
     [InlineData("test_ki2_aurora_anim.nanr")]
+    [InlineData("test_cma_ignis.nanr")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
