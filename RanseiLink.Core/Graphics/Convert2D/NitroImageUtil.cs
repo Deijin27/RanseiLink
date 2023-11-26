@@ -23,7 +23,7 @@ public static class NitroImageUtil
         return (width, height);
     }
 
-    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1, bool debug = false)
+    public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft, bool debug = false)
     {
         if (width < 0 || height < 0)
         {
@@ -41,11 +41,12 @@ public static class NitroImageUtil
                 IsTiled: ncgr.Pixels.IsTiled,
                 Format: ncgr.Pixels.Format
                 ),
+            prt: prt,
             debug: debug
             );
     }
 
-    public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1)
+    public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
     {
         return CellImageUtil.MultiBankToMultipleImages(
             banks: ncer.CellBanks.Banks,
@@ -58,6 +59,7 @@ public static class NitroImageUtil
                 IsTiled: ncgr.Pixels.IsTiled,
                 Format: ncgr.Pixels.Format
                 ),
+            prt: prt,
             debug: false
             );
     }
@@ -94,14 +96,21 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncer. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcerFromImage(NCER ncer, NCGR ncgr, NCLR nclr, Image<Rgba32> image)
+    public static void NcerFromImage(NCER ncer, NCGR ncgr, NCLR nclr, Image<Rgba32> image, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
     {
+        if (width < 0 || height < 0)
+        {
+            (width, height) = InferDimsTiled(ncgr, 8);
+        }
         var imageInfo = CellImageUtil.MultiBankFromImage(
                 image: image,
                 banks: ncer.CellBanks.Banks,
                 blockSize: ncer.CellBanks.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
-                format: ncgr.Pixels.Format
+                format: ncgr.Pixels.Format,
+                width: width,
+                height: height,
+                prt: prt
                 );
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
@@ -123,14 +132,15 @@ public static class NitroImageUtil
         newPalette.CopyTo(nclr.Palettes.Palette, 0);
     }
 
-    public static void NcerFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images)
+    public static void NcerFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
     {
         var imageInfo = CellImageUtil.MultiBankFromMultipleImages(
             images: images,
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
             tiled: ncgr.Pixels.IsTiled,
-            format: ncgr.Pixels.Format
+            format: ncgr.Pixels.Format,
+            prt: prt
             );
 
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);

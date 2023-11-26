@@ -2,6 +2,7 @@
 using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core;
+using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Services;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,6 +21,9 @@ public class NanrExtractCommand : ICommand
     [CommandOption("destinationFile", 'd', Description = "Optional destination folder; default is a dir in the same location as the file.")]
     public string DestinationFolder { get; set; }
 
+    [CommandOption("positionRelativeTo", 'p', Description = "Whether cell x and y should be interpreted as relative to centre of background, or top-left of background")]
+    public PositionRelativeTo PositionRelativeTo { get; set; } = PositionRelativeTo.TopLeft;
+
     public ValueTask ExecuteAsync(IConsole console)
     {
         if (DestinationFolder == null)
@@ -28,7 +32,7 @@ public class NanrExtractCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
-        CellAnimationSerialiser.Serialise(DestinationFolder, Background, AnimatedParts);
+        CellAnimationSerialiser.Serialise(PositionRelativeTo, DestinationFolder, Background, AnimatedParts);
 
         return default;
     }

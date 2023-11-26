@@ -2,7 +2,7 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "ncer info \"C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\strategy\\castlemap_anime\\03_05_parts_castlemap_01_lo-Unpacked\\0002.ncer\"",
+      "commandLineArgs": "nanr extract .\\castlemap\\03_05_BG_castlemap_01_lo.G2DR .\\castlemap_anime\\03_05_parts_castlemap_01_lo.G2DR",
       "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\strategy"
     }
   }
