@@ -185,7 +185,7 @@ public class CEBK
         for (int i = 0; i < header.NumberOfBanks; i++)
         {
             var bankInfo = bankInfos[i];
-            var cells = new List<Cell>(bankInfo.NumberOfCells);
+            var bank = new CellBank(bankInfo.NumberOfCells);
             for (ushort j = 0; j < bankInfo.NumberOfCells; j++)
             {
                 var cell = new Cell(br)
@@ -193,11 +193,8 @@ public class CEBK
                     CellId = j
                 };
 
-                cells.Add(cell);
+                bank.Add(cell);
             }
-
-            var bank = new CellBank(cells.OrderBy(x => x.Priority).ThenBy(x => x.CellId));
-
             bank.ReadOnlyCellInfo = bankInfo.ReadOnlyCellInfo;
             bank.XMax = bankInfo.XMax;
             bank.YMax = bankInfo.YMax;
@@ -259,7 +256,7 @@ public class CEBK
                 info.YMin = (short)bank.YMin;
             }
             
-            foreach (var cell in bank.OrderBy(x => x.CellId))
+            foreach (var cell in bank)
             {
                 cell.WriteTo(bw);
             }

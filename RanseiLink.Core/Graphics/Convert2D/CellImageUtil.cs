@@ -126,8 +126,11 @@ public static class CellImageUtil
         imageInfo.Palette[0] = Color.Transparent;
 
         var graphic = new Image<Rgba32>(dims.Width, dims.Height);
-        foreach (var cell in bank)
+        // for some reason the cells are drawn in reverse
+        // while usually cells don't overlap, sometimes they do e.g. in castlemap illusio
+        for (int i = bank.Count - 1; i >= 0; i--)
         {
+            Cell cell = bank[i];
             using (var cellImg = CellToImage(cell, blockSize, imageInfo))
             {
                 graphic.Mutate(g =>
