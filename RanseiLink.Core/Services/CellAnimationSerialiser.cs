@@ -141,32 +141,40 @@ public static class CellAnimationSerialiser
 
         var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
 
+        string[] fileNames = new string[images.Count];
         for (int i = 0; i < images.Count; i++)
         {
             var cellImage = images[i];
-            cellImage.SaveAsPng(Path.Combine(outputFolder, CellAnimationSerialiser.NumToFileName(i)));
+            var fileName = $"{i.ToString().PadLeft(4, '0')}.png";
+            fileNames[i] = fileName;
+            cellImage.SaveAsPng(Path.Combine(outputFolder, fileName));
             cellImage.Dispose();
         }
 
         // save the animation file
 
-        var cells = new List<CellImage>();
-        var anims = new List<Anim>();
+        var res = new Resource();
 
         for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
         {
             var anim = nanr.AnimationBanks.Banks[i];
             var name = nanr.Labels.Names[i];
-            anims.Add(new Anim(name, anim.Frames.Select(x => new AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
+            res.Animations.Add(new Anim(name, anim.Frames.Select(x => new AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
         }
 
         for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
         {
             var cellBank = ncer.CellBanks.Banks[i];
-            cells.Add(new CellImage(cellBank, i.ToString(), NumToFileName(i)));
+            foreach (var cell in cellBank)
+            {
+                // IMPORTANT: this must happen after the cells are saved, because we modify the actual cells from the ncer
+                cell.XOffset += xShift;
+                cell.YOffset += yShift;
+            }
+            res.Cells.Add(new CellImage(cellBank, i.ToString(), fileNames[i]));
         }
 
-        var doc = Serialise(cells, anims, xShift, yShift);
+        var doc = res.Serialise();
 
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
@@ -195,7 +203,7 @@ public static class CellAnimationSerialiser
         // or created from scratch. Then the handling after that can be unified.
         var nanr = new NANR();
 
-        var (cells, animations) = Deseralise(XDocument.Load(animationXmlFile), xShift, yShift);
+        var res = new Resource(XDocument.Load(animationXmlFile));
         var dir = Path.GetDirectoryName(animationXmlFile)!;
         
         // clear it ready for adding our own cell banks
@@ -205,7 +213,7 @@ public static class CellAnimationSerialiser
         // load the cell info
         var nameToCellBankId = new Dictionary<string, ushort>();
         List<Image<Rgba32>> images = new();
-        foreach (var cellImage in cells)
+        foreach (var cellImage in res.Cells)
         {
             var bank = new CellBank();
             // store the mapping of name to bank to use later when loading animations
@@ -214,6 +222,8 @@ public static class CellAnimationSerialiser
 
             foreach (var cell in cellImage.Cells)
             {
+                cell.XOffset -= xShift; 
+                cell.YOffset -= yShift;
                 bank.Add(cell);
             }
 
@@ -235,7 +245,7 @@ public static class CellAnimationSerialiser
         }
 
         // load the animations
-        foreach (var anim in animations)
+        foreach (var anim in res.Animations)
         {
             var targetAnim = new ABNK.Anim();
             // TODO: set datatype, unknowns1,2,3
@@ -258,29 +268,11 @@ public static class CellAnimationSerialiser
         return nanr;
     }
 
-    private static XDocument Serialise(List<CellImage> cells, List<Anim> animations, int xShift, int yShift)
-    {
-        var cellElem = new XElement("cell_collection", cells.Select(x => x.Serialise(xShift, yShift)));
-        var animationElem = new XElement("animation_collection", animations.Select(x => x.Serialise()));
-
-        return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
-    }
-
-    private static (List<CellImage> Cells, List<Anim> Animations) Deseralise(XDocument doc, int xShift, int yShift)
-    {
-        var element = doc.ElementRequired("nitro_cell_animation_resource");
-
-        var cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellImage(x, xShift, yShift)).ToList();
-        var anims = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
-
-        return (cells, anims);
-    }
-
-    private static XElement SerialiseCell(Cell cell, int xShift, int yShift)
+    private static XElement SerialiseCell(Cell cell)
     {
         var cellElem = new XElement("cell",
-                    new XAttribute("x", cell.XOffset + xShift),
-                    new XAttribute("y", cell.YOffset + yShift),
+                    new XAttribute("x", cell.XOffset),
+                    new XAttribute("y", cell.YOffset),
                     new XAttribute("width", cell.Width),
                     new XAttribute("height", cell.Height)
                     );
@@ -297,11 +289,11 @@ public static class CellAnimationSerialiser
         return cellElem;
     }
 
-    private static Cell DeserialiseCell(XElement element, int xShift, int yShift)
+    private static Cell DeserialiseCell(XElement element)
     {
         var cell = new Cell();
-        cell.XOffset = element.AttributeInt("x") - xShift;
-        cell.YOffset = element.AttributeInt("y") - yShift;
+        cell.XOffset = element.AttributeInt("x");
+        cell.YOffset = element.AttributeInt("y");
         cell.Width = element.AttributeInt("width");
         cell.Height = element.AttributeInt("height");
         cell.FlipX = element.AttributeBool("flip_x", false);
@@ -309,12 +301,35 @@ public static class CellAnimationSerialiser
         return cell;
     }
 
-    public static string NumToFileName(int num)
+    public class Resource
     {
-        return $"{num.ToString().PadLeft(4, '0')}.png";
+        public List<CellImage> Cells { get; }
+        public List<Anim> Animations { get; }
+
+        public Resource()
+        {
+            Cells = new();
+            Animations = new();
+        }
+
+        public Resource(XDocument doc)
+        {
+            var element = doc.ElementRequired("nitro_cell_animation_resource");
+
+            Cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellImage(x)).ToList();
+            Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
+        }
+
+        public XDocument Serialise()
+        {
+            var cellElem = new XElement("cell_collection", Cells.Select(x => x.Serialise()));
+            var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
+
+            return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
+        }
     }
 
-    private class Anim
+    public class Anim
     {
         public string Name { get; }
         public List<AnimFrame> Frames { get; }
@@ -346,8 +361,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-
-    private class AnimFrame
+    public class AnimFrame
     {
         public string Image { get; }
         public int Duration { get; }
@@ -373,20 +387,20 @@ public static class CellAnimationSerialiser
         }
     }
 
-    private class CellImage
+    public class CellImage
     {
         public CellBank Cells { get; }
         public string Name { get; }
         public string File { get; }
 
-        public CellImage(XElement groupElem, int xShift, int yShift)
+        public CellImage(XElement groupElem)
         {
             Name = groupElem.AttributeStringNonEmpty("name");
             File = groupElem.AttributeStringNonEmpty("file");
             Cells = new CellBank();
             foreach (var cellElement in groupElem.Elements("cell"))
             {
-                var cell = DeserialiseCell(cellElement, xShift, yShift);
+                var cell = DeserialiseCell(cellElement);
                 Cells.Add(cell);
             }
         }
@@ -398,12 +412,12 @@ public static class CellAnimationSerialiser
             File = file;
         }
 
-        public XElement Serialise(int xShift, int yShift)
+        public XElement Serialise()
         {
             var groupElem = new XElement("image", new XAttribute("name", Name), new XAttribute("file", File));
             foreach (var cell in Cells)
             {
-                groupElem.Add(SerialiseCell(cell, xShift, yShift));
+                groupElem.Add(SerialiseCell(cell));
             }
             return groupElem;
         }

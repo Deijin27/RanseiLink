@@ -53,6 +53,9 @@
     <None Update="TestData\test_ki2_aurora_anim.nclr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\test_ki2_aurora_anim_serialised.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_leafeon.nsbtp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
