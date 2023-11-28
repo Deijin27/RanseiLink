@@ -8,13 +8,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
+    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height)
+    {
+        var anim = G2DR.LoadAnimFromFile(animLinkFile);
+        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt);
+    }
+
     public static void Serialise(PositionRelativeTo prt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
@@ -22,10 +27,10 @@ public static class CellAnimationSerialiser
 
         if (animLinkFile != null)
         {
-            var anim = G2DR.LoadAnimFromFile(animLinkFile);
-            SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt);
+            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height);
         }
     }
+
 
     // We will always have a background file to use, and we will always have the default of another anim to use
     // but it may be nice if we can generate without one to base it on. it's just more work.
