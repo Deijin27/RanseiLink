@@ -64,7 +64,6 @@ public class NcerTests
         var cell = bank1[0];
         using (new AssertionScope())
         {
-            cell.CellId.Should().Be(0);
             cell.Height.Should().Be(32);
             cell.Width.Should().Be(64);
             cell.XOffset.Should().Be(97);

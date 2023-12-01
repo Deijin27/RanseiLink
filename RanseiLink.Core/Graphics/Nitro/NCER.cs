@@ -188,10 +188,7 @@ public class CEBK
             var bank = new CellBank(bankInfo.NumberOfCells);
             for (ushort j = 0; j < bankInfo.NumberOfCells; j++)
             {
-                var cell = new Cell(br)
-                {
-                    CellId = j
-                };
+                var cell = new Cell(br);
 
                 bank.Add(cell);
             }
@@ -504,7 +501,6 @@ public class Cell
     {
         Width = 0;
         Height = 0;
-        CellId = 0;
 
         YOffset = 0;
         RotateOrScale = RotateOrScale.Rotate;
@@ -590,7 +586,6 @@ public class Cell
         var size = CellImageUtil.GetCellSize(Shape, Scale);
         Width = size.Width;
         Height = size.Height;
-        CellId = 0;
 
     }
 

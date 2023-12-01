@@ -146,6 +146,19 @@ public static class NitroImageUtil
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
 
+    public static void NcerFromMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups)
+    {
+        var imageInfo = CellImageUtil.MultiBankFromMultipleImageGroups(
+            imageGroups: imageGroups,
+            banks: ncer.CellBanks.Banks,
+            blockSize: ncer.CellBanks.BlockSize,
+            tiled: ncgr.Pixels.IsTiled,
+            format: ncgr.Pixels.Format
+            );
+
+        ProcessNcerImageInfo(imageInfo, ncgr, nclr);
+    }
+
     /// <summary>
     /// Import image data into a pre-existing ncgr. This will modify the ncgr and nclr.
     /// </summary>

@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -398,6 +399,39 @@ public static class CellImageUtil
             var bank = banks[i];
             var image = images[i];
             SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, prt);
+        }
+
+        workingPalette[0] = Color.Magenta;
+
+        return new SpriteImageInfo(
+            Pixels: workingPixels.ToArray(),
+            Palette: workingPalette.ToArray(),
+            Width: -1,
+            Height: -1,
+            IsTiled: tiled,
+            Format: format
+            );
+    }
+
+    public static SpriteImageInfo MultiBankFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<CellBank> banks, uint blockSize,
+        bool tiled, TexFormat format)
+    {
+        if (banks.Count == 0)
+        {
+            throw new ArgumentException("Can't load image with no cell banks");
+        }
+        if (banks.Count != imageGroups.Count)
+        {
+            throw new ArgumentException($"ImageGroups did not have the same number of items as banks ({imageGroups.Count} vs {banks.Count})");
+        }
+
+        var workingPalette = new List<Rgba32> { Color.Transparent };
+        var workingPixels = new List<byte>();
+        for (int i = 0; i < banks.Count; i++)
+        {
+            var bank = banks[i];
+            var imageGroup = imageGroups[i];
+            SharedSingleBankFromMultipleImages(imageGroup, bank, blockSize, workingPixels, workingPalette, tiled, format);
         }
 
         workingPalette[0] = Color.Magenta;

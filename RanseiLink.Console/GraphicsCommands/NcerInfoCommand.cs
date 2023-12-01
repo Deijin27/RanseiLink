@@ -45,7 +45,6 @@ public class NcerInfoCommand : ICommand
     private static XElement SerialiseCell(Cell cell)
     {
         var e = new XElement("Cell",
-            new XAttribute("cellId", cell.CellId),
             new XAttribute("height", cell.Height),
             new XAttribute("width", cell.Width),
             new XAttribute("xOffset", cell.XOffset),

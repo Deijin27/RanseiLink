@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core.Archive;
+﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
@@ -14,10 +13,10 @@ namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
-    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height)
+    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, bool mergeCells)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt);
+        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, mergeCells);
     }
 
     public static void Serialise(PositionRelativeTo prt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
@@ -27,7 +26,7 @@ public static class CellAnimationSerialiser
 
         if (animLinkFile != null)
         {
-            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height);
+            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height, mergeCells: true);
         }
     }
 
@@ -127,10 +126,8 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt)
+    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, bool mergeCells)
     {
-        // save the images
-
         int xShift;
         int yShift;
         if (prt == PositionRelativeTo.Centre)
@@ -144,22 +141,9 @@ public static class CellAnimationSerialiser
             yShift = 0;
         }
 
-        var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
-
-        string[] fileNames = new string[images.Count];
-        for (int i = 0; i < images.Count; i++)
-        {
-            var cellImage = images[i];
-            var fileName = $"{i.ToString().PadLeft(4, '0')}.png";
-            fileNames[i] = fileName;
-            cellImage.SaveAsPng(Path.Combine(outputFolder, fileName));
-            cellImage.Dispose();
-        }
-
-        // save the animation file
-
         var res = new Resource();
 
+        // save animations
         for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
         {
             var anim = nanr.AnimationBanks.Banks[i];
@@ -167,27 +151,73 @@ public static class CellAnimationSerialiser
             res.Animations.Add(new Anim(name, anim.Frames.Select(x => new AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
         }
 
-        for (int i = 0; i < ncer.CellBanks.Banks.Count; i++)
+        // save cells
+        if (mergeCells)
         {
-            var cellBank = ncer.CellBanks.Banks[i];
-            foreach (var cell in cellBank)
+            var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
+
+            for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
             {
-                // IMPORTANT: this must happen after the cells are saved, because we modify the actual cells from the ncer
-                cell.XOffset += xShift;
-                cell.YOffset += yShift;
+                // save bank image
+                var bankImage = images[bankId];
+                var fileName = $"{bankId.ToString().PadLeft(4, '0')}.png";
+                bankImage.SaveAsPng(Path.Combine(outputFolder, fileName));
+                bankImage.Dispose();
+
+                // save bank data
+                var cellBank = ncer.CellBanks.Banks[bankId];
+                var bankData = new CellBankInfo(bankId.ToString()) { File = fileName };
+                res.Cells.Add(bankData);
+
+                foreach (var cell in cellBank)
+                {
+                    // save cell data
+                    var cellData = new CellInfo(cell);
+                    cellData.Cell.XOffset += xShift;
+                    cellData.Cell.YOffset += yShift;
+                }
             }
-            res.Cells.Add(new CellImage(cellBank, i.ToString(), fileNames[i]));
+        }
+        else
+        {
+            var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
+
+            for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
+            {
+                // prepare image folders
+                string folderName = bankId.ToString().PadLeft(4, '0');
+                Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
+                var group = imageGroups[bankId];
+
+                // save bank data
+                var cellBank = ncer.CellBanks.Banks[bankId];
+                var bankData = new CellBankInfo(bankId.ToString());
+                res.Cells.Add(bankData);
+
+                for (int cellId = 0; cellId < cellBank.Count; cellId++)
+                {
+                    // save cell image
+                    var cellImage = group[cellId];
+                    var fileName = $"{folderName}/{cellId.ToString().PadLeft(4, '0')}.png";
+                    cellImage.SaveAsPng(Path.Combine(outputFolder, fileName));
+
+                    // save cell data
+                    var cell = cellBank[cellId];
+                    var cellData = new CellInfo(cell);
+                    cellData.Cell.XOffset += xShift;
+                    cellData.Cell.YOffset += yShift;
+                }
+            }
         }
 
         var doc = res.Serialise();
-
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt)
+    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt, bool mergeCells)
     {
         int xShift;
         int yShift;
@@ -217,38 +247,79 @@ public static class CellAnimationSerialiser
 
         // load the cell info
         var nameToCellBankId = new Dictionary<string, ushort>();
-        List<Image<Rgba32>> images = new();
-        foreach (var cellImage in res.Cells)
-        {
-            var bank = new CellBank();
-            // store the mapping of name to bank to use later when loading animations
-            nameToCellBankId.Add(cellImage.Name, (ushort)bank.Count);
-            ncer.CellBanks.Banks.Add(bank);
 
-            foreach (var cell in cellImage.Cells)
+        if (mergeCells)
+        {
+            List<Image<Rgba32>> images = new();
+            foreach (var cellBankInfo in res.Cells)
             {
-                cell.XOffset -= xShift; 
-                cell.YOffset -= yShift;
-                bank.Add(cell);
+                var bank = new CellBank();
+                // store the mapping of name to bank to use later when loading animations
+                nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+                ncer.CellBanks.Banks.Add(bank);
+
+                foreach (var cellInfo in cellBankInfo.Cells)
+                {
+                    var cell = cellInfo.Cell;
+                    cell.XOffset -= xShift;
+                    cell.YOffset -= yShift;
+                    bank.Add(cell);
+                }
+
+                // image path is relative to the location of the xml file
+                if (cellBankInfo.File == null)
+                {
+                    throw new Exception("Missing required attribute 'file' on cell group");
+                }
+                var imgPath = Path.Combine(dir, cellBankInfo.File);
+                images.Add(ImageUtil.LoadPngBetterError(imgPath));
+
+                bank.EstimateMinMaxValues();
+                // TODO: cellBank.ReadOnlyCellInfo = ?;
             }
 
-            // image path is relative to the location of the xml file
-            var imgPath = Path.Combine(dir, cellImage.File);
-            images.Add(ImageUtil.LoadPngBetterError(imgPath));
+            // import the image data
+            NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, prt);
 
-            bank.EstimateMinMaxValues();
-            // TODO: cellBank.ReadOnlyCellInfo = ?;
+            // dispose of the images as we don't need them anymore
+            foreach (var image in images)
+            {
+                image.Dispose();
+            }
         }
-
-        // import the image data
-        NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, prt);
-
-        // dispose of the images as we don't need them anymore
-        foreach (var image in images)
+        else
         {
-            image.Dispose();
-        }
+            var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
+            foreach (var cellBankInfo in res.Cells)
+            {
+                List<Image<Rgba32>> images = new();
+                imageGroups.Add(images);
+                var bank = new CellBank();
+                // store the mapping of name to bank to use later when loading animations
+                nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+                ncer.CellBanks.Banks.Add(bank);
 
+                foreach (var cellInfo in cellBankInfo.Cells)
+                {
+                    var cell = cellInfo.Cell;
+                    cell.XOffset -= xShift;
+                    cell.YOffset -= yShift;
+                    bank.Add(cell);
+                    if (cellInfo.File == null)
+                    {
+                        throw new Exception("Missing required attribute 'file' on cell");
+                    }
+                    images.Add(ImageUtil.LoadPngBetterError(cellInfo.File));
+                }
+
+                bank.EstimateMinMaxValues();
+                // TODO: cellBank.ReadOnlyCellInfo = ?;
+            }
+
+            // import the image data
+            NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
+        }
+        
         // load the animations
         foreach (var anim in res.Animations)
         {
@@ -261,7 +332,7 @@ public static class CellAnimationSerialiser
             {
                 var targetFrame = new ABNK.Frame();
                 targetAnim.Frames.Add(targetFrame);
-                if (!nameToCellBankId.TryGetValue(frame.Image, out  var bankId))
+                if (!nameToCellBankId.TryGetValue(frame.Image, out var bankId))
                 {
                     throw new Exception($"Animation '{anim.Name}' references cellImage of name '{frame.Image}' which doesn't exist");
                 }
@@ -273,42 +344,11 @@ public static class CellAnimationSerialiser
         return nanr;
     }
 
-    private static XElement SerialiseCell(Cell cell)
-    {
-        var cellElem = new XElement("cell",
-                    new XAttribute("x", cell.XOffset),
-                    new XAttribute("y", cell.YOffset),
-                    new XAttribute("width", cell.Width),
-                    new XAttribute("height", cell.Height)
-                    );
-
-        if (cell.FlipX)
-        {
-            cellElem.Add(new XAttribute("flip_x", cell.FlipX));
-        }
-        if (cell.FlipY)
-        {
-            cellElem.Add(new XAttribute("flip_y", cell.FlipY));
-        }
-
-        return cellElem;
-    }
-
-    private static Cell DeserialiseCell(XElement element)
-    {
-        var cell = new Cell();
-        cell.XOffset = element.AttributeInt("x");
-        cell.YOffset = element.AttributeInt("y");
-        cell.Width = element.AttributeInt("width");
-        cell.Height = element.AttributeInt("height");
-        cell.FlipX = element.AttributeBool("flip_x", false);
-        cell.FlipY = element.AttributeBool("flip_y", false);
-        return cell;
-    }
+    
 
     public class Resource
     {
-        public List<CellImage> Cells { get; }
+        public List<CellBankInfo> Cells { get; }
         public List<Anim> Animations { get; }
 
         public Resource()
@@ -321,7 +361,7 @@ public static class CellAnimationSerialiser
         {
             var element = doc.ElementRequired("nitro_cell_animation_resource");
 
-            Cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellImage(x)).ToList();
+            Cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellBankInfo(x)).ToList();
             Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
         }
 
@@ -392,37 +432,92 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public class CellImage
+    public class CellInfo
     {
-        public CellBank Cells { get; }
-        public string Name { get; }
-        public string File { get; }
+        public Cell Cell { get; set; }
+        public string? File { get; set; }
 
-        public CellImage(XElement groupElem)
+        public CellInfo(Cell cell)
         {
-            Name = groupElem.AttributeStringNonEmpty("name");
-            File = groupElem.AttributeStringNonEmpty("file");
-            Cells = new CellBank();
-            foreach (var cellElement in groupElem.Elements("cell"))
-            {
-                var cell = DeserialiseCell(cellElement);
-                Cells.Add(cell);
-            }
-        }
-
-        public CellImage(CellBank cells, string name, string file)
-        {
-            Cells = cells;
-            Name = name;
-            File = file;
+            Cell = cell;
         }
 
         public XElement Serialise()
         {
-            var groupElem = new XElement("image", new XAttribute("name", Name), new XAttribute("file", File));
+            var cellElem = new XElement("cell",
+                        new XAttribute("x", Cell.XOffset),
+                        new XAttribute("y", Cell.YOffset),
+                        new XAttribute("width", Cell.Width),
+                        new XAttribute("height", Cell.Height)
+                        );
+
+            if (Cell.FlipX)
+            {
+                cellElem.Add(new XAttribute("flip_x", Cell.FlipX));
+            }
+            if (Cell.FlipY)
+            {
+                cellElem.Add(new XAttribute("flip_y", Cell.FlipY));
+            }
+
+            if (!string.IsNullOrEmpty(File))
+            {
+                cellElem.Add(new XAttribute("file", File));
+            }
+
+            return cellElem;
+        }
+
+        public CellInfo(XElement element)
+        {
+            Cell = new Cell
+            {
+                XOffset = element.AttributeInt("x"),
+                YOffset = element.AttributeInt("y"),
+                Width = element.AttributeInt("width"),
+                Height = element.AttributeInt("height"),
+                FlipX = element.AttributeBool("flip_x", false),
+                FlipY = element.AttributeBool("flip_y", false)
+            };
+
+            File = element.Attribute("file")?.Value;
+        }
+    }
+
+    public class CellBankInfo
+    {
+        public List<CellInfo> Cells { get; }
+        public string Name { get; }
+        public string? File { get; set; }
+
+        public CellBankInfo(XElement groupElem)
+        {
+            Name = groupElem.AttributeStringNonEmpty("name");
+            File = groupElem.Attribute("file")?.Value;
+            Cells = new();
+            foreach (var cellElement in groupElem.Elements("cell"))
+            {
+                var cell = new CellInfo(cellElement);
+                Cells.Add(cell);
+            }
+        }
+
+        public CellBankInfo(string name)
+        {
+            Cells = new();
+            Name = name;
+        }
+
+        public XElement Serialise()
+        {
+            var groupElem = new XElement("image", new XAttribute("name", Name));
+            if (!string.IsNullOrEmpty(File))
+            {
+                groupElem.Add(new XAttribute("file", File));
+            }
             foreach (var cell in Cells)
             {
-                groupElem.Add(SerialiseCell(cell));
+                groupElem.Add(cell.Serialise());
             }
             return groupElem;
         }
