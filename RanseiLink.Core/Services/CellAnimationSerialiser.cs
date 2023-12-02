@@ -181,6 +181,7 @@ public static class CellAnimationSerialiser
                     var cellData = new CellInfo(cell);
                     cellData.Cell.XOffset += xShift;
                     cellData.Cell.YOffset += yShift;
+                    bankData.Cells.Add(cellData);
                 }
             }
         }
@@ -209,9 +210,10 @@ public static class CellAnimationSerialiser
 
                     // save cell data
                     var cell = cellBank[cellId];
-                    var cellData = new CellInfo(cell);
+                    var cellData = new CellInfo(cell) { File = fileName };
                     cellData.Cell.XOffset += xShift;
                     cellData.Cell.YOffset += yShift;
+                    bankData.Cells.Add(cellData);
                 }
             }
         }
@@ -470,6 +472,16 @@ public static class CellAnimationSerialiser
                         new XAttribute("height", Cell.Height)
                         );
 
+            if (!string.IsNullOrEmpty(File))
+            {
+                cellElem.Add(new XAttribute("file", File));
+            }
+
+            if (Cell.IndexPalette != 0)
+            {
+                cellElem.Add(new XAttribute("palette", Cell.IndexPalette));
+            }
+
             if (Cell.FlipX)
             {
                 cellElem.Add(new XAttribute("flip_x", Cell.FlipX));
@@ -478,15 +490,9 @@ public static class CellAnimationSerialiser
             {
                 cellElem.Add(new XAttribute("flip_y", Cell.FlipY));
             }
-
-            if (!string.IsNullOrEmpty(File))
+            if (Cell.DoubleSize)
             {
-                cellElem.Add(new XAttribute("file", File));
-            }
-
-            if (Cell.IndexPalette != 0)
-            {
-                cellElem.Add(new XAttribute("palette", 0));
+                cellElem.Add(new XAttribute("double_size", Cell.DoubleSize));
             }
 
             return cellElem;
@@ -502,8 +508,15 @@ public static class CellAnimationSerialiser
                 Height = element.AttributeInt("height"),
                 FlipX = element.AttributeBool("flip_x", false),
                 FlipY = element.AttributeBool("flip_y", false),
+                DoubleSize = element.AttributeBool("double_size", false),
                 IndexPalette = (byte)element.AttributeInt("palette", 0)
             };
+
+            if ((Cell.FlipX || Cell.FlipY) && Cell.DoubleSize)
+            {
+                throw new Exception("Cell cannot have both rotation (flip_x or flip_y) and scaling (double_size) at once");
+            }
+            Cell.RotateOrScale = Cell.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate;
 
             File = element.Attribute("file")?.Value;
         }
