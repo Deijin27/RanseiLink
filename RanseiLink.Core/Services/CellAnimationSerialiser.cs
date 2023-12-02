@@ -258,7 +258,8 @@ public static class CellAnimationSerialiser
         // load the cell info
         var nameToCellBankId = new Dictionary<string, ushort>();
 
-        if (res.Format == Format.OneImagePerBank)
+        var fmt = res.Format;
+        if (fmt == Format.OneImagePerBank)
         {
             List<Image<Rgba32>> images = new();
             foreach (var cellBankInfo in res.Cells)
@@ -297,7 +298,7 @@ public static class CellAnimationSerialiser
                 image.Dispose();
             }
         }
-        else if (res.Format == Format.OneImagePerCell)
+        else if (fmt == Format.OneImagePerCell)
         {
             var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
             foreach (var cellBankInfo in res.Cells)
@@ -375,15 +376,17 @@ public static class CellAnimationSerialiser
         public Resource(XDocument doc)
         {
             var element = doc.ElementRequired("nitro_cell_animation_resource");
-            Format = element.AttributeEnum<Format>("format");
-
-            Cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellBankInfo(x)).ToList();
+            
+            var cellCollection = element.ElementRequired("cell_collection");
+            Format = cellCollection.AttributeEnum<Format>("format");
+            Cells = cellCollection.Elements("image").Select(x => new CellBankInfo(x)).ToList();
             Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
         }
 
         public XDocument Serialise()
         {
             var cellElem = new XElement("cell_collection", Cells.Select(x => x.Serialise()));
+            cellElem.Add(new XAttribute("format", Format));
             var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
 
             return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));

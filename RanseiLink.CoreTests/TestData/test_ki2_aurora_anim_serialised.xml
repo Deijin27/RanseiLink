@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <nitro_cell_animation_resource>
-  <cell_collection>
+  <cell_collection format="OneImagePerBank">
     <image name="0" file="0000.png" />
     <image name="1" file="0001.png">
       <cell x="97" y="3" width="64" height="32" flip_x="true" />
