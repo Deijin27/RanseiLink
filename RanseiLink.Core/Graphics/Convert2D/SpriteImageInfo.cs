@@ -1,12 +1,27 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
+using System.Collections.Generic;
 
 namespace RanseiLink.Core.Graphics;
 
 public record SpriteImageInfo(
     byte[] Pixels, 
-    Rgba32[] Palette, 
+    Palette Palette, 
     int Width, 
     int Height,
     bool IsTiled,
     TexFormat Format
     );
+
+public record MultiPaletteImageInfo(
+    byte[] Pixels,
+    PaletteCollection Palette,
+    int Width,
+    int Height,
+    bool IsTiled,
+    TexFormat Format)
+{
+    public SpriteImageInfo SelectPalette(int paletteId)
+    {
+        return new SpriteImageInfo(Pixels, Palette[paletteId], Width, Height, IsTiled, Format);
+    }
+}

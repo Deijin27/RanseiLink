@@ -68,11 +68,7 @@ public class NsbtxExtractCommand : ICommand
                 console.Output.WriteLine($"- {nameof(tex.Color0Transparent)}: {tex.Color0Transparent}");
             }
 
-            var convPal = PaletteUtil.To32bitColors(pal.PaletteData);
-            if (tex.Color0Transparent)
-            {
-                convPal[0] = SixLabors.ImageSharp.Color.Transparent;
-            }
+            var convPal = new Palette(pal.PaletteData, true);
             ImageUtil.SpriteToPng(Path.Combine(DestinationFolder, tex.Name + ".png"), 
                 new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height,
                     IsTiled: false,

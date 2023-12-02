@@ -238,13 +238,14 @@ namespace RanseiLink.Core.Graphics
 
         public void SaveAsPng(NCER ncer, string saveFile, bool tiled, bool debug = false)
         {
+            const TexFormat format = TexFormat.Pltt256;
             CellImageUtil.SingleBankToPng(
                 file: saveFile,
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                new SpriteImageInfo(Pixels, PaletteUtil.To32bitColors(Palette), Width, Height,
+                new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), Width, Height,
                     IsTiled: tiled,
-                    Format: TexFormat.Pltt256),
+                    Format: format),
                 debug: debug
                 );
         }
@@ -259,12 +260,17 @@ namespace RanseiLink.Core.Graphics
                 format: TexFormat.Pltt256
                 );
 
+            if (imageInfo.Palette.Count != 1)
+            {
+                throw new Exception("Multi-palette STL not supported");
+            }
+
             return new STL
             (
                 width: imageInfo.Width,
                 height: imageInfo.Height,
                 pixels: imageInfo.Pixels,
-                palette: PaletteUtil.From32bitColors(imageInfo.Palette)
+                palette: PaletteUtil.From32bitColors(imageInfo.Palette[0])
             );
         }
     }

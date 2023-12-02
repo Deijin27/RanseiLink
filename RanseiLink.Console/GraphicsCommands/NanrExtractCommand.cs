@@ -24,6 +24,9 @@ public class NanrExtractCommand : ICommand
     [CommandOption("positionRelativeTo", 'p', Description = "Whether cell x and y should be interpreted as relative to centre of background, or top-left of background")]
     public PositionRelativeTo PositionRelativeTo { get; set; } = PositionRelativeTo.TopLeft;
 
+    [CommandOption("format", 'f', Description = "Serialisation format")]
+    public CellAnimationSerialiser.Format Format { get; set; } = CellAnimationSerialiser.Format.OneImagePerBank;
+
     [CommandOption("width", 'w', Description = "If no background is specified, the width the images should be")]
     public int Width { get; set; }
 
@@ -40,7 +43,7 @@ public class NanrExtractCommand : ICommand
 
         if (Background != null)
         {
-            CellAnimationSerialiser.Serialise(PositionRelativeTo, DestinationFolder, Background, AnimatedParts);
+            CellAnimationSerialiser.Serialise(PositionRelativeTo, Format, DestinationFolder, Background, AnimatedParts);
         }
         else if (AnimatedParts != null)
         {
@@ -48,7 +51,7 @@ public class NanrExtractCommand : ICommand
             {
                 throw new System.Exception("Width and height must be specified if there is no background");
             }
-            CellAnimationSerialiser.SerialiseAnimation(PositionRelativeTo, DestinationFolder, AnimatedParts, Width, Height);
+            CellAnimationSerialiser.SerialiseAnimation(PositionRelativeTo, DestinationFolder, AnimatedParts, Width, Height, Format);
         }
 
         return default;

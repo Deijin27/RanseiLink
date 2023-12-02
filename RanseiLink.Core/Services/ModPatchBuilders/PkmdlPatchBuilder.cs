@@ -96,16 +96,12 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                 // load columns from sprite sheet
                 using (var combinedImage = Image.Load<Rgba32>(spriteFile.File))
                 {
-
-                    // populate palette ------------------------------------------------------------------------------------------------------
-
-                    var palette = new List<Rgba32> { Color.Transparent };
-
                     // TEX ------------------------------------------------------------------------------------------------------
 
                     const bool isTiled = false;
                     const TexFormat texFormat = TexFormat.Pltt16;
                     const bool color0Transparent = true;
+                    var palette = new Palette(texFormat, color0Transparent);
                     string texTemp = Path.GetTempFileName();
                     NSBTX btx0 = new NSBTX(new NSTEX());
                     int texHeight = _pokemonSpriteHeight * _texSpriteCount;

@@ -1,7 +1,8 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using System.Collections.Generic;
-using System;
+using System.Linq;
+using DryIoc.ImTools;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -33,9 +34,9 @@ public static class NitroImageUtil
         return CellImageUtil.MultiBankToImage(
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
-            imageInfo: new SpriteImageInfo(
+            imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
                 Width: width,
                 Height: height,
                 IsTiled: ncgr.Pixels.IsTiled,
@@ -51,9 +52,9 @@ public static class NitroImageUtil
         return CellImageUtil.MultiBankToMultipleImages(
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
-            imageInfo: new SpriteImageInfo(
+            imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
                 Width: width,
                 Height: height,
                 IsTiled: ncgr.Pixels.IsTiled,
@@ -69,9 +70,9 @@ public static class NitroImageUtil
         return CellImageUtil.MultiBankToMultipleImageGroups(
             banks: ncer.CellBanks.Banks,
             blockSize: ncer.CellBanks.BlockSize,
-            imageInfo: new SpriteImageInfo(
+            imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
                 Width: -1,
                 Height: -1,
                 IsTiled: ncgr.Pixels.IsTiled,
@@ -85,7 +86,7 @@ public static class NitroImageUtil
         return ImageUtil.SpriteToImage(
             new SpriteImageInfo(
                 Pixels: ncgr.Pixels.Data,
-                Palette: PaletteUtil.To32bitColors(nclr.Palettes.Palette),
+                Palette: new Palette(nclr.Palettes.Palette, false),
                 Width: ncgr.Pixels.TilesPerRow * 8,
                 Height: ncgr.Pixels.TilesPerColumn * 8,
                 IsTiled: ncgr.Pixels.IsTiled,
@@ -115,7 +116,7 @@ public static class NitroImageUtil
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
 
-    private static void ProcessNcerImageInfo(SpriteImageInfo imageInfo, NCGR ncgr, NCLR nclr)
+    private static void ProcessNcerImageInfo(MultiPaletteImageInfo imageInfo, NCGR ncgr, NCLR nclr)
     {
         ncgr.Pixels.Data = imageInfo.Pixels;
         if (ncgr.Pixels.TilesPerColumn != -1)
@@ -124,12 +125,35 @@ public static class NitroImageUtil
             ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
         }
 
-        var newPalette = PaletteUtil.From32bitColors(imageInfo.Palette);
-        if (newPalette.Length > nclr.Palettes.Palette.Length)
+        var palSize = imageInfo.Format.PaletteSize();
+        if (imageInfo.Palette.Any(x => x.Count > palSize))
         {
-            throw new InvalidPaletteException($"Palette length exceeds current palette when importing image");
+            throw new InvalidPaletteException($"Palette length exceeds allowed length {palSize} when importing image");
         }
-        newPalette.CopyTo(nclr.Palettes.Palette, 0);
+
+        Rgb15[] mergedPalette;
+        if (imageInfo.Palette.Count == 1)
+        {
+            mergedPalette = PaletteUtil.From32bitColors(imageInfo.Palette[0]);
+        }
+        else
+        {
+            mergedPalette = new Rgb15[imageInfo.Palette.Count * palSize];
+            for (int i = 0; i < imageInfo.Palette.Count; i++)
+            {
+                var pal = PaletteUtil.From32bitColors(imageInfo.Palette[i]);
+                pal.CopyTo(mergedPalette, i * palSize);
+            }
+        }
+        nclr.Palettes.Palette = mergedPalette;
+        if (nclr.PaletteCollectionMap != null)
+        {
+            nclr.PaletteCollectionMap.Palettes.Clear();
+            for (int i = 0; i < imageInfo.Palette.Count; i++)
+            {
+                nclr.PaletteCollectionMap.Palettes.Add((ushort)i);
+            }
+        }
     }
 
     public static void NcerFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images, PositionRelativeTo prt = PositionRelativeTo.TopLeft)

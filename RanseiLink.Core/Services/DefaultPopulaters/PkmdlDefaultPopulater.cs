@@ -48,8 +48,7 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
 
             NSBTX btx0 = new NSBTX(Path.Combine(texUnpacked, fileName));
 
-            Rgba32[] palette = PaletteUtil.To32bitColors(btx0.Texture.Palettes[0].PaletteData);
-            palette[0] = Color.Transparent;
+            var palette = new Palette(btx0.Texture.Palettes[0].PaletteData, true);
 
             // merge individual TEX textures into one for speed
             var texPixelmap = new byte[btx0.Texture.Textures.Sum(x => x.TextureData.Length)];

@@ -1,5 +1,7 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Graphics;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.IO;
 using System.Linq;
@@ -204,7 +206,7 @@ public static class BannerExtensions
     {
         var imageInfo = new SpriteImageInfo(
             Pixels: banner.ImagePixels,
-            Palette: PaletteUtil.To32bitColors(banner.ImagePalette),
+            Palette: new Palette(banner.ImagePalette, false),
             Width: 32,
             Height: 32,
             IsTiled: true,
@@ -221,9 +223,13 @@ public static class BannerExtensions
         {
             return Result.Fail("Invalid image dimensions. Should be 32x32 pixels");
         }
-        if (imageInfo.Palette.Length > 16)
+        if (imageInfo.Palette.Count > 16)
         {
             return Result.Fail("Invalid image palette. Should have at most 16 colors. You could use 'simplify palette' command");
+        }
+        while (imageInfo.Palette.Count < 16)
+        {
+            imageInfo.Palette.Add(Color.Black);
         }
 
         banner.ImagePalette = PaletteUtil.From32bitColors(imageInfo.Palette);

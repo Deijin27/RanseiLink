@@ -197,7 +197,7 @@ namespace RanseiLink.Core.Graphics
                 file: saveFile,
                 new SpriteImageInfo(
                     Pixels: Pixels, 
-                    Palette: PaletteUtil.To32bitColors(Palette), 
+                    Palette: new Palette(Palette, false), 
                     Width: Width, 
                     Height: Height,
                     IsTiled: tiled,

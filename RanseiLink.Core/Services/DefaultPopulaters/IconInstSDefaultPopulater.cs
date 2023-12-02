@@ -52,7 +52,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
             throw new Exception("Palette folder not found for IconInstS");
         }
         var nclr = G2DR.LoadPaletteFromFolder(palFolder);
-        var palette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
+        var palette = new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true);
 
         // Load the ncer and ncgrs, then load all the images
         const int width = 32;
@@ -72,7 +72,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
                 using var image = CellImageUtil.MultiBankToImage(
                    banks: ncer.CellBanks.Banks,
                    blockSize: ncer.CellBanks.BlockSize,
-                   imageInfo: new SpriteImageInfo(
+                   imageInfo: new MultiPaletteImageInfo(
                        Pixels: ncgr.Pixels.Data,
                        Palette: palette, // <-- it's probably worth using this over NitroImageUtil because we can load the palette only once
                        Width: width,

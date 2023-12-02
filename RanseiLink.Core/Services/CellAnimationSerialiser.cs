@@ -13,20 +13,26 @@ namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
-    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, bool mergeCells)
+    public enum Format
     {
-        var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, mergeCells);
+        OneImagePerCell,
+        OneImagePerBank
     }
 
-    public static void Serialise(PositionRelativeTo prt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
+    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, Format fmt)
+    {
+        var anim = G2DR.LoadAnimFromFile(animLinkFile);
+        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, fmt);
+    }
+
+    public static void Serialise(PositionRelativeTo prt, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
         var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, outputFolder);
 
         if (animLinkFile != null)
         {
-            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height, mergeCells: true);
+            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height, fmt: fmt);
         }
     }
 
@@ -126,7 +132,7 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, bool mergeCells)
+    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, Format fmt)
     {
         int xShift;
         int yShift;
@@ -152,7 +158,7 @@ public static class CellAnimationSerialiser
         }
 
         // save cells
-        if (mergeCells)
+        if (fmt == Format.OneImagePerBank)
         {
             var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
 
@@ -178,7 +184,7 @@ public static class CellAnimationSerialiser
                 }
             }
         }
-        else
+        else if (fmt == Format.OneImagePerCell)
         {
             var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
 
@@ -209,6 +215,10 @@ public static class CellAnimationSerialiser
                 }
             }
         }
+        else
+        {
+            throw new ArgumentOutOfRangeException(nameof(fmt), fmt, null);
+        }
 
         var doc = res.Serialise();
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
@@ -217,7 +227,7 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt, bool mergeCells)
+    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt)
     {
         int xShift;
         int yShift;
@@ -248,7 +258,7 @@ public static class CellAnimationSerialiser
         // load the cell info
         var nameToCellBankId = new Dictionary<string, ushort>();
 
-        if (mergeCells)
+        if (res.Format == Format.OneImagePerBank)
         {
             List<Image<Rgba32>> images = new();
             foreach (var cellBankInfo in res.Cells)
@@ -287,7 +297,7 @@ public static class CellAnimationSerialiser
                 image.Dispose();
             }
         }
-        else
+        else if (res.Format == Format.OneImagePerCell)
         {
             var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
             foreach (var cellBankInfo in res.Cells)
@@ -319,6 +329,10 @@ public static class CellAnimationSerialiser
             // import the image data
             NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
         }
+        else
+        {
+            throw new Exception($"Invalid serialisation format {res.Format}");
+        }
         
         // load the animations
         foreach (var anim in res.Animations)
@@ -348,6 +362,7 @@ public static class CellAnimationSerialiser
 
     public class Resource
     {
+        public Format Format { get; set; }
         public List<CellBankInfo> Cells { get; }
         public List<Anim> Animations { get; }
 
@@ -360,6 +375,7 @@ public static class CellAnimationSerialiser
         public Resource(XDocument doc)
         {
             var element = doc.ElementRequired("nitro_cell_animation_resource");
+            Format = element.AttributeEnum<Format>("format");
 
             Cells = element.ElementRequired("cell_collection").Elements("image").Select(x => new CellBankInfo(x)).ToList();
             Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
@@ -465,6 +481,11 @@ public static class CellAnimationSerialiser
                 cellElem.Add(new XAttribute("file", File));
             }
 
+            if (Cell.IndexPalette != 0)
+            {
+                cellElem.Add(new XAttribute("palette", 0));
+            }
+
             return cellElem;
         }
 
@@ -477,7 +498,8 @@ public static class CellAnimationSerialiser
                 Width = element.AttributeInt("width"),
                 Height = element.AttributeInt("height"),
                 FlipX = element.AttributeBool("flip_x", false),
-                FlipY = element.AttributeBool("flip_y", false)
+                FlipY = element.AttributeBool("flip_y", false),
+                IndexPalette = (byte)element.AttributeInt("palette", 0)
             };
 
             File = element.Attribute("file")?.Value;

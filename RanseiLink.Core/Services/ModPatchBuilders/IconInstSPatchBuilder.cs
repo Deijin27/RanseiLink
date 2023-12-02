@@ -38,7 +38,7 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
         // are similar to identical, so it should be do-able.
         var rx = new Regex(@"03_05_parts_shisetsuicon_s_(\d\d)\.G2DR");
         var linkFiles = Directory.GetFiles(containingFolder, "*.G2DR");
-        var workingPalette = new List<Rgba32>() { Color.Transparent };
+        var workingPalette = new PaletteCollection(1, TexFormat.Pltt256, true);
         string? nclrDir = null;
 
         if (linkFiles.Length == 0)
@@ -110,7 +110,7 @@ public class IconInstSPatchBuilder : IMiscItemPatchBuilder
         // if the palette is too small it will be scaled to the right 
         // length via the Array.Copy
         var nclr = G2DR.LoadPaletteFromFolder(nclrDir!);
-        var newPalette = PaletteUtil.From32bitColors(workingPalette);
+        var newPalette = PaletteUtil.From32bitColors(workingPalette[0]);
         if (newPalette.Length > nclr.Palettes.Palette.Length)
         {
             throw new InvalidPaletteException($"Palette is bigger than allowed for in IconInstS ({newPalette.Length} vs {nclr.Palettes.Palette.Length})");

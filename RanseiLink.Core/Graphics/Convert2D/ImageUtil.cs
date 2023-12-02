@@ -108,18 +108,14 @@ public static class ImageUtil
     {
         int width = image.Width;
         int height = image.Height;
-        var palette = new List<Rgba32>();
-        if (color0ToTransparent)
-        {
-            palette.Add(Color.Transparent);
-        }
+        var palette = new Palette(format, color0ToTransparent);
 
         byte[] pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
 
-        return new SpriteImageInfo(pixels, palette.ToArray(), width, height, tiled, format);
+        return new SpriteImageInfo(pixels, palette, width, height, tiled, format);
     }
 
-    public static byte[] SharedPalettePixelsFromImage(Image<Rgba32> image, List<Rgba32> palette, bool tiled, TexFormat format, bool color0ToTransparent)
+    public static byte[] SharedPalettePixelsFromImage(Image<Rgba32> image, Palette palette, bool tiled, TexFormat format, bool color0ToTransparent)
     {
         var indexGetter = PointUtil.DecideIndexGetter(tiled);
         int width = image.Width;

@@ -98,11 +98,7 @@ namespace RanseiLink.Core.Services
             var tex = nstex.Textures.First(x => x.Name == texName);
             var pal = nstex.Palettes.First(x => x.Name == palName);
 
-            var convPal = PaletteUtil.To32bitColors(pal.PaletteData);
-            if (tex.Color0Transparent)
-            {
-                convPal[0] = Color.Transparent;
-            }
+            var convPal = new Palette(pal.PaletteData, true);
             ImageUtil.SpriteToPng(Path.Combine(destinationFolder, texFileNameWithExt),
                 new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height,
                   IsTiled: false,
@@ -210,7 +206,12 @@ namespace RanseiLink.Core.Services
                 Height = imgInfo.Height,
             };
             var outPal = PaletteUtil.From32bitColors(imgInfo.Palette);
-            Array.Resize(ref outPal, format.PaletteSize());
+            var palSize = format.PaletteSize();
+            if (outPal.Length > palSize)
+            {
+                return Result.Fail($"Palette of texture {texName} has more than the allowed {palSize} colors");
+            }
+            Array.Resize(ref outPal, palSize);
             var palResult = new NSTEX.Palette(name: texName + "_pl", paletteData: outPal);
 
             return Result.Ok(new TextureLoadResult(Texture: texResult, Palette: palResult));

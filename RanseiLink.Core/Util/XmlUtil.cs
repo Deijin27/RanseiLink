@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Util;
@@ -63,6 +64,30 @@ public static class XmlUtil
             return defaultValue;
         }
         if (!int.TryParse(a.Value, out var result))
+        {
+            return defaultValue;
+        }
+        return result;
+    }
+
+    public static TEnum AttributeEnum<TEnum>(this XElement element, XName name) where TEnum : struct, Enum
+    {
+        var a = element.AttributeRequired(name);
+        if (!Enum.TryParse<TEnum>(a.Value, out var result))
+        {
+            ThrowXmlUtilException($"Element '{element.Name}' attribute '{name}' value must be valid {typeof(TEnum).Name} value, but was '{a.Value}'");
+        }
+        return result;
+    }
+
+    public static TEnum AttributeEnum<TEnum>(this XElement element, XName name, TEnum defaultValue) where TEnum : struct, Enum
+    {
+        var a = element.Attribute(name);
+        if (a == null)
+        {
+            return defaultValue;
+        }
+        if (!Enum.TryParse<TEnum>(a.Value, out var result))
         {
             return defaultValue;
         }
