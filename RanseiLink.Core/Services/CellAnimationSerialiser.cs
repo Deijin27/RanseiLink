@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
@@ -19,27 +20,44 @@ public static class CellAnimationSerialiser
         OneImagePerBank
     }
 
-    public static void SerialiseAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, Format fmt)
+    public static void ExportAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, Format fmt)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        SerialiseAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, fmt);
+        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, fmt);
     }
 
-    public static void Serialise(PositionRelativeTo prt, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
+    public static void ImportAnimation(PositionRelativeTo prt, string animLinkFile, string inputFolder, int width, int height, string outputAnimLinkFile)
+    {
+        var tempAnim = FileUtil.GetTemporaryDirectory();
+        try
+        {
+            LINK.Unpack(animLinkFile, tempAnim);
+            var anim = G2DR.LoadCellImgFromFolder(tempAnim);
+            var nanr = ImportAnimationXml(Path.Combine(inputFolder, "animation.xml"), anim.Ncer, anim.Ncgr, anim.Nclr, width, height, prt);
+            G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+            LINK.Pack(tempAnim, outputAnimLinkFile);
+        }
+        finally
+        {
+            Directory.Delete(tempAnim, true);
+        }
+    }
+
+    public static void Export(PositionRelativeTo prt, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
-        var (width, height) = SerialiseBackground(bg.Ncgr, bg.Nclr, outputFolder);
+        var (width, height) = ExportBackground(bg.Ncgr, bg.Nclr, outputFolder);
 
         if (animLinkFile != null)
         {
-            SerialiseAnimation(prt, outputFolder, animLinkFile, width, height, fmt: fmt);
+            ExportAnimation(prt, outputFolder, animLinkFile, width, height, fmt: fmt);
         }
     }
 
 
     // We will always have a background file to use, and we will always have the default of another anim to use
     // but it may be nice if we can generate without one to base it on. it's just more work.
-    public static void Deserialise(PositionRelativeTo prt, string inputFolder, string bgLinkFile, string outputBgLinkFile, string? animLinkFile = null, string? outputAnimLinkFile = null)
+    public static void Import(PositionRelativeTo prt, string inputFolder, string bgLinkFile, string outputBgLinkFile, string? animLinkFile = null, string? outputAnimLinkFile = null)
     {
         int width;
         int height;
@@ -49,7 +67,7 @@ public static class CellAnimationSerialiser
         {
             LINK.Unpack(bgLinkFile, tempBg);
             var bg = G2DR.LoadImgFromFolder(bgLinkFile);
-            (width, height) = DeserialiseBackground(inputFolder, bg.Ncgr, bg.Nclr);
+            (width, height) = ImportBackground(inputFolder, bg.Ncgr, bg.Nclr);
             G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempBg, outputBgLinkFile);
         }
@@ -61,19 +79,7 @@ public static class CellAnimationSerialiser
         // load animation
         if (animLinkFile != null && outputAnimLinkFile != null)
         {
-            var tempAnim = FileUtil.GetTemporaryDirectory();
-            try
-            {
-                LINK.Unpack(animLinkFile, tempAnim);
-                var anim = G2DR.LoadCellImgFromFolder(tempAnim);
-                var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), anim.Ncer, anim.Ncgr, anim.Nclr, width, height, prt);
-                G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
-                LINK.Pack(tempAnim, outputAnimLinkFile);
-            }
-            finally
-            {
-                Directory.Delete(tempAnim, true);
-            }
+            ImportAnimation(prt, animLinkFile, inputFolder, width, height, outputAnimLinkFile);
         }
     }
     /*
@@ -116,7 +122,7 @@ public static class CellAnimationSerialiser
     }
     */
 
-    public static (int width, int height) SerialiseBackground(NCGR ncgr, NCLR nclr, string outputFolder)
+    public static (int width, int height) ExportBackground(NCGR ncgr, NCLR nclr, string outputFolder)
     {
         using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
 
@@ -125,14 +131,14 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static (int width, int height) DeserialiseBackground(string inputFolder, NCGR ncgr, NCLR nclr)
+    public static (int width, int height) ImportBackground(string inputFolder, NCGR ncgr, NCLR nclr)
     {
         using var image = ImageUtil.LoadPngBetterError(Path.Combine(inputFolder, "background.png"));
         NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
         return (image.Width, image.Height);
     }
 
-    public static void SerialiseAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, Format fmt)
+    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, Format fmt)
     {
         int xShift;
         int yShift;
@@ -178,22 +184,32 @@ public static class CellAnimationSerialiser
                 foreach (var cell in cellBank)
                 {
                     // save cell data
-                    var cellData = new CellInfo(cell);
-                    cellData.Cell.XOffset += xShift;
-                    cellData.Cell.YOffset += yShift;
+                    var cellData = new CellInfo()
+                    {
+                        File = fileName,
+                        X = cell.XOffset + xShift,
+                        Y = cell.YOffset + yShift,
+                        FlipX = cell.FlipX,
+                        FlipY = cell.FlipY,
+                        Palette = cell.IndexPalette,
+                        DoubleSize = cell.DoubleSize,
+                        Height = cell.Height,
+                        Width = cell.Width,
+                    };
                     bankData.Cells.Add(cellData);
                 }
             }
         }
         else if (fmt == Format.OneImagePerCell)
         {
+            var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
             var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
 
             for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
             {
                 // prepare image folders
                 string folderName = bankId.ToString().PadLeft(4, '0');
-                Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
+                //Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
                 var group = imageGroups[bankId];
 
                 // save bank data
@@ -203,16 +219,43 @@ public static class CellAnimationSerialiser
 
                 for (int cellId = 0; cellId < cellBank.Count; cellId++)
                 {
+                    var cell = cellBank[cellId];
+
                     // save cell image
                     var cellImage = group[cellId];
-                    var fileName = $"{folderName}/{cellId.ToString().PadLeft(4, '0')}.png";
-                    cellImage.SaveAsPng(Path.Combine(outputFolder, fileName));
+                    var fileName = $"{folderName}_{cellId.ToString().PadLeft(4, '0')}.png";
+                    var filePath = Path.Combine(outputFolder, fileName);
+                    cellImage.SaveAsPng(filePath);
 
+                    // only save distinct images
+                    var sha = Sha256File(filePath);
+                    bool found = false;
+                    foreach (var tup in distinctImages)
+                    {
+                        // tup.TileOffset == cell.TileOffset && tup.IndexPalette == cell.IndexPalette && 
+                        if (tup.Hash.SequenceEqual(sha))
+                        {
+                            found = true;
+                            fileName = tup.FileName;
+                            File.Delete(filePath);
+                        }
+                    }
+                    if (!found)
+                    {
+                        distinctImages.Add((cell.TileOffset, cell.IndexPalette, sha, fileName));
+                    }
                     // save cell data
-                    var cell = cellBank[cellId];
-                    var cellData = new CellInfo(cell) { File = fileName };
-                    cellData.Cell.XOffset += xShift;
-                    cellData.Cell.YOffset += yShift;
+                    
+                    var cellData = new CellInfo() 
+                    { 
+                        File = fileName,
+                        X = cell.XOffset + xShift,
+                        Y = cell.YOffset + yShift,
+                        FlipX = cell.FlipX,
+                        FlipY = cell.FlipY,
+                        Palette = cell.IndexPalette,
+                        DoubleSize = cell.DoubleSize,
+                    };
                     bankData.Cells.Add(cellData);
                 }
             }
@@ -226,10 +269,21 @@ public static class CellAnimationSerialiser
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
+    private static byte[] Sha256File(string file)
+    {
+        using (var sha = SHA256.Create())
+        {
+            using (var fs = File.OpenRead(file))
+            {
+                return sha.ComputeHash(fs);
+            }
+        }
+    }
+
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR DeserialiseAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt)
+    public static NANR ImportAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt)
     {
         int xShift;
         int yShift;
@@ -273,16 +327,33 @@ public static class CellAnimationSerialiser
 
                 foreach (var cellInfo in cellBankInfo.Cells)
                 {
-                    var cell = cellInfo.Cell;
-                    cell.XOffset -= xShift;
-                    cell.YOffset -= yShift;
+                    if (cellInfo.Width < 0)
+                    {
+                        throw new Exception($"Missing required attribute 'width' on cell for format {fmt}");
+                    }
+                    if (cellInfo.Height < 0)
+                    {
+                        throw new Exception($"Missing required attribute 'height' on cell for format {fmt}");
+                    }
+                    var cell = new Cell
+                    {
+                        RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
+                        XOffset = cellInfo.X - xShift,
+                        YOffset = cellInfo.Y - yShift,
+                        FlipX = cellInfo.FlipX,
+                        FlipY = cellInfo.FlipY,
+                        DoubleSize = cellInfo.DoubleSize,
+                        IndexPalette = (byte)cellInfo.Palette,
+                        Width = cellInfo.Width,
+                        Height = cellInfo.Height,
+                    };
                     bank.Add(cell);
                 }
 
                 // image path is relative to the location of the xml file
                 if (cellBankInfo.File == null)
                 {
-                    throw new Exception("Missing required attribute 'file' on cell group");
+                    throw new Exception($"Missing required attribute 'file' on cell group for format {fmt}");
                 }
                 var imgPath = Path.Combine(dir, cellBankInfo.File);
                 images.Add(ImageUtil.LoadPngBetterError(imgPath));
@@ -314,15 +385,25 @@ public static class CellAnimationSerialiser
 
                 foreach (var cellInfo in cellBankInfo.Cells)
                 {
-                    var cell = cellInfo.Cell;
-                    cell.XOffset -= xShift;
-                    cell.YOffset -= yShift;
+                    var cell = new Cell
+                    {
+                        RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
+                        XOffset = cellInfo.X - xShift,
+                        YOffset = cellInfo.Y - yShift,
+                        FlipX = cellInfo.FlipX,
+                        FlipY = cellInfo.FlipY,
+                        DoubleSize = cellInfo.DoubleSize,
+                        IndexPalette = (byte)cellInfo.Palette
+                    };
                     bank.Add(cell);
                     if (cellInfo.File == null)
                     {
-                        throw new Exception("Missing required attribute 'file' on cell");
+                        throw new Exception($"Missing required attribute 'file' on cell for format {fmt}");
                     }
-                    images.Add(ImageUtil.LoadPngBetterError(cellInfo.File));
+                    var img = ImageUtil.LoadPngBetterError(cellInfo.File);
+                    images.Add(img);
+                    cell.Width = img.Width;
+                    cell.Height = img.Height;
                 }
 
                 bank.EstimateMinMaxValues();
@@ -331,6 +412,14 @@ public static class CellAnimationSerialiser
 
             // import the image data
             NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
+
+            foreach (var group in imageGroups)
+            {
+                foreach (var image in group)
+                {
+                    image.Dispose();
+                }
+            }
         }
         else
         {
@@ -360,8 +449,6 @@ public static class CellAnimationSerialiser
 
         return nanr;
     }
-
-    
 
     public class Resource
     {
@@ -455,44 +542,57 @@ public static class CellAnimationSerialiser
 
     public class CellInfo
     {
-        public Cell Cell { get; set; }
         public string? File { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+        public int Palette { get; set; }
+        public bool FlipX { get; set; }
+        public bool FlipY { get; set; }
+        public bool DoubleSize { get; set; }
 
-        public CellInfo(Cell cell)
+        public CellInfo()
         {
-            Cell = cell;
         }
 
         public XElement Serialise()
         {
             var cellElem = new XElement("cell",
-                        new XAttribute("x", Cell.XOffset),
-                        new XAttribute("y", Cell.YOffset),
-                        new XAttribute("width", Cell.Width),
-                        new XAttribute("height", Cell.Height)
+                        new XAttribute("x", X),
+                        new XAttribute("y", Y)
                         );
+
+            if (Width > 0)
+            {
+                cellElem.Add(new XAttribute("width", Width));
+            }
+            if (Height > 0)
+            {
+                cellElem.Add(new XAttribute("height", Height));
+            }
 
             if (!string.IsNullOrEmpty(File))
             {
                 cellElem.Add(new XAttribute("file", File));
             }
 
-            if (Cell.IndexPalette != 0)
+            if (Palette != 0)
             {
-                cellElem.Add(new XAttribute("palette", Cell.IndexPalette));
+                cellElem.Add(new XAttribute("palette", Palette));
             }
 
-            if (Cell.FlipX)
+            if (FlipX)
             {
-                cellElem.Add(new XAttribute("flip_x", Cell.FlipX));
+                cellElem.Add(new XAttribute("flip_x", FlipX));
             }
-            if (Cell.FlipY)
+            if (FlipY)
             {
-                cellElem.Add(new XAttribute("flip_y", Cell.FlipY));
+                cellElem.Add(new XAttribute("flip_y", FlipY));
             }
-            if (Cell.DoubleSize)
+            if (DoubleSize)
             {
-                cellElem.Add(new XAttribute("double_size", Cell.DoubleSize));
+                cellElem.Add(new XAttribute("double_size", DoubleSize));
             }
 
             return cellElem;
@@ -500,25 +600,21 @@ public static class CellAnimationSerialiser
 
         public CellInfo(XElement element)
         {
-            Cell = new Cell
-            {
-                XOffset = element.AttributeInt("x"),
-                YOffset = element.AttributeInt("y"),
-                Width = element.AttributeInt("width"),
-                Height = element.AttributeInt("height"),
-                FlipX = element.AttributeBool("flip_x", false),
-                FlipY = element.AttributeBool("flip_y", false),
-                DoubleSize = element.AttributeBool("double_size", false),
-                IndexPalette = (byte)element.AttributeInt("palette", 0)
-            };
+            X = element.AttributeInt("x");
+            Y = element.AttributeInt("y");
+            FlipX = element.AttributeBool("flip_x", false);
+            FlipY = element.AttributeBool("flip_y", false);
+            DoubleSize = element.AttributeBool("double_size", false);
+            Palette = (byte)element.AttributeInt("palette", 0);
 
-            if ((Cell.FlipX || Cell.FlipY) && Cell.DoubleSize)
+            Width = element.AttributeInt("width", -1);
+            Height = element.AttributeInt("height", -1);
+            File = element.Attribute("file")?.Value;
+
+            if ((FlipX || FlipY) && DoubleSize)
             {
                 throw new Exception("Cell cannot have both rotation (flip_x or flip_y) and scaling (double_size) at once");
             }
-            Cell.RotateOrScale = Cell.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate;
-
-            File = element.Attribute("file")?.Value;
         }
     }
 
