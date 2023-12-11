@@ -207,11 +207,8 @@
 	<Misc Id="IconInstS" DisplayName="Building Icon Small">
 		<IconInstS ContainingFolder="graphics/strategy/icon_inst_s"/>
 	</Misc>
-	
-	
-    
-	<!--
-	<Misc Id="Castlemap" DisplayName="Kingdom Internal Background">
+
+	<Misc Id="Castlemap" DisplayName="Kingdom Castle Background">
 		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_00_lo.G2DR"/>
 		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_01_lo.G2DR"/>
 		<NSCR Link="graphics/strategy/castlemap/03_05_BG_castlemap_02_lo.G2DR"/>
@@ -270,5 +267,4 @@
 		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_15_up.G2DR"/>
 		<NSCR Link="graphics/strategy/kuniimage2/03_00_parts_kuniimage_16_up.G2DR"/>
 	</Misc>
-	-->
 </GraphicsInfo>
