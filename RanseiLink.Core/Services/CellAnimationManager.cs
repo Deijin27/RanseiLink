@@ -16,7 +16,7 @@ public class CellAnimationManager
     public DataFile GetDataFile(AnimationTypeId type, int id)
     {
         var info = AnimationTypeInfoResource.Get(type);
-        return 
+        return _overrideDataProvider.GetDataFile(info.AnimationRelativePath(id));
     }
 
     public void ClearOverride(AnimationTypeId type, int id)

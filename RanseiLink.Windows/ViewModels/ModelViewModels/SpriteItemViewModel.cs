@@ -111,7 +111,7 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void RaiseSpriteModified()
     {
-        SpriteModified?.Invoke(this, new SpriteFile(_spriteType, Id, _displayFile, IsOverride));
+        SpriteModified?.Invoke(this, _spriteProvider.GetSpriteFile(_spriteType, Id));
     }
 
     public event EventHandler<SpriteFile>? SpriteModified;
