@@ -78,7 +78,7 @@ public class FallbackDataProvider : IFallbackDataProvider
             foreach (var item in miscInfo.Items)
             {
                 var file = Path.Combine(defaultDataFolder, item.PngFile);
-                result.Add(new SpriteFile(type, item.Id, file, isOverride: false));
+                result.Add(new SpriteFile(type, item.Id, item.PngFile, file, IsOverride: false));
             }
             return result;
         }
@@ -90,7 +90,12 @@ public class FallbackDataProvider : IFallbackDataProvider
                 return new List<SpriteFile>();
             }
             return Directory.GetFiles(dir)
-                .Select(i => new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), i, isOverride: false))
+                .Select(i => new SpriteFile(
+                    type, 
+                    int.Parse(Path.GetFileNameWithoutExtension(i)),
+                    i[(defaultDataFolder.Length + 1)..],
+                    i,
+                    IsOverride: false))
                 .ToList();
         }
         else
@@ -103,7 +108,8 @@ public class FallbackDataProvider : IFallbackDataProvider
     public SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id)
     {
         string defaultDataFolder = Constants.DefaultDataFolder(gc);
-        return new SpriteFile(type, id, Path.Combine(defaultDataFolder, GraphicsInfoResource.Get(type).GetRelativeSpritePath(id)), false);
+        var relPath = GraphicsInfoResource.Get(type).GetRelativeSpritePath(id);
+        return new SpriteFile(type, id, relPath, Path.Combine(defaultDataFolder, relPath), false);
     }
 
     public DataFile GetDataFile(ConquestGameCode gc, string pathInRom)

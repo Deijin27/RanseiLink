@@ -36,33 +36,23 @@ public enum SpriteType
     KuniImage2
 }
 
-public class SpriteFile
-{
-    public SpriteType Type { get; }
-    public int Id { get; } 
-    public string File { get; }
-    public bool IsOverride { get; }
-    public SpriteFile(SpriteType type, int id, string file, bool isOverride)
-    {
-        Type = type;
-        Id = id;
-        File = file;
-        IsOverride = isOverride;
-    }
-}
+/// <summary>
+/// A snapshot of the state of a sprite data file
+/// </summary>
+/// <param name="Type"></param>
+/// <param name="Id"></param>
+/// <param name="RomPath">Path of file relative to the root of the rom</param>
+/// <param name="File">Absolute path of the file in the local file system</param>
+/// <param name="IsOverride">True if the file is overwritten</param>
+public record SpriteFile(SpriteType Type, int Id, string RomPath, string File, bool IsOverride) : DataFile(RomPath, File, IsOverride);
 
-public class DataFile
-{
-    public string RomPath { get; }
-    public string File { get; }
-    public bool IsOverride { get; }
-    public DataFile(string romPath, string file, bool isOverride)
-    {
-        RomPath = romPath;
-        File = file;
-        IsOverride = isOverride;
-    }
-}
+/// <summary>
+/// A snapshot of the state of a data file
+/// </summary>
+/// <param name="RomPath">Path of file relative to the root of the rom</param>
+/// <param name="File">Absolute path of the file in the local file system</param>
+/// <param name="IsOverride">True if the file is overwritten</param>
+public record DataFile(string RomPath, string File, bool IsOverride);
 
 public interface IFallbackDataProvider
 {

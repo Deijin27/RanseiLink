@@ -47,9 +47,9 @@ public class OverrideDataProvider : IOverrideDataProvider
             foreach (var item in miscInfo.Items)
             {
                 var file = Path.Combine(_mod.FolderPath, item.PngFile);
-                var fi = new SpriteFile(type, item.Id, file, isOverride: true);
-                if (File.Exists(fi.File))
+                if (File.Exists(file))
                 {
+                    var fi = new SpriteFile(type, item.Id, item.PngFile, file, IsOverride: true);
                     dict[fi.Id] = fi;
                 }
             }
@@ -59,9 +59,11 @@ public class OverrideDataProvider : IOverrideDataProvider
             string overrideFolder = Path.Combine(_mod.FolderPath, groupedInfo.PngFolder);
             if (Directory.Exists(overrideFolder))
             {
-                foreach (var i in Directory.GetFiles(overrideFolder).Select(i => new SpriteFile(type: type, id: int.Parse(Path.GetFileNameWithoutExtension(i)), file: i, isOverride: true)))
+                foreach (var i in Directory.GetFiles(overrideFolder))
                 {
-                    dict[i.Id] = i;
+                    var romPath = i[(_mod.FolderPath.Length + 1)..];
+                    var fi = new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), romPath, i, IsOverride: true);
+                    dict[fi.Id] = fi;
                 }
             }
             
@@ -76,7 +78,8 @@ public class OverrideDataProvider : IOverrideDataProvider
 
     private SpriteFile GetSpriteFilePathWithoutFallback(SpriteType type, int id)
     {
-        return new SpriteFile(type, id, Path.Combine(_mod.FolderPath, GraphicsInfoResource.Get(type).GetRelativeSpritePath(id)), true);
+        var romPath = GraphicsInfoResource.Get(type).GetRelativeSpritePath(id);
+        return new SpriteFile(type, id, romPath, Path.Combine(_mod.FolderPath, romPath), true);
     }
 
     public SpriteFile GetSpriteFile(SpriteType type, int id)
