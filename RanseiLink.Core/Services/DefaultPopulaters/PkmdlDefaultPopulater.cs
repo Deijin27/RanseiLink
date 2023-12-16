@@ -100,24 +100,24 @@ public class PkmdlDefaultPopulater : IGraphicTypeDefaultPopulater
             combinedImage.Mutate(g =>
             {
                 g.DrawImage(
-                    image: texImg,
-                    location: new Point(0, 0),
-                    opacity: 1
+                    texImg,
+                    new Point(0, 0),
+                    1
                     );
                 g.DrawImage(
-                    image: atxImg,
-                    location: new Point(texImg.Width, 0),
-                    opacity: 1
+                    atxImg,
+                    new Point(texImg.Width, 0),
+                    1
                     );
                 g.DrawImage(
-                    image: dtxImg,
-                    location: new Point(texImg.Width + atxImg.Width, 0),
-                    opacity: 1
+                    dtxImg,
+                    new Point(texImg.Width + atxImg.Width, 0),
+                    1
                     );
                 g.DrawImage(
-                    image: pacImg,
-                    location: new Point(texImg.Width + atxImg.Width + dtxImg.Width, 0),
-                    opacity: 1
+                    pacImg,
+                    new Point(texImg.Width + atxImg.Width + dtxImg.Width, 0),
+                    1
                     );
             });
 

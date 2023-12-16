@@ -291,9 +291,9 @@ public static class ImageUtil
             foreach (var image in images)
             {
                 g.DrawImage(
-                    image: image,
-                    location: new Point(0, cumulativeHeight),
-                    opacity: 1
+                    image,
+                    new Point(0, cumulativeHeight),
+                    1
                     );
                 cumulativeHeight += image.Height;
             }

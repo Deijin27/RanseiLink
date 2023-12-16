@@ -47,11 +47,7 @@ public static class MaterialRegistry
 
     public static Image<Rgba32> GenerateImage(NSTEX.Texture tex, NSTEX.Palette pal)
     {
-        var convPal = PaletteUtil.To32bitColors(pal.PaletteData);
-        if (tex.Color0Transparent)
-        {
-            convPal[0] = SixLabors.ImageSharp.Color.Transparent;
-        }
+        var convPal = new Palette(pal.PaletteData, tex.Color0Transparent);
 
         return ImageUtil.SpriteToImage(
             imageInfo: new SpriteImageInfo(

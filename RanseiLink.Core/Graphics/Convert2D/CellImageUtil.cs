@@ -132,9 +132,9 @@ public static class CellImageUtil
                 graphic.Mutate(g =>
                 {
                     g.DrawImage(
-                        image: cellImg,
-                        location: new Point(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift),
-                        opacity: 1);
+                        cellImg,
+                        new Point(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift),
+                        1);
                 });
             }
         }

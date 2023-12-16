@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
     <TrimMode>copyused</TrimMode>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
 	<Authors>Deijin</Authors>
 	<VersionPrefix>6.0</VersionPrefix>
 	<VersionSuffix>alpha1</VersionSuffix>
+	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	<AssemblyName>RanseiLink</AssemblyName>
 	<ApplicationIcon>Assets\ranseilink-logo.ico</ApplicationIcon>
   </PropertyGroup>
@@ -29,12 +30,12 @@
     <TrimmableAssembly Include="Avalonia.Themes.Default" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.0.5" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
-	<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.5" />
+    <PackageReference Include="Avalonia" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
+	<PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.5" />
-    <PackageReference Include="DryIoc.dll" Version="5.4.2" />
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
+    <PackageReference Include="DryIoc.dll" Version="5.4.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
