@@ -46,7 +46,7 @@ namespace RanseiLink.Core
             {
                 if (type.IsAbstract || type.GetCustomAttribute<PatchBuilderAttribute>() == null)
                 {
-                    return;
+                    continue;
                 }
                 if (typeof(IPatchBuilder).IsAssignableFrom(type))
                 {

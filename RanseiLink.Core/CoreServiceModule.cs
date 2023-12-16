@@ -39,7 +39,7 @@ namespace RanseiLink.Core
             {
                 if (type.IsAbstract || type.GetCustomAttribute<DefaultPopulaterAttribute>() == null)
                 {
-                    return;
+                    continue;
                 }
                 if (typeof(IGraphicTypeDefaultPopulater).IsAssignableFrom(type))
                 {
