@@ -7,15 +7,11 @@ using System.IO;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class NcerPatchBuilder : IMiscItemPatchBuilder
+public class NcerPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 {
     public MetaMiscItemId Id => MetaMiscItemId.NCER;
 
-    private readonly string _graphicsProviderFolder;
-    public NcerPatchBuilder(ModInfo mod)
-    {
-        _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
-    }
+    private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, MiscConstants gInfo, MiscItem miscItem, string pngFile)
     {

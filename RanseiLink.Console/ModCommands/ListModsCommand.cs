@@ -9,26 +9,18 @@ using System.Threading.Tasks;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("list mods", Description = "View info on all existing mods.")]
-public class ListModsCommand : ICommand
+public class ListModsCommand(IModManager modManager, ISettingService settingService) : ICommand
 {
-    private readonly IModManager _modManager;
-    private readonly ISettingService _settingService;
-    public ListModsCommand(IModManager modManager, ISettingService settingService)
-    {
-        _modManager = modManager;
-        _settingService = settingService;
-    }
-
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var mods = _modManager.GetAllModInfo();
+        var mods = modManager.GetAllModInfo();
         if (mods.Count == 0)
         {
             console.Output.WriteLine("No mods found");
         }
         else
         {
-            var current = _settingService.Get<CurrentConsoleModSlotSetting>().Value;
+            var current = settingService.Get<CurrentConsoleModSlotSetting>().Value;
             int count = 0;
             foreach (var mod in mods)
             {

@@ -6,13 +6,8 @@ using System.IO;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class DataPatchBuilder : IPatchBuilder
+public class DataPatchBuilder(ModInfo mod) : IPatchBuilder
 {
-    private readonly ModInfo _mod;
-    public DataPatchBuilder(ModInfo mod)
-    {
-        _mod = mod;
-    }
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
     {
         List<string> dataRomPaths = new List<string>()
@@ -44,10 +39,10 @@ public class DataPatchBuilder : IPatchBuilder
             dataRomPaths.Add(Constants.ScenarioBuildingPathFromId((int)i));
         }
 
-        filesToPatch.Add(new FileToPatch(Constants.PokemonRomPath, Path.Combine(_mod.FolderPath, Constants.PokemonRomPath), FilePatchOptions.VariableLength));
+        filesToPatch.Add(new FileToPatch(Constants.PokemonRomPath, Path.Combine(mod.FolderPath, Constants.PokemonRomPath), FilePatchOptions.VariableLength));
         foreach (string drp in dataRomPaths)
         {
-            filesToPatch.Add(new FileToPatch(drp, Path.Combine(_mod.FolderPath, drp), FilePatchOptions.None));
+            filesToPatch.Add(new FileToPatch(drp, Path.Combine(mod.FolderPath, drp), FilePatchOptions.None));
         }
     }
 }

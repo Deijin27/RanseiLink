@@ -7,7 +7,6 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
+public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService) : IGraphicTypePatchBuilder
 {
     public MetaSpriteType Id => MetaSpriteType.PKMDL;
 
@@ -23,23 +22,13 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
     private const int _pokemonSpriteWidth = 32;
     private const int _pokemonSpriteHeight = 32;
     private const int _texSpriteCount = 24;
-
-    private readonly IOverrideDataProvider _overrideSpriteProvider;
-    private readonly IPokemonService _pokemonService; // this will be used to get the sprite asymmetry, whether the animation is double duration, and the pokemon's national dex number
-    private readonly string _graphicsProviderFolder;
-
-    public PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService)
-    {
-        _pokemonService = pokemonService;
-        _overrideSpriteProvider = overrideSpriteProvider;
-        _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
-    }
+    private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)
     {
         var pkmdlInfo = (PkmdlConstants)gInfo;
 
-        var spriteFiles = _overrideSpriteProvider.GetAllSpriteFiles(pkmdlInfo.Type);
+        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(pkmdlInfo.Type);
         if (!spriteFiles.Any(i => i.IsOverride))
         {
             return;
@@ -71,7 +60,7 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
             if (spriteFile.IsOverride)
             {
                 // determine heights of columns within sprite sheet based on pokemon data
-                var pokemon = _pokemonService.Retrieve(i);
+                var pokemon = pokemonService.Retrieve(i);
                 int atxHeight;
                 int dtxHeight;
                 int pacHeight;
@@ -184,8 +173,8 @@ public class PkmdlPatchBuilder : IGraphicTypePatchBuilder
                         string[] pacFiles = new string[]
                         {
                             Path.Combine(_graphicsProviderFolder, pacUnpackedFolder, "0000"),
-                            _overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0001")).File,
-                            _overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0002")).File,
+                            overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0001")).File,
+                            overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0002")).File,
                             pacCharTemp
                         };
                         PAC.Pack(pacFiles, pacTemp, new[] { PAC.FileTypeNumber.NSBMD, PAC.FileTypeNumber.NSBTP, PAC.FileTypeNumber.PAT, PAC.FileTypeNumber.CHAR }, 1);

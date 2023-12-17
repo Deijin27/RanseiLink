@@ -8,16 +8,8 @@ using RanseiLink.Console.Services;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("commit mod", Description = "Commit current mod to rom.")]
-public class CommitModCommand : ICommand
+public class CommitModCommand(ICurrentModService currentModService, IModPatchingService modPatcher) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    private readonly IModPatchingService _modPatcher;
-    public CommitModCommand(ICurrentModService currentModService, IModPatchingService modPatcher)
-    {
-        _currentModService = currentModService;
-        _modPatcher = modPatcher;
-    }
-
     [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
     public string Path { get; set; }
 
@@ -26,7 +18,7 @@ public class CommitModCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
+        if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
             console.Output.WriteLine("No mod selected");
             return default;
@@ -39,14 +31,14 @@ public class CommitModCommand : ICommand
             patchOpt |= PatchOptions.IncludeSprites;
         }
 
-        var canPatch = _modPatcher.CanPatch(currentMod, Path, patchOpt);
+        var canPatch = modPatcher.CanPatch(currentMod, Path, patchOpt);
         if (canPatch.IsFailed)
         {
             console.Output.WriteLine(canPatch.ToString());
             return default;
         }
 
-        _modPatcher.Patch(currentMod, Path, patchOpt);
+        modPatcher.Patch(currentMod, Path, patchOpt);
         console.Output.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
         console.Render(currentMod);
         return default;

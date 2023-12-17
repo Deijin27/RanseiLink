@@ -16,32 +16,15 @@
         No,
     }
 
-    public class MessageBoxButton
-    {
-        public string Text { get; } 
-        public MessageBoxResult Result { get; }
-        public MessageBoxButton(string text, MessageBoxResult result) 
-        { 
-            Text = text; 
-            Result = result; 
-        }
-    }
+    public record MessageBoxButton(string Text, MessageBoxResult Result);
 
-    public class MessageBoxSettings
+    public class MessageBoxSettings(
+        string title,
+        string message,
+        MessageBoxButton[] buttons,
+        MessageBoxType type = MessageBoxType.Information,
+        MessageBoxResult defaultResult = MessageBoxResult.Ok)
     {
-        public MessageBoxSettings(
-            string title,
-            string message,
-            MessageBoxButton[] buttons,
-            MessageBoxType type = MessageBoxType.Information,
-            MessageBoxResult defaultResult = MessageBoxResult.Ok)
-        {
-            Title = title;
-            Message = message;
-            Buttons = buttons;
-            Type = type;
-            DefaultResult = defaultResult;
-        }
 
         /// <summary>
         /// Simple way to create a message box that just has one button on it saying "OK"
@@ -53,16 +36,16 @@
             return new MessageBoxSettings(
                 title,
                 message,
-                new MessageBoxButton[] { new MessageBoxButton("OK", MessageBoxResult.Ok) },
+                [new("OK", MessageBoxResult.Ok)],
                 type,
                 MessageBoxResult.Ok
                 );
         }
 
-        public string Title { get; }
-        public string Message { get; }
-        public MessageBoxButton[] Buttons { get; }
-        public MessageBoxType Type { get; }
-        public MessageBoxResult DefaultResult { get; }
+        public string Title { get; } = title;
+        public string Message { get; } = message;
+        public MessageBoxButton[] Buttons { get; } = buttons;
+        public MessageBoxType Type { get; } = type;
+        public MessageBoxResult DefaultResult { get; } = defaultResult;
     }
 }

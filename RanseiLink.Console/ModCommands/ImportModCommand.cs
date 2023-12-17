@@ -9,16 +9,8 @@ using System.Threading.Tasks;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("import mod", Description = "Import mod (and by default sets imported mod to current)")]
-public class ImportModCommand : ICommand
+public class ImportModCommand(IModManager modManager, ISettingService settingService) : ICommand
 {
-    private readonly IModManager _modManager;
-    private readonly ISettingService _settingService;
-    public ImportModCommand(IModManager modManager, ISettingService settingService)
-    {
-        _modManager = modManager;
-        _settingService = settingService;
-    }
-
     [CommandParameter(0, Description = "Path to mod file.", Name = "path", Converter = typeof(PathConverter))]
     public string Path { get; set; }
 
@@ -27,16 +19,16 @@ public class ImportModCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var info = _modManager.Import(Path);
+        var info = modManager.Import(Path);
         if (SetAsCurrent)
         {
-            var mods = _modManager.GetAllModInfo();
+            var mods = modManager.GetAllModInfo();
             for (int i = 0; i < mods.Count; i++)
             {
                 if (mods[i].FolderPath == info.FolderPath)
                 {
-                    _settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
-                    _settingService.Save();
+                    settingService.Get<CurrentConsoleModSlotSetting>().Value = i;
+                    settingService.Save();
                     break;
                 }
             }

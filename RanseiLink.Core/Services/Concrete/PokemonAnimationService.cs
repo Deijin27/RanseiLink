@@ -10,17 +10,8 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-public class PokemonAnimationService : IPokemonAnimationService
+public class PokemonAnimationService(IOverrideDataProvider spriteProvider, IPokemonService pokemonService) : IPokemonAnimationService
 {
-    private readonly IOverrideDataProvider _spriteProvider;
-    private readonly IPokemonService _pokemonService;
-
-    public PokemonAnimationService(IOverrideDataProvider spriteProvider, IPokemonService pokemonService)
-    {
-        _spriteProvider = spriteProvider;
-        _pokemonService = pokemonService;
-    }
-
     public Result ImportAnimation(PokemonId id, string file)
     {
         var result = file;
@@ -63,9 +54,9 @@ public class PokemonAnimationService : IPokemonAnimationService
             // raw
             NSPAT_RAW.WriteTo(nspat, temp1);
             var nspatRawFile = ResolveRelativeAnimPath(id, true);
-            _spriteProvider.SetOverride(nspatRawFile, temp1);
+            spriteProvider.SetOverride(nspatRawFile, temp1);
 
-            var pokemon = _pokemonService.Retrieve((int)id);
+            var pokemon = pokemonService.Retrieve((int)id);
             // non raw
             // need to make sure the natdex number is correct
             foreach (var anim in nspat.PatternAnimations)
@@ -77,7 +68,7 @@ public class PokemonAnimationService : IPokemonAnimationService
             }
             new NSBTP(nspat).WriteTo(temp2);
             var nsbtpFile = ResolveRelativeAnimPath(id, false);
-            _spriteProvider.SetOverride(nsbtpFile, temp2);
+            spriteProvider.SetOverride(nsbtpFile, temp2);
 
             pokemon.AsymmetricBattleSprite = bool.TryParse(root.Attribute(AsymmetricalAttributeName)?.Value, out var asv) && asv;
             pokemon.LongAttackAnimation = bool.TryParse(root.Attribute(LongAttackAttributeName)?.Value, out var lav) && lav;
@@ -97,17 +88,17 @@ public class PokemonAnimationService : IPokemonAnimationService
 
     public bool IsAnimationOverwritten(PokemonId id)
     {
-        return _spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, false)).IsOverride
-            || _spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, true)).IsOverride;
+        return spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, false)).IsOverride
+            || spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, true)).IsOverride;
     }
 
     public void RevertAnimation(PokemonId id)
     {
         string nonRawFile = ResolveRelativeAnimPath(id, false);
-        _spriteProvider.ClearOverride(nonRawFile);
+        spriteProvider.ClearOverride(nonRawFile);
 
         var rawFile = ResolveRelativeAnimPath(id, true);
-        _spriteProvider.ClearOverride(rawFile);
+        spriteProvider.ClearOverride(rawFile);
     }
 
     private string ResolveRelativeAnimPath(PokemonId id, bool raw)
@@ -121,16 +112,16 @@ public class PokemonAnimationService : IPokemonAnimationService
 
     public Result ExportAnimations(PokemonId id, string dest)
     {
-        if (!_spriteProvider.IsDefaultsPopulated())
+        if (!spriteProvider.IsDefaultsPopulated())
         {
             return Result.Fail("Cannot export animation since graphics defaults are not populated");
         }
 
         dest = FileUtil.MakeUniquePath(dest);
-        var file = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, false));
-        var rawfile = _spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, true));
+        var file = spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, false));
+        var rawfile = spriteProvider.GetDataFile(ResolveRelativeAnimPath(id, true));
 
-        var pokemon = _pokemonService.Retrieve((int)id);
+        var pokemon = pokemonService.Retrieve((int)id);
         var nsbtp = new NSBTP(file.File);
         var nspat = NSPAT_RAW.Load(rawfile.File);
         var doc = new XDocument(new XElement(PatternGroupElementName,

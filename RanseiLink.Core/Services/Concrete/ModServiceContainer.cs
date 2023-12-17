@@ -3,62 +3,33 @@ using System;
 
 namespace RanseiLink.Core.Services.Concrete
 {
-    public class ModServiceContainer : IModServiceContainer
+    public class ModServiceContainer(IServiceGetter modServices) : IModServiceContainer
     {
-        private readonly Lazy<IPokemonService> _pokemon;
-        private readonly Lazy<IMoveService> _move;
-        private readonly Lazy<IAbilityService> _ability;
-        private readonly Lazy<IWarriorSkillService> _warriorSkill;
-        private readonly Lazy<IGimmickService> _gimmick;
-        private readonly Lazy<IBuildingService> _building;
-        private readonly Lazy<IItemService> _item;
-        private readonly Lazy<IKingdomService> _kingdom;
-        private readonly Lazy<IMoveRangeService> _moveRange;
-        private readonly Lazy<IGimmickRangeService> _gimmickRange;
-        private readonly Lazy<IEventSpeakerService> _eventSpeaker;
-        private readonly Lazy<IScenarioPokemonService> _scenarioPokemon;
-        private readonly Lazy<IScenarioWarriorService> _scenarioWarrior;
-        private readonly Lazy<IMaxLinkService> _maxLink;
-        private readonly Lazy<IBaseWarriorService> _baseWarrior;
-        private readonly Lazy<IScenarioAppearPokemonService> _scenarioAppearPokemon;
-        private readonly Lazy<IScenarioKingdomService> _scenarioKingdom;
-        private readonly Lazy<IScenarioBuildingService> _scenarioBuilding;
-        private readonly Lazy<IMsgBlockService> _msg;
-        private readonly Lazy<IBattleConfigService> _battleConfig;
-        private readonly Lazy<IMoveAnimationService> _moveAnimation;
-        private readonly Lazy<IGimmickObjectService> _gimmickObject;
-        private readonly Lazy<IMapService> _map;
-        private readonly Lazy<IOverrideDataProvider> _overrideSpriteProvider;
-        private readonly Lazy<IEpisodeService> _episode;
-
-        public ModServiceContainer(IServiceGetter modServices)
-        {
-            _pokemon = new Lazy<IPokemonService>(() => modServices.Get<IPokemonService>());
-            _move = new Lazy<IMoveService>(() => modServices.Get<IMoveService>());
-            _ability = new Lazy<IAbilityService>(() => modServices.Get<IAbilityService>());
-            _warriorSkill = new Lazy<IWarriorSkillService>(() => modServices.Get<IWarriorSkillService>());
-            _gimmick = new Lazy<IGimmickService>(() => modServices.Get<IGimmickService>());
-            _building = new Lazy<IBuildingService>(() => modServices.Get<IBuildingService>());
-            _item = new Lazy<IItemService>(() => modServices.Get<IItemService>());
-            _kingdom = new Lazy<IKingdomService>(() => modServices.Get<IKingdomService>());
-            _moveRange = new Lazy<IMoveRangeService>(() => modServices.Get<IMoveRangeService>());
-            _gimmickRange = new Lazy<IGimmickRangeService>(() => modServices.Get<IGimmickRangeService>());
-            _eventSpeaker = new Lazy<IEventSpeakerService>(() => modServices.Get<IEventSpeakerService>());
-            _scenarioPokemon = new Lazy<IScenarioPokemonService>(() => modServices.Get<IScenarioPokemonService>());
-            _scenarioWarrior = new Lazy<IScenarioWarriorService>(() => modServices.Get<IScenarioWarriorService>());
-            _maxLink = new Lazy<IMaxLinkService>(() => modServices.Get<IMaxLinkService>());
-            _baseWarrior = new Lazy<IBaseWarriorService>(() => modServices.Get<IBaseWarriorService>());
-            _scenarioAppearPokemon = new Lazy<IScenarioAppearPokemonService>(() => modServices.Get<IScenarioAppearPokemonService>());
-            _scenarioKingdom = new Lazy<IScenarioKingdomService>(() => modServices.Get<IScenarioKingdomService>());
-            _scenarioBuilding = new Lazy<IScenarioBuildingService>(() => modServices.Get<IScenarioBuildingService>());
-            _msg = new Lazy<IMsgBlockService>(() => modServices.Get<IMsgBlockService>());
-            _battleConfig = new Lazy<IBattleConfigService>(() => modServices.Get<IBattleConfigService>());
-            _moveAnimation = new Lazy<IMoveAnimationService>(() => modServices.Get<IMoveAnimationService>());
-            _gimmickObject = new Lazy<IGimmickObjectService>(() => modServices.Get<IGimmickObjectService>());
-            _map = new Lazy<IMapService>(() => modServices.Get<IMapService>());
-            _overrideSpriteProvider = new Lazy<IOverrideDataProvider>(() => modServices.Get<IOverrideDataProvider>());
-            _episode = new Lazy<IEpisodeService>(() => modServices.Get<IEpisodeService>());
-        }
+        private readonly Lazy<IPokemonService> _pokemon = new(modServices.Get<IPokemonService>);
+        private readonly Lazy<IMoveService> _move = new(modServices.Get<IMoveService>);
+        private readonly Lazy<IAbilityService> _ability = new(modServices.Get<IAbilityService>);
+        private readonly Lazy<IWarriorSkillService> _warriorSkill = new(modServices.Get<IWarriorSkillService>);
+        private readonly Lazy<IGimmickService> _gimmick = new(modServices.Get<IGimmickService>);
+        private readonly Lazy<IBuildingService> _building = new(modServices.Get<IBuildingService>);
+        private readonly Lazy<IItemService> _item = new(modServices.Get<IItemService>);
+        private readonly Lazy<IKingdomService> _kingdom = new(modServices.Get<IKingdomService>);
+        private readonly Lazy<IMoveRangeService> _moveRange = new(modServices.Get<IMoveRangeService>);
+        private readonly Lazy<IGimmickRangeService> _gimmickRange = new(modServices.Get<IGimmickRangeService>);
+        private readonly Lazy<IEventSpeakerService> _eventSpeaker = new(modServices.Get<IEventSpeakerService>);
+        private readonly Lazy<IScenarioPokemonService> _scenarioPokemon = new(modServices.Get<IScenarioPokemonService>);
+        private readonly Lazy<IScenarioWarriorService> _scenarioWarrior = new(modServices.Get<IScenarioWarriorService>);
+        private readonly Lazy<IMaxLinkService> _maxLink = new(modServices.Get<IMaxLinkService>);
+        private readonly Lazy<IBaseWarriorService> _baseWarrior = new(modServices.Get<IBaseWarriorService>);
+        private readonly Lazy<IScenarioAppearPokemonService> _scenarioAppearPokemon = new(modServices.Get<IScenarioAppearPokemonService>);
+        private readonly Lazy<IScenarioKingdomService> _scenarioKingdom = new(modServices.Get<IScenarioKingdomService>);
+        private readonly Lazy<IScenarioBuildingService> _scenarioBuilding = new(modServices.Get<IScenarioBuildingService>);
+        private readonly Lazy<IMsgBlockService> _msg = new(modServices.Get<IMsgBlockService>);
+        private readonly Lazy<IBattleConfigService> _battleConfig = new(modServices.Get<IBattleConfigService>);
+        private readonly Lazy<IMoveAnimationService> _moveAnimation = new(modServices.Get<IMoveAnimationService>);
+        private readonly Lazy<IGimmickObjectService> _gimmickObject = new(modServices.Get<IGimmickObjectService>);
+        private readonly Lazy<IMapService> _map = new(modServices.Get<IMapService>);
+        private readonly Lazy<IOverrideDataProvider> _overrideSpriteProvider = new(modServices.Get<IOverrideDataProvider>);
+        private readonly Lazy<IEpisodeService> _episode = new(modServices.Get<IEpisodeService>);
 
         public IPokemonService Pokemon => _pokemon.Value;
         public IMoveService Move => _move.Value;

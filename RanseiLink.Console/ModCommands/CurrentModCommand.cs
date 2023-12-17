@@ -8,16 +8,11 @@ using CliFx;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("current mod", Description = "Current Mod.")]
-public class CurrentModCommand : ICommand
+public class CurrentModCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public CurrentModCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
+        if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
             console.Output.WriteLine("No mod selected");
             return default;

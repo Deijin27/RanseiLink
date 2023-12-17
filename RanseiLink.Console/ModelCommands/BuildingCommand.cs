@@ -9,20 +9,14 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("building", Description = "Get data on a given building.")]
-public class BuildingCommand : ICommand
+public class BuildingCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public BuildingCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
-
     [CommandParameter(0, Description = "Building ID.", Name = "id")]
     public BuildingId Id { get; set; }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
             console.Output.WriteLine("No mod selected");
             return default;

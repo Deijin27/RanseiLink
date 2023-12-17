@@ -6,18 +6,9 @@ using System.Linq;
 
 namespace RanseiLink.Core.Services.Concrete;
 
-public class OverrideDataProvider : IOverrideDataProvider
+public class OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, ModInfo mod) : IOverrideDataProvider
 {
-    private readonly IFallbackDataProvider _fallbackSpriteProvider;
-    private readonly ModInfo _mod;
-
     public event EventHandler<SpriteModifiedArgs>? SpriteModified;
-
-    public OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, ModInfo mod)
-    {
-        _mod = mod;
-        _fallbackSpriteProvider = fallbackSpriteProvider;
-    }
 
     public void ClearOverride(SpriteType type, int id)
     {
@@ -31,12 +22,12 @@ public class OverrideDataProvider : IOverrideDataProvider
 
     public List<SpriteFile> GetAllSpriteFiles(SpriteType type)
     {
-        if (!_fallbackSpriteProvider.IsDefaultsPopulated(_mod.GameCode))
+        if (!fallbackSpriteProvider.IsDefaultsPopulated(mod.GameCode))
         {
-            return new List<SpriteFile>();
+            return [];
         }
         var dict = new Dictionary<int, SpriteFile>();
-        foreach (var i in _fallbackSpriteProvider.GetAllSpriteFiles(_mod.GameCode, type))
+        foreach (var i in fallbackSpriteProvider.GetAllSpriteFiles(mod.GameCode, type))
         {
             dict[i.Id] = i;
         }
@@ -46,7 +37,7 @@ public class OverrideDataProvider : IOverrideDataProvider
         {
             foreach (var item in miscInfo.Items)
             {
-                var file = Path.Combine(_mod.FolderPath, item.PngFile);
+                var file = Path.Combine(mod.FolderPath, item.PngFile);
                 if (File.Exists(file))
                 {
                     var fi = new SpriteFile(type, item.Id, item.PngFile, file, IsOverride: true);
@@ -56,12 +47,12 @@ public class OverrideDataProvider : IOverrideDataProvider
         }
         else if (info is IGroupedGraphicsInfo groupedInfo)
         {
-            string overrideFolder = Path.Combine(_mod.FolderPath, groupedInfo.PngFolder);
+            string overrideFolder = Path.Combine(mod.FolderPath, groupedInfo.PngFolder);
             if (Directory.Exists(overrideFolder))
             {
                 foreach (var i in Directory.GetFiles(overrideFolder))
                 {
-                    var romPath = i[(_mod.FolderPath.Length + 1)..];
+                    var romPath = i[(mod.FolderPath.Length + 1)..];
                     var fi = new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), romPath, i, IsOverride: true);
                     dict[fi.Id] = fi;
                 }
@@ -79,7 +70,7 @@ public class OverrideDataProvider : IOverrideDataProvider
     private SpriteFile GetSpriteFilePathWithoutFallback(SpriteType type, int id)
     {
         var romPath = GraphicsInfoResource.Get(type).GetRelativeSpritePath(id);
-        return new SpriteFile(type, id, romPath, Path.Combine(_mod.FolderPath, romPath), true);
+        return new SpriteFile(type, id, romPath, Path.Combine(mod.FolderPath, romPath), true);
     }
 
     public SpriteFile GetSpriteFile(SpriteType type, int id)
@@ -87,7 +78,7 @@ public class OverrideDataProvider : IOverrideDataProvider
         var file = GetSpriteFilePathWithoutFallback(type, id);
         if (!File.Exists(file.File))
         {
-            file = _fallbackSpriteProvider.GetSpriteFile(_mod.GameCode, type, id);
+            file = fallbackSpriteProvider.GetSpriteFile(mod.GameCode, type, id);
         }
         return file;
     }
@@ -102,7 +93,7 @@ public class OverrideDataProvider : IOverrideDataProvider
 
     private DataFile GetDataFilePathWithoutFallback(string pathInRom)
     {
-        return new DataFile(pathInRom, Path.Combine(_mod.FolderPath, pathInRom), true);
+        return new DataFile(pathInRom, Path.Combine(mod.FolderPath, pathInRom), true);
     }
 
     public void SetOverride(string pathInRom, string file)
@@ -126,15 +117,15 @@ public class OverrideDataProvider : IOverrideDataProvider
         var file = GetDataFilePathWithoutFallback(pathInRom);
         if (!File.Exists(file.File))
         {
-            file = _fallbackSpriteProvider.GetDataFile(_mod.GameCode, pathInRom);
+            file = fallbackSpriteProvider.GetDataFile(mod.GameCode, pathInRom);
         }
         return file;
     }
 
     public List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom)
     {
-        var files = _fallbackSpriteProvider.GetAllDataFilesInFolder(_mod.GameCode, pathOfFolderInRom).ToDictionary(x => x.RomPath);
-        var dir = Path.Combine(_mod.FolderPath, pathOfFolderInRom);
+        var files = fallbackSpriteProvider.GetAllDataFilesInFolder(mod.GameCode, pathOfFolderInRom).ToDictionary(x => x.RomPath);
+        var dir = Path.Combine(mod.FolderPath, pathOfFolderInRom);
         if (Directory.Exists(dir))
         {
             foreach (var file in Directory.GetFiles(dir))
@@ -150,6 +141,6 @@ public class OverrideDataProvider : IOverrideDataProvider
 
     public bool IsDefaultsPopulated()
     {
-        return _fallbackSpriteProvider.IsDefaultsPopulated(_mod.GameCode);
+        return fallbackSpriteProvider.IsDefaultsPopulated(mod.GameCode);
     }
 }

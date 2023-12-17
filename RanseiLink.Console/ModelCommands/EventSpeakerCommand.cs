@@ -9,20 +9,14 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("eventspeaker", Description = "Get data on a given event speaker.")]
-public class EventSpeakerCommand : ICommand
+public class EventSpeakerCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public EventSpeakerCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
-
     [CommandParameter(0, Description = "Event Speaker ID.", Name = "id")]
     public EventSpeakerId Id { get; set; }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
             console.Output.WriteLine("No mod selected");
             return default;

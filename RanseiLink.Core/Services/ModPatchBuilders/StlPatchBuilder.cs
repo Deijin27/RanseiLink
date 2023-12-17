@@ -7,17 +7,11 @@ using System.Linq;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class StlPatchBuilder : IGraphicTypePatchBuilder
+public class StlPatchBuilder(ModInfo mod, IOverrideDataProvider overrideSpriteProvider) : IGraphicTypePatchBuilder
 {
     public MetaSpriteType Id => MetaSpriteType.STL;
 
-    private readonly IOverrideDataProvider _overrideSpriteProvider;
-    private readonly string _graphicsProviderFolder;
-    public StlPatchBuilder(ModInfo mod, IOverrideDataProvider overrideSpriteProvider)
-    {
-        _overrideSpriteProvider = overrideSpriteProvider;
-        _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
-    }
+    private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)
     {
@@ -28,7 +22,7 @@ public class StlPatchBuilder : IGraphicTypePatchBuilder
 
         var stlInfo = (StlConstants)gInfo;
 
-        var spriteFiles = _overrideSpriteProvider.GetAllSpriteFiles(stlInfo.Type);
+        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(stlInfo.Type);
         if (!spriteFiles.Any(i => i.IsOverride))
         {
             return;

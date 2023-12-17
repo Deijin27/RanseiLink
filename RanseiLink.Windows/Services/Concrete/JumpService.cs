@@ -2,18 +2,11 @@
 
 namespace RanseiLink.Windows.Services.Concrete;
 
-internal class JumpService : IJumpService 
-{ 
-    private readonly IMainEditorViewModel _mainEditor;
-
-    public JumpService(IMainEditorViewModel mainEditorViewModel)
-    {
-        _mainEditor = mainEditorViewModel;
-    }
-
+internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpService 
+{
     public void JumpToMessageFilter(string filter, bool regex = false)
     {
-        if (!_mainEditor.TryGetModule(MsgGridEditorModule.Id, out var module))
+        if (!mainEditorViewModel.TryGetModule(MsgGridEditorModule.Id, out var module))
         {
             return;
         }
@@ -23,12 +16,12 @@ internal class JumpService : IJumpService
         }
         vm.UseRegex = false;
         vm.SearchTerm = filter;
-        _mainEditor.CurrentModuleId = MsgGridEditorModule.Id;
+        mainEditorViewModel.CurrentModuleId = MsgGridEditorModule.Id;
     }
 
     public void JumpTo(string moduleId, int selectId)
     {
-        if (!_mainEditor.TryGetModule(moduleId, out var module))
+        if (!mainEditorViewModel.TryGetModule(moduleId, out var module))
         {
             return;
         }
@@ -41,21 +34,21 @@ internal class JumpService : IJumpService
         {
             return;
         }
-        _mainEditor.CurrentModuleId = moduleId;
+        mainEditorViewModel.CurrentModuleId = moduleId;
     }
 
     public void JumpTo(string moduleId)
     {
-        if (!_mainEditor.TryGetModule(moduleId, out _))
+        if (!mainEditorViewModel.TryGetModule(moduleId, out _))
         {
             return;
         }
-        _mainEditor.CurrentModuleId = moduleId;
+        mainEditorViewModel.CurrentModuleId = moduleId;
     }
 
     public void JumpToNested(string moduleId, int outerSelectedId, int innerSelectedId)
     {
-        if (!_mainEditor.TryGetModule(moduleId, out var module))
+        if (!mainEditorViewModel.TryGetModule(moduleId, out var module))
         {
             return;
         }
@@ -80,7 +73,7 @@ internal class JumpService : IJumpService
             }
         }
 
-        _mainEditor.CurrentModuleId = moduleId;
+        mainEditorViewModel.CurrentModuleId = moduleId;
     }
 
 }

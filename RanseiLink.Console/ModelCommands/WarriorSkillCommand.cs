@@ -9,20 +9,14 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("warriorskill", Description = "Get data on a given warrior skill.")]
-public class WarriorSkillCommand : ICommand
+public class WarriorSkillCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public WarriorSkillCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
-
     [CommandParameter(0, Description = "WarriorSkill ID.", Name = "id")]
     public WarriorSkillId Id { get; set; }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
             console.Output.WriteLine("No mod selected");
             return default;

@@ -10,22 +10,14 @@ public interface ICurrentModService
     bool TryGetCurrentModServiceGetter(out IServiceGetter currentModKernel);
 }
 
-public class CurrentModService : ICurrentModService
+public class CurrentModService(ISettingService settingService, IModManager modManager, IModServiceGetterFactory modKernelFactory) : ICurrentModService
 {
-    private readonly CurrentConsoleModSlotSetting _currentConsoleModSlotSetting;
-    private readonly IModManager _modManager;
-    private readonly IModServiceGetterFactory _modServiceGetterFactory;
-    public CurrentModService(ISettingService settingService, IModManager modManager, IModServiceGetterFactory modKernelFactory)
-    {
-        _modServiceGetterFactory = modKernelFactory;
-        _currentConsoleModSlotSetting = settingService.Get<CurrentConsoleModSlotSetting>();
-        _modManager = modManager;
-    }
+    private readonly CurrentConsoleModSlotSetting _currentConsoleModSlotSetting = settingService.Get<CurrentConsoleModSlotSetting>();
 
     public bool TryGetCurrentMod(out ModInfo currentMod)
     {
         var currentModSlot = _currentConsoleModSlotSetting.Value;
-        var allModInfo = _modManager.GetAllModInfo();
+        var allModInfo = modManager.GetAllModInfo();
         if (currentModSlot < allModInfo.Count)
         {
             currentMod = allModInfo[currentModSlot];
@@ -42,7 +34,7 @@ public class CurrentModService : ICurrentModService
             currentModServiceGetter = null;
             return false;
         }
-        currentModServiceGetter = _modServiceGetterFactory.Create(currentMod);
+        currentModServiceGetter = modKernelFactory.Create(currentMod);
         return true;
     }
 }

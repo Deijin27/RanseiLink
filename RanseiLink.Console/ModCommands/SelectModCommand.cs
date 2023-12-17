@@ -9,22 +9,14 @@ using System.Threading.Tasks;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("select mod", Description = "Change current mod to specific slot. View slots with 'list mods' command")]
-public class SelectModCommand : ICommand
+public class SelectModCommand(IModManager modManager, ISettingService settingService) : ICommand
 {
-    private readonly IModManager _modManager;
-    private readonly ISettingService _settingService;
-    public SelectModCommand(IModManager modManager, ISettingService settingService)
-    {
-        _modManager = modManager;
-        _settingService = settingService;
-    }
-
     [CommandParameter(0, Description = "Slot to switch to.", Name = "modSlot")]
     public int Slot { get; set; }
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var modInfos = _modManager.GetAllModInfo();
+        var modInfos = modManager.GetAllModInfo();
         if (modInfos.Count == 0)
         {
             console.Output.WriteLine("No mods currently exist");
@@ -36,8 +28,8 @@ public class SelectModCommand : ICommand
             return default;
         }
         var mod = modInfos[Slot];
-        _settingService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
-        _settingService.Save();
+        settingService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
+        settingService.Save();
         console.Output.WriteLine("Current mod changed to:");
         console.Render(mod);
 

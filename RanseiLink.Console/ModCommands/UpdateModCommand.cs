@@ -8,16 +8,8 @@ using CliFx;
 namespace RanseiLink.Console.ModCommands;
 
 [Command("update mod", Description = "Update current mod with new info.")]
-public class UpdateModCommand : ICommand
+public class UpdateModCommand(ICurrentModService currentModService, IModManager modManager) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    private readonly IModManager _modManager;
-    public UpdateModCommand(ICurrentModService currentModService, IModManager modManager)
-    {
-        _currentModService = currentModService;
-        _modManager = modManager;
-    }
-
     [CommandOption("name", 'n', Description = "Name of mod")]
     public string ModName { get; set; }
 
@@ -29,7 +21,7 @@ public class UpdateModCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentMod(out ModInfo currentMod))
+        if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
             console.Output.WriteLine("No mod selected");
             return default;
@@ -46,7 +38,7 @@ public class UpdateModCommand : ICommand
         {
             currentMod.Author = ModAuthor;
         }
-        _modManager.Update(currentMod);
+        modManager.Update(currentMod);
         console.Output.WriteLine("Mod update successfully with new info:");
         console.Render(currentMod);
         return default;

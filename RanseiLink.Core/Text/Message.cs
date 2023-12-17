@@ -1,21 +1,12 @@
 ﻿namespace RanseiLink.Core.Text
 {
-    public class Message
+    public class Message(string text, string context, string boxConfig, int groupId = 0, int elementId = 0)
     {
-        public Message(string text, string context, string boxConfig, int groupId = 0, int elementId = 0)
-        {
-            GroupId = groupId;
-            ElementId = elementId;
-            Text = text;
-            Context = context;
-            BoxConfig = boxConfig;
-        }
-
-        public string Text { get; set; }
-        public string Context { get; set; }
-        public string BoxConfig { get; set; }
-        public int GroupId { get; set; }
-        public int ElementId { get; set; }
+        public string Text { get; set; } = text;
+        public string Context { get; set; } = context;
+        public string BoxConfig { get; set; } = boxConfig;
+        public int GroupId { get; set; } = groupId;
+        public int ElementId { get; set; } = elementId;
 
         public bool IsEmpty
         {

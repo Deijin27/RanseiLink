@@ -7,21 +7,15 @@ using System.Linq;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class ScbgPatchBuilder : IGraphicTypePatchBuilder
+public class ScbgPatchBuilder(IOverrideDataProvider overrideSpriteProvider) : IGraphicTypePatchBuilder
 {
     public MetaSpriteType Id => MetaSpriteType.SCBG;
-
-    private readonly IOverrideDataProvider _overrideSpriteProvider;
-    public ScbgPatchBuilder(IOverrideDataProvider overrideSpriteProvider)
-    {
-        _overrideSpriteProvider = overrideSpriteProvider;
-    }
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)
     {
         var scbgInfo = (ScbgConstants)gInfo;
 
-        var spriteFiles = _overrideSpriteProvider.GetAllSpriteFiles(scbgInfo.Type);
+        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(scbgInfo.Type);
         if (!spriteFiles.Any(i => i.IsOverride))
         {
             return;

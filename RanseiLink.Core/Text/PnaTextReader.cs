@@ -24,7 +24,7 @@ using System.Text;
 namespace RanseiLink.Core.Text
 {
 
-    public class PnaTextReader
+    public class PnaTextReader(BinaryReader stream)
     {
         static readonly byte[] KanjiTable = {
             0x92, 0x40, 0x42, 0x44, 0x46, 0x48, 0x83, 0x85, 0x87, 0x62,
@@ -34,9 +34,6 @@ namespace RanseiLink.Core.Text
             0x7A, 0x7D, 0x7E, 0x80, 0x81, 0x82, 0x84, 0x86, 0x88, 0x89,
             0x8A, 0x8B, 0x8C, 0x8D, 0x8F, 0x93,
         };
-
-        readonly BinaryReader stream;
-
         StringBuilder textBuilder = null!;
         StringBuilder contextBuilder = null!;
         StringBuilder boxBuilder = null!;
@@ -45,11 +42,6 @@ namespace RanseiLink.Core.Text
         bool kanjiPage2Mode;
         bool furiganaMode;
         bool endString;
-
-        public PnaTextReader(BinaryReader stream)
-        {
-            this.stream = stream;
-        }
 
         public Message ReadMessage()
         {

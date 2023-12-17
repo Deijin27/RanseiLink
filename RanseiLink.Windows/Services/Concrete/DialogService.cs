@@ -17,14 +17,8 @@ internal static class DialogLocatorExtensions
     }
 }
 
-internal class DialogService : IDialogService
+internal class DialogService(IDialogLocator locator) : IDialogService
 {
-    private readonly IDialogLocator _locator;
-    public DialogService(IDialogLocator locator)
-    {
-        _locator = locator;
-    }
-
     private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
     private Window MainWindow
     {
@@ -42,7 +36,7 @@ internal class DialogService : IDialogService
 
     public void ShowDialog(object dialogViewModel)
     {
-        var type = _locator.Locate(dialogViewModel);
+        var type = locator.Locate(dialogViewModel);
         if (type == null)
         {
             throw new TypeLoadException($"Dialog type for view model '{dialogViewModel.GetType().FullName}' not found.");

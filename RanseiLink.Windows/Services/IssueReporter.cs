@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Diagnostics;
 
 namespace RanseiLink.Windows.Services;
 
-public class IssueReporter
+public static class IssueReporter
 {
     private const string c_bug = "https://github.com/Deijin27/RanseiLink/issues/new?template=bug_report.yml&version={version}";
     private const string c_crash = "https://github.com/Deijin27/RanseiLink/issues/new?template=bug_report.yml&version={version}&error={error}";

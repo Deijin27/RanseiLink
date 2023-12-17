@@ -11,14 +11,8 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("map", Description = "Get data on a given map. If all sections toggles are false, the default is to output all sections.")]
-public class MapCommand : ICommand
+public class MapCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public MapCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
-
     [CommandParameter(0, Description = "Map ID", Name = "map")]
     public int? Map { get; set; }
 
@@ -39,7 +33,7 @@ public class MapCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
             console.Output.WriteLine("No mod selected");
             return default;

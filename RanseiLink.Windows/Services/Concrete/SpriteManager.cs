@@ -4,21 +4,11 @@ using RanseiLink.Windows.ViewModels;
 using System.IO;
 
 namespace RanseiLink.Windows.Services.Concrete;
-public class SpriteManager : ISpriteManager
+public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService) : ISpriteManager
 {
-    private readonly IOverrideDataProvider _spriteProvider;
-    private readonly IDialogService _dialogService;
-    private readonly ICachedSpriteProvider _cachedSpriteProvider;
-    public SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, ICachedSpriteProvider cachedSpriteProvider)
-    {
-        _spriteProvider = overrideSpriteProvider;
-        _dialogService = dialogService;
-        _cachedSpriteProvider = cachedSpriteProvider;
-    }
-
     public bool SetOverride(SpriteType type, int id, string requestFileMsg)
     {
-        var file = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        var file = dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
         {
             Title = requestFileMsg,
             Filters = new()
@@ -48,14 +38,14 @@ public class SpriteManager : ISpriteManager
             {
                 if (groupedGInfo.StrictHeight || groupedGInfo.StrictWidth)
                 {
-                    _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                    dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                         "Invalid dimensions",
                         $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nFor this image type it is a strict requirement."
                         ));
                     return false;
                 }
 
-                var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
+                var result = dialogService.ShowMessageBox(new MessageBoxSettings(
                     title: "Invalid dimensions",
                     message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
                     buttons: new[]
@@ -87,14 +77,14 @@ public class SpriteManager : ISpriteManager
         if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
         {
             var vm = new SimplifyPaletteViewModel(paletteCapacity, file, temp);
-            if (!_dialogService.ShowDialogWithResult(vm))
+            if (!dialogService.ShowDialogWithResult(vm))
             {
                 return false;
             }
             file = temp;
         }
 
-        _spriteProvider.SetOverride(type, id, file);
+        overrideSpriteProvider.SetOverride(type, id, file);
 
         if (File.Exists(temp))
         {

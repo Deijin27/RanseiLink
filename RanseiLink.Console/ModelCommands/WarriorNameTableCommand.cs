@@ -8,17 +8,11 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Console.ModelCommands;
 
 [Command("warriornametable", Description = "Get warrior name table data.")]
-public class WarriorNameTableCommand : ICommand
+public class WarriorNameTableCommand(ICurrentModService currentModService) : ICommand
 {
-    private readonly ICurrentModService _currentModService;
-    public WarriorNameTableCommand(ICurrentModService currentModService)
-    {
-        _currentModService = currentModService;
-    }
-
     public ValueTask ExecuteAsync(IConsole console)
     {
-        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
             console.Output.WriteLine("No mod selected");
             return default;

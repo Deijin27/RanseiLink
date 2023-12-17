@@ -12,14 +12,8 @@ public interface ILuaService
     void RunScript(string scriptFilePath);
 }
 
-public class LuaService : ILuaService
+public class LuaService(IModServiceContainer modServiceContainer) : ILuaService
 {
-    private readonly IModServiceContainer _modServiceContainer;
-    public LuaService(IModServiceContainer modServiceContainer)
-    {
-        _modServiceContainer = modServiceContainer;
-    }
-
     public void RunScript(string scriptFilePath)
     {
         Directory.SetCurrentDirectory(Path.GetDirectoryName(scriptFilePath));
@@ -38,7 +32,7 @@ public class LuaService : ILuaService
                     import = function () end
                 ");
 
-            lua["service"] = _modServiceContainer;
+            lua["service"] = modServiceContainer;
             lua.RegisterFunction("toInt", typeof(LuaService).GetMethod(nameof(ConvertToInt)));
 
             // add all enum id items to the state to allow users to enumerate them with luanet.each

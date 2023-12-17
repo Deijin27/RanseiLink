@@ -4,14 +4,8 @@ using System.IO;
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [PatchBuilder]
-public class MapModelPatchBuilder : IPatchBuilder
+public class MapModelPatchBuilder(IOverrideDataProvider overrideProvider) : IPatchBuilder
 {
-    private readonly IOverrideDataProvider _overrideProvider;
-    public MapModelPatchBuilder(IOverrideDataProvider overrideProvider)
-    {
-        _overrideProvider = overrideProvider;
-    }
-
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
     {
         if (!patchOptions.HasFlag(PatchOptions.IncludeSprites))
@@ -19,7 +13,7 @@ public class MapModelPatchBuilder : IPatchBuilder
             return;
         }
 
-        foreach (var file in _overrideProvider.GetAllDataFilesInFolder(Path.Combine("graphics", "ikusa_map")))
+        foreach (var file in overrideProvider.GetAllDataFilesInFolder(Path.Combine("graphics", "ikusa_map")))
         {
             if (file.IsOverride)
             {
