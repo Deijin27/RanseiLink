@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Windows.Services;
 using System.Collections.Generic;
@@ -8,26 +9,27 @@ using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public class KingdomViewModel : ViewModelBase
+public class KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager) : ViewModelBase
 {
-    private Kingdom _model;
-
-    public KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService)
-    {
-        _model = new Kingdom();
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
-
-        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
-    }
+    private Kingdom _model = new();
 
     public void SetModel(KingdomId id, Kingdom model)
     {
         Id = id;
         _model = model;
+        KingdomImageAnimVm = new(animGuiManager, AnimationTypeId.KuniImage2, (int)id);
+        CastlemapAnimVm = new(animGuiManager, AnimationTypeId.Castlemap, (int)id);
+        KingdomIconAnimVm = new(animGuiManager, AnimationTypeId.IconCastle, (int)id);
         RaiseAllPropertiesChanged();
     }
 
     public KingdomId Id { get; private set; }
+
+    public AnimationViewModel? KingdomImageAnimVm { get; private set; }
+    public AnimationViewModel? CastlemapAnimVm { get; private set; }
+    public AnimationViewModel? KingdomIconAnimVm { get; private set; }
+
+    public ICommand JumpToBattleConfigCommand { get; } = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
 
     public string Name
     {
@@ -35,7 +37,7 @@ public class KingdomViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public List<SelectorComboBoxItem> KingdomItems { get; }
+    public List<SelectorComboBoxItem> KingdomItems { get; } = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
 
     public int MapConnection0
     {
@@ -125,6 +127,4 @@ public class KingdomViewModel : ViewModelBase
         get => _model.Unknown_R5_C26_L4;
         set => RaiseAndSetIfChanged(_model.Unknown_R5_C26_L4, value, v => _model.Unknown_R5_C26_L4 = v);
     }
-
-    public ICommand JumpToBattleConfigCommand { get; }
 }

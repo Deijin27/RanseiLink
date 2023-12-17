@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
@@ -21,65 +22,93 @@
             <Setter Property="Height" Value="20"/>
         </Style>
     </UserControl.Resources>
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        
-        <TextBlock Text="Name" Grid.Row="0" />
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Button Grid.Row="1" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config" ToolTip="Jump to selected battle config" 
+            <TextBlock Text="Name" Grid.Row="0" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="10"/>
+
+            <Button Grid.Row="1" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig}"/>
-        <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig}"/>
+            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig}"/>
 
-        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
-            <StackPanel>
-                <ComboBox Margin="4,4,4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection0}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection1}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection2}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection3}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection4}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection5}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection6}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection7}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection8}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection9}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection10}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection11}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                <ComboBox Margin="4,2,4,4" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection12}" Style="{StaticResource SelectorComboBoxStyle}"/>
-            </StackPanel>
-        </GroupBox>
+            <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
+                <StackPanel>
+                    <ComboBox Margin="4,4,4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection0}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection1}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection2}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection3}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection4}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection5}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection6}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection7}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection8}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection9}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection10}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection11}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    <ComboBox Margin="4,2,4,4" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection12}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                </StackPanel>
+            </GroupBox>
 
-        <TextBlock Text="Unknown 1" Grid.Row="14" />
-        <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Unknown1}"/>
+            <TextBlock Text="Unknown 1" Grid.Row="14" />
+            <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Unknown1}"/>
 
-        <TextBlock Text="Unknown 2" Grid.Row="15" />
-        <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding Unknown2}"/>
+            <TextBlock Text="Unknown 2" Grid.Row="15" />
+            <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding Unknown2}"/>
 
-        <TextBlock Text="Unknown 3" Grid.Row="16" />
-        <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Unknown3}"/>
+            <TextBlock Text="Unknown 3" Grid.Row="16" />
+            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Unknown3}"/>
 
-    </Grid>
+        </Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Top-Screen Animated Image" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding KingdomImageAnimVm}"/>
+            </GroupBox>
+            <GroupBox Header="Bottom-Screen Animated Image" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding CastlemapAnimVm}"/>
+            </GroupBox>
+            <GroupBox Header="Icon Animated Image" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding KingdomIconAnimVm}"/>
+            </GroupBox>
+        </Grid>
+    </WrapPanel>
 </UserControl>

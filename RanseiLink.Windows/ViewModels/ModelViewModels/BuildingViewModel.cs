@@ -8,28 +8,21 @@ using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public class BuildingViewModel : ViewModelBase
+public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animManager) : ViewModelBase
 {
-    private Building _model;
-
-    public BuildingViewModel(IJumpService jumpService, IIdToNameService idToNameService)
-    {
-        _model = new Building();
-
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
-
-        KingdomItems = idToNameService.GetComboBoxItemsExceptDefault<IKingdomService>();
-        BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
-    }
+    private Building _model = new();
 
     public void SetModel(BuildingId id, Building model)
     {
         Id = id;
         _model = model;
+        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, (int)id);
         RaiseAllPropertiesChanged();
     }
 
     public BuildingId Id { get; private set; }
+
+    public AnimationViewModel? IconAnimVm { get; private set; }
 
     public string Name
     {
@@ -37,8 +30,8 @@ public class BuildingViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public List<SelectorComboBoxItem> KingdomItems { get; }
-    public List<SelectorComboBoxItem> BuildingItems { get; }
+    public List<SelectorComboBoxItem> KingdomItems { get; } = idToNameService.GetComboBoxItemsExceptDefault<IKingdomService>();
+    public List<SelectorComboBoxItem> BuildingItems { get; } = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
 
     public int Kingdom
     {
@@ -136,5 +129,5 @@ public class BuildingViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Function, value, v => _model.Function = v);
     }
 
-    public ICommand JumpToBattleConfigCommand { get; }
+    public ICommand JumpToBattleConfigCommand { get; } = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
 }

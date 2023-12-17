@@ -42,6 +42,9 @@
     <Compile Update="Dialogs\MessageBoxDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Dialogs\AnimExportDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Dialogs\SimplifyPaletteDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,6 +106,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\GimmickView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModelViews\AnimationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\WarriorMiniView.xaml.cs">

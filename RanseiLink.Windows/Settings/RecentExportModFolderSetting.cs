@@ -8,7 +8,7 @@ internal class RecentExportModFolderSetting : StringSetting
     {
         _default = null;
         IsHidden = true;
-        Name = "Recent Patch Rom";
-        Description = "The path of the most recent rom that was patched to";
+        Name = "Recent Export Mod";
+        Description = "The path of the most recent folder exported mod to";
     }
 }

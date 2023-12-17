@@ -69,6 +69,7 @@ public class WpfServiceModule : IModule
         locator.Register<ModUpgradeDialog, ModUpgradeViewModel>();
         locator.Register<PopulateDefaultSpriteDialog, PopulateDefaultSpriteViewModel>();
         locator.Register<SimplifyPaletteDialog, SimplifyPaletteViewModel>();
+        locator.Register<AnimExportDialog, AnimExportViewModel>();
 
         return locator;
     }
@@ -82,6 +83,7 @@ public class WpfModServiceModule : IModule
         builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
         builder.Register<ICachedSpriteProvider, CachedSpriteProvider>(Reuse.Singleton);
         builder.Register<IMapManager, MapManager>(Reuse.Singleton);
+        builder.Register<IAnimGuiManager, AnimGuiManager>(Reuse.Singleton);
 
         builder.Register<AbilityViewModel>();
         builder.Register<BaseWarriorViewModel>();

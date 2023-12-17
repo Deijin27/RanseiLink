@@ -1,8 +1,6 @@
-﻿using RanseiLink.Core.Archive;
-using RanseiLink.Core.Enums;
+﻿using FluentResults;
+using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Models;
-using RanseiLink.Core.Resources;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -23,20 +21,23 @@ public static class CellAnimationSerialiser
         OneImagePerBank
     }
 
+    /// <summary>
+    /// If format is <see cref="Format.OneImagePerBank"/> then width/height are unnecessary
+    /// </summary>
     public static void ExportAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, Format fmt)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
         ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, fmt);
     }
 
-    public static void ImportAnimation(PositionRelativeTo prt, string animLinkFile, string inputFolder, int width, int height, string outputAnimLinkFile)
+    public static void ImportAnimation(PositionRelativeTo prt, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile)
     {
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
         {
             LINK.Unpack(animLinkFile, tempAnim);
             var anim = G2DR.LoadCellImgFromFolder(tempAnim);
-            var nanr = ImportAnimationXml(Path.Combine(inputFolder, "animation.xml"), anim.Ncer, anim.Ncgr, anim.Nclr, width, height, prt);
+            var nanr = ImportAnimationXml(animationXml, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, prt);
             G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
         }
@@ -60,29 +61,42 @@ public static class CellAnimationSerialiser
 
     // We will always have a background file to use, and we will always have the default of another anim to use
     // but it may be nice if we can generate without one to base it on. it's just more work.
-    public static void Import(PositionRelativeTo prt, string inputFolder, string bgLinkFile, string outputBgLinkFile, string? animLinkFile = null, string? outputAnimLinkFile = null)
+    public static Result Import(PositionRelativeTo prt, 
+        string? animationXml = null, string? animLinkFile = null, string? outputAnimLinkFile = null,
+        string? bgImage = null, string? bgLinkFile = null, string? outputBgLinkFile = null)
     {
-        int width;
-        int height;
-        // load background
-        var tempBg = FileUtil.GetTemporaryDirectory();
         try
         {
-            LINK.Unpack(bgLinkFile, tempBg);
-            var bg = G2DR.LoadImgFromFolder(bgLinkFile);
-            (width, height) = ImportBackground(inputFolder, bg.Ncgr, bg.Nclr);
-            G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
-            LINK.Pack(tempBg, outputBgLinkFile);
+            int width = -1;
+            int height = -1;
+            // load background
+            var tempBg = FileUtil.GetTemporaryDirectory();
+            if (bgImage != null && bgLinkFile != null && outputBgLinkFile != null)
+            {
+                try
+                {
+                    LINK.Unpack(bgLinkFile, tempBg);
+                    var bg = G2DR.LoadImgFromFolder(bgLinkFile);
+                    (width, height) = ImportBackground(bgImage, bg.Ncgr, bg.Nclr);
+                    G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
+                    LINK.Pack(tempBg, outputBgLinkFile);
+                }
+                finally
+                {
+                    Directory.Delete(tempBg, true);
+                }
+            }
+
+            // load animation
+            if (animLinkFile != null && outputAnimLinkFile != null && animationXml != null)
+            {
+                ImportAnimation(prt, animLinkFile, animationXml, width, height, outputAnimLinkFile);
+            }
+            return Result.Ok();
         }
-        finally
+        catch (Exception ex)
         {
-            Directory.Delete(tempBg, true);
-        }
-        
-        // load animation
-        if (animLinkFile != null && outputAnimLinkFile != null)
-        {
-            ImportAnimation(prt, animLinkFile, inputFolder, width, height, outputAnimLinkFile);
+            return Result.Fail(ex.Message);
         }
     }
     /*
@@ -169,6 +183,10 @@ public static class CellAnimationSerialiser
         // save cells
         if (fmt == Format.OneImagePerBank)
         {
+            if (width <= 0 || height <= 0)
+            {
+                throw new Exception($"With format {fmt} width and height must be specified");
+            }
             var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
 
             for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)

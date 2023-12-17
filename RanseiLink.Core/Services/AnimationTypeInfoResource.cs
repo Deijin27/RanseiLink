@@ -34,7 +34,6 @@ public class AnimationTypeInfo
     public AnimationTypeId Id { get; }
     public PositionRelativeTo Prt { get; }
     public CellAnimationSerialiser.Format? ExportFormat { get; }
-    public CellAnimationSerialiser.Format Format { get; }
 
     public string AnimationRelativePath(int id)
     {
@@ -66,7 +65,7 @@ public static class AnimationTypeInfoResource
             ));
         Register(new(
             id: AnimationTypeId.KuniImage2,
-            animationLinkFormat: "graphics/strategy/kuniimage2/03_00_parts_kuniimage_00_up_{0:D2}.G2DR",
+            animationLinkFormat: "graphics/strategy/kuniimage2/03_00_parts_kuniimage_{0:D2}_up_anim.G2DR",
             prt: PositionRelativeTo.TopLeft,
             backgroundLinkFormat: "graphics/strategy/kuniimage2/03_00_parts_kuniimage_{0:D2}_up.G2DR"
             ));

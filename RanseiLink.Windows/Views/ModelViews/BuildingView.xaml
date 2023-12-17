@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
@@ -74,6 +75,10 @@
 
             <TextBlock Text="Function" Grid.Row="8" />
             <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
+
+            <GroupBox Header="Icon Animated Image" Grid.Row="9" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding IconAnimVm}"/>
+            </GroupBox>
         </Grid>
         <Grid Margin="10">
             <Grid.ColumnDefinitions>

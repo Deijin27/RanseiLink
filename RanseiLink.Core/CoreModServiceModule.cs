@@ -41,6 +41,7 @@ namespace RanseiLink.Core
             builder.Register<IPokemonAnimationService, PokemonAnimationService>(Reuse.Singleton);
 
             builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
+            builder.Register<ICellAnimationManager, CellAnimationManager>(Reuse.Singleton);
 
             foreach (var type in GetType().Assembly.GetTypes())
             {
