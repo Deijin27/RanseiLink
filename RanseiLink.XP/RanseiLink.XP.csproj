@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
+    <ProjectReference Include="..\RanseiLink.GuiCore\RanseiLink.GuiCore.csproj" />
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>
   <ItemGroup>

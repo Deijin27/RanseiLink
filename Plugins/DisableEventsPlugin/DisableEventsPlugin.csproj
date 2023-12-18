@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\RanseiLink.GuiCore\RanseiLink.GuiCore.csproj" />
     <ProjectReference Include="..\..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>
 

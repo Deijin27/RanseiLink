@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
+    <ProjectReference Include="..\RanseiLink.GuiCore\RanseiLink.GuiCore.csproj" />
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
     <ProjectReference Include="..\RanseiLink.View3D\RanseiLink.View3D.csproj" />
   </ItemGroup>

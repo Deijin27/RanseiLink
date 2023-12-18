@@ -1,10 +1,7 @@
-﻿using System;
+﻿using RanseiLink.Core.Services;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace RanseiLink.Core.Services
+namespace RanseiLink.GuiCore.Services
 {
     public interface IDialogService
     {
@@ -74,8 +71,6 @@ namespace RanseiLink.Core.Services
             _registry[viewModelType] = dialogType;
         }
     }
-
-    public record ProgressInfo(string? StatusText = null, int? Progress = null, int? MaxProgress = null, bool? IsIndeterminate = null);
 
     public abstract class FileSystemDialogSettings
     {

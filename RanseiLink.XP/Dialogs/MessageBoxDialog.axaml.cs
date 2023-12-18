@@ -21,14 +21,14 @@ public partial class MessageBoxDialog : Window
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        var clickedButton = (Core.Services.MessageBoxButton)(((Button)sender).DataContext);
+        var clickedButton = (MessageBoxButton)(((Button)sender).DataContext);
         Result = clickedButton.Result;
         Close();
     }
 
-    public Core.Services.MessageBoxResult Result { get; private set; }
+    public MessageBoxResult Result { get; private set; }
 
-    public static async Task<MessageBoxResult> ShowDialog(RanseiLink.Core.Services.MessageBoxSettings options, Window owner)
+    public static async Task<MessageBoxResult> ShowDialog(MessageBoxSettings options, Window owner)
     {
         var dialog = new MessageBoxDialog()
         {

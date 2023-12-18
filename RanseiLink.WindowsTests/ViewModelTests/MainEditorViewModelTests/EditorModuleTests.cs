@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.Services;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Windows.Settings;

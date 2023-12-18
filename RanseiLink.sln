@@ -54,14 +54,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.XP", "RanseiLink
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Build", "build\RanseiLink.Build.csproj", "{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RanseiLink.GuiCore", "RanseiLink.GuiCore\RanseiLink.GuiCore.csproj", "{2C08E4D0-216C-44B7-BA61-387DF0278057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -130,6 +130,12 @@ Global
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

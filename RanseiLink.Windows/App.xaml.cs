@@ -10,14 +10,13 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace RanseiLink.Windows;
 
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     public static readonly string Version = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
     public MainWindowViewModel GetMainWindowViewModel() => _mainWindowViewModel;
@@ -31,7 +30,7 @@ public partial class App : Application
         
     }
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override void OnStartup(System.Windows.StartupEventArgs e)
     {
         SetupExceptionHandling();
 
@@ -90,24 +89,24 @@ public partial class App : Application
                 var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
                     Title: title,
                     Message: message,
-                    Buttons: new[] {
-                        new Core.Services.MessageBoxButton("Open Bug Report Webpage", Core.Services.MessageBoxResult.Yes),
-                        new Core.Services.MessageBoxButton("Dismiss", Core.Services.MessageBoxResult.No) },
+                    Buttons: [
+                        new("Open Bug Report Webpage", MessageBoxResult.Yes),
+                        new("Dismiss", MessageBoxResult.No) ],
                     Type: MessageBoxType.Error
                     ));
-                if (result == Core.Services.MessageBoxResult.Yes)
+                if (result == MessageBoxResult.Yes)
                 {
                     IssueReporter.ReportCrash(exMsg);
                 }
             }
             catch
             {
-                MessageBox.Show(message, title);
+                System.Windows.MessageBox.Show(message, title);
             }
         }
         else
         {
-            MessageBox.Show(message, title);
+            System.Windows.MessageBox.Show(message, title);
         }
 
         Environment.Exit(0);

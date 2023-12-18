@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Services;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.Dialogs;
@@ -8,7 +6,7 @@ namespace RanseiLink.Windows.Dialogs;
 /// <summary>
 /// Interaction logic for MessageBoxDialog.xaml
 /// </summary>
-public partial class MessageBoxDialog : Window
+public partial class MessageBoxDialog : System.Windows.Window
 {
     public MessageBoxDialog(MessageBoxSettings args)
     {
@@ -32,12 +30,12 @@ public partial class MessageBoxDialog : Window
         }
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
     {
-        var clickedButton = (Core.Services.MessageBoxButton)(((System.Windows.Controls.Button)sender).DataContext);
+        var clickedButton = (MessageBoxButton)(((System.Windows.Controls.Button)sender).DataContext);
         Result = clickedButton.Result;
         Close();
     }
 
-    public Core.Services.MessageBoxResult Result { get; private set; }
+    public MessageBoxResult Result { get; private set; }
 }

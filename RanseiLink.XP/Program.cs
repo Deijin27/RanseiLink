@@ -55,15 +55,15 @@ internal class Program
                 Title: title,
                 Message: message,
                 Buttons: new[] {
-                    new Core.Services.MessageBoxButton("Open Bug Report Webpage", Core.Services.MessageBoxResult.Yes),
-                    new Core.Services.MessageBoxButton("Dismiss", Core.Services.MessageBoxResult.No) },
+                    new MessageBoxButton("Open Bug Report Webpage", MessageBoxResult.Yes),
+                    new MessageBoxButton("Dismiss", MessageBoxResult.No) },
                 Type: MessageBoxType.Error
                 );
 
             // Can't await because the app just closes, so use synchronous dialog
             var result = MessageBoxDialog.ShowDialog(options, App.MainWindow).WaitOnDispatcherFrame();
 
-            if (result == Core.Services.MessageBoxResult.Yes)
+            if (result == MessageBoxResult.Yes)
             {
                 IssueReporter.ReportCrash(exMsg);
             }

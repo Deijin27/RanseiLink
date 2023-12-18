@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Core.Services
+﻿namespace RanseiLink.GuiCore.Services
 {
     public enum MessageBoxType
     {

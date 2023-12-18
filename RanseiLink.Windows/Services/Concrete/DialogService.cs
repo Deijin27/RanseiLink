@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
@@ -11,7 +10,7 @@ namespace RanseiLink.Windows.Services.Concrete;
 
 internal static class DialogLocatorExtensions
 {
-    public static void Register<TDialog, TViewModel>(this RegistryDialogLocator locator) where TDialog : Window
+    public static void Register<TDialog, TViewModel>(this RegistryDialogLocator locator) where TDialog : System.Windows.Window
     {
         locator.Register(typeof(TDialog), typeof(TViewModel));
     }
@@ -20,7 +19,7 @@ internal static class DialogLocatorExtensions
 internal class DialogService(IDialogLocator locator) : IDialogService
 {
     private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
-    private Window MainWindow
+    private System.Windows.Window MainWindow
     {
         get 
         {
@@ -41,21 +40,21 @@ internal class DialogService(IDialogLocator locator) : IDialogService
         {
             throw new TypeLoadException($"Dialog type for view model '{dialogViewModel.GetType().FullName}' not found.");
         }
-        if (!typeof(Window).IsAssignableFrom(type))
+        if (!typeof(System.Windows.Window).IsAssignableFrom(type))
         {
             throw new Exception($"Dialog type '{type.FullName}' is not assignable to Window");
         }
 
         Dispatcher.Invoke(() =>
         {
-            var dialog = (Window)Activator.CreateInstance(type);
+            var dialog = (System.Windows.Window)Activator.CreateInstance(type);
             dialog.Owner = MainWindow;
             dialog.DataContext = dialogViewModel;
             dialog.ShowDialog();
         });
     }
 
-    public Core.Services.MessageBoxResult ShowMessageBox(MessageBoxSettings options)
+    public MessageBoxResult ShowMessageBox(MessageBoxSettings options)
     {
         return Dispatcher.Invoke(() =>
         {
