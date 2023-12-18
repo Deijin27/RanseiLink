@@ -54,7 +54,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
 
-        ReportBugCommand = new RelayCommand(IssueReporter.ReportBug);
+        ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 

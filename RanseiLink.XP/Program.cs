@@ -1,7 +1,5 @@
 using Avalonia;
-using RanseiLink.Core.Services;
 using RanseiLink.XP.Dialogs;
-using RanseiLink.XP.Services;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -65,12 +63,12 @@ internal class Program
 
             if (result == MessageBoxResult.Yes)
             {
-                IssueReporter.ReportCrash(exMsg);
+                IssueReporter.ReportCrash(App.Version, exMsg);
             }
         }
         else
         {
-            IssueReporter.ReportCrash(exMsg);
+            IssueReporter.ReportCrash(App.Version, exMsg);
         }
 
         Environment.Exit(0);

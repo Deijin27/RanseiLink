@@ -2,6 +2,7 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore;
 using RanseiLink.PluginModule;
 using RanseiLink.View3D;
 using RanseiLink.Windows.Services;
@@ -37,11 +38,13 @@ public partial class App : System.Windows.Application
         // Register services here because theme service requires that application resources are already initialized
         var builder = new Container();
         builder.RegisterModule(new CoreServiceModule());
+        builder.RegisterModule(new GuiCoreServiceModule());
         builder.RegisterModule(new PluginServiceModule());
         builder.RegisterModule(new WpfServiceModule());
 
         var modServiceGetter = new ModServiceGetterFactory(builder);
         modServiceGetter.AddModule(new CoreModServiceModule());
+        modServiceGetter.AddModule(new GuiCoreModServiceModule());
         modServiceGetter.AddModule(new View3DModServiceModule());
         modServiceGetter.AddModule(new WpfModServiceModule());
         _dialogService = builder.Resolve<IDialogService>() ?? throw new Exception("Missing dialog service");
@@ -96,7 +99,7 @@ public partial class App : System.Windows.Application
                     ));
                 if (result == MessageBoxResult.Yes)
                 {
-                    IssueReporter.ReportCrash(exMsg);
+                    IssueReporter.ReportCrash(App.Version, exMsg);
                 }
             }
             catch

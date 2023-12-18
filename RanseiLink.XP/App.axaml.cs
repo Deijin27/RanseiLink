@@ -10,6 +10,7 @@ using RanseiLink.XP.ViewModels;
 using RanseiLink.XP.Views;
 using System.Reflection;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore;
 
 namespace RanseiLink.XP;
 public partial class App : Application
@@ -29,11 +30,13 @@ public partial class App : Application
         {
             var builder = new Container();
             builder.RegisterModule(new CoreServiceModule());
+            builder.RegisterModule(new GuiCoreServiceModule());
             builder.RegisterModule(new PluginServiceModule());
             builder.RegisterModule(new XPServiceModule());
 
             var modServiceGetter = new ModServiceGetterFactory(builder);
             modServiceGetter.AddModule(new CoreModServiceModule());
+            modServiceGetter.AddModule(new GuiCoreModServiceModule());
             builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 
             // Update Theme to match setting, this is done in construction

@@ -57,7 +57,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
-        ReportBugCommand = new RelayCommand(IssueReporter.ReportBug);
+        ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
 
         RefreshModItems();
