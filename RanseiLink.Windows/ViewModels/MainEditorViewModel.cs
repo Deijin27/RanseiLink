@@ -280,7 +280,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         Exception error = null;
         _dialogService.ProgressDialog(progress =>
         {
-            progress?.Report(new ProgressInfo("Saving...", isIndeterminate: true));
+            progress?.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
             SaveTextChanges();
             foreach (var module in InitialisedModules.Values)
             {

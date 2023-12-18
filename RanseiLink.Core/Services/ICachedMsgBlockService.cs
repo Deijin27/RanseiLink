@@ -5,67 +5,21 @@ using System.Text.RegularExpressions;
 
 namespace RanseiLink.Core.Services;
 
+public record MessageAddedToBlockArgs(Message Message, int IndexInBlock);
+public record MessageRemovedFromBlockArgs(Message Message);
+public record MessageAddedArgs(Message Message, int IndexInBlock, int BlockId);
+public record MessageRemovedArgs(Message Message, int BlockId);
 
-public class MessageAddedToBlockArgs
+public class ChangeTrackedBlock(List<Message> block)
 {
-    public MessageAddedToBlockArgs(Message message, int indexInBlock)
-    {
-        Message = message;
-        IndexInBlock = indexInBlock;
-    }
-    public Message Message { get; }
-    public int IndexInBlock { get; }
-}
-
-public class MessageRemovedFromBlockArgs
-{
-    public MessageRemovedFromBlockArgs(Message message)
-    {
-        Message = message;
-    }
-    public Message Message { get; }
-}
-
-public class MessageAddedArgs
-{
-    public MessageAddedArgs(Message message, int indexInBlock, int blockId)
-    {
-        Message = message;
-        IndexInBlock = indexInBlock;
-        BlockId = blockId;
-    }
-    public Message Message { get; }
-    public int IndexInBlock { get; }
-    public int BlockId { get; }
-}
-
-public class MessageRemovedArgs
-{
-    public MessageRemovedArgs(Message message, int blockId)
-    {
-        Message = message;
-        BlockId = blockId;
-    }
-    public Message Message { get; }
-    public int BlockId { get; }
-}
-
-public class ChangeTrackedBlock
-{
-    public ChangeTrackedBlock(List<Message> block)
-    {
-        _blockInternal = block;
-    }
-    private readonly List<Message> _blockInternal;
-
-    public Message this[int index] => _blockInternal[index];
-    public int Count => _blockInternal.Count;
+    public Message this[int index] => block[index];
+    public int Count => block.Count;
     public bool IsChanged { get; set; } = false;
 
     public bool CanAdd(int groupId)
     {
         int found = 0;
-        foreach (var message in _blockInternal)
+        foreach (var message in block)
         {
             if (message.GroupId == groupId)
             {
@@ -82,7 +36,7 @@ public class ChangeTrackedBlock
     public bool CanRemove(int groupId)
     {
         int found = 0;
-        foreach (var message in _blockInternal)
+        foreach (var message in block)
         {
             if (message.GroupId == groupId)
             {
@@ -112,9 +66,9 @@ public class ChangeTrackedBlock
 
         // find the last message in this group
         int lastIndex = -1;
-        for (int i = _blockInternal.Count - 1; i >= 0; i--)
+        for (int i = block.Count - 1; i >= 0; i--)
         {
-            var message = _blockInternal[i];
+            var message = block[i];
             if (message.GroupId == groupId)
             {
                 lastIndex = i;
@@ -123,8 +77,8 @@ public class ChangeTrackedBlock
         }
 
         // create new message and insert it after last one in the group
-        var secondToLastMessage = _blockInternal[lastIndex - 1];
-        var lastMessage = _blockInternal[lastIndex];
+        var secondToLastMessage = block[lastIndex - 1];
+        var lastMessage = block[lastIndex];
         var newMessage = secondToLastMessage.Clone();
         // increment the speaker ids if present
         newMessage.Context = Regex.Replace(newMessage.Context, "{" + PnaConstNames.SpeakerId + /* language=regex */ @":(?<speakerId>\d+)}", new MatchEvaluator(match =>
@@ -138,13 +92,13 @@ public class ChangeTrackedBlock
         newMessage.ElementId++;
         lastMessage.ElementId++;
         var newIndex = lastIndex; // not lastIndex+1 because there is a dummy item at the end of the group which should be ignored
-        _blockInternal.Insert(newIndex, newMessage);
+        block.Insert(newIndex, newMessage);
         MessageAdded?.Invoke(this, new MessageAddedToBlockArgs(newMessage, newIndex));
     }
 
     public void Remove(Message message)
     {
-        if (!_blockInternal.Contains(message))
+        if (!block.Contains(message))
         {
             return;
         }
@@ -153,10 +107,10 @@ public class ChangeTrackedBlock
             return;
         }
 
-        _blockInternal.Remove(message);
+        block.Remove(message);
         // Fixup element ids
         int elementId = 0;
-        foreach (var item in _blockInternal)
+        foreach (var item in block)
         {
             if (item.GroupId == message.GroupId)
             {

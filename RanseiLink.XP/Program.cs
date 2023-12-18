@@ -52,12 +52,12 @@ internal class Program
         if (App.MainWindow != null)
         {
             var options = new MessageBoxSettings(
-                title: title,
-                message: message,
-                buttons: new[] {
+                Title: title,
+                Message: message,
+                Buttons: new[] {
                     new Core.Services.MessageBoxButton("Open Bug Report Webpage", Core.Services.MessageBoxResult.Yes),
                     new Core.Services.MessageBoxButton("Dismiss", Core.Services.MessageBoxResult.No) },
-                type: MessageBoxType.Error
+                Type: MessageBoxType.Error
                 );
 
             // Can't await because the app just closes, so use synchronous dialog

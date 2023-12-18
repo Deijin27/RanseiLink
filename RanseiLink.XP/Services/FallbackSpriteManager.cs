@@ -5,9 +5,7 @@ using RanseiLink.Core.Settings;
 using RanseiLink.Core;
 using RanseiLink.XP.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RanseiLink.XP.Services;
@@ -18,33 +16,22 @@ public interface IFallbackSpriteManager
     Task PopulateGraphicsDefaults();
 }
 
-public class FallbackSpriteManager : IFallbackSpriteManager
+public class FallbackSpriteManager(IAsyncDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider) : IFallbackSpriteManager
 {
-    private readonly IAsyncDialogService _dialogService;
-    private readonly ISettingService _settingService;
-    private readonly IFallbackDataProvider _fallbackDataProvider;
-
-    public FallbackSpriteManager(IAsyncDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider)
-    {
-        _dialogService = dialogService;
-        _settingService = settingService;
-        _fallbackDataProvider = fallbackDataProvider;
-    }
-
     public async Task PopulateGraphicsDefaults()
     {
-        var vm = new PopulateDefaultSpriteViewModel(_dialogService, _settingService);
-        if (!await _dialogService.ShowDialogWithResult(vm))
+        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService);
+        if (!await dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
         Exception error = null;
         Result result = null;
-        await _dialogService.ProgressDialog(progress =>
+        await dialogService.ProgressDialog(progress =>
         {
             try
             {
-                result = _fallbackDataProvider.Populate(vm.File, progress);
+                result = fallbackDataProvider.Populate(vm.File, progress);
             }
             catch (Exception e)
             {
@@ -54,7 +41,7 @@ public class FallbackSpriteManager : IFallbackSpriteManager
 
         if (error != null)
         {
-            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Error Populating Default Sprites",
                 message: error.ToString(),
                 type: MessageBoxType.Error
@@ -62,7 +49,7 @@ public class FallbackSpriteManager : IFallbackSpriteManager
         }
         else if (!result.IsSuccess)
         {
-            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Failed to Populate Default Sprites",
                 message: result.ToString(),
                 type: MessageBoxType.Error
@@ -72,11 +59,11 @@ public class FallbackSpriteManager : IFallbackSpriteManager
 
     public async Task CheckDefaultsPopulated()
     {
-        if (EnumUtil.GetValues<ConquestGameCode>().Any(x => _fallbackDataProvider.IsDefaultsPopulated(x)))
+        if (EnumUtil.GetValues<ConquestGameCode>().Any(x => fallbackDataProvider.IsDefaultsPopulated(x)))
         {
             return;
         }
-        var result = await _dialogService.ShowMessageBox(new MessageBoxSettings(
+        var result = await dialogService.ShowMessageBox(new MessageBoxSettings(
             "Welcome To RanseiLink",
             "On of the first steps when using RanseiLink is to 'Populate Graphics Defaults'. " +
             "You provide an unchanged copy of the pokemon conquest rom, and the sprites are extracted from it.\n" +
@@ -89,7 +76,7 @@ public class FallbackSpriteManager : IFallbackSpriteManager
                     new MessageBoxButton("Populate Graphics Now", MessageBoxResult.Yes),
                     new MessageBoxButton("Later", MessageBoxResult.No)
             },
-            defaultResult: MessageBoxResult.Yes
+            DefaultResult: MessageBoxResult.Yes
             ));
 
         if (result != MessageBoxResult.Yes)

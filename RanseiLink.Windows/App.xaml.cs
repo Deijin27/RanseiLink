@@ -88,12 +88,12 @@ public partial class App : Application
             try
             {
                 var result = _dialogService.ShowMessageBox(new MessageBoxSettings(
-                    title: title,
-                    message: message,
-                    buttons: new[] {
+                    Title: title,
+                    Message: message,
+                    Buttons: new[] {
                         new Core.Services.MessageBoxButton("Open Bug Report Webpage", Core.Services.MessageBoxResult.Yes),
                         new Core.Services.MessageBoxButton("Dismiss", Core.Services.MessageBoxResult.No) },
-                    type: MessageBoxType.Error
+                    Type: MessageBoxType.Error
                     ));
                 if (result == Core.Services.MessageBoxResult.Yes)
                 {

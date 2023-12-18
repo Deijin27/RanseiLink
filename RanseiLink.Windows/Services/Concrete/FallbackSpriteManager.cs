@@ -69,7 +69,7 @@ public class FallbackSpriteManager(IDialogService dialogService, ISettingService
                     new MessageBoxButton("Populate Graphics Now", MessageBoxResult.Yes),
                     new MessageBoxButton("Later", MessageBoxResult.No)
             },
-            defaultResult: MessageBoxResult.Yes
+            DefaultResult: MessageBoxResult.Yes
             ));
 
         if (result != MessageBoxResult.Yes)

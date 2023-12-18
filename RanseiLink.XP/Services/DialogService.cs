@@ -15,17 +15,11 @@ internal static class DialogLocatorExtensions
     }
 }
 
-internal class DialogService : IAsyncDialogService
+internal class DialogService(IDialogLocator locator) : IAsyncDialogService
 {
-    private readonly IDialogLocator _locator;
-    public DialogService(IDialogLocator locator)
-    {
-        _locator = locator;
-    }
-
     public Task ShowDialog(object dialogViewModel)
     {
-        var type = _locator.Locate(dialogViewModel);
+        var type = locator.Locate(dialogViewModel);
         if (type == null)
         {
             throw new TypeLoadException($"Dialog type for view model '{dialogViewModel.GetType().FullName}' not found.");

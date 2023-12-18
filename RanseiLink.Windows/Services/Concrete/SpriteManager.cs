@@ -46,15 +46,15 @@ public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialog
                 }
 
                 var result = dialogService.ShowMessageBox(new MessageBoxSettings(
-                    title: "Invalid dimensions",
-                    message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
-                    buttons: new[]
+                    Title: "Invalid dimensions",
+                    Message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
+                    Buttons: new[]
                     {
                         new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
                         new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
                         new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
                     },
-                    defaultResult: MessageBoxResult.Cancel
+                    DefaultResult: MessageBoxResult.Cancel
                     ));
 
                 switch (result)

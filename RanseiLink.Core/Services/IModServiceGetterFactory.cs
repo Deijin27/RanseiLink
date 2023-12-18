@@ -27,14 +27,9 @@ public interface IModServiceRegistrator
     void AddModule(IModule module);
 }
 
-public class ModServiceGetterFactory : IModServiceGetterFactory, IModServiceRegistrator
+public class ModServiceGetterFactory(IContainer container) : IModServiceGetterFactory, IModServiceRegistrator
 {
-    private readonly List<IModule> _modules = new List<IModule>();
-    private readonly IContainer _container;
-    public ModServiceGetterFactory(IContainer container)
-    {
-        _container = container;
-    }
+    private readonly List<IModule> _modules = [];
 
     public void AddModule(IModule module)
     {
@@ -45,7 +40,7 @@ public class ModServiceGetterFactory : IModServiceGetterFactory, IModServiceRegi
     {
         // RegistrySharing.CloneButKeepCache important to make the child container disposable
         // childDefaultServiceKey=null important because with a value multiple registrations to the same interface dont work
-        var builder = _container.CreateChild(RegistrySharing.CloneButKeepCache, null);
+        var builder = container.CreateChild(RegistrySharing.CloneButKeepCache, null);
         builder.RegisterInstance(mod);
 
         var serviceGetter = new ServiceGetter(builder);

@@ -67,7 +67,7 @@ public class PartialTransferPlugin : IPlugin
 
         await dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo(statusText: "Preparing...", isIndeterminate:true));
+            progress.Report(new ProgressInfo(StatusText: "Preparing...", IsIndeterminate:true));
 
             var kernelFactory = context.Services.Get<IModServiceGetterFactory>();
             IServiceGetter sourceServices = context.Services;
@@ -189,14 +189,14 @@ public class PartialTransferPlugin : IPlugin
                 actionsToDo.Add(TransferBanner(sourceServices.Get<IBannerService>(), destinationServices.Get<IBannerService>()));
             }
 
-            progress.Report(new ProgressInfo(statusText:"Transferring...", maxProgress:filesToTransfer.Count+dirsToTransfer.Count+actionsToDo.Count, isIndeterminate:false));
+            progress.Report(new ProgressInfo(StatusText:"Transferring...", MaxProgress:filesToTransfer.Count+dirsToTransfer.Count+actionsToDo.Count, IsIndeterminate:false));
 
             int count = 0;
             foreach (var action in actionsToDo)
             {
                 action();
                 count++;
-                progress.Report(new ProgressInfo(progress: count));
+                progress.Report(new ProgressInfo(Progress: count));
             }
             foreach (var file in filesToTransfer)
             {
@@ -204,7 +204,7 @@ public class PartialTransferPlugin : IPlugin
                 string destinationPath = Path.Combine(destinationMod.FolderPath, file);
                 File.Copy(sourcePath, destinationPath, true);
                 count++;
-                progress.Report(new ProgressInfo(progress:count));
+                progress.Report(new ProgressInfo(Progress:count));
             }
             foreach(var dir in dirsToTransfer)
             {
@@ -217,9 +217,9 @@ public class PartialTransferPlugin : IPlugin
                 Directory.CreateDirectory(destinationPath);
                 FileUtil.CopyFilesRecursively(sourcePath, destinationPath);
                 count++;
-                progress.Report(new ProgressInfo(progress: count));
+                progress.Report(new ProgressInfo(Progress: count));
             }
-            progress.Report(new ProgressInfo(statusText:"Transfer Complete!"));
+            progress.Report(new ProgressInfo(StatusText:"Transfer Complete!"));
 
             sourceServices.Dispose();
             destinationServices.Dispose();

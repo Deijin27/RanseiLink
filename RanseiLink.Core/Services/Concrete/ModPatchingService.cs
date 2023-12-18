@@ -58,7 +58,7 @@ namespace RanseiLink.Core.Services.Concrete
 
         public void Patch(ModInfo modInfo, string romPath, PatchOptions patchOptions, IProgress<ProgressInfo>? progress = null)
         {
-            progress?.Report(new ProgressInfo(statusText: "Preparing to patch...", isIndeterminate: true));
+            progress?.Report(new ProgressInfo(StatusText: "Preparing to patch...", IsIndeterminate: true));
 
             ConcurrentBag<FileToPatch> filesToPatch = new ConcurrentBag<FileToPatch>();
             Exception? exception = null;
@@ -88,13 +88,13 @@ namespace RanseiLink.Core.Services.Concrete
                     return;
 #endif
 
-                    progress?.Report(new ProgressInfo(isIndeterminate: false, maxProgress: filesToPatch.Count + 1, statusText: "Patching..."));
+                    progress?.Report(new ProgressInfo(IsIndeterminate: false, MaxProgress: filesToPatch.Count + 1, StatusText: "Patching..."));
                     int count = 0;
 
                     using (var nds = _ndsFactory(romPath))
                     {
                         PatchBanner(nds, modInfo);
-                        progress?.Report(new ProgressInfo(progress: ++count));
+                        progress?.Report(new ProgressInfo(Progress: ++count));
 
                         foreach (var file in filesToPatch)
                         {
@@ -106,7 +106,7 @@ namespace RanseiLink.Core.Services.Concrete
                             {
                                 nds.InsertFixedLengthFile(file.GamePath, file.FileSystemPath);
                             }
-                            progress?.Report(new ProgressInfo(progress: ++count));
+                            progress?.Report(new ProgressInfo(Progress: ++count));
                         }
                     }
                 }
@@ -117,7 +117,7 @@ namespace RanseiLink.Core.Services.Concrete
             }
             finally
             {
-                progress?.Report(new ProgressInfo(statusText: "Cleaning up temporary files...", isIndeterminate: true));
+                progress?.Report(new ProgressInfo(StatusText: "Cleaning up temporary files...", IsIndeterminate: true));
 
                 foreach (var file in filesToPatch)
                 {
@@ -133,7 +133,7 @@ namespace RanseiLink.Core.Services.Concrete
                 throw exception;
             }
 
-            progress?.Report(new ProgressInfo(statusText: "Done!", isIndeterminate: false));
+            progress?.Report(new ProgressInfo(StatusText: "Done!", IsIndeterminate: false));
         }
 
         private void GetFilesToPatch(IEnumerable<IPatchBuilder> patchBuilders, ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)

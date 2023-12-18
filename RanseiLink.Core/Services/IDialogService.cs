@@ -53,7 +53,7 @@ namespace RanseiLink.Core.Services
 
     public class RegistryDialogLocator : IDialogLocator
     {
-        private readonly ConcurrentDictionary<Type, Type> _registry = new ConcurrentDictionary<Type, Type>();
+        private readonly ConcurrentDictionary<Type, Type> _registry = new();
 
         public Type? Locate(object viewModel)
         {
@@ -75,20 +75,7 @@ namespace RanseiLink.Core.Services
         }
     }
 
-    public class ProgressInfo
-    {
-        public string? StatusText { get; }
-        public int? Progress { get; }
-        public int? MaxProgress { get; }
-        public bool? IsIndeterminate { get; }
-        public ProgressInfo(string? statusText = null, int? progress = null, int? maxProgress = null, bool? isIndeterminate = null)
-        {
-            StatusText = statusText;
-            Progress = progress;
-            MaxProgress = maxProgress;
-            IsIndeterminate = isIndeterminate;
-        }
-    }
+    public record ProgressInfo(string? StatusText = null, int? Progress = null, int? MaxProgress = null, bool? IsIndeterminate = null);
 
     public abstract class FileSystemDialogSettings
     {
@@ -99,7 +86,7 @@ namespace RanseiLink.Core.Services
     public abstract class FileDialogSettings : FileSystemDialogSettings
     {
         public string InitialFileName { get; set; } = string.Empty;
-        public List<FileDialogFilter> Filters { get; set; } = new List<FileDialogFilter>();
+        public List<FileDialogFilter> Filters { get; set; } = [];
     }
 
     public class SaveFileDialogSettings : FileDialogSettings
@@ -147,7 +134,7 @@ namespace RanseiLink.Core.Services
         /// Gets or sets a list of file extensions matched by the filter (e.g. "txt" or "*" for all
         /// files).
         /// </summary>
-        public List<string> Extensions { get; set; } = new List<string>();
+        public List<string> Extensions { get; set; } = [];
     }
 
     public static class DialogServiceExtensions
@@ -163,10 +150,10 @@ namespace RanseiLink.Core.Services
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
                 Title = "Select a Rom",
-                Filters = new List<FileDialogFilter>
-                {
-                    new FileDialogFilter("Pokemon Conquest Rom (.nds)", ".nds")
-                }
+                Filters =
+                [
+                    new("Pokemon Conquest Rom (.nds)", ".nds")
+                ]
             });
         }
 
@@ -175,10 +162,10 @@ namespace RanseiLink.Core.Services
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
                 Title = "Select a Mod",
-                Filters = new List<FileDialogFilter>
-                {
-                    new FileDialogFilter("RanseiLink Mod (.rlmod)", ".rlmod")
-                }
+                Filters =
+                [
+                    new("RanseiLink Mod (.rlmod)", ".rlmod")
+                ]
             });
         }
 
@@ -211,10 +198,10 @@ namespace RanseiLink.Core.Services
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
                 Title = "Select a Rom",
-                Filters = new List<FileDialogFilter>
-                {
-                    new FileDialogFilter("Pokemon Conquest Rom (.nds)", ".nds")
-                }
+                Filters =
+                [
+                    new("Pokemon Conquest Rom (.nds)", ".nds")
+                ]
             });
         }
 
@@ -223,10 +210,10 @@ namespace RanseiLink.Core.Services
             return dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
             {
                 Title = "Select a Mod",
-                Filters = new List<FileDialogFilter>
-                {
-                    new FileDialogFilter("RanseiLink Mod (.rlmod)", ".rlmod")
-                }
+                Filters =
+                [
+                    new("RanseiLink Mod (.rlmod)", ".rlmod")
+                ]
             });
         }
 

@@ -18,12 +18,12 @@
 
     public record MessageBoxButton(string Text, MessageBoxResult Result);
 
-    public class MessageBoxSettings(
-        string title,
-        string message,
-        MessageBoxButton[] buttons,
-        MessageBoxType type = MessageBoxType.Information,
-        MessageBoxResult defaultResult = MessageBoxResult.Ok)
+    public record MessageBoxSettings(
+        string Title,
+        string Message,
+        MessageBoxButton[] Buttons,
+        MessageBoxType Type = MessageBoxType.Information,
+        MessageBoxResult DefaultResult = MessageBoxResult.Ok)
     {
 
         /// <summary>
@@ -41,11 +41,5 @@
                 MessageBoxResult.Ok
                 );
         }
-
-        public string Title { get; } = title;
-        public string Message { get; } = message;
-        public MessageBoxButton[] Buttons { get; } = buttons;
-        public MessageBoxType Type { get; } = type;
-        public MessageBoxResult DefaultResult { get; } = defaultResult;
     }
 }

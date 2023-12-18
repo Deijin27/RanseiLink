@@ -64,16 +64,7 @@ public interface IFallbackDataProvider
     List<DataFile> GetAllDataFilesInFolder(ConquestGameCode gc, string pathOfFolderInRom);
 }
 
-public class SpriteModifiedArgs
-{
-    public SpriteType Type { get; }
-    public int Id { get; }
-    public SpriteModifiedArgs(SpriteType type, int id)
-    {
-        Type = type;
-        Id = id;
-    }   
-}
+public record SpriteModifiedArgs(SpriteType Type, int Id);
 
 public interface IOverrideDataProvider
 {

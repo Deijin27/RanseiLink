@@ -30,7 +30,7 @@ internal class MassAction
 
         await dialogService.ProgressDialog(progress =>
         {
-            progress.Report(new ProgressInfo(isIndeterminate:true));
+            progress.Report(new ProgressInfo(IsIndeterminate:true));
             if (options.Target == ConstOptions.MaxLink)
             {
                 progress.Report(new ProgressInfo("Setting max link values..."));
@@ -52,7 +52,7 @@ internal class MassAction
                 HandleInitLink();
             }
 
-            progress.Report(new ProgressInfo(progress:100, isIndeterminate:false, statusText:"Done!"));
+            progress.Report(new ProgressInfo(Progress:100, IsIndeterminate:false, StatusText:"Done!"));
 
         });
     }

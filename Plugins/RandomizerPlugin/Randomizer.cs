@@ -49,7 +49,7 @@ public class Randomizer
         _options = options;
         progress.Report(new ProgressInfo("Initializing Randomizer..."));
         Init(context.Services);
-        progress.Report(new ProgressInfo(progress:15, statusText:"Randomizing..."));
+        progress.Report(new ProgressInfo(Progress:15, StatusText:"Randomizing..."));
 
         Randomize();
 
@@ -65,15 +65,15 @@ public class Randomizer
 
         if (options.AllMaxLinkValue > 0)
         {
-            progress.Report(new ProgressInfo(progress: 70, statusText: "Handling max link values..."));
+            progress.Report(new ProgressInfo(Progress: 70, StatusText: "Handling max link values..."));
             HandleMaxLink(context.Services.Get<IMaxLinkService>());
         }
 
-        progress.Report(new ProgressInfo(progress: 85, statusText: "Saving randomized data..."));
+        progress.Report(new ProgressInfo(Progress: 85, StatusText: "Saving randomized data..."));
         Save();
 
 
-        progress.Report(new ProgressInfo(progress: 100, statusText: "Randomization Complete!"));
+        progress.Report(new ProgressInfo(Progress: 100, StatusText: "Randomization Complete!"));
     }
 
     /// <summary>

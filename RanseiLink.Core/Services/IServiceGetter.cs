@@ -11,22 +11,16 @@ public interface IServiceGetter : IDisposable
     T Get<T>();
 }
 
-public class ServiceGetter : IServiceGetter
+public class ServiceGetter(IContainer services) : IServiceGetter
 {
-    private readonly IContainer _services;
-    public ServiceGetter(IContainer services)
-    {
-        _services = services;
-    }
-
     public void Dispose()
     {
-        _services.Dispose();
+        services.Dispose();
         GC.SuppressFinalize(this);
     }
 
     public T Get<T>()
     {
-        return _services.Resolve<T>();
+        return services.Resolve<T>();
     }
 }

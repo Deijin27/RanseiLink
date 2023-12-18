@@ -43,27 +43,27 @@ public class FallbackDataProvider : IFallbackDataProvider
         // reset the graphics folder
         if (IsDefaultsPopulated(gc))
         {
-            progress?.Report(new ProgressInfo(statusText: "Deleting Existing...", isIndeterminate: true));
+            progress?.Report(new ProgressInfo(StatusText: "Deleting Existing...", IsIndeterminate: true));
             Directory.Delete(defaultDataFolder, true);
         }
         Directory.CreateDirectory(defaultDataFolder);
 
         // populate
-        progress?.Report(new ProgressInfo(statusText: "Extracting files from rom...", isIndeterminate: true));
+        progress?.Report(new ProgressInfo(StatusText: "Extracting files from rom...", IsIndeterminate: true));
         using (var nds = _ndsFactory(ndsFile))
         {
             nds.ExtractCopyOfDirectory(Constants.GraphicsFolderPath, defaultDataFolder);
         }
             
         var infos = GraphicsInfoResource.All;
-        progress?.Report(new ProgressInfo(statusText: "Converting Images...", isIndeterminate: false, maxProgress: infos.Count));
+        progress?.Report(new ProgressInfo(StatusText: "Converting Images...", IsIndeterminate: false, MaxProgress: infos.Count));
         int count = 0;
         Parallel.ForEach(infos, gfxInfo =>
         {
             _populaters[gfxInfo.MetaType].ProcessExportedFiles(defaultDataFolder, gfxInfo);
-            progress?.Report(new ProgressInfo(progress: ++count));
+            progress?.Report(new ProgressInfo(Progress: ++count));
         });
-        progress?.Report(new ProgressInfo(statusText: "Done!"));
+        progress?.Report(new ProgressInfo(StatusText: "Done!"));
 
         return Result.Ok();
     }

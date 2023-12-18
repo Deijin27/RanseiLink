@@ -5,9 +5,8 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Core.Util;
 
-public class XmlUtilException : Exception
+public class XmlUtilException(string message) : Exception(message)
 {
-    public XmlUtilException(string message) : base(message) { }
 }
 
 public static class XmlUtil
