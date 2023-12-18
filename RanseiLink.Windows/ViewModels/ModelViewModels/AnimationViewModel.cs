@@ -17,15 +17,20 @@ public class AnimationViewModel : ViewModelBase
         _type = type;
         _id = id;
 
-        ImportCommand = new RelayCommand(() =>
+        ImportCommand = new RelayCommand(async () =>
         {
-            _manager.Import(_type, _id);
+            await _manager.Import(_type, _id);
             RaisePropertyChanged(nameof(IsOverriden));
         });
-        ExportCommand = new RelayCommand(() => _manager.Export(_type, _id));
-        RevertCommand = new RelayCommand(() =>
+
+        ExportCommand = new RelayCommand(async () =>
         {
-            _manager.RevertToDefault(_type, _id);
+            await _manager.Export(_type, _id);
+        });
+
+        RevertCommand = new RelayCommand(async () =>
+        {
+            await _manager.RevertToDefault(_type, _id);
             RaisePropertyChanged(nameof(IsOverriden));
         },
         () => IsOverriden);

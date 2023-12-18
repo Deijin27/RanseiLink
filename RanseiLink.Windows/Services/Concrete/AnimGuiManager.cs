@@ -6,11 +6,12 @@ using RanseiLink.Windows.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RanseiLink.Windows.Services.Concrete;
-internal class AnimGuiManager(ICellAnimationManager _manager, IDialogService _dialogService, ISettingService _settingService, ModInfo _mod) : IAnimGuiManager
+internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogService _dialogService, ISettingService _settingService, ModInfo _mod) : IAnimGuiManager
 {
-    public bool Export(AnimationTypeId type, int id)
+    public async Task<bool> Export(AnimationTypeId type, int id)
     {
         var info = AnimationTypeInfoResource.Get(type);
         CellAnimationSerialiser.Format[] formats;
@@ -27,7 +28,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IDialogService _di
         }
 
         var dialogVm = new AnimExportViewModel(_dialogService, _settingService, _mod, formats, format);
-        if (!_dialogService.ShowDialogWithResult(dialogVm))
+        if (!await _dialogService.ShowDialogWithResult(dialogVm))
         {
             return false;
         }
@@ -36,7 +37,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IDialogService _di
         return true;
     }
 
-    public bool Import(AnimationTypeId type, int id)
+    public async Task<bool> Import(AnimationTypeId type, int id)
     {
         var filters = new List<FileDialogFilter>();
         var current = _manager.GetDataFile(type, id);
@@ -52,7 +53,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IDialogService _di
             filters.Add(new FileDialogFilter("Animation Background Image", ".png"));
         }
 
-        var file = _dialogService.ShowOpenSingleFileDialog(new("Choose a file to import", filters.ToArray()));
+        var file = await _dialogService.ShowOpenSingleFileDialog(new("Choose a file to import", filters.ToArray()));
 
         if (file == null)
         {
@@ -82,13 +83,13 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IDialogService _di
         return anim.IsOverride || (bg != null && bg.IsOverride);
     }
 
-    public bool RevertToDefault(AnimationTypeId type, int id)
+    public async Task<bool> RevertToDefault(AnimationTypeId type, int id)
     {
         if (!IsOverriden(type, id))
         {
             return false;
         }
-        var result = _dialogService.ShowMessageBox(new(
+        var result = await _dialogService.ShowMessageBox(new(
             $"Revert animation to default?",
             "Confirm to permanently delete the internally stored animation and/or background which overrides the default",
             [

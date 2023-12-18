@@ -2,7 +2,6 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
 using RanseiLink.Windows.Settings;
-using System;
 using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -11,7 +10,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentExportAnimFolderSetting _recentExportModFolderSetting;
-    public AnimExportViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo,
+    public AnimExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo,
         CellAnimationSerialiser.Format[] selectableFormats, CellAnimationSerialiser.Format initialSelectedFormat)
     {
         ExportFormats = selectableFormats;
@@ -26,9 +25,9 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
             Folder = f;
         };
 
-        FolderPickerCommand = new RelayCommand(() =>
+        FolderPickerCommand = new RelayCommand(async () =>
         {
-            var folder = dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings { Title = "Select a folder to export the animation to" });
+            var folder = await dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings { Title = "Select a folder to export the animation to" });
             if (!string.IsNullOrEmpty(folder))
             {
                 Folder = folder;
