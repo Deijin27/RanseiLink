@@ -18,6 +18,7 @@ public class WpfServiceModule : IModule
     {
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
+        builder.Register<IAsyncDialogService, WpfAsyncDialogService>(Reuse.Singleton);
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
