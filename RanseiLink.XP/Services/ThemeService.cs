@@ -4,23 +4,10 @@ using RanseiLink.XP.Settings;
 using System;
 
 namespace RanseiLink.XP.Services;
-public enum Theme
-{
-    Dark,
-    Light,
-    Catppuccin_Mocha
-}
 
 public class RanseiLinkThemeVariant
 {
-    public static ThemeVariant Catppuccin_Mocha { get; } = new ThemeVariant(nameof(Theme.Catppuccin_Mocha), ThemeVariant.Dark);
-}
-
-public interface IThemeService
-{
-    public Theme CurrentTheme { get; }
-    public void SetTheme(Theme theme);
-    public void ToggleTheme();
+    public static ThemeVariant Catppuccin_Mocha { get; } = new ThemeVariant("Catppuccin_Mocha", ThemeVariant.Dark);
 }
 
 internal class ThemeService : IThemeService
@@ -44,25 +31,13 @@ internal class ThemeService : IThemeService
         UpdateTheme();
     }
 
-    public void ToggleTheme()
-    {
-        var newTheme = CurrentTheme switch
-        {
-            Theme.Dark => Theme.Light,
-            Theme.Light => Theme.Dark,
-            Theme.Catppuccin_Mocha => Theme.Dark,
-            _ => Theme.Dark,
-        };
-        SetTheme(newTheme);
-    }
-
     private void UpdateTheme()
     {
         App.Current.RequestedThemeVariant = CurrentTheme switch
         {
             Theme.Dark => ThemeVariant.Dark,
             Theme.Light => ThemeVariant.Light,
-            Theme.Catppuccin_Mocha => RanseiLinkThemeVariant.Catppuccin_Mocha,
+            //Theme.Catppuccin_Mocha => RanseiLinkThemeVariant.Catppuccin_Mocha,
             _ => throw new NotImplementedException()
         };
     }
