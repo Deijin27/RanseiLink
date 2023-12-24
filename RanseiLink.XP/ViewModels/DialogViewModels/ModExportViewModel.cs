@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
-using RanseiLink.XP.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.XP.Settings;
 using System.Windows.Input;
 
@@ -10,14 +10,14 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
-    public ModExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo)
+    public ModExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFolderDropHandler folderDropHandler)
     {
         _settingService = settingService;
         _recentExportModFolderSetting = settingService.Get<RecentExportModFolderSetting>();
         Folder = _recentExportModFolderSetting.Value;
         ModInfo = modInfo;
-        RomDropHandler = new FolderDropHandler();
-        RomDropHandler.FolderDropped += f =>
+        FolderDropHandler = folderDropHandler;
+        FolderDropHandler.FolderDropped += f =>
         {
             Folder = f;
         };
@@ -46,7 +46,7 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ICommand FolderPickerCommand { get; }
 
-    public FolderDropHandler RomDropHandler { get; }
+    public IFolderDropHandler FolderDropHandler { get; }
 
     private string _folder;
     public string Folder

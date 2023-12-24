@@ -1,8 +1,7 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
-using RanseiLink.XP.DragDrop;
+﻿using RanseiLink.Core.Settings;
 using System.Windows.Input;
 using RanseiLink.XP.Settings;
+using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.XP.ViewModels;
 
@@ -10,11 +9,11 @@ public class PopulateDefaultSpriteViewModel : ViewModelBase, IModalDialogViewMod
 {
     private readonly ISettingService _settingService;
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    public PopulateDefaultSpriteViewModel(IAsyncDialogService dialogService, ISettingService settingService)
+    public PopulateDefaultSpriteViewModel(IAsyncDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
-        RomDropHandler = new RomDropHandler();
+        RomDropHandler = fdhFactory.NewRomDropHandler();
         File = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
         {
@@ -33,7 +32,7 @@ public class PopulateDefaultSpriteViewModel : ViewModelBase, IModalDialogViewMod
 
     public ICommand FilePickerCommand { get; }
 
-    public RomDropHandler RomDropHandler { get; }
+    public IFileDropHandler RomDropHandler { get; }
 
     private string _file;
     public string File

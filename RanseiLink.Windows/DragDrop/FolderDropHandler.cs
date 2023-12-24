@@ -1,10 +1,11 @@
 ﻿using GongSolutions.Wpf.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using System;
 using System.Windows;
 
 namespace RanseiLink.DragDrop;
 
-public class FolderDropHandler : IDropTarget
+public class FolderDropHandler : IFolderDropHandler, IDropTarget
 {
     public void DragOver(IDropInfo dropInfo)
     {

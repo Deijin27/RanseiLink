@@ -1,10 +1,12 @@
 ﻿using GongSolutions.Wpf.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using System;
+using System.Linq;
 using System.Windows;
 
 namespace RanseiLink.DragDrop;
 
-public class ModDropHandler : IDropTarget
+public class FileDropHandler(params string[] allowedExtensions) : IFileDropHandler, IDropTarget
 {
     public void DragOver(IDropInfo dropInfo)
     {
@@ -16,7 +18,7 @@ public class ModDropHandler : IDropTarget
                 if (drop.Count == 1)
                 {
                     var file = drop[0];
-                    if (System.IO.Path.GetExtension(file) == ".rlmod")
+                    if (allowedExtensions.Contains(System.IO.Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
                     {
                         dropInfo.Effects = DragDropEffects.All;
                         return;

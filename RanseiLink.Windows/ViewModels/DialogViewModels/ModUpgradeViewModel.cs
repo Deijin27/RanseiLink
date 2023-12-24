@@ -1,6 +1,5 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
-using RanseiLink.DragDrop;
+﻿using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.Windows.Settings;
 using System.Windows.Input;
 
@@ -10,11 +9,11 @@ public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    public ModUpgradeViewModel(IDialogService dialogService, ISettingService settingService)
+    public ModUpgradeViewModel(IDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
-        RomDropHandler = new RomDropHandler();
+        RomDropHandler = fdhFactory.NewRomDropHandler();
         File = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
         {
@@ -33,7 +32,7 @@ public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ICommand FilePickerCommand { get; }
 
-    public RomDropHandler RomDropHandler { get; }
+    public IFileDropHandler RomDropHandler { get; }
 
     private string _file;
     public string File

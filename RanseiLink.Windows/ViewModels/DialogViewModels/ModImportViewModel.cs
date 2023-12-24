@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
-using RanseiLink.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -12,11 +12,11 @@ namespace RanseiLink.Windows.ViewModels;
 public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly IDialogService _dialogService;
-    public ModImportViewModel(IDialogService dialogService)
+    public ModImportViewModel(IDialogService dialogService, IFileDropHandlerFactory fileDropHandlerFactory)
     {
         _dialogService = dialogService;
         ModInfo = new ModInfo();
-        ModDropHandler = new ModDropHandler();
+        ModDropHandler = fileDropHandlerFactory.NewModDropHandler();
         ModDropHandler.FileDropped += SafeSetAndPreviewFile;
 
         FilePickerCommand = new RelayCommand(() =>
@@ -71,7 +71,7 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ICommand FilePickerCommand { get; }
 
-    public ModDropHandler ModDropHandler { get; }
+    public IFileDropHandler ModDropHandler { get; }
 
     private string _file;
     public string File

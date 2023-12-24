@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.Windows.Settings;
 using System.Windows.Input;
 
@@ -11,7 +12,8 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     private readonly ISettingService _settingService;
     private readonly RecentExportAnimFolderSetting _recentExportModFolderSetting;
     public AnimExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo,
-        CellAnimationSerialiser.Format[] selectableFormats, CellAnimationSerialiser.Format initialSelectedFormat)
+        CellAnimationSerialiser.Format[] selectableFormats, CellAnimationSerialiser.Format initialSelectedFormat,
+        IFolderDropHandler folderDropHandler)
     {
         ExportFormats = selectableFormats;
         _selectedFormat = initialSelectedFormat;
@@ -19,8 +21,8 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         _recentExportModFolderSetting = settingService.Get<RecentExportAnimFolderSetting>();
         Folder = _recentExportModFolderSetting.Value;
         ModInfo = modInfo;
-        RomDropHandler = new FolderDropHandler();
-        RomDropHandler.FolderDropped += f =>
+        FolderDropHandler = folderDropHandler;
+        FolderDropHandler.FolderDropped += f =>
         {
             Folder = f;
         };
@@ -58,7 +60,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ICommand FolderPickerCommand { get; }
 
-    public FolderDropHandler RomDropHandler { get; }
+    public IFolderDropHandler FolderDropHandler { get; }
 
     private string _folder;
     private CellAnimationSerialiser.Format _selectedFormat;

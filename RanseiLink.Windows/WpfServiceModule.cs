@@ -9,6 +9,8 @@ using RanseiLink.Windows.Dialogs;
 using System.Reflection;
 using RanseiLink.Windows.Services;
 using RanseiLink.Core;
+using RanseiLink.GuiCore.DragDrop;
+using RanseiLink.DragDrop;
 
 namespace RanseiLink.Windows;
 
@@ -19,6 +21,8 @@ public class WpfServiceModule : IModule
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
         builder.Register<IAsyncDialogService, WpfAsyncDialogService>(Reuse.Singleton);
+        builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
+        builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);

@@ -1,12 +1,13 @@
 ﻿using Avalonia.Input;
 using Avalonia.Platform.Storage;
+using RanseiLink.GuiCore.DragDrop;
 using System;
 using System.Linq;
 #nullable enable
 
 namespace RanseiLink.XP.DragDrop;
 
-public class FolderDropHandler : IDropTarget
+public class FolderDropHandler : IFolderDropHandler, IDropTarget
 {
     public event Action<string>? FolderDropped;
 

@@ -1,8 +1,8 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.Windows.Settings;
-using RanseiLink.DragDrop;
 using System.Windows.Input;
+using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -14,13 +14,13 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
     private readonly PatchSpritesSetting _patchSpritesSetting;
     private readonly ISettingService _settingService;
 
-    public ModCommitViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo)
+    public ModCommitViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();
         _patchSpritesSetting = settingService.Get<PatchSpritesSetting>();
         ModInfo = modInfo;
-        RomDropHandler = new RomDropHandler();
+        RomDropHandler = fdhFactory.NewRomDropHandler();
         RomDropHandler.FileDropped += f =>
         {
             File = f;
@@ -60,7 +60,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ICommand FilePickerCommand { get; }
 
-    public RomDropHandler RomDropHandler { get; }
+    public IFileDropHandler RomDropHandler { get; }
 
     
     public string File

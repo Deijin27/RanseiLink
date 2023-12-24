@@ -1,21 +1,15 @@
 ﻿using Avalonia.Input;
 using Avalonia.Platform.Storage;
+using RanseiLink.GuiCore.DragDrop;
 using System;
 using System.Linq;
 #nullable enable
 
 namespace RanseiLink.XP.DragDrop;
 
-public class FileDropHandler : IDropTarget
+public class FileDropHandler(params string[] allowedExtensions) : IFileDropHandler, IDropTarget
 {
-    private readonly string[] _allowedExtensions;
-
     public event Action<string>? FileDropped;
-
-    public FileDropHandler(params string[] allowedExtensions)
-    {
-        _allowedExtensions = allowedExtensions;
-    }
 
     public DragDropEffects DragOver(DragEventArgs dropInfo)
     {
@@ -25,7 +19,7 @@ public class FileDropHandler : IDropTarget
             return DragDropEffects.None;
         }
         var ext = System.IO.Path.GetExtension(local);
-        if (!_allowedExtensions.Contains(ext))
+        if (!allowedExtensions.Contains(ext, StringComparer.OrdinalIgnoreCase))
         {
             return DragDropEffects.None;
         }
