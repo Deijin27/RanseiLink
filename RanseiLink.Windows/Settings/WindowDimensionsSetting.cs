@@ -15,17 +15,46 @@ public class WindowDimensionsSetting : Setting<WindowDimensions>
 
     public override void Deserialize(XElement element)
     {
-        var xStr = element.Attribute("X")?.Value;
-        var yStr = element.Attribute("Y")?.Value;
-        var wStr = element.Attribute("Width")?.Value;
-        var hStr = element.Attribute("Height")?.Value;
-        var sStr = element.Attribute("State")?.Value;
-        double.TryParse(xStr, out var x);
-        double.TryParse(yStr, out var y);
-        double.TryParse(wStr, out var width);
-        double.TryParse(hStr, out var height);
-        var state = Enum.TryParse<WindowState>(sStr, out var stateVal) ? stateVal : WindowState.Normal;
-        Value = new WindowDimensions(x, y, width, height, state);
+        double x = -1;
+        double y = -1;
+        double w = -1;
+        double h = -1;
+        WindowState s = WindowState.Normal;
+
+        var xAttr = element.Attribute("X");
+        var yAttr = element.Attribute("Y");
+        var wAttr = element.Attribute("Width");
+        var hAttr = element.Attribute("Height");
+        var sAttr = element.Attribute("State");
+
+        var max = short.MaxValue;
+
+        if (xAttr != null && double.TryParse(xAttr.Value, out var xParsed) && xParsed < max)
+        {
+            x = xParsed;
+        }
+
+        if (yAttr != null && double.TryParse(yAttr.Value, out var yParsed) && yParsed < max)
+        {
+            y = yParsed;
+        }
+
+        if (wAttr != null && double.TryParse(xAttr.Value, out var wParsed) && wParsed < max)
+        {
+            w = wParsed;
+        }
+
+        if (hAttr != null && double.TryParse(hAttr.Value, out var hParsed) && hParsed < max)
+        {
+            h = hParsed;
+        }
+
+        if (sAttr != null && Enum.TryParse<WindowState>(sAttr.Value, out var sParsed))
+        {
+            s = sParsed;
+        }
+
+        Value = new WindowDimensions(x, y, w, h, s);
     }
 
     public override void Serialize(XElement element)
