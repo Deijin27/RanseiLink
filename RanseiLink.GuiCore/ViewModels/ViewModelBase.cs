@@ -17,7 +17,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
     }
 
-    protected bool RaiseAndSetIfChanged<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string name = null)
+    protected bool RaiseAndSetIfChanged<T>(T currentValue, T newValue, Action<T> setter, [CallerMemberName] string? name = null)
     {
         if (!EqualityComparer<T>.Default.Equals(currentValue, newValue))
         {
@@ -28,7 +28,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         return false;
     }
 
-    protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string name = null)
+    protected bool RaiseAndSetIfChanged<T>(ref T property, T newValue, [CallerMemberName] string? name = null)
     {
         if (!EqualityComparer<T>.Default.Equals(property, newValue))
         {
