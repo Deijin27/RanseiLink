@@ -1,6 +1,4 @@
 ﻿using RanseiLink.Core.Text;
-using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace RanseiLink.Core.Services;

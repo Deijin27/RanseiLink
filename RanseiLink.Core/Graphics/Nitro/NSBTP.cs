@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 /// <summary>
 /// Nitro SDK Binary Texture Pattern - Pattern animations

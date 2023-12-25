@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RanseiLink.Core
+﻿namespace RanseiLink.Core
 {
 
     [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]

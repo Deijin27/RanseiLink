@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.Enums
+﻿namespace RanseiLink.Core.Enums
 {
     [Flags]
     public enum MoveMovementFlags

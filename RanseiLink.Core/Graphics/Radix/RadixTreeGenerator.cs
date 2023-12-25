@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 public class RadixTreeGenerator
 {

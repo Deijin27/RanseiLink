@@ -1,7 +1,4 @@
-﻿
-using System;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 [System.Diagnostics.DebuggerDisplay("PolygonDisplayCommand: {OpCode}")]
 public class PolygonDisplayCommand

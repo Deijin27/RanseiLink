@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Models
 {

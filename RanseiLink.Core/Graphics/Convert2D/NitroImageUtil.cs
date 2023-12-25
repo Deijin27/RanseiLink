@@ -1,7 +1,5 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RanseiLink.Core.Graphics;
 

@@ -1,11 +1,8 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using System;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RanseiLink.Core.Graphics;
 

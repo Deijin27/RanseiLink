@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 public class InvalidPaletteException : Exception
 {

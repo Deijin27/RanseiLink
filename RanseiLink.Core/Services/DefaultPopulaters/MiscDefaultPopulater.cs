@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Resources;
-using System.Collections.Generic;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 

@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace RanseiLink.Core.Maps;
+﻿namespace RanseiLink.Core.Maps;
 
 public class MapPokemonPositionSection
 {

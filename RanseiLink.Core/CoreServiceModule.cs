@@ -4,7 +4,6 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Settings;
-using System.IO;
 using System.Reflection;
 
 namespace RanseiLink.Core

@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using System.Xml.Linq;
-using System;
 
 namespace RanseiLink.Core.Resources
 {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 [System.Diagnostics.DebuggerDisplay("RenderCommand: {OpCode}, {Flags}")]
 public class RenderCommand

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace RanseiLink.Core.Archive;
+﻿namespace RanseiLink.Core.Archive;
 
 public static class PAC
 {

@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.RomFs;
-using System.IO;
 
 namespace RanseiLink.Core.Services;
 

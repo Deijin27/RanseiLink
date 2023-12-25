@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.Models
+﻿namespace RanseiLink.Core.Models
 {
     public class WarriorNameTable : BaseDataWindow
     {

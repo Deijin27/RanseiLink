@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Archive;
-using System.IO;
 
 namespace RanseiLink.Core.Graphics;
 

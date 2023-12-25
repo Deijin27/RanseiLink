@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
-using System.IO;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 

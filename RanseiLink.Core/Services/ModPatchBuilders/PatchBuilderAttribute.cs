@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.Services.ModPatchBuilders;
+﻿namespace RanseiLink.Core.Services.ModPatchBuilders;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class PatchBuilderAttribute : Attribute

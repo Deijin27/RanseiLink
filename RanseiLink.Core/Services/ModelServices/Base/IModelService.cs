@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RanseiLink.Core.Services.ModelServices
+﻿namespace RanseiLink.Core.Services.ModelServices
 {
     public interface IModelService
     {

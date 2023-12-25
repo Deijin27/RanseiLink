@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.RomFs;
+﻿namespace RanseiLink.Core.RomFs;
 
 public interface IRomFs : IDisposable
 {

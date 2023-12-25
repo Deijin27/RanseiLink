@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RanseiLink.Core.Services;
+﻿namespace RanseiLink.Core.Services;
 
 public static class LinkCalculator
 {

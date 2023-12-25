@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace RanseiLink.Core.Archive;
+﻿namespace RanseiLink.Core.Archive;
 
 /// <summary>
 /// Archive format used in Pokemon Conquest used to group related graphic resources. 

@@ -1,9 +1,5 @@
 ﻿using RanseiLink.Core.Resources;
 using RanseiLink.Core.Text;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace RanseiLink.Core.Services.Concrete

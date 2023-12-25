@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Enums;
-using System;
 
 namespace RanseiLink.Core.Models
 {

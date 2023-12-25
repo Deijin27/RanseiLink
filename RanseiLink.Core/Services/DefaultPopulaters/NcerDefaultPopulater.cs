@@ -2,7 +2,6 @@
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
-using System.IO;
 
 namespace RanseiLink.Core.Services.DefaultPopulaters;
 

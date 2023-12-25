@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 public enum RenderOpCode
 {

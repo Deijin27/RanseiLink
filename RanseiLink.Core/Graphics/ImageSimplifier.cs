@@ -2,8 +2,6 @@
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Quantization;
-using System.Collections.Generic;
-using System.IO;
 
 namespace RanseiLink.Core.Graphics;
 

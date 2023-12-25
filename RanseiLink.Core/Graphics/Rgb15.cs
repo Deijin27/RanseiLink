@@ -1,7 +1,4 @@
-﻿
-using System;
-
-namespace RanseiLink.Core.Graphics; 
+﻿namespace RanseiLink.Core.Graphics;
 
 public struct Rgb15 : IEquatable<Rgb15>
 {

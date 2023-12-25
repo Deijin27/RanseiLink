@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.Core.Util;
+﻿namespace RanseiLink.Core.Util;
 
 public static class FixedPoint
 {
