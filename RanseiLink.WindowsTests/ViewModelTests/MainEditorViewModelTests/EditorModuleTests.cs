@@ -2,11 +2,9 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
-using RanseiLink.GuiCore.DragDrop;
-using RanseiLink.GuiCore.Services;
+using RanseiLink.GuiCore.Settings;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Windows.Settings;
 using RanseiLink.Windows.ViewModels;
 using System;
 using System.Collections.Generic;

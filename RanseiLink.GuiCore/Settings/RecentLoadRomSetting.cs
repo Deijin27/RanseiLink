@@ -1,8 +1,8 @@
 ﻿using RanseiLink.Core.Settings;
 
-namespace RanseiLink.Windows.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
-internal class RecentLoadRomSetting : StringSetting
+public class RecentLoadRomSetting : StringSetting
 {
     public RecentLoadRomSetting() : base("RecentLoadRom") 
     {

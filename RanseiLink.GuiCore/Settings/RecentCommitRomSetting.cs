@@ -1,10 +1,10 @@
 ﻿using RanseiLink.Core.Settings;
 
-namespace RanseiLink.XP.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
-internal class RecentExportModFolderSetting : StringSetting
+public class RecentCommitRomSetting : StringSetting
 {
-    public RecentExportModFolderSetting() : base("RecentExportFolder") 
+    public RecentCommitRomSetting() : base("RecentCommitRom") 
     {
         _default = null;
         IsHidden = true;

@@ -1,8 +1,8 @@
 ﻿using RanseiLink.Core.Settings;
 
-namespace RanseiLink.Windows.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
-internal class RecentExportAnimFolderSetting : StringSetting
+public class RecentExportAnimFolderSetting : StringSetting
 {
     public RecentExportAnimFolderSetting() : base("RecentExportAnimFolder")
     {

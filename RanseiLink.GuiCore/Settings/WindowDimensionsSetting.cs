@@ -1,9 +1,13 @@
-﻿using System.Windows;
-using RanseiLink.Core.Settings;
-using System;
+﻿using RanseiLink.Core.Settings;
 using System.Xml.Linq;
 
-namespace RanseiLink.Windows.Settings;
+namespace RanseiLink.GuiCore.Settings;
+
+public enum WindowState
+{
+    Normal,
+    Maximized
+}
 
 public record WindowDimensions(double X, double Y, double Width, double Height, WindowState State);
 
@@ -39,7 +43,7 @@ public class WindowDimensionsSetting : Setting<WindowDimensions>
             y = yParsed;
         }
 
-        if (wAttr != null && double.TryParse(xAttr.Value, out var wParsed) && wParsed < max)
+        if (wAttr != null && double.TryParse(wAttr.Value, out var wParsed) && wParsed < max)
         {
             w = wParsed;
         }

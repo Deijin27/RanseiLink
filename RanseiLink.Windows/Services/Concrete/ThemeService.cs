@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Settings;
-using RanseiLink.Windows.Settings;
 using System;
 using System.Windows;
 

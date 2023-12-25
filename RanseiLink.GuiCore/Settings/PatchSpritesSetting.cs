@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Settings;
 
-namespace RanseiLink.XP.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
 public class PatchSpritesSetting : BoolSetting
 {

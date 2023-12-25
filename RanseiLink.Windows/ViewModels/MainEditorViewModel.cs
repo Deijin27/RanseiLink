@@ -3,7 +3,6 @@ using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Windows.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

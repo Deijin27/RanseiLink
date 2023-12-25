@@ -1,9 +1,7 @@
 ﻿using RanseiLink.Core.Settings;
-using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
-namespace RanseiLink.Windows.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
 public class EditorModuleOrderSetting : Setting<IReadOnlyCollection<string>>
 {

@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Services;
-
-namespace RanseiLink.XP.ViewModels;
+﻿namespace RanseiLink.XP.ViewModels;
 
 public class SimplifyPaletteViewModel : IModalDialogViewModel<bool>
 {

@@ -1,11 +1,10 @@
 ﻿using RanseiLink.Core.Settings;
-using RanseiLink.XP.Services;
-using System;
+using RanseiLink.GuiCore.Services;
 using System.Xml.Linq;
 
-namespace RanseiLink.XP.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
-internal class ThemeSetting : Setting<Theme>
+public class ThemeSetting : Setting<Theme>
 {
     public ThemeSetting() : base("Theme", Theme.Dark) 
     {

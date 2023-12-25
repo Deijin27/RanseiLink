@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using RanseiLink.Core.Settings;
-using RanseiLink.XP.Settings;
 
 namespace RanseiLink.XP.Views;
 public partial class MainWindow : Window
@@ -37,9 +36,13 @@ public partial class MainWindow : Window
         {
             this.Height = dims.Height;
         }
-        if (dims.State == WindowState.Normal || dims.State == WindowState.Maximized)
+        if (dims.State == GuiCore.Settings.WindowState.Normal)
         {
-            this.WindowState = dims.State;
+            this.WindowState = Avalonia.Controls.WindowState.Normal;
+        }
+        else if (dims.State == GuiCore.Settings.WindowState.Maximized)
+        {
+            this.WindowState = Avalonia.Controls.WindowState.Maximized;
         }
     }
 
@@ -47,7 +50,8 @@ public partial class MainWindow : Window
     {
         var dimSetting = settingService.Get<WindowDimensionsSetting>();
         var pos = this.Position;
-        dimSetting.Value = new WindowDimensions(pos.X, pos.Y, Width, Height, WindowState);
+        dimSetting.Value = new WindowDimensions(pos.X, pos.Y, Width, Height, 
+            WindowState == Avalonia.Controls.WindowState.Maximized ? GuiCore.Settings.WindowState.Maximized : GuiCore.Settings.WindowState.Normal);
         settingService.Save();
     }
 }

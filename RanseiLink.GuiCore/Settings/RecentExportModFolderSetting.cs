@@ -1,8 +1,8 @@
 ﻿using RanseiLink.Core.Settings;
 
-namespace RanseiLink.Windows.Settings;
+namespace RanseiLink.GuiCore.Settings;
 
-internal class RecentExportModFolderSetting : StringSetting
+public class RecentExportModFolderSetting : StringSetting
 {
     public RecentExportModFolderSetting() : base("RecentExportFolder") 
     {

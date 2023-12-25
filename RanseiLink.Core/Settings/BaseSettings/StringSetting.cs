@@ -2,9 +2,9 @@
 
 namespace RanseiLink.Core.Settings
 {
-    public abstract class StringSetting : Setting<string>
+    public abstract class StringSetting : Setting<string?>
     {
-        protected StringSetting(string uniqueElementName) : base(uniqueElementName, string.Empty) { }
+        protected StringSetting(string uniqueElementName) : base(uniqueElementName, null) { }
 
         public override void Deserialize(XElement element)
         {
@@ -13,7 +13,7 @@ namespace RanseiLink.Core.Settings
 
         public override void Serialize(XElement element)
         {
-            element.Value = Value;
+            element.Value = Value ?? string.Empty;
         }
     }
 }

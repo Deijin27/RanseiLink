@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
-using RanseiLink.Windows.Settings;
 using System.Windows.Input;
 using RanseiLink.GuiCore.DragDrop;
 

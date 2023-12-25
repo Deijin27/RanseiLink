@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Settings;
-using RanseiLink.Windows.Settings;
 using RanseiLink.Windows.ViewModels;
 using System;
 using System.Windows;
@@ -43,16 +42,21 @@ public partial class MainWindow : Window
         {
             this.Height = dims.Height;
         }
-        if (dims.State == WindowState.Normal || dims.State == WindowState.Maximized)
+        if (dims.State == GuiCore.Settings.WindowState.Normal)
         {
-            this.WindowState = dims.State;
+            this.WindowState = System.Windows.WindowState.Normal;
+        }
+        else if (dims.State == GuiCore.Settings.WindowState.Maximized)
+        {
+            this.WindowState = System.Windows.WindowState.Maximized;
         }
     }
 
     private void SaveDimensions(ISettingService settingService)
     {
         var dimSetting = settingService.Get<WindowDimensionsSetting>();
-        dimSetting.Value = new WindowDimensions(Left, Top, Width, Height, WindowState);
+        dimSetting.Value = new WindowDimensions(Left, Top, Width, Height, 
+            WindowState == System.Windows.WindowState.Maximized ? GuiCore.Settings.WindowState.Maximized : GuiCore.Settings.WindowState.Normal);
         settingService.Save();
     }
 
@@ -68,14 +72,14 @@ public partial class MainWindow : Window
 
     private void MinimizeWindowButton_Click(object sender, RoutedEventArgs e)
     {
-        WindowState = WindowState.Minimized;
+        WindowState = System.Windows.WindowState.Minimized;
     }
 
     private void MaximizeWindowButton_Click(object sender, RoutedEventArgs e)
     {
-        WindowState = WindowState == WindowState.Maximized
-            ? WindowState.Normal
-            : WindowState.Maximized;
+        WindowState = WindowState == System.Windows.WindowState.Maximized
+            ? System.Windows.WindowState.Normal
+            : System.Windows.WindowState.Maximized;
     }
 
     protected override void OnContentRendered(EventArgs e)

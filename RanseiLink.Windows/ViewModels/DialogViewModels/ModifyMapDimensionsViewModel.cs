@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Services;
-
-namespace RanseiLink.Windows.ViewModels;
+﻿namespace RanseiLink.Windows.ViewModels;
 
 public class ModifyMapDimensionsViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
