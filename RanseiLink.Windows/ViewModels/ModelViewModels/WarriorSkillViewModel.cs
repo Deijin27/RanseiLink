@@ -29,7 +29,7 @@ public class WarriorSkillViewModel : ViewModelBase
         _cachedSpriteProvider = cachedSpriteProvider;
         _model = new WarriorSkill();
 
-        _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, wa.Id));
+        _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => { if (wa != null) jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, wa.Id); });
     }
 
     public void SetModel(WarriorSkillId id, WarriorSkill model)

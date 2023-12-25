@@ -48,7 +48,7 @@ public class MoveViewModel : ViewModelBase
         UpdatePreviewAnimation();
 
         JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
-        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => jumpService.JumpTo(PokemonSelectorEditorModule.Id, pk.Id));
+        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonSelectorEditorModule.Id, pk.Id); });
     }
 
     public void SetModel(MoveId id, Move model)
