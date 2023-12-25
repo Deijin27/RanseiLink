@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace RanseiLink.Windows.Services;
+namespace RanseiLink.GuiCore.Services;
 
 public interface IFallbackSpriteManager
 {

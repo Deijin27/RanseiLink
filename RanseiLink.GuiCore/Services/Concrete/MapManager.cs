@@ -6,7 +6,7 @@ using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 
 public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider overrideDataProvider, IMapService mapService) : IMapManager
 {

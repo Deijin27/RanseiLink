@@ -2,9 +2,8 @@
 
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Windows.ViewModels;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 
 public class IdToNameService(IServiceGetter serviceGetter) : IIdToNameService
 {

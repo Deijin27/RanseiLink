@@ -2,7 +2,7 @@
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IAsyncDialogService dialogService) : ISpriteManager
 {
     public async Task<bool> SetOverride(SpriteType type, int id, string requestFileMsg)

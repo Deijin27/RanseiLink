@@ -6,7 +6,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 
 public class FallbackSpriteManager(
     IAsyncDialogService dialogService,

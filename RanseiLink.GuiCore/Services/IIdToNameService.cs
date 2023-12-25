@@ -1,8 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Windows.ViewModels;
 
-namespace RanseiLink.Windows.Services;
+namespace RanseiLink.GuiCore.Services;
 
 public interface IIdToNameService
 {

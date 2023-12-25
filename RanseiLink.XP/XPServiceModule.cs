@@ -22,8 +22,6 @@ public class XPServiceModule : IModule
 
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
-        builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
-        builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
 
 
 
@@ -65,5 +63,12 @@ public class XPServiceModule : IModule
         //locator.Register<SimplifyPaletteDialog, SimplifyPaletteViewModel>();
 
         return locator;
+    }
+}
+
+public class XPModServiceModule : IModule
+{
+    public void Load(IRegistrator builder)
+    {
     }
 }

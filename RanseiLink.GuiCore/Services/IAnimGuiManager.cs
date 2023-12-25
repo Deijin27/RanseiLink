@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.Services;
+namespace RanseiLink.GuiCore.Services;
 
 public interface IAnimGuiManager
 {

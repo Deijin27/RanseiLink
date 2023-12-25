@@ -2,6 +2,7 @@
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.GuiCore.ViewModels;
 using RanseiLink.Windows.Services;
 using RanseiLink.Windows.ViewModels;
 using System.Collections.Generic;

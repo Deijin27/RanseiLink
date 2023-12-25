@@ -36,6 +36,7 @@ public partial class App : Application
             var modServiceGetter = new ModServiceGetterFactory(builder);
             modServiceGetter.AddModule(new CoreModServiceModule());
             modServiceGetter.AddModule(new GuiCoreModServiceModule());
+            modServiceGetter.AddModule(new XPModServiceModule());
             builder.RegisterInstance<IModServiceGetterFactory>(modServiceGetter);
 
             // Update Theme to match setting, this is done in construction

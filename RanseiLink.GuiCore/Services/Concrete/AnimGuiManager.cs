@@ -4,7 +4,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService dialogService, ISettingService settingService, ModInfo mod, IFolderDropHandler fdh) : IAnimGuiManager
 {
     public async Task<bool> Export(AnimationTypeId type, int id)

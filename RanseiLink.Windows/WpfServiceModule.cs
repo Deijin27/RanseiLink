@@ -26,8 +26,6 @@ public class WpfServiceModule : IModule
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
-        builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
-        builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
 
         builder.Register<MainWindowViewModel>(Reuse.Singleton);
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
@@ -87,12 +85,9 @@ public class WpfModServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.Register<IIdToNameService, IdToNameService>(Reuse.Singleton);
-        builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
+        
         builder.Register<ICachedSpriteProvider, CachedSpriteProvider>(Reuse.Singleton);
-        builder.Register<IMapManager, MapManager>(Reuse.Singleton);
-        builder.Register<IAnimGuiManager, AnimGuiManager>(Reuse.Singleton);
-
+        
         builder.Register<AbilityViewModel>();
         builder.Register<BaseWarriorViewModel>();
         builder.Register<BattleConfigViewModel>();
