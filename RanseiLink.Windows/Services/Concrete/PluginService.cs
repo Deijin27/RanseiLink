@@ -1,4 +1,5 @@
-﻿using RanseiLink.Windows.Dialogs;
+﻿#nullable enable
+using RanseiLink.Windows.Dialogs;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System.Windows;

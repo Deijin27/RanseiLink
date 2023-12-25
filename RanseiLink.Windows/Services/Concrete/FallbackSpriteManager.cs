@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿#nullable enable
+using FluentResults;
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
@@ -22,8 +23,8 @@ public class FallbackSpriteManager(
         {
             return;
         }
-        Exception error = null;
-        Result result = null;
+        Exception? error = null;
+        Result? result = null;
         dialogService.ProgressDialog(progress =>
         {
             try
@@ -44,7 +45,7 @@ public class FallbackSpriteManager(
                 type: MessageBoxType.Error
                 ));
         }
-        else if (!result.IsSuccess)
+        else if (!result!.IsSuccess)
         {
             dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Failed to Populate Default Sprites",

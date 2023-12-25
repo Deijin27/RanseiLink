@@ -1,7 +1,6 @@
-﻿using RanseiLink.Core.Resources;
+﻿#nullable enable
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.ViewModels;
-using System.IO;
 
 namespace RanseiLink.Windows.Services.Concrete;
 public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService) : ISpriteManager
@@ -11,14 +10,14 @@ public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialog
         var file = dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
         {
             Title = requestFileMsg,
-            Filters = new()
-            {
+            Filters =
+            [
                 new()
                 {
                     Name = "PNG Image (.png)",
-                    Extensions = new() { ".png" }
+                    Extensions = [".png"]
                 }
-            }
+            ]
         });
         if (string.IsNullOrEmpty(file))
         {
@@ -48,12 +47,12 @@ public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialog
                 var result = dialogService.ShowMessageBox(new MessageBoxSettings(
                     Title: "Invalid dimensions",
                     Message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
-                    Buttons: new[]
-                    {
+                    Buttons:
+                    [
                         new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
                         new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
                         new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
-                    },
+                    ],
                     DefaultResult: MessageBoxResult.Cancel
                     ));
 

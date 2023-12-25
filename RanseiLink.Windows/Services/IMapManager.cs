@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Maps;
+﻿#nullable enable
+using RanseiLink.Core.Maps;
 
 namespace RanseiLink.Windows.Services;
 

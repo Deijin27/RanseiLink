@@ -1,4 +1,5 @@
-﻿using RanseiLink.Windows.ViewModels;
+﻿#nullable enable
+using RanseiLink.Windows.ViewModels;
 
 namespace RanseiLink.Windows.Services.Concrete;
 

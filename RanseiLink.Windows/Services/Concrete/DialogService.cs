@@ -15,8 +15,8 @@ internal static class DialogLocatorExtensions
 
 internal class DialogService(IDialogLocator locator) : IDialogService
 {
-    private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
-    private System.Windows.Window? MainWindow
+    private static Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
+    private static System.Windows.Window? MainWindow
     {
         get 
         {

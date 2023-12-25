@@ -1,4 +1,5 @@
-﻿namespace RanseiLink.Windows.Services;
+﻿#nullable enable
+namespace RanseiLink.Windows.Services;
 
 public interface IJumpService
 {

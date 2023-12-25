@@ -8,7 +8,7 @@ namespace RanseiLink.Windows.Services.Concrete;
 public class CachedSpriteProvider : ICachedSpriteProvider
 {
     private readonly IOverrideDataProvider _overrideDataProvider;
-    private readonly Dictionary<int, ImageSource?> _cache = new();
+    private readonly Dictionary<int, ImageSource?> _cache = [];
 
     public CachedSpriteProvider(IOverrideDataProvider overrideDataProvider)
     {

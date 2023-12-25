@@ -1,5 +1,6 @@
-﻿using RanseiLink.Core.Enums;
-using System.IO;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
+
 
 namespace RanseiLink.Windows.Services.Concrete;
 
@@ -16,12 +17,12 @@ internal class ExternalService : IExternalService
         _moveMovementAnimationFile = Path.Combine(_externalDirectory, "MoveMovementAnimations.txt");
     }
 
-    private Dictionary<MoveAnimationId, string> _moveAnimationCache;
+    private Dictionary<MoveAnimationId, string>? _moveAnimationCache;
     public string GetMoveAnimationUri(MoveAnimationId id)
     {
         if (_moveAnimationCache == null)
         {
-            _moveAnimationCache = new Dictionary<MoveAnimationId, string>();
+            _moveAnimationCache = [];
             if (!File.Exists(_moveAnimationFile))
             {
                 return "";
@@ -33,19 +34,19 @@ internal class ExternalService : IExternalService
                 count++;
             }
         }
-        if (_moveAnimationCache.TryGetValue(id, out string uri))
+        if (_moveAnimationCache.TryGetValue(id, out string? uri))
         {
             return uri;
         }
         return "";
     }
 
-    private Dictionary<MoveMovementAnimationId, string> _moveMovementAnimationCache;
+    private Dictionary<MoveMovementAnimationId, string>? _moveMovementAnimationCache;
     public string GetMoveMovementAnimationUri(MoveMovementAnimationId id)
     {
         if (_moveMovementAnimationCache == null)
         {
-            _moveMovementAnimationCache = new Dictionary<MoveMovementAnimationId, string>();
+            _moveMovementAnimationCache = [];
             if (!File.Exists(_moveMovementAnimationFile))
             {
                 return "";
@@ -57,7 +58,7 @@ internal class ExternalService : IExternalService
                 count++;
             }
         }
-        if (_moveMovementAnimationCache.TryGetValue(id, out string uri))
+        if (_moveMovementAnimationCache.TryGetValue(id, out string? uri))
         {
             return uri;
         }
