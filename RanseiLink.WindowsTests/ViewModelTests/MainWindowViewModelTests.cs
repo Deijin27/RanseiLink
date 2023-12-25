@@ -21,7 +21,7 @@ public class MainWindowViewModelTests
         _mockFallbackSpriteManager = new Mock<IFallbackSpriteManager>();
 
         _mainWindowVm = new MainWindowViewModel(
-            new Mock<IDialogService>().Object,
+            new Mock<IAsyncDialogService>().Object,
             new Mock<IPluginLoader>().Object,
             _mockThemeService.Object,
             _mockModSelectionVm.Object,

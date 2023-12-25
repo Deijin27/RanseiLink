@@ -32,9 +32,8 @@ public class WpfServiceModule : IModule
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
 
         builder.RegisterDelegate(context =>
-            new ModListItemViewModelFactory((parent, mod) =>
+            new ModListItemViewModelFactory((mod) =>
                 new ModListItemViewModel(
-                    parent,
                     mod,
                     context.Resolve<IModManager>(),
                     context.Resolve<IModPatchingService>(),

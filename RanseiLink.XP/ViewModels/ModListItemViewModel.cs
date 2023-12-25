@@ -228,18 +228,18 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _parentVm.ModItems.Remove(this);
     }
 
-    private void RunPlugin(ModInfo mod, PluginInfo chosen)
+    private async Task RunPlugin(ModInfo mod, PluginInfo chosen)
     {
         try
         {
             using (var serviceGetter = _modKernelFactory.Create(mod))
             {
-                chosen.Plugin.Run(new PluginContext(serviceGetter));
+                await chosen.Plugin.Run(new PluginContext(serviceGetter));
             }
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.ToString(),
                 type: MessageBoxType.Error

@@ -19,7 +19,6 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
-    private readonly IAsyncDialogService _asyncDialogService;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
 
@@ -79,19 +78,31 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public void RefreshModItems()
     {
+        // If necessary, I could do the stuff before showing the dialog for the fast things, then not have to do this locking
         lock (_modItemsLock)
         {
             ModItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
-                ModItems.Add(_itemViewModelFactory(this, mi));
+                var item = _itemViewModelFactory(mi);
+                item.RequestRefresh += RefreshModItems;
+                item.RequestRemove += RemoveItem;
+                ModItems.Add(item);
             }
+        }
+    }
+
+    private void RemoveItem(IModListItemViewModel mod)
+    {
+        lock (_modItemsLock)
+        {
+            ModItems.Remove(mod);
         }
     }
 
     private async Task CreateMod()
     {
-        var vm = new ModCreationViewModel(_asyncDialogService, _settingService, _fdhFactory);
+        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -120,7 +131,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     }
     private async Task ImportMod()
     {
-        var vm = new ModImportViewModel(_asyncDialogService, _fdhFactory);
+        var vm = new ModImportViewModel(_dialogService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -150,7 +161,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private async Task UpgradeOutdatedMods()
     {
-        var vm = new ModUpgradeViewModel(_asyncDialogService, _settingService, _fdhFactory);
+        var vm = new ModUpgradeViewModel(_dialogService, _settingService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
