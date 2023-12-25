@@ -20,6 +20,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
+    private readonly IAsyncDialogService _asyncDialogService;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
 
@@ -47,13 +48,15 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteManager fallbackManager,
-        IFileDropHandlerFactory fdhFactory)
+        IFileDropHandlerFactory fdhFactory,
+        IAsyncDialogService asyncDialogService)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
         _fdhFactory = fdhFactory;
+        _asyncDialogService = asyncDialogService;
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
@@ -91,7 +94,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private void CreateMod()
     {
-        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory);
+        var vm = new ModCreationViewModel(_asyncDialogService, _settingService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -120,7 +123,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     }
     private void ImportMod()
     {
-        var vm = new ModImportViewModel(_dialogService, _fdhFactory);
+        var vm = new ModImportViewModel(_asyncDialogService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -150,7 +153,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private void UpgradeOutdatedMods()
     {
-        var vm = new ModUpgradeViewModel(_dialogService, _settingService, _fdhFactory);
+        var vm = new ModUpgradeViewModel(_asyncDialogService, _settingService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;

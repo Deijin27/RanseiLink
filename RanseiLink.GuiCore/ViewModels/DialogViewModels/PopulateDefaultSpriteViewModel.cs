@@ -1,26 +1,26 @@
 ﻿using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
-public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
+public class PopulateDefaultSpriteViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
-    public ModUpgradeViewModel(IDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
+    public PopulateDefaultSpriteViewModel(IAsyncDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
         RomDropHandler = fdhFactory.NewRomDropHandler();
-        File = _recentLoadRomSetting.Value;
+        _file = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
         {
             File = f;
         };
 
-        FilePickerCommand = new RelayCommand(() =>
+        FilePickerCommand = new RelayCommand(async () =>
         {
-            var file = dialogService.RequestRomFile();
+            var file = await dialogService.RequestRomFile();
             if (!string.IsNullOrEmpty(file))
             {
                 File = file;
@@ -52,10 +52,11 @@ public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public void OnClosing(bool result)
     {
         Result = result;
-        if (result)
+        if (Result)
         {
             _recentLoadRomSetting.Value = File;
             _settingService.Save();
         }
     }
 }
+

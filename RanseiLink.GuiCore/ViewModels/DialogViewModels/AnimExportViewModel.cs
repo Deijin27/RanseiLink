@@ -2,7 +2,7 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
@@ -16,7 +16,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         _selectedFormat = initialSelectedFormat;
         _settingService = settingService;
         _recentExportModFolderSetting = settingService.Get<RecentExportAnimFolderSetting>();
-        Folder = _recentExportModFolderSetting.Value;
+        _folder = _recentExportModFolderSetting.Value;
         ModInfo = modInfo;
         FolderDropHandler = folderDropHandler;
         FolderDropHandler.FolderDropped += f =>
@@ -74,7 +74,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         }
     }
 
-    public bool OkEnabled => _folder != null && System.IO.Directory.Exists(_folder);
+    public bool OkEnabled => _folder != null && Directory.Exists(_folder);
 
     public ModInfo ModInfo { get; }
 

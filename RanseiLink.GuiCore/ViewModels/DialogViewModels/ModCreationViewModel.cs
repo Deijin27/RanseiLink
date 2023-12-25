@@ -2,30 +2,23 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.XP.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
-public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
+public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
-    private string _file;
-    private bool _includeSprites = true;
-    private readonly RecentCommitRomSetting _recentCommitRomSetting;
-    private readonly PatchSpritesSetting _patchSpritesSetting;
+    private readonly RecentLoadRomSetting _recentLoadRomSetting;
     private readonly ISettingService _settingService;
-
-    public ModCommitViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
+    public ModCreationViewModel(IAsyncDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
-        _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();
-        _patchSpritesSetting = settingService.Get<PatchSpritesSetting>();
-        ModInfo = modInfo;
+        _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
+        ModInfo = new ModInfo();
         RomDropHandler = fdhFactory.NewRomDropHandler();
+        _file = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
         {
             File = f;
         };
-
-        File = _recentCommitRomSetting.Value;
-        _includeSprites = _patchSpritesSetting.Value;
 
         FilePickerCommand = new RelayCommand(async () =>
         {
@@ -38,29 +31,26 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
     }
 
     public bool Result { get; private set; }
-    public PatchOptions PatchOpt { get; private set; }
     public void OnClosing(bool result)
     {
         Result = result;
-
         if (result)
         {
-            _recentCommitRomSetting.Value = File;
-            _patchSpritesSetting.Value = IncludeSprites;
+            _recentLoadRomSetting.Value = File!;
             _settingService.Save();
-            
-            if (IncludeSprites)
-            {
-                PatchOpt |= PatchOptions.IncludeSprites;
-            }
         }
+        else
+        {
+            File = string.Empty;
+        }
+        
     }
 
     public ICommand FilePickerCommand { get; }
 
     public IFileDropHandler RomDropHandler { get; }
 
-    
+    private string _file;
     public string File
     {
         get => _file;
@@ -75,11 +65,23 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
-    public bool IncludeSprites
+    public ModInfo ModInfo { get; }
+
+    public string? Name
     {
-        get => _includeSprites;
-        set => RaiseAndSetIfChanged(ref _includeSprites, value);
+        get => ModInfo.Name;
+        set => RaiseAndSetIfChanged(ModInfo.Name, value, v => ModInfo.Name = v);
     }
 
-    public ModInfo ModInfo { get; }
+    public string? Author
+    {
+        get => ModInfo.Author;
+        set => RaiseAndSetIfChanged(ModInfo.Author, value, v => ModInfo.Author = v);
+    }
+
+    public string? Version
+    {
+        get => ModInfo.Version;
+        set => RaiseAndSetIfChanged(ModInfo.Version, value, v => ModInfo.Version = v);
+    }
 }

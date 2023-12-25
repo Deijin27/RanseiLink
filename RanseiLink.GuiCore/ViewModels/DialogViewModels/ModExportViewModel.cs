@@ -2,17 +2,17 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly ISettingService _settingService;
     private readonly RecentExportModFolderSetting _recentExportModFolderSetting;
-    public ModExportViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFolderDropHandler folderDropHandler)
+    public ModExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFolderDropHandler folderDropHandler)
     {
         _settingService = settingService;
         _recentExportModFolderSetting = settingService.Get<RecentExportModFolderSetting>();
-        Folder = _recentExportModFolderSetting.Value;
+        _folder = _recentExportModFolderSetting.Value;
         ModInfo = modInfo;
         FolderDropHandler = folderDropHandler;
         FolderDropHandler.FolderDropped += f =>
@@ -20,9 +20,9 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
             Folder = f;
         };
 
-        FolderPickerCommand = new RelayCommand(() =>
+        FolderPickerCommand = new RelayCommand(async () =>
         {
-            var folder = dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings { Title = "Select a folder to export the mod into" });
+            var folder = await dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings { Title = "Select a folder to export the mod into" });
             if (!string.IsNullOrEmpty(folder))
             {
                 Folder = folder;
@@ -37,7 +37,7 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         Result = result;
         if (result)
         {
-            _recentExportModFolderSetting.Value = Folder;
+            _recentExportModFolderSetting.Value = Folder!;
             _settingService.Save();
         }
     }

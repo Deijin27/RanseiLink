@@ -4,7 +4,7 @@ using RanseiLink.GuiCore.DragDrop;
 using System.IO.Compression;
 using System.Xml.Linq;
 
-namespace RanseiLink.XP.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
@@ -14,6 +14,7 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         _dialogService = dialogService;
         ModDropHandler = fdhFactory.NewModDropHandler();
         ModDropHandler.FileDropped += SafeSetAndPreviewFile;
+        _file = string.Empty;
 
         FilePickerCommand = new RelayCommand(async () =>
         {
@@ -29,10 +30,10 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     {
         try
         {
-            ModInfo modInfo;
+            ModInfo? modInfo;
             using (ZipArchive zip = ZipFile.OpenRead(file))
             {
-                ZipArchiveEntry entry = zip.GetEntry(ModManager.ModInfoFileName);
+                ZipArchiveEntry? entry = zip.GetEntry(ModManager.ModInfoFileName);
                 if (entry == null)
                 {
                     throw new Exception("Failed to load mod because ModInfoFile not found.");
@@ -84,8 +85,8 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
-    private ModInfo _modInfo;
-    public ModInfo ModInfo
+    private ModInfo? _modInfo;
+    public ModInfo? ModInfo
     {
         get => _modInfo;
         set => RaiseAndSetIfChanged(ref _modInfo, value);

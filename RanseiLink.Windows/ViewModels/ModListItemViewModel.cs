@@ -21,6 +21,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly IModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _asyncDialogService;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
@@ -33,6 +34,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         IModManager modManager,
         IModPatchingService modPatcher,
         IDialogService dialogService,
+        IAsyncDialogService asyncDialogService,
         ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
@@ -46,6 +48,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _parentVm = parent;
         _modService = modManager;
         _dialogService = dialogService;
+        _asyncDialogService = asyncDialogService;
         _modPatcher = modPatcher;
         Mod = mod;
         PluginItems = pluginLoader.LoadPlugins(out var _);
@@ -90,7 +93,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private void PatchRom(ModInfo mod)
     {
-        var vm = new ModCommitViewModel(_dialogService, _settingService, mod, _fdhFactory);
+        var vm = new ModCommitViewModel(_asyncDialogService, _settingService, mod, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -127,7 +130,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private void ExportMod(ModInfo mod)
     {
-        var vm = new ModExportViewModel(_dialogService, _settingService, mod, _folderDropHandler);
+        var vm = new ModExportViewModel(_asyncDialogService, _settingService, mod, _folderDropHandler);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;

@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 
-namespace RanseiLink.XP.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class ModEditInfoViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
@@ -18,19 +18,19 @@ public class ModEditInfoViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public ModInfo ModInfo { get; }
 
-    public string Name
+    public string? Name
     {
         get => ModInfo.Name;
         set => RaiseAndSetIfChanged(ModInfo.Name, value, v => ModInfo.Name = v);
     }
 
-    public string Author
+    public string? Author
     {
         get => ModInfo.Author;
         set => RaiseAndSetIfChanged(ModInfo.Author, value, v => ModInfo.Author = v);
     }
 
-    public string Version
+    public string? Version
     {
         get => ModInfo.Version;
         set => RaiseAndSetIfChanged(ModInfo.Version, value, v => ModInfo.Version = v);

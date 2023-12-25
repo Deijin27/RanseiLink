@@ -2,7 +2,7 @@
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
@@ -12,7 +12,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
     private readonly PatchSpritesSetting _patchSpritesSetting;
     private readonly ISettingService _settingService;
 
-    public ModCommitViewModel(IDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
+    public ModCommitViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();
@@ -24,12 +24,12 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
             File = f;
         };
 
-        File = _recentCommitRomSetting.Value;
+        _file = _recentCommitRomSetting.Value;
         _includeSprites = _patchSpritesSetting.Value;
 
-        FilePickerCommand = new RelayCommand(() =>
+        FilePickerCommand = new RelayCommand(async () =>
         {
-            var file = dialogService.RequestRomFile();
+            var file = await dialogService.RequestRomFile();
             if (!string.IsNullOrEmpty(file))
             {
                 File = file;

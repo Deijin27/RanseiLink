@@ -23,6 +23,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
+    private readonly IAsyncDialogService _asyncDialogService;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
@@ -38,10 +39,12 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IEnumerable<EditorModule> modules,
-        IFileDropHandlerFactory fdhFactory)
+        IFileDropHandlerFactory fdhFactory,
+        IAsyncDialogService asyncDialogService)
     {
         _modKernelFactory = modKernelFactory;
         _fdhFactory = fdhFactory;
+        _asyncDialogService = asyncDialogService;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
         _settingService = settingService;
@@ -263,7 +266,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void CommitRom()
     {
-        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod, _fdhFactory);
+        var vm = new ModCommitViewModel(_asyncDialogService, _settingService, Mod, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;

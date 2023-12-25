@@ -10,8 +10,4 @@
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ViewModels\DialogViewModels\" />
-  </ItemGroup>
-
 </Project>

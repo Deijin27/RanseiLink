@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 
-namespace RanseiLink.XP.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class ModDeleteViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {

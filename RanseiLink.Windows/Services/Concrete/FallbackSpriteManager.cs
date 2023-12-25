@@ -4,15 +4,20 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
-using RanseiLink.Windows.ViewModels;
 
 namespace RanseiLink.Windows.Services.Concrete;
 
-public class FallbackSpriteManager(IDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider, IFileDropHandlerFactory fdhFactory) : IFallbackSpriteManager
+public class FallbackSpriteManager(
+    IDialogService dialogService,
+    IAsyncDialogService asyncDialogService,
+    ISettingService settingService, 
+    IFallbackDataProvider fallbackDataProvider, 
+    IFileDropHandlerFactory fdhFactory
+    ) : IFallbackSpriteManager
 {
     public void PopulateGraphicsDefaults()
     {
-        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService, fdhFactory);
+        var vm = new PopulateDefaultSpriteViewModel(asyncDialogService, settingService, fdhFactory);
         if (!dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -55,7 +60,7 @@ public class FallbackSpriteManager(IDialogService dialogService, ISettingService
         {
             return;
         }
-        var result = dialogService.ShowMessageBox(new MessageBoxSettings(
+        var result = dialogService.ShowMessageBox(new(
             "Welcome To RanseiLink",
             "On of the first steps when using RanseiLink is to 'Populate Graphics Defaults'. " +
             "You provide an unchanged copy of the pokemon conquest rom, and the sprites are extracted from it.\n" +
@@ -63,11 +68,10 @@ public class FallbackSpriteManager(IDialogService dialogService, ISettingService
             "1. You are able to patch with mods that modify sprites\n" +
             "2. You are able to create mods that modify sprites\n" +
             "3. You will see images in various places that improve the experience using this tool\n",
-            new MessageBoxButton[]
-            {
-                    new MessageBoxButton("Populate Graphics Now", MessageBoxResult.Yes),
-                    new MessageBoxButton("Later", MessageBoxResult.No)
-            },
+            [
+                new("Populate Graphics Now", MessageBoxResult.Yes),
+                new("Later", MessageBoxResult.No)
+            ],
             DefaultResult: MessageBoxResult.Yes
             ));
 

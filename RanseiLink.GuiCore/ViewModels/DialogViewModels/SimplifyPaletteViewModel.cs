@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Windows.ViewModels;
+﻿namespace RanseiLink.GuiCore.ViewModels;
 
 public class SimplifyPaletteViewModel : IModalDialogViewModel<bool>
 {
