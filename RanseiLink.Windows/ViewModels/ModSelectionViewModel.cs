@@ -10,7 +10,6 @@ public interface IModSelectionViewModel
 {
     event Action<ModInfo> ModSelected;
     ObservableCollection<IModListItemViewModel> ModItems { get; }
-    void RefreshModItems();
 }
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
