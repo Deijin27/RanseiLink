@@ -7,6 +7,7 @@ using RanseiLink.XP.ViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.XP.Services;
 
@@ -16,11 +17,12 @@ public interface IFallbackSpriteManager
     Task PopulateGraphicsDefaults();
 }
 
-public class FallbackSpriteManager(IAsyncDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider) : IFallbackSpriteManager
+public class FallbackSpriteManager(IAsyncDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider,
+    IFileDropHandlerFactory fdhFactory) : IFallbackSpriteManager
 {
     public async Task PopulateGraphicsDefaults()
     {
-        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService);
+        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService, fdhFactory);
         if (!await dialogService.ShowDialogWithResult(vm))
         {
             return;

@@ -1,6 +1,7 @@
 ﻿using Avalonia.Media;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.XP.ValueConverters;
@@ -27,6 +28,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IModPatchingService _modPatcher;
+    private readonly IFileDropHandlerFactory _fdhFactory;
+    private readonly IFolderDropHandler _folderDropHandler;
 
     public ModListItemViewModel(
         IModSelectionViewModel parent,
@@ -36,10 +39,14 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         IAsyncDialogService dialogService,
         ISettingService settingService,
         IPluginLoader pluginLoader,
-        IModServiceGetterFactory modKernelFactory)
+        IModServiceGetterFactory modKernelFactory,
+        IFileDropHandlerFactory fdhFactory,
+        IFolderDropHandler folderDropHandler)
     {
         _settingService = settingService;
         _modKernelFactory = modKernelFactory;
+        _fdhFactory = fdhFactory;
+        _folderDropHandler = folderDropHandler;
         _parentVm = parent;
         _modService = modManager;
         _dialogService = dialogService;
@@ -93,7 +100,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private async Task PatchRom(ModInfo mod)
     {
-        var vm = new ModCommitViewModel(_dialogService, _settingService, mod);
+        var vm = new ModCommitViewModel(_dialogService, _settingService, mod, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -130,7 +137,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private async Task ExportMod(ModInfo mod)
     {
-        var vm = new ModExportViewModel(_dialogService, _settingService, mod);
+        var vm = new ModExportViewModel(_dialogService, _settingService, mod, _folderDropHandler);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;

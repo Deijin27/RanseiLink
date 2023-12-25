@@ -2,6 +2,7 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.Windows.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Windows.Services.Concrete;
-internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogService _dialogService, ISettingService _settingService, ModInfo _mod) : IAnimGuiManager
+internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService dialogService, ISettingService settingService, ModInfo mod, IFolderDropHandler fdh) : IAnimGuiManager
 {
     public async Task<bool> Export(AnimationTypeId type, int id)
     {
@@ -27,20 +28,20 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogServic
             format = info.ExportFormat.Value;
         }
 
-        var dialogVm = new AnimExportViewModel(_dialogService, _settingService, _mod, formats, format);
-        if (!await _dialogService.ShowDialogWithResult(dialogVm))
+        var dialogVm = new AnimExportViewModel(dialogService, settingService, mod, formats, format, fdh);
+        if (!await dialogService.ShowDialogWithResult(dialogVm))
         {
             return false;
         }
 
-        _manager.Export(type, id, FileUtil.MakeUniquePath(Path.Combine(dialogVm.Folder, $"anim_{type}_{id}")), dialogVm.SelectedFormat);
+        manager.Export(type, id, FileUtil.MakeUniquePath(Path.Combine(dialogVm.Folder, $"anim_{type}_{id}")), dialogVm.SelectedFormat);
         return true;
     }
 
     public async Task<bool> Import(AnimationTypeId type, int id)
     {
         var filters = new List<FileDialogFilter>();
-        var current = _manager.GetDataFile(type, id);
+        var current = manager.GetDataFile(type, id);
         bool chooseBackgroundFile;
         if (File.Exists(current.AnimationLink.File)) // if there's no animation, e.g. for Castlemap aurora, we just ask for a background
         {
@@ -53,7 +54,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogServic
             filters.Add(new FileDialogFilter("Animation Background Image", ".png"));
         }
 
-        var file = await _dialogService.ShowOpenSingleFileDialog(new("Choose a file to import", filters.ToArray()));
+        var file = await dialogService.ShowOpenSingleFileDialog(new("Choose a file to import", filters.ToArray()));
 
         if (file == null)
         {
@@ -72,14 +73,14 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogServic
             background = Path.Combine(Path.GetDirectoryName(file)!, "background.png");
         }
         
-        _manager.Import(type, id, animation, background);
+        manager.Import(type, id, animation, background);
 
         return true;
     }
 
     public bool IsOverriden(AnimationTypeId type, int id)
     {
-        var (anim, bg) = _manager.GetDataFile(type, id);
+        var (anim, bg) = manager.GetDataFile(type, id);
         return anim.IsOverride || (bg != null && bg.IsOverride);
     }
 
@@ -89,7 +90,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogServic
         {
             return false;
         }
-        var result = await _dialogService.ShowMessageBox(new(
+        var result = await dialogService.ShowMessageBox(new(
             $"Revert animation to default?",
             "Confirm to permanently delete the internally stored animation and/or background which overrides the default",
             [
@@ -102,7 +103,7 @@ internal class AnimGuiManager(ICellAnimationManager _manager, IAsyncDialogServic
         {
             return false;
         }
-        _manager.ClearOverride(type, id);
+        manager.ClearOverride(type, id);
         return true;
     }
 }

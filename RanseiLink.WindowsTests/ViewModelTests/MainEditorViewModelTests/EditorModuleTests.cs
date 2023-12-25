@@ -1,6 +1,8 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.DragDrop;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.GuiCore.Services;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
@@ -70,7 +72,8 @@ public class EditorModuleTests
             _settingService.Object,
             new Mock<IPluginLoader>().Object,
             _modServiceGetterFactory.Object,
-            new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object }
+            new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object },
+            new FileDropHandlerFactory()
             );
 
         _mainEditorVm.SetMod(null);

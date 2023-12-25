@@ -1,6 +1,7 @@
 ﻿using Avalonia.Threading;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.XP.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -23,6 +24,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
+    private readonly IFileDropHandlerFactory _fdhFactory;
     private bool _outdatedModsExist;
 
     public bool OutdatedModsExist
@@ -51,12 +53,14 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteManager fallbackManager,
-        IThemeService themeService)
+        IThemeService themeService,
+        IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
+        _fdhFactory = fdhFactory;
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
 
@@ -95,7 +99,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private async Task CreateMod()
     {
-        var vm = new ModCreationViewModel(_dialogService, _settingService);
+        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -124,7 +128,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     }
     private async Task ImportMod()
     {
-        var vm = new ModImportViewModel(_dialogService);
+        var vm = new ModImportViewModel(_dialogService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -154,7 +158,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private async Task UpgradeOutdatedMods()
     {
-        var vm = new ModUpgradeViewModel(_dialogService, _settingService);
+        var vm = new ModUpgradeViewModel(_dialogService, _settingService, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;

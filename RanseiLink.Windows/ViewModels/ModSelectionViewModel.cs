@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Data;
 using RanseiLink.Core.Settings;
 using RanseiLink.Windows.Services;
+using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -21,6 +22,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly IDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
+    private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly object _modItemsLock = new();
     private bool _outdatedModsExist;
 
@@ -47,13 +49,14 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         IDialogService dialogService,
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
-        IFallbackSpriteManager fallbackManager)
+        IFallbackSpriteManager fallbackManager,
+        IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
-
+        _fdhFactory = fdhFactory;
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
@@ -91,7 +94,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private void CreateMod()
     {
-        var vm = new ModCreationViewModel(_dialogService, _settingService);
+        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -120,7 +123,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     }
     private void ImportMod()
     {
-        var vm = new ModImportViewModel(_dialogService);
+        var vm = new ModImportViewModel(_dialogService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -150,7 +153,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private void UpgradeOutdatedMods()
     {
-        var vm = new ModUpgradeViewModel(_dialogService, _settingService);
+        var vm = new ModUpgradeViewModel(_dialogService, _settingService, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;

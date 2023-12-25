@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Windows.Settings;
@@ -26,6 +27,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly IModPatchingService _modPatcher;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
+    private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
@@ -40,9 +42,11 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
-        IEnumerable<EditorModule> modules)
+        IEnumerable<EditorModule> modules,
+        IFileDropHandlerFactory fdhFactory)
     {
         _modKernelFactory = modKernelFactory;
+        _fdhFactory = fdhFactory;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
         _settingService = settingService;
@@ -264,7 +268,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void CommitRom()
     {
-        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod);
+        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod, _fdhFactory);
         if (!_dialogService.ShowDialogWithResult(vm))
         {
             return;

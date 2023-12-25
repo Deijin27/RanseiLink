@@ -42,7 +42,9 @@ public class XPServiceModule : IModule
                     context.Resolve<IAsyncDialogService>(),
                     context.Resolve<ISettingService>(),
                     context.Resolve<IPluginLoader>(),
-                    context.Resolve<IModServiceGetterFactory>()
+                    context.Resolve<IModServiceGetterFactory>(),
+                    context.Resolve<IFileDropHandlerFactory>(),
+                    context.Resolve<IFolderDropHandler>()
             )), Reuse.Singleton);
     }
 

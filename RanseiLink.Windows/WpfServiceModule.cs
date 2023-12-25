@@ -43,7 +43,9 @@ public class WpfServiceModule : IModule
                     context.Resolve<IDialogService>(),
                     context.Resolve<ISettingService>(),
                     context.Resolve<IPluginLoader>(),
-                    context.Resolve<IModServiceGetterFactory>()
+                    context.Resolve<IModServiceGetterFactory>(),
+                    context.Resolve<IFileDropHandlerFactory>(),
+                    context.Resolve<IFolderDropHandler>()
             )), Reuse.Singleton);
 
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);

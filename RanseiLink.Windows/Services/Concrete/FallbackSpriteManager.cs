@@ -3,17 +3,18 @@ using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.Windows.ViewModels;
 using System;
 using System.Linq;
 
 namespace RanseiLink.Windows.Services.Concrete;
 
-public class FallbackSpriteManager(IDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider) : IFallbackSpriteManager
+public class FallbackSpriteManager(IDialogService dialogService, ISettingService settingService, IFallbackDataProvider fallbackDataProvider, IFileDropHandlerFactory fdhFactory) : IFallbackSpriteManager
 {
     public void PopulateGraphicsDefaults()
     {
-        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService);
+        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService, fdhFactory);
         if (!dialogService.ShowDialogWithResult(vm))
         {
             return;
