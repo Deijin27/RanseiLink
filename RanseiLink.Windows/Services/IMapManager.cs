@@ -5,12 +5,12 @@ namespace RanseiLink.Windows.Services;
 
 public interface IMapManager
 {
-    public bool IsOverriden(MapId id);
-    public bool ExportPac(MapId id);
-    public bool ImportPac(MapId id);
-    public bool ExportObj(MapId id);
-    public bool ImportObj(MapId id);
-    public bool ExportPslm(MapId id);
-    public bool ImportPslm(MapId id);
-    bool RevertModelToDefault(MapId id);
+    bool IsOverriden(MapId id);
+    Task<bool> ExportPac(MapId id);
+    Task<bool> ImportPac(MapId id);
+    Task<bool> ExportObj(MapId id);
+    Task<bool> ImportObj(MapId id);
+    Task<bool> ExportPslm(MapId id);
+    Task<bool> ImportPslm(MapId id);
+    Task<bool> RevertModelToDefault(MapId id);
 }

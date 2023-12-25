@@ -93,9 +93,9 @@ public class SpriteItemViewModel : ViewModelBase
         _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }
 
-    private void SetOverride()
+    private async void SetOverride()
     {
-        if (_spriteManager.SetOverride(_spriteType, Id, $"Pick a file to replace sprite '{Id}' with"))
+        if (await _spriteManager.SetOverride(_spriteType, Id, $"Pick a file to replace sprite '{Id}' with"))
         {
             var file = _spriteProvider.GetSpriteFile(_spriteType, Id);
             _displayFile = file.File;

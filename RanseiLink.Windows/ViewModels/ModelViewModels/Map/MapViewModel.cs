@@ -401,47 +401,47 @@ public class MapViewModel : ViewModelBase
         window.ShowDialog();
     }
 
-    public void Revert3dModel()
+    public async void Revert3dModel()
     {
-        _mapManager.RevertModelToDefault(_id);
+        await _mapManager.RevertModelToDefault(_id);
         RaisePropertyChanged(nameof(Is3dModelOverriden));
     }
 
-    private void ImportObj()
+    private async void ImportObj()
     {
-        _mapManager.ImportObj(_id);
+        await _mapManager.ImportObj(_id);
         RaisePropertyChanged(nameof(Is3dModelOverriden));
     }
 
-    private void ExportObj()
+    private async void ExportObj()
     {
-        _mapManager.ExportObj(_id);
+        await _mapManager.ExportObj(_id);
     }
 
-    private void ImportPac()
+    private async void ImportPac()
     {
-        _mapManager.ImportPac(_id);
+        await _mapManager.ImportPac(_id);
         RaisePropertyChanged(nameof(Is3dModelOverriden));
     }
 
-    private void ExportPac()
+    private async void ExportPac()
     {
-        _mapManager.ExportPac(_id);
+        await _mapManager.ExportPac(_id);
     }
 
-    private void ImportPslm()
+    private async void ImportPslm()
     {
-        if (!_mapManager.ImportPslm(_id))
+        if (!await _mapManager.ImportPslm(_id))
         {
             return;
         }
         RequestReload.Invoke(this, EventArgs.Empty);
     }
 
-    private void ExportPslm()
+    private async void ExportPslm()
     {
         RequestSave.Invoke(this, EventArgs.Empty);
-        if (!_mapManager.ExportPslm(_id))
+        if (!await _mapManager.ExportPslm(_id))
         {
             return;
         }

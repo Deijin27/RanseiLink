@@ -9,23 +9,22 @@ using RanseiLink.GuiCore.DragDrop;
 namespace RanseiLink.Windows.Services.Concrete;
 
 public class FallbackSpriteManager(
-    IDialogService dialogService,
-    IAsyncDialogService asyncDialogService,
+    IAsyncDialogService dialogService,
     ISettingService settingService, 
     IFallbackDataProvider fallbackDataProvider, 
     IFileDropHandlerFactory fdhFactory
     ) : IFallbackSpriteManager
 {
-    public void PopulateGraphicsDefaults()
+    public async Task PopulateGraphicsDefaults()
     {
-        var vm = new PopulateDefaultSpriteViewModel(asyncDialogService, settingService, fdhFactory);
-        if (!dialogService.ShowDialogWithResult(vm))
+        var vm = new PopulateDefaultSpriteViewModel(dialogService, settingService, fdhFactory);
+        if (!await dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
         Exception? error = null;
         Result? result = null;
-        dialogService.ProgressDialog(progress =>
+        await dialogService.ProgressDialog(progress =>
         {
             try
             {
@@ -39,7 +38,7 @@ public class FallbackSpriteManager(
 
         if (error != null)
         {
-            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Error Populating Default Sprites",
                 message: error.ToString(),
                 type: MessageBoxType.Error
@@ -47,7 +46,7 @@ public class FallbackSpriteManager(
         }
         else if (!result!.IsSuccess)
         {
-            dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Failed to Populate Default Sprites",
                 message: result.ToString(),
                 type: MessageBoxType.Error
@@ -55,13 +54,13 @@ public class FallbackSpriteManager(
         }
     }
 
-    public void CheckDefaultsPopulated()
+    public async Task CheckDefaultsPopulated()
     {
         if (EnumUtil.GetValues<ConquestGameCode>().Any(x => fallbackDataProvider.IsDefaultsPopulated(x)))
         {
             return;
         }
-        var result = dialogService.ShowMessageBox(new(
+        var result = await dialogService.ShowMessageBox(new(
             "Welcome To RanseiLink",
             "On of the first steps when using RanseiLink is to 'Populate Graphics Defaults'. " +
             "You provide an unchanged copy of the pokemon conquest rom, and the sprites are extracted from it.\n" +
@@ -81,6 +80,6 @@ public class FallbackSpriteManager(
             return;
         }
 
-        PopulateGraphicsDefaults();
+        await PopulateGraphicsDefaults();
     }
 }

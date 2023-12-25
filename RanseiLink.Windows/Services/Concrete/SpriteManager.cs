@@ -3,11 +3,11 @@ using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 
 namespace RanseiLink.Windows.Services.Concrete;
-public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService) : ISpriteManager
+public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IAsyncDialogService dialogService) : ISpriteManager
 {
-    public bool SetOverride(SpriteType type, int id, string requestFileMsg)
+    public async Task<bool> SetOverride(SpriteType type, int id, string requestFileMsg)
     {
-        var file = dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        var file = await dialogService.ShowOpenSingleFileDialog(new()
         {
             Title = requestFileMsg,
             Filters =
@@ -37,21 +37,21 @@ public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialog
             {
                 if (groupedGInfo.StrictHeight || groupedGInfo.StrictWidth)
                 {
-                    dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+                    await dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                         "Invalid dimensions",
                         $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nFor this image type it is a strict requirement."
                         ));
                     return false;
                 }
 
-                var result = dialogService.ShowMessageBox(new MessageBoxSettings(
+                var result = await dialogService.ShowMessageBox(new(
                     Title: "Invalid dimensions",
                     Message: $"The dimensions of this image should be {groupedGInfo.Width}x{groupedGInfo.Height}.\nIf will work if they are different, but may look weird in game.",
                     Buttons:
                     [
-                        new MessageBoxButton("Proceed anyway", MessageBoxResult.No),
-                        new MessageBoxButton("Auto Resize", MessageBoxResult.Yes),
-                        new MessageBoxButton("Cancel", MessageBoxResult.Cancel),
+                        new("Proceed anyway", MessageBoxResult.No),
+                        new("Auto Resize", MessageBoxResult.Yes),
+                        new("Cancel", MessageBoxResult.Cancel),
                     ],
                     DefaultResult: MessageBoxResult.Cancel
                     ));
@@ -76,7 +76,7 @@ public class SpriteManager(IOverrideDataProvider overrideSpriteProvider, IDialog
         if (Core.Graphics.ImageSimplifier.SimplifyPalette(file, paletteCapacity, temp))
         {
             var vm = new SimplifyPaletteViewModel(paletteCapacity, file, temp);
-            if (!dialogService.ShowDialogWithResult(vm))
+            if (!await dialogService.ShowDialogWithResult(vm))
             {
                 return false;
             }

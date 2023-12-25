@@ -4,7 +4,6 @@ using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -110,12 +109,12 @@ public class SpriteTypeViewModel : ViewModelBase
         });
     }
 
-    private void AddNew()
+    private async void AddNew()
     {
         if (_canAddNew)
         {
             var id = Items.Max(i => i.Id) + 1;
-            if (SetOverride(id, $"Pick a file to add in slot '{id}' "))
+            if (await SetOverride(id, $"Pick a file to add in slot '{id}' "))
             {
                 var spriteFile = _spriteProvider.GetSpriteFile(SelectedType, id);
                 var item = _spriteItemVmFactory().Init(spriteFile);
@@ -139,7 +138,7 @@ public class SpriteTypeViewModel : ViewModelBase
         UpdateInfo(SelectedType);
     }
 
-    public bool SetOverride(int id, string requestFileMsg)
+    public Task<bool> SetOverride(int id, string requestFileMsg)
     {
         return _spriteManager.SetOverride(SelectedType, id, requestFileMsg);
     }

@@ -3,6 +3,6 @@ namespace RanseiLink.Windows.Services;
 
 public interface IFallbackSpriteManager
 {
-    void CheckDefaultsPopulated();
-    void PopulateGraphicsDefaults();
+    Task CheckDefaultsPopulated();
+    Task PopulateGraphicsDefaults();
 }

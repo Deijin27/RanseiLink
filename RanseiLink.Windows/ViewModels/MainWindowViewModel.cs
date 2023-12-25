@@ -44,9 +44,9 @@ public class MainWindowViewModel : ViewModelBase
         ToggleThemeCommand = new RelayCommand(ToggleTheme);
     }
 
-    internal void OnWindowShown()
+    internal async void OnWindowShown()
     {
-        _fallbackManager.CheckDefaultsPopulated();
+        await _fallbackManager.CheckDefaultsPopulated();
     }
 
     public object CurrentVm
