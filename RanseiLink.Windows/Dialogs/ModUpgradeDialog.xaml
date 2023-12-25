@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModUpgradeViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Height="225" Width="550" Background="Transparent">

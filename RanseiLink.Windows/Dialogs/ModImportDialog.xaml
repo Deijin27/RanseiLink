@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModImportViewModel, IsDesignTimeCreatable=False}"

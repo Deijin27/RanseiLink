@@ -9,9 +9,6 @@
         xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
-        xmlns:dd="urn:gong-wpf-dragdrop"
-        d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
         Title="ModCreationDialog" Background="Transparent" Width="445" Height="100">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown" Background="{DynamicResource WindowBackgroundBrush}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

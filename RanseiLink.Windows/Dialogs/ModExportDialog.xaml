@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         mc:Ignorable="d"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         d:DataContext="{d:DesignInstance vm:ModExportViewModel, IsDesignTimeCreatable=False}"
         Background="Transparent"

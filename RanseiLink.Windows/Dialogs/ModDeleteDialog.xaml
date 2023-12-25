@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
         xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModDeleteViewModel, IsDesignTimeCreatable=False}"
         Title="Patch rom" Height="200" Width="350" Background="Transparent">
