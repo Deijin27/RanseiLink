@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿#nullable enable
+using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using RanseiLink.Core.Services;
 
@@ -42,7 +43,7 @@ internal class DialogService(IDialogLocator locator) : IAsyncDialogService
 
     private TopLevel GetTopLevel() => TopLevel.GetTopLevel(App.MainWindow) ?? throw new Exception("Failed to get main window top level");
 
-    public async Task<string[]> ShowOpenFileDialog(OpenFileDialogSettings settings)
+    public async Task<string[]?> ShowOpenFileDialog(OpenFileDialogSettings settings)
     {
         var topLevel = GetTopLevel();
 
@@ -62,7 +63,7 @@ internal class DialogService(IDialogLocator locator) : IAsyncDialogService
         return files;
     }
 
-    public async Task<string> ShowOpenFolderDialog(OpenFolderDialogSettings settings)
+    public async Task<string?> ShowOpenFolderDialog(OpenFolderDialogSettings settings)
     {
         var topLevel = GetTopLevel();
 
@@ -90,7 +91,7 @@ internal class DialogService(IDialogLocator locator) : IAsyncDialogService
         return "*" + ext;
     }
 
-    public async Task<string> ShowSaveFileDialog(SaveFileDialogSettings settings)
+    public async Task<string?> ShowSaveFileDialog(SaveFileDialogSettings settings)
     {
         var topLevel = GetTopLevel();
 

@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿#nullable enable
+using RanseiLink.Core.Services;
 using System.Windows.Forms;
 using System.Windows.Threading;
 
@@ -15,7 +16,7 @@ internal static class DialogLocatorExtensions
 internal class DialogService(IDialogLocator locator) : IDialogService
 {
     private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
-    private System.Windows.Window MainWindow
+    private System.Windows.Window? MainWindow
     {
         get 
         {
@@ -43,7 +44,11 @@ internal class DialogService(IDialogLocator locator) : IDialogService
 
         Dispatcher.Invoke(() =>
         {
-            var dialog = (System.Windows.Window)Activator.CreateInstance(type);
+            var dialog = Activator.CreateInstance(type) as System.Windows.Window;
+            if (dialog == null)
+            {
+                throw new Exception($"Dialog type '{type.FullName}' could not be created");
+            }
             dialog.Owner = MainWindow;
             dialog.DataContext = dialogViewModel;
             dialog.ShowDialog();
@@ -81,7 +86,7 @@ internal class DialogService(IDialogLocator locator) : IDialogService
         return string.Join('|', parts);
     }
 
-    public string[] ShowOpenFileDialog(OpenFileDialogSettings settings)
+    public string[]? ShowOpenFileDialog(OpenFileDialogSettings settings)
     {
         return Dispatcher.Invoke(() =>
         {
@@ -99,7 +104,7 @@ internal class DialogService(IDialogLocator locator) : IDialogService
         });
     }
 
-    public string ShowSaveFileDialog(SaveFileDialogSettings settings)
+    public string? ShowSaveFileDialog(SaveFileDialogSettings settings)
     {
         return Dispatcher.Invoke(() =>
         {
@@ -115,7 +120,7 @@ internal class DialogService(IDialogLocator locator) : IDialogService
         });
     }
 
-    public string ShowOpenFolderDialog(OpenFolderDialogSettings settings)
+    public string? ShowOpenFolderDialog(OpenFolderDialogSettings settings)
     {
         return Dispatcher.Invoke(() =>
         {
@@ -136,7 +141,7 @@ internal class DialogService(IDialogLocator locator) : IDialogService
                 _ => null
             };
 
-            string resultString = result == true ? dialog.SelectedPath : null;
+            string? resultString = result == true ? dialog.SelectedPath : null;
             dialog.Dispose();
             return resultString;
         });
@@ -186,7 +191,7 @@ internal class DialogService(IDialogLocator locator) : IDialogService
 internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogService
 {
     private Dispatcher Dispatcher => System.Windows.Application.Current.Dispatcher;
-    private System.Windows.Window MainWindow
+    private System.Windows.Window? MainWindow
     {
         get
         {
@@ -214,7 +219,11 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
 
         await Dispatcher.InvokeAsync(() =>
         {
-            var dialog = (System.Windows.Window)Activator.CreateInstance(type);
+            var dialog = Activator.CreateInstance(type) as System.Windows.Window;
+            if (dialog == null)
+            {
+                throw new Exception($"Dialog type '{type.FullName}' could not be created");
+            }
             dialog.Owner = MainWindow;
             dialog.DataContext = dialogViewModel;
             dialog.ShowDialog();
@@ -252,7 +261,7 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
         return string.Join('|', parts);
     }
 
-    public async Task<string[]> ShowOpenFileDialog(OpenFileDialogSettings settings)
+    public async Task<string[]?> ShowOpenFileDialog(OpenFileDialogSettings settings)
     {
         return await Dispatcher.InvokeAsync(() =>
         {
@@ -270,7 +279,7 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
         });
     }
 
-    public async Task<string> ShowSaveFileDialog(SaveFileDialogSettings settings)
+    public async Task<string?> ShowSaveFileDialog(SaveFileDialogSettings settings)
     {
         return await Dispatcher.InvokeAsync(() =>
         {
@@ -286,7 +295,7 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
         });
     }
 
-    public async Task<string> ShowOpenFolderDialog(OpenFolderDialogSettings settings)
+    public async Task<string?> ShowOpenFolderDialog(OpenFolderDialogSettings settings)
     {
         return await Dispatcher.InvokeAsync(() =>
         {
@@ -307,7 +316,7 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
                 _ => null
             };
 
-            string resultString = result == true ? dialog.SelectedPath : null;
+            string? resultString = result == true ? dialog.SelectedPath : null;
             dialog.Dispose();
             return resultString;
         });

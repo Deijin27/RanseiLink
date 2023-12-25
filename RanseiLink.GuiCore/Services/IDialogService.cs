@@ -17,7 +17,7 @@ namespace RanseiLink.GuiCore.Services
     {
         Task ShowDialog(object dialogViewModel);
         Task<MessageBoxResult> ShowMessageBox(MessageBoxSettings options);
-        Task<string[]> ShowOpenFileDialog(OpenFileDialogSettings settings);
+        Task<string[]?> ShowOpenFileDialog(OpenFileDialogSettings settings);
         Task<string?> ShowSaveFileDialog(SaveFileDialogSettings settings);
         Task<string?> ShowOpenFolderDialog(OpenFolderDialogSettings settings);
         Task ProgressDialog(Action<IProgress<ProgressInfo>> work, bool delayOnCompletion = true);
@@ -168,7 +168,7 @@ namespace RanseiLink.GuiCore.Services
         {
             settings.AllowMultiple = false;
             var result = await dialogService.ShowOpenFileDialog(settings);
-            var file = result.FirstOrDefault();
+            var file = result?.FirstOrDefault();
             if (string.IsNullOrEmpty(file))
             {
                 file = null;
@@ -176,7 +176,7 @@ namespace RanseiLink.GuiCore.Services
             return file;
         }
 
-        public static Task<string[]> ShowOpenMultipleFilesDialog(this IAsyncDialogService dialogService, OpenFileDialogSettings settings)
+        public static Task<string[]?> ShowOpenMultipleFilesDialog(this IAsyncDialogService dialogService, OpenFileDialogSettings settings)
         {
             settings.AllowMultiple = true;
             return dialogService.ShowOpenFileDialog(settings);
