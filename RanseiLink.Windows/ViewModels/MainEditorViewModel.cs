@@ -18,12 +18,11 @@ public interface IMainEditorViewModel
 }
 public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 {
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IModPatchingService _modPatcher;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
-    private readonly IAsyncDialogService _asyncDialogService;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
@@ -33,18 +32,16 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private EditorModule _currentModule;
 
     public MainEditorViewModel(
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         IModPatchingService modPatcher,
         ISettingService settingService,
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IEnumerable<EditorModule> modules,
-        IFileDropHandlerFactory fdhFactory,
-        IAsyncDialogService asyncDialogService)
+        IFileDropHandlerFactory fdhFactory)
     {
         _modKernelFactory = modKernelFactory;
         _fdhFactory = fdhFactory;
-        _asyncDialogService = asyncDialogService;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
         _settingService = settingService;
@@ -264,10 +261,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     public ICommand CommitRomCommand { get; }
 
-    private void CommitRom()
+    private async Task CommitRom()
     {
-        var vm = new ModCommitViewModel(_asyncDialogService, _settingService, Mod, _fdhFactory);
-        if (!_dialogService.ShowDialogWithResult(vm))
+        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod, _fdhFactory);
+        if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -275,12 +272,12 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         var canPatch = _modPatcher.CanPatch(Mod, vm.File, vm.PatchOpt);
         if (canPatch.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ToString()));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unable to patch", canPatch.ToString()));
             return;
         }
 
         Exception error = null;
-        _dialogService.ProgressDialog(progress =>
+        await _dialogService.ProgressDialog(progress =>
         {
             progress?.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
             SaveTextChanges();
@@ -300,7 +297,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
         if (error != null)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: "Error Writing To Rom",
                 message: error.ToString(),
                 type: MessageBoxType.Error
@@ -332,19 +329,19 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         set => RaiseAndSetIfChanged(ref _pluginPopupOpen, value);
     }
 
-    private void RunPlugin(PluginInfo chosen)
+    private async void RunPlugin(PluginInfo chosen)
     {
         Deactivate();
         try
         {
             using (var services = _modKernelFactory.Create(Mod))
             {
-                chosen.Plugin.Run(new PluginContext(services));
+                await chosen.Plugin.Run(new PluginContext(services));
             }
         }
         catch (Exception e)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 title: $"Error running {chosen.Name}",
                 message: $"An error was encountered while running the plugin {chosen.Name} (v{chosen.Version} by {chosen.Author}). Details:\n\n" + e.ToString(),
                 type: MessageBoxType.Error

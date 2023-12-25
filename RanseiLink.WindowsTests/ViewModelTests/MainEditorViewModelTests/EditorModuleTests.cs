@@ -30,8 +30,7 @@ public class EditorModuleTests
     private readonly Mock<ICachedMsgBlockService> _cachedMsgBlockService;
     private readonly Mock<ISettingService> _settingService;
     private readonly Mock<IModPatchingService> _patchingService;
-    private readonly Mock<IDialogService> _dialogService;
-    private readonly Mock<IAsyncDialogService> _asyncDialogService;
+    private readonly Mock<IAsyncDialogService> _dialogService;
     private readonly MainEditorViewModel _mainEditorVm;
     private readonly Mock<EditorModule> _moduleA;
     private readonly Mock<EditorModule> _moduleB;
@@ -50,8 +49,7 @@ public class EditorModuleTests
         _settingService.Setup(i => i.Get<EditorModuleOrderSetting>()).Returns(_editorModuleOrderSetting);
 
         _patchingService = new Mock<IModPatchingService>();
-        _dialogService = new Mock<IDialogService>();
-        _asyncDialogService = new Mock<IAsyncDialogService>();
+        _dialogService = new Mock<IAsyncDialogService>();
 
         _cachedMsgBlockService = new Mock<ICachedMsgBlockService>();
 
@@ -74,8 +72,7 @@ public class EditorModuleTests
             new Mock<IPluginLoader>().Object,
             _modServiceGetterFactory.Object,
             new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object },
-            new FileDropHandlerFactory(),
-            _asyncDialogService.Object
+            new FileDropHandlerFactory()
             );
 
         _mainEditorVm.SetMod(null);
