@@ -38,7 +38,6 @@ public class WpfServiceModule : IModule
                     mod,
                     context.Resolve<IModManager>(),
                     context.Resolve<IModPatchingService>(),
-                    context.Resolve<IDialogService>(),
                     context.Resolve<IAsyncDialogService>(),
                     context.Resolve<ISettingService>(),
                     context.Resolve<IPluginLoader>(),

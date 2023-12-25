@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using RanseiLink.Core.Settings;
-using RanseiLink.Windows.Services;
 using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -16,7 +15,7 @@ public interface IModSelectionViewModel
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
@@ -44,19 +43,17 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public ModSelectionViewModel(
         IModManager modManager,
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteManager fallbackManager,
-        IFileDropHandlerFactory fdhFactory,
-        IAsyncDialogService asyncDialogService)
+        IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
         _fdhFactory = fdhFactory;
-        _asyncDialogService = asyncDialogService;
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
 
         BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
@@ -92,14 +89,14 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         }
     }
 
-    private void CreateMod()
+    private async Task CreateMod()
     {
         var vm = new ModCreationViewModel(_asyncDialogService, _settingService, _fdhFactory);
-        if (!_dialogService.ShowDialogWithResult(vm))
+        if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
-        _dialogService.ProgressDialog(progress =>
+        await _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Creating mod..."));
             ModInfo newMod;
@@ -121,14 +118,14 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             progress.Report(new ProgressInfo("Mod created successfully!", 100));
         });
     }
-    private void ImportMod()
+    private async Task ImportMod()
     {
         var vm = new ModImportViewModel(_asyncDialogService, _fdhFactory);
-        if (!_dialogService.ShowDialogWithResult(vm))
+        if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
-        _dialogService.ProgressDialog(progress =>
+        await _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Importing mod..."));
             try
@@ -151,15 +148,15 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         });
     }
 
-    private void UpgradeOutdatedMods()
+    private async Task UpgradeOutdatedMods()
     {
         var vm = new ModUpgradeViewModel(_asyncDialogService, _settingService, _fdhFactory);
-        if (!_dialogService.ShowDialogWithResult(vm))
+        if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
 
-        _dialogService.ProgressDialog(progress =>
+        await _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Upgrading mods..."));
             try
