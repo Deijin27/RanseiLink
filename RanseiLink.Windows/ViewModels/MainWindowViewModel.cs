@@ -1,8 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.Windows.Services;
-using System;
-using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 

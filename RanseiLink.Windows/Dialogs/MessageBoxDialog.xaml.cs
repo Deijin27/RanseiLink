@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace RanseiLink.Windows.Dialogs;
 

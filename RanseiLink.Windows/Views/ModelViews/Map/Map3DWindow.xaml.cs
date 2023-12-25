@@ -1,5 +1,4 @@
 ﻿using OpenTK.Wpf;
-using System;
 using System.Windows;
 using RanseiLink.Core.Enums;
 using RanseiLink.View3D.CameraControls;

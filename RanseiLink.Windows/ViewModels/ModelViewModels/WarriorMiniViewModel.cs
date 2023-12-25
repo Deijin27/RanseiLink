@@ -4,7 +4,6 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Windows.Services;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;

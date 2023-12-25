@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Services.Concrete;
-
-namespace RanseiLink.GuiCore.DragDrop;
+﻿namespace RanseiLink.GuiCore.DragDrop;
 
 public interface IFolderDropHandler
 {

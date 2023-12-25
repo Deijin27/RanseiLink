@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Globalization;
-using System.Linq;
 
 namespace RanseiLink.Core.Text
 {

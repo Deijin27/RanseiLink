@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Graphics;
-using System;
 using System.Windows.Data;
 using System.Windows.Media;
 

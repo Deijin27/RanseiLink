@@ -1,7 +1,6 @@
 ﻿using ColorPicker;
 using ColorPicker.Models;
 using RanseiLink.Core;
-using System.Linq;
 using System.Windows;
 
 namespace RanseiLink.Windows.Controls;

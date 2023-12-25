@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
-using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 

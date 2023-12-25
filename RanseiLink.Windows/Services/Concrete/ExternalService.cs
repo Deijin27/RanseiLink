@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Enums;
-using System.Collections.Generic;
 using System.IO;
 
 namespace RanseiLink.Windows.Services.Concrete;

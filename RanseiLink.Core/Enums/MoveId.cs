@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RanseiLink.Core.Enums
+﻿namespace RanseiLink.Core.Enums
 {
     public enum MoveId
     {

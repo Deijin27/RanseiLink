@@ -3,7 +3,6 @@ using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
-using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.XP.Dialogs;
 using RanseiLink.XP.DragDrop;

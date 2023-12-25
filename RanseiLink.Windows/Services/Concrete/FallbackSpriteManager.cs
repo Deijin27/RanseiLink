@@ -5,8 +5,6 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.Windows.ViewModels;
-using System;
-using System.Linq;
 
 namespace RanseiLink.Windows.Services.Concrete;
 

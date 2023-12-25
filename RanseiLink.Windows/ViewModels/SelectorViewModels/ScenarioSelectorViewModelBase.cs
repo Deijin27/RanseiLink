@@ -1,13 +1,4 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Enums;
-using RanseiLink.Core.Models;
-using RanseiLink.Core.Services;
-using System;
-using System.Linq;
-using System.Windows;
-using System.Windows.Input;
-
-namespace RanseiLink.Windows.ViewModels;
+﻿namespace RanseiLink.Windows.ViewModels;
 
 //public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase
 //    where TModel : IDataWrapper

@@ -5,7 +5,6 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace RanseiLink.Windows.ViewModels;
 

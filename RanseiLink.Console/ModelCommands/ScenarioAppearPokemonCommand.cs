@@ -1,7 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 using RanseiLink.Console.Services;
 using System.Threading.Tasks;
 using CliFx;

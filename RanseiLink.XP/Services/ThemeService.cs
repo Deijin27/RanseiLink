@@ -1,6 +1,5 @@
 ﻿using Avalonia.Styling;
 using RanseiLink.Core.Settings;
-using System;
 
 namespace RanseiLink.XP.Services;
 

@@ -5,11 +5,6 @@ using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using RanseiLink.XP.ValueConverters;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace RanseiLink.XP.ViewModels;
 

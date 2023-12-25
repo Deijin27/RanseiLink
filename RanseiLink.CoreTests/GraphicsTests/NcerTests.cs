@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Graphics;
-using System.Collections.Generic;
 using System.IO;
 
 namespace RanseiLink.CoreTests.GraphicsTests;

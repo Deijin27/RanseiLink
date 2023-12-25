@@ -1,7 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using RanseiLink.Core.Services;
-using System.Threading.Tasks;
 
 namespace RanseiLink.XP.Dialogs;
 public partial class MessageBoxDialog : Window

@@ -1,7 +1,6 @@
 ﻿using CliFx.Attributes;
 using CliFx.Infrastructure;
 using RanseiLink.Console.Services;
-using RanseiLink.Core.Services;
 using System.Threading.Tasks;
 using CliFx;
 using RanseiLink.Core.Services.ModelServices;

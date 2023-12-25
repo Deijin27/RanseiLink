@@ -1,6 +1,4 @@
-﻿using RanseiLink.Core.Enums;
-
-namespace RanseiLink.Core.Models
+﻿namespace RanseiLink.Core.Models
 {
     public class GimmickObject : BaseDataWindow
     {

@@ -1,5 +1,4 @@
-﻿using RanseiLink.Core;
-using RanseiLink.PluginModule.Api;
+﻿using RanseiLink.PluginModule.Api;
 
 namespace DisableEventsPlugin;
 public static class ConstOptions

@@ -1,8 +1,6 @@
 ﻿using Avalonia.Input;
 using Avalonia.Platform.Storage;
 using RanseiLink.GuiCore.DragDrop;
-using System;
-using System.Linq;
 #nullable enable
 
 namespace RanseiLink.XP.DragDrop;

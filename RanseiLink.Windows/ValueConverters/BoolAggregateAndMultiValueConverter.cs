@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace RanseiLink.Windows.ValueConverters;
+﻿namespace RanseiLink.Windows.ValueConverters;
 
 internal class BoolAggregateAndValueConverter : MultiValueConverter<bool, bool>
 {

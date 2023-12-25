@@ -1,11 +1,8 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Text;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 

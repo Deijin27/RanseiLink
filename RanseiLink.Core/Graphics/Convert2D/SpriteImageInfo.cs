@@ -1,7 +1,4 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
-using System.Collections.Generic;
-
-namespace RanseiLink.Core.Graphics;
+﻿namespace RanseiLink.Core.Graphics;
 
 public record SpriteImageInfo(
     byte[] Pixels, 

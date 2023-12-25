@@ -1,8 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using RanseiLink.Core.Services;
-using System.Collections.Generic;
 
 namespace RanseiLink.XP.Controls;
 public partial class ModInfoControl : UserControl

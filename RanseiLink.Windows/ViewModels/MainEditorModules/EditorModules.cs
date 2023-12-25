@@ -2,7 +2,6 @@
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using System.Linq;
 
 namespace RanseiLink.Windows.ViewModels;
 

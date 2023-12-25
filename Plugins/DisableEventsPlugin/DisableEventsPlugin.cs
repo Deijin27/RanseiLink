@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.RomFs;
-using RanseiLink.Core.Services;
 using RanseiLink.GuiCore.Services;
 using RanseiLink.PluginModule.Api;
 using System.Text;

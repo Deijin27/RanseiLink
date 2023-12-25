@@ -5,7 +5,6 @@ using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.ValueConverters;
 using System.IO;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;

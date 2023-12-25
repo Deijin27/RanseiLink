@@ -1,7 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Text;
-using RanseiLink.Windows.Services;
-using System;
 using System.Collections;
 using System.ComponentModel;
 using System.IO;

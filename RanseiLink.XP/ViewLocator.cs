@@ -1,8 +1,6 @@
 #nullable enable
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using RanseiLink.XP.ViewModels;
-using System;
 
 namespace RanseiLink.XP;
 public class ViewLocator : IDataTemplate

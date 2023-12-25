@@ -5,7 +5,6 @@ using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule;
-using RanseiLink.XP.Services;
 using RanseiLink.XP.ViewModels;
 using RanseiLink.XP.Views;
 using System.Reflection;

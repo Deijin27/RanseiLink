@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.Services;
-using System.Windows.Input;
 
 namespace RanseiLink.Windows.ViewModels;
 

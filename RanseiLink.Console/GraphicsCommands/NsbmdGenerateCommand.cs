@@ -1,17 +1,9 @@
 ﻿using CliFx;
 using CliFx.Attributes;
 using CliFx.Infrastructure;
-using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Graphics.ExternalFormats;
 using RanseiLink.Core.Services;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;

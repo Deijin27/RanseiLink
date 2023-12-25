@@ -1,8 +1,6 @@
 using Avalonia;
 using RanseiLink.XP.Dialogs;
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace RanseiLink.XP;
 internal class Program

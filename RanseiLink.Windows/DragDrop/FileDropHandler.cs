@@ -1,7 +1,5 @@
 ﻿using GongSolutions.Wpf.DragDrop;
 using RanseiLink.GuiCore.DragDrop;
-using System;
-using System.Linq;
 using System.Windows;
 
 namespace RanseiLink.DragDrop;

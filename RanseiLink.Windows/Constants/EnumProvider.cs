@@ -2,7 +2,6 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Windows.ViewModels;
-using System.Linq;
 
 namespace RanseiLink.Windows.Constants;
 

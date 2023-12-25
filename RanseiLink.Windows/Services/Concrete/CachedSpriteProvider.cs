@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.ValueConverters;
-using System.Collections.Generic;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.Services.Concrete;

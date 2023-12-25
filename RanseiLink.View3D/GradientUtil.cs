@@ -1,6 +1,5 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL;
-using System;
 
 namespace RanseiLink.View3D;
 
