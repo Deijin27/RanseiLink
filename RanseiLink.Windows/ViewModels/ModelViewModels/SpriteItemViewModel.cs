@@ -1,9 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.Services;
 using RanseiLink.Windows.ValueConverters;
-using System.IO;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -12,7 +10,7 @@ public class SpriteItemViewModel : ViewModelBase
 {
     public delegate SpriteItemViewModel Factory();
 
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ISpriteManager _spriteManager;
     private SpriteType _spriteType;
@@ -20,7 +18,7 @@ public class SpriteItemViewModel : ViewModelBase
     private string _displayFile = null!;
     private ImageSource? _displayImage;
 
-    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IDialogService dialogService)
+    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IAsyncDialogService dialogService)
     {
         _dialogService = dialogService;
         _spriteProvider = spriteProvider;
@@ -78,19 +76,16 @@ public class SpriteItemViewModel : ViewModelBase
         }
     }
 
-    private void Export()
+    private async Task Export()
     {
-        var dir = _dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
-        {
-            Title = "Select folder to export sprite into"
-        });
+        var dir = await _dialogService.ShowOpenFolderDialog(new("Select folder to export sprite into"));
         if (string.IsNullOrEmpty(dir))
         {
             return;
         }
         var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_displayFile)));
         File.Copy(_displayFile, dest);
-        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
+        await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }
 
     private async void SetOverride()

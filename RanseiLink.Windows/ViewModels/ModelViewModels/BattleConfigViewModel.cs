@@ -4,7 +4,6 @@ using RanseiLink.Core.Maps;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Windows.Services;
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.Views.ModelViews.Map;
 using RanseiLink.View3D;
@@ -16,7 +15,7 @@ public class BattleConfigViewModel : ViewModelBase
 {
     private BattleConfig _model;
     private readonly ISceneRenderer _sceneRenderer;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
 
     public BattleConfigViewModel(
@@ -24,7 +23,7 @@ public class BattleConfigViewModel : ViewModelBase
         IJumpService jumpService, 
         IIdToNameService idToNameService, 
         ISceneRenderer sceneRenderer,
-        IDialogService dialogService,
+        IAsyncDialogService dialogService,
         IOverrideDataProvider overrideDataProvider)
     {
         _model = new BattleConfig();
@@ -39,7 +38,7 @@ public class BattleConfigViewModel : ViewModelBase
         JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
         View3DModelCommand = new RelayCommand(View3DModel);
 
-        Minimaps = new List<MinimapInfo>();
+        Minimaps = [];
         
         foreach (var spriteFile in _overrideDataProvider.GetAllSpriteFiles(SpriteType.Minimap))
         {
@@ -291,7 +290,7 @@ public class BattleConfigViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Treasure12, (ItemId)value, v => _model.Treasure12 = v);
     }
 
-    public void View3DModel()
+    public async void View3DModel()
     {
         _sceneRenderer.Configure(0);
 
@@ -299,7 +298,7 @@ public class BattleConfigViewModel : ViewModelBase
         var result = _sceneRenderer.LoadScene(Id);
         if (result.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
             return;
         }
         window.ShowDialog();

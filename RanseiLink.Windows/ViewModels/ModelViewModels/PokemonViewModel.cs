@@ -4,7 +4,6 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -17,7 +16,7 @@ public class PokemonViewModel : ViewModelBase
     private readonly IKingdomService _kingdomService;
     private readonly IItemService _itemService;
     private readonly IOverrideDataProvider _spriteProvider;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IPokemonAnimationService _animationService;
     private PokemonId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
@@ -28,7 +27,7 @@ public class PokemonViewModel : ViewModelBase
         IItemService itemService, 
         IOverrideDataProvider spriteProvider, 
         SpriteItemViewModel.Factory spriteItemVmFactory, 
-        IDialogService dialogService, 
+        IAsyncDialogService dialogService, 
         IPokemonAnimationService animationService)
     {
         _animationService = animationService;
@@ -357,16 +356,18 @@ public class PokemonViewModel : ViewModelBase
     public ICommand ViewSpritesCommand { get; }
     private void ViewSprites()
     {
-        List<SpriteFile> sprites = new();
         int id = (int)_id;
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonB, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonCI, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonL, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonS, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonSR, id));
-        //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlPokemonWu, id));
-        sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.ModelPokemon, id));
+        List<SpriteFile> sprites =
+        [
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonB, id),
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonCI, id),
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonL, id),
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, id),
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonS, id),
+            _spriteProvider.GetSpriteFile(SpriteType.StlPokemonSR, id),
+            //_spriteProvider.GetSpriteFile(SpriteType.StlPokemonWu, id);
+            _spriteProvider.GetSpriteFile(SpriteType.ModelPokemon, id),
+        ];
 
         var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
         _dialogService.ShowDialog(vm);
@@ -375,19 +376,19 @@ public class PokemonViewModel : ViewModelBase
 
     }
 
-    private void ImportAnimation()
+    private async Task ImportAnimation()
     {
-        var file = _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
+        var file = await _dialogService.ShowOpenSingleFileDialog(new OpenFileDialogSettings
         {
             Title = "Select the raw pattern animation library file",
-            Filters = new List<FileDialogFilter>
-            {
-                new FileDialogFilter
+            Filters =
+            [
+                new()
                 {
                     Name = "Pattern Animation XML (.xml)",
-                    Extensions = new() { ".xml" }
+                    Extensions = [".xml"]
                 }
-            }
+            ]
         });
 
         if (string.IsNullOrEmpty(file))
@@ -397,33 +398,33 @@ public class PokemonViewModel : ViewModelBase
         var result = _animationService.ImportAnimation(_id, file);
         if (result.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
             return;
         }
 
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
     }
 
-    private void ExportAnimations()
+    private async Task ExportAnimations()
     {
         if (!_spriteProvider.IsDefaultsPopulated())
         {
             return;
         }
 
-        var dest = _dialogService.ShowSaveFileDialog(new SaveFileDialogSettings
+        var dest = await _dialogService.ShowSaveFileDialog(new()
         {
             Title = "Export animation file",
             DefaultExtension = ".xml",
             InitialFileName = $"{(int)_id}_{_model.Name}_NSPAT.xml",
-            Filters = new()
-            {
+            Filters =
+            [
                 new()
                 {
                     Name = "Pattern Animation XML (.xml)",
-                    Extensions = new() { ".xml" }
+                    Extensions = [".xml"]
                 }
-            }
+            ]
         });
 
         if (string.IsNullOrEmpty(dest))
@@ -434,7 +435,7 @@ public class PokemonViewModel : ViewModelBase
         var result = _animationService.ExportAnimations(_id, dest);
         if (result.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to export animation", result.ToString()));
         }
     }
 

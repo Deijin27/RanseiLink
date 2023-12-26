@@ -4,20 +4,19 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using RanseiLink.Windows.ValueConverters;
-using System.IO;
 using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
 
 public class BannerViewModel : ViewModelBase
 {
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IBannerService _bannerService;
     private ImageSource? _displayImage;
     private readonly BannerInfo _bannerInfo;
     private string _allTitles = string.Empty;
 
-    public BannerViewModel(IDialogService dialogService, IBannerService bannerService)
+    public BannerViewModel(IAsyncDialogService dialogService, IBannerService bannerService)
     {
         _dialogService = dialogService;
         _bannerService = bannerService;
@@ -85,9 +84,9 @@ public class BannerViewModel : ViewModelBase
         DisplayImage = PathToImageSourceConverter.TryConvert(_bannerService.ImagePath);
     }
 
-    private void ReplaceImage()
+    private async Task ReplaceImage()
     {
-        var file = _dialogService.ShowOpenSingleFileDialog(new("Choose a file to set as banner image", new FileDialogFilter("PNG Image (.png)", ".png")));
+        var file = await _dialogService.ShowOpenSingleFileDialog(new("Choose a file to set as banner image", new FileDialogFilter("PNG Image (.png)", ".png")));
         if (string.IsNullOrEmpty(file))
         {
             return;
@@ -95,7 +94,7 @@ public class BannerViewModel : ViewModelBase
 
         if (!ImageSimplifier.ImageMatchesSize(file, 32, 32))
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok(
                 "Invalid dimensions",
                 $"The dimensions of this image should be 32x32."
                 ));
@@ -107,7 +106,7 @@ public class BannerViewModel : ViewModelBase
         if (ImageSimplifier.SimplifyPalette(file, 16, temp))
         {
             var vm = new SimplifyPaletteViewModel(16, file, temp);
-            if (!_dialogService.ShowDialogWithResult(vm))
+            if (!await _dialogService.ShowDialogWithResult(vm))
             {
                 return;
             }
@@ -135,15 +134,15 @@ public class BannerViewModel : ViewModelBase
         SpanishTitle = title;
     }
 
-    private void ExportImage()
+    private async Task ExportImage()
     {
-        var dir = _dialogService.ShowOpenFolderDialog(new("Select folder to export image into"));
+        var dir = await _dialogService.ShowOpenFolderDialog(new("Select folder to export image into"));
         if (string.IsNullOrEmpty(dir))
         {
             return;
         }
         var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_bannerService.ImagePath)));
         File.Copy(_bannerService.ImagePath, dest);
-        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Image Exported", $"Exported to '{dest}'"));
+        await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Image Exported", $"Exported to '{dest}'"));
     }
 }

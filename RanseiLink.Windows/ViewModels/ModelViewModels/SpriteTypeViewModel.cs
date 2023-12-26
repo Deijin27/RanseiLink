@@ -2,7 +2,6 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -11,12 +10,12 @@ public class SpriteTypeViewModel : ViewModelBase
 {
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     private readonly IOverrideDataProvider _spriteProvider;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly ISpriteManager _spriteManager;
     private string _dimensionInfo = null!;
     private bool _canAddNew;
 
-    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
+    public SpriteTypeViewModel(ISpriteManager spriteManager, IOverrideDataProvider overrideSpriteProvider, IAsyncDialogService dialogService, SpriteItemViewModel.Factory spriteItemVmFactory)
     {
         _spriteProvider = overrideSpriteProvider;
         _dialogService = dialogService;
@@ -87,16 +86,16 @@ public class SpriteTypeViewModel : ViewModelBase
         }
     }
 
-    private void UpdateList()
+    private async void UpdateList()
     {
-        _dialogService.ProgressDialog(delayOnCompletion: false, work:progress =>
+        await _dialogService.ProgressDialog(delayOnCompletion: false, work:progress =>
         {
             progress.Report(new ProgressInfo("Loading..."));
 
             var files = _spriteProvider.GetAllSpriteFiles(SelectedType);
             progress.Report(new ProgressInfo(MaxProgress: files.Count));
             int count = 0;
-            List<SpriteItemViewModel> newItems = new();
+            List<SpriteItemViewModel> newItems = [];
             foreach (var i in files)
             {
                 var item = _spriteItemVmFactory().Init(i);
@@ -143,12 +142,9 @@ public class SpriteTypeViewModel : ViewModelBase
         return _spriteManager.SetOverride(SelectedType, id, requestFileMsg);
     }
 
-    private void ExportAll()
+    private async Task ExportAll()
     {
-        var dir = _dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
-        {
-            Title = "Select folder to export sprites into"
-        });
+        var dir = await _dialogService.ShowOpenFolderDialog(new("Select folder to export sprites into"));
         if (string.IsNullOrEmpty(dir))
         {
             return;
@@ -158,6 +154,6 @@ public class SpriteTypeViewModel : ViewModelBase
             string dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(spriteInfo.File)));
             File.Copy(spriteInfo.File, dest);
         }
-        _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
+        await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Export complete!", $"Sprites exported to: '{dir}'"));
     }
 }

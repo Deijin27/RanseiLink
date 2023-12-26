@@ -5,7 +5,6 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Text;
-using RanseiLink.Windows.Services;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -13,13 +12,13 @@ public class BaseWarriorViewModel : ViewModelBase
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private BaseWarrior _model;
     private WarriorNameTable _nameTable;
     private WarriorId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public BaseWarriorViewModel(IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
-        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IDialogService dialogService)
+        IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IAsyncDialogService dialogService)
     {
         _model = new BaseWarrior();
         _dialogService = dialogService;
@@ -251,7 +250,7 @@ public class BaseWarriorViewModel : ViewModelBase
     public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouM, Sprite).File;
 
     public ICommand ViewSpritesCommand { get; }
-    private void ViewSprites()
+    private async void ViewSprites()
     {
         List<SpriteFile> sprites = new();
         int id = Sprite;
@@ -264,7 +263,7 @@ public class BaseWarriorViewModel : ViewModelBase
         //sprites.Add(_spriteProvider.GetSpriteFile(SpriteType.StlBushouWu, id));
 
         var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
-        _dialogService.ShowDialog(vm);
+        await _dialogService.ShowDialog(vm);
 
         RaisePropertyChanged(nameof(SmallSpritePath));
 

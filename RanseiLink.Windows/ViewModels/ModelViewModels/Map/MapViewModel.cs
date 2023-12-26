@@ -2,7 +2,6 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.View3D;
-using RanseiLink.Windows.Services;
 using RanseiLink.Windows.Views.ModelViews.Map;
 using System.Collections.ObjectModel;
 
@@ -28,7 +27,7 @@ public class MapViewModel : ViewModelBase
     private MapPokemonPositionViewModel _selectedPokemonPosition;
     private MapGridSubCellViewModel _mouseOverItem;
     private MapGridCellViewModel _selectedCell;
-    private readonly IDialogService _dialogService;
+    private readonly IAsyncDialogService _dialogService;
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
@@ -41,7 +40,7 @@ public class MapViewModel : ViewModelBase
     public PSLM Map { get; set; }
 
     public MapViewModel(
-        IDialogService dialogService, 
+        IAsyncDialogService dialogService, 
         IGimmickService gimmickService, 
         IOverrideDataProvider overrideSpriteProvider, 
         IMapManager mapManager,
@@ -327,10 +326,10 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    private void ModifyMapDimensions()
+    private async void ModifyMapDimensions()
     {
         var vm = new ModifyMapDimensionsViewModel(Width, Height);
-        if (!_dialogService.ShowDialogWithResult(vm))
+        if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
@@ -387,7 +386,7 @@ public class MapViewModel : ViewModelBase
         
     }
 
-    public void View3DModel()
+    public async void View3DModel()
     {
         _sceneRenderer.Configure(0);
         
@@ -395,7 +394,7 @@ public class MapViewModel : ViewModelBase
         var result = _sceneRenderer.LoadScene(_id);
         if (result.IsFailed)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
             return;
         }
         window.ShowDialog();
