@@ -53,7 +53,7 @@ public static class CellImageUtil
             int maxY = bank.Max(i => i.YOffset + i.Height);
             int maxX = bank.Max(i => i.XOffset + i.Width);
             width = maxX - minX;
-            height = maxY - minX;
+            height = maxY - minY;
         }
         else if (prt == PositionRelativeTo.Centre)
         {
@@ -144,7 +144,7 @@ public static class CellImageUtil
                 foreach (var cell in bank)
                 {
                     g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + dims.XShift, cell.YOffset + 2 + dims.YShift));
-                    g.Draw(Pens.Solid(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
+                    g.Draw(Pens.Solid(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width - 1, cell.Height - 1));
                     i++;
                 }
             });

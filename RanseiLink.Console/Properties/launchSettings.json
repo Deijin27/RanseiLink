@@ -2,8 +2,8 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "nanr extract .\\castlemap\\03_05_BG_castlemap_01_lo.G2DR .\\castlemap_anime\\03_05_parts_castlemap_01_lo.G2DR",
-      "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\strategy"
+      "commandLineArgs": "ncer extract 0002.ncer 0001.ncgr 0004.nclr --debug",
+      "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\still\\stl_pokemon_wu\\stl_pokemon_wu-Unpacked"
     }
   }
 }

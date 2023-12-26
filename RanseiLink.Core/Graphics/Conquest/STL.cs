@@ -1,4 +1,6 @@
-﻿namespace RanseiLink.Core.Graphics
+﻿using SixLabors.ImageSharp;
+
+namespace RanseiLink.Core.Graphics
 {
     public class STLCollection
     {
@@ -113,7 +115,7 @@
         public void SaveAsPngs(string outputFolder, NCER ncer, bool tiled)
         {
             Directory.CreateDirectory(outputFolder);
-            Parallel.For(0, Items.Count, i =>
+            for(int i = 0; i < Items.Count; i++)
             {
                 var stl = Items[i];
                 string saveFile = Path.Combine(outputFolder, $"{i.ToString().PadLeft(4, '0')}.png");
@@ -122,12 +124,12 @@
                     File.Create(saveFile).Dispose(); // create an empty file
                                                      // the empty file creation is just a precaution in case the number of files matters in some cases.
                                                      // need a way to know if there is empty files at the end of the list of numbers.
-            }
+                }
                 else
                 {
                     stl.SaveAsPng(ncer, saveFile, tiled: tiled);
                 }
-            });
+            }
         }
     }
 
@@ -232,16 +234,19 @@
 
         public void SaveAsPng(NCER ncer, string saveFile, bool tiled, bool debug = false)
         {
+            // Important: don't use the Width and Height values because the x/yshift won't be calculated
+            // maybe we should have an option to pass in the width and still calculated those values,
+            // but it works without them
             const TexFormat format = TexFormat.Pltt256;
-            CellImageUtil.SingleBankToPng(
-                file: saveFile,
+            using var image = CellImageUtil.SingleBankToImage(
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), Width, Height,
+                new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), -1, -1,
                     IsTiled: tiled,
                     Format: format),
                 debug: debug
                 );
+            image.SaveAsPng(saveFile);
         }
 
         public static STL LoadPng(NCER ncer, string pngFile, bool tiled)
