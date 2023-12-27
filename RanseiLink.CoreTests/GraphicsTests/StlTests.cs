@@ -9,15 +9,17 @@ namespace RanseiLink.CoreTests.GraphicsTests;
 /// <summary>
 /// This verifies that conversions of ncer-sprites with 1 cell bank are working
 /// </summary>
-public class NcerWarriorBattleIntroTests
+public class StlTests
 {
-    [Fact]
-    public void ConvertToImage()
+    [Theory]
+    [InlineData("test_warriorbattleintro")]
+    [InlineData("test_pokemonxl")]
+    public void ConvertToImage(string filename)
     {
-        var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.ncer"));
-        var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.ncgr"));
-        var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.nclr"));
-        var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.png");
+        var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".ncer"));
+        var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".ncgr"));
+        var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".nclr"));
+        var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".png");
 
         ncer.CellBanks.Banks.Should().HaveCount(1);
 
@@ -27,12 +29,14 @@ public class NcerWarriorBattleIntroTests
         image.ShouldBeIdenticalTo(expectedImage);
     }
 
-    [Fact]
-    public void IdenticalThroughConversionCycle()
+    [Theory]
+    [InlineData("test_warriorbattleintro")]
+    [InlineData("test_pokemonxl")]
+    public void IdenticalThroughConversionCycle(string filename)
     {
-        var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.ncer"));
-        var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.ncgr"));
-        var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_warriorbattleintro.nclr"));
+        var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".ncer"));
+        var ncgr = NCGR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".ncgr"));
+        var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".nclr"));
 
         var oldPixels = ncgr.Pixels.Data.ToArray();
         var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);

@@ -98,6 +98,18 @@
     <None Update="TestData\test_parts.ncgr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\test_pokemonxl.ncer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_pokemonxl.ncgr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_pokemonxl.nclr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_pokemonxl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_screen.ncgr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
