@@ -25,6 +25,13 @@ public enum PositionRelativeTo
     Centre
 }
 
+/// <summary>
+/// Settings for cell image conversion
+/// </summary>
+/// <param name="Prt">If explicit width and height are specified, should the cells xoffset and yoffsets be interpreted as relative to the center of the image</param>
+/// <param name="ShiftCellsToOrigin">Should the cells be shifted uniformly so no xoffsets and yoffsets are negative</param>
+/// <param name="ScaleDimensionsToFitCells">Should the image be scaled to fit all of the cells</param>
+/// <param name="Debug">Should debug information be drawn on the image, cell numbers and borders</param>
 public record CellImageSettings(
     PositionRelativeTo Prt = PositionRelativeTo.TopLeft,
     bool ShiftCellsToOrigin = true,
