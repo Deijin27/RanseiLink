@@ -16,6 +16,15 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 
     private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
+    private static readonly CellImageSettings _settings = new(
+        Prt: PositionRelativeTo.TopLeft,
+        ShiftCellsToOrigin: true,
+        ScaleDimensionsToFitCells: true,
+        Debug: false
+        );
+
+    public static CellImageSettings Settings => _settings;
+
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, MiscConstants gInfo, MiscItem miscItem, string pngFile)
     {
         var item = (BuildingIconSmallMiscItem)miscItem;
@@ -76,7 +85,8 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
                 workingPalette,
                 ncer.CellBanks.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
-                format: ncgr.Pixels.Format
+                format: ncgr.Pixels.Format,
+                settings: _settings
                 );
 
             var pixels = workingPixels.ToArray();

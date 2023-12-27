@@ -11,6 +11,8 @@ namespace RanseiLink.CoreTests.GraphicsTests;
 /// </summary>
 public class NcerMinimapTests
 {
+    private static CellImageSettings Settings => Core.Services.ModPatchBuilders.NcerPatchBuilder.Settings;
+
     [Fact]
     public void ConvertToImage()
     {
@@ -19,7 +21,7 @@ public class NcerMinimapTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.nclr"));
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.png");
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
         using var expectedImage = Image.Load<Rgba32>(png);
         image.ShouldBeIdenticalTo(expectedImage);
@@ -35,9 +37,9 @@ public class NcerMinimapTests
         var oldPixels = ncgr.Pixels.Data.ToArray();
         var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
-        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image);
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image, Settings);
 
         var newPixels = ncgr.Pixels.Data;
         var newPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);

@@ -19,7 +19,7 @@ public class NcerDefaultPopulater : IMiscItemDefaultPopulater
 
         var (ncer, ncgr, nclr) = G2DR.LoadCellImgFromFolder(outFolder, NcgrSlot.Infer);
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, ModPatchBuilders.NcerPatchBuilder.Settings);
 
         image.SaveAsPng(Path.Combine(defaultDataFolder, item.PngFile));
     }

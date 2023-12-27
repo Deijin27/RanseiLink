@@ -11,6 +11,8 @@ namespace RanseiLink.CoreTests.GraphicsTests;
 /// </summary>
 public class StlTests
 {
+    private static CellImageSettings Settings => STL.Settings with { ScaleDimensionsToFitCells = true };
+
     [Theory]
     [InlineData("test_warriorbattleintro")]
     [InlineData("test_pokemonxl")]
@@ -23,7 +25,7 @@ public class StlTests
 
         ncer.CellBanks.Banks.Should().HaveCount(1);
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
         using var expectedImage = Image.Load<Rgba32>(png);
         image.ShouldBeIdenticalTo(expectedImage);
@@ -41,14 +43,15 @@ public class StlTests
         var oldPixels = ncgr.Pixels.Data.ToArray();
         var oldPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
         var info = CellImageUtil.MultiBankFromImage(
             image,
             ncer.CellBanks.Banks,
             ncer.CellBanks.BlockSize,
             ncgr.Pixels.IsTiled,
-            ncgr.Pixels.Format
+            ncgr.Pixels.Format,
+            STL.Settings
             );
 
         var newPixels = info.Pixels;

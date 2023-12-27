@@ -232,7 +232,16 @@ namespace RanseiLink.Core.Graphics
             bw.Pad(PaddingLength);
         }
 
-        public void SaveAsPng(NCER ncer, string saveFile, bool tiled, bool debug = false)
+        private static readonly CellImageSettings _settings = new(
+            Prt: PositionRelativeTo.TopLeft,
+            ShiftCellsToOrigin: true,
+            ScaleDimensionsToFitCells: false,
+            Debug: false
+            );
+
+        public static CellImageSettings Settings => _settings;
+
+        public void SaveAsPng(NCER ncer, string saveFile, bool tiled)
         {
             // Important: don't use the Width and Height values because the x/yshift won't be calculated
             // maybe we should have an option to pass in the width and still calculated those values,
@@ -241,10 +250,10 @@ namespace RanseiLink.Core.Graphics
             using var image = CellImageUtil.SingleBankToImage(
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
-                new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), -1, -1,
+                new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), Width, Height,
                     IsTiled: tiled,
                     Format: format),
-                debug: debug
+                settings: _settings
                 );
             image.SaveAsPng(saveFile);
         }
@@ -256,7 +265,8 @@ namespace RanseiLink.Core.Graphics
                 bank: ncer.CellBanks.Banks[0],
                 blockSize: ncer.CellBanks.BlockSize,
                 tiled: tiled,
-                format: TexFormat.Pltt256
+                format: TexFormat.Pltt256,
+                settings: _settings
                 );
 
             if (imageInfo.Palette.Count != 1)

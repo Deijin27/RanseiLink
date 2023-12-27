@@ -12,6 +12,14 @@ public class NcerPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 
     private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
+    private static readonly CellImageSettings _settings = new(
+        Prt: PositionRelativeTo.TopLeft,
+        ShiftCellsToOrigin: true,
+        ScaleDimensionsToFitCells: true,
+        Debug: false
+        );
+
+    public static CellImageSettings Settings => _settings;
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, MiscConstants gInfo, MiscItem miscItem, string pngFile)
     {
         var item = (G2DRMiscItem)miscItem;
@@ -25,7 +33,7 @@ public class NcerPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 
         // load up the png and replace provider data with new image data
         using var image = ImageUtil.LoadPngBetterError(pngFile);
-        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image);
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image, _settings);
 
         // save the modified provider files
         G2DR.SaveImgToFolder(tempDir, ncgr, nclr, NcgrSlot.Infer);

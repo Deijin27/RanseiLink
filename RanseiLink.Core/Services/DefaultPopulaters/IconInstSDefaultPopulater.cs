@@ -76,7 +76,7 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
                        IsTiled: ncgr.Pixels.IsTiled,
                        Format: ncgr.Pixels.Format
                        ),
-                   debug: false
+                   ModPatchBuilders.IconInstSPatchBuilder.Settings
                    );
                 g.DrawImage(image, new Point(0, linkId * height), 1);
             }

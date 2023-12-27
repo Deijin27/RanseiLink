@@ -25,9 +25,16 @@ public enum PositionRelativeTo
     Centre
 }
 
+public record CellImageSettings(
+    PositionRelativeTo Prt = PositionRelativeTo.TopLeft,
+    bool ShiftCellsToOrigin = true,
+    bool ScaleDimensionsToFitCells = true,
+    bool Debug = false
+    );
+
 public static class CellImageUtil
 {
-    private static BankDimensions InferDimensions(CellBank bank, int width, int height, PositionRelativeTo prt)
+    private static BankDimensions InferDimensions(CellBank bank, int width, int height, CellImageSettings settings)
     {
         if (bank.Count == 0)
         {
@@ -44,26 +51,35 @@ public static class CellImageUtil
         int xShift;
         int yShift;
 
-        if (width < 0 || height < 0)
+        int minY = bank.Min(i => i.YOffset);
+        int minX = bank.Min(i => i.XOffset);
+        if (settings.ShiftCellsToOrigin)
         {
-            int minY = bank.Min(i => i.YOffset);
-            int minX = bank.Min(i => i.XOffset);
             yShift = -minY;
             xShift = -minX;
-            int maxY = bank.Max(i => i.YOffset + i.Height);
-            int maxX = bank.Max(i => i.XOffset + i.Width);
-            width = maxX - minX;
-            height = maxY - minY;
-        }
-        else if (prt == PositionRelativeTo.Centre)
-        {
-            xShift = width / 2;
-            yShift = height / 2;
         }
         else
         {
             xShift = 0;
             yShift = 0;
+        }
+
+        if (settings.ScaleDimensionsToFitCells)
+        {
+            int maxY = bank.Max(i => i.YOffset + i.Height);
+            int maxX = bank.Max(i => i.XOffset + i.Width);
+            width = Math.Max(maxX - minX, width);
+            height = Math.Max(maxY - minY, height);
+        }
+        else if (width <= 0 || height <= 0)
+        {
+            throw new Exception($"Width and Height must be specified if not using {nameof(CellImageSettings)}.{nameof(settings.ScaleDimensionsToFitCells)}");
+        }
+
+        if (settings.Prt == PositionRelativeTo.Centre)
+        {
+            xShift = width / 2;
+            yShift = height / 2;
         }
 
         return new BankDimensions(xShift, yShift, width, height);
@@ -113,10 +129,9 @@ public static class CellImageUtil
         return images;
     }
 
-    public static Image<Rgba32> SingleBankToImage(CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, 
-        PositionRelativeTo prt = PositionRelativeTo.TopLeft, bool debug = false)
+    public static Image<Rgba32> SingleBankToImage(CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height, prt);
+        var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height, settings);
 
         var graphic = new Image<Rgba32>(dims.Width, dims.Height);
         // for some reason the cells are drawn in reverse
@@ -136,7 +151,7 @@ public static class CellImageUtil
             }
         }
 
-        if (debug)
+        if (settings.Debug)
         {
             graphic.Mutate(g =>
             {
@@ -153,16 +168,14 @@ public static class CellImageUtil
         return graphic;
     }
 
-    public static void SingleBankToPng(string file, CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, 
-        PositionRelativeTo prt = PositionRelativeTo.TopLeft, bool debug = false)
+    public static void SingleBankToPng(string file, CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        using var graphic = SingleBankToImage(bank, blockSize, imageInfo, prt, debug);
+        using var graphic = SingleBankToImage(bank, blockSize, imageInfo, settings);
         graphic.SaveAsPng(file);
     }
 
 
-    public static Image<Rgba32> MultiBankToImage(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, 
-        PositionRelativeTo prt = PositionRelativeTo.TopLeft, bool debug = false)
+    public static Image<Rgba32> MultiBankToImage(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
         if (banks.Count == 0)
         {
@@ -170,18 +183,18 @@ public static class CellImageUtil
         }
         else if (banks.Count == 1)
         {
-            return SingleBankToImage(banks[0], blockSize, imageInfo, prt, debug);
+            return SingleBankToImage(banks[0], blockSize, imageInfo, settings);
         }
         else
         {
-            var images = MultiBankToMultipleImages(banks, blockSize, imageInfo, prt, debug);
+            var images = MultiBankToMultipleImages(banks, blockSize, imageInfo, settings);
             return ImageUtil.CombineImagesVertically(images);
         }
     }
 
-    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, PositionRelativeTo prt = PositionRelativeTo.TopLeft, bool debug = false)
+    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        return banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, prt, debug)).ToList();
+        return banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, settings)).ToList();
     }
 
     public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiBankToMultipleImageGroups(IReadOnlyCollection<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo)
@@ -257,9 +270,9 @@ public static class CellImageUtil
 
     public static void SharedSingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
-        bool tiled, TexFormat format, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
-        var dims = InferDimensions(bank, image.Width, image.Height, prt);
+        var dims = InferDimensions(bank, image.Width, image.Height, settings);
 
         for (int i = 0; i < bank.Count; i++)
         {
@@ -275,13 +288,13 @@ public static class CellImageUtil
     }
 
     public static MultiPaletteImageInfo SingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
-        bool tiled, TexFormat format, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
         var workingPixels = new List<byte>();
         var workingPalette = new PaletteCollection(bank, format, true);
         
 
-        SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, prt);
+        SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
 
         workingPalette.SetColor0(Color.Magenta);
         return new MultiPaletteImageInfo(
@@ -295,7 +308,7 @@ public static class CellImageUtil
     }
 
     public static MultiPaletteImageInfo SingleBankFromPng(string file, CellBank bank, uint blockSize, 
-        bool tiled, TexFormat format, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (bank.Count == 0)
         {
@@ -304,11 +317,11 @@ public static class CellImageUtil
 
         using var image = ImageUtil.LoadPngBetterError(file);
 
-        return SingleBankFromImage(image, bank, blockSize, tiled, format, prt);
+        return SingleBankFromImage(image, bank, blockSize, tiled, format, settings);
     }
 
     public static MultiPaletteImageInfo MultiBankFromPng(string file, IReadOnlyList<CellBank> banks, uint blockSize, 
-        bool tiled, TexFormat format, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (banks.Any(x => x.Count == 0))
         {
@@ -317,11 +330,11 @@ public static class CellImageUtil
 
         using var image = ImageUtil.LoadPngBetterError(file);
 
-        return MultiBankFromImage(image, banks, blockSize, tiled, format, width, height, prt);
+        return MultiBankFromImage(image, banks, blockSize, tiled, format, settings, width, height);
     }
 
     public static MultiPaletteImageInfo MultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, uint blockSize, 
-        bool tiled, TexFormat format, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (banks.Count == 0)
         {
@@ -329,14 +342,14 @@ public static class CellImageUtil
         }
         if (banks.Count == 1)
         {
-            return SingleBankFromImage(image, banks[0], blockSize, tiled, format, prt);
+            return SingleBankFromImage(image, banks[0], blockSize, tiled, format, settings);
         }
 
 
         var workingPalette = new PaletteCollection(banks, format, true);
         var workingPixels = new List<byte>();
 
-        SharedPaletteMultiBankFromImage(image, banks, workingPixels, workingPalette, blockSize, tiled, format, width, height, prt);
+        SharedPaletteMultiBankFromImage(image, banks, workingPixels, workingPalette, blockSize, tiled, format, settings, width, height);
         workingPalette.SetColor0(Color.Magenta);
 
         return new MultiPaletteImageInfo(workingPixels.ToArray(), workingPalette, width, height, tiled, format);
@@ -344,7 +357,7 @@ public static class CellImageUtil
 
     public static void SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, 
         List<byte> workingPixels, PaletteCollection workingPalette, uint blockSize, 
-        bool tiled, TexFormat format, int width = -1, int height = -1, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (banks.Count == 0)
         {
@@ -353,26 +366,26 @@ public static class CellImageUtil
 
         if (banks.Count == 1)
         {
-            SharedSingleBankFromImage(image, banks[0], blockSize, workingPixels, workingPalette, tiled, format, prt);
+            SharedSingleBankFromImage(image, banks[0], blockSize, workingPixels, workingPalette, tiled, format, settings);
         }
 
         var cumulativeHeight = 0;
         foreach (var bank in banks)
         {
-            var dims = InferDimensions(bank, width, height, prt);
+            var dims = InferDimensions(bank, width, height, settings);
             using (var subImage = image.Clone(g =>
             {
                 g.Crop(new Rectangle(0, cumulativeHeight, dims.Width, dims.Height));
 
             }))
             {
-                SharedSingleBankFromImage(subImage, bank, blockSize, workingPixels, workingPalette, tiled, format, prt);
+                SharedSingleBankFromImage(subImage, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
             }
             cumulativeHeight += dims.Height;
         }
     }
     public static MultiPaletteImageInfo MultiBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<CellBank> banks, uint blockSize, 
-        bool tiled, TexFormat format, PositionRelativeTo prt = PositionRelativeTo.TopLeft)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (banks.Count == 0)
         {
@@ -389,7 +402,7 @@ public static class CellImageUtil
         {
             var bank = banks[i];
             var image = images[i];
-            SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, prt);
+            SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
         }
 
         workingPalette.SetColor0(Color.Magenta);

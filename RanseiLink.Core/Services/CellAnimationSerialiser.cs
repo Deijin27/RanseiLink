@@ -4,6 +4,7 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 
@@ -11,6 +12,13 @@ namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
+    private static readonly CellImageSettings _settings = new(
+                Prt: PositionRelativeTo.TopLeft,
+                ShiftCellsToOrigin: false,
+                ScaleDimensionsToFitCells: false,
+                Debug: false
+                );
+
     public enum Format
     {
         OneImagePerCell,
@@ -183,7 +191,8 @@ public static class CellAnimationSerialiser
             {
                 throw new Exception($"With format {fmt} width and height must be specified");
             }
-            var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, width, height, prt);
+            var settings = _settings with { Prt = prt };
+            var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
 
             for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
             {
@@ -380,7 +389,8 @@ public static class CellAnimationSerialiser
             }
 
             // import the image data
-            NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, prt);
+            var settings = _settings with { Prt = prt };
+            NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
 
             // dispose of the images as we don't need them anymore
             foreach (var image in images)
