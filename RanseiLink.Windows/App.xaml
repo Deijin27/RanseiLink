@@ -30,7 +30,7 @@
                 <views:ModSelectionView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MainEditorViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MainEditorViewModel}">
                 <views:MainEditorView/>
             </DataTemplate>
 

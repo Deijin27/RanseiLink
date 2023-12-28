@@ -4,8 +4,9 @@ using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public record EditorModuleListItem(string DisplayName, string ModuleId);
 
@@ -13,8 +14,8 @@ public interface IMainEditorViewModel
 {
     void SetMod(ModInfo mod);
     void Deactivate();
-    string CurrentModuleId { get; set; }
-    bool TryGetModule(string moduleId, out EditorModule module);
+    string? CurrentModuleId { get; set; }
+    bool TryGetModule(string moduleId, [NotNullWhen(true)] out EditorModule? module);
 }
 public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 {
@@ -26,10 +27,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
-    private object _currentVm;
-    private ModInfo _mod;
-    private IServiceGetter _modServiceGetter;
-    private EditorModule _currentModule;
+    private object? _currentVm;
+    private ModInfo? _mod;
+    private IServiceGetter? _modServiceGetter;
+    private EditorModule? _currentModule;
 
     public MainEditorViewModel(
         IAsyncDialogService dialogService,
@@ -50,18 +51,18 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         PluginItems = pluginLoader.LoadPlugins(out var loadFailures);
         if (loadFailures?.AnyFailures == true)
         {
-            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load some plugins", loadFailures?.ToString()));
+            _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load some plugins", loadFailures.ToString()));
         }
 
         CommitRomCommand = new RelayCommand(CommitRom);
 
         RegisterModules(modules);
 
-        GoForwardInModuleStackCommand = new RelayCommand(GoForwardInModuleStack, () => _forwardModuleStack.Any());
-        GoBackInModuleStackCommand = new RelayCommand(GoBackInModuleStack, () => _backModuleStack.Any());
+        GoForwardInModuleStackCommand = new RelayCommand(GoForwardInModuleStack, () => _forwardModuleStack.Count != 0);
+        GoBackInModuleStackCommand = new RelayCommand(GoBackInModuleStack, () => _backModuleStack.Count != 0);
     }
 
-    private ICachedMsgBlockService _cachedMsgBlockService;
+    private ICachedMsgBlockService? _cachedMsgBlockService;
     public void SetMod(ModInfo mod)
     {
         Mod = mod;
@@ -73,13 +74,13 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         RaiseAllPropertiesChanged();
     }
 
-    public object CurrentVm
+    public object? CurrentVm
     {
         get => _currentVm;
         private set => RaiseAndSetIfChanged(ref _currentVm, value);
     }
 
-    public string CurrentModuleId
+    public string? CurrentModuleId
     {
         get => _currentModule?.UniqueId;
         set
@@ -91,8 +92,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         }
     }
 
-    private EditorModuleListItem _selectedModuleItem;
-    public EditorModuleListItem SelectedModuleItem
+    private EditorModuleListItem? _selectedModuleItem;
+    public EditorModuleListItem? SelectedModuleItem
     {
         get => _selectedModuleItem;
         set
@@ -107,7 +108,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
 
-    public ModInfo Mod
+    public ModInfo? Mod
     {
         get => _mod;
         private set => RaiseAndSetIfChanged(ref _mod, value);
@@ -124,14 +125,14 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void GoForwardInModuleStack()
     {
-        if (_forwardModuleStack.Any())
+        if (_forwardModuleStack.Count != 0)
         {
             SetCurrentModule(_forwardModuleStack.Pop());
         }
     }
     private void GoBackInModuleStack()
     {
-        if (_backModuleStack.Any())
+        if (_backModuleStack.Count != 0 && CurrentModuleId != null)
         {
             _forwardModuleStack.Push(CurrentModuleId);
             SetCurrentModule(_backModuleStack.Pop(), blockStackPush:true);
@@ -140,19 +141,20 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private void SaveTextChanges()
     {
-        _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
-        _cachedMsgBlockService.SaveChangedBlocks();
+        _cachedMsgBlockService = _modServiceGetter?.Get<ICachedMsgBlockService>();
+        _cachedMsgBlockService?.SaveChangedBlocks();
     }
 
-    public bool TryGetModule(string moduleId, out EditorModule module)
+    public bool TryGetModule(string moduleId, [NotNullWhen(true)] out EditorModule? module)
     {
-        if (moduleId == null)
-        {
-            throw new ArgumentNullException(nameof(moduleId));
-        }
+        ArgumentNullException.ThrowIfNull(moduleId);
         if (!InitialisedModules.TryGetValue(moduleId, out module))
         {
             if (!UninitialisedModules.TryGetValue(moduleId, out module))
+            {
+                return false;
+            }
+            if (_modServiceGetter == null)
             {
                 return false;
             }
@@ -163,7 +165,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         return true;
     }
 
-    private void SetCurrentModule(string moduleId, bool forceUpdate = false, bool blockStackPush = false)
+    private void SetCurrentModule(string? moduleId, bool forceUpdate = false, bool blockStackPush = false)
     {
         if (moduleId == null)
         {
@@ -263,6 +265,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private async Task CommitRom()
     {
+        if (Mod == null)
+        {
+            return;
+        }
         var vm = new ModCommitViewModel(_dialogService, _settingService, Mod, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
@@ -276,7 +282,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             return;
         }
 
-        Exception error = null;
+        Exception? error = null;
         await _dialogService.ProgressDialog(progress =>
         {
             progress?.Report(new ProgressInfo("Saving...", IsIndeterminate: true));
@@ -309,7 +315,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     #region Plugins
 
-    public PluginInfo SelectedPlugin
+    public PluginInfo? SelectedPlugin
     {
         get => null;
         set
@@ -318,7 +324,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             if (PluginPopupOpen)
             {
                 PluginPopupOpen = false;
-                RunPlugin(value);
+                if (value != null)
+                {
+                    RunPlugin(value);
+                }
             }
         }
     }
@@ -331,6 +340,10 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     private async void RunPlugin(PluginInfo chosen)
     {
+        if (Mod == null)
+        {
+            return;
+        }
         Deactivate();
         try
         {
