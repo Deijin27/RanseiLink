@@ -4,7 +4,6 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 
@@ -12,13 +11,6 @@ namespace RanseiLink.Core.Services;
 
 public static class CellAnimationSerialiser
 {
-    private static readonly CellImageSettings _settings = new(
-                Prt: PositionRelativeTo.TopLeft,
-                ShiftCellsToOrigin: false,
-                ScaleDimensionsToFitCells: false,
-                Debug: false
-                );
-
     public enum Format
     {
         OneImagePerCell,
@@ -28,20 +20,20 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// If format is <see cref="Format.OneImagePerBank"/> then width/height are unnecessary
     /// </summary>
-    public static void ExportAnimation(PositionRelativeTo prt, string outputFolder, string animLinkFile, int width, int height, Format fmt)
+    public static void ExportAnimation(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, Format fmt)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, prt, fmt);
+        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, settings, fmt);
     }
 
-    public static void ImportAnimation(PositionRelativeTo prt, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile)
+    public static void ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile)
     {
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
         {
             LINK.Unpack(animLinkFile, tempAnim);
             var anim = G2DR.LoadCellImgFromFolder(tempAnim);
-            var nanr = ImportAnimationXml(animationXml, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, prt);
+            var nanr = ImportAnimationXml(animationXml, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
             G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
         }
@@ -51,21 +43,21 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static void Export(PositionRelativeTo prt, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
+    public static void Export(CellImageSettings settings, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
         var (width, height) = ExportBackground(bg.Ncgr, bg.Nclr, outputFolder);
 
         if (animLinkFile != null)
         {
-            ExportAnimation(prt, outputFolder, animLinkFile, width, height, fmt: fmt);
+            ExportAnimation(settings, outputFolder, animLinkFile, width, height, fmt: fmt);
         }
     }
 
 
     // We will always have a background file to use, and we will always have the default of another anim to use
     // but it may be nice if we can generate without one to base it on. it's just more work.
-    public static Result Import(PositionRelativeTo prt, 
+    public static Result Import(CellImageSettings settings, 
         string? animationXml = null, string? animLinkFile = null, string? outputAnimLinkFile = null,
         string? bgImage = null, string? bgLinkFile = null, string? outputBgLinkFile = null)
     {
@@ -94,7 +86,7 @@ public static class CellAnimationSerialiser
             // load animation
             if (animLinkFile != null && outputAnimLinkFile != null && animationXml != null)
             {
-                ImportAnimation(prt, animLinkFile, animationXml, width, height, outputAnimLinkFile);
+                ImportAnimation(settings, animLinkFile, animationXml, width, height, outputAnimLinkFile);
             }
             return Result.Ok();
         }
@@ -159,20 +151,9 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, PositionRelativeTo prt, Format fmt)
+    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, Format fmt)
     {
-        int xShift;
-        int yShift;
-        if (prt == PositionRelativeTo.Centre)
-        {
-            xShift = width / 2;
-            yShift = height / 2;
-        }
-        else
-        {
-            xShift = 0;
-            yShift = 0;
-        }
+        var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
         var res = new Resource();
 
@@ -191,7 +172,6 @@ public static class CellAnimationSerialiser
             {
                 throw new Exception($"With format {fmt} width and height must be specified");
             }
-            var settings = _settings with { Prt = prt };
             var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
 
             for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
@@ -213,8 +193,8 @@ public static class CellAnimationSerialiser
                     var cellData = new CellInfo()
                     {
                         File = fileName,
-                        X = cell.XOffset + xShift,
-                        Y = cell.YOffset + yShift,
+                        X = cell.XOffset + dims.XShift,
+                        Y = cell.YOffset + dims.YShift,
                         FlipX = cell.FlipX,
                         FlipY = cell.FlipY,
                         Palette = cell.IndexPalette,
@@ -275,8 +255,8 @@ public static class CellAnimationSerialiser
                     var cellData = new CellInfo() 
                     { 
                         File = fileName,
-                        X = cell.XOffset + xShift,
-                        Y = cell.YOffset + yShift,
+                        X = cell.XOffset + dims.XShift,
+                        Y = cell.YOffset + dims.YShift,
                         FlipX = cell.FlipX,
                         FlipY = cell.FlipY,
                         Palette = cell.IndexPalette,
@@ -309,20 +289,9 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR ImportAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, PositionRelativeTo prt)
+    public static NANR ImportAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
     {
-        int xShift;
-        int yShift;
-        if (prt == PositionRelativeTo.Centre)
-        {
-            xShift = width / 2;
-            yShift = height / 2;
-        }
-        else
-        {
-            xShift = 0;
-            yShift = 0;
-        }
+        var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
         // nanr is the only one where all info is recreated
         // however, i think ideally we have an intermediate "configuration" class which 
@@ -343,7 +312,7 @@ public static class CellAnimationSerialiser
         var fmt = res.Format;
         if (fmt == Format.OneImagePerBank)
         {
-            List<Image<Rgba32>> images = new();
+            List<Image<Rgba32>> images = [];
             foreach (var cellBankInfo in res.Cells)
             {
                 var bank = new CellBank();
@@ -364,8 +333,8 @@ public static class CellAnimationSerialiser
                     var cell = new Cell
                     {
                         RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
-                        XOffset = cellInfo.X - xShift,
-                        YOffset = cellInfo.Y - yShift,
+                        XOffset = cellInfo.X - dims.XShift,
+                        YOffset = cellInfo.Y - dims.YShift,
                         FlipX = cellInfo.FlipX,
                         FlipY = cellInfo.FlipY,
                         DoubleSize = cellInfo.DoubleSize,
@@ -389,7 +358,6 @@ public static class CellAnimationSerialiser
             }
 
             // import the image data
-            var settings = _settings with { Prt = prt };
             NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
 
             // dispose of the images as we don't need them anymore
@@ -415,8 +383,8 @@ public static class CellAnimationSerialiser
                     var cell = new Cell
                     {
                         RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
-                        XOffset = cellInfo.X - xShift,
-                        YOffset = cellInfo.Y - yShift,
+                        XOffset = cellInfo.X - dims.XShift,
+                        YOffset = cellInfo.Y - dims.YShift,
                         FlipX = cellInfo.FlipX,
                         FlipY = cellInfo.FlipY,
                         DoubleSize = cellInfo.DoubleSize,

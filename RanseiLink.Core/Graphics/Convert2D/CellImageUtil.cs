@@ -16,6 +16,10 @@ namespace RanseiLink.Core.Graphics;
 public enum PositionRelativeTo
 {
     /// <summary>
+    /// The top-leftmost cell should be drawn at (0,0), and others move accordingly. It's acceptable to not specify backround width/height for this, it will scale to fit all cells if you don't specify
+    /// </summary>
+    MinCell,
+    /// <summary>
     /// Top-left of the cell should be draw at (x, y) on the image
     /// </summary>
     TopLeft,
@@ -25,76 +29,69 @@ public enum PositionRelativeTo
     Centre
 }
 
-/// <summary>
-/// Settings for cell image conversion
-/// </summary>
-/// <param name="Prt">If explicit width and height are specified, should the cells xoffset and yoffsets be interpreted as relative to the center of the image</param>
-/// <param name="ShiftCellsToOrigin">Should the cells be shifted uniformly so no xoffsets and yoffsets are negative</param>
-/// <param name="ScaleDimensionsToFitCells">Should the image be scaled to fit all of the cells</param>
-/// <param name="Debug">Should debug information be drawn on the image, cell numbers and borders</param>
 public record CellImageSettings(
-    PositionRelativeTo Prt = PositionRelativeTo.TopLeft,
-    bool ShiftCellsToOrigin = true,
-    bool ScaleDimensionsToFitCells = true,
+    PositionRelativeTo Prt = PositionRelativeTo.MinCell,
     bool Debug = false
     );
 
+public record BankDimensions(int XShift, int YShift, int Width, int Height);
+
 public static class CellImageUtil
 {
-    private static BankDimensions InferDimensions(CellBank bank, int width, int height, CellImageSettings settings)
+
+    public static BankDimensions InferDimensions(CellBank? bank, int width, int height, CellImageSettings settings)
     {
-        if (bank.Count == 0)
-        {
-            // if the bank is empty, we still return bank dimensoins which are
-            // just the width and height with everything else as default
-            // The other values will not be used, so it doesn't matter
-            // The width and height should be the values passed in.
-            // this will lead to a transparent, blank placeholder image to be produced.
-            // but default the width and height to non-zero values
-            // for the case where the user doesn't provide them to remain valid image
-            return new BankDimensions(0, 0, Math.Max(width, 1), Math.Max(height, 1));
-        }
+        int xShift = 0;
+        int yShift = 0;
 
-        int xShift;
-        int yShift;
+        if (settings.Prt == PositionRelativeTo.MinCell)
+        {
+            if (bank == null || bank.Count == 0)
+            {
+                // if the bank is empty, we still return bank dimensoins which are
+                // just the width and height with everything else as default
+                // The other values will not be used, so it doesn't matter
+                // The width and height should be the values passed in.
+                // this will lead to a transparent, blank placeholder image to be produced.
+                // but default the width and height to non-zero values
+                // for the case where the user doesn't provide them to remain valid image
+                return new BankDimensions(0, 0, Math.Max(width, 1), Math.Max(height, 1));
+            }
+            int minY = bank.Min(i => i.YOffset + yShift);
+            int minX = bank.Min(i => i.XOffset + xShift);
+            yShift -= minY;
+            xShift -= minX;
 
-        int minY = bank.Min(i => i.YOffset);
-        int minX = bank.Min(i => i.XOffset);
-        if (settings.ShiftCellsToOrigin)
-        {
-            yShift = -minY;
-            xShift = -minX;
+            if (width <= 0 || height <= 0)
+            {
+                // scale dimensions to fit cells
+                int maxY = bank.Max(i => i.YOffset + i.Height);
+                int maxX = bank.Max(i => i.XOffset + i.Width);
+                width = Math.Max(maxX - minX, width);
+                height = Math.Max(maxY - minY, height);
+            }
         }
-        else
+        else if (settings.Prt == PositionRelativeTo.Centre)
         {
+            if (width <= 0 || height <= 0)
+            {
+                throw new Exception($"Width and Height must be specified if not using {nameof(PositionRelativeTo)}.{settings.Prt}");
+            }
+            xShift = width / 2;
+            yShift = height / 2;
+        }
+        else if (settings.Prt == PositionRelativeTo.TopLeft)
+        {
+            if (width <= 0 || height <= 0)
+            {
+                throw new Exception($"Width and Height must be specified if not using {nameof(PositionRelativeTo)}.{settings.Prt}");
+            }
             xShift = 0;
             yShift = 0;
         }
 
-        if (settings.ScaleDimensionsToFitCells)
-        {
-            int maxY = bank.Max(i => i.YOffset + i.Height);
-            int maxX = bank.Max(i => i.XOffset + i.Width);
-            width = Math.Max(maxX - minX, width);
-            height = Math.Max(maxY - minY, height);
-        }
-        else if (width <= 0 || height <= 0)
-        {
-            throw new Exception($"Width and Height must be specified if not using {nameof(CellImageSettings)}.{nameof(settings.ScaleDimensionsToFitCells)}");
-        }
-
-        if (settings.Prt == PositionRelativeTo.Centre)
-        {
-            xShift = width / 2;
-            yShift = height / 2;
-        }
-
         return new BankDimensions(xShift, yShift, width, height);
     }
-
-    private record BankDimensions(int XShift, int YShift, int Width, int Height);
-
-
 
     public static Image<Rgba32> CellToImage(Cell cell, uint blockSize, MultiPaletteImageInfo imageInfo)
     {

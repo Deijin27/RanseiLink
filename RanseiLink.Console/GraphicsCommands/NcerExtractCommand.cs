@@ -34,13 +34,7 @@ public class NcerExtractCommand : ICommand
     public bool Debug { get; set; } = false;
 
     [CommandOption("positionRelativeTo", 'p', Description = "If explicit width and height provided, should cell xoffset and yoffsets be interpreted to be relative to the center of the image")]
-    public PositionRelativeTo Prt { get; set; } = PositionRelativeTo.TopLeft;
-
-    [CommandOption("shiftCells", 's', Description = "Shift cells to origin so no cells are drawn above or to the left of the image bounds")]
-    public bool ShiftCells { get; set; } = true;
-
-    [CommandOption("scaleToFitCells", 'f', Description = "Scale the image to fit all cells, so no cells are drawn outside of the image bounds")]
-    public bool ScaleToFit { get; set; } = true;
+    public PositionRelativeTo Prt { get; set; } = PositionRelativeTo.MinCell;
 
     public ValueTask ExecuteAsync(IConsole console)
     {
@@ -52,7 +46,7 @@ public class NcerExtractCommand : ICommand
         var ncer = NCER.Load(Ncer);
         var ncgr = NCGR.Load(Ncgr);
         var nclr = NCLR.Load(Nclr);
-        var settings = new CellImageSettings(Prt: Prt, ShiftCellsToOrigin: ShiftCells, ScaleDimensionsToFitCells: ScaleToFit, Debug: Debug);
+        var settings = new CellImageSettings(Prt: Prt, Debug: Debug);
         using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, settings, Width, Height);
         image.SaveAsPng(DestinationFile);
 

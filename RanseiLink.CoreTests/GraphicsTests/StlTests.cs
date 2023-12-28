@@ -11,7 +11,7 @@ namespace RanseiLink.CoreTests.GraphicsTests;
 /// </summary>
 public class StlTests
 {
-    private static CellImageSettings Settings => STL.Settings with { ScaleDimensionsToFitCells = true };
+    private static CellImageSettings Settings => STL.Settings;
 
     [Theory]
     [InlineData("test_warriorbattleintro")]

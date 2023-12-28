@@ -233,9 +233,7 @@ namespace RanseiLink.Core.Graphics
         }
 
         private static readonly CellImageSettings _settings = new(
-            Prt: PositionRelativeTo.TopLeft,
-            ShiftCellsToOrigin: true,
-            ScaleDimensionsToFitCells: false,
+            Prt: PositionRelativeTo.MinCell,
             Debug: false
             );
 

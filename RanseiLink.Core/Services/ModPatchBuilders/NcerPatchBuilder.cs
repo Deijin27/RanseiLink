@@ -13,9 +13,7 @@ public class NcerPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
     private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
     private static readonly CellImageSettings _settings = new(
-        Prt: PositionRelativeTo.TopLeft,
-        ShiftCellsToOrigin: true,
-        ScaleDimensionsToFitCells: true,
+        Prt: PositionRelativeTo.MinCell,
         Debug: false
         );
 

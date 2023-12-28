@@ -41,9 +41,11 @@ public class NanrExtractCommand : ICommand
         }
         Directory.CreateDirectory(DestinationFolder);
 
+        var settings = new CellImageSettings(Prt: PositionRelativeTo);
+
         if (Background != null)
         {
-            CellAnimationSerialiser.Export(PositionRelativeTo, Format, DestinationFolder, Background, AnimatedParts);
+            CellAnimationSerialiser.Export(settings, Format, DestinationFolder, Background, AnimatedParts);
         }
         else if (AnimatedParts != null)
         {
@@ -51,7 +53,7 @@ public class NanrExtractCommand : ICommand
             {
                 throw new System.Exception("Width and height must be specified if there is no background");
             }
-            CellAnimationSerialiser.ExportAnimation(PositionRelativeTo, DestinationFolder, AnimatedParts, Width, Height, Format);
+            CellAnimationSerialiser.ExportAnimation(settings, DestinationFolder, AnimatedParts, Width, Height, Format);
         }
 
         return default;

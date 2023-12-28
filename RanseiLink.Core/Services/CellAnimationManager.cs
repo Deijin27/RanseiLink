@@ -11,15 +11,10 @@ public interface ICellAnimationManager
     void SetOverride(AnimationTypeId type, int id, string? animationLink = null, string? backgroundLink = null);
 }
 
-public class CellAnimationManager : ICellAnimationManager
+public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : ICellAnimationManager
 {
 
-    private readonly IOverrideDataProvider _overrideDataProvider;
-
-    public CellAnimationManager(IOverrideDataProvider overrideDataProvider)
-    {
-        _overrideDataProvider = overrideDataProvider;
-    }
+    private readonly IOverrideDataProvider _overrideDataProvider = overrideDataProvider;
 
     public (DataFile AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id)
     {
@@ -72,11 +67,11 @@ public class CellAnimationManager : ICellAnimationManager
         if (bgRelPath != null)
         {
             var bgFile = _overrideDataProvider.GetDataFile(bgRelPath);
-            CellAnimationSerialiser.Export(info.Prt, format, outputFolder, bgFile.File, animExists ? animFile.File : null);
+            CellAnimationSerialiser.Export(new(info.Prt), format, outputFolder, bgFile.File, animExists ? animFile.File : null);
         }
         else if (animExists)
         {
-            CellAnimationSerialiser.ExportAnimation(info.Prt, outputFolder, animFile.File, -1, -1, format);
+            CellAnimationSerialiser.ExportAnimation(new(info.Prt), outputFolder, animFile.File, -1, -1, format);
         }
     }
 
@@ -90,7 +85,7 @@ public class CellAnimationManager : ICellAnimationManager
         var bgOut = Path.GetTempFileName();
 
         var importResult = CellAnimationSerialiser.Import(
-                info.Prt,
+                new(info.Prt),
                 animationXml: animationXml,
                 animLinkFile: animExists ? animFile.File : null,
                 outputAnimLinkFile: animOut,
