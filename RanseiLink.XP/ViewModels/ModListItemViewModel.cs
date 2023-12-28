@@ -1,10 +1,8 @@
-﻿using Avalonia.Media;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.XP.ValueConverters;
 
 namespace RanseiLink.XP.ViewModels;
 
@@ -25,6 +23,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly IModPatchingService _modPatcher;
     private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly IFolderDropHandler _folderDropHandler;
+    private readonly IPathToImageConverter _pathToImageConverter;
 
     public ModListItemViewModel(
         IModSelectionViewModel parent,
@@ -36,12 +35,14 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IFileDropHandlerFactory fdhFactory,
-        IFolderDropHandler folderDropHandler)
+        IFolderDropHandler folderDropHandler,
+        IPathToImageConverter pathToImageConverter)
     {
         _settingService = settingService;
         _modKernelFactory = modKernelFactory;
         _fdhFactory = fdhFactory;
         _folderDropHandler = folderDropHandler;
+        _pathToImageConverter = pathToImageConverter;
         _parentVm = parent;
         _modService = modManager;
         _dialogService = dialogService;
@@ -70,11 +71,11 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     public void UpdateBanner()
     {
-        Banner = PathToImageSourceConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
+        Banner = _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
     }
 
-    private IImage _banner;
-    public IImage Banner
+    private object _banner;
+    public object Banner
     {
         get => _banner;
         set => RaiseAndSetIfChanged(ref _banner, value);

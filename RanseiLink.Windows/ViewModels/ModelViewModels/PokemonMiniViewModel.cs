@@ -48,7 +48,7 @@ public class PokemonMiniViewModel : ViewModelBase
 
     public bool HasType2 => Type2 != TypeId.NoType;
 
-    public ImageSource? Image => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _id);
+    public object? Image => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _id);
 
     public ICommand SelectCommand { get; }
 }

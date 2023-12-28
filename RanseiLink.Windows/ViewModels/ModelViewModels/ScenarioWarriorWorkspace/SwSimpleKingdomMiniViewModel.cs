@@ -23,7 +23,7 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
         return this;
     }
 
-    public ImageSource KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
+    public object KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
 
     public KingdomId Kingdom => _kingdom;
 

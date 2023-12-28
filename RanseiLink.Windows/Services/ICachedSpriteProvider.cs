@@ -10,5 +10,5 @@ namespace RanseiLink.Windows.Services;
 /// </summary>
 public interface ICachedSpriteProvider
 {
-    ImageSource? GetSprite(SpriteType type, int id);
+    object? GetSprite(SpriteType type, int id);
 }

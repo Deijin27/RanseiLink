@@ -19,6 +19,7 @@ public class XPServiceModule : IModule
 
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
+        builder.Register<IPathToImageConverter, PathToImageConverter>(Reuse.Singleton);
 
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);

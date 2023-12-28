@@ -8,15 +8,14 @@ using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
 
 public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
-    private readonly Func<ImageSource> _sprite;
-    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<ImageSource> sprite, int itemId)
+    private readonly Func<object> _sprite;
+    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<object> sprite, int itemId)
     {
         _model = model;
         _pokemonId = pokemonId;
@@ -39,7 +38,7 @@ public class WarriorMaxLinkListItem : ViewModelBase
 
     public string Name { get; }
 
-    public ImageSource Sprite => _sprite();
+    public object Sprite => _sprite();
 }
 
 

@@ -153,7 +153,7 @@ public class SwMiniViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
-    public ImageSource WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 

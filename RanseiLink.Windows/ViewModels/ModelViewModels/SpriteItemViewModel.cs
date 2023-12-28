@@ -1,8 +1,6 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.ValueConverters;
-using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -11,16 +9,18 @@ public class SpriteItemViewModel : ViewModelBase
     public delegate SpriteItemViewModel Factory();
 
     private readonly IAsyncDialogService _dialogService;
+    private readonly IPathToImageConverter _pathToImageConverter;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ISpriteManager _spriteManager;
     private SpriteType _spriteType;
     private bool _isOverride;
     private string _displayFile = null!;
-    private ImageSource? _displayImage;
+    private object? _displayImage;
 
-    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IAsyncDialogService dialogService)
+    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IAsyncDialogService dialogService, IPathToImageConverter pathToImageConverter)
     {
         _dialogService = dialogService;
+        _pathToImageConverter = pathToImageConverter;
         _spriteProvider = spriteProvider;
         _spriteManager = spriteManager;
 
@@ -49,7 +49,7 @@ public class SpriteItemViewModel : ViewModelBase
     public int Id { get; private set; }
     public bool IsOverride => _isOverride;
 
-    public ImageSource? DisplayImage
+    public object? DisplayImage
     {
         get => _displayImage;
         private set => RaiseAndSetIfChanged(ref _displayImage, value);  
@@ -57,7 +57,7 @@ public class SpriteItemViewModel : ViewModelBase
 
     private void UpdateDisplayImage()
     {
-        DisplayImage = PathToImageSourceConverter.TryConvert(_displayFile);
+        DisplayImage = _pathToImageConverter.TryConvert(_displayFile);
     }
 
     private void Revert()

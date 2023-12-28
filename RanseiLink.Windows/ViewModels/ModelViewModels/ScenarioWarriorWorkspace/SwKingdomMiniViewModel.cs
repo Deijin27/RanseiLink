@@ -49,7 +49,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         return this;
     }
 
-    public ImageSource WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 

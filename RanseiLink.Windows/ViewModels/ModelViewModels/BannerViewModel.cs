@@ -3,8 +3,6 @@ using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.ValueConverters;
-using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
 
@@ -12,14 +10,16 @@ public class BannerViewModel : ViewModelBase
 {
     private readonly IAsyncDialogService _dialogService;
     private readonly IBannerService _bannerService;
-    private ImageSource? _displayImage;
+    private readonly IPathToImageConverter _pathToImageConverter;
+    private object? _displayImage;
     private readonly BannerInfo _bannerInfo;
     private string _allTitles = string.Empty;
 
-    public BannerViewModel(IAsyncDialogService dialogService, IBannerService bannerService)
+    public BannerViewModel(IAsyncDialogService dialogService, IBannerService bannerService, IPathToImageConverter pathToImageConverter)
     {
         _dialogService = dialogService;
         _bannerService = bannerService;
+        _pathToImageConverter = pathToImageConverter;
         _bannerInfo = _bannerService.BannerInfo;
         ReplaceImageCommand = new RelayCommand(ReplaceImage);
         SetAllTitlesCommand = new RelayCommand(SetAllTitles);
@@ -73,7 +73,7 @@ public class BannerViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
     }
 
-    public ImageSource? DisplayImage
+    public object? DisplayImage
     {
         get => _displayImage;
         private set => RaiseAndSetIfChanged(ref _displayImage, value);
@@ -81,7 +81,7 @@ public class BannerViewModel : ViewModelBase
 
     private void UpdateDisplayImage()
     {
-        DisplayImage = PathToImageSourceConverter.TryConvert(_bannerService.ImagePath);
+        DisplayImage = _pathToImageConverter.TryConvert(_bannerService.ImagePath);
     }
 
     private async Task ReplaceImage()

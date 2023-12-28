@@ -23,6 +23,7 @@ public class WpfServiceModule : IModule
         builder.Register<IAsyncDialogService, WpfAsyncDialogService>(Reuse.Singleton);
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
+        builder.Register<IPathToImageConverter, PathToImageConverter>(Reuse.Singleton);
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
@@ -42,7 +43,8 @@ public class WpfServiceModule : IModule
                     context.Resolve<IPluginLoader>(),
                     context.Resolve<IModServiceGetterFactory>(),
                     context.Resolve<IFileDropHandlerFactory>(),
-                    context.Resolve<IFolderDropHandler>()
+                    context.Resolve<IFolderDropHandler>(),
+                    context.Resolve<IPathToImageConverter>()
             )), Reuse.Singleton);
 
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);

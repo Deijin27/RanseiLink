@@ -85,7 +85,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(ref _nestedVm, value);
     }
 
-    public ImageSource PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
+    public object PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
     private int _pokemonImageId;
     public void UpdatePokemonImage()
     {
