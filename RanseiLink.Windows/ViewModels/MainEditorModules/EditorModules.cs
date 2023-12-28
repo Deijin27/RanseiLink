@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
@@ -95,10 +96,10 @@ public class WarriorNameTableEditorModule : EditorModule
     public const string Id = "warrior_name_table";
     public override string UniqueId => Id;
     public override string ListName => "Warrior Name Table";
-    public override object ViewModel => _viewModel;
+    public override object? ViewModel => _viewModel;
 
-    private WarriorNameTableViewModel _viewModel;
-    private IBaseWarriorService _service;
+    private WarriorNameTableViewModel? _viewModel;
+    private IBaseWarriorService? _service;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
@@ -106,8 +107,8 @@ public class WarriorNameTableEditorModule : EditorModule
         _viewModel = new WarriorNameTableViewModel();
         _viewModel.SetModel(_service.NameTable);
     }
-    public override void Deactivate() => _service.Save();
-    public override void OnPatchingRom() => _service.Save();
+    public override void Deactivate() => _service?.Save();
+    public override void OnPatchingRom() => _service?.Save();
 }
 
 [EditorModule]
@@ -162,8 +163,8 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
     public override string UniqueId => Id;
     public override string ListName => "Scenario Warrior";
 
-    private IScenarioPokemonService _scenarioPokemonService;
-    private IScenarioKingdomService _scenarioKingdomService;
+    private IScenarioPokemonService? _scenarioPokemonService;
+    private IScenarioKingdomService? _scenarioKingdomService;
 
     public override void Initialise(IServiceGetter modServices)
     {
@@ -269,8 +270,8 @@ public class MsgGridEditorModule : EditorModule
     public const string Id = "msg_grid";
     public override string UniqueId => Id;
     public override string ListName => "Text";
-    public override object ViewModel => _viewModel;
-    private MsgGridViewModel _viewModel;
+    public override object? ViewModel => _viewModel;
+    private MsgGridViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
@@ -374,18 +375,22 @@ public class MapSelectorEditorModule : EditorModule
     public const string Id = "map_selector";
     public override string UniqueId => Id;
     public override string ListName => "Map";
-    private SelectorViewModel _viewModel;
-    public override object ViewModel => _viewModel;
-    private IMapService _service;
+    private SelectorViewModel? _viewModel;
+    public override object? ViewModel => _viewModel;
+    private IMapService? _service;
     private MapId? _currentId;
-    private PSLM _currentMap;
-    private MapViewModel _nestedVm;
+    private PSLM? _currentMap;
+    private MapViewModel? _nestedVm;
 
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _service = modServices.Get<IMapService>();
         _nestedVm = modServices.Get<MapViewModel>();
+        if (_nestedVm == null)
+        {
+            throw new Exception("Failed to resolve map view model");
+        }
         _currentMap = null;
         _currentId = null;
         var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
@@ -406,20 +411,32 @@ public class MapSelectorEditorModule : EditorModule
         _nestedVm.RequestReload += NestedVm_RequestReload;
     }
 
-    private void NestedVm_RequestReload(object sender, System.EventArgs e)
+    private void NestedVm_RequestReload(object? sender, System.EventArgs e)
     {
+        if (_viewModel == null || _service == null || _nestedVm == null)
+        {
+            return;
+        }
         var id = (MapId)_viewModel.Selected;
         _currentMap = _service.Retrieve(id);
         _nestedVm.SetModel(id, _currentMap);
     }
 
-    private void NestedVm_RequestSave(object sender, System.EventArgs e)
+    private void NestedVm_RequestSave(object? sender, System.EventArgs e)
     {
+        if (_viewModel == null || _service == null || _currentMap == null)
+        {
+            return;
+        }
         _service.Save((MapId)_viewModel.Selected, _currentMap);
     }
 
     public override void OnPageClosing()
     {
+        if (_viewModel == null || _service == null || _nestedVm == null)
+        {
+            return;
+        }
         if (_currentMap != null)
         {
             _service.Save((MapId)_viewModel.Selected, _currentMap);
@@ -428,6 +445,10 @@ public class MapSelectorEditorModule : EditorModule
 
     public override void OnPatchingRom()
     {
+        if (_viewModel == null || _service == null)
+        {
+            return;
+        }
         if (_currentMap != null)
         {
             _service.Save((MapId)_viewModel.Selected, _currentMap);
@@ -436,6 +457,10 @@ public class MapSelectorEditorModule : EditorModule
 
     public override void Deactivate()
     {
+        if (_viewModel == null || _service == null)
+        {
+            return;
+        }
         if (_currentMap != null)
         {
             _service.Save((MapId)_viewModel.Selected, _currentMap);
@@ -449,9 +474,9 @@ public class SpriteEditorModule : EditorModule
     public const string Id = "sprites";
     public override string UniqueId => Id;
     public override string ListName => "Sprites";
-    public override object ViewModel => _viewModel;
+    public override object? ViewModel => _viewModel;
 
-    private SpriteTypeViewModel _viewModel;
+    private SpriteTypeViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
@@ -465,16 +490,16 @@ public class BannerEditorModule : EditorModule
     public const string Id = "banner";
     public override string UniqueId => Id;
     public override string ListName => "Banner";
-    public override object ViewModel => _viewModel;
+    public override object? ViewModel => _viewModel;
 
-    private BannerViewModel _viewModel;
-    private IBannerService _service;
+    private BannerViewModel? _viewModel;
+    private IBannerService? _service;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _service = modServices.Get<IBannerService>();
         _viewModel = modServices.Get<BannerViewModel>();
     }
-    public override void Deactivate() => _service.Save();
-    public override void OnPatchingRom() => _service.Save();
+    public override void Deactivate() => _service?.Save();
+    public override void OnPatchingRom() => _service?.Save();
 }

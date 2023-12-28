@@ -1,7 +1,8 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using System.Diagnostics.CodeAnalysis;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class EditorModuleAttribute : Attribute
@@ -13,7 +14,7 @@ public abstract class EditorModule
 {
     public abstract string UniqueId { get; }
     public abstract string ListName { get; }
-    public abstract object ViewModel { get; }
+    public abstract object? ViewModel { get; }
 
     /// <summary>
     /// Initialise prior to first view of this module
@@ -54,11 +55,12 @@ public abstract class EditorModule
 
 public abstract class BaseSelectorEditorModule<TService> : EditorModule where TService : IModelService
 {
-    public override object ViewModel => _viewModel;
+    public override object? ViewModel => _viewModel;
 
-    protected TService _service;
-    protected SelectorViewModel _viewModel;
+    protected TService? _service;
+    protected SelectorViewModel? _viewModel;
 
+    [MemberNotNull(nameof(_service))]
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
@@ -70,6 +72,6 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule where TS
     }
 
     public override void Deactivate() => _service?.Save();
-    public override void OnPatchingRom() => _service.Save();
+    public override void OnPatchingRom() => _service?.Save();
 }
 

@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Windows.ViewModels;
+﻿//namespace RanseiLink.GuiCore.ViewModels;
 
 //public abstract class ScenarioSelectorViewModelBase<TModel, TViewModel> : ViewModelBase
 //    where TModel : IDataWrapper

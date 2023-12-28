@@ -1,7 +1,7 @@
 ﻿using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class SelectorViewModel : ViewModelBase
 {
@@ -24,7 +24,7 @@ public class SelectorViewModel : ViewModelBase
         }
 
         _onSelectedChanged = onSelectedChanged;
-        NestedViewModel = nestedViewModel;
+        _nestedViewModel = nestedViewModel;
         _selected = DisplayItems.First().Id;
         UpdateNestedViewModel();
         RaisePropertyChanged(nameof(Selected));
