@@ -1,10 +1,11 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Text;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 {
@@ -41,7 +42,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         Search();
     }
 
-    private void CachedMsgBlockService_MessageRemoved(object sender, MessageRemovedArgs e)
+    private void CachedMsgBlockService_MessageRemoved(object? sender, MessageRemovedArgs e)
     {
         var vmIndex = _allItems.FindIndex(x => x.Message == e.Message);
         if (vmIndex != -1)
@@ -63,7 +64,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         Search();
     }
 
-    private void CachedMsgBlockService_MessageAdded(object sender, MessageAddedArgs e)
+    private void CachedMsgBlockService_MessageAdded(object? sender, MessageAddedArgs e)
     {
         var vm = new MsgViewModel(e.BlockId, e.IndexInBlock, _cachedMsgBlockService.Retrieve(e.BlockId));
         var indexToInsert = _allItems.FindIndex(x => x.BlockId == e.BlockId && x.Id == e.IndexInBlock);
@@ -152,8 +153,8 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     private readonly List<MsgViewModel> _allItems = new();
 
-    private MsgViewModel _selectedItem;
-    public MsgViewModel SelectedItem
+    private MsgViewModel? _selectedItem;
+    public MsgViewModel? SelectedItem
     {
         get => _selectedItem;
         set => RaiseAndSetIfChanged(ref _selectedItem, value);
@@ -197,12 +198,12 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     private void Remove()
     {
-        SelectedItem.Block.Remove(SelectedItem.Message);
+        SelectedItem?.Block.Remove(SelectedItem.Message);
     }
 
     private void Add()
     {
-        SelectedItem.Block.Add(SelectedItem.GroupId);
+        SelectedItem?.Block.Add(SelectedItem.GroupId);
     }
 
     public ICommand SearchCommand { get; }
@@ -285,8 +286,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         _busy = false;
     }
 
-    private static bool TryGenerateRegex(string pattern, RegexOptions options, out Regex regex)
+    private static bool TryGenerateRegex(string pattern, RegexOptions options, [NotNullWhen(true)] out Regex? regex)
     {
+        options |= RegexOptions.Compiled;
         try
         {
             regex = new Regex(pattern, options);

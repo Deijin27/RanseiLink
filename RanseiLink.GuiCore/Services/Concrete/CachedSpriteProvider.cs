@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.Services.Concrete;
+namespace RanseiLink.GuiCore.Services.Concrete;
 
 public class CachedSpriteProvider : ICachedSpriteProvider
 {

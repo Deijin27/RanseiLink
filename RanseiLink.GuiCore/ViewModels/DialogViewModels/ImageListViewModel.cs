@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 public class ImageListViewModel
 {
     public ImageListViewModel(IEnumerable<SpriteFile> sprites, SpriteItemViewModel.Factory factory)

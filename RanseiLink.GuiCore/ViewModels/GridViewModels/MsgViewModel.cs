@@ -2,15 +2,14 @@
 using RanseiLink.Core.Text;
 using System.Collections;
 using System.ComponentModel;
-using System.IO;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class MsgViewModel : INotifyDataErrorInfo
 {
     private readonly ChangeTrackedBlock _block;
 
-    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+    public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
     public Message Message => _block[Id];
     public MsgViewModel(int blockId, int id, ChangeTrackedBlock block)
@@ -92,19 +91,19 @@ public class MsgViewModel : INotifyDataErrorInfo
         }
     }
 
-    public IEnumerable GetErrors(string propertyName)
+    public IEnumerable GetErrors(string? propertyName)
     {
         if (string.IsNullOrEmpty(propertyName))
         {
             if (HasErrors)
             {
-                return new string[] { _error };
+                return new string?[] { _error };
             }
         }
-        return null;
+        return Array.Empty<string?>();
     }
 
-    private string _error;
+    private string? _error;
     private void Validate()
     {
         var testMsg = new Message(

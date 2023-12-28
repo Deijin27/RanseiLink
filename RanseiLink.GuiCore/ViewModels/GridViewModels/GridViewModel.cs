@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public interface IGridViewModel<TItemViewModel>
 {

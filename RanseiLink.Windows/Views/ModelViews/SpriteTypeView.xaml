@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance vm:SpriteTypeViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -39,7 +40,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:SpriteItemViewModel}">
+                    <DataTemplate DataType="{x:Type cvm:SpriteItemViewModel}">
                         <Grid Background="{DynamicResource WindowBackgroundBrush}">
                             <Grid.ContextMenu>
                                 <ContextMenu>

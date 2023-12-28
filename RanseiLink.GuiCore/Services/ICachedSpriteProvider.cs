@@ -1,8 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
-using System.Windows.Media;
 
-namespace RanseiLink.Windows.Services;
+namespace RanseiLink.GuiCore.Services;
 
 /// <summary>
 /// A service to avoid constantly reloading common images e.g. the little pokemon and warrior sprites.

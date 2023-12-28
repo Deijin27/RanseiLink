@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
@@ -48,7 +49,7 @@
         <ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5" d:Background="{DynamicResource WindowBackgroundBrush}" 
                       Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
+                <DataTemplate DataType="{x:Type cvm:ModListItemViewModel}">
                     <Button HorizontalContentAlignment="Left"
                                 CommandParameter="{Binding Mod}" 
                                 Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">

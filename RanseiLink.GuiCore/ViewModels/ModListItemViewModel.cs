@@ -4,29 +4,28 @@ using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 
-namespace RanseiLink.XP.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
-public delegate IModListItemViewModel ModListItemViewModelFactory(IModSelectionViewModel parent, ModInfo mod);
+public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod);
 
 public interface IModListItemViewModel
 {
     void UpdateBanner();
+    event Action<IModListItemViewModel> RequestRemove;
+    event Action RequestRefresh;
 }
-
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
-    private readonly IModSelectionViewModel _parentVm;
     private readonly IModManager _modService;
     private readonly IAsyncDialogService _dialogService;
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
-    private readonly IModPatchingService _modPatcher;
     private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly IFolderDropHandler _folderDropHandler;
     private readonly IPathToImageConverter _pathToImageConverter;
+    private readonly IModPatchingService _modPatcher;
 
     public ModListItemViewModel(
-        IModSelectionViewModel parent,
         ModInfo mod,
         IModManager modManager,
         IModPatchingService modPatcher,
@@ -43,7 +42,6 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _fdhFactory = fdhFactory;
         _folderDropHandler = folderDropHandler;
         _pathToImageConverter = pathToImageConverter;
-        _parentVm = parent;
         _modService = modManager;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
@@ -57,10 +55,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         EditModInfoCommand = new RelayCommand(() => EditModInfo(Mod));
         CreateModBasedOnCommand = new RelayCommand(() => CreateModBasedOn(Mod));
         DeleteModCommand = new RelayCommand(() => DeleteMod(Mod));
-        RunPluginCommand = new RelayCommand<PluginInfo>(parameter => RunPlugin(Mod, parameter));
+        RunPluginCommand = new RelayCommand<PluginInfo>(async parameter => { if (parameter != null) await RunPlugin(Mod, parameter); });
         ShowInExplorerCommand = new RelayCommand(() =>
         {
-            //System.Diagnostics.Process.Start("explorer.exe", Mod.FolderPath);
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
             {
                 FileName = Mod.FolderPath + "/",
@@ -74,23 +71,23 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         Banner = _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
     }
 
-    private object _banner;
-    public object Banner
+    private object? _banner;
+    public object? Banner
     {
         get => _banner;
         set => RaiseAndSetIfChanged(ref _banner, value);
     }
-
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ModInfo Mod { get; }
     public ICommand PatchRomCommand { get; }
     public ICommand ExportModCommand { get; }
     public ICommand EditModInfoCommand { get; }
     public ICommand CreateModBasedOnCommand { get; }
-    public ICommand RandomizeCommand { get; }
     public ICommand DeleteModCommand { get; }
     public ICommand RunPluginCommand { get; }
     public ICommand ShowInExplorerCommand { get; }
+    public event Action<IModListItemViewModel>? RequestRemove;
+    public event Action? RequestRefresh;
 
     #region Mod Specific Command Implementations
 
@@ -109,7 +106,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             return;
         }
 
-        Exception error = null;
+        Exception? error = null;
         await _dialogService.ProgressDialog(progress =>
         {
             try
@@ -138,7 +135,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         {
             return;
         }
-        Exception error = null;
+        Exception? error = null;
         await _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Exporting mod..."));
@@ -176,7 +173,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             progress.Report(new ProgressInfo("Editing mod info..."));
             _modService.Update(vm.ModInfo);
             progress.Report(new ProgressInfo("Updating mod list...", 50));
-            _parentVm.RefreshModItems();
+            RequestRefresh?.Invoke();
             progress.Report(new ProgressInfo("Edit Complete!", 100));
         });
     }
@@ -188,14 +185,14 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             return;
         }
         var newModInfo = vm.ModInfo;
-        Exception error = null;
+        Exception? error = null;
         await _dialogService.ProgressDialog(progress =>
         {
             progress.Report(new ProgressInfo("Creating mod..."));
             ModInfo newMod;
             try
             {
-                newMod = _modService.CreateBasedOn(mod, newModInfo.Name, newModInfo.Version, newModInfo.Author);
+                newMod = _modService.CreateBasedOn(mod, newModInfo.Name ?? "", newModInfo.Version ?? "", newModInfo.Author ?? "");
             }
             catch (Exception e)
             {
@@ -204,7 +201,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             }
 
             progress.Report(new ProgressInfo("Updating mod list...", 60));
-            _parentVm.RefreshModItems();
+            RequestRefresh?.Invoke();
             progress.Report(new ProgressInfo("Mod Creating Complete!", 100));
         });
 
@@ -225,8 +222,14 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         {
             return;
         }
-        _modService.Delete(mod);
-        _parentVm.ModItems.Remove(this);
+        await _dialogService.ProgressDialog(progress =>
+        {
+            progress.Report(new ProgressInfo("Deleting mod..."));
+            _modService.Delete(mod);
+            progress.Report(new ProgressInfo("Updating mod list", 90));
+            RequestRemove?.Invoke(this);
+            progress.Report(new ProgressInfo("Mod Deleted!", 100));
+        });
     }
 
     private async Task RunPlugin(ModInfo mod, PluginInfo chosen)

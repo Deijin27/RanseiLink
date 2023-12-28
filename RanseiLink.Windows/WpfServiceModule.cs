@@ -32,21 +32,6 @@ public class WpfServiceModule : IModule
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
 
-        builder.RegisterDelegate(context =>
-            new ModListItemViewModelFactory((mod) =>
-                new ModListItemViewModel(
-                    mod,
-                    context.Resolve<IModManager>(),
-                    context.Resolve<IModPatchingService>(),
-                    context.Resolve<IAsyncDialogService>(),
-                    context.Resolve<ISettingService>(),
-                    context.Resolve<IPluginLoader>(),
-                    context.Resolve<IModServiceGetterFactory>(),
-                    context.Resolve<IFileDropHandlerFactory>(),
-                    context.Resolve<IFolderDropHandler>(),
-                    context.Resolve<IPathToImageConverter>()
-            )), Reuse.Singleton);
-
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
 
         // editor modules
@@ -86,7 +71,7 @@ public class WpfModServiceModule : IModule
     public void Load(IRegistrator builder)
     {
         
-        builder.Register<ICachedSpriteProvider, CachedSpriteProvider>(Reuse.Singleton);
+        
         
         builder.Register<AbilityViewModel>();
         builder.Register<BaseWarriorViewModel>();
@@ -111,10 +96,6 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
 
-        builder.Register<MsgGridViewModel>();
-        builder.Register<ScenarioWarriorGridViewModel>();
-
-        builder.Register<SpriteItemViewModel>();
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();
         builder.Register<SwSimpleKingdomMiniViewModel>();
