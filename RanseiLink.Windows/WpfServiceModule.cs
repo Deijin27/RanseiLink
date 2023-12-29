@@ -1,13 +1,9 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.PluginModule.Api;
+﻿using RanseiLink.PluginModule.Api;
 using RanseiLink.Windows.Services.Concrete;
 using RanseiLink.Windows.ViewModels;
 using DryIoc;
-using RanseiLink.PluginModule.Services;
-using RanseiLink.Core.Settings;
 using RanseiLink.Windows.Dialogs;
 using System.Reflection;
-using RanseiLink.Windows.Services;
 using RanseiLink.Core;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.DragDrop;
@@ -21,6 +17,7 @@ public class WpfServiceModule : IModule
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
         builder.Register<IDispatcherService, DispatcherService>(Reuse.Singleton);
+        builder.Register<IAppInfoService, AppInfoService>(Reuse.Singleton);
         builder.Register<IAsyncDialogService, WpfAsyncDialogService>(Reuse.Singleton);
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
@@ -28,8 +25,6 @@ public class WpfServiceModule : IModule
 
         builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
-
-        builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
 
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
 
@@ -69,9 +64,6 @@ public class WpfModServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        
-        
-        
         builder.Register<AbilityViewModel>();
         builder.Register<BaseWarriorViewModel>();
         builder.Register<BattleConfigViewModel>();

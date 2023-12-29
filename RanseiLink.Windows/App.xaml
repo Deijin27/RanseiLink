@@ -26,7 +26,7 @@
             
             <!-- Register Main View Models -->
 
-            <DataTemplate DataType="{x:Type vm:ModSelectionViewModel}">
+            <DataTemplate DataType="{x:Type cvm:ModSelectionViewModel}">
                 <views:ModSelectionView/>
             </DataTemplate>
 

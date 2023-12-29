@@ -13,10 +13,12 @@ public class GuiCoreServiceModule : IModule
 
         builder.Register<MainWindowViewModel>(Reuse.Singleton);
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
+        builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
         builder.Register<ModListItemViewModel>(Reuse.Transient);
         builder.RegisterDelegate(context => 
             new ModListItemViewModelFactory((mod) => context.Resolve<ModListItemViewModel>().Init(mod))
             , Reuse.Singleton);
+
     }
 }
 

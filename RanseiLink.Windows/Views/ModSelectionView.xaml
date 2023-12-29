@@ -7,7 +7,7 @@
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
              xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
-             d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance cvm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="500" Background="Transparent">
     <UserControl.Resources>

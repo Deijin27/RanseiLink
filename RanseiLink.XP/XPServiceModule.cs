@@ -1,13 +1,9 @@
 ﻿using DryIoc;
 using RanseiLink.Core;
-using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
-using RanseiLink.PluginModule.Services;
 using RanseiLink.XP.Dialogs;
 using RanseiLink.XP.DragDrop;
 using RanseiLink.XP.Services;
-using RanseiLink.XP.ViewModels;
 
 namespace RanseiLink.XP;
 public class XPServiceModule : IModule
@@ -17,6 +13,7 @@ public class XPServiceModule : IModule
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IAsyncDialogService, DialogService>(Reuse.Singleton);
         builder.Register<IDispatcherService, DispatcherService>(Reuse.Singleton);
+        builder.Register<IAppInfoService, AppInfoService>(Reuse.Singleton);
 
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
@@ -24,8 +21,6 @@ public class XPServiceModule : IModule
 
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
-
-        builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
     }
 
     private static IDialogLocator CreateDialogLocator()
