@@ -1,8 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Windows.Services;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
@@ -36,15 +35,15 @@ public class MainWindowViewModel : ViewModelBase
 
         _modSelectionVm = modSelectionViewModel;
         _mainEditorViewModel = mainEditorViewModel;
-        CurrentVm = _modSelectionVm;
+        _currentVm = _modSelectionVm;
 
         _modSelectionVm.ModSelected += OnModSelected;
 
         BackButtonCommand = new RelayCommand(OnBackButtonPressed);
-        ToggleThemeCommand = new RelayCommand(ToggleTheme);
+        ToggleThemeCommand = new RelayCommand(_themeService.ToggleTheme);
     }
 
-    internal async void OnWindowShown()
+    public async void OnWindowShown()
     {
         await _fallbackManager.CheckDefaultsPopulated();
     }
@@ -78,17 +77,6 @@ public class MainWindowViewModel : ViewModelBase
         {
             mainEditor.Deactivate();
         }
-    }
-
-    private void ToggleTheme()
-    {
-        var newTheme = _themeService.CurrentTheme switch
-        {
-            Theme.Dark => Theme.Light,
-            Theme.Light => Theme.Dark,
-            _ => throw new System.Exception("Invalid theme enum value"),
-        };
-        _themeService.SetTheme(newTheme);
     }
 
     private void OnModSelected(ModInfo mod)

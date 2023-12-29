@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Settings;
-using RanseiLink.Windows.ViewModels;
 using System.Windows;
 
 namespace RanseiLink.Windows;

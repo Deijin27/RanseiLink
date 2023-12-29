@@ -1,10 +1,6 @@
 ﻿using DryIoc;
 using RanseiLink.Core;
-using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
-using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.GuiCore.Services.Concrete;
-using RanseiLink.PluginModule.Services;
 
 namespace RanseiLink.GuiCore;
 
@@ -15,20 +11,12 @@ public class GuiCoreServiceModule : IModule
         builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
         builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
 
-        builder.RegisterDelegate(context =>
-            new ModListItemViewModelFactory((mod) =>
-                new ModListItemViewModel(
-                    mod,
-                    context.Resolve<IModManager>(),
-                    context.Resolve<IModPatchingService>(),
-                    context.Resolve<IAsyncDialogService>(),
-                    context.Resolve<ISettingService>(),
-                    context.Resolve<IPluginLoader>(),
-                    context.Resolve<IModServiceGetterFactory>(),
-                    context.Resolve<IFileDropHandlerFactory>(),
-                    context.Resolve<IFolderDropHandler>(),
-                    context.Resolve<IPathToImageConverter>()
-            )), Reuse.Singleton);
+        builder.Register<MainWindowViewModel>(Reuse.Singleton);
+        builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
+        builder.Register<ModListItemViewModel>(Reuse.Transient);
+        builder.RegisterDelegate(context => 
+            new ModListItemViewModelFactory((mod) => context.Resolve<ModListItemViewModel>().Init(mod))
+            , Reuse.Singleton);
     }
 }
 

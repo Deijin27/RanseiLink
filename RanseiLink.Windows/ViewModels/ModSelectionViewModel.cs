@@ -6,11 +6,6 @@ using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public interface IModSelectionViewModel
-{
-    event Action<ModInfo> ModSelected;
-    ObservableCollection<IModListItemViewModel> ModItems { get; }
-}
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;

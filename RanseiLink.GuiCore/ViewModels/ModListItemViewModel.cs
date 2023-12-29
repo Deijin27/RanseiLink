@@ -26,7 +26,6 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly IModPatchingService _modPatcher;
 
     public ModListItemViewModel(
-        ModInfo mod,
         IModManager modManager,
         IModPatchingService modPatcher,
         IAsyncDialogService dialogService,
@@ -45,10 +44,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _modService = modManager;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
-        Mod = mod;
+        
         PluginItems = pluginLoader.LoadPlugins(out var _);
-
-        UpdateBanner();
 
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
@@ -66,6 +63,17 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         });
     }
 
+    /// <summary>
+    /// IMPORTANT: This must be called after construction or things go kaboom
+    /// </summary>
+    /// <param name="mod"></param>
+    internal ModListItemViewModel Init(ModInfo mod)
+    {
+        Mod = mod;
+        UpdateBanner();
+        return this;
+    }
+
     public void UpdateBanner()
     {
         Banner = _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
@@ -78,7 +86,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         set => RaiseAndSetIfChanged(ref _banner, value);
     }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
-    public ModInfo Mod { get; }
+    public ModInfo Mod { get; private set; } = null!;
     public ICommand PatchRomCommand { get; }
     public ICommand ExportModCommand { get; }
     public ICommand EditModInfoCommand { get; }
