@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.Windows.Services;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 

@@ -2,7 +2,6 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.Services;
 
 namespace RanseiLink.Windows.ViewModels;
 

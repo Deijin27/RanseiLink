@@ -1,7 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.Services;
-using System.Windows.Media;
 
 namespace RanseiLink.Windows.ViewModels;
 
