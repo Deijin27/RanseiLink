@@ -70,7 +70,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _modServiceGetter = _modKernelFactory.Create(mod);
         _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
         _cachedMsgBlockService.RebuildCache();
-        SetCurrentModule(CurrentModuleId ?? ListItems[0].ModuleId, true);
+        var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
+        SetCurrentModule(module, true);
         RaiseAllPropertiesChanged();
     }
 

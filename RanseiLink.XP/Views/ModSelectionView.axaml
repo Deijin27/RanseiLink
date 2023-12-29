@@ -5,6 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="RanseiLink.XP.Views.ModSelectionView"
 			 xmlns:vm="clr-namespace:RanseiLink.XP.ViewModels"
+			 xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
 			 xmlns:local="clr-namespace:RanseiLink.XP.Views"
              xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
 			 >
@@ -92,7 +93,7 @@
 		<ScrollViewer >
 			<ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5">
 				<ItemsControl.ItemTemplate>
-					<DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
+					<DataTemplate DataType="{x:Type cvm:ModListItemViewModel}">
 						<Button HorizontalContentAlignment="Left"
 								Classes="Hover"
                                 CommandParameter="{Binding Mod}"
