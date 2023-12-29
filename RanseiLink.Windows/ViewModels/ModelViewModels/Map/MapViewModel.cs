@@ -2,7 +2,6 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.View3D;
-using RanseiLink.Windows.Views.ModelViews.Map;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -31,6 +30,7 @@ public class MapViewModel : ViewModelBase
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
+    private readonly IMapViewerService _mapViewerService;
     private readonly ISceneRenderer _sceneRenderer;
     private MapId _id;
 
@@ -44,13 +44,13 @@ public class MapViewModel : ViewModelBase
         IGimmickService gimmickService, 
         IOverrideDataProvider overrideSpriteProvider, 
         IMapManager mapManager,
-        ISceneRenderer sceneRenderer)
+        IMapViewerService mapViewerService)
     {
         _mapManager = mapManager;
+        _mapViewerService = mapViewerService;
         _dialogService = dialogService;
         _gimmickService = gimmickService;
         _spriteProvider = overrideSpriteProvider;
-        _sceneRenderer = sceneRenderer;
         
         RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
         ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
@@ -388,16 +388,7 @@ public class MapViewModel : ViewModelBase
 
     public async void View3DModel()
     {
-        _sceneRenderer.Configure(0);
-        
-        var window = new Map3DWindow(_sceneRenderer);
-        var result = _sceneRenderer.LoadScene(_id);
-        if (result.IsFailed)
-        {
-            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
-            return;
-        }
-        window.ShowDialog();
+        await _mapViewerService.ShowDialog(_id);
     }
 
     public async void Revert3dModel()

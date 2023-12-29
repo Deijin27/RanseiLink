@@ -5,7 +5,6 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
-using RanseiLink.Windows.Views.ModelViews.Map;
 using RanseiLink.View3D;
 using System.Text.RegularExpressions;
 
@@ -17,6 +16,7 @@ public class BattleConfigViewModel : ViewModelBase
     private readonly ISceneRenderer _sceneRenderer;
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
+    private readonly IMapViewerService _mapViewerService;
 
     public BattleConfigViewModel(
         IMapService mapService, 
@@ -24,12 +24,14 @@ public class BattleConfigViewModel : ViewModelBase
         IIdToNameService idToNameService, 
         ISceneRenderer sceneRenderer,
         IAsyncDialogService dialogService,
-        IOverrideDataProvider overrideDataProvider)
+        IOverrideDataProvider overrideDataProvider,
+        IMapViewerService mapViewerService)
     {
         _model = new BattleConfig();
         _sceneRenderer = sceneRenderer;
         _dialogService = dialogService;
         _overrideDataProvider = overrideDataProvider;
+        _mapViewerService = mapViewerService;
         MapItems = mapService.GetMapIds();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
@@ -292,15 +294,6 @@ public class BattleConfigViewModel : ViewModelBase
 
     public async void View3DModel()
     {
-        _sceneRenderer.Configure(0);
-
-        var window = new Map3DWindow(_sceneRenderer);
-        var result = _sceneRenderer.LoadScene(Id);
-        if (result.IsFailed)
-        {
-            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load model", result.ToString(), MessageBoxType.Warning));
-            return;
-        }
-        window.ShowDialog();
+        await _mapViewerService.ShowDialog(Id);
     }
 }
