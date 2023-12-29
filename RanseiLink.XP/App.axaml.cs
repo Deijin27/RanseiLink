@@ -5,7 +5,6 @@ using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using RanseiLink.PluginModule;
-using RanseiLink.XP.ViewModels;
 using RanseiLink.XP.Views;
 using System.Reflection;
 using RanseiLink.Core.Settings;
@@ -43,9 +42,11 @@ public partial class App : Application
             builder.Resolve<IThemeService>();
 
             SettingService = builder.Resolve<ISettingService>();
+            var mainWindowVm = builder.Resolve<MainWindowViewModel>();
+            mainWindowVm.MainEditorEnabled = false;
             desktop.MainWindow = MainWindow = new MainWindow()
             {
-                DataContext = builder.Resolve<MainWindowViewModel>(),
+                DataContext = mainWindowVm,
             };
         }
 
