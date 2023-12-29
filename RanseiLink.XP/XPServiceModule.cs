@@ -16,6 +16,7 @@ public class XPServiceModule : IModule
     {
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IAsyncDialogService, DialogService>(Reuse.Singleton);
+        builder.Register<IDispatcherService, DispatcherService>(Reuse.Singleton);
 
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
@@ -24,26 +25,7 @@ public class XPServiceModule : IModule
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
 
-
-
-        builder.Register<MainWindowViewModel, MainWindowViewModel>(Reuse.Singleton);
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
-        builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
-
-        builder.RegisterDelegate(context =>
-            new ModListItemViewModelFactory((parent, mod) =>
-                new ModListItemViewModel(
-                    parent,
-                    mod,
-                    context.Resolve<IModManager>(),
-                    context.Resolve<IModPatchingService>(),
-                    context.Resolve<IAsyncDialogService>(),
-                    context.Resolve<ISettingService>(),
-                    context.Resolve<IPluginLoader>(),
-                    context.Resolve<IModServiceGetterFactory>(),
-                    context.Resolve<IFileDropHandlerFactory>(),
-                    context.Resolve<IFolderDropHandler>()
-            )), Reuse.Singleton);
     }
 
     private static IDialogLocator CreateDialogLocator()

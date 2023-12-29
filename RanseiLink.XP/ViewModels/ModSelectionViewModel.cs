@@ -83,7 +83,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public void RefreshModItems()
     {
-        Dispatcher.UIThread.Invoke(() =>
+        Dispatcher.UIThread.InvokeAsync(() =>
         {
             ModItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))

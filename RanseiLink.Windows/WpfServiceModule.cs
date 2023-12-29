@@ -20,6 +20,7 @@ public class WpfServiceModule : IModule
     {
         builder.RegisterInstance(CreateDialogLocator());
         builder.Register<IDialogService, DialogService>(Reuse.Singleton);
+        builder.Register<IDispatcherService, DispatcherService>(Reuse.Singleton);
         builder.Register<IAsyncDialogService, WpfAsyncDialogService>(Reuse.Singleton);
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);

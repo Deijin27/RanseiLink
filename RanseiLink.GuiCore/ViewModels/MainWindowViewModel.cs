@@ -5,7 +5,6 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
-    private readonly IThemeService _themeService;
     private readonly IModSelectionViewModel _modSelectionVm;
     private readonly IMainEditorViewModel _mainEditorViewModel;
     private readonly IFallbackSpriteManager _fallbackManager;
@@ -21,7 +20,6 @@ public class MainWindowViewModel : ViewModelBase
         IFallbackSpriteManager fallbackManager)
     {
         _fallbackManager = fallbackManager;
-        _themeService = themeService;
         // Initial load of plugins to create cache and alert user of failures
         pluginLoader.LoadPlugins(out var failures);
         if (failures?.AnyFailures == true)
@@ -40,7 +38,7 @@ public class MainWindowViewModel : ViewModelBase
         _modSelectionVm.ModSelected += OnModSelected;
 
         BackButtonCommand = new RelayCommand(OnBackButtonPressed);
-        ToggleThemeCommand = new RelayCommand(_themeService.ToggleTheme);
+        ToggleThemeCommand = new RelayCommand(themeService.ToggleTheme);
     }
 
     public async void OnWindowShown()

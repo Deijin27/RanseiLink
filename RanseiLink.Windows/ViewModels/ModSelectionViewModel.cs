@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Services;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
@@ -13,7 +12,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly ISettingService _settingService;
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
-    private readonly object _modItemsLock = new();
+    private readonly IDispatcherService _dispatcherService;
     private bool _outdatedModsExist;
 
     public bool OutdatedModsExist
@@ -22,7 +21,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
     }
 
-    public ObservableCollection<IModListItemViewModel> ModItems { get; } = new ObservableCollection<IModListItemViewModel>();
+    public ObservableCollection<IModListItemViewModel> ModItems { get; } = [];
 
     public ICommand ModItemClicked { get; }
     public ICommand CreateModCommand { get; }
@@ -30,6 +29,9 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public ICommand UpgradeOutdatedModsCommand { get; }
     public ICommand PopulateGraphicsDefaultsCommand { get; }
     public ICommand ReportBugCommand { get; }
+
+    public ICommand ToggleThemeCommand { get; }
+    public ICommand CrashCommand { get; }
 
 
     public event Action<ModInfo> ModSelected;
@@ -40,16 +42,17 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         ISettingService settingService,
         ModListItemViewModelFactory modListItemViewModelFactory,
         IFallbackSpriteManager fallbackManager,
-        IFileDropHandlerFactory fdhFactory)
+        IFileDropHandlerFactory fdhFactory,
+        IDispatcherService dispatcherService,
+        IThemeService themeService)
     {
         _settingService = settingService;
         _modService = modManager;
         _dialogService = dialogService;
         _itemViewModelFactory = modListItemViewModelFactory;
         _fdhFactory = fdhFactory;
+        _dispatcherService = dispatcherService;
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(App.Version));
-
-        BindingOperations.EnableCollectionSynchronization(ModItems, _modItemsLock);
 
         RefreshModItems();
         RefreshOutdatedModsExist();
@@ -63,6 +66,9 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         {
             ModSelected?.Invoke(mi);
         });
+
+        ToggleThemeCommand = new RelayCommand(themeService.ToggleTheme);
+        CrashCommand = new RelayCommand(() => throw new Exception("Alert! Alert! Intentional Crash Detected!"));
     }
 
     private void RefreshOutdatedModsExist()
@@ -73,7 +79,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public void RefreshModItems()
     {
         // If necessary, I could do the stuff before showing the dialog for the fast things, then not have to do this locking
-        lock (_modItemsLock)
+        _dispatcherService.Invoke(() =>
         {
             ModItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
@@ -83,15 +89,15 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
                 item.RequestRemove += RemoveItem;
                 ModItems.Add(item);
             }
-        }
+        });
     }
 
     private void RemoveItem(IModListItemViewModel mod)
     {
-        lock (_modItemsLock)
+        _dispatcherService.Invoke(() =>
         {
             ModItems.Remove(mod);
-        }
+        });
     }
 
     private async Task CreateMod()
