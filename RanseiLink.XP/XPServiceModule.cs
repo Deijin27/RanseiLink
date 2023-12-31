@@ -27,7 +27,7 @@ public class XPServiceModule : IModule
     {
         var locator = new RegistryDialogLocator();
 
-        //locator.Register<ImageListDialog, ImageListViewModel>();
+        locator.Register<ImageListDialog, ImageListViewModel>();
         locator.Register<ModCommitDialog, ModCommitViewModel>();
         locator.Register<ModCreateBasedOnDialog, ModCreateBasedOnViewModel>();
         locator.Register<ModCreationDialog, ModCreationViewModel>();
