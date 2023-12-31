@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
-namespace RanseiLink.XP.Views;
+namespace RanseiLink.XP.Dialogs;
 public partial class PluginDialog : Window
 {
     public PluginDialog()

@@ -1,6 +1,6 @@
 ﻿using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.XP.Views;
+using RanseiLink.XP.Dialogs;
 
 namespace RanseiLink.XP.Services;
 public class PluginService(IPluginFormLoader pluginFormLoader) : IAsyncPluginService
