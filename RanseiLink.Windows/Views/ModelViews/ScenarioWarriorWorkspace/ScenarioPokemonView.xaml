@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
-             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance Type=vm:ScenarioPokemonViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 

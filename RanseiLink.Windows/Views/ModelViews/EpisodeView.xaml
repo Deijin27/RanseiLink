@@ -6,7 +6,7 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
-             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              d:DataContext="{d:DesignInstance Type=vm:EpisodeViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">

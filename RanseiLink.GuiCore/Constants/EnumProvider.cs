@@ -1,9 +1,8 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
-using RanseiLink.Windows.ViewModels;
 
-namespace RanseiLink.Windows.Constants;
+namespace RanseiLink.GuiCore.Constants;
 
 public static class EnumProvider
 {

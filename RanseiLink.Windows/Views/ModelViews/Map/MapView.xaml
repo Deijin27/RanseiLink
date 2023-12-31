@@ -6,7 +6,7 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
-             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:MapViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 

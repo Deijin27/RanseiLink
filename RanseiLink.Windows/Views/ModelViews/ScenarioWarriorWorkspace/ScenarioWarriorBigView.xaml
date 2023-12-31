@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
-             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              mc:Ignorable="d" 

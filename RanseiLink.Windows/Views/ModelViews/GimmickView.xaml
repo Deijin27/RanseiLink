@@ -6,7 +6,7 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
-             xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.Windows.ValueConverters"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
