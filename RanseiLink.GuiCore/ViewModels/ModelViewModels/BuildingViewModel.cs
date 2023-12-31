@@ -3,7 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animManager) : ViewModelBase
 {

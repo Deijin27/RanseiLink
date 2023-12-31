@@ -1,10 +1,9 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using RanseiLink.View3D;
 using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public enum MapRenderMode
 {
@@ -22,22 +21,21 @@ public class MapViewModel : ViewModelBase
     private static MapRenderMode _mapRenderMode; // static so it's preserved between pages
     private static bool _hideGimmicks;
     private static bool _hidePokemonMarkers;
-    private MapGimmickViewModel _selectedGimmick;
-    private MapPokemonPositionViewModel _selectedPokemonPosition;
-    private MapGridSubCellViewModel _mouseOverItem;
-    private MapGridCellViewModel _selectedCell;
+    private MapGimmickViewModel? _selectedGimmick;
+    private MapPokemonPositionViewModel? _selectedPokemonPosition;
+    private MapGridSubCellViewModel? _mouseOverItem;
+    private MapGridCellViewModel? _selectedCell;
     private readonly IAsyncDialogService _dialogService;
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
     private readonly IMapViewerService _mapViewerService;
-    private readonly ISceneRenderer _sceneRenderer;
     private MapId _id;
 
-    public event EventHandler RequestSave;
-    public event EventHandler RequestReload;
+    public event EventHandler? RequestSave;
+    public event EventHandler? RequestReload;
 
-    public PSLM Map { get; set; }
+    public PSLM Map { get; set; } = null!;
 
     public MapViewModel(
         IAsyncDialogService dialogService, 
@@ -61,7 +59,7 @@ public class MapViewModel : ViewModelBase
         ImportPslmCommand = new RelayCommand(ImportPslm);
         ExportPslmCommand = new RelayCommand(ExportPslm);
         RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
-        ModifyElevationToPaintCommand = new RelayCommand<string>(diff => ElevationToPaint += float.Parse(diff));
+        ModifyElevationToPaintCommand = new RelayCommand<string>(diff => { if (diff != null) ElevationToPaint += float.Parse(diff); });
         View3DModelCommand = new RelayCommand(View3DModel);
     }
 
@@ -179,13 +177,13 @@ public class MapViewModel : ViewModelBase
 
     public ObservableCollection<List<MapGridCellViewModel>> Matrix { get; } = new();
 
-    public MapGridSubCellViewModel MouseOverItem
+    public MapGridSubCellViewModel? MouseOverItem
     {
         get => _mouseOverItem;
         set => RaiseAndSetIfChanged(ref _mouseOverItem, value);
     }
 
-    public MapGimmickViewModel SelectedGimmick
+    public MapGimmickViewModel? SelectedGimmick
     {
         get => _selectedGimmick;
         set
@@ -197,7 +195,7 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    public MapPokemonPositionViewModel SelectedPokemonPosition
+    public MapPokemonPositionViewModel? SelectedPokemonPosition
     {
         get => _selectedPokemonPosition;
         set
@@ -209,7 +207,7 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    public MapGridCellViewModel SelectedCell
+    public MapGridCellViewModel? SelectedCell
     {
         get => _selectedCell;
         set
@@ -425,12 +423,12 @@ public class MapViewModel : ViewModelBase
         {
             return;
         }
-        RequestReload.Invoke(this, EventArgs.Empty);
+        RequestReload?.Invoke(this, EventArgs.Empty);
     }
 
     private async void ExportPslm()
     {
-        RequestSave.Invoke(this, EventArgs.Empty);
+        RequestSave?.Invoke(this, EventArgs.Empty);
         if (!await _mapManager.ExportPslm(_id))
         {
             return;

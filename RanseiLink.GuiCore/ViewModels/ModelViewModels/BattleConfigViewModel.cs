@@ -5,15 +5,13 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
-using RanseiLink.View3D;
 using System.Text.RegularExpressions;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class BattleConfigViewModel : ViewModelBase
 {
     private BattleConfig _model;
-    private readonly ISceneRenderer _sceneRenderer;
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IMapViewerService _mapViewerService;
@@ -21,14 +19,12 @@ public class BattleConfigViewModel : ViewModelBase
     public BattleConfigViewModel(
         IMapService mapService, 
         IJumpService jumpService, 
-        IIdToNameService idToNameService, 
-        ISceneRenderer sceneRenderer,
+        IIdToNameService idToNameService,
         IAsyncDialogService dialogService,
         IOverrideDataProvider overrideDataProvider,
         IMapViewerService mapViewerService)
     {
         _model = new BattleConfig();
-        _sceneRenderer = sceneRenderer;
         _dialogService = dialogService;
         _overrideDataProvider = overrideDataProvider;
         _mapViewerService = mapViewerService;

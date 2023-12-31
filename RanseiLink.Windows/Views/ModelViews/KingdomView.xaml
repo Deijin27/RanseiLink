@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
              d:Background="{DynamicResource WindowBackgroundBrush}"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance Type=vm:KingdomViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 

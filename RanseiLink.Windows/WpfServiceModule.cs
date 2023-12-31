@@ -3,7 +3,6 @@ using RanseiLink.Windows.Services.Concrete;
 using RanseiLink.Windows.ViewModels;
 using DryIoc;
 using RanseiLink.Windows.Dialogs;
-using System.Reflection;
 using RanseiLink.Core;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.DragDrop;
@@ -28,14 +27,31 @@ public class WpfServiceModule : IModule
 
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
 
-        // editor modules
-        foreach (var type in GetType().Assembly.GetTypes())
-        {
-            if (typeof(EditorModule).IsAssignableFrom(type) && !type.IsAbstract && type.GetCustomAttribute<EditorModuleAttribute>() != null)
-            {
-                builder.Register(typeof(EditorModule), type);
-            }
-        }
+
+        builder.Register<EditorModule, PokemonSelectorEditorModule>();
+        builder.Register<EditorModule, AbilitySelectorEditorModule>();
+        builder.Register<EditorModule, WarriorSkillSelectorEditorModule>();
+        builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
+        builder.Register<EditorModule, MoveSelectorEditorModule>();
+        builder.Register<EditorModule, WarriorNameTableEditorModule>();
+        builder.Register<EditorModule, BaseWarriorSelectorEditorModule>();
+        builder.Register<EditorModule, MaxLinkSelectorEditorModule>();
+        builder.Register<EditorModule, MaxLinkPokemonSelectorEditorModule>();
+        builder.Register<EditorModule, ScenarioWarriorWorkspaceEditorModule>();
+        builder.Register<EditorModule, ScenarioAppearPokemonSelectorEditorModule>();
+        builder.Register<EditorModule, ScenarioBuildingSelectorEditorModule>();
+        builder.Register<EditorModule, EventSpeakerSelectorEditorModule>();
+        builder.Register<EditorModule, ItemSelectorEditorModule>();
+        builder.Register<EditorModule, BuildingSelectorEditorModule>();
+        builder.Register<EditorModule, MsgGridEditorModule>();
+        builder.Register<EditorModule, GimmickSelectorEditorModule>();
+        builder.Register<EditorModule, EpisodeSelectorEditorModule>();
+        builder.Register<EditorModule, KingdomSelectorEditorModule>();
+        builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
+        builder.Register<EditorModule, GimmickRangeSelectorEditorModule>();
+        builder.Register<EditorModule, MapSelectorEditorModule>();
+        builder.Register<EditorModule, SpriteEditorModule>();
+        builder.Register<EditorModule, BannerEditorModule>();
     }
 
     private static IDialogLocator CreateDialogLocator()

@@ -6,7 +6,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Text;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class BaseWarriorViewModel : ViewModelBase
 {

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:gif="http://wpfanimatedgif.codeplex.com"
              xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"

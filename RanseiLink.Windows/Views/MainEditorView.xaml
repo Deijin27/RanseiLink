@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:dd="urn:gong-wpf-dragdrop"
              d:DataContext="{d:DesignInstance vm:MainEditorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 

@@ -4,7 +4,7 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class BannerViewModel : ViewModelBase
 {

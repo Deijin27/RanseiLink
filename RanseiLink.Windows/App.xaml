@@ -46,39 +46,39 @@
 
             <!-- Register View Models -->
 
-            <DataTemplate DataType="{x:Type vm:BannerViewModel}">
+            <DataTemplate DataType="{x:Type cvm:BannerViewModel}">
                 <views:BannerView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MapViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MapViewModel}">
                 <views:MapView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type vm:PokemonViewModel}">
+            <DataTemplate DataType="{x:Type cvm:PokemonViewModel}">
                 <views:PokemonView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MoveViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MoveViewModel}">
                 <views:MoveView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:GimmickViewModel}">
+            <DataTemplate DataType="{x:Type cvm:GimmickViewModel}">
                 <views:GimmickView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:AbilityViewModel}">
+            <DataTemplate DataType="{x:Type cvm:AbilityViewModel}">
                 <views:AbilityView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:BattleConfigViewModel}">
+            <DataTemplate DataType="{x:Type cvm:BattleConfigViewModel}">
                 <views:BattleConfigView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WarriorSkillViewModel}">
+            <DataTemplate DataType="{x:Type cvm:WarriorSkillViewModel}">
                 <views:WarriorSkillView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MoveRangeViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MoveRangeViewModel}">
                 <views:MoveRangeView/>
             </DataTemplate>
 
@@ -86,47 +86,47 @@
                 <views:ScenarioPokemonView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MaxLinkWarriorViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MaxLinkWarriorViewModel}">
                 <views:MaxLinkView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:MaxLinkPokemonViewModel}">
+            <DataTemplate DataType="{x:Type cvm:MaxLinkPokemonViewModel}">
                 <views:MaxLinkView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:WarriorNameTableViewModel}">
+            <DataTemplate DataType="{x:Type cvm:WarriorNameTableViewModel}">
                 <views:WarriorNameTableView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:BaseWarriorViewModel}">
+            <DataTemplate DataType="{x:Type cvm:BaseWarriorViewModel}">
                 <views:BaseWarriorView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:ScenarioAppearPokemonViewModel}">
+            <DataTemplate DataType="{x:Type cvm:ScenarioAppearPokemonViewModel}">
                 <views:ScenarioAppearPokemonView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:EventSpeakerViewModel}">
+            <DataTemplate DataType="{x:Type cvm:EventSpeakerViewModel}">
                 <views:EventSpeakerView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:KingdomViewModel}">
+            <DataTemplate DataType="{x:Type cvm:KingdomViewModel}">
                 <views:KingdomView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:ScenarioBuildingViewModel}">
+            <DataTemplate DataType="{x:Type cvm:ScenarioBuildingViewModel}">
                 <views:ScenarioBuildingView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:ItemViewModel}">
+            <DataTemplate DataType="{x:Type cvm:ItemViewModel}">
                 <views:ItemView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:BuildingViewModel}">
+            <DataTemplate DataType="{x:Type cvm:BuildingViewModel}">
                 <views:BuildingView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:EpisodeViewModel}">
+            <DataTemplate DataType="{x:Type cvm:EpisodeViewModel}">
                 <views:EpisodeView/>
             </DataTemplate>
 
@@ -134,15 +134,11 @@
                 <views:ScenarioWarriorWorkspaceView/>
             </DataTemplate>
 
-            <!--<DataTemplate DataType="{x:Type vm:PokemonGridViewModel}">
-                <views:ModelGridView/>
-            </DataTemplate>-->
-
             <DataTemplate DataType="{x:Type cvm:MsgGridViewModel}">
                 <views:MsgGridView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:SpriteTypeViewModel}">
+            <DataTemplate DataType="{x:Type cvm:SpriteTypeViewModel}">
                 <views:SpriteTypeView/>
             </DataTemplate>
 

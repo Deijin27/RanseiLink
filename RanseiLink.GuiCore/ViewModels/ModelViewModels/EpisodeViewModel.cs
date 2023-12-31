@@ -6,7 +6,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class EpisodeViewModel : ViewModelBase
 {

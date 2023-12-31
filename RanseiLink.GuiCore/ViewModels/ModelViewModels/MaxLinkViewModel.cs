@@ -5,10 +5,8 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows.Data;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class WarriorMaxLinkListItem : ViewModelBase
 {
@@ -56,8 +54,8 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
     protected readonly IOverrideDataProvider _overrideDataProvider;
     protected readonly ICachedSpriteProvider _cachedSpriteProvider;
     protected readonly IBaseWarriorService _baseWarriorService;
+    private readonly CollectionSorter<WarriorMaxLinkListItem> _sorter;
 
-    protected readonly ICollectionView _itemsView;
     protected int _id;
 
     protected MaxLinkViewModelBase(IIdToNameService idToNameService,
@@ -69,39 +67,39 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         _cachedSpriteProvider = spriteProvider;
         _overrideDataProvider = overrideDataProvider;
         _idToNameService = idToNameService;
-
-        _itemsView = CollectionViewSource.GetDefaultView(Items);
         SortItems = EnumUtil.GetValues<MaxLinkSortMode>().ToList();
+
+        Items = [];
+        _sorter = new(Items);
     }
 
     protected void OnSetModel()
     {
-        if (_selectedSortItem == MaxLinkSortMode.Link)
-        {
-            Sort();
-        }
+        Sort();
     }
 
     private void Sort()
     {
         var mode = _selectedSortItem;
-        _itemsView.SortDescriptions.Clear();
+        _sorter.Clear();
+
         if (mode == MaxLinkSortMode.Id)
         {
             // default
         }
         else if (mode == MaxLinkSortMode.Name)
         {
-            _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.Name), ListSortDirection.Ascending));
+            _sorter.OrderBy(x => x.Name);
         }
         else if (mode == MaxLinkSortMode.Link)
         {
-            _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.MaxLinkValue), ListSortDirection.Descending));
+            _sorter.OrderByDescending(x => x.MaxLinkValue);
         }
 
         // this is always present, either for ID-only sorting
         // or as a "ThenBy" sort to give a consistent order to Name and MaxLinkValue sort value conflicts
-        _itemsView.SortDescriptions.Add(new SortDescription(nameof(WarriorMaxLinkListItem.Id), ListSortDirection.Ascending));
+        _sorter.OrderBy(x => x.Id);
+        _sorter.ApplySort();
     }
 
     public List<MaxLinkSortMode> SortItems { get; }
@@ -119,7 +117,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
         }
     }
 
-    public ObservableCollection<WarriorMaxLinkListItem> Items { get; } = new ObservableCollection<WarriorMaxLinkListItem>();
+    public ObservableCollection<WarriorMaxLinkListItem> Items { get; }
 
     public abstract string? SmallSpritePath { get; }
 }

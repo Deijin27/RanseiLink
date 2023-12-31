@@ -1,7 +1,6 @@
-﻿using RanseiLink.Windows.ValueConverters;
-using System.Windows.Media;
+﻿namespace RanseiLink.GuiCore.ViewModels;
 
-namespace RanseiLink.Windows.ViewModels;
+public record MapSubCellInfo(MapRenderMode RenderMode, float Z);
 
 public class MapGridSubCellViewModel : ViewModelBase
 {
@@ -22,12 +21,12 @@ public class MapGridSubCellViewModel : ViewModelBase
         {
             if (RaiseAndSetIfChanged(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value))
             {
-                RaisePropertyChanged(nameof(Brush));
+                RaisePropertyChanged(nameof(Info));
             }
         }
     }
 
     public MapRenderMode RenderMode { get; }
 
-    public Brush Brush => SubCellToBrushConverter.ConvertValue(this);
+    public MapSubCellInfo Info => new(RenderMode, Z);
 }

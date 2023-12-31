@@ -3,7 +3,7 @@ using RanseiLink.Core.Models;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class WarriorNameTableItem : ViewModelBase
 {

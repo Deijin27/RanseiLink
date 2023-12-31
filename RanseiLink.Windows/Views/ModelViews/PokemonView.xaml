@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"

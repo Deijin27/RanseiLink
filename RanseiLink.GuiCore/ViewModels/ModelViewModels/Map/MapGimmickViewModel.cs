@@ -1,7 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class MapGimmickViewModel : ViewModelBase
 {

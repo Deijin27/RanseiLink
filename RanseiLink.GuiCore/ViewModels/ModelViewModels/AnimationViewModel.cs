@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class AnimationViewModel : ViewModelBase
 {

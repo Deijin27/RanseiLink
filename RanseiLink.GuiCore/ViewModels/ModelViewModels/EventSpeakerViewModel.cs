@@ -2,7 +2,7 @@
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class EventSpeakerViewModel : ViewModelBase
 {

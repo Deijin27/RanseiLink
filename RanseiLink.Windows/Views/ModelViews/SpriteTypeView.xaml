@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance vm:SpriteTypeViewModel, IsDesignTimeCreatable=False}"

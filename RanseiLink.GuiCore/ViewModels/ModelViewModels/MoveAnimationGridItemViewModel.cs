@@ -2,7 +2,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public abstract class MoveAnimationViewModelBase : ViewModelBase
 {

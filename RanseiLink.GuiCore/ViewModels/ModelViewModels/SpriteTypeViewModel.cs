@@ -4,7 +4,7 @@ using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class SpriteTypeViewModel : ViewModelBase
 {

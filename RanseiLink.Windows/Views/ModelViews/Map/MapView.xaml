@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              d:Background="{DynamicResource WindowBackgroundBrush}"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:const="clr-namespace:RanseiLink.Windows.Constants"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
@@ -82,15 +82,15 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
                                             <!-- Z mouse enter trigger zones-->
-                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Brush}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Brush}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Brush}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Brush}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Brush}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Brush}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Brush}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Brush}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Brush}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <!-- Gimmick and pokemon markers -->
                                             <Rectangle Grid.Column="0" 
                                                        Grid.Row="0" 
@@ -103,7 +103,7 @@
                                                        Height="8"
                                                        HorizontalAlignment="Center" 
                                                        VerticalAlignment="Center"
-                                                       Visibility="{Binding GimmickMarkerVisibility}"
+                                                       Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}"
                                                        />
                                             <Image Grid.Column="0" 
                                                    Grid.Row="0" 
@@ -128,7 +128,7 @@
                                                        Height="8" 
                                                        HorizontalAlignment="Center" 
                                                        VerticalAlignment="Center"
-                                                       Visibility="{Binding PokemonMarkerVisibility}" 
+                                                       Visibility="{Binding PokemonMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
                                                        Stroke="White"/>
                                         </Grid>
                                     </Border>

@@ -2,9 +2,8 @@
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
-using System.Windows;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 
 public class MapGridCellViewModel : ViewModelBase
@@ -55,7 +54,7 @@ public class MapGridCellViewModel : ViewModelBase
         UpdateVisibleGimmick();
     }
 
-    private void OnGimmickVmGimmickChanged(object sender, EventArgs e)
+    private void OnGimmickVmGimmickChanged(object? sender, EventArgs e)
     {
         UpdateVisibleGimmick();
     }
@@ -107,32 +106,32 @@ public class MapGridCellViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(TerrainEntry.Orientation, value, v => TerrainEntry.Orientation = v);
     }
 
-    public Visibility GimmickMarkerVisibility
+    public bool GimmickMarkerVisibility
     {
         get
         {
             if (_hideGimmicks)
             {
-                return Visibility.Hidden;
+                return false;
             }
             else
             {
-                return Gimmicks.Any() ? Visibility.Visible : Visibility.Hidden;
+                return Gimmicks.Any();
             }
         }
     }
 
-    public Visibility PokemonMarkerVisibility
+    public bool PokemonMarkerVisibility
     {
         get
         {
             if (_hidePokemonMarkers)
             {
-                return Visibility.Hidden;
+                return false;
             }
             else
             {
-                return Pokemon.Any() ? Visibility.Visible : Visibility.Hidden;
+                return Pokemon.Any();
             }
         }
     }
@@ -143,8 +142,8 @@ public class MapGridCellViewModel : ViewModelBase
 
     public string GimmicksString => string.Join(", ", Gimmicks.Select(i => i.Gimmick));
 
-    private string _gimmickImagePath;
-    public string GimmickImagePath
+    private string? _gimmickImagePath;
+    public string? GimmickImagePath
     {
         get => _gimmickImagePath;
         set => RaiseAndSetIfChanged(ref _gimmickImagePath, value);

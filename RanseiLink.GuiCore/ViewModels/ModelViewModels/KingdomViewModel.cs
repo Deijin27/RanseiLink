@@ -4,7 +4,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager) : ViewModelBase
 {

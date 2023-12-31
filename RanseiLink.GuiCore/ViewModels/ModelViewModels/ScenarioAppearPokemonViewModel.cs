@@ -5,7 +5,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
 
-namespace RanseiLink.Windows.ViewModels;
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class AppearItem : ViewModelBase
 {
