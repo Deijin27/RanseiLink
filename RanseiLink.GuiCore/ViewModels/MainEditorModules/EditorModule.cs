@@ -57,14 +57,17 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule where TS
 {
     public override object? ViewModel => _viewModel;
 
+    protected ISelectorViewModelFactory? _selectorVmFactory;
     protected TService? _service;
     protected SelectorViewModel? _viewModel;
 
     [MemberNotNull(nameof(_service))]
+    [MemberNotNull(nameof(_selectorVmFactory))]
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _service = modServices.Get<TService>();
+        _selectorVmFactory = modServices.Get<ISelectorViewModelFactory>();
         if (_service == null)
         {
             throw new System.Exception("what the fuck");

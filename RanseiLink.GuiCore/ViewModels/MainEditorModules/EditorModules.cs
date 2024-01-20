@@ -16,7 +16,7 @@ public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<PokemonViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((PokemonId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((PokemonId)id, _service.Retrieve(id)));
     }
 }
 
@@ -44,7 +44,7 @@ public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<AbilityViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
     }
 }
 
@@ -58,7 +58,7 @@ public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarrio
     {
         base.Initialise(modServices);
         var vm = modServices.Get<WarriorSkillViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
     }
 }
 
@@ -72,7 +72,7 @@ public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRange
     {
         base.Initialise(modServices);
         var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
 
@@ -86,7 +86,7 @@ public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
     {
         base.Initialise(modServices);
         var vm = modServices.Get<MoveViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((MoveId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((MoveId)id, _service.Retrieve(id)));
     }
 }
 
@@ -121,7 +121,7 @@ public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWar
     {
         base.Initialise(modServices);
         var vm = modServices.Get<BaseWarriorViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((WarriorId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((WarriorId)id, _service.Retrieve(id)));
     }
 }
 
@@ -136,7 +136,7 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
         base.Initialise(modServices);
         var vm = modServices.Get<MaxLinkWarriorViewModel>();
         var items = modServices.Get<IBaseWarriorService>().GetComboBoxItemsExceptDefault();
-        _viewModel = new SelectorViewModelWithoutScroll(items, vm, id => vm.SetModel(id, _service.Retrieve(id)), _service.ValidateId);
+        _viewModel = _selectorVmFactory.Create(items, vm, id => vm.SetModel(id, _service.Retrieve(id)));
     }
 }
 
@@ -152,7 +152,7 @@ public class MaxLinkPokemonSelectorEditorModule : BaseSelectorEditorModule<IMaxL
         var vm = modServices.Get<MaxLinkPokemonViewModel>();
         var pokemonService = modServices.Get<IPokemonService>();
         var items = pokemonService.GetComboBoxItemsExceptDefault();
-        _viewModel = new SelectorViewModelWithoutScroll(items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId);
+        _viewModel = _selectorVmFactory.Create(null, items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId);
     }
 }
 
@@ -166,7 +166,7 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     {
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioAppearPokemonViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)), scrollEnabled: false);
     }
 }
 
@@ -180,7 +180,7 @@ public class ScenarioBuildingSelectorEditorModule : BaseSelectorEditorModule<ISc
     {
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioBuildingViewModel>();
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(id, _service.Retrieve(id)), scrollEnabled: false);
     }
 }
 
@@ -194,7 +194,7 @@ public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventS
     {
         base.Initialise(modServices);
         var vm = modServices.Get<EventSpeakerViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
 
@@ -208,7 +208,7 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
     {
         base.Initialise(modServices);
         var vm = modServices.Get<ItemViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
     }
 }
 
@@ -222,7 +222,7 @@ public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingSe
     {
         base.Initialise(modServices);
         var vm = modServices.Get<BuildingViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BuildingId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BuildingId)id, _service.Retrieve(id)));
     }
 }
 
@@ -252,7 +252,7 @@ public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<GimmickViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
     }
 }
 
@@ -272,7 +272,7 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
             .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
             .ToList();
         
-        _viewModel = new SelectorViewModel(episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)), _service.ValidateId);
+        _viewModel = _selectorVmFactory.Create(_service, episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)));
     }
 }
 
@@ -286,7 +286,7 @@ public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomServ
     {
         base.Initialise(modServices);
         var vm = modServices.Get<KingdomViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((KingdomId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((KingdomId)id, _service.Retrieve(id)));
     }
 }
 
@@ -300,7 +300,7 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
     {
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
     }
 }
 
@@ -314,7 +314,7 @@ public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmic
     {
         base.Initialise(modServices);
         var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
 
