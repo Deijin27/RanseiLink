@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿#nullable enable
+using FluentResults;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.DragDrop;
@@ -36,6 +37,7 @@ public class EditorModuleTests
     private readonly Mock<EditorModule> _moduleB;
     private readonly Mock<EditorModule> _moduleC;
     private readonly Mock<EditorModule> _moduleD;
+    private readonly Mock<IProgress<ProgressInfo>> _mockProgress;
 
     private List<Mock<IServiceGetter>> _modServiceGetters = new List<Mock<IServiceGetter>>();
 
@@ -52,6 +54,7 @@ public class EditorModuleTests
         _dialogService = new Mock<IAsyncDialogService>();
 
         _cachedMsgBlockService = new Mock<ICachedMsgBlockService>();
+        _mockProgress = new Mock<IProgress<ProgressInfo>>();
 
         _mockModServiceGetter = new Mock<IServiceGetter>();
         _mockModServiceGetter.Setup(i => i.Get<ICachedMsgBlockService>()).Returns(_cachedMsgBlockService.Object);
@@ -75,7 +78,7 @@ public class EditorModuleTests
             new FileDropHandlerFactory()
             );
 
-        _mainEditorVm.SetMod(null);
+        _mainEditorVm.SetMod(new ModInfo());
     }
 
     [Fact]
@@ -178,7 +181,7 @@ public class EditorModuleTests
         _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), It.IsAny<string>(), It.IsAny<PatchOptions>())).Returns(Result.Ok());
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
-            .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(null));
+            .Callback((Action<IProgress<ProgressInfo>> action, bool opt) => action(_mockProgress.Object));
     }
 
     [Fact]

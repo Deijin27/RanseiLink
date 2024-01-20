@@ -1,7 +1,6 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.GuiCore.ViewModels;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Windows.Services;
-using RanseiLink.Windows.ViewModels;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.Tests.ViewModelTests;
@@ -86,10 +85,10 @@ public class MainWindowViewModelTests
     {
         _mockThemeService.Setup(i => i.CurrentTheme).Returns(Theme.Light);
         _mainWindowVm.ToggleThemeCommand?.Execute(null);
-        _mockThemeService.Verify(i => i.SetTheme(Theme.Dark), Times.Once());
+        _mockThemeService.Verify(i => i.ToggleTheme(), Times.Once());
 
         _mockThemeService.Setup(i => i.CurrentTheme).Returns(Theme.Dark);
         _mainWindowVm.ToggleThemeCommand?.Execute(null);
-        _mockThemeService.Verify(i => i.SetTheme(Theme.Light), Times.Once());
+        _mockThemeService.Verify(i => i.ToggleTheme(), Times.Exactly(2));
     }
 }
