@@ -58,7 +58,7 @@ public class SelectorViewModel : ViewModelBase
         var success = await _clipboardService.SetText(text);
         if (success)
         {
-            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Copied", "Data of this entry is copied to your clipboard", MessageBoxType.Error));
+            await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Copied", "Data of this entry is copied to your clipboard"));
         }
         else
         {
@@ -97,7 +97,7 @@ public class SelectorViewModel : ViewModelBase
             return;
         }
 
-        if (_validateId(Selected))
+        if (!_validateId(Selected))
         {
             return;
         }

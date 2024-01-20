@@ -11,9 +11,6 @@
              xmlns:styles="clr-namespace:RanseiLink.Styles"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -45,7 +42,7 @@
                     
                 </TextBox>
             </DockPanel>
-            <DockPanel Margin="0,0,0,10" Visibility="{Binding ReplaceVisible, Converter={StaticResource Converter.BoolToVis}}">
+            <DockPanel Margin="0,0,0,10" Visibility="{Binding ReplaceVisible, Converter={StaticResource Converter.BoolToVisibility}}">
                 <Button Margin="10,0" Height="20" Padding="5,0" Content="Replace All" Grid.Column="2" Command="{Binding ReplaceAllCommand}" DockPanel.Dock="Right"/>
 
                 <TextBlock DockPanel.Dock="Left" Text="Replace With" Margin="10,0" TextAlignment="Right"/>
@@ -53,7 +50,7 @@
                 <TextBox Text="{Binding ReplaceWith, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
                 </TextBox>
             </DockPanel>
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding AddRemoveVisible, Converter={StaticResource Converter.BoolToVis}}">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding AddRemoveVisible, Converter={StaticResource Converter.BoolToVisibility}}">
                 <TextBlock Margin="10,0,0,0">Select a message in a group containing multiple messages: </TextBlock>
                 <Button Command="{Binding AddCommand}" Content="Add New Message To Group" Margin="10,0" Padding="5,0" ToolTip="Only for messages in a group of multiple messages"/>
                 <Button Command="{Binding RemoveCommand}" Content="Delete Selected Message" Padding="5,0" ToolTip="Only for messages in a group of multiple messages"/>

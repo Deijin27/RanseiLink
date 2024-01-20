@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -12,6 +13,12 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <DockPanel Margin="10,0,10,0">
+            <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14f;" Text="Paste Data"
+                     Command="{Binding PasteCommand}"
+                     Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVisibility}}"/>
+            <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14d;" Text="Copy Data" Margin="5,0"
+                     Command="{Binding CopyCommand}"
+                     Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVisibility}}"/>
             <ComboBox Grid.Row="0" Height="20" 
                       ItemsSource="{Binding DisplayItems}" 
                       SelectedValue="{Binding Selected, Mode=TwoWay}"

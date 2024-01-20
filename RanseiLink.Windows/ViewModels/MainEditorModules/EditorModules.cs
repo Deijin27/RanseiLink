@@ -25,8 +25,8 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
         var spService = modServices.Get<IScenarioPokemonService>();
 
-        _viewModel = new SelectorViewModelWithoutScroll(_service, vm,
-            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), spService.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm,
+            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), spService.Retrieve(id)), scrollEnabled: false);
     }
 
     public override void OnPatchingRom()

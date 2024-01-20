@@ -13,7 +13,6 @@
              d:DesignHeight="680" d:DesignWidth="800">
     <UserControl.Resources>
         <vc:TerrainToBrushConverter x:Key="Converter.TerrainToBrush"/>
-        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
         <vc:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis"/>
         <vc:SubCellToBrushConverter x:Key="Converter.SubCellToBrush"/>
         <vc:GreaterThanZeroToVisiblityConverter x:Key="Converter.GTZeroToVis"/>

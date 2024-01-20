@@ -9,9 +9,6 @@
              d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="350" d:DesignWidth="500" Background="Transparent">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="Converter.BoolToVis"/>
-    </UserControl.Resources>
     <DockPanel>
         <Border Width="180" BorderThickness="0">
             <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
@@ -23,7 +20,7 @@
                     </StackPanel.Resources>
                     <controls:IconButton Icon="&#xe89c;" Text="Create Mod" Command="{Binding CreateModCommand}"/>
                     <controls:IconButton Icon="&#xe890;" Text="Import Mod" Command="{Binding ImportModCommand}"/>
-                    <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVis}}">
+                    <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
                             Upgrade Old Mods
                             <LineBreak/>

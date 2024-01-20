@@ -136,7 +136,7 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
         base.Initialise(modServices);
         var vm = modServices.Get<MaxLinkWarriorViewModel>();
         var items = modServices.Get<IBaseWarriorService>().GetComboBoxItemsExceptDefault();
-        _viewModel = _selectorVmFactory.Create(items, vm, id => vm.SetModel(id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, items, vm, id => vm.SetModel(id, _service.Retrieve(id)), _service.ValidateId, scrollEnabled: false);
     }
 }
 
@@ -152,7 +152,7 @@ public class MaxLinkPokemonSelectorEditorModule : BaseSelectorEditorModule<IMaxL
         var vm = modServices.Get<MaxLinkPokemonViewModel>();
         var pokemonService = modServices.Get<IPokemonService>();
         var items = pokemonService.GetComboBoxItemsExceptDefault();
-        _viewModel = _selectorVmFactory.Create(null, items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId);
+        _viewModel = _selectorVmFactory.Create(null, items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId, scrollEnabled: false);
     }
 }
 
@@ -272,7 +272,7 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
             .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
             .ToList();
         
-        _viewModel = _selectorVmFactory.Create(_service, episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -387,6 +387,7 @@ public class MapSelectorEditorModule : EditorModule
         base.Initialise(modServices);
         _service = modServices.Get<IMapService>();
         _nestedVm = modServices.Get<MapViewModel>();
+        var selectorVmFactory = modServices.Get<ISelectorViewModelFactory>();
         if (_nestedVm == null)
         {
             throw new Exception("Failed to resolve map view model");
@@ -394,7 +395,7 @@ public class MapSelectorEditorModule : EditorModule
         _currentMap = null;
         _currentId = null;
         var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
-        _viewModel = new SelectorViewModelWithoutScroll(mapComboItems, _nestedVm, id =>
+        _viewModel = selectorVmFactory.Create(null, mapComboItems, _nestedVm, id =>
         {
             if (_currentMap != null && _currentId != null)
             {
@@ -405,7 +406,8 @@ public class MapSelectorEditorModule : EditorModule
             _currentId = mid;
             _nestedVm.SetModel(mid, _currentMap);
         },
-        id => _service.GetMapIds().Select(i => (int)i).Contains(id));
+        id => _service.GetMapIds().Select(i => (int)i).Contains(id)
+        );
 
         _nestedVm.RequestSave += NestedVm_RequestSave;
         _nestedVm.RequestReload += NestedVm_RequestReload;
