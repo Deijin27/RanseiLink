@@ -20,7 +20,7 @@
                    Height="30" 
                    RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"
                    />
-            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0">Sort:</TextBlock>
+            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource IconTextBlockStyle}" Text="&#xe164;"/>
             <ComboBox VerticalAlignment="Center" Width="100" ItemsSource="{Binding SortItems}" SelectedItem="{Binding SelectedSortItem}"/>
         </StackPanel>
         <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">

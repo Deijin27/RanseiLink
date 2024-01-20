@@ -61,6 +61,20 @@ public class MapViewModel : ViewModelBase
         RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
         ModifyElevationToPaintCommand = new RelayCommand<string>(diff => { if (diff != null) ElevationToPaint += float.Parse(diff); });
         View3DModelCommand = new RelayCommand(View3DModel);
+
+        this.PropertyChanged += MapViewModel_PropertyChanged;
+    }
+
+    private void MapViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SelectedGimmick))
+        {
+            RemoveSelectedGimmickCommand.RaiseCanExecuteChanged();
+        }
+        else if (e.PropertyName == nameof(Is3dModelOverriden))
+        {
+            RevertModelCommand.RaiseCanExecuteChanged();
+        }
     }
 
     public void SetModel(MapId id, PSLM model)
@@ -83,7 +97,7 @@ public class MapViewModel : ViewModelBase
         RaisePropertyChanged(nameof(Height));
     }
     public bool Is3dModelOverriden => _mapManager.IsOverriden(_id);
-    public ICommand RevertModelCommand { get; }
+    public RelayCommand RevertModelCommand { get; }
     public ICommand ExportPslmCommand { get; }
     public ICommand ImportPslmCommand { get; }
     public ICommand ExportObjCommand { get; }
@@ -92,7 +106,7 @@ public class MapViewModel : ViewModelBase
     public ICommand ImportPacCommand { get; }
     public ICommand ModifyElevationToPaintCommand { get; }
 
-    public ICommand RemoveSelectedGimmickCommand { get; }
+    public RelayCommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
     public ICommand View3DModelCommand { get; }
     public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
@@ -321,6 +335,7 @@ public class MapViewModel : ViewModelBase
             Map.GimmickSection.Items.Remove(_selectedGimmick.GimmickItem);
             Gimmicks.Remove(_selectedGimmick);
             _selectedGimmick = null;
+            RaisePropertyChanged(nameof(SelectedGimmick));
         }
     }
 

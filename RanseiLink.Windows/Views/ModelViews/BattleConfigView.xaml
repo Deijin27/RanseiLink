@@ -56,9 +56,7 @@
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Map File" Grid.Row="0" ToolTip="Jump to selected map" 
                     Command="{Binding JumpToMapCommand}" CommandParameter="{Binding Map}"/>
             <DockPanel Grid.Row="0" Grid.Column="1">
-                <Button ToolTip="View 3D Model" DockPanel.Dock="Right" Padding="4,0" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" Height="20">
-                    <TextBlock VerticalAlignment="Center" Height="12" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE124;"/>
-                </Button>
+                <controls:IconButton Icon="&#xe8f4;" ToolTip="View 3D Model" DockPanel.Dock="Right" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" />
                 <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
                 
             </DockPanel>

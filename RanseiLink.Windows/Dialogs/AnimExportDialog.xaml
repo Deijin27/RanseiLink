@@ -20,7 +20,7 @@
               dd:DragDrop.DropHandler="{Binding FolderDropHandler}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
                     <TextBlock Text="Drop a folder to&#x0a; export to here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                    <TextBlock FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE197;" HorizontalAlignment="Center" FontSize="40" Height="60"/>
+                    <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xE9A3;" HorizontalAlignment="Center" FontSize="60" Height="60"/>
                     <TextBlock Text="{Binding Folder, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
                     <Button Command="{Binding FolderPickerCommand}" Width="130" Margin="10,0,10,0">Or use folder picker</Button>
                 </StackPanel>

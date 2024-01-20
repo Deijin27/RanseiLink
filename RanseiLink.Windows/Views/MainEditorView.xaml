@@ -82,18 +82,18 @@
             </Popup>
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding CommitRomCommand}" Width="30" Height="30" Margin="5" ToolTip="Write to rom" Style="{StaticResource RoundedGrayHoverButtonStyle}">
-                    <ContentPresenter Height="18" Content="{StaticResource CommitRomIcon}" />
+                    <TextBlock Style="{DynamicResource IconTextBlockStyle}" Text="&#xe255;" FontSize="16"/>
                 </Button>
                 <!-- hit test stuff prevents double trigger when clicking on button to close popup -->
                 <ToggleButton ToolTip="Plugins" Height="30" Width="30" Style="{StaticResource RoundedGrayToggleButtonStyle}" IsChecked="{Binding PluginPopupOpen}"
                               IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={StaticResource Converter.InvertBool}}">
-                    <ContentPresenter Height="18" Content="{StaticResource PluginIcon}" />
+                    <TextBlock Style="{DynamicResource IconTextBlockStyle}" Text="&#xe87b;" FontSize="16"/>
                 </ToggleButton>
                 <Button Command="{Binding GoBackInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip="Navigate Back (Ctrl+LeftArrow)" Style="{StaticResource RoundedGrayHoverButtonStyle}">
-                    <TextBlock Text="&#xE0A6;" FontFamily="{StaticResource SegoeMDL2Assets}"/>
+                    <TextBlock Style="{DynamicResource IconTextBlockStyle}" Text="&#xe5c4;" FontSize="16"/>
                 </Button>
                 <Button Command="{Binding GoForwardInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip="Navigate Forward (Ctrl+RightArrow)" Style="{StaticResource RoundedGrayHoverButtonStyle}">
-                    <TextBlock Text="&#xE0AB;" FontFamily="{StaticResource SegoeMDL2Assets}"/>
+                    <TextBlock Style="{DynamicResource IconTextBlockStyle}" Text="&#xe5c8;" FontSize="16"/>
                 </Button>
             </StackPanel>
         </Grid>

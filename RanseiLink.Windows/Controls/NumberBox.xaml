@@ -55,14 +55,15 @@
     </UserControl.Resources>
     <Border Height="20" Background="{DynamicResource ControlBorderBrush}" CornerRadius="2">
         <DockPanel >
-            <RepeatButton Style="{StaticResource RightButtonStyle}" BorderThickness="0.5,1,1,1" Width="18" x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right">
-                <Path Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=RepeatButton}}" Data="{StaticResource DownArrowGeometry}"/>
+            <RepeatButton Content="&#xe5cf;" FontSize="16" Padding="0" FontFamily="{DynamicResource MaterialIcons}" 
+                          Style="{StaticResource RightButtonStyle}" BorderThickness="0.5,1,1,1" Width="18" x:Name="DecrementButton" Click="DecrementButton_Click" DockPanel.Dock="Right">
             </RepeatButton>
-            <RepeatButton Style="{StaticResource MiddleButtonStyle}" BorderThickness="0.5,1" Width="18" x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right">
-                <Path Stroke="{Binding Path=Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=RepeatButton}}" Data="{StaticResource UpArrowGeometry}"/>
+            <RepeatButton Content="&#xe5ce;" FontSize="16" Padding="0" FontFamily="{DynamicResource MaterialIcons}" 
+                Style="{StaticResource MiddleButtonStyle}" BorderThickness="0.5,1" Width="18" x:Name="IncrementButton" Click="IncrementButton_Click" DockPanel.Dock="Right">
+
             </RepeatButton>
             <TextBox Style="{StaticResource NumberBoxTextBoxStyle}" BorderThickness="1,1,0.5,1" x:Name="NumberTextBox" TextChanged="NumberTextBox_TextChanged" PreviewTextInput="NumberTextBox_PreviewTextInput" />
         </DockPanel>
     </Border>
-    
+
 </UserControl>

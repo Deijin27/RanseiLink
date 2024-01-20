@@ -17,6 +17,7 @@
     <SolidColorBrush x:Key="ForegroundBrush" Color="#1B1B1B"/>
     <SolidColorBrush x:Key="AltForegroundBrush" Color="#5b5b5b"/>
     <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7B7B7B"/>
+    <SolidColorBrush x:Key="AltForegroundDisabledBrush" Color="#909090"/>
 
     <SolidColorBrush x:Key="ControlBorderBrush" Color="#777777"/>
     <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#000000"/>

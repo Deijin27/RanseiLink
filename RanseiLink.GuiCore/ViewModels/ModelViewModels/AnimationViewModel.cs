@@ -19,6 +19,7 @@ public class AnimationViewModel : ViewModelBase
         {
             await _manager.Import(_type, _id);
             RaisePropertyChanged(nameof(IsOverriden));
+            RevertCommand?.RaiseCanExecuteChanged();
         });
 
         ExportCommand = new RelayCommand(async () =>
@@ -30,6 +31,7 @@ public class AnimationViewModel : ViewModelBase
         {
             await _manager.RevertToDefault(_type, _id);
             RaisePropertyChanged(nameof(IsOverriden));
+            RevertCommand?.RaiseCanExecuteChanged();
         },
         () => IsOverriden);
     }
@@ -42,5 +44,5 @@ public class AnimationViewModel : ViewModelBase
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
-    public ICommand RevertCommand { get; }
+    public RelayCommand RevertCommand { get; }
 }

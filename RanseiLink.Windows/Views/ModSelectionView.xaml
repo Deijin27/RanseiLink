@@ -18,12 +18,11 @@
                 <StackPanel Margin="10">
                     <StackPanel.Resources>
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                            <Setter Property="Height" Value="25"/>
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
                     </StackPanel.Resources>
-                    <Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
-                    <Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <controls:IconButton Icon="&#xe89c;" Text="Create Mod" Command="{Binding CreateModCommand}"/>
+                    <controls:IconButton Icon="&#xe890;" Text="Import Mod" Command="{Binding ImportModCommand}"/>
                     <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVis}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
                             Upgrade Old Mods
@@ -39,7 +38,7 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
-                    <Button Command="{Binding ReportBugCommand}" Content="Report Bug"/>
+                    <controls:IconButton Icon="&#xe868;" Command="{Binding ReportBugCommand}" Text="Report Bug"/>
                 </StackPanel>
             </Grid>
             
@@ -63,12 +62,31 @@
                         </Button.Style>
                         <Button.ContextMenu>
                             <ContextMenu>
-                                <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}" Icon="{StaticResource CommitRomIcon}"/>
-                                <MenuItem Header="Export mod" Command="{Binding ExportModCommand}" Icon="{StaticResource ExportModIcon}"/>
-                                <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}" Icon="{StaticResource EditModInfoIcon}"/>
-                                <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}" Icon="{StaticResource CreateModIcon}"/>
+                                <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe255;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Export mod" Command="{Binding ExportModCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xebbe;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe745;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe02e;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
                                 <Separator/>
-                                <MenuItem Header="Plugins" Icon="{StaticResource PluginIcon}" ItemsSource="{Binding PluginItems}">
+                                <MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe87b;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="{x:Type MenuItem}">
                                             <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
@@ -93,8 +111,16 @@
                                     </MenuItem.ItemContainerStyle>
                                 </MenuItem>
                                 <Separator/>
-                                <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" />
-                                <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}"/>
+                                <MenuItem Header="Delete" Command="{Binding DeleteModCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe872;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Text="&#xe2c8;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                    </MenuItem.Icon>
+                                </MenuItem>
                             </ContextMenu>
                         </Button.ContextMenu>
                         <DockPanel>

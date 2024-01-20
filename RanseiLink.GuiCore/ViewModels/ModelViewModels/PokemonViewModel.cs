@@ -47,7 +47,7 @@ public class PokemonViewModel : ViewModelBase
         JumpToMoveCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveSelectorEditorModule.Id, id));
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
         AddEvolutionCommand = new RelayCommand(AddEvolution);
-        RemoveEvolutionCommand = new RelayCommand(RemoveEvolution);
+        RemoveEvolutionCommand = new RelayCommand(RemoveEvolution, () => Evolutions.Count > 0);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
@@ -70,6 +70,7 @@ public class PokemonViewModel : ViewModelBase
             HabitatItems.Add(new HabitatItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
         }
         RaiseAllPropertiesChanged();
+        RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
 
     public ICommand ImportAnimationCommand { get; }
@@ -336,19 +337,25 @@ public class PokemonViewModel : ViewModelBase
     public ObservableCollection<EvolutionComboBoxItem> Evolutions { get; } = new();
 
     public ICommand AddEvolutionCommand { get; }
-    public ICommand RemoveEvolutionCommand { get; }
+    public RelayCommand RemoveEvolutionCommand { get; }
 
     private void AddEvolution()
     {
         _model.Evolutions.Add(PokemonId.Eevee);
         var newItem = new EvolutionComboBoxItem(_model.Evolutions, _model.Evolutions.Count - 1, _evolutionEntryOptions);
         Evolutions.Add(newItem);
+        RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
 
     private void RemoveEvolution()
     {
+        if (_model.Evolutions.Count == 0)
+        {
+            return;
+        }
         _model.Evolutions.RemoveAt(_model.Evolutions.Count - 1);
         Evolutions.RemoveAt(Evolutions.Count - 1);
+        RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
 
     public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, (int)_id).File;

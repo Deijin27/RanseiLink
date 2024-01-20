@@ -150,18 +150,8 @@
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
                 <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
-                <Button Padding="4,0" Command="{Binding ModifyMapDimensionsCommand}">
-                    <DockPanel>
-                        <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE1D9;"/>
-                        <TextBlock Margin="6,0,0,0">Modify Dimensions</TextBlock>
-                    </DockPanel>
-                </Button>
-                <Button Padding="4,0" Command="{Binding View3DModelCommand}" Margin="10,0">
-                    <DockPanel>
-                        <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE124;"/>
-                        <TextBlock Margin="6,0,0,0">View 3D Model</TextBlock>
-                    </DockPanel>
-                </Button>
+                <controls:IconButton Icon="&#xf707;" Text="Modify Dimensions" Command="{Binding ModifyMapDimensionsCommand}"/>
+                <controls:IconButton Icon="&#xe8f4;" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
             </StackPanel>
 
             <TabControl Margin="0,20,0,0">
@@ -202,18 +192,8 @@
                 <TabItem Header="Gimmicks">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  Margin="5">
-                            <Button Padding="3" Click="AddGimmickButton_Click">
-                                <DockPanel>
-                                    <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE109;"/>
-                                    <TextBlock Margin="6,0,0,0">Add New</TextBlock>
-                                </DockPanel>
-                            </Button>
-                            <Button Padding="3" Margin="5,0,0,0" Command="{Binding RemoveSelectedGimmickCommand}">
-                                <DockPanel>
-                                    <TextBlock VerticalAlignment="Center" DockPanel.Dock="Left" FontWeight="Bold" FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE107;"/>
-                                    <TextBlock Margin="6,0,0,0">Remove Selected</TextBlock>
-                                </DockPanel>
-                            </Button>
+                            <controls:IconButton Icon="&#xe145;" Text="Add New" Click="AddGimmickButton_Click"/>
+                            <controls:IconButton Icon="&#xe872;" Text="Remove Selected" Margin="5,0,0,0" Command="{Binding RemoveSelectedGimmickCommand}"/>
                         </StackPanel>
                         <DataGrid x:Name="GimmickDataGrid" CanUserAddRows="True" AutoGenerateColumns="False" ItemsSource="{Binding Gimmicks}"
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
@@ -239,19 +219,19 @@
                                                 <RowDefinition Height="22"/>
                                             </Grid.RowDefinitions>
                                             <Button Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1">
-                                                <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource UpArrowGeometry}"/>
+                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5ce;"/>
                                             </Button>
                                             <Button Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1">
-                                                <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource LeftArrowGeometry}"/>
+                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cb;"/>
                                             </Button>
                                             <Button Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1">
-                                                <TextBlock FontFamily="{StaticResource SegoeMDL2Assets}" Text="&#xE117;"/>
+                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe41a;"/>
                                             </Button>
                                             <Button Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1">
-                                                <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource RightArrowGeometry}"/>
+                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cc;"/>
                                             </Button>
                                             <Button Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2">
-                                                <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource DownArrowGeometry}"/>
+                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cf;"/>
                                             </Button>
                                         </Grid>
                                         <Grid Margin="5">

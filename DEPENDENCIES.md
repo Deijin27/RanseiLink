@@ -19,6 +19,7 @@
 - WpfAnimatedGif under [Apache 2.0](https://github.com/XamlAnimatedGif/WpfAnimatedGif/blob/master/LICENSE.txt)
 - OpenTK under [MIT](https://github.com/opentk/opentk/blob/master/LICENSE.md)
 - GlWpfControl under [MIT](https://github.com/opentk/GLWpfControl/blob/master/LICENSE.md)
+- Material Design Icons [Apache 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
 
 ## Tests-Only
 

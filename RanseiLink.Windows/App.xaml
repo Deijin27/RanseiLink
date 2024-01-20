@@ -22,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
             
             <!-- Fonts -->
-            <FontFamily x:Key="SegoeMDL2Assets">pack://application:,,,/Fonts/#Segoe MDL2 Assets</FontFamily>
+            <FontFamily x:Key="MaterialIcons">pack://application:,,,/Fonts/#Material Symbols Outlined</FontFamily>
             
             <!-- Register Main View Models -->
 

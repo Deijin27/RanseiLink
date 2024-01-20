@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             xmlns:wvm="clr-namespace:RanseiLink.Windows.ViewModels"
              x:Name="msgGridViewControl"
              d:DataContext="{d:DesignInstance vm:MsgGridViewModel, IsDesignTimeCreatable=False}"
              xmlns:styles="clr-namespace:RanseiLink.Styles"
@@ -23,10 +25,10 @@
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="10,0,0,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
+                <controls:IconButton Margin="10,0,0,0" Icon="&#xe14a;" Text="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
                 <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Search" Command="{Binding SearchCommand}" DockPanel.Dock="Right"/>
 
-                <TextBlock DockPanel.Dock="Left" Text="Find" Margin="10,0" TextAlignment="Right"/>
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource IconTextBlockStyle}" Text="&#xe8b6;" Margin="10,0" />
                 <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
                     <TextBox.Style>
                         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
@@ -62,7 +64,7 @@
                   ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False"
                   SelectedItem="{Binding SelectedItem}">
             <DataGrid.RowValidationRules>
-                <vm:WorkaroundValidationRule ValidationStep="UpdatedValue"/>
+                <wvm:WorkaroundValidationRule ValidationStep="UpdatedValue"/>
             </DataGrid.RowValidationRules>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Block" Binding="{Binding BlockId}" IsReadOnly="True"/>

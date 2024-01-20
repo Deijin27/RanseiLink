@@ -18,7 +18,7 @@
                             SnapsToDevicePixels="true">
 
                         <Border x:Name="splitBorder" BorderThickness="1" BorderBrush="Transparent" HorizontalAlignment="Right" Margin="0" SnapsToDevicePixels="true" Width="20">
-                            <Path x:Name="arrow" Data="{StaticResource DownArrowGeometry}" Stroke="{TemplateBinding Foreground}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="arrow" FontSize="16" FontFamily="{DynamicResource MaterialIcons}" Text="&#xe5cf;" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center"/>
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>

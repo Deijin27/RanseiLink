@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RanseiLink.Windows"
-        xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+        xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Height="500" Width="900" Background="Black">
@@ -41,39 +41,39 @@
             <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
 
             <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Background="Transparent">
-                <Button DockPanel.Dock="Left" Content="&#xE0A6;" WindowChrome.IsHitTestVisibleInChrome="True"
+                <Button DockPanel.Dock="Left" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
                     Command="{Binding BackButtonCommand}"
                     Visibility="{Binding BackButtonVisible, Converter={StaticResource BoolToVisConv}}"
-                    FontFamily="{StaticResource SegoeMDL2Assets}"
+                    FontFamily="{StaticResource MaterialIcons}"
                     Width="45" Height="30"
                     FontSize="13"
                     ToolTip="Go Back"
                     Style="{StaticResource GrayHoverButtonStyle}"/>
 
                 <Button DockPanel.Dock="Right" FontSize="13" Width="45" Height="30"  WindowChrome.IsHitTestVisibleInChrome="True"
-                        FontFamily="{StaticResource SegoeMDL2Assets}" 
-                        Click="CloseWindowButton_Click" Content="&#xE10A;"
+                        FontFamily="{StaticResource MaterialIcons}" 
+                        Click="CloseWindowButton_Click" Content="&#xe5cd;"
                         ToolTip="Close window"
                         Style="{StaticResource RedHoverButtonStyle}"/>
 
-                <Button DockPanel.Dock="Right" Click="MaximizeWindowButton_Click" Content="&#xE003;"
-                        FontFamily="{StaticResource SegoeMDL2Assets}"  WindowChrome.IsHitTestVisibleInChrome="True"
+                <Button DockPanel.Dock="Right" Click="MaximizeWindowButton_Click" Content="&#xeb36;"
+                        FontFamily="{StaticResource MaterialIcons}"  WindowChrome.IsHitTestVisibleInChrome="True"
                         Width="45" Height="30"
                         FontSize="10"
                         ToolTip="Maximize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
 
-                <Button Click="MinimizeWindowButton_Click" Content="&#xE108;"
+                <Button Click="MinimizeWindowButton_Click" Content="&#xf108;"
                         DockPanel.Dock="Right"  WindowChrome.IsHitTestVisibleInChrome="True"
-                        FontFamily="{StaticResource SegoeMDL2Assets}"
+                        FontFamily="{StaticResource MaterialIcons}"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Minimize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
 
-                <Button Command="{Binding ToggleThemeCommand}" Content="&#xE2B1;"
+                <Button Command="{Binding ToggleThemeCommand}" Content="&#xe518;"
                         DockPanel.Dock="Right"  WindowChrome.IsHitTestVisibleInChrome="True"
-                        FontFamily="{StaticResource SegoeMDL2Assets}"
+                        FontFamily="{StaticResource MaterialIcons}"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Toggle Theme"

@@ -24,7 +24,7 @@
               dd:DragDrop.DropHandler="{Binding ModDropHandler}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
                     <TextBlock Text="Drop the mod to&#x0a; import here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                    <TextBlock Text="&#xe1a5;" FontFamily="{StaticResource SegoeMDL2Assets}" HorizontalAlignment="Center" FontSize="40" Height="60"/>
+                    <TextBlock Text="&#xe9fc;" Style="{DynamicResource IconTextBlockStyle}" HorizontalAlignment="Center" FontSize="50" Height="60"/>
                     <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
                     <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>
