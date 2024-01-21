@@ -19,7 +19,7 @@
 		<Border Width="180" BorderThickness="0">
 			<Grid >
 				<StackPanel Margin="10" Spacing="8">
-					<Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
+					<controls:IconButton Icon="&#xe89c;" Text="Create Mod" Command="{Binding CreateModCommand}"/>
 					<Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
 					<ComboBox Height="20">
 						<ComboBoxItem Content="Pichu"/>

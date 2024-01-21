@@ -1,0 +1,21 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+		<Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+			<!-- Add Controls for Previewer Here -->
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Classes="icon" Text="&#xe89c;"/>
+				<TextBlock>Hello</TextBlock>
+			</StackPanel>
+			
+		</Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+
+	<Style Selector="TextBlock.icon">
+		<Setter Property="Foreground" Value="{DynamicResource AltForegroundBrush}"/>
+		<Setter Property="FontFamily" Value="{DynamicResource MaterialIcons}"/>
+		<Setter Property="FontSize" Value="15"/>
+	</Style>
+</Styles>

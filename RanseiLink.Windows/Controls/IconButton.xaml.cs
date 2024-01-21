@@ -43,13 +43,6 @@ namespace RanseiLink.Windows.Controls
             new PropertyMetadata(null, OnCommandParameterPropertyChanged)
             );
 
-        public static readonly RoutedEvent ConditionalClickEvent = EventManager.RegisterRoutedEvent(
-            nameof(Click),
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(IconButton)
-            );
-
         public string Icon
         {
             get => (string)GetValue(IconProperty);

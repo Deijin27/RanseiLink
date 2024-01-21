@@ -14,15 +14,12 @@
 	<ApplicationIcon>Assets\ranseilink-logo.ico</ApplicationIcon>
   </PropertyGroup>
 
-	<ItemGroup>
+  <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
-    <None Remove="Assets\ranseilink-logo.ico" />
+	  <Content Include="Assets\ranseilink-logo.ico" />
   </ItemGroup>
 
-	<ItemGroup>
-	  <Content Include="Assets\ranseilink-logo.ico" />
-	</ItemGroup>
   <ItemGroup>
     <!--This helps with theme dll-s trimming.
 	If you will publish your application in self-contained mode with p:PublishTrimmed=true and it will use Fluent theme Default theme will be trimmed from the output and vice versa.
@@ -44,6 +41,9 @@
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Controls\IconButton.axaml.cs">
+      <DependentUpon>IconButton.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Dialogs\LoadingDialog.axaml.cs">
       <DependentUpon>LoadingDialog.axaml</DependentUpon>
     </Compile>
