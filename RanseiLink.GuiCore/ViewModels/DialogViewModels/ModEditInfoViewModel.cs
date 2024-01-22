@@ -35,4 +35,14 @@ public class ModEditInfoViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => ModInfo.Version;
         set => RaiseAndSetIfChanged(ModInfo.Version, value, v => ModInfo.Version = v);
     }
+
+    public string Tags
+    {
+        get => string.Join(", ", ModInfo.Tags);
+        set
+        {
+            ModInfo.Tags = value.Split(",").Select(x => x.Trim()).ToList();
+            RaisePropertyChanged();
+        }
+    }
 }

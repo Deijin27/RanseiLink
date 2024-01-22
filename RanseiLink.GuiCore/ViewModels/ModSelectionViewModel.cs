@@ -11,6 +11,25 @@ public interface IModSelectionViewModel
     ObservableCollection<IModListItemViewModel> ModItems { get; }
 }
 
+public class FilterableTag(string tag) : ViewModelBase
+{
+    private bool _checked;
+
+    public string Tag { get; } = tag;
+    public EventHandler? CheckedChanged;
+    public bool Checked
+    {
+        get => _checked;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _checked, value))
+            {
+                CheckedChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
+}
+
 public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 {
     private readonly IModManager _modService;
@@ -27,8 +46,9 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         set => RaiseAndSetIfChanged(ref _outdatedModsExist, value);
     }
 
+    public ObservableCollection<FilterableTag> FilterableTags { get; } = [];
     public ObservableCollection<IModListItemViewModel> ModItems { get; } = [];
-
+    private readonly List<IModListItemViewModel> _allItems = [];
     public ICommand ModItemClicked { get; }
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
@@ -78,6 +98,50 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         CrashCommand = new RelayCommand(() => throw new Exception("Alert! Alert! Intentional Crash Detected!"));
     }
 
+    private void ReloadTags()
+    {
+        foreach (var tag in FilterableTags)
+        {
+            tag.CheckedChanged -= TagCheckedChanged;
+        }
+        FilterableTags.Clear();
+        var tags = ModItems.SelectMany(x => x.Mod.Tags).Distinct().ToList();
+        tags.Sort();
+        foreach ( var tag in tags)
+        {
+            var ft = new FilterableTag(tag);
+            FilterableTags.Add(ft);
+            ft.CheckedChanged += TagCheckedChanged;
+        }
+    }
+
+    private void TagCheckedChanged(object? sender, EventArgs e)
+    {
+        // apply filtering
+        var checkedTags = FilterableTags.Where(x => x.Checked).ToList();
+        ModItems.Clear();
+        if (checkedTags.Count != 0)
+        {
+            foreach (var item in _allItems)
+            {
+                foreach (var tag in checkedTags)
+                {
+                    if (item.Mod.Tags.Contains(tag.Tag))
+                    {
+                        ModItems.Add(item);
+                    }
+                }
+            }
+        }
+        else
+        {
+            foreach (var item in _allItems)
+            {
+                ModItems.Add(item);
+            }
+        }
+    }
+
     private void RefreshOutdatedModsExist()
     {
         OutdatedModsExist = _modService.GetModInfoPreviousVersions().Any();
@@ -89,13 +153,16 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _dispatcherService.Invoke(() =>
         {
             ModItems.Clear();
+            _allItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
                 var item = _itemViewModelFactory(mi);
                 item.RequestRefresh += RefreshModItems;
                 item.RequestRemove += RemoveItem;
                 ModItems.Add(item);
+                _allItems.Add(item);
             }
+            ReloadTags();
         });
     }
 
@@ -104,6 +171,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _dispatcherService.Invoke(() =>
         {
             ModItems.Remove(mod);
+            ReloadTags();
         });
     }
 

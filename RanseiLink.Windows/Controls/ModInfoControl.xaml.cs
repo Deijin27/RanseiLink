@@ -41,7 +41,14 @@ public partial class ModInfoControl : UserControl
             }
             bottomTextItems.Add(mi.GameCode.ToString());
 
-            target.BottomTextBlock.Text = string.Join(" | ", bottomTextItems);
+            var bottomText = string.Join(" | ", bottomTextItems);
+
+            foreach (var tag in mi.Tags)
+            {
+                bottomText += " • " + tag;
+            }
+
+            target.BottomTextBlock.Text = bottomText;
         }
     }
 }

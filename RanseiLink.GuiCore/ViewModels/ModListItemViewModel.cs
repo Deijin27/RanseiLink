@@ -13,6 +13,7 @@ public interface IModListItemViewModel
     void UpdateBanner();
     event Action<IModListItemViewModel> RequestRemove;
     event Action RequestRefresh;
+    ModInfo Mod { get; }
 }
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {

@@ -15,7 +15,7 @@
         <!--<Rectangle Fill="Gray" Grid.RowSpan="2" />-->
         <TextBlock x:Name="NameTextBlock" FontWeight="SemiBold" Text="Mod Name" FontSize="13" VerticalAlignment="Center" Grid.Column="0"/>
 
-        <TextBlock x:Name="BottomTextBlock" Text="v1.0.0 | Deijin | VPYJ" Foreground="{DynamicResource AltForegroundBrush}" FontSize="10" VerticalAlignment="Center" 
+        <TextBlock x:Name="BottomTextBlock" Text="v1.0.0 | Deijin | VPYJ • reconquered • template" Foreground="{DynamicResource AltForegroundBrush}" FontSize="10" VerticalAlignment="Center" 
                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
     </Grid>
 </UserControl>

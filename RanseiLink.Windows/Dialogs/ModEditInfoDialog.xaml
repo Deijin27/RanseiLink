@@ -31,6 +31,8 @@
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <Grid.Resources>
                         <ResourceDictionary>
@@ -54,6 +56,10 @@
 
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Author"/>
                     <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Author, Mode=TwoWay}"/>
+
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Tags"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Tags, Mode=TwoWay}"/>
+
 
                 </Grid>
             </Border>

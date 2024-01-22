@@ -14,6 +14,8 @@ public class ModInfo
         public const string Author = "Author";
         public const string RLModVersion = "RLModVersion";
         public const string GameCode = "GameCode";
+        public const string Tags = "Tags";
+        public const string Tag = "Tag";
     }
     /// <summary>
     /// Name given by user to mod
@@ -27,6 +29,9 @@ public class ModInfo
     /// Author given by user to mod
     /// </summary>
     public string? Author { get; set; }
+
+    public List<string> Tags { get; set; } = [];
+
     /// <summary>
     /// Mod version for knowing how to load it
     /// </summary>
@@ -55,6 +60,15 @@ public class ModInfo
             GameCode = Enum.TryParse(element.Element(ElementNames.GameCode)?.Value, out ConquestGameCode culture) ? culture : ConquestGameCode.VPYT
         };
 
+        var tagsEl = element.Element(ElementNames.Tags);
+        if (tagsEl != null)
+        {
+            foreach (var tagEl in tagsEl.Elements(ElementNames.Tag))
+            {
+                modInfo.Tags.Add(tagEl.Value);
+            }
+        }
+
         string? version = element.Attribute(ElementNames.RLModVersion)?.Value;
         if (!uint.TryParse(version, out uint versionVal))
         {
@@ -73,6 +87,15 @@ public class ModInfo
             new XElement(ElementNames.Author, Author),
             new XElement(ElementNames.GameCode, GameCode)
             );
+        if (Tags.Count != 0)
+        {
+            var tagsEl = new XElement(ElementNames.Tags);
+            foreach (var tag in Tags)
+            {
+                tagsEl.Add(new XElement(ElementNames.Tag, tag));
+            }
+            element.Add(tagsEl);
+        }
         doc.Add(element);
     }
 
@@ -86,6 +109,7 @@ public class ModInfo
             Author = Author,
             GameCode = GameCode,
             FolderPath = FolderPath,
+            Tags = [.. Tags]
         };
     }
 }
