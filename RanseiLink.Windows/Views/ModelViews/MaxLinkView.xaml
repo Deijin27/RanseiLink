@@ -13,6 +13,8 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
+        <valueConverters:LinkToBrushConverter x:Key="Converter.LinkToBrush"/>
+        <valueConverters:GreaterThanNumberToVisiblityConverter Number="49" x:Key="Converter.AboveLinkThresholdToVisibility"/>
     </UserControl.Resources>
     <DockPanel>
         <StackPanel Margin="10,10,10,0" Orientation="Horizontal" DockPanel.Dock="Top">
@@ -21,7 +23,9 @@
                    RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"
                    />
             <TextBlock VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource IconTextBlockStyle}" Text="&#xe164;"/>
-            <ComboBox VerticalAlignment="Center" Width="100" ItemsSource="{Binding SortItems}" SelectedItem="{Binding SelectedSortItem}"/>
+            <ComboBox  Margin="0,0,5,0" VerticalAlignment="Center" Width="100" ItemsSource="{Binding SortItems}" SelectedItem="{Binding SelectedSortItem}"/>
+            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource IconTextBlockStyle}" Text="&#xea0b;"/>
+            <TextBox VerticalAlignment="Center" Text="{Binding ValuesSource, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
         </StackPanel>
         <ItemsControl Margin="10" ItemsSource="{Binding Items, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
@@ -31,6 +35,8 @@
                             <ColumnDefinition Width="32"/>
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="10"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
@@ -48,7 +54,13 @@
                                 </Style>
                             </TextBlock.Style>
                         </TextBlock>
+                        <Ellipse 
+                            Visibility="{Binding MaxLinkValue, Converter={StaticResource Converter.AboveLinkThresholdToVisibility}}" 
+                            Stroke="Black" StrokeThickness="1" Width="8" Height="8" Grid.Column="3" 
+                            Fill="{Binding MaxLinkValue, Converter={StaticResource Converter.LinkToBrush}}"
+                            />
                         <controls:NumberBox Value="{Binding MaxLinkValue, Mode=TwoWay}" Max="100" Grid.Column="4" Width="100" HorizontalAlignment="Left"/>
+                        <controls:NumberButtonPanel Grid.Column="6" HorizontalAlignment="Left" Value="{Binding MaxLinkValue}" Items="{Binding MaxLinkQuickSetter.ValuesSource}"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

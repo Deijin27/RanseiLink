@@ -12,18 +12,27 @@ public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
     private readonly Func<object> _sprite;
-    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<object> sprite, int itemId)
+    public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<object> sprite, int itemId,
+        IMaxLinkQuickSetter maxLinkQuickSetter)
     {
         _model = model;
         _pokemonId = pokemonId;
         Name = name;
         _sprite = sprite;
         Id = itemId;
+        MaxLinkQuickSetter = maxLinkQuickSetter;
     }
     public int MaxLinkValue
     {
         get => _model.GetMaxLink(_pokemonId);
-        set => RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v));
+        set
+        {
+            // validate because this can come from the user's custom quick setter
+            if (value >= 0 && value <= 100)
+            {
+                RaiseAndSetIfChanged(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v));
+            }
+        }
     }
 
     private int _pokemonId;
@@ -32,12 +41,16 @@ public class WarriorMaxLinkListItem : ViewModelBase
     /// This ID is sortable
     /// </summary>
     public int Id { get; }
-
+    public IMaxLinkQuickSetter MaxLinkQuickSetter { get; }
     public string Name { get; }
 
     public object Sprite => _sprite();
 }
 
+public interface IMaxLinkQuickSetter
+{
+    string ValuesSource { get; }
+}
 
 
 public enum MaxLinkSortMode
@@ -47,7 +60,7 @@ public enum MaxLinkSortMode
     Link
 }
 
-public abstract class MaxLinkViewModelBase : ViewModelBase
+public abstract class MaxLinkViewModelBase : ViewModelBase, IMaxLinkQuickSetter
 {
 
     protected readonly IIdToNameService _idToNameService;
@@ -120,6 +133,13 @@ public abstract class MaxLinkViewModelBase : ViewModelBase
     public ObservableCollection<WarriorMaxLinkListItem> Items { get; }
 
     public abstract string? SmallSpritePath { get; }
+
+    private static string _valuesSource = "0,50,70,90,100";
+    public string ValuesSource
+    {
+        get => _valuesSource;
+        set => RaiseAndSetIfChanged(ref _valuesSource, value);
+    }
 }
 
 public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
@@ -142,7 +162,7 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
             var pidInt = (int)pid;
             var name = _idToNameService.IdToName<IPokemonService>(pidInt);
             var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
-            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt));
+            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt, this));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
         OnSetModel();
@@ -184,7 +204,7 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
             var name = _baseWarriorService.IdToName(widInt);
             var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
             var model = maxLinkService.Retrieve(widInt);
-            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt));
+            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt, this));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
         OnSetModel();
