@@ -28,7 +28,7 @@ public class CreateModCommand(IModManager modManager, ISettingService settingSer
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        ModInfo modInfo = modManager.Create(RomPath, ModName, ModVersion, ModAuthor);
+        ModInfo modInfo = modManager.Create(RomPath, new() { Name = ModName, Author = ModAuthor, Version = ModVersion });
         if (SetAsCurrent)
         {
             var mods = modManager.GetAllModInfo();

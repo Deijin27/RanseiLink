@@ -93,16 +93,22 @@ public class ModManager : IModManager
         return GetAllModInfoIncludingPreviousVersions().Where(i => i.RLModVersion < CurrentModVersion).ToList();
     }
 
-    public ModInfo Create(string baseRomPath, string name = "", string version = "", string author = "")
+    public ModInfo Create(string baseRomPath, ModMetadata modMetadata)
     {
-        var modInfo = new ModInfo
+        ConquestGameCode gameCode;
+        using (var br = new BinaryReader(File.OpenRead(baseRomPath)))
         {
-            FolderPath = GetNewModDirectory(),
-            Name = name,
-            Version = version,
-            Author = author,
-            RLModVersion = CurrentModVersion
-        };
+            var header = new NdsHeader(br);
+            gameCode = header.GameCode switch
+            {
+                "VPYJ" => ConquestGameCode.VPYJ,
+                "VPYT" => ConquestGameCode.VPYT,
+                "VPYP" => ConquestGameCode.VPYP,
+                _ => throw new Exception($"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet"),
+            };
+        }
+
+        var modInfo = NewMod(modMetadata, gameCode, CurrentModVersion);
         Directory.CreateDirectory(modInfo.FolderPath);
 
         Banner banner;
@@ -121,40 +127,27 @@ public class ModManager : IModManager
         _msgService.ExtractFromMsgDat(msgPath, Path.Combine(modInfo.FolderPath, Constants.MsgFolderPath));
         File.Delete(msgPath);
 
-        using (var br = new BinaryReader(File.OpenRead(baseRomPath)))
-        {
-            var header = new NdsHeader(br);
-            switch (header.GameCode)
-            {
-                case "VPYJ":
-                    modInfo.GameCode = ConquestGameCode.VPYJ;
-                    break;
-                case "VPYT":
-                    modInfo.GameCode = ConquestGameCode.VPYT;
-                    break;
-                case "VPYP":
-                    modInfo.GameCode = ConquestGameCode.VPYP;
-                    break;
-                default:
-                    throw new Exception($"Unexpected game code '{header.GameCode}', this may not be a conquest rom, or it may be a culture we don't know of yet");
-            }
-        }
-
         Update(modInfo);
         return modInfo;
     }
 
-    public ModInfo CreateBasedOn(ModInfo baseMod, string name = "", string version = "", string author = "")
+    private ModInfo NewMod(ModMetadata metadata, ConquestGameCode gameCode, uint rlModVersion)
     {
-        var modInfo = new ModInfo
+        return new ModInfo
         {
             FolderPath = GetNewModDirectory(),
-            Name = name,
-            Version = version,
-            Author = author,
-            RLModVersion = CurrentModVersion,
-            GameCode = baseMod.GameCode
+            Name = metadata.Name,
+            Author = metadata.Author,
+            Version = metadata.Version,
+            Tags = [.. metadata.Tags],
+            GameCode = gameCode,
+            RLModVersion = rlModVersion
         };
+    }
+
+    public ModInfo CreateBasedOn(ModInfo baseMod, ModMetadata metadata)
+    {
+        var modInfo = NewMod(metadata, baseMod.GameCode, baseMod.RLModVersion);
         FileUtil.CopyFilesRecursively(baseMod.FolderPath, modInfo.FolderPath);
         Update(modInfo);
         return modInfo;

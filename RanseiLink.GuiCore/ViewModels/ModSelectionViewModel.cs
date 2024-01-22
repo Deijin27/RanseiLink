@@ -156,7 +156,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             _allItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
-                var item = _itemViewModelFactory(mi);
+                var item = _itemViewModelFactory(mi, GetKnownTags);
                 item.RequestRefresh += RefreshModItems;
                 item.RequestRemove += RemoveItem;
                 ModItems.Add(item);
@@ -164,6 +164,11 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             }
             ReloadTags();
         });
+    }
+
+    private List<string> GetKnownTags()
+    {
+        return FilterableTags.Select(x => x.Tag).ToList();
     }
 
     private void RemoveItem(IModListItemViewModel mod)
@@ -177,7 +182,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     private async Task CreateMod()
     {
-        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory);
+        var vm = new ModCreationViewModel(_dialogService, _settingService, _fdhFactory, GetKnownTags());
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -188,7 +193,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             ModInfo newMod;
             try
             {
-                newMod = _modService.Create(vm.File, vm.ModInfo.Name ?? "", vm.ModInfo.Version ?? "", vm.ModInfo.Author ?? "");
+                newMod = _modService.Create(vm.File, vm.Metadata);
             }
             catch (Exception e)
             {

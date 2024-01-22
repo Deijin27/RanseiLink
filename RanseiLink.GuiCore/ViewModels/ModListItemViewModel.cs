@@ -6,7 +6,7 @@ using RanseiLink.PluginModule.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod);
+public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod, Func<List<string>> getKnownTags);
 
 public interface IModListItemViewModel
 {
@@ -68,8 +68,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     /// IMPORTANT: This must be called after construction or things go kaboom
     /// </summary>
     /// <param name="mod"></param>
-    internal ModListItemViewModel Init(ModInfo mod)
+    internal ModListItemViewModel Init(ModInfo mod, Func<List<string>> getKnownTags)
     {
+        _getKnownTags = getKnownTags;
         Mod = mod;
         UpdateBanner();
         return this;
@@ -87,6 +88,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         set => RaiseAndSetIfChanged(ref _banner, value);
     }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
+
+    private Func<List<string>> _getKnownTags = null!;
+
     public ModInfo Mod { get; private set; } = null!;
     public ICommand PatchRomCommand { get; }
     public ICommand ExportModCommand { get; }
@@ -172,7 +176,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private async Task EditModInfo(ModInfo mod)
     {
-        var vm = new ModEditInfoViewModel(mod);
+        var vm = new ModEditInfoViewModel(mod, _getKnownTags());
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
@@ -188,12 +192,11 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private async Task CreateModBasedOn(ModInfo mod)
     {
-        var vm = new ModCreateBasedOnViewModel(mod);
+        var vm = new ModCreateBasedOnViewModel(mod, _getKnownTags());
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;
         }
-        var newModInfo = vm.ModInfo;
         Exception? error = null;
         await _dialogService.ProgressDialog(progress =>
         {
@@ -201,7 +204,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             ModInfo newMod;
             try
             {
-                newMod = _modService.CreateBasedOn(mod, newModInfo.Name ?? "", newModInfo.Version ?? "", newModInfo.Author ?? "");
+                newMod = _modService.CreateBasedOn(mod, vm.Metadata);
             }
             catch (Exception e)
             {

@@ -4,19 +4,8 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
 
-public class ModInfo
+public class ModMetadata
 {
-    private static class ElementNames
-    {
-        public const string ModInfo = "ModInfo";
-        public const string Name = "Name";
-        public const string Version = "Version";
-        public const string Author = "Author";
-        public const string RLModVersion = "RLModVersion";
-        public const string GameCode = "GameCode";
-        public const string Tags = "Tags";
-        public const string Tag = "Tag";
-    }
     /// <summary>
     /// Name given by user to mod
     /// </summary>
@@ -31,6 +20,22 @@ public class ModInfo
     public string? Author { get; set; }
 
     public List<string> Tags { get; set; } = [];
+}
+
+public class ModInfo : ModMetadata
+{
+    private static class ElementNames
+    {
+        public const string ModInfo = "ModInfo";
+        public const string Name = "Name";
+        public const string Version = "Version";
+        public const string Author = "Author";
+        public const string RLModVersion = "RLModVersion";
+        public const string GameCode = "GameCode";
+        public const string Tags = "Tags";
+        public const string Tag = "Tag";
+    }
+    
 
     /// <summary>
     /// Mod version for knowing how to load it
@@ -99,17 +104,22 @@ public class ModInfo
         doc.Add(element);
     }
 
-    public ModInfo Clone()
+    public ModMetadata CopyMetadata()
     {
-        return new ModInfo
+        return new()
         {
-            RLModVersion = RLModVersion,
             Name = Name,
             Version = Version,
             Author = Author,
-            GameCode = GameCode,
-            FolderPath = FolderPath,
-            Tags = [.. Tags]
+            Tags = [..Tags]
         };
+    }
+
+    public void LoadMetadata(ModMetadata metadata)
+    {
+        Name = metadata.Name;
+        Version = metadata.Version;
+        Author = metadata.Author;
+        Tags = [..metadata.Tags];
     }
 }

@@ -8,13 +8,15 @@
         AllowsTransparency="True"
         xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
+        SizeToContent="Height"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:dd="urn:gong-wpf-dragdrop"
         d:DataContext="{d:DesignInstance vm:ModEditInfoViewModel, IsDesignTimeCreatable=False}"
-        Title="ModCreationDialog" Height="200" Width="350" Background="Transparent">
+        Title="ModCreationDialog" Width="350" Background="Transparent">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
-        <DockPanel>
+        <DockPanel VerticalAlignment="Center">
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
                     <Button Height="20" Width="100" Margin="0,0,20,0" Content="Apply Changes" Click="OkButton_Click"/>
@@ -22,46 +24,7 @@
                 </StackPanel>
             </Grid>
             <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
-                <Grid Grid.Column="1" Margin="20,20,20,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="2.5*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                    </Grid.RowDefinitions>
-                    <Grid.Resources>
-                        <ResourceDictionary>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                <Setter Property="Height" Value="20"/>
-                            </Style>
-                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                <Setter Property="Height" Value="20"/>
-                            </Style>
-                            <Style TargetType="ComboBox">
-                                <Setter Property="Height" Value="20"/>
-                            </Style>
-                        </ResourceDictionary>
-                    </Grid.Resources>
-
-                    <TextBlock  Grid.Row="0" Grid.Column="0" Text="Name"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
-
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Version"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Version, Mode=TwoWay}"/>
-
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Author"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Author, Mode=TwoWay}"/>
-
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Tags"/>
-                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Tags, Mode=TwoWay}"/>
-
-
-                </Grid>
+                <local:ModMetadataView/>
             </Border>
         </DockPanel>
     </Border>

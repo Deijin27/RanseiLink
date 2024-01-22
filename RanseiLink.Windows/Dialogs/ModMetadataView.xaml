@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Dialogs.ModMetadataView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             d:DataContext="{d:DesignInstance vm:ModMetadataViewModelBase, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Grid.Column="1" Margin="20,20,20,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="2.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+                <Style TargetType="ComboBox">
+                    <Setter Property="Height" Value="20"/>
+                </Style>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <TextBlock  Grid.Row="0" Grid.Column="0" Text="Name"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Version"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Version, Mode=TwoWay}"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Author"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Author, Mode=TwoWay}"/>
+
+        <GroupBox Grid.Row="3" Grid.ColumnSpan="2" Header="Tags" Padding="5">
+            <StackPanel>
+                <DockPanel Grid.Row="3" Grid.Column="1">
+                    <Button VerticalAlignment="Center" Margin="5,0,0,0" DockPanel.Dock="Right" Command="{Binding AddTagCommand}">Add New Tag (Enter)</Button>
+                    <TextBox Text="{Binding TagToAdd, UpdateSourceTrigger=PropertyChanged}" KeyDown="TextBox_KeyDown"/>
+
+                </DockPanel>
+
+                <ItemsControl Margin="0,5,0,0" Grid.Row="4" Grid.ColumnSpan="2" ItemsSource="{Binding KnownTags}" VerticalAlignment="Top">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:FilterableTag">
+                            <ToggleButton Margin="3,0,0,3" Content="{Binding Tag}" IsChecked="{Binding Checked}" Style="{StaticResource TagToggleButtonStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

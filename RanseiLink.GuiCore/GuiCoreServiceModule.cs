@@ -16,7 +16,7 @@ public class GuiCoreServiceModule : IModule
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
         builder.Register<ModListItemViewModel>(Reuse.Transient);
         builder.RegisterDelegate(context => 
-            new ModListItemViewModelFactory((mod) => context.Resolve<ModListItemViewModel>().Init(mod))
+            new ModListItemViewModelFactory((mod, getKnownTags) => context.Resolve<ModListItemViewModel>().Init(mod, getKnownTags))
             , Reuse.Singleton);
 
     }

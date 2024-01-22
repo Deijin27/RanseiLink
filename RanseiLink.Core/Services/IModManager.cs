@@ -19,11 +19,9 @@ public interface IModManager
     /// Create a new mod.
     /// </summary>
     /// <param name="baseRomPath">Rom to act as a base for the mod.</param>
-    /// <param name="name">Name of the mod</param>
-    /// <param name="version">User defined version of the mod</param>
-    /// <param name="author">Author of the mod</param>
+    /// <param name="metadata">Metadata for the new mod</param>
     /// <returns>Info on created mod</returns>
-    ModInfo Create(string baseRomPath, string name = "", string version = "", string author = "");
+    ModInfo Create(string baseRomPath, ModMetadata metadata);
 
     /// <summary>
     /// Export current mod to destination folder
@@ -55,11 +53,9 @@ public interface IModManager
     /// Create a new mod based on an existing, duplicating the data.
     /// </summary>
     /// <param name="baseMod">Mod to copy</param>
-    /// <param name="name">Name of new mod</param>
-    /// <param name="version">Version of new mod</param>
-    /// <param name="author">Author of new mod</param>
+    /// <param name="metadata">Metadata of new mod</param>
     /// <returns></returns>
-    ModInfo CreateBasedOn(ModInfo baseMod, string name = "", string version = "", string author = "");
+    ModInfo CreateBasedOn(ModInfo baseMod, ModMetadata metadata);
 
     /// <summary>
     /// Upgrade mods to the latest version.

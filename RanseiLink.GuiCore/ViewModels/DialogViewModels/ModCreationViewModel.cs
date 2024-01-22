@@ -1,18 +1,17 @@
-﻿using RanseiLink.Core.Services;
-using RanseiLink.Core.Settings;
+﻿using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
+public class ModCreationViewModel : ModMetadataViewModelBase, IModalDialogViewModel<bool>
 {
     private readonly RecentLoadRomSetting _recentLoadRomSetting;
     private readonly ISettingService _settingService;
-    public ModCreationViewModel(IAsyncDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory)
+    public ModCreationViewModel(IAsyncDialogService dialogService, ISettingService settingService, IFileDropHandlerFactory fdhFactory, List<string> knownTags)
+        :base(new(), knownTags)
     {
         _settingService = settingService;
         _recentLoadRomSetting = settingService.Get<RecentLoadRomSetting>();
-        ModInfo = new ModInfo();
         RomDropHandler = fdhFactory.NewRomDropHandler();
         _file = _recentLoadRomSetting.Value;
         RomDropHandler.FileDropped += f =>
@@ -33,6 +32,7 @@ public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public bool Result { get; private set; }
     public void OnClosing(bool result)
     {
+        OnClosing();
         Result = result;
         if (result)
         {
@@ -65,23 +65,5 @@ public class ModCreationViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
-    public ModInfo ModInfo { get; }
-
-    public string? Name
-    {
-        get => ModInfo.Name;
-        set => RaiseAndSetIfChanged(ModInfo.Name, value, v => ModInfo.Name = v);
-    }
-
-    public string? Author
-    {
-        get => ModInfo.Author;
-        set => RaiseAndSetIfChanged(ModInfo.Author, value, v => ModInfo.Author = v);
-    }
-
-    public string? Version
-    {
-        get => ModInfo.Version;
-        set => RaiseAndSetIfChanged(ModInfo.Version, value, v => ModInfo.Version = v);
-    }
+    
 }

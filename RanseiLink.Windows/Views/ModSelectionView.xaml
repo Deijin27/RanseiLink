@@ -41,8 +41,8 @@
             
         </Border>
 
-        <StackPanel Margin="5" DockPanel.Dock="Top" Orientation="Horizontal">
-            <TextBlock VerticalAlignment="Top" Style="{StaticResource IconTextBlockStyle}">&#xf05b;</TextBlock>
+        <DockPanel Margin="5" DockPanel.Dock="Top">
+            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Style="{StaticResource IconTextBlockStyle}">&#xf05b;</TextBlock>
             <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -55,7 +55,7 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </StackPanel>
+        </DockPanel>
         <ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5"  
                       Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
