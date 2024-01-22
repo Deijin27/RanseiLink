@@ -193,9 +193,9 @@
             <GroupBox Header="Battle Model Animations" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="5" Padding="5">
                 <StackPanel>
                     <UniformGrid Rows="1">
-                        <Button Content="Export" Height="20" Command="{Binding ExportAnimationsCommand}"/>
-                        <Button Content="Import" Height="20" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
-                        <Button Content="Revert" Height="20" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
+                        <controls:IconButton Icon="&#xebbe;" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
+                        <controls:IconButton Icon="&#xe890;" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
+                        <controls:IconButton Icon="&#xe166;" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
                     </UniformGrid>
 
                     <TextBlock Margin="0,7" Text="{Binding IsAnimationOverwritten, StringFormat='Is Animation Overwritten: {0}'}" d:Text="Is Animation Overwritten: true"/>

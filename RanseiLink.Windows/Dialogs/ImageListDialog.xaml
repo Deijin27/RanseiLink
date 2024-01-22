@@ -28,9 +28,21 @@
                             <Image Source="{Binding DisplayImage}" Stretch="None">
                                 <Image.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Import Override" Command="{Binding SetOverrideCommand}"/>
-                                        <MenuItem Header="Revert to Default" Command="{Binding RevertCommand}"/>
-                                        <MenuItem Header="Export Image" Command="{Binding ExportCommand}"/>
+                                        <MenuItem Header="Import Override" Command="{Binding SetOverrideCommand}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xe890;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Revert to Default" Command="{Binding RevertCommand}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xe166;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Export Image" Command="{Binding ExportCommand}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xebbe;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                            </MenuItem.Icon>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Image.ContextMenu>
                             </Image>
