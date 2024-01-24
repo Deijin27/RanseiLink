@@ -16,14 +16,20 @@ public class ScenarioPokemonViewModel : ViewModelBase
     private int _id;
     private ScenarioId _scenario;
     private readonly List<SelectorComboBoxItem> _allAbilityItems;
+    private string _ivQuickSetSource = "0,5,10,15,20,25,31";
+    private string _linkQuickSetSource = "0,10,20,30";
 
-    private static int _linkNum;
-    public int LinkNum
+    public string IvQuickSetSource
     {
-        get => _linkNum;
-        set => RaiseAndSetIfChanged(ref _linkNum, value);
+        get => _ivQuickSetSource;
+        set => RaiseAndSetIfChanged(ref _ivQuickSetSource, value);
     }
-    public ICommand SetExactLinkCommand { get; }
+
+    public string LinkQuickSetSource
+    {
+        get => _linkQuickSetSource;
+        set => RaiseAndSetIfChanged(ref _linkQuickSetSource, value);
+    }
 
     public ScenarioPokemonViewModel(
         IJumpService jumpService,
@@ -33,7 +39,6 @@ public class ScenarioPokemonViewModel : ViewModelBase
         _pokemonService = pokemonService;
         _model = new ScenarioPokemon();
 
-        SetExactLinkCommand = new RelayCommand(() => Exp = LinkCalculator.CalculateExp(LinkNum));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
 
@@ -98,45 +103,75 @@ public class ScenarioPokemonViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Ability, (AbilityId)value, v => _model.Ability = v);
     }
 
+    private bool ValidateIv(int value)
+    {
+        return value >= 0 && value <= 31;
+    }
+
     public int HpIv
     {
         get => _model.HpIv;
-        set => RaiseAndSetIfChanged(_model.HpIv, value, v => _model.HpIv = v);
+        set
+        {
+            if (ValidateIv(value))
+            {
+                RaiseAndSetIfChanged(_model.HpIv, value, v => _model.HpIv = v);
+            }
+        }
     }
 
     public int AtkIv
     {
         get => _model.AtkIv;
-        set => RaiseAndSetIfChanged(_model.AtkIv, value, v => _model.AtkIv = v);
+        set
+        {
+            if (ValidateIv(value))
+            {
+                RaiseAndSetIfChanged(_model.AtkIv, value, v => _model.AtkIv = v);
+            }
+        }
     }
 
     public int DefIv
     {
         get => _model.DefIv;
-        set => RaiseAndSetIfChanged(_model.DefIv, value, v => _model.DefIv = v);
+        set
+        {
+            if (ValidateIv(value))
+            {
+                RaiseAndSetIfChanged(_model.DefIv, value, v => _model.DefIv = v);
+            }
+        }
     }
 
     public int SpeIv
     {
         get => _model.SpeIv;
-        set => RaiseAndSetIfChanged(_model.SpeIv, value, v => _model.SpeIv = v);
-    }
-
-    public int Exp
-    {
-        get => _model.Exp;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Exp, value, v => _model.Exp = (ushort)v))
+            if (ValidateIv(value))
             {
-                RaisePropertyChanged(nameof(ApproximateLink));
+                RaiseAndSetIfChanged(_model.SpeIv, value, v => _model.SpeIv = v);
             }
         }
     }
 
-    public string ApproximateLink
+    // the default values are all integers, so I decided to drop support for setting exp directly
+    // to simplify the ui
+    public int Link
     {
-        get => LinkCalculator.CalculateLink(_model.Exp).ToString("0.00");
-        set => Exp = LinkCalculator.CalculateExp(double.Parse(value));
+        get => (int)LinkCalculator.CalculateLink(_model.Exp);
+        set
+        {
+            if (value >= 0 && value <= 100)
+            {
+                var newValue = LinkCalculator.CalculateExp(value);
+                if (newValue != _model.Exp)
+                {
+                    _model.Exp = newValue;
+                    RaisePropertyChanged();
+                }
+            }
+        }
     }
 }
