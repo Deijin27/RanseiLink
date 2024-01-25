@@ -99,7 +99,7 @@ public class MainWindowViewModel : ViewModelBase
         CurrentVm = _modSelectionVm;
         BackButtonVisible = false;
 
-        foreach (var item in _modSelectionVm.ModItems)
+        foreach (var item in _modSelectionVm.AllItems)
         {
             item.UpdateBanner();
         }

@@ -9,6 +9,7 @@ public interface IModSelectionViewModel
 {
     event Action<ModInfo> ModSelected;
     ObservableCollection<IModListItemViewModel> ModItems { get; }
+    List<IModListItemViewModel> AllItems { get; }
 }
 
 public class FilterableTag(string tag) : ViewModelBase
@@ -48,7 +49,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public ObservableCollection<FilterableTag> FilterableTags { get; } = [];
     public ObservableCollection<IModListItemViewModel> ModItems { get; } = [];
-    private readonly List<IModListItemViewModel> _allItems = [];
+    public List<IModListItemViewModel> AllItems { get; } = [];
     public ICommand ModItemClicked { get; }
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
@@ -105,7 +106,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             tag.CheckedChanged -= TagCheckedChanged;
         }
         FilterableTags.Clear();
-        var tags = ModItems.SelectMany(x => x.Mod.Tags).Distinct().ToList();
+        var tags = AllItems.SelectMany(x => x.Mod.Tags).Distinct().ToList();
         tags.Sort();
         foreach ( var tag in tags)
         {
@@ -122,7 +123,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         ModItems.Clear();
         if (checkedTags.Count != 0)
         {
-            foreach (var item in _allItems)
+            foreach (var item in AllItems)
             {
                 foreach (var tag in checkedTags)
                 {
@@ -135,7 +136,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         }
         else
         {
-            foreach (var item in _allItems)
+            foreach (var item in AllItems)
             {
                 ModItems.Add(item);
             }
@@ -153,14 +154,14 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _dispatcherService.Invoke(() =>
         {
             ModItems.Clear();
-            _allItems.Clear();
+            AllItems.Clear();
             foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
             {
                 var item = _itemViewModelFactory(mi, GetKnownTags);
                 item.RequestRefresh += RefreshModItems;
                 item.RequestRemove += RemoveItem;
                 ModItems.Add(item);
-                _allItems.Add(item);
+                AllItems.Add(item);
             }
             ReloadTags();
         });
@@ -175,6 +176,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     {
         _dispatcherService.Invoke(() =>
         {
+            AllItems.Remove(mod);
             ModItems.Remove(mod);
             ReloadTags();
         });

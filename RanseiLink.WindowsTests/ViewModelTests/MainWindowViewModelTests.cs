@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Services;
 using RanseiLink.GuiCore.ViewModels;
 using RanseiLink.PluginModule.Services;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.Tests.ViewModelTests;
@@ -53,7 +54,7 @@ public class MainWindowViewModelTests
         SelectingModShouldLoadMainEditorWithMod();
 
         var mockModItem = new Mock<IModListItemViewModel>();
-        _mockModSelectionVm.Setup(x => x.ModItems).Returns(new ObservableCollection<IModListItemViewModel>() { mockModItem.Object });
+        _mockModSelectionVm.Setup(x => x.AllItems).Returns([mockModItem.Object]);
 
         _mainWindowVm.BackButtonCommand?.Execute(null);
 
