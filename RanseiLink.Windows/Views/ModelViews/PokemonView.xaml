@@ -126,7 +126,7 @@
                         <ItemsControl ItemsSource="{Binding Evolutions}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <ComboBox ItemsSource="{Binding Options}" SelectedValue="{Binding Id}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                                    <ComboBox Margin="0,0,0,2" ItemsSource="{Binding Options}" SelectedValue="{Binding Id}" Style="{StaticResource SelectorComboBoxStyle}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
