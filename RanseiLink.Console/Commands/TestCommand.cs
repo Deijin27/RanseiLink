@@ -1,10 +1,4 @@
-﻿using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Console.Services;
-using System.Threading.Tasks;
-using CliFx;
-using System.Linq;
-using RanseiLink.Core.Graphics;
+﻿using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Util;
 
 namespace RanseiLink.Console.Commands;

@@ -1,7 +1,4 @@
-﻿using CliFx.Infrastructure;
-using System;
-
-namespace RanseiLink.Console;
+﻿namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {

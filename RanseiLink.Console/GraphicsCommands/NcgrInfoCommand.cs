@@ -1,8 +1,4 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Core.Graphics;
-using System.Threading.Tasks;
+﻿using RanseiLink.Core.Graphics;
 using System.Xml.Linq;
 
 namespace RanseiLink.Console.GraphicsCommands;

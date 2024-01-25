@@ -2,8 +2,6 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using NLua;
-using System.IO;
-using System.Linq;
 
 namespace RanseiLink.Console.Services;
 

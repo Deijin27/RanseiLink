@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RanseiLink.PluginModule.Api;
+﻿namespace RanseiLink.PluginModule.Api;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class PluginAttribute : Attribute

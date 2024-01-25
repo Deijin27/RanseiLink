@@ -1,7 +1,4 @@
-﻿
-using System.Threading.Tasks;
-
-namespace RanseiLink.PluginModule.Api;
+﻿namespace RanseiLink.PluginModule.Api;
 
 /// <summary>
 /// Provides plugin writers with tools that work trans context

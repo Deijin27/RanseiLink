@@ -1,7 +1,4 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using DryIoc;
-using RanseiLink.Console.Services;
+﻿using DryIoc;
 using RanseiLink.Core;
 using System.Reflection;
 

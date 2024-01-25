@@ -1,8 +1,4 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Core.RomFs;
-using System.Threading.Tasks;
+﻿using RanseiLink.Core.RomFs;
 
 namespace RanseiLink.Console.ArchiveCommands;
 

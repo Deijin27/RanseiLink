@@ -1,10 +1,6 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Console.Settings;
+﻿using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
-using System.Threading.Tasks;
 
 namespace RanseiLink.Console.ModCommands;
 

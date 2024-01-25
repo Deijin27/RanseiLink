@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RanseiLink.PluginModule.Api;
+﻿namespace RanseiLink.PluginModule.Api;
 
 public static class UtilityExtensions
 {

@@ -1,9 +1,6 @@
-﻿using CliFx.Infrastructure;
-using RanseiLink.Core;
+﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using System;
-using System.Linq;
 using System.Text;
 
 namespace RanseiLink.Console;

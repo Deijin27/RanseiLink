@@ -1,11 +1,6 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Core;
+﻿using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
 using SixLabors.ImageSharp;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace RanseiLink.Console.GraphicsCommands;
 

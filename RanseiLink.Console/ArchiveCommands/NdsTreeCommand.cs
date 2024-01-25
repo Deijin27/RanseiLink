@@ -1,10 +1,4 @@
-﻿using CliFx;
-using CliFx.Attributes;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.IO;
-using System.Text;
-using CliFx.Infrastructure;
+﻿using System.Text;
 using RanseiLink.Core.RomFs;
 
 namespace RanseiLink.Console.ArchiveCommands;

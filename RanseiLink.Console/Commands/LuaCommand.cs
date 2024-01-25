@@ -1,10 +1,4 @@
-﻿using CliFx.Attributes;
-using CliFx.Infrastructure;
-using RanseiLink.Console.Services;
-using System.Threading.Tasks;
-using CliFx;
-
-namespace RanseiLink.Console.Commands;
+﻿namespace RanseiLink.Console.Commands;
 
 [Command("lua", Description = "Run given lua script.")]
 public class LuaCommand : ICommand

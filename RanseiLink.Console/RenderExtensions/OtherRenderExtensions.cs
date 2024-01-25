@@ -1,5 +1,4 @@
-﻿using CliFx.Infrastructure;
-using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Services;
 using RanseiLink.Core.Text;
 
 namespace RanseiLink.Console;
