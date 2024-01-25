@@ -73,7 +73,8 @@
                                         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsOverride}" Value="True">
-                                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                                <Setter Property="Foreground" Value="#80c468"/>
+                                                <Setter Property="TextDecorations" Value="Underline"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

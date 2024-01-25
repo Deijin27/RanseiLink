@@ -7,10 +7,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              d:DataContext="{d:DesignInstance vm:AnimationViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" HorizontalAlignment="Stretch">
-    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-        <controls:IconButton Icon="&#xebbe;" Text="Export" Command="{Binding ExportCommand}" Margin="0,0,5,0"/>
-        <controls:IconButton Icon="&#xe890;" Text="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
-        <controls:IconButton Icon="&#xe166;" Text="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
-        <TextBlock VerticalAlignment="Center" Text="{Binding IsOverriden, StringFormat='Is Overriden: {0}'}" d:Text="Is Overriden: true"/>
-    </StackPanel>
+    <Grid VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Visibility="{Binding IsOverriden, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Text="&#xe86c;" Style="{StaticResource IconTextBlockStyle}"/>
+        <controls:IconButton Grid.Column="1" Icon="&#xebbe;" Text="Export" Command="{Binding ExportCommand}" Margin="5,0,5,0"/>
+        <controls:IconButton Grid.Column="2" Icon="&#xe890;" Text="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
+        <controls:IconButton Grid.Column="3" Icon="&#xe166;" Text="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
+    </Grid>
 </UserControl>

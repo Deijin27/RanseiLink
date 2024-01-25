@@ -190,15 +190,20 @@
                 <controls:IconButton Icon="&#xe3f4;" Text="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
 
-            <GroupBox Header="Battle Model Animations" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="5" Padding="5">
+            <GroupBox Header="Battle Model Animations" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="5">
                 <StackPanel>
-                    <UniformGrid Rows="1">
-                        <controls:IconButton Icon="&#xebbe;" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
-                        <controls:IconButton Icon="&#xe890;" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
-                        <controls:IconButton Icon="&#xe166;" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
-                    </UniformGrid>
-
-                    <TextBlock Margin="0,7" Text="{Binding IsAnimationOverwritten, StringFormat='Is Animation Overwritten: {0}'}" d:Text="Is Animation Overwritten: true"/>
+                    <Grid Margin="0,4,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Visibility="{Binding IsAnimationOverwritten, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Text="&#xe86c;" Style="{StaticResource IconTextBlockStyle}"/>
+                        <controls:IconButton Grid.Column="1" Icon="&#xebbe;" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
+                        <controls:IconButton Grid.Column="2" Icon="&#xe890;" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
+                        <controls:IconButton Grid.Column="3" Icon="&#xe166;" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
+                    </Grid>
 
                     <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" VerticalAlignment="Center" Margin="0,0,0,7"/>
 
@@ -207,7 +212,7 @@
             </GroupBox>
             
 
-            <GroupBox Header="Evolution Condition 1" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
+            <GroupBox Header="Evolution Condition 1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
                   ToolTip="The first requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -224,7 +229,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Evolution Condition 2" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
+            <GroupBox Header="Evolution Condition 2" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
                   ToolTip="The second requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -241,7 +246,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Habitats" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
+            <GroupBox Header="Habitats" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
                 <ItemsControl ItemsSource="{Binding HabitatItems}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
