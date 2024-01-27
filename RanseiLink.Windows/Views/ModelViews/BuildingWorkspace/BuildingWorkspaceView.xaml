@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.BuildingWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d:Background="{DynamicResource WindowBackgroundBrush}"
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
+             xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             d:DataContext="{d:DesignInstance vm:BuildingWorkspaceViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="miniBuildingTemplate">
+            <local:BuildingMiniView Margin="2" Width="163"/>
+        </DataTemplate>
+        <DataTemplate x:Key="miniKingdomTemplate">
+            <local:SwSimpleKingdomMiniView Margin="2" Width="163"/>
+        </DataTemplate>
+
+        <local:BuildingWorkspaceItemDataTemplateSelector
+            x:Key="miniTemplateSelector"
+            BuildingTemplate="{StaticResource miniBuildingTemplate}"
+            KingdomTemplate="{StaticResource miniKingdomTemplate}"
+            />
+    </UserControl.Resources>
+    <DockPanel Margin="10">
+        <ItemsControl
+            DockPanel.Dock="Left"
+            Margin="0,0,10,0"
+            ItemsSource="{Binding Items}" 
+            Style="{StaticResource ItemsControlVirtualizedStyle}"
+            VirtualizingPanel.ScrollUnit="Pixel"
+            ItemTemplateSelector="{StaticResource miniTemplateSelector}">
+        </ItemsControl>
+        <ScrollViewer>
+            <local:BuildingView DataContext="{Binding SelectedItem}"/>
+        </ScrollViewer>
+        
+    </DockPanel>
+    
+
+</UserControl>

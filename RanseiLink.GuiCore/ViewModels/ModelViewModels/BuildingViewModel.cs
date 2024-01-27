@@ -1,23 +1,124 @@
 ﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animManager) : ViewModelBase
+public class BuildingSimpleKingdomMiniViewModel : ViewModelBase
 {
-    private Building _model = new();
-
-    public void SetModel(BuildingId id, Building model)
+    private readonly KingdomId _kingdom;
+    protected readonly ICachedSpriteProvider _spriteProvider;
+    public BuildingSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, KingdomId kingdom)
     {
-        Id = id;
-        _model = model;
-        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, (int)id);
-        RaiseAllPropertiesChanged();
+        _spriteProvider = spriteProvider;
+        _kingdom = kingdom;
     }
 
-    public BuildingId Id { get; private set; }
+    public object? KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
+
+    public KingdomId Kingdom => _kingdom;
+}
+
+public class BuildingWorkspaceViewModel : ViewModelBase
+{
+    private readonly IBuildingService _buildingService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
+
+    public ObservableCollection<object> Items { get; } = [];
+
+    public void Deactivate()
+    {
+        _buildingService.Save();
+    }
+
+    public BuildingWorkspaceViewModel(
+        IBuildingService buildingService, 
+        IKingdomService kingdomService,
+        IJumpService jumpService, 
+        IIdToNameService idToNameService, 
+        ICachedSpriteProvider cachedSpriteProvider,
+        IAnimGuiManager animManager)
+    {
+        BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+        _buildingService = buildingService;
+        _cachedSpriteProvider = cachedSpriteProvider;
+        ItemClickedCommand = new RelayCommand<object>(ItemClicked);
+        // load the building view models
+        var vms = new List<BuildingViewModel>();
+        foreach (var id in buildingService.ValidIds())
+        {
+            var model = buildingService.Retrieve(id);
+            var vm = new BuildingViewModel(this, kingdomService, cachedSpriteProvider, animManager, (BuildingId)id, model);
+            vms.Add(vm);
+        }
+
+        // put the view models into the list. maybe this won't be a list long term
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+        {
+            Items.Add(new BuildingSimpleKingdomMiniViewModel(cachedSpriteProvider, kingdom));
+            var intKingdom = (int)kingdom;
+            foreach (var vm in vms.Where(x => x.Kingdom == intKingdom))
+            {
+                Items.Add(vm);
+            }
+        }
+        _selectedItem = vms.First();
+    }
+
+    public List<SelectorComboBoxItem> BuildingItems { get; }
+
+    public ICommand JumpToBattleConfigCommand { get; }
+
+    public ICommand ItemClickedCommand { get; }
+
+    private object _selectedItem;
+    public object SelectedItem
+    {
+        get => _selectedItem;
+        set
+        {
+            if (RaiseAndSetIfChanged(ref _selectedItem, value))
+            {
+            }
+        }
+    }
+
+    private void ItemClicked(object? sender)
+    {
+        if (sender is BuildingViewModel)
+        {
+            SelectedItem = sender;
+        }
+    }
+}
+
+
+
+public class BuildingViewModel : ViewModelBase
+{
+    public delegate BuildingViewModel Factory();
+
+    private readonly BuildingWorkspaceViewModel _parent;
+    private readonly IKingdomService _kingdomService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    private Building _model = new();
+
+    public BuildingViewModel(BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, IAnimGuiManager animManager, BuildingId id, Building model)
+    {
+        _parent = parent;
+        _kingdomService = kingdomService;
+        _cachedSpriteProvider = cachedSpriteProvider;
+        Id = (int)id;
+        _model = model;
+        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, Sprite1); // TODO: this needs moving to its own module
+    }
+
+    public int Id { get; private set; }
 
     public AnimationViewModel? IconAnimVm { get; private set; }
 
@@ -27,14 +128,21 @@ public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNa
         set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
     }
 
-    public List<SelectorComboBoxItem> KingdomItems { get; } = idToNameService.GetComboBoxItemsExceptDefault<IKingdomService>();
-    public List<SelectorComboBoxItem> BuildingItems { get; } = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
+    public List<SelectorComboBoxItem> BuildingItems => _parent.BuildingItems;
 
     public int Kingdom
     {
         get => (int)_model.Kingdom;
-        set => RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
+            {
+                RaisePropertyChanged(nameof(KingdomName));
+            }
+        }
     }
+
+    public string KingdomName => _kingdomService.IdToName(Kingdom);
 
     public int Building1
     {
@@ -102,23 +210,47 @@ public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNa
         set => RaiseAndSetIfChanged(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
     }
 
-    public BuildingSpriteId Sprite1
+    public int Sprite1
     {
         get => _model.Sprite1;
-        set => RaiseAndSetIfChanged(_model.Sprite1, value, v => _model.Sprite1 = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Sprite1, value, v => _model.Sprite1 = v))
+            {
+                RaisePropertyChanged(nameof(Sprite1Image));
+            }
+        }
     }
 
-    public BuildingSpriteId Sprite2
+    public object? Sprite1Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite1);
+
+    public int Sprite2
     {
         get => _model.Sprite2;
-        set => RaiseAndSetIfChanged(_model.Sprite2, value, v => _model.Sprite2 = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Sprite2, value, v => _model.Sprite2 = v))
+            {
+                RaisePropertyChanged(nameof(Sprite2Image)); 
+            }
+        }
     }
 
-    public BuildingSpriteId Sprite3
+    public object? Sprite2Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite2);
+
+    public int Sprite3
     {
         get => _model.Sprite3;
-        set => RaiseAndSetIfChanged(_model.Sprite3, value, v => _model.Sprite3 = v);
+        set
+        {
+            if (RaiseAndSetIfChanged(_model.Sprite3, value, v => _model.Sprite3 = v))
+            {
+                RaisePropertyChanged(nameof(Sprite3Image));
+            }
+        }
     }
+
+    public object? Sprite3Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite3);
 
     public BuildingFunctionId Function
     {
@@ -126,5 +258,7 @@ public class BuildingViewModel(IJumpService jumpService, IIdToNameService idToNa
         set => RaiseAndSetIfChanged(_model.Function, value, v => _model.Function = v);
     }
 
-    public ICommand JumpToBattleConfigCommand { get; } = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+    public ICommand JumpToBattleConfigCommand => _parent.JumpToBattleConfigCommand;
+
+    public ICommand SelectCommand => _parent.ItemClickedCommand;
 }

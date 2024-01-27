@@ -213,16 +213,23 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
 }
 
 [EditorModule]
-public class BuildingSelectorEditorModule : BaseSelectorEditorModule<IBuildingService>
+public class BuildingWorkspaceEditorModule : EditorModule
 {
-    public const string Id = "building_selector";
+    public const string Id = "building_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Building";
+
+    public override object? ViewModel => _viewModel;
+    private BuildingWorkspaceViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<BuildingViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BuildingId)id, _service.Retrieve(id)));
+        _viewModel = modServices.Get<BuildingWorkspaceViewModel>();
+    }
+
+    public override void Deactivate()
+    {
+        _viewModel?.Deactivate();
     }
 }
 

@@ -44,7 +44,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, ScenarioBuildingSelectorEditorModule>();
         builder.Register<EditorModule, EventSpeakerSelectorEditorModule>();
         builder.Register<EditorModule, ItemSelectorEditorModule>();
-        builder.Register<EditorModule, BuildingSelectorEditorModule>();
+        builder.Register<EditorModule, BuildingWorkspaceEditorModule>();
         builder.Register<EditorModule, MsgGridEditorModule>();
         builder.Register<EditorModule, GimmickSelectorEditorModule>();
         builder.Register<EditorModule, EpisodeSelectorEditorModule>();
@@ -106,6 +106,7 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorNameTableViewModel>();
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
+        builder.Register<BuildingWorkspaceViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

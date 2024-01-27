@@ -79,6 +79,9 @@
     <Compile Update="Views\ModelViews\BannerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\BuildingWorkspace\BuildingWorkspaceView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\EpisodeView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,7 +97,7 @@
     <Compile Update="Views\ModelViews\EventSpeakerView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\BuildingView.xaml.cs">
+    <Compile Update="Views\ModelViews\BuildingWorkspace\BuildingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\GridViews\ModelGridView.xaml.cs">
@@ -235,6 +238,9 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Views\ModelViews\BuildingWorkspace\BuildingWorkspaceView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Views\ModelViews\EpisodeView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -255,7 +261,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\BuildingView.xaml">
+    <Page Update="Views\ModelViews\BuildingWorkspace\BuildingView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

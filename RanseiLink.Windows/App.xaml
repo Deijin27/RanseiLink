@@ -126,6 +126,10 @@
                 <views:BuildingView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:BuildingWorkspaceViewModel}">
+                <views:BuildingWorkspaceView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:EpisodeViewModel}">
                 <views:EpisodeView/>
             </DataTemplate>

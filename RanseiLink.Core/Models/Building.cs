@@ -119,21 +119,21 @@ namespace RanseiLink.Core.Models
             set => SetInt(7 + _cultureBinOffset, 0, 7, (int)value);
         }
 
-        public BuildingSpriteId Sprite1
+        public int Sprite1
         {
-            get => (BuildingSpriteId)GetInt(7 + _cultureBinOffset, 7, 7);
+            get => GetInt(7 + _cultureBinOffset, 7, 7);
             set => SetInt(7 + _cultureBinOffset, 7, 7, (int)value);
         }
 
-        public BuildingSpriteId Sprite2
+        public int Sprite2
         {
-            get => (BuildingSpriteId)GetInt(7 + _cultureBinOffset, 14, 7);
+            get => GetInt(7 + _cultureBinOffset, 14, 7);
             set => SetInt(7 + _cultureBinOffset, 14, 7, (int)value);
         }
 
-        public BuildingSpriteId Sprite3
+        public int Sprite3
         {
-            get => (BuildingSpriteId)GetInt(7 + _cultureBinOffset, 21, 7);
+            get => GetInt(7 + _cultureBinOffset, 21, 7);
             set => SetInt(7 + _cultureBinOffset, 21, 7, (int)value);
         }
 

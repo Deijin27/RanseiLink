@@ -75,7 +75,7 @@ public static class CellImageUtil
         {
             if (width <= 0 || height <= 0)
             {
-                throw new Exception($"Width and Height must be specified if not using {nameof(PositionRelativeTo)}.{settings.Prt}");
+                throw new Exception($"Width and Height must be specified if using {nameof(PositionRelativeTo)}.{settings.Prt}");
             }
             xShift = width / 2;
             yShift = height / 2;
@@ -84,7 +84,7 @@ public static class CellImageUtil
         {
             if (width <= 0 || height <= 0)
             {
-                throw new Exception($"Width and Height must be specified if not using {nameof(PositionRelativeTo)}.{settings.Prt}");
+                throw new Exception($"Width and Height must be specified if using {nameof(PositionRelativeTo)}.{settings.Prt}");
             }
             xShift = 0;
             yShift = 0;

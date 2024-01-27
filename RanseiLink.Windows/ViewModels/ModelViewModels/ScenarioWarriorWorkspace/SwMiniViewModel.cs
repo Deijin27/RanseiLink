@@ -6,32 +6,18 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public class SwMiniViewModel : ViewModelBase
+public class SwMiniViewModel(
+    IScenarioPokemonService scenarioPokemonService,
+    IBaseWarriorService baseWarriorService,
+    ICachedSpriteProvider spriteProvider,
+    IKingdomService kingdomService,
+    IStrengthService strengthService) : ViewModelBase
 {
     public delegate SwMiniViewModel Factory();
 
     private ScenarioId _scenario;
     private ScenarioWarrior _model;
-    private readonly IScenarioPokemonService _scenarioPokemonService;
-    private readonly ICachedSpriteProvider _spriteProvider;
-    private readonly IBaseWarriorService _baseWarriorService;
-    private readonly IKingdomService _kingdomService;
-    private readonly IStrengthService _strengthService;
     private ScenarioWarriorWorkspaceViewModel _parent;
-
-    public SwMiniViewModel(
-        IScenarioPokemonService scenarioPokemonService,
-        IBaseWarriorService baseWarriorService,
-        ICachedSpriteProvider spriteProvider,
-        IKingdomService kingdomService,
-        IStrengthService strengthService)
-    {
-        _kingdomService = kingdomService;
-        _scenarioPokemonService = scenarioPokemonService;
-        _spriteProvider = spriteProvider;
-        _baseWarriorService = baseWarriorService;
-        _strengthService = strengthService;
-    }
 
     public SwMiniViewModel Init(
         int id,
@@ -49,10 +35,10 @@ public class SwMiniViewModel : ViewModelBase
         UpdateWarriorImage();
 
         ScenarioPokemonSlots.Clear();
-        var spService = _scenarioPokemonService.Retrieve((int)scenario);
+        var spService = scenarioPokemonService.Retrieve((int)scenario);
         for (int i = 0; i < 8; i++)
         {
-            var slotVm = new SwPokemonSlotViewModel(_parent.ScenarioPokemonItems, scenario, model, i, spVm, spService, _spriteProvider);
+            var slotVm = new SwPokemonSlotViewModel(_parent.ScenarioPokemonItems, scenario, model, i, spVm, spService, spriteProvider);
             slotVm.PropertyChanged += SlotVm_PropertyChanged;
             ScenarioPokemonSlots.Add(slotVm);
         }
@@ -82,7 +68,7 @@ public class SwMiniViewModel : ViewModelBase
     public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
     public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;
 
-    public string WarriorName => _baseWarriorService.IdToName(Warrior);
+    public string WarriorName => baseWarriorService.IdToName(Warrior);
 
     public int Warrior
     {
@@ -97,7 +83,7 @@ public class SwMiniViewModel : ViewModelBase
         }
     }
 
-    public int Strength => _strengthService.CalculateScenarioWarriorStrength(_scenario, _model);
+    public int Strength => strengthService.CalculateScenarioWarriorStrength(_scenario, _model);
 
     public WarriorClassId Class
     {
@@ -131,9 +117,9 @@ public class SwMiniViewModel : ViewModelBase
     {
         get
         {
-            if (_kingdomService.ValidateId(Kingdom))
+            if (kingdomService.ValidateId(Kingdom))
             {
-                return _kingdomService.IdToName(Kingdom);
+                return kingdomService.IdToName(Kingdom);
             }
             return "Default";
         }
@@ -151,19 +137,19 @@ public class SwMiniViewModel : ViewModelBase
         set => RaiseAndSetIfChanged(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
-    public object WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object WarriorImage => spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 
     private void UpdateWarriorImage()
     {
-        if (!_baseWarriorService.ValidateId(Warrior))
+        if (!baseWarriorService.ValidateId(Warrior))
         {
             _warriorImageId = -1;
         }
         else
         {
-            _warriorImageId = _baseWarriorService.Retrieve(Warrior).Sprite;
+            _warriorImageId = baseWarriorService.Retrieve(Warrior).Sprite;
         }
         
         RaisePropertyChanged(nameof(WarriorImage));

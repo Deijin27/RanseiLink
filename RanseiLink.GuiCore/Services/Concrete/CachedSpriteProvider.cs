@@ -32,9 +32,35 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         {
             return null;
         }
-        var file = _overrideDataProvider.GetSpriteFile(type, id);
-        var imageSource = _pathToImageConverter.TryConvert(file.File);
-        _cache[ResolveKey(type, id)] = imageSource;
+        object? imageSource;
+        if (type == SpriteType.IconInstS)
+        {
+            imageSource = GetIconInstS(id);
+        }
+        else
+        {
+            imageSource = LoadImage(type, id);
+        }
         return imageSource;
+    }
+
+    object? LoadImage(SpriteType type, int id)
+    {
+        var key = ResolveKey(type, id);
+        if (_cache.TryGetValue(key, out var sprite))
+        {
+            return sprite;
+        }
+        var file = _overrideDataProvider.GetSpriteFile(type, id);
+        var img = _pathToImageConverter.TryConvert(file.File);
+        _cache[key] = img;
+        return img;
+    }
+
+    private object? GetIconInstS(int id)
+    {
+        const int dim = 32;
+        var img = LoadImage(SpriteType.IconInstS, 0);
+        return _pathToImageConverter.TryCrop(img, 0, dim * id, dim, dim);
     }
 }

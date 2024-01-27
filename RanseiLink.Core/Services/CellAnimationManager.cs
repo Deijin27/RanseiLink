@@ -71,7 +71,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         }
         else if (animExists)
         {
-            CellAnimationSerialiser.ExportAnimation(new(info.Prt), outputFolder, animFile.File, -1, -1, format);
+            CellAnimationSerialiser.ExportAnimation(new(info.Prt), outputFolder, animFile.File, info.Width, info.Height, format);
         }
     }
 

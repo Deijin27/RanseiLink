@@ -16,11 +16,11 @@ public class AnimationTypeInfo
     private readonly string? _backgroundLinkFormat;
 
     public AnimationTypeInfo(
-    AnimationTypeId id,
-    string animationLinkFormat,
-    PositionRelativeTo prt,
-    string? backgroundLinkFormat = null,
-    CellAnimationSerialiser.Format? exportFormat = null
+        AnimationTypeId id,
+        string animationLinkFormat,
+        PositionRelativeTo prt,
+        string? backgroundLinkFormat,
+        CellAnimationSerialiser.Format? exportFormat = null
     )
     {
         Id = id;
@@ -28,11 +28,33 @@ public class AnimationTypeInfo
         Prt = prt;
         _backgroundLinkFormat = FileUtil.NormalizePath(backgroundLinkFormat);
         ExportFormat = exportFormat;
+        Width = -1;
+        Height = -1;
+    }
+
+    public AnimationTypeInfo(
+        AnimationTypeId id,
+        string animationLinkFormat,
+        PositionRelativeTo prt,
+        int width,
+        int height,
+        CellAnimationSerialiser.Format? exportFormat = null
+    )
+    {
+        Id = id;
+        _animationLinkFormat = FileUtil.NormalizePath(animationLinkFormat);
+        Prt = prt;
+        _backgroundLinkFormat = null;
+        ExportFormat = exportFormat;
+        Width = width;
+        Height = height;
     }
 
     public AnimationTypeId Id { get; }
     public PositionRelativeTo Prt { get; }
     public CellAnimationSerialiser.Format? ExportFormat { get; }
+    public int Width { get; }
+    public int Height { get; }
 
     public string AnimationRelativePath(int id)
     {
@@ -72,12 +94,16 @@ public static class AnimationTypeInfoResource
             id: AnimationTypeId.IconCastle,
             animationLinkFormat: "graphics/strategy/icon_castle/03_01_parts_castleicon_{0:D2}_lo.G2DR",
             prt: PositionRelativeTo.Centre,
+            width: 64,
+            height: 64,
             exportFormat: CellAnimationSerialiser.Format.OneImagePerCell
             ));
         Register(new(
             id: AnimationTypeId.IconInst,
             animationLinkFormat: "graphics/strategy/icon_inst/03_05_parts_shisetsuicon_{0:D2}_lo.G2DR",
             prt: PositionRelativeTo.Centre,
+            width: 64,
+            height: 64,
             exportFormat: CellAnimationSerialiser.Format.OneImagePerCell
             ));
     }
