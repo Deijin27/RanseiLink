@@ -51,7 +51,7 @@ public class PokemonViewModel : ViewModelBase
         ViewSpritesCommand = new RelayCommand(ViewSprites);
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
-        RevertAnimationCommand = new RelayCommand(RevertAnimation);
+        RevertAnimationCommand = new RelayCommand(RevertAnimation, () => IsAnimationOverwritten);
     }
 
     public void SetModel(PokemonId id, Pokemon model)
@@ -74,7 +74,7 @@ public class PokemonViewModel : ViewModelBase
     }
 
     public ICommand ImportAnimationCommand { get; }
-    public ICommand RevertAnimationCommand { get; }
+    public RelayCommand RevertAnimationCommand { get; }
     public ICommand ExportAnimationsCommand { get; }
     public ICommand JumpToMoveCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
@@ -410,6 +410,7 @@ public class PokemonViewModel : ViewModelBase
         }
 
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        RevertAnimationCommand.RaiseCanExecuteChanged();
     }
 
     private async Task ExportAnimations()
@@ -450,6 +451,7 @@ public class PokemonViewModel : ViewModelBase
     {
         _animationService.RevertAnimation(_id);
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        RevertAnimationCommand.RaiseCanExecuteChanged();
     }
 
     public bool IsAnimationOverwritten => _animationService.IsAnimationOverwritten(_id);

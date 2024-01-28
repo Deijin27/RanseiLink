@@ -93,6 +93,8 @@ public class MapViewModel : ViewModelBase
         }
         Draw();
         RaisePropertyChanged(nameof(Is3dModelOverriden));
+        RevertModelCommand.RaiseCanExecuteChanged();
+        RemoveSelectedGimmickCommand.RaiseCanExecuteChanged();
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
     }
@@ -202,10 +204,14 @@ public class MapViewModel : ViewModelBase
         get => _selectedGimmick;
         set
         {
-            if (RaiseAndSetIfChanged(ref _selectedGimmick, value) && value != null)
+            if (RaiseAndSetIfChanged(ref _selectedGimmick, value))
             {
-                SelectedCell = Matrix[value.Y][value.X];
-            };
+                if (value != null)
+                {
+                    SelectedCell = Matrix[value.Y][value.X];
+                }
+                RemoveSelectedGimmickCommand.RaiseCanExecuteChanged();
+            }
         }
     }
 

@@ -53,7 +53,7 @@ public class SpriteTypeViewModel : ViewModelBase
 
     public ObservableCollection<SpriteItemViewModel> Items { get; private set; } = new ObservableCollection<SpriteItemViewModel>();
 
-    public ICommand AddNewCommand { get; }
+    public RelayCommand AddNewCommand { get; }
     public ICommand ExportAllCommand { get; }
 
     public void UpdateInfo(SpriteType type)
@@ -61,6 +61,7 @@ public class SpriteTypeViewModel : ViewModelBase
         IGraphicsInfo basicInfo = GraphicsInfoResource.Get(type);
 
         _canAddNew = !basicInfo.FixedAmount;
+        AddNewCommand.RaiseCanExecuteChanged();
 
         if (basicInfo is IGroupedGraphicsInfo info)
         {

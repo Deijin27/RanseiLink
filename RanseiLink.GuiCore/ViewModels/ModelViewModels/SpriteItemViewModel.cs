@@ -44,7 +44,7 @@ public class SpriteItemViewModel : ViewModelBase
 
     public ICommand SetOverrideCommand { get; private set; }
     public ICommand ExportCommand { get; private set; }
-    public ICommand RevertCommand { get; private set; }
+    public RelayCommand RevertCommand { get; private set; }
 
     public int Id { get; private set; }
     public bool IsOverride => _isOverride;
@@ -67,6 +67,7 @@ public class SpriteItemViewModel : ViewModelBase
             _spriteProvider.ClearOverride(_spriteType, Id);
             _isOverride = false;
             RaisePropertyChanged(nameof(IsOverride));
+            RevertCommand.RaiseCanExecuteChanged();
             _displayFile = _spriteProvider.GetSpriteFile(_spriteType, Id).File;
             if (File.Exists(_displayFile))
             {
@@ -96,6 +97,7 @@ public class SpriteItemViewModel : ViewModelBase
             _displayFile = file.File;
             _isOverride = file.IsOverride;
             RaisePropertyChanged(nameof(IsOverride));
+            RevertCommand.RaiseCanExecuteChanged();
             UpdateDisplayImage();
             RaiseSpriteModified();
 

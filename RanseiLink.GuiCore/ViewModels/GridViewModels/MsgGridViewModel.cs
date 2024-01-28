@@ -18,9 +18,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         Items = new ObservableCollection<MsgViewModel>();
         Reload();
 
-        SearchCommand = new RelayCommand(Search, () => !_busy);
-        ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !_busy);
-        ClearCommand = new RelayCommand(() => SearchTerm = "", () => !_busy);
+        SearchCommand = new RelayCommand(Search, () => !Busy);
+        ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !Busy);
+        ClearCommand = new RelayCommand(() => SearchTerm = "", () => !Busy);
         AddCommand = new RelayCommand(Add, CanAdd);
         RemoveCommand = new RelayCommand(Remove, CanRemove);
 
@@ -160,11 +160,11 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         set => RaiseAndSetIfChanged(ref _selectedItem, value);
     }
 
-    public ICommand AddCommand { get; }
-    public ICommand RemoveCommand { get; }
+    public RelayCommand AddCommand { get; }
+    public RelayCommand RemoveCommand { get; }
     private bool CanAdd()
     {
-        if (_busy)
+        if (Busy)
         {
             return false;
         }
@@ -181,7 +181,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     private bool CanRemove()
     {
-        if (_busy)
+        if (Busy)
         {
             return false;
         }
@@ -199,22 +199,48 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     private void Remove()
     {
         SelectedItem?.Block.Remove(SelectedItem.Message);
+        RemoveCommand.RaiseCanExecuteChanged();
+        AddCommand.RaiseCanExecuteChanged();
     }
 
     private void Add()
     {
         SelectedItem?.Block.Add(SelectedItem.GroupId);
+        RemoveCommand.RaiseCanExecuteChanged();
+        AddCommand.RaiseCanExecuteChanged();
     }
 
-    public ICommand SearchCommand { get; }
-    public ICommand ClearCommand { get; }
-    public ICommand ReplaceAllCommand { get; }
+    public RelayCommand SearchCommand { get; }
+    public RelayCommand ClearCommand { get; }
+    public RelayCommand ReplaceAllCommand { get; }
 
     private bool _busy;
 
+    private bool Busy
+    {
+        get => _busy;
+        set
+        {
+            if (_busy != value)
+            {
+                _busy = value;
+                SearchCommand.RaiseCanExecuteChanged();
+                ClearCommand.RaiseCanExecuteChanged();
+                ReplaceAllCommand.RaiseCanExecuteChanged();
+                AddCommand.RaiseCanExecuteChanged();
+                RemoveCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
     private void Search()
     {
-        _busy = true;
+        if (Busy)
+        {
+            return;
+        }
+
+        Busy = true;
         string searchTerm = SearchTerm;
         if (string.IsNullOrEmpty(searchTerm))
         {
@@ -235,6 +261,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
             
             if (!TryGenerateRegex(searchTerm, options, out var rx))
             {
+                Busy = false;
                 return;
             }
             
@@ -283,7 +310,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
             }
         }
         
-        _busy = false;
+        Busy = false;
     }
 
     private static bool TryGenerateRegex(string pattern, RegexOptions options, [NotNullWhen(true)] out Regex? regex)
@@ -303,7 +330,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     public void ReplaceAll()
     {
-        _busy = true;
+        Busy = true;
 
         string replaceTerm = ReplaceWith;
         string searchTerm = SearchTerm;
@@ -319,6 +346,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
             }
             if (!TryGenerateRegex(searchTerm, options, out var rx))
             {
+                Busy = false;
                 return;
             }
             foreach (var item in _allItems)
@@ -346,6 +374,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
                 }
             }
         }
+        Busy = false;
     }
 
     public void UnhookEvents()
