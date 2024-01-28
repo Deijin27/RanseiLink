@@ -103,6 +103,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             {
                 SetCurrentModule(value?.ModuleId);
                 _forwardModuleStack.Clear();
+                GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
             }
         }
     }
@@ -121,14 +122,15 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly Stack<string> _backModuleStack = new();
     private readonly Stack<string> _forwardModuleStack = new();
 
-    public ICommand GoForwardInModuleStackCommand { get; }
-    public ICommand GoBackInModuleStackCommand { get; }
+    public RelayCommand GoForwardInModuleStackCommand { get; }
+    public RelayCommand GoBackInModuleStackCommand { get; }
 
     private void GoForwardInModuleStack()
     {
         if (_forwardModuleStack.Count != 0)
         {
             SetCurrentModule(_forwardModuleStack.Pop());
+            GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
         }
     }
     private void GoBackInModuleStack()
@@ -137,6 +139,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         {
             _forwardModuleStack.Push(CurrentModuleId);
             SetCurrentModule(_backModuleStack.Pop(), blockStackPush:true);
+            GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
+            GoBackInModuleStackCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -184,6 +188,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         if (_currentModule != null && _currentModule.UniqueId != moduleId && !blockStackPush)
         {
             _backModuleStack.Push(_currentModule.UniqueId);
+            GoBackInModuleStackCommand.RaiseCanExecuteChanged();
         }
         _currentModule?.OnPageClosing();
         _currentModule = module;
