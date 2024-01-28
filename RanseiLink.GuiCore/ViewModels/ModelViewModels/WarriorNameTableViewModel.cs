@@ -65,6 +65,7 @@ public class WarriorNameTableViewModel : ViewModelBase
             {
                 Items.Add(item);
             }
+            return;
         }
         Items.Clear();
 
