@@ -19,6 +19,7 @@ public class AnimationTypeInfo
         AnimationTypeId id,
         string animationLinkFormat,
         PositionRelativeTo prt,
+        int maxId,
         string? backgroundLinkFormat,
         CellAnimationSerialiser.Format? exportFormat = null
     )
@@ -26,6 +27,7 @@ public class AnimationTypeInfo
         Id = id;
         _animationLinkFormat = FileUtil.NormalizePath(animationLinkFormat);
         Prt = prt;
+        MaxId = maxId;
         _backgroundLinkFormat = FileUtil.NormalizePath(backgroundLinkFormat);
         ExportFormat = exportFormat;
         Width = -1;
@@ -36,6 +38,7 @@ public class AnimationTypeInfo
         AnimationTypeId id,
         string animationLinkFormat,
         PositionRelativeTo prt,
+        int maxId,
         int width,
         int height,
         CellAnimationSerialiser.Format? exportFormat = null
@@ -44,6 +47,7 @@ public class AnimationTypeInfo
         Id = id;
         _animationLinkFormat = FileUtil.NormalizePath(animationLinkFormat);
         Prt = prt;
+        MaxId = maxId;
         _backgroundLinkFormat = null;
         ExportFormat = exportFormat;
         Width = width;
@@ -52,6 +56,7 @@ public class AnimationTypeInfo
 
     public AnimationTypeId Id { get; }
     public PositionRelativeTo Prt { get; }
+    public int MaxId { get; }
     public CellAnimationSerialiser.Format? ExportFormat { get; }
     public int Width { get; }
     public int Height { get; }
@@ -76,24 +81,29 @@ public static class AnimationTypeInfoResource
     private static readonly Dictionary<AnimationTypeId, AnimationTypeInfo> _types = new();
     private static void Register(AnimationTypeInfo type) => _types.Add(type.Id, type);
 
+    public static IEnumerable<AnimationTypeInfo> All => _types.Values;
+
     static AnimationTypeInfoResource()
     {
         Register(new(
             id: AnimationTypeId.Castlemap,
             animationLinkFormat: "graphics/strategy/castlemap_anime/03_05_parts_castlemap_{0:D2}_lo.G2DR",
             prt: PositionRelativeTo.Centre,
+            maxId: 16,
             backgroundLinkFormat: "graphics/strategy/castlemap/03_05_BG_castlemap_{0:D2}_lo.G2DR"
             ));
         Register(new(
             id: AnimationTypeId.KuniImage2,
             animationLinkFormat: "graphics/strategy/kuniimage2/03_00_parts_kuniimage_{0:D2}_up_anim.G2DR",
             prt: PositionRelativeTo.TopLeft,
+            maxId: 16,
             backgroundLinkFormat: "graphics/strategy/kuniimage2/03_00_parts_kuniimage_{0:D2}_up.G2DR"
             ));
         Register(new(
             id: AnimationTypeId.IconCastle,
             animationLinkFormat: "graphics/strategy/icon_castle/03_01_parts_castleicon_{0:D2}_lo.G2DR",
             prt: PositionRelativeTo.Centre,
+            maxId: 16,
             width: 64,
             height: 64,
             exportFormat: CellAnimationSerialiser.Format.OneImagePerCell
@@ -102,6 +112,7 @@ public static class AnimationTypeInfoResource
             id: AnimationTypeId.IconInst,
             animationLinkFormat: "graphics/strategy/icon_inst/03_05_parts_shisetsuicon_{0:D2}_lo.G2DR",
             prt: PositionRelativeTo.Centre,
+            maxId: 83,
             width: 64,
             height: 64,
             exportFormat: CellAnimationSerialiser.Format.OneImagePerCell

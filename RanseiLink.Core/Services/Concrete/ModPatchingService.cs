@@ -7,20 +7,8 @@ using System.Collections.Concurrent;
 
 namespace RanseiLink.Core.Services.Concrete
 {
-    public class ModPatchingService : IModPatchingService
+    public class ModPatchingService(RomFsFactory ndsFactory, IFallbackDataProvider fallbackSpriteProvider, IModServiceGetterFactory modServiceGetterFactory) : IModPatchingService
     {
-
-        private readonly RomFsFactory _ndsFactory;
-        private readonly IFallbackDataProvider _fallbackSpriteProvider;
-        private readonly IModServiceGetterFactory _modServiceGetterFactory;
-
-        public ModPatchingService(RomFsFactory ndsFactory, IFallbackDataProvider fallbackSpriteProvider, IModServiceGetterFactory modServiceGetterFactory)
-        {
-            _fallbackSpriteProvider = fallbackSpriteProvider;
-            _ndsFactory = ndsFactory;
-            _modServiceGetterFactory = modServiceGetterFactory;
-        }
-
         public Result CanPatch(ModInfo modInfo, string romPath, PatchOptions patchOptions)
         {
             if (!File.Exists(romPath))
@@ -43,7 +31,7 @@ namespace RanseiLink.Core.Services.Concrete
 
             if (patchOptions.HasFlag(PatchOptions.IncludeSprites))
             {
-                if (!_fallbackSpriteProvider.IsDefaultsPopulated(modInfo.GameCode))
+                if (!fallbackSpriteProvider.IsDefaultsPopulated(modInfo.GameCode))
                 {
                     return Result.Fail("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
                 }
@@ -60,7 +48,7 @@ namespace RanseiLink.Core.Services.Concrete
             Exception? exception = null;
             try
             {
-                using (var services = _modServiceGetterFactory.Create(modInfo))
+                using (var services = modServiceGetterFactory.Create(modInfo))
                 {
                     var patchers = services.Get<IEnumerable<IPatchBuilder>>();
                     GetFilesToPatch(patchers, filesToPatch, patchOptions);
@@ -87,7 +75,7 @@ namespace RanseiLink.Core.Services.Concrete
                     progress?.Report(new ProgressInfo(IsIndeterminate: false, MaxProgress: filesToPatch.Count + 1, StatusText: "Patching..."));
                     int count = 0;
 
-                    using (var nds = _ndsFactory(romPath))
+                    using (var nds = ndsFactory(romPath))
                     {
                         PatchBanner(nds, modInfo);
                         progress?.Report(new ProgressInfo(Progress: ++count));

@@ -81,21 +81,21 @@
         <TextBlock Text="Sprite 1" Grid.Row="5" />
         <DockPanel Grid.Row="5" Grid.Column="1">
             <Image Source="{Binding Sprite1Image}" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite1}" Max="75"/>
+            <controls:NumberBox Value="{Binding Sprite1}" Max="84"/>
         </DockPanel>
 
 
         <TextBlock Text="Sprite 2" Grid.Row="6" />
         <DockPanel Grid.Row="6" Grid.Column="1">
             <Image Source="{Binding Sprite2Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite2}" Max="75"/>
+            <controls:NumberBox Value="{Binding Sprite2}" Max="84"/>
         </DockPanel>
 
 
         <TextBlock Text="Sprite 3" Grid.Row="7" />
         <DockPanel Grid.Row="7" Grid.Column="1">
             <Image Source="{Binding Sprite3Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite3}" Max="75"/>
+            <controls:NumberBox Value="{Binding Sprite3}" Max="84"/>
         </DockPanel>
 
         <TextBlock Text="Function" Grid.Row="8" />

@@ -115,7 +115,7 @@ public class BuildingViewModel : ViewModelBase
         _cachedSpriteProvider = cachedSpriteProvider;
         Id = (int)id;
         _model = model;
-        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, Sprite1); // TODO: this needs moving to its own module
+        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, () => Sprite1); // TODO: this needs moving to its own module
     }
 
     public int Id { get; private set; }
