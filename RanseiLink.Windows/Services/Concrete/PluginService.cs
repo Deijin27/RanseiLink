@@ -22,3 +22,24 @@ internal class PluginService(IPluginFormLoader pluginFormLoader) : IPluginServic
         return result;
     }
 }
+
+internal class AsyncPluginService(IPluginFormLoader pluginFormLoader) : IAsyncPluginService
+{
+    public async Task<bool> RequestOptions(IPluginForm optionForm)
+    {
+        PluginFormInfo info = pluginFormLoader.FormToInfo(optionForm);
+
+        var result = await Application.Current.Dispatcher.InvokeAsync(() =>
+        {
+            var pluginDialog = new PluginDialog
+            {
+                DataContext = info,
+                Owner = Application.Current.MainWindow,
+            };
+            return pluginDialog.ShowDialog() == true;
+        });
+        
+        pluginFormLoader.InfoToForm(info);
+        return result;
+    }
+}

@@ -23,7 +23,7 @@ public class WpfServiceModule : IModule
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);
         builder.Register<IPathToImageConverter, PathToImageConverter>(Reuse.Singleton);
 
-        builder.Register<IPluginService, PluginService>(Reuse.Singleton);
+        builder.Register<IAsyncPluginService, AsyncPluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
 
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
