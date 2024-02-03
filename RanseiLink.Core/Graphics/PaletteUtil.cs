@@ -8,9 +8,16 @@ public static class PaletteUtil
     {
         return new Rgba32((byte)(color.R * 8), (byte)(color.G * 8), (byte)(color.B * 8));
     }
-    public static Rgba32[] To32bitColors(IEnumerable<Rgb15> colors)
+
+    public static Rgba32[] To32bitColors(IReadOnlyCollection<Rgb15> colors)
     {
-        return colors.Select(To32BitColor).ToArray();
+        var result = new Rgba32[colors.Count];
+        int count = 0;
+        foreach (var color in colors)
+        {
+            result[count++] = To32BitColor(color);
+        }
+        return result;
     }
 
     public static Rgb15 From32BitColor(Rgba32 color)
@@ -18,19 +25,36 @@ public static class PaletteUtil
         return new Rgb15(color.R / 8, color.G / 8, color.B / 8);
     }
 
-    public static Rgb15[] From32bitColors(IEnumerable<Rgba32> colors)
+    public static Rgb15[] From32bitColors(IReadOnlyCollection<Rgba32> colors)
     {
-        return colors.Select(From32BitColor).ToArray();
+        var result = new Rgb15[colors.Count];
+        int count = 0;
+        foreach (var color in colors)
+        {
+            result[count++] = From32BitColor(color);
+        }
+        return result;
     }
 
     public static Rgb15[] Decompress(byte[] data)
     {
-        return data.ToUInt16Array().Select(i => Rgb15.From(i)).ToArray();
+        var ushorts = data.ToUInt16Array();
+        var result = new Rgb15[ushorts.Length];
+        for (int i = 0; i < ushorts.Length; i++)
+        {
+            result[i] = Rgb15.From(ushorts[i]);
+        }
+        return result;
     }
 
     public static byte[] Compress(Rgb15[] colors)
     {
-        return colors.Select(i => i.ToUInt16()).ToArray().ToByteArray();
+        ushort[] result = new ushort[colors.Length];
+        for (int i = 0; i < colors.Length; i++)
+        {
+            result[i] = colors[i].ToUInt16();
+        }
+        return result.ToByteArray();
     }
 
     public static void SaveAsPaintNetPalette(Rgba32[] colors, string file)
