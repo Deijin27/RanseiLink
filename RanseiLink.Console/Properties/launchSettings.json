@@ -2,8 +2,8 @@
   "profiles": {
     "RanseiLink.Console": {
       "commandName": "Project",
-      "commandLineArgs": "ncer extract 0002.ncer 0001.ncgr 0004.nclr --debug",
-      "workingDirectory": "C:\\Users\\Mia\\Desktop\\ConquestData\\graphics\\still\\stl_pokemon_wu\\stl_pokemon_wu-Unpacked"
+      "commandLineArgs": "minimap generate",
+      "workingDirectory": "C:\\Users\\Mia\\Desktop\\"
     }
   }
 }
