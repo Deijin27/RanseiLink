@@ -51,9 +51,9 @@ public class BuildingTests
         a.BattleConfig1.Should().Be(BattleConfigId.SacredRuins);
         a.BattleConfig2.Should().Be(BattleConfigId.SacredRuins);
         a.BattleConfig3.Should().Be(BattleConfigId.SacredRuins);
-        a.Sprite1.Should().Be(BuildingSpriteId.SacredRuins);
-        a.Sprite2.Should().Be(BuildingSpriteId.SacredRuins);
-        a.Sprite3.Should().Be(BuildingSpriteId.SacredRuins);
+        a.Sprite1.Should().Be((int)BuildingSpriteId.SacredRuins);
+        a.Sprite2.Should().Be((int)BuildingSpriteId.SacredRuins);
+        a.Sprite3.Should().Be((int)BuildingSpriteId.SacredRuins);
         a.Function.Should().Be(BuildingFunctionId.Battle);
     }
 
@@ -69,9 +69,9 @@ public class BuildingTests
             BattleConfig1 = BattleConfigId.Cragspur,
             BattleConfig2 = BattleConfigId.SkyGarden_1,
             BattleConfig3 = BattleConfigId.Terrera,
-            Sprite1 = BuildingSpriteId.SnowyMountain_1,
-            Sprite2 = BuildingSpriteId.UndergroundMine_1,
-            Sprite3 = BuildingSpriteId.Ravine_2,
+            Sprite1 = (int)BuildingSpriteId.SnowyMountain_1,
+            Sprite2 = (int)BuildingSpriteId.UndergroundMine_1,
+            Sprite3 = (int)BuildingSpriteId.Ravine_2,
             Function = BuildingFunctionId.ObtainGold
         };
 
@@ -80,9 +80,9 @@ public class BuildingTests
         a.BattleConfig1.Should().Be(BattleConfigId.Cragspur);
         a.BattleConfig2.Should().Be(BattleConfigId.SkyGarden_1);
         a.BattleConfig3.Should().Be(BattleConfigId.Terrera);
-        a.Sprite1.Should().Be(BuildingSpriteId.SnowyMountain_1);
-        a.Sprite2.Should().Be(BuildingSpriteId.UndergroundMine_1);
-        a.Sprite3.Should().Be(BuildingSpriteId.Ravine_2);
+        a.Sprite1.Should().Be((int)BuildingSpriteId.SnowyMountain_1);
+        a.Sprite2.Should().Be((int)BuildingSpriteId.UndergroundMine_1);
+        a.Sprite3.Should().Be((int)BuildingSpriteId.Ravine_2);
         a.Function.Should().Be(BuildingFunctionId.ObtainGold);
 
         // Add Array equal test when possible
