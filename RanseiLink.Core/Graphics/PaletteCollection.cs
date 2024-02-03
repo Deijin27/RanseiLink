@@ -71,7 +71,7 @@ public class PaletteCollection : List<Palette>
         }
         if (palette.Length % paletteSize != 0)
         {
-            throw new System.Exception("Palette colors are not divisble by expected palette length");
+            throw new System.Exception($"Palette colors ({palette.Length}) are not divisible by expected palette length {paletteSize}");
         }
         var paletteCount = palette.Length / format.PaletteSize();
         var cumulativeOffset = 0;

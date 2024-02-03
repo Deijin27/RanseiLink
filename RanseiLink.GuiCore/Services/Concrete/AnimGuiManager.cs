@@ -68,7 +68,13 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
             background = Path.Combine(Path.GetDirectoryName(file)!, "background.png");
         }
         
-        manager.Import(type, id, animation, background);
+        var result = manager.Import(type, id, animation, background);
+        if (result.IsFailed)
+        {
+
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error Importing Animation", result.ToString(), MessageBoxType.Error));
+            return false;
+        }
 
         return true;
     }

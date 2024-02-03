@@ -72,7 +72,7 @@ public static class CellAnimationSerialiser
                 try
                 {
                     LINK.Unpack(bgLinkFile, tempBg);
-                    var bg = G2DR.LoadImgFromFolder(bgLinkFile);
+                    var bg = G2DR.LoadImgFromFolder(tempBg);
                     (width, height) = ImportBackground(bgImage, bg.Ncgr, bg.Nclr);
                     G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
                     LINK.Pack(tempBg, outputBgLinkFile);
@@ -92,7 +92,7 @@ public static class CellAnimationSerialiser
         }
         catch (Exception ex)
         {
-            return Result.Fail(ex.Message);
+            return Result.Fail(ex.ToString());
         }
     }
     /*
@@ -144,9 +144,9 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static (int width, int height) ImportBackground(string inputFolder, NCGR ncgr, NCLR nclr)
+    public static (int width, int height) ImportBackground(string inputFile, NCGR ncgr, NCLR nclr)
     {
-        using var image = ImageUtil.LoadPngBetterError(Path.Combine(inputFolder, "background.png"));
+        using var image = ImageUtil.LoadPngBetterError(inputFile);
         NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
         return (image.Width, image.Height);
     }
@@ -346,11 +346,11 @@ public static class CellAnimationSerialiser
                 }
 
                 // image path is relative to the location of the xml file
-                if (cellBankInfo.File == null)
+                if (string.IsNullOrEmpty(cellBankInfo.File))
                 {
                     throw new Exception($"Missing required attribute 'file' on cell group for format {fmt}");
                 }
-                var imgPath = Path.Combine(dir, cellBankInfo.File);
+                var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellBankInfo.File));
                 images.Add(ImageUtil.LoadPngBetterError(imgPath));
 
                 bank.EstimateMinMaxValues();
@@ -391,11 +391,12 @@ public static class CellAnimationSerialiser
                         IndexPalette = (byte)cellInfo.Palette
                     };
                     bank.Add(cell);
-                    if (cellInfo.File == null)
+                    if (string.IsNullOrEmpty(cellInfo.File))
                     {
                         throw new Exception($"Missing required attribute 'file' on cell for format {fmt}");
                     }
-                    var img = ImageUtil.LoadPngBetterError(cellInfo.File);
+                    var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
+                    var img = ImageUtil.LoadPngBetterError(imgPath);
                     images.Add(img);
                     cell.Width = img.Width;
                     cell.Height = img.Height;

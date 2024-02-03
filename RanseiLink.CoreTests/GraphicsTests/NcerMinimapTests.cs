@@ -45,8 +45,12 @@ public class NcerMinimapTests
         var newPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
 
         // Ensure palette has been maintained
-        var oldPaletteSorted = oldPalette.Skip(1).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
-        var newPaletteSorted = newPalette.Skip(1).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
+        Rgba32 black = Color.Black;
+        newPalette.Should().HaveSameCount(oldPalette);
+        // skip 1 because it's transparency which we don't care about
+        // ignore black because it's used for padding
+        var oldPaletteSorted = oldPalette.Skip(1).Where(x => x != black).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
+        var newPaletteSorted = newPalette.Skip(1).Where(x => x != black).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
         newPaletteSorted.Should().Equal(oldPaletteSorted);
 
         // Ensure pixels point to the same colors

@@ -60,6 +60,7 @@ public static class G2DR
 
     public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
+        FileUtil.EnsureDirectoryExists(linkFolder);
         var nclr = LoadPaletteFromFolder(linkFolder);
         var ncgr = LoadPixelsFromFolder(linkFolder);
         return (ncgr, nclr);
@@ -67,6 +68,7 @@ public static class G2DR
 
     public static (NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadCellImgFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
+        FileUtil.EnsureDirectoryExists(linkFolder);
         var img = LoadImgFromFolder(linkFolder, ncgrSlot);
         var ncer = LoadCellFromFolder(linkFolder);
         return (ncer, img.Ncgr, img.Nclr);
@@ -74,6 +76,7 @@ public static class G2DR
 
     public static (NANR Nanr, NCER Ncer, NCGR Ncgr, NCLR Nclr) LoadAnimImgFromFolder(string linkFolder, NcgrSlot ncgrSlot = NcgrSlot.Infer)
     {
+        FileUtil.EnsureDirectoryExists(linkFolder);
         var cell = LoadCellImgFromFolder(linkFolder, ncgrSlot);
         var nanr = LoadAnimFromFolder(linkFolder);
         return (nanr, cell.Ncer, cell.Ncgr, cell.Nclr);

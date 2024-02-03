@@ -95,4 +95,17 @@ public static class FileUtil
     {
         return ExistentAlphanumericRegex.IsMatch(strToCheck);
     }
+
+    /// <summary>
+    /// Throws exception if the directory doesn't exist
+    /// </summary>
+    /// <param name="path">Directory path to check for</param>
+    /// <exception cref="DirectoryNotFoundException"></exception>
+    public static void EnsureDirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            throw new DirectoryNotFoundException(path);
+        }
+    }
 }
