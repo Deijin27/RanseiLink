@@ -11,7 +11,7 @@ public class CellAnimSerialiseTests
     {
         var doc = XDocument.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_ki2_aurora_anim_serialised.xml"));
 
-        var res = new CellAnimationSerialiser.Resource(doc);
+        var res = new CellAnimationSerialiser.RLAnimationResource(doc);
         var newDoc = res.Serialise();
 
         newDoc.Should().BeEquivalentTo(doc);

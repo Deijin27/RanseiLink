@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace RanseiLink.Core;
@@ -106,6 +107,22 @@ public static class FileUtil
         if (!Directory.Exists(path))
         {
             throw new DirectoryNotFoundException(path);
+        }
+    }
+
+    /// <summary>
+    /// Calculate the Sha256 hash of a file
+    /// </summary>
+    /// <param name="file">The file to hash</param>
+    /// <returns>The hash as a byte array</returns>
+    public static byte[] Sha256File(string file)
+    {
+        using (var sha = SHA256.Create())
+        {
+            using (var fs = File.OpenRead(file))
+            {
+                return sha.ComputeHash(fs);
+            }
         }
     }
 }

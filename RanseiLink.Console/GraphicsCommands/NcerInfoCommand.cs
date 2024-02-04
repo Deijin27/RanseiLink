@@ -13,7 +13,7 @@ public class NcerInfoCommand : ICommand
     {
         var nanr = NCER.Load(FilePath);
 
-        var el = new XElement("AnimationBank",
+        var el = new XElement("CellBank",
             new XAttribute("BlockSize", nanr.CellBanks.BlockSize),
             new XAttribute("BankType", nanr.CellBanks.BankType),
             new XElement("Banks", nanr.CellBanks.Banks.Select(SerialiseBank)),

@@ -1,10 +1,8 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Security.Cryptography;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
@@ -155,116 +153,19 @@ public static class CellAnimationSerialiser
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
-        var res = new Resource();
+        var res = new RLAnimationResource(fmt);
 
         // save animations
-        for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
-        {
-            var anim = nanr.AnimationBanks.Banks[i];
-            var name = nanr.Labels.Names[i];
-            res.Animations.Add(new Anim(name, anim.Frames.Select(x => new AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
-        }
+        ExportNanr(nanr, res);
 
         // save cells
         if (fmt == Format.OneImagePerBank)
         {
-            if (width <= 0 || height <= 0)
-            {
-                throw new Exception($"With format {fmt} width and height must be specified");
-            }
-            var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
-
-            for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
-            {
-                // save bank image
-                var bankImage = images[bankId];
-                var fileName = $"{bankId.ToString().PadLeft(4, '0')}.png";
-                bankImage.SaveAsPng(Path.Combine(outputFolder, fileName));
-                bankImage.Dispose();
-
-                // save bank data
-                var cellBank = ncer.CellBanks.Banks[bankId];
-                var bankData = new CellBankInfo(bankId.ToString()) { File = fileName };
-                res.Cells.Add(bankData);
-
-                foreach (var cell in cellBank)
-                {
-                    // save cell data
-                    var cellData = new CellInfo()
-                    {
-                        File = fileName,
-                        X = cell.XOffset + dims.XShift,
-                        Y = cell.YOffset + dims.YShift,
-                        FlipX = cell.FlipX,
-                        FlipY = cell.FlipY,
-                        Palette = cell.IndexPalette,
-                        DoubleSize = cell.DoubleSize,
-                        Height = cell.Height,
-                        Width = cell.Width,
-                    };
-                    bankData.Cells.Add(cellData);
-                }
-            }
+            ExportOneImagePerBank(ncer, ncgr, nclr, outputFolder, width, height, settings, dims, res);
         }
         else if (fmt == Format.OneImagePerCell)
         {
-            var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
-            var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
-
-            for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
-            {
-                // prepare image folders
-                string folderName = bankId.ToString().PadLeft(4, '0');
-                //Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
-                var group = imageGroups[bankId];
-
-                // save bank data
-                var cellBank = ncer.CellBanks.Banks[bankId];
-                var bankData = new CellBankInfo(bankId.ToString());
-                res.Cells.Add(bankData);
-
-                for (int cellId = 0; cellId < cellBank.Count; cellId++)
-                {
-                    var cell = cellBank[cellId];
-
-                    // save cell image
-                    var cellImage = group[cellId];
-                    var fileName = $"{folderName}_{cellId.ToString().PadLeft(4, '0')}.png";
-                    var filePath = Path.Combine(outputFolder, fileName);
-                    cellImage.SaveAsPng(filePath);
-
-                    // only save distinct images
-                    var sha = Sha256File(filePath);
-                    bool found = false;
-                    foreach (var tup in distinctImages)
-                    {
-                        // tup.TileOffset == cell.TileOffset && tup.IndexPalette == cell.IndexPalette && 
-                        if (tup.Hash.SequenceEqual(sha))
-                        {
-                            found = true;
-                            fileName = tup.FileName;
-                            File.Delete(filePath);
-                        }
-                    }
-                    if (!found)
-                    {
-                        distinctImages.Add((cell.TileOffset, cell.IndexPalette, sha, fileName));
-                    }
-                    // save cell data
-                    
-                    var cellData = new CellInfo() 
-                    { 
-                        File = fileName,
-                        X = cell.XOffset + dims.XShift,
-                        Y = cell.YOffset + dims.YShift,
-                        FlipX = cell.FlipX,
-                        FlipY = cell.FlipY,
-                        Palette = cell.IndexPalette,
-                        DoubleSize = cell.DoubleSize,
-                    };
-                    bankData.Cells.Add(cellData);
-                }
-            }
+            ExportOneImagePerCell(ncer, ncgr, nclr, outputFolder, dims, res);
         }
         else
         {
@@ -275,16 +176,119 @@ public static class CellAnimationSerialiser
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
-    private static byte[] Sha256File(string file)
+    private static void ExportNanr(NANR nanr, RLAnimationResource res)
     {
-        using (var sha = SHA256.Create())
+        for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
         {
-            using (var fs = File.OpenRead(file))
+            var anim = nanr.AnimationBanks.Banks[i];
+            var name = nanr.Labels.Names[i];
+            res.Animations.Add(new RLAnimationResource.Anim(name, anim.Frames.Select(x => new RLAnimationResource.AnimFrame(x.CellBank.ToString(), x.Duration)).ToList()));
+        }
+    }
+
+    private static void ExportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims, RLAnimationResource res)
+    {
+        if (width <= 0 || height <= 0)
+        {
+            throw new Exception($"With format {Format.OneImagePerBank} width and height must be specified");
+        }
+        var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
+
+        for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
+        {
+            // save bank image
+            var bankImage = images[bankId];
+            var fileName = $"{bankId.ToString().PadLeft(4, '0')}.png";
+            bankImage.SaveAsPng(Path.Combine(outputFolder, fileName));
+            bankImage.Dispose();
+
+            // save bank data
+            var cellBank = ncer.CellBanks.Banks[bankId];
+            var bankData = new RLAnimationResource.CellBankInfo(bankId.ToString()) { File = fileName };
+            res.Cells.Add(bankData);
+
+            foreach (var cell in cellBank)
             {
-                return sha.ComputeHash(fs);
+                // save cell data
+                var cellData = new RLAnimationResource.CellInfo()
+                {
+                    File = fileName,
+                    X = cell.XOffset + dims.XShift,
+                    Y = cell.YOffset + dims.YShift,
+                    FlipX = cell.FlipX,
+                    FlipY = cell.FlipY,
+                    Palette = cell.IndexPalette,
+                    DoubleSize = cell.DoubleSize,
+                    Height = cell.Height,
+                    Width = cell.Width,
+                };
+                bankData.Cells.Add(cellData);
             }
         }
     }
+
+    private static void ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, BankDimensions dims, RLAnimationResource res)
+    {
+        var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
+        var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
+
+        for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
+        {
+            // prepare image folders
+            string folderName = bankId.ToString().PadLeft(4, '0');
+            //Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
+            var group = imageGroups[bankId];
+
+            // save bank data
+            var cellBank = ncer.CellBanks.Banks[bankId];
+            var bankData = new RLAnimationResource.CellBankInfo(bankId.ToString());
+            res.Cells.Add(bankData);
+
+            for (int cellId = 0; cellId < cellBank.Count; cellId++)
+            {
+                var cell = cellBank[cellId];
+
+                // save cell image
+                var cellImage = group[cellId];
+                var fileName = $"{folderName}_{cellId.ToString().PadLeft(4, '0')}.png";
+                var filePath = Path.Combine(outputFolder, fileName);
+                cellImage.SaveAsPng(filePath);
+
+                // only save distinct images
+                var sha = FileUtil.Sha256File(filePath);
+                bool found = false;
+                foreach (var tup in distinctImages)
+                {
+                    // tup.TileOffset == cell.TileOffset && tup.IndexPalette == cell.IndexPalette && 
+                    if (tup.Hash.SequenceEqual(sha))
+                    {
+                        found = true;
+                        fileName = tup.FileName;
+                        File.Delete(filePath);
+                    }
+                }
+                if (!found)
+                {
+                    distinctImages.Add((cell.TileOffset, cell.IndexPalette, sha, fileName));
+                }
+                // save cell data
+
+                var cellData = new RLAnimationResource.CellInfo()
+                {
+                    File = fileName,
+                    X = cell.XOffset + dims.XShift,
+                    Y = cell.YOffset + dims.YShift,
+                    FlipX = cell.FlipX,
+                    FlipY = cell.FlipY,
+                    Palette = cell.IndexPalette,
+                    DoubleSize = cell.DoubleSize,
+                };
+                bankData.Cells.Add(cellData);
+            }
+        }
+    }
+
+    
 
     /// <summary>
     /// Warning: will throw an exception on failure
@@ -293,15 +297,9 @@ public static class CellAnimationSerialiser
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
-        // nanr is the only one where all info is recreated
-        // however, i think ideally we have an intermediate "configuration" class which 
-        // can either be generated from the existing files,
-        // or created from scratch. Then the handling after that can be unified.
-        var nanr = new NANR();
-
-        var res = new Resource(XDocument.Load(animationXmlFile));
+        var res = new RLAnimationResource(XDocument.Load(animationXmlFile));
         var dir = Path.GetDirectoryName(animationXmlFile)!;
-        
+
         // clear it ready for adding our own cell banks
         ncer.CellBanks.Banks.Clear();
         ncer.Labels.Names.Clear();
@@ -312,117 +310,26 @@ public static class CellAnimationSerialiser
         var fmt = res.Format;
         if (fmt == Format.OneImagePerBank)
         {
-            List<Image<Rgba32>> images = [];
-            foreach (var cellBankInfo in res.Cells)
-            {
-                var bank = new CellBank();
-                // store the mapping of name to bank to use later when loading animations
-                nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
-                ncer.CellBanks.Banks.Add(bank);
-
-                foreach (var cellInfo in cellBankInfo.Cells)
-                {
-                    if (cellInfo.Width < 0)
-                    {
-                        throw new Exception($"Missing required attribute 'width' on cell for format {fmt}");
-                    }
-                    if (cellInfo.Height < 0)
-                    {
-                        throw new Exception($"Missing required attribute 'height' on cell for format {fmt}");
-                    }
-                    var cell = new Cell
-                    {
-                        RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
-                        XOffset = cellInfo.X - dims.XShift,
-                        YOffset = cellInfo.Y - dims.YShift,
-                        FlipX = cellInfo.FlipX,
-                        FlipY = cellInfo.FlipY,
-                        DoubleSize = cellInfo.DoubleSize,
-                        IndexPalette = (byte)cellInfo.Palette,
-                        Width = cellInfo.Width,
-                        Height = cellInfo.Height,
-                    };
-                    bank.Add(cell);
-                }
-
-                // image path is relative to the location of the xml file
-                if (string.IsNullOrEmpty(cellBankInfo.File))
-                {
-                    throw new Exception($"Missing required attribute 'file' on cell group for format {fmt}");
-                }
-                var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellBankInfo.File));
-                images.Add(ImageUtil.LoadPngBetterError(imgPath));
-
-                bank.EstimateMinMaxValues();
-                // TODO: cellBank.ReadOnlyCellInfo = ?;
-            }
-
-            // import the image data
-            NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
-
-            // dispose of the images as we don't need them anymore
-            foreach (var image in images)
-            {
-                image.Dispose();
-            }
+            ImportOneImagePerBank(ncer, ncgr, nclr, settings, dims, res, dir, nameToCellBankId);
         }
         else if (fmt == Format.OneImagePerCell)
         {
-            var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
-            foreach (var cellBankInfo in res.Cells)
-            {
-                List<Image<Rgba32>> images = new();
-                imageGroups.Add(images);
-                var bank = new CellBank();
-                // store the mapping of name to bank to use later when loading animations
-                nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
-                ncer.CellBanks.Banks.Add(bank);
-
-                foreach (var cellInfo in cellBankInfo.Cells)
-                {
-                    var cell = new Cell
-                    {
-                        RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
-                        XOffset = cellInfo.X - dims.XShift,
-                        YOffset = cellInfo.Y - dims.YShift,
-                        FlipX = cellInfo.FlipX,
-                        FlipY = cellInfo.FlipY,
-                        DoubleSize = cellInfo.DoubleSize,
-                        IndexPalette = (byte)cellInfo.Palette
-                    };
-                    bank.Add(cell);
-                    if (string.IsNullOrEmpty(cellInfo.File))
-                    {
-                        throw new Exception($"Missing required attribute 'file' on cell for format {fmt}");
-                    }
-                    var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
-                    var img = ImageUtil.LoadPngBetterError(imgPath);
-                    images.Add(img);
-                    cell.Width = img.Width;
-                    cell.Height = img.Height;
-                }
-
-                bank.EstimateMinMaxValues();
-                // TODO: cellBank.ReadOnlyCellInfo = ?;
-            }
-
-            // import the image data
-            NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
-
-            foreach (var group in imageGroups)
-            {
-                foreach (var image in group)
-                {
-                    image.Dispose();
-                }
-            }
+            ImportOneImagePerCell(ncer, ncgr, nclr, dims, res, dir, nameToCellBankId);
         }
         else
         {
             throw new Exception($"Invalid serialisation format {res.Format}");
         }
-        
+
+        NANR nanr = ImportNanr(ncer, res, nameToCellBankId);
+
+        return nanr;
+    }
+
+    private static NANR ImportNanr(NCER ncer, RLAnimationResource res, Dictionary<string, ushort> nameToCellBankId)
+    {
         // load the animations
+        var nanr = new NANR();
         foreach (var anim in res.Animations)
         {
             var targetAnim = new ABNK.Anim();
@@ -446,212 +353,114 @@ public static class CellAnimationSerialiser
         return nanr;
     }
 
-    public class Resource
+    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
-        public Format Format { get; set; }
-        public List<CellBankInfo> Cells { get; }
-        public List<Anim> Animations { get; }
-
-        public Resource()
+        var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
+        foreach (var cellBankInfo in res.Cells)
         {
-            Cells = new();
-            Animations = new();
-        }
+            List<Image<Rgba32>> images = [];
+            imageGroups.Add(images);
+            var bank = new CellBank();
+            // store the mapping of name to bank to use later when loading animations
+            nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+            ncer.CellBanks.Banks.Add(bank);
 
-        public Resource(XDocument doc)
-        {
-            var element = doc.ElementRequired("nitro_cell_animation_resource");
-            
-            var cellCollection = element.ElementRequired("cell_collection");
-            Format = cellCollection.AttributeEnum<Format>("format");
-            Cells = cellCollection.Elements("image").Select(x => new CellBankInfo(x)).ToList();
-            Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
-        }
-
-        public XDocument Serialise()
-        {
-            var cellElem = new XElement("cell_collection", Cells.Select(x => x.Serialise()));
-            cellElem.Add(new XAttribute("format", Format));
-            var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
-
-            return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
-        }
-    }
-
-    public class Anim
-    {
-        public string Name { get; }
-        public List<AnimFrame> Frames { get; }
-
-        public Anim(string name, List<AnimFrame> frames)
-        {
-            Name = name;
-            Frames = frames;
-        }
-
-        public Anim(XElement animElem)
-        {
-            Name = animElem.AttributeStringNonEmpty("name");
-            Frames = new List<AnimFrame>();
-            foreach (var frameElem in animElem.Elements("frame"))
+            foreach (var cellInfo in cellBankInfo.Cells)
             {
-                Frames.Add(new AnimFrame(frameElem));
-            }
-        }
-
-        public XElement Serialise()
-        {
-            var trackElem = new XElement("animation", new XAttribute("name", Name));
-            foreach (var keyFrame in Frames)
-            {
-                trackElem.Add(keyFrame.Serialise());
-            }
-            return trackElem;
-        }
-    }
-
-    public class AnimFrame
-    {
-        public string Image { get; }
-        public int Duration { get; }
-
-        public AnimFrame(string image, int duration)
-        {
-            Image = image;
-            Duration = duration;
-        }
-
-        public AnimFrame(XElement frameElem)
-        {
-            Image = frameElem.AttributeStringNonEmpty("image");
-            Duration = frameElem.AttributeInt("duration");
-        }
-
-        public XElement Serialise()
-        {
-            return new XElement("frame",
-                new XAttribute("image", Image),
-                new XAttribute("duration", Duration)
-                );
-        }
-    }
-
-    public class CellInfo
-    {
-        public string? File { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public int Palette { get; set; }
-        public bool FlipX { get; set; }
-        public bool FlipY { get; set; }
-        public bool DoubleSize { get; set; }
-
-        public CellInfo()
-        {
-        }
-
-        public XElement Serialise()
-        {
-            var cellElem = new XElement("cell",
-                        new XAttribute("x", X),
-                        new XAttribute("y", Y)
-                        );
-
-            if (Width > 0)
-            {
-                cellElem.Add(new XAttribute("width", Width));
-            }
-            if (Height > 0)
-            {
-                cellElem.Add(new XAttribute("height", Height));
+                var cell = new Cell
+                {
+                    RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
+                    XOffset = cellInfo.X - dims.XShift,
+                    YOffset = cellInfo.Y - dims.YShift,
+                    FlipX = cellInfo.FlipX,
+                    FlipY = cellInfo.FlipY,
+                    DoubleSize = cellInfo.DoubleSize,
+                    IndexPalette = (byte)cellInfo.Palette
+                };
+                bank.Add(cell);
+                if (string.IsNullOrEmpty(cellInfo.File))
+                {
+                    throw new Exception($"Missing required attribute 'file' on cell for format {Format.OneImagePerCell}");
+                }
+                var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
+                var img = ImageUtil.LoadPngBetterError(imgPath);
+                images.Add(img);
+                cell.Width = img.Width;
+                cell.Height = img.Height;
             }
 
-            if (!string.IsNullOrEmpty(File))
-            {
-                cellElem.Add(new XAttribute("file", File));
-            }
-
-            if (Palette != 0)
-            {
-                cellElem.Add(new XAttribute("palette", Palette));
-            }
-
-            if (FlipX)
-            {
-                cellElem.Add(new XAttribute("flip_x", FlipX));
-            }
-            if (FlipY)
-            {
-                cellElem.Add(new XAttribute("flip_y", FlipY));
-            }
-            if (DoubleSize)
-            {
-                cellElem.Add(new XAttribute("double_size", DoubleSize));
-            }
-
-            return cellElem;
+            bank.EstimateMinMaxValues();
+            // TODO: cellBank.ReadOnlyCellInfo = ?;
         }
 
-        public CellInfo(XElement element)
+        // import the image data
+        NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
+
+        foreach (var group in imageGroups)
         {
-            X = element.AttributeInt("x");
-            Y = element.AttributeInt("y");
-            FlipX = element.AttributeBool("flip_x", false);
-            FlipY = element.AttributeBool("flip_y", false);
-            DoubleSize = element.AttributeBool("double_size", false);
-            Palette = (byte)element.AttributeInt("palette", 0);
-
-            Width = element.AttributeInt("width", -1);
-            Height = element.AttributeInt("height", -1);
-            File = element.Attribute("file")?.Value;
-
-            if ((FlipX || FlipY) && DoubleSize)
+            foreach (var image in group)
             {
-                throw new Exception("Cell cannot have both rotation (flip_x or flip_y) and scaling (double_size) at once");
+                image.Dispose();
             }
         }
     }
 
-    public class CellBankInfo
+    private static void ImportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
-        public List<CellInfo> Cells { get; }
-        public string Name { get; }
-        public string? File { get; set; }
-
-        public CellBankInfo(XElement groupElem)
+        var fmt = Format.OneImagePerBank;
+        List<Image<Rgba32>> images = [];
+        foreach (var cellBankInfo in res.Cells)
         {
-            Name = groupElem.AttributeStringNonEmpty("name");
-            File = groupElem.Attribute("file")?.Value;
-            Cells = new();
-            foreach (var cellElement in groupElem.Elements("cell"))
+            var bank = new CellBank();
+            // store the mapping of name to bank to use later when loading animations
+            nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+            ncer.CellBanks.Banks.Add(bank);
+
+            foreach (var cellInfo in cellBankInfo.Cells)
             {
-                var cell = new CellInfo(cellElement);
-                Cells.Add(cell);
+                if (cellInfo.Width < 0)
+                {
+                    throw new Exception($"Missing required attribute 'width' on cell for format {fmt}");
+                }
+                if (cellInfo.Height < 0)
+                {
+                    throw new Exception($"Missing required attribute 'height' on cell for format {fmt}");
+                }
+                var cell = new Cell
+                {
+                    RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
+                    XOffset = cellInfo.X - dims.XShift,
+                    YOffset = cellInfo.Y - dims.YShift,
+                    FlipX = cellInfo.FlipX,
+                    FlipY = cellInfo.FlipY,
+                    DoubleSize = cellInfo.DoubleSize,
+                    IndexPalette = (byte)cellInfo.Palette,
+                    Width = cellInfo.Width,
+                    Height = cellInfo.Height,
+                };
+                bank.Add(cell);
             }
+
+            // image path is relative to the location of the xml file
+            if (string.IsNullOrEmpty(cellBankInfo.File))
+            {
+                throw new Exception($"Missing required attribute 'file' on cell group for format {fmt}");
+            }
+            var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellBankInfo.File));
+            images.Add(ImageUtil.LoadPngBetterError(imgPath));
+
+            bank.EstimateMinMaxValues();
+            // TODO: cellBank.ReadOnlyCellInfo = ?;
         }
 
-        public CellBankInfo(string name)
-        {
-            Cells = new();
-            Name = name;
-        }
+        // import the image data
+        NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
 
-        public XElement Serialise()
+        // dispose of the images as we don't need them anymore
+        foreach (var image in images)
         {
-            var groupElem = new XElement("image", new XAttribute("name", Name));
-            if (!string.IsNullOrEmpty(File))
-            {
-                groupElem.Add(new XAttribute("file", File));
-            }
-            foreach (var cell in Cells)
-            {
-                groupElem.Add(cell.Serialise());
-            }
-            return groupElem;
+            image.Dispose();
         }
     }
+
 }
-
-

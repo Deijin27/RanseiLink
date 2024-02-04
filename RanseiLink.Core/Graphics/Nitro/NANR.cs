@@ -315,11 +315,11 @@ public class ABNK
     public class Anim
     {
         public const int DataLength = 0x10;
-        public ushort DataType { get; set; }
-        public ushort Unknown1 { get; set; }
-        public ushort Unknown2 { get; set; }
-        public ushort Unknown3 { get; set; }
-        public List<Frame> Frames { get; set; } = new List<Frame>();
+        public ushort DataType { get; set; } = 0;
+        public ushort Unknown1 { get; set; } = 1;
+        public ushort Unknown2 { get; set; } = 2;
+        public ushort Unknown3 { get; set; } = 0;
+        public List<Frame> Frames { get; set; } = [];
      }
 
     public class Frame
