@@ -6,8 +6,9 @@ public interface ICellAnimationManager
 {
     void ClearOverride(AnimationTypeId type, int id);
     void Export(AnimationTypeId type, int id, string outputFolder, CellAnimationSerialiser.Format format);
-    (DataFile AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id);
-    Result Import(AnimationTypeId type, int id, string? animationXml, string? backgroundImg);
+    (DataFile? AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id);
+    Result ImportBackgroundOnly(AnimationTypeId type, int id, string backgroundImg);
+    Result ImportAnimAndBackground(AnimationTypeId type, int id, string animationXml);
     void SetOverride(AnimationTypeId type, int id, string? animationLink = null, string? backgroundLink = null);
 }
 
@@ -16,10 +17,14 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
 
     private readonly IOverrideDataProvider _overrideDataProvider = overrideDataProvider;
 
-    public (DataFile AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id)
+    public (DataFile? AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id)
     {
         var info = AnimationTypeInfoResource.Get(type);
         var anim = _overrideDataProvider.GetDataFile(info.AnimationRelativePath(id));
+        if (!File.Exists(anim.File))
+        {
+            anim = null;
+        }
         var bgPath = info.BackgroundRelativePath(id);
         DataFile? background = null;
         if (bgPath != null)
@@ -71,28 +76,81 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         }
         else if (animExists)
         {
-            CellAnimationSerialiser.ExportAnimation(new(info.Prt), outputFolder, animFile.File, info.Width, info.Height, format);
+            CellAnimationSerialiser.ExportAnimationOnly(new(info.Prt), outputFolder, animFile.File, info.Width, info.Height, format, null);
         }
     }
 
-    public Result Import(AnimationTypeId type, int id, string? animationXml, string? backgroundImg)
+    public Result ImportBackgroundOnly(AnimationTypeId type, int id, string backgroundImg)
+    {
+        var (_, bgLinkFile) = GetDataFile(type, id);
+        if (bgLinkFile == null)
+        {
+            return Result.Fail($"Cannot import background '{backgroundImg}' because animation type {type} does not support backgrounds");
+        }
+        var bgOut = Path.GetTempFileName();
+        var importResult = CellAnimationSerialiser.ImportBackground(
+            bgImage: backgroundImg,
+            bgLinkFile: bgLinkFile.File,
+            outputBgLinkFile: bgOut
+            );
+        if (importResult.IsFailed)
+        {
+            return importResult.ToResult();
+        }
+
+        ClearOverride(type, id);
+        SetOverride(type, id, null, bgOut);
+
+        File.Delete(bgOut);
+
+        return Result.Ok();
+    }
+
+    /// <summary>
+    /// Imports animation, and if applicable background
+    /// </summary>
+    public Result ImportAnimAndBackground(AnimationTypeId type, int id, string animationXml)
     {
         var info = AnimationTypeInfoResource.Get(type);
         var animFile = _overrideDataProvider.GetDataFile(info.AnimationRelativePath(id));
         var animExists = File.Exists(animFile.File);
+        if (!animExists)
+        {
+            // this particular slot has background but not animation
+            return Result.Fail($"Importing animation not permitted for type '{type}' id '{id}'");
+        }
         var bgRelPath = info.BackgroundRelativePath(id);
-        var animOut = Path.GetTempFileName();
-        var bgOut = Path.GetTempFileName();
 
-        var importResult = CellAnimationSerialiser.Import(
-                new(info.Prt),
+        Result importResult;
+        var animOut = Path.GetTempFileName();
+        string? bgOut;
+        if (bgRelPath == null)
+        {
+            bgOut = null;
+            // there is no background associated with this animation
+            importResult = CellAnimationSerialiser.ImportAnimation(
+                new Graphics.CellImageSettings(info.Prt),
+                animLinkFile: animFile.File,
                 animationXml: animationXml,
-                animLinkFile: animExists ? animFile.File : null,
+                width: -1,
+                height: -1,
+                outputAnimLinkFile: animOut
+                );
+        }
+        else
+        {
+            bgOut = Path.GetTempFileName();
+            // this has both background and animation
+            importResult = CellAnimationSerialiser.ImportAnimAndBackground(
+                new Graphics.CellImageSettings(info.Prt),
+                animationXml: animationXml,
+                animLinkFile: animFile.File,
                 outputAnimLinkFile: animOut,
-                bgImage: backgroundImg,
-                bgLinkFile: bgRelPath != null ? _overrideDataProvider.GetDataFile(bgRelPath).File : null,
+                bgLinkFile: _overrideDataProvider.GetDataFile(bgRelPath).File,
                 outputBgLinkFile: bgOut
                 );
+        }
+       
         if (importResult.IsFailed)
         {
             return importResult;
@@ -101,11 +159,17 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         ClearOverride(type, id);
         SetOverride(type, id, animOut, bgOut);
 
-        File.Delete(animOut);
-        File.Delete(bgOut);
+        if (File.Exists(animOut))
+        {
+            File.Delete(animOut);
+        }
+
+        if (File.Exists(bgOut))
+        {
+            File.Delete(bgOut);
+        }
 
         return Result.Ok();
-
     }
 }
 

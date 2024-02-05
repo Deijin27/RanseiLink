@@ -35,45 +35,41 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
 
     public async Task<bool> Import(AnimationTypeId type, int id)
     {
-        var filters = new List<FileDialogFilter>();
-        var current = manager.GetDataFile(type, id);
-        bool chooseBackgroundFile;
-        if (File.Exists(current.AnimationLink.File)) // if there's no animation, e.g. for Castlemap aurora, we just ask for a background
-        {
-            chooseBackgroundFile = false;
-            filters.Add(new FileDialogFilter("Nitro Cell Animation", ".xml"));
-        }
-        else
-        {
-            chooseBackgroundFile = true;
-            filters.Add(new FileDialogFilter("Animation Background Image", ".png"));
-        }
-
-        var file = await dialogService.ShowOpenSingleFileDialog(new("Choose a file to import", filters.ToArray()));
-
-        if (file == null)
-        {
-            return false;
-        }
-
-        string? animation = null;
-        string? background;
-        if (chooseBackgroundFile)
-        {
-            background = file;
-        }
-        else
-        {
-            animation = file;
-            background = Path.Combine(Path.GetDirectoryName(file)!, "background.png");
-        }
+        var (anim, bg) = manager.GetDataFile(type, id);
         
-        var result = manager.Import(type, id, animation, background);
-        if (result.IsFailed)
+        if (anim != null) // if there's no animation, e.g. for Castlemap aurora, we just ask for a background
         {
-
-            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error Importing Animation", result.ToString(), MessageBoxType.Error));
-            return false;
+            var file = await dialogService.ShowOpenSingleFileDialog(new(
+                "Choose an animation file to import", 
+                new FileDialogFilter("Nitro Cell Animation", ".xml")
+                ));
+            if (file == null)
+            {
+                return false;
+            }
+            var result = manager.ImportAnimAndBackground(type, id, file);
+            if (result.IsFailed)
+            {
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error Importing Animation", result.ToString(), MessageBoxType.Error));
+                return false;
+            }
+        }
+        else if (bg != null)
+        {
+            var file = await dialogService.ShowOpenSingleFileDialog(new(
+                "Choose a background file to import (this slot only supports backgrounds",
+                new FileDialogFilter("Animation Background Image", ".png")
+                ));
+            if (file == null)
+            {
+                return false;
+            }
+            var result = manager.ImportBackgroundOnly(type, id, file);
+            if (result.IsFailed)
+            {
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error Importing Background", result.ToString(), MessageBoxType.Error));
+                return false;
+            }
         }
 
         return true;
@@ -82,7 +78,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
     public bool IsOverriden(AnimationTypeId type, int id)
     {
         var (anim, bg) = manager.GetDataFile(type, id);
-        return anim.IsOverride || (bg != null && bg.IsOverride);
+        return (anim != null && anim.IsOverride) || (bg != null && bg.IsOverride);
     }
 
     public async Task<bool> RevertToDefault(AnimationTypeId type, int id)

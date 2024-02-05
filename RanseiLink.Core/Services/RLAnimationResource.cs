@@ -6,11 +6,12 @@ namespace RanseiLink.Core.Services;
 
 public class RLAnimationResource
 {
+    public string? Background { get; set; }
     public CellAnimationSerialiser.Format Format { get; set; }
     public List<CellBankInfo> Cells { get; }
     public List<Anim> Animations { get; }
 
-    public RLAnimationResource(CellAnimationSerialiser.Format format)
+    public RLAnimationResource(CellAnimationSerialiser.Format format, string? background = null)
     {
         Cells = [];
         Animations = [];
@@ -18,12 +19,12 @@ public class RLAnimationResource
 
     public RLAnimationResource(XDocument doc)
     {
-        var element = doc.ElementRequired("nitro_cell_animation_resource");
-
-        var cellCollection = element.ElementRequired("cell_collection");
+        var root = doc.ElementRequired("nitro_cell_animation_resource");
+        Background = root.Attribute("background")?.Value;
+        var cellCollection = root.ElementRequired("cell_collection");
         Format = cellCollection.AttributeEnum<CellAnimationSerialiser.Format>("format");
         Cells = cellCollection.Elements("image").Select(x => new CellBankInfo(x)).ToList();
-        Animations = element.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
+        Animations = root.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
     }
 
     public XDocument Serialise()
@@ -32,7 +33,12 @@ public class RLAnimationResource
         cellElem.Add(new XAttribute("format", Format));
         var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
 
-        return new XDocument(new XElement("nitro_cell_animation_resource", cellElem, animationElem));
+        var root = new XElement("nitro_cell_animation_resource", cellElem, animationElem);
+        if (Background != null)
+        {
+            root.Add(new XAttribute("background", Background));
+        }
+        return new XDocument(root);
     }
 
     public class Anim

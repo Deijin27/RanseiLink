@@ -48,7 +48,7 @@ public class NanrExtractCommand : ICommand
             {
                 throw new System.Exception("Width and height must be specified if there is no background");
             }
-            CellAnimationSerialiser.ExportAnimation(settings, DestinationFolder, AnimatedParts, Width, Height, Format);
+            CellAnimationSerialiser.ExportAnimationOnly(settings, DestinationFolder, AnimatedParts, Width, Height, Format, null);
         }
 
         return default;

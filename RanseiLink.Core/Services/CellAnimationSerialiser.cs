@@ -18,22 +18,29 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// If format is <see cref="Format.OneImagePerBank"/> then width/height are unnecessary
     /// </summary>
-    public static void ExportAnimation(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, Format fmt)
+    public static void ExportAnimationOnly(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, Format fmt, string? background)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, settings, fmt);
+        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, settings, fmt, background);
     }
 
-    public static void ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile)
+    public static Result ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile, RLAnimationResource? res = null)
     {
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
         {
+            res ??= new RLAnimationResource(XDocument.Load(animationXml));
+            var dir = Path.GetDirectoryName(animationXml)!;
             LINK.Unpack(animLinkFile, tempAnim);
             var anim = G2DR.LoadCellImgFromFolder(tempAnim);
-            var nanr = ImportAnimationXml(animationXml, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
+            var nanr = ImportAnimationXml(res, dir, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
             G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
+            return Result.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to import animation '{animationXml}'. Reason: {ex}");
         }
         finally
         {
@@ -43,49 +50,43 @@ public static class CellAnimationSerialiser
 
     public static void Export(CellImageSettings settings, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
+        const string backgroundFile = "background.png";
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
-        var (width, height) = ExportBackground(bg.Ncgr, bg.Nclr, outputFolder);
+        var (width, height) = ExportBackground(bg.Ncgr, bg.Nclr, outputFolder, backgroundFile);
 
         if (animLinkFile != null)
         {
-            ExportAnimation(settings, outputFolder, animLinkFile, width, height, fmt: fmt);
+            ExportAnimationOnly(settings, outputFolder, animLinkFile, width, height, fmt: fmt, backgroundFile);
         }
     }
 
-
-    // We will always have a background file to use, and we will always have the default of another anim to use
-    // but it may be nice if we can generate without one to base it on. it's just more work.
-    public static Result Import(CellImageSettings settings, 
-        string? animationXml = null, string? animLinkFile = null, string? outputAnimLinkFile = null,
-        string? bgImage = null, string? bgLinkFile = null, string? outputBgLinkFile = null)
+    public static Result ImportAnimAndBackground(CellImageSettings settings, 
+        string animationXml, string animLinkFile, string outputAnimLinkFile,
+        string bgLinkFile, string outputBgLinkFile)
     {
         try
         {
-            int width = -1;
-            int height = -1;
-            // load background
-            var tempBg = FileUtil.GetTemporaryDirectory();
-            if (bgImage != null && bgLinkFile != null && outputBgLinkFile != null)
+            // pre-load animation resource to locate background file
+            RLAnimationResource res = new RLAnimationResource(XDocument.Load(animationXml));
+            if (string.IsNullOrEmpty(res.Background))
             {
-                try
-                {
-                    LINK.Unpack(bgLinkFile, tempBg);
-                    var bg = G2DR.LoadImgFromFolder(tempBg);
-                    (width, height) = ImportBackground(bgImage, bg.Ncgr, bg.Nclr);
-                    G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
-                    LINK.Pack(tempBg, outputBgLinkFile);
-                }
-                finally
-                {
-                    Directory.Delete(tempBg, true);
-                }
+                return Result.Fail($"Required attribute 'background' not specified in animation file '{bgLinkFile}'");
             }
 
-            // load animation
-            if (animLinkFile != null && outputAnimLinkFile != null && animationXml != null)
+            // load background
+            var dir = Path.GetDirectoryName(animationXml)!;
+            var backgroundFile = Path.Combine(dir, FileUtil.NormalizePath(res.Background));
+
+            var bgResult = ImportBackground(backgroundFile, bgLinkFile, outputBgLinkFile);
+            if (bgResult.IsFailed)
             {
-                ImportAnimation(settings, animLinkFile, animationXml, width, height, outputAnimLinkFile);
+                return bgResult.ToResult();
             }
+            var (width, height) = bgResult.Value;
+
+            // finally load the animation using the dimensions obtained from the background
+            ImportAnimation(settings, animLinkFile, dir, width, height, outputAnimLinkFile, res);
+
             return Result.Ok();
         }
         catch (Exception ex)
@@ -93,51 +94,81 @@ public static class CellAnimationSerialiser
             return Result.Fail(ex.ToString());
         }
     }
-    /*
-    public static void DeserialiseFromScratch(string inputFolder, string outputBgLinkFile, string? outputAnimLinkFile = null)
+
+    /// <summary>
+    /// Imports a background file
+    /// </summary>
+    /// <param name="bgImage">Absolute path of background image file</param>
+    /// <param name="bgLinkFile">Absolute path of current background link file to inherit information from</param>
+    /// <param name="outputBgLinkFile">Absolute path to put the output background link file</param>
+    /// <returns>Width and height of the background that was imported</returns>
+    public static Result<(int width, int height)> ImportBackground(string bgImage, string bgLinkFile, string outputBgLinkFile)
     {
-        // technically we will always have the background file default to work off of
         var tempBg = FileUtil.GetTemporaryDirectory();
         try
         {
-            var ncgr = new NCGR();
-            var nclr = new NCLR();
-            
-            // TODO: set up the ncgr and nclr properly
-            var (width, height) = DeserialiseBackground(inputFolder, ncgr, nclr);
-            // G2DR.SaveScreenToFile(tempBg, nscr, ncgr, nclr, NcgrSlot.Slot1);
+            LINK.Unpack(bgLinkFile, tempBg);
+            var bg = G2DR.LoadImgFromFolder(tempBg);
+            var res = ImportBackground(bgImage, bg.Ncgr, bg.Nclr);
+            G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
+            LINK.Pack(tempBg, outputBgLinkFile);
+            return Result.Ok(res);
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to import background file '{bgImage}'. Reason: {ex}");
         }
         finally
         {
             Directory.Delete(tempBg, true);
         }
-
-        // load animation
-        if (outputAnimLinkFile != null)
-        {
-            var tempAnim = FileUtil.GetTemporaryDirectory();
-            try
-            {
-                var ncer = new NCER();
-                var ncgr = new NCGR();
-                var nclr = new NCLR();
-                // TODO: set up the nanr, ncgr and nclr properly
-                var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), ncer, ncgr, nclr);
-                // G2DR.SaveAnimToFile(tempAnim, nanr, ncer, ncgr, nclr, NcgrSlot.Slot1);
-            }
-            finally
-            {
-                Directory.Delete(tempAnim, true);
-            }
-        }
     }
-    */
 
-    public static (int width, int height) ExportBackground(NCGR ncgr, NCLR nclr, string outputFolder)
+    /*
+public static void DeserialiseFromScratch(string inputFolder, string outputBgLinkFile, string? outputAnimLinkFile = null)
+{
+   // technically we will always have the background file default to work off of
+   var tempBg = FileUtil.GetTemporaryDirectory();
+   try
+   {
+       var ncgr = new NCGR();
+       var nclr = new NCLR();
+
+       // TODO: set up the ncgr and nclr properly
+       var (width, height) = DeserialiseBackground(inputFolder, ncgr, nclr);
+       // G2DR.SaveScreenToFile(tempBg, nscr, ncgr, nclr, NcgrSlot.Slot1);
+   }
+   finally
+   {
+       Directory.Delete(tempBg, true);
+   }
+
+   // load animation
+   if (outputAnimLinkFile != null)
+   {
+       var tempAnim = FileUtil.GetTemporaryDirectory();
+       try
+       {
+           var ncer = new NCER();
+           var ncgr = new NCGR();
+           var nclr = new NCLR();
+           // TODO: set up the nanr, ncgr and nclr properly
+           var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), ncer, ncgr, nclr);
+           // G2DR.SaveAnimToFile(tempAnim, nanr, ncer, ncgr, nclr, NcgrSlot.Slot1);
+       }
+       finally
+       {
+           Directory.Delete(tempAnim, true);
+       }
+   }
+}
+*/
+
+    public static (int width, int height) ExportBackground(NCGR ncgr, NCLR nclr, string outputFolder, string outputFileName)
     {
         using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
 
-        image.SaveAsPng(Path.Combine(outputFolder, "background.png"));
+        image.SaveAsPng(Path.Combine(outputFolder, outputFileName));
 
         return (image.Width, image.Height);
     }
@@ -149,11 +180,11 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, Format fmt)
+    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, Format fmt, string? background)
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
-        var res = new RLAnimationResource(fmt);
+        var res = new RLAnimationResource(fmt, background);
 
         // save animations
         ExportNanr(nanr, res);
@@ -293,12 +324,9 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR ImportAnimationXml(string animationXmlFile, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
+    public static NANR ImportAnimationXml(RLAnimationResource res, string dir, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
-
-        var res = new RLAnimationResource(XDocument.Load(animationXmlFile));
-        var dir = Path.GetDirectoryName(animationXmlFile)!;
 
         // clear it ready for adding our own cell banks
         ncer.CellBanks.Banks.Clear();
