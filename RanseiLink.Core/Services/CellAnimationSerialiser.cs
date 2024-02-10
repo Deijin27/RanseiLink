@@ -85,9 +85,7 @@ public static class CellAnimationSerialiser
             var (width, height) = bgResult.Value;
 
             // finally load the animation using the dimensions obtained from the background
-            ImportAnimation(settings, animLinkFile, dir, width, height, outputAnimLinkFile, res);
-
-            return Result.Ok();
+            return ImportAnimation(settings, animLinkFile, animationXml, width, height, outputAnimLinkFile, res);
         }
         catch (Exception ex)
         {

@@ -50,11 +50,13 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         var info = AnimationTypeInfoResource.Get(type);
         if (animationLink != null)
         {
+            FileUtil.EnsureFileIsNotEmpty(animationLink);
             _overrideDataProvider.SetOverride(info.AnimationRelativePath(id), animationLink);
         }
         var bgPath = info.BackgroundRelativePath(id);
         if (bgPath != null && backgroundLink != null)
         {
+            FileUtil.EnsureFileIsNotEmpty(backgroundLink);
             _overrideDataProvider.SetOverride(bgPath, backgroundLink);
         }
     }

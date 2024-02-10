@@ -48,7 +48,7 @@ public static class LINK
             string magic = br.ReadMagicNumber();
             if (magic != MagicNumber)
             {
-                throw new InvalidDataException("Correct magic number not detected at start of file. Thus the file is incorret format.");
+                throw new InvalidDataException($"Correct magic number not detected at start of file. Thus the file is incorret format. '{filePath}'");
             }
 
             // Get destination folder

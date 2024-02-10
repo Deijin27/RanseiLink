@@ -111,6 +111,25 @@ public static class FileUtil
     }
 
     /// <summary>
+    /// Throws an exception if the file doesn't exist, or is empty
+    /// </summary>
+    /// <param name="path">File to check</param>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="InvalidDataException"></exception>
+    public static void EnsureFileIsNotEmpty(string path)
+    {
+        var fileInfo = new FileInfo(path);
+        if (!fileInfo.Exists)
+        {
+            throw new FileNotFoundException(path);
+        }
+        if (fileInfo.Length == 0)
+        {
+            throw new InvalidDataException($"File '{path}' was empty when it shouldn't be");
+        }
+    }
+
+    /// <summary>
     /// Calculate the Sha256 hash of a file
     /// </summary>
     /// <param name="file">The file to hash</param>
