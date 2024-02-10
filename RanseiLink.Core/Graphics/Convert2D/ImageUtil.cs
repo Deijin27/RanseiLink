@@ -298,4 +298,37 @@ public static class ImageUtil
         });
         return combinedImage;
     }
+
+    /// <summary>
+    /// Safely crop an image. If a portion of the cropRectangle is outside of the image bounds, 
+    /// that portion of the resulting image will be transparent.
+    /// </summary>
+    public static Image<TPixel> SafeCrop<TPixel>(Image<TPixel> image, Rectangle cropRectangle) where TPixel : unmanaged, IPixel<TPixel>
+    {
+        if (cropRectangle.X >= 0 && cropRectangle.Y >= 0 && cropRectangle.Right <= image.Width && cropRectangle.Bottom <= image.Height)
+        {
+            // the crop rectange is in the boundaries of the image so
+            // it's safe to do a regular crop
+            return image.Clone(g => g.Crop(cropRectangle));
+        }
+
+        int safeX = Math.Max(cropRectangle.X, 0);
+        int safeY = Math.Max(cropRectangle.Y, 0);
+        int safeR = Math.Min(cropRectangle.Right, image.Width);
+        var safeB = Math.Min(cropRectangle.Bottom, image.Height);
+        var safeW = safeR - safeX;
+        var safeH = safeB - safeX;
+        var resultImg = new Image<TPixel>(cropRectangle.Width, cropRectangle.Height);
+        if (safeW <= 0 || safeH <= 0)
+        {
+            // the image is completely outside of the bounds
+            // so we just create a new blank image with the correct dims
+            return resultImg;
+        }
+        // safely crop a section of the image then draw it onto
+        // a correctly sized image at the right position
+        using var cropped = image.Clone(g => g.Crop(new Rectangle(safeX, safeY, safeW, safeH)));
+        resultImg.Mutate(g => g.DrawImage(cropped, new Point(safeX - cropRectangle.X, safeY - cropRectangle.Y), opacity: 1));
+        return resultImg;
+    }
 }

@@ -281,10 +281,7 @@ public static class CellImageUtil
         for (int i = 0; i < bank.Count; i++)
         {
             var cell = bank[i];
-            using (var cellImg = image.Clone(g =>
-            {
-                g.Crop(new Rectangle(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height));
-            }))
+            using (var cellImg = ImageUtil.SafeCrop(image, new Rectangle(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height)))
             {
                 CellFromImage(cellImg, cell, blockSize, workingPixels, workingPalette, tiled, format);
             }
