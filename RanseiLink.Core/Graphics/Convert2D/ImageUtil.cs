@@ -317,7 +317,7 @@ public static class ImageUtil
         int safeR = Math.Min(cropRectangle.Right, image.Width);
         var safeB = Math.Min(cropRectangle.Bottom, image.Height);
         var safeW = safeR - safeX;
-        var safeH = safeB - safeX;
+        var safeH = safeB - safeY;
         var resultImg = new Image<TPixel>(cropRectangle.Width, cropRectangle.Height);
         if (safeW <= 0 || safeH <= 0)
         {

@@ -440,8 +440,10 @@ public class CellBank : List<Cell>
         YMin = int.MaxValue;
         foreach (var cell in this)
         {
-            var cellXMax = cell.XOffset + cell.Width;
-            var cellYMax = cell.YOffset + cell.Height;
+            // we minus 1 because we're working with pixels
+            // if xmin is 2, and width is 1, then xmax is also 2, ya see?
+            var cellXMax = cell.XOffset + cell.Width - 1; 
+            var cellYMax = cell.YOffset + cell.Height - 1;
             if (cellXMax > XMax)
             {
                 XMax = cellXMax;

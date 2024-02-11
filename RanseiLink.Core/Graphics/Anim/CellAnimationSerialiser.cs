@@ -382,13 +382,14 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
     private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
         var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
-        foreach (var cellBankInfo in res.Cells)
+        for (int i = 0; i < res.Cells.Count; i++)
         {
+            var cellBankInfo = res.Cells[i];
             List<Image<Rgba32>> images = [];
             imageGroups.Add(images);
             var bank = new CellBank();
             // store the mapping of name to bank to use later when loading animations
-            nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+            nameToCellBankId.Add(cellBankInfo.Name, (ushort)i);
             ncer.CellBanks.Banks.Add(bank);
 
             foreach (var cellInfo in cellBankInfo.Cells)
@@ -435,11 +436,13 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
     {
         var fmt = RLAnimationFormat.OneImagePerBank;
         List<Image<Rgba32>> images = [];
-        foreach (var cellBankInfo in res.Cells)
+
+        for (int i = 0; i < res.Cells.Count; i++)
         {
+            var cellBankInfo = res.Cells[i];
             var bank = new CellBank();
             // store the mapping of name to bank to use later when loading animations
-            nameToCellBankId.Add(cellBankInfo.Name, (ushort)bank.Count);
+            nameToCellBankId.Add(cellBankInfo.Name, (ushort)i);
             ncer.CellBanks.Banks.Add(bank);
 
             foreach (var cellInfo in cellBankInfo.Cells)
