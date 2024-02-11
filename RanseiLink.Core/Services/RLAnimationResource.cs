@@ -13,6 +13,8 @@ public class RLAnimationResource
 
     public RLAnimationResource(CellAnimationSerialiser.Format format, string? background = null)
     {
+        Format = format;
+        Background = background;
         Cells = [];
         Animations = [];
     }
