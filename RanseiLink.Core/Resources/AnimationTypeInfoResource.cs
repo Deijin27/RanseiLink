@@ -1,6 +1,6 @@
 ﻿using RanseiLink.Core.Graphics;
 
-namespace RanseiLink.Core.Services;
+namespace RanseiLink.Core.Resources;
 
 public enum AnimationTypeId
 {
@@ -21,7 +21,7 @@ public class AnimationTypeInfo
         PositionRelativeTo prt,
         int maxId,
         string? backgroundLinkFormat,
-        CellAnimationSerialiser.Format? exportFormat = null
+        RLAnimationFormat? exportFormat = null
     )
     {
         Id = id;
@@ -41,7 +41,7 @@ public class AnimationTypeInfo
         int maxId,
         int width,
         int height,
-        CellAnimationSerialiser.Format? exportFormat = null
+        RLAnimationFormat? exportFormat = null
     )
     {
         Id = id;
@@ -57,7 +57,7 @@ public class AnimationTypeInfo
     public AnimationTypeId Id { get; }
     public PositionRelativeTo Prt { get; }
     public int MaxId { get; }
-    public CellAnimationSerialiser.Format? ExportFormat { get; }
+    public RLAnimationFormat? ExportFormat { get; }
     public int Width { get; }
     public int Height { get; }
 
@@ -106,7 +106,7 @@ public static class AnimationTypeInfoResource
             maxId: 16,
             width: 64,
             height: 64,
-            exportFormat: CellAnimationSerialiser.Format.OneImagePerCell
+            exportFormat: RLAnimationFormat.OneImagePerCell
             ));
         Register(new(
             id: AnimationTypeId.IconInst,
@@ -115,7 +115,7 @@ public static class AnimationTypeInfoResource
             maxId: 83,
             width: 64,
             height: 64,
-            exportFormat: CellAnimationSerialiser.Format.OneImagePerCell
+            exportFormat: RLAnimationFormat.OneImagePerCell
             ));
     }
 

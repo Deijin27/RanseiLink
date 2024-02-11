@@ -1,4 +1,4 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Graphics;
 using System.IO;
 using System.Xml.Linq;
 
@@ -11,7 +11,7 @@ public class CellAnimSerialiseTests
     {
         var doc = XDocument.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_ki2_aurora_anim_serialised.xml"));
 
-        var res = new CellAnimationSerialiser.RLAnimationResource(doc);
+        var res = new RLAnimationResource(doc);
         var newDoc = res.Serialise();
 
         newDoc.Should().BeEquivalentTo(doc);

@@ -2,6 +2,7 @@
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
@@ -115,7 +116,7 @@ public class BuildingViewModel : ViewModelBase
         _cachedSpriteProvider = cachedSpriteProvider;
         Id = (int)id;
         _model = model;
-        IconAnimVm = new(animManager, Core.Services.AnimationTypeId.IconInst, () => Sprite1); // TODO: this needs moving to its own module
+        IconAnimVm = new(animManager, AnimationTypeId.IconInst, () => Sprite1); // TODO: this needs moving to its own module
     }
 
     public int Id { get; private set; }

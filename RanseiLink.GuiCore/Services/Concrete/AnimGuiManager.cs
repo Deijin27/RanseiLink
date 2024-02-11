@@ -1,5 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core;
+using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
@@ -10,12 +12,12 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
     public async Task<bool> Export(AnimationTypeId type, int id)
     {
         var info = AnimationTypeInfoResource.Get(type);
-        CellAnimationSerialiser.Format[] formats;
-        CellAnimationSerialiser.Format format;
+        RLAnimationFormat[] formats;
+        RLAnimationFormat format;
         if (info.ExportFormat == null)
         {
-            formats = Enum.GetValues<CellAnimationSerialiser.Format>();
-            format = CellAnimationSerialiser.Format.OneImagePerBank;
+            formats = Enum.GetValues<RLAnimationFormat>();
+            format = RLAnimationFormat.OneImagePerBank;
         }
         else
         {

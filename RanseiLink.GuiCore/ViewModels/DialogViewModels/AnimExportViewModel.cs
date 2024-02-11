@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 
@@ -9,7 +10,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     private readonly ISettingService _settingService;
     private readonly RecentExportAnimFolderSetting _recentExportModFolderSetting;
     public AnimExportViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo,
-        CellAnimationSerialiser.Format[] selectableFormats, CellAnimationSerialiser.Format initialSelectedFormat,
+        RLAnimationFormat[] selectableFormats, RLAnimationFormat initialSelectedFormat,
         IFolderDropHandler folderDropHandler)
     {
         ExportFormats = selectableFormats;
@@ -35,9 +36,9 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     }
 
 
-    public CellAnimationSerialiser.Format[] ExportFormats { get; }
+    public RLAnimationFormat[] ExportFormats { get; }
 
-    public CellAnimationSerialiser.Format SelectedFormat
+    public RLAnimationFormat SelectedFormat
     {
         get => _selectedFormat;
         set => RaiseAndSetIfChanged(ref  _selectedFormat, value);
@@ -60,7 +61,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public IFolderDropHandler FolderDropHandler { get; }
 
     private string _folder;
-    private CellAnimationSerialiser.Format _selectedFormat;
+    private RLAnimationFormat _selectedFormat;
 
     public string Folder
     {

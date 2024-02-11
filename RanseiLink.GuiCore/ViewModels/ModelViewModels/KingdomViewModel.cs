@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Services;
+using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;

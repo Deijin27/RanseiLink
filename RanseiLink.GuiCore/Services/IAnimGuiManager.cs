@@ -1,5 +1,5 @@
 ﻿#nullable enable
-using RanseiLink.Core.Services;
+using RanseiLink.Core.Resources;
 
 namespace RanseiLink.GuiCore.Services;
 

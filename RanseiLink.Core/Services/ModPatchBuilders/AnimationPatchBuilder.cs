@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using RanseiLink.Core.Resources;
 
 namespace RanseiLink.Core.Services.ModPatchBuilders;
 

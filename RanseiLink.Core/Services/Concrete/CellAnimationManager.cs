@@ -1,16 +1,8 @@
 ﻿using FluentResults;
+using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Resources;
 
-namespace RanseiLink.Core.Services;
-
-public interface ICellAnimationManager
-{
-    void ClearOverride(AnimationTypeId type, int id);
-    void Export(AnimationTypeId type, int id, string outputFolder, CellAnimationSerialiser.Format format);
-    (DataFile? AnimationLink, DataFile? BackgroundLink) GetDataFile(AnimationTypeId type, int id);
-    Result ImportBackgroundOnly(AnimationTypeId type, int id, string backgroundImg);
-    Result ImportAnimAndBackground(AnimationTypeId type, int id, string animationXml);
-    void SetOverride(AnimationTypeId type, int id, string? animationLink = null, string? backgroundLink = null);
-}
+namespace RanseiLink.Core.Services.Concrete;
 
 public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : ICellAnimationManager
 {
@@ -64,7 +56,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
     /// <summary>
     /// If the default format is oneImagePerBank, then you can choose
     /// </summary>
-    public void Export(AnimationTypeId type, int id, string outputFolder, CellAnimationSerialiser.Format format)
+    public void Export(AnimationTypeId type, int id, string outputFolder, RLAnimationFormat format)
     {
         Directory.CreateDirectory(outputFolder);
         var info = AnimationTypeInfoResource.Get(type);
@@ -131,7 +123,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
             bgOut = null;
             // there is no background associated with this animation
             importResult = CellAnimationSerialiser.ImportAnimation(
-                new Graphics.CellImageSettings(info.Prt),
+                new CellImageSettings(info.Prt),
                 animLinkFile: animFile.File,
                 animationXml: animationXml,
                 width: -1,
@@ -144,7 +136,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
             bgOut = Path.GetTempFileName();
             // this has both background and animation
             importResult = CellAnimationSerialiser.ImportAnimAndBackground(
-                new Graphics.CellImageSettings(info.Prt),
+                new CellImageSettings(info.Prt),
                 animationXml: animationXml,
                 animLinkFile: animFile.File,
                 outputAnimLinkFile: animOut,
@@ -152,7 +144,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
                 outputBgLinkFile: bgOut
                 );
         }
-       
+
         if (importResult.IsFailed)
         {
             return importResult;

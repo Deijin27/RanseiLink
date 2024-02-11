@@ -2,16 +2,16 @@
 using SixLabors.ImageSharp;
 using System.Xml.Linq;
 
-namespace RanseiLink.Core.Services;
+namespace RanseiLink.Core.Graphics;
 
 public class RLAnimationResource
 {
     public string? Background { get; set; }
-    public CellAnimationSerialiser.Format Format { get; set; }
+    public RLAnimationFormat Format { get; set; }
     public List<CellBankInfo> Cells { get; }
     public List<Anim> Animations { get; }
 
-    public RLAnimationResource(CellAnimationSerialiser.Format format, string? background = null)
+    public RLAnimationResource(RLAnimationFormat format, string? background = null)
     {
         Format = format;
         Background = background;
@@ -24,7 +24,7 @@ public class RLAnimationResource
         var root = doc.ElementRequired("nitro_cell_animation_resource");
         Background = root.Attribute("background")?.Value;
         var cellCollection = root.ElementRequired("cell_collection");
-        Format = cellCollection.AttributeEnum<CellAnimationSerialiser.Format>("format");
+        Format = cellCollection.AttributeEnum<RLAnimationFormat>("format");
         Cells = cellCollection.Elements("image").Select(x => new CellBankInfo(x)).ToList();
         Animations = root.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
     }

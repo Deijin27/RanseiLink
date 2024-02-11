@@ -1,24 +1,25 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Archive;
-using RanseiLink.Core.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Xml.Linq;
 
-namespace RanseiLink.Core.Services;
+namespace RanseiLink.Core.Graphics;
+
+public enum RLAnimationFormat
+{
+    OneImagePerCell,
+    OneImagePerBank
+}
 
 public static class CellAnimationSerialiser
 {
-    public enum Format
-    {
-        OneImagePerCell,
-        OneImagePerBank
-    }
+    
 
     /// <summary>
-    /// If format is <see cref="Format.OneImagePerBank"/> then width/height are unnecessary
+    /// If format is <see cref="RLAnimationFormat.OneImagePerBank"/> then width/height are unnecessary
     /// </summary>
-    public static void ExportAnimationOnly(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, Format fmt, string? background)
+    public static void ExportAnimationOnly(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, RLAnimationFormat fmt, string? background)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
         ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, settings, fmt, background);
@@ -48,7 +49,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static void Export(CellImageSettings settings, Format fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
+    public static void Export(CellImageSettings settings, RLAnimationFormat fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
         const string backgroundFile = "background.png";
         var bg = G2DR.LoadImgFromFile(bgLinkFile);
@@ -60,7 +61,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static Result ImportAnimAndBackground(CellImageSettings settings, 
+    public static Result ImportAnimAndBackground(CellImageSettings settings,
         string animationXml, string animLinkFile, string outputAnimLinkFile,
         string bgLinkFile, string outputBgLinkFile)
     {
@@ -178,7 +179,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return (image.Width, image.Height);
     }
 
-    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, Format fmt, string? background)
+    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, RLAnimationFormat fmt, string? background)
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
@@ -188,11 +189,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         ExportNanr(nanr, res);
 
         // save cells
-        if (fmt == Format.OneImagePerBank)
+        if (fmt == RLAnimationFormat.OneImagePerBank)
         {
             ExportOneImagePerBank(ncer, ncgr, nclr, outputFolder, width, height, settings, dims, res);
         }
-        else if (fmt == Format.OneImagePerCell)
+        else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
             ExportOneImagePerCell(ncer, ncgr, nclr, outputFolder, dims, res);
         }
@@ -219,7 +220,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
     {
         if (width <= 0 || height <= 0)
         {
-            throw new Exception($"With format {Format.OneImagePerBank} width and height must be specified");
+            throw new Exception($"With format {RLAnimationFormat.OneImagePerBank} width and height must be specified");
         }
         var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
 
@@ -316,7 +317,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    
+
 
     /// <summary>
     /// Warning: will throw an exception on failure
@@ -333,11 +334,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         var nameToCellBankId = new Dictionary<string, ushort>();
 
         var fmt = res.Format;
-        if (fmt == Format.OneImagePerBank)
+        if (fmt == RLAnimationFormat.OneImagePerBank)
         {
             ImportOneImagePerBank(ncer, ncgr, nclr, settings, dims, res, dir, nameToCellBankId);
         }
-        else if (fmt == Format.OneImagePerCell)
+        else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
             ImportOneImagePerCell(ncer, ncgr, nclr, dims, res, dir, nameToCellBankId);
         }
@@ -405,7 +406,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 bank.Add(cell);
                 if (string.IsNullOrEmpty(cellInfo.File))
                 {
-                    throw new Exception($"Missing required attribute 'file' on cell for format {Format.OneImagePerCell}");
+                    throw new Exception($"Missing required attribute 'file' on cell for format {RLAnimationFormat.OneImagePerCell}");
                 }
                 var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
                 var img = ImageUtil.LoadPngBetterError(imgPath);
@@ -432,7 +433,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
     private static void ImportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
-        var fmt = Format.OneImagePerBank;
+        var fmt = RLAnimationFormat.OneImagePerBank;
         List<Image<Rgba32>> images = [];
         foreach (var cellBankInfo in res.Cells)
         {

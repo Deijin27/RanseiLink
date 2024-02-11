@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Services;
 
 namespace RanseiLink.Console.GraphicsCommands;
 
@@ -20,7 +19,7 @@ public class NanrExtractCommand : ICommand
     public PositionRelativeTo PositionRelativeTo { get; set; } = PositionRelativeTo.TopLeft;
 
     [CommandOption("format", 'f', Description = "Serialisation format")]
-    public CellAnimationSerialiser.Format Format { get; set; } = CellAnimationSerialiser.Format.OneImagePerBank;
+    public RLAnimationFormat Format { get; set; } = RLAnimationFormat.OneImagePerBank;
 
     [CommandOption("width", 'w', Description = "If no background is specified, the width the images should be")]
     public int Width { get; set; }
