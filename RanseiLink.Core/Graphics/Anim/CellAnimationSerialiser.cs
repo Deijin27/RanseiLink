@@ -414,6 +414,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 images.Add(img);
                 cell.Width = img.Width;
                 cell.Height = img.Height;
+                CalculateShapeAndScale(cell);
             }
 
             bank.EstimateMinMaxValues();
@@ -430,6 +431,17 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 image.Dispose();
             }
         }
+    }
+
+    private static void CalculateShapeAndScale(Cell cell)
+    {
+        var size = CellImageUtil.GetCellSize(cell.Width, cell.Height);
+        if (size == null)
+        {
+            throw new Exception($"Disallowed cell width and height ({cell.Width}, {cell.Height})");
+        }
+        cell.Shape = size.Shape;
+        cell.Scale = size.Scale;
     }
 
     private static void ImportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
@@ -455,6 +467,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 {
                     throw new Exception($"Missing required attribute 'height' on cell for format {fmt}");
                 }
+                var size = CellImageUtil.GetCellSize(cellInfo.Width, cellInfo.Height);
+                if (size == null)
+                {
+                    throw new Exception($"Invalid cell width and height combination ({cellInfo.Width},{cellInfo.Height})");
+                }
                 var cell = new Cell
                 {
                     RotateOrScale = cellInfo.DoubleSize ? RotateOrScale.Scale : RotateOrScale.Rotate,
@@ -467,6 +484,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Width = cellInfo.Width,
                     Height = cellInfo.Height,
                 };
+                CalculateShapeAndScale(cell);
                 bank.Add(cell);
             }
 
