@@ -241,7 +241,6 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 // save cell data
                 var cellData = new RLAnimationResource.CellInfo()
                 {
-                    File = fileName,
                     X = cell.XOffset + dims.XShift,
                     Y = cell.YOffset + dims.YShift,
                     FlipX = cell.FlipX,
