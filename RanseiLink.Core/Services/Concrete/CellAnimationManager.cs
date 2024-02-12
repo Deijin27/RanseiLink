@@ -63,14 +63,15 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         var animFile = _overrideDataProvider.GetDataFile(info.AnimationRelativePath(id));
         var animExists = File.Exists(animFile.File);
         var bgRelPath = info.BackgroundRelativePath(id);
+        var settings = new CellImageSettings(info.Prt);
         if (bgRelPath != null)
         {
             var bgFile = _overrideDataProvider.GetDataFile(bgRelPath);
-            CellAnimationSerialiser.Export(new(info.Prt), format, outputFolder, bgFile.File, animExists ? animFile.File : null);
+            CellAnimationSerialiser.Export(settings, format, outputFolder, bgFile.File, animExists ? animFile.File : null);
         }
         else if (animExists)
         {
-            CellAnimationSerialiser.ExportAnimationOnly(new(info.Prt), outputFolder, animFile.File, info.Width, info.Height, format, null);
+            CellAnimationSerialiser.ExportAnimationOnly(settings, outputFolder, animFile.File, info.Width, info.Height, format, null);
         }
     }
 

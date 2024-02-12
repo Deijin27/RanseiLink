@@ -224,6 +224,7 @@ public static class CellImageUtil
             });
         }
 
+        int byteBlockSize = (byte)blockSize;
         // work out tile offset
         var startByte = workingPixels.Count;
         if (format == TexFormat.Pltt16)
@@ -231,11 +232,25 @@ public static class CellImageUtil
             startByte /= 2; // account for compression
         }
         var tileOffset = startByte / 0x20;
-        cell.TileOffset = tileOffset >> (byte)blockSize;
+        cell.TileOffset = tileOffset >> byteBlockSize;
 
         // get pixels from image
         var pixels = ImageUtil.SharedPalettePixelsFromImage(image, workingPalette[cell.IndexPalette], tiled, format, color0ToTransparent: true);
         workingPixels.AddRange(pixels);
+
+        // pad to the correct length
+        while (true)
+        {
+            if ((workingPixels.Count % 0x20) == 0)
+            {
+                var total = workingPixels.Count / 0x20;
+                if (((total >> byteBlockSize) << byteBlockSize) == total)
+                {
+                    break;
+                }
+            }
+            workingPixels.Add(0);
+        }
     }
     public static void SharedSingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, CellBank bank, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
