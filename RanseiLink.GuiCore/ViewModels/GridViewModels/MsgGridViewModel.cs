@@ -16,7 +16,6 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         _cachedMsgBlockService = cachedMsgBlockService;
         
         Items = new ObservableCollection<MsgViewModel>();
-        Reload();
 
         SearchCommand = new RelayCommand(Search, () => !Busy);
         ReplaceAllCommand = new RelayCommand(ReplaceAll, () => !Busy);
@@ -24,8 +23,12 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         AddCommand = new RelayCommand(Add, CanAdd);
         RemoveCommand = new RelayCommand(Remove, CanRemove);
 
+        Reload();
+
         _cachedMsgBlockService.MessageAdded += CachedMsgBlockService_MessageAdded;
         _cachedMsgBlockService.MessageRemoved += CachedMsgBlockService_MessageRemoved;
+
+
     }
 
     public void Reload()
