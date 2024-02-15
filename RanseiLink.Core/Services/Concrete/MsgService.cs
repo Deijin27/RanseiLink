@@ -138,7 +138,8 @@ namespace RanseiLink.Core.Services.Concrete
 
         public void SaveBlock(string file, List<Message> block)
         {
-            using (var bw = new BinaryWriter(File.Create(file)))
+            var temp = Path.GetTempFileName();
+            using (var bw = new BinaryWriter(File.Create(temp)))
             {
                 var pnaWriter = new PnaTextWriter(bw);
                 // Group the messages by groupId so we can generate the table
@@ -175,7 +176,20 @@ namespace RanseiLink.Core.Services.Concrete
                         pnaWriter.WriteMessage(msg, multiElements);
                     }
                 }
-            } 
+            }
+
+            // corruption check #67 had problem that file was all zeros, maybe a flushing issue?
+            using (var stream = File.OpenRead(temp))
+            {
+                if (stream.Length < 10 || stream.ReadByte() <= 0)
+                {
+                    throw new Exception($"Error saving message block. File was corrupt '{file}'. Block had {block.Count} messages.");
+                }
+            }
+
+            // by saving to a temp file first, if any errors occur the original file is unharmed
+            // and we can also do the corruption check before replacing the original
+            File.Replace(temp, file, null);
         }
 
         public void ApplyEncryption(byte[] data)

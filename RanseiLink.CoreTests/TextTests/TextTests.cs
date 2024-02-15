@@ -43,7 +43,9 @@ public class TextTests
     [Fact]
     public void IdenticalThroughLoadSaveCycle()
     {
-        foreach (var file in Directory.GetFiles(Path.Combine(TestConstants.TestModFolder, "msg")))
+        var files = Directory.GetFiles(Path.Combine(TestConstants.TestModFolder, "msg"));
+        files.Should().HaveCount(33);
+        foreach (var file in files)
         {
             var unchangedBytes = File.ReadAllBytes(file);
             string temp = Path.GetTempFileName();

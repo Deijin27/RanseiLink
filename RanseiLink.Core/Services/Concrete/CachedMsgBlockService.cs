@@ -28,14 +28,28 @@ internal class CachedMsgBlockService : ICachedMsgBlockService
 
     public void SaveChangedBlocks()
     {
-        Parallel.For(0, _msgBlockService.BlockCount, i =>
+        Exception? exception = null;
+        // don't do parallel when saving, you're usually not saving that many files, and it's safer (probably, idk, I'm making this up)
+        for (int i = 0; i < _msgBlockService.BlockCount; i++)
         {
             if (_changeTrackedBlocks[i].IsChanged)
             {
-                _msgBlockService.Save(i, _blocks[i]);
-                _changeTrackedBlocks[i].IsChanged = false;
+                try
+                {
+                    _msgBlockService.Save(i, _blocks[i]);
+                    _changeTrackedBlocks[i].IsChanged = false;
+                }
+                catch (Exception ex)
+                {
+                    exception = ex;
+                }
             }
-        });
+        }
+
+        if (exception != null)
+        {
+            throw new Exception("Error saving changed msg blocks", exception);
+        }
     }
 
     [MemberNotNull(nameof(_blocks))]

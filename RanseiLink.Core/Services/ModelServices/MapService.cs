@@ -31,10 +31,13 @@ namespace RanseiLink.Core.Services.ModelServices
         public void Save(MapId id, PSLM model)
         {
             string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
-            using (var bw = new BinaryWriter(File.Create(file)))
+            var temp = Path.GetTempFileName();
+            using (var bw = new BinaryWriter(File.Create(temp)))
             {
                 model.WriteTo(bw);
             }
+            // safety measure to help protect against corruption
+            File.Replace(temp, file, null);
         }
 
         public string MapFolderPath => Path.Combine(_modInfo.FolderPath, Constants.MapFolderPath);
