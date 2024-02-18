@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using RanseiLink.Core.Archive;
+using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Xml.Linq;
@@ -14,7 +15,6 @@ public enum RLAnimationFormat
 
 public static class CellAnimationSerialiser
 {
-    
 
     /// <summary>
     /// If format is <see cref="RLAnimationFormat.OneImagePerBank"/> then width/height are unnecessary
@@ -61,7 +61,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static Result ImportAnimAndBackground(CellImageSettings settings,
+    public static Result ImportAnimAndBackground(AnimationTypeId type, CellImageSettings settings,
         string animationXml, string animLinkFile, string outputAnimLinkFile,
         string bgLinkFile, string outputBgLinkFile)
     {
@@ -78,7 +78,7 @@ public static class CellAnimationSerialiser
             var dir = Path.GetDirectoryName(animationXml)!;
             var backgroundFile = Path.Combine(dir, FileUtil.NormalizePath(res.Background));
 
-            var bgResult = ImportBackground(backgroundFile, bgLinkFile, outputBgLinkFile);
+            var bgResult = ImportBackground(type, backgroundFile, bgLinkFile, outputBgLinkFile);
             if (bgResult.IsFailed)
             {
                 return bgResult.ToResult();
@@ -101,14 +101,14 @@ public static class CellAnimationSerialiser
     /// <param name="bgLinkFile">Absolute path of current background link file to inherit information from</param>
     /// <param name="outputBgLinkFile">Absolute path to put the output background link file</param>
     /// <returns>Width and height of the background that was imported</returns>
-    public static Result<(int width, int height)> ImportBackground(string bgImage, string bgLinkFile, string outputBgLinkFile)
+    public static Result<(int width, int height)> ImportBackground(AnimationTypeId type, string bgImage, string bgLinkFile, string outputBgLinkFile)
     {
         var tempBg = FileUtil.GetTemporaryDirectory();
         try
         {
             LINK.Unpack(bgLinkFile, tempBg);
             var bg = G2DR.LoadImgFromFolder(tempBg);
-            var res = ImportBackground(bgImage, bg.Ncgr, bg.Nclr);
+            var res = ImportBackground(type, bgImage, bg.Ncgr, bg.Nclr);
             G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempBg, outputBgLinkFile);
             return Result.Ok(res);
@@ -172,10 +172,37 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return (image.Width, image.Height);
     }
 
-    public static (int width, int height) ImportBackground(string inputFile, NCGR ncgr, NCLR nclr)
+    public static (int width, int height) ImportBackground(AnimationTypeId type, string inputFile, NCGR ncgr, NCLR nclr)
     {
         using var image = ImageUtil.LoadPngBetterError(inputFile);
-        NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
+
+        if (type == AnimationTypeId.Castlemap)
+        {
+            // we pre-pad the palette because the first 16 are used for something
+            // idk why, but if you fill it up the colors of portions of the image are messed up.
+            var palette = new Palette(ncgr.Pixels.Format, true);
+            for (int i = 0; i < 15; i++)
+            {
+                palette.Add(Color.Black);
+            }
+            var pixels = ImageUtil.SharedPalettePixelsFromImage(image, palette, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
+            ncgr.Pixels.Data = pixels;
+            ncgr.Pixels.TilesPerRow = (short)(image.Width / 8);
+            ncgr.Pixels.TilesPerColumn = (short)(image.Height / 8);
+
+            var newPalette = PaletteUtil.From32bitColors(palette);
+            if (newPalette.Length > nclr.Palettes.Palette.Length)
+            {
+                // this should not be hit because it should be filtered out by the palette simplifier
+                throw new InvalidPaletteException($"Palette length exceeds current palette when importing image {newPalette.Length} vs {nclr.Palettes.Palette.Length}");
+            }
+            newPalette.CopyTo(nclr.Palettes.Palette, 0);
+        }
+        else
+        {
+            NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
+        }
+        
         return (image.Width, image.Height);
     }
 

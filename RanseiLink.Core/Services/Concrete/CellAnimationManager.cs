@@ -84,6 +84,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
         }
         var bgOut = Path.GetTempFileName();
         var importResult = CellAnimationSerialiser.ImportBackground(
+            type: type,
             bgImage: backgroundImg,
             bgLinkFile: bgLinkFile.File,
             outputBgLinkFile: bgOut
@@ -137,6 +138,7 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
             bgOut = Path.GetTempFileName();
             // this has both background and animation
             importResult = CellAnimationSerialiser.ImportAnimAndBackground(
+                type: type,
                 new CellImageSettings(info.Prt),
                 animationXml: animationXml,
                 animLinkFile: animFile.File,
