@@ -35,7 +35,7 @@ public static class CellAnimationSerialiser
             LINK.Unpack(animLinkFile, tempAnim);
             var anim = G2DR.LoadCellImgFromFolder(tempAnim);
             var nanr = ImportAnimationXml(res, dir, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
-            G2DR.SaveAnimToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+            G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
             return Result.Ok();
         }

@@ -64,12 +64,12 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
                 targetPath: tempDir
                 );
 
-            var ncgrPath = Path.Combine(tempDir, "0003.ncgr");
-            var ncgr = NCGR.Load(ncgrPath);
+            const NcgrSlot ncgrSlot = NcgrSlot.Slot3;
+            var ncgr = G2DR.LoadPixelsFromFolder(tempDir, ncgrSlot);
             const int width = 32;
             const int height = 32;
 
-            var ncer = NCER.Load(Path.Combine(tempDir, "0002.ncer"));
+            var ncer = G2DR.LoadCellFromFolder(tempDir);
 
             // Crop the part of the image for this link
             using var subImage = image.Clone(g =>
@@ -94,7 +94,7 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
                 throw new Exception("Image was different size when processing IconInstS");
             }
             ncgr.Pixels.Data = pixels;
-            ncgr.Save(ncgrPath);
+            G2DR.SavePixelsToFolder(tempDir, ncgr, ncgrSlot);
 
             if (id == 0)
             {
@@ -106,17 +106,23 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 
         }
 
+        if (nclrDir == null)
+        {
+            throw new Exception("There was no link 0 file for IconInstS");
+        }
+
         // Save the palette
         // if the palette is too big this is an error
         // if the palette is too small it will be scaled to the right 
         // length via the Array.Copy
-        var nclr = G2DR.LoadPaletteFromFolder(nclrDir!);
+        var nclr = G2DR.LoadPaletteFromFolder(nclrDir);
         var newPalette = PaletteUtil.From32bitColors(workingPalette[0]);
         if (newPalette.Length > nclr.Palettes.Palette.Length)
         {
             throw new InvalidPaletteException($"Palette is bigger than allowed for in IconInstS ({newPalette.Length} vs {nclr.Palettes.Palette.Length})");
         }
         Array.Copy(newPalette, nclr.Palettes.Palette, newPalette.Length);
+        G2DR.SavePaletteOnlyToFolder(nclrDir, nclr);
 
         // Generate the LINKs for patching
         // Temp dirs are stored within the parent dir and are deleted all at once an the end

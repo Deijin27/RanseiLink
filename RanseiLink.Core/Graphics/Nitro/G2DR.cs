@@ -108,6 +108,12 @@ public static class G2DR
         }
     }
 
+    public static void SavePaletteOnlyToFolder(string linkFolder, NCLR nclr)
+    {
+        var nclrFile = Path.Combine(linkFolder, _nclrFile);
+        nclr.Save(nclrFile);
+    }
+
     public static void SavePaletteToFolder(string linkFolder, NCLR nclr)
     {
         var nanrFile = Path.Combine(linkFolder, _nanrFile);
@@ -127,14 +133,14 @@ public static class G2DR
         nclr.Save(nclrFile);
     }
 
-    public static void SaveImgToFolder(string linkFolder, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    public static void SavePixelsToFolder(string linkFolder, NCGR ncgr, NcgrSlot ncgrSlot)
     {
         var ncgrFile1 = Path.Combine(linkFolder, _ncgrFile1);
         var ncgrFile3 = Path.Combine(linkFolder, _ncgrFile3);
 
         if (ncgrSlot == NcgrSlot.Infer)
         {
-            ncgrSlot = InferSlot(ncgrFile1 , ncgrFile3);
+            ncgrSlot = InferSlot(ncgrFile1, ncgrFile3);
         }
 
         if (ncgrSlot == NcgrSlot.Slot1)
@@ -145,20 +151,34 @@ public static class G2DR
         {
             ncgr.Save(ncgrFile3);
         }
+    }
 
+    public static void SaveImgToFolder(string linkFolder, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    {
+        SavePixelsToFolder(linkFolder, ncgr, ncgrSlot);
         SavePaletteToFolder(linkFolder, nclr);
     }
 
-    public static void SaveCellToFolder(string linkFolder, NCER ncer, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    public static void SaveCellToFolder(string linkFolder, NCER ncer)
     {
         ncer.Save(Path.Combine(linkFolder, _ncerFile));
+    }
+
+    public static void SaveCellImgToFolder(string linkFolder, NCER ncer, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    {
+        SaveCellToFolder(linkFolder, ncer);
         SaveImgToFolder(linkFolder, ncgr, nclr, ncgrSlot);
     }
 
-    public static void SaveAnimToFolder(string linkFolder, NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    public static void SaveAnimToFolder(string linkFolder, NANR nanr)
     {
         nanr.Save(Path.Combine(linkFolder, _nanrFile));
-        SaveCellToFolder(linkFolder, ncer, ncgr, nclr, ncgrSlot);
+    }
+
+    public static void SaveAnimImgToFolder(string linkFolder, NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, NcgrSlot ncgrSlot)
+    {
+        SaveAnimToFolder(linkFolder, nanr);
+        SaveCellImgToFolder(linkFolder, ncer, ncgr, nclr, ncgrSlot);
     }
 
     public static (NCGR Ncgr, NCLR Nclr) LoadImgFromFile(string linkFilePath, NcgrSlot ncgrSlot = NcgrSlot.Infer)
