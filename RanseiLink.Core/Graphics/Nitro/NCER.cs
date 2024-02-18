@@ -595,7 +595,7 @@ public class Cell
 
         value0 |= YOffset & 0xFF;
         value0 |= ((int)RotateOrScale & 1) << 8;
-        bool nextFlag = RotateOrScale == RotateOrScale.Rotate ? DoubleSize : ObjDisable;
+        bool nextFlag = RotateOrScale == RotateOrScale.Rotate ? ObjDisable : DoubleSize;
         value0 |= (nextFlag ? 1 : 0) << 9;
         value0 |= ((int)ObjMode & 2) << 10;
         value0 |= (Mosaic ? 1 : 0) << 12;

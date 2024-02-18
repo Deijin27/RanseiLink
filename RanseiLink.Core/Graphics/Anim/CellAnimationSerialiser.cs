@@ -429,7 +429,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     FlipX = cellInfo.FlipX,
                     FlipY = cellInfo.FlipY,
                     DoubleSize = cellInfo.DoubleSize,
-                    IndexPalette = (byte)cellInfo.Palette
+                    IndexPalette = (byte)cellInfo.Palette,
+                    Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit 
                 };
                 bank.Add(cell);
                 if (string.IsNullOrEmpty(cellInfo.File))

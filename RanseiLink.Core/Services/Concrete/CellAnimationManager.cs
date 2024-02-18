@@ -128,8 +128,8 @@ public class CellAnimationManager(IOverrideDataProvider overrideDataProvider) : 
                 new CellImageSettings(info.Prt),
                 animLinkFile: animFile.File,
                 animationXml: animationXml,
-                width: -1,
-                height: -1,
+                width: info.Width,
+                height: info.Height,
                 outputAnimLinkFile: animOut
                 );
         }
