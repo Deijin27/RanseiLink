@@ -383,6 +383,7 @@ public static class CellImageUtil
         if (banks.Count == 1)
         {
             SharedSingleBankFromImage(image, banks[0], blockSize, workingPixels, workingPalette, tiled, format, settings);
+            return;
         }
 
         var cumulativeHeight = 0;
