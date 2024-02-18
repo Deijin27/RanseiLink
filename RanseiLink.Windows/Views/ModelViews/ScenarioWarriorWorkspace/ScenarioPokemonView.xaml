@@ -81,7 +81,7 @@
 
         <TextBlock Text="Initial Link" Grid.Row="6" />
         <DockPanel Grid.Row="6" Grid.Column="1">
-            <controls:NumberButtonPanel Value="{Binding Link, Mode=OneWayToSource}" DockPanel.Dock="Right" Items="{Binding LinkQuickSetSource}" Margin="1,0,-1,0"/>
+            <controls:NumberButtonPanel Value="{Binding Link}" DockPanel.Dock="Right" Items="{Binding LinkQuickSetSource}" Margin="1,0,-1,0"/>
             <controls:NumberBox  Value="{Binding Link}" Max="100" Increment="10"/>
         </DockPanel>
 
