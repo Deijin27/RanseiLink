@@ -101,11 +101,7 @@
         <TextBlock Text="Function" Grid.Row="8" />
         <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
 
-        <GroupBox Header="Icon Animated Image" Grid.Row="9" Grid.ColumnSpan="2" Grid.RowSpan="2">
-            <local:AnimationView DataContext="{Binding IconAnimVm}"/>
-        </GroupBox>
-
-        <GroupBox Header="Referenced Buildings" Grid.Row="12" Grid.ColumnSpan="2" Grid.RowSpan="8">
+        <GroupBox Header="Referenced Buildings" Grid.Row="9" Grid.ColumnSpan="2" Grid.RowSpan="8">
             <StackPanel>
                 <StackPanel.Resources>
                     <Style TargetType="ComboBox" BasedOn="{StaticResource SelectorComboBoxStyle}">

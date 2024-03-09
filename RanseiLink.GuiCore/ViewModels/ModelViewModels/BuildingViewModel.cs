@@ -54,7 +54,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         foreach (var id in buildingService.ValidIds())
         {
             var model = buildingService.Retrieve(id);
-            var vm = new BuildingViewModel(this, kingdomService, cachedSpriteProvider, animManager, (BuildingId)id, model);
+            var vm = new BuildingViewModel(this, kingdomService, cachedSpriteProvider, (BuildingId)id, model);
             vms.Add(vm);
         }
 
@@ -69,6 +69,8 @@ public class BuildingWorkspaceViewModel : ViewModelBase
             }
         }
         _selectedItem = vms.First();
+
+        IconAnimVm = new(animManager, AnimationTypeId.IconInst, () => SelectedAnimation);
     }
 
     public List<SelectorComboBoxItem> BuildingItems { get; }
@@ -96,6 +98,26 @@ public class BuildingWorkspaceViewModel : ViewModelBase
             SelectedItem = sender;
         }
     }
+
+
+    public AnimationViewModel? IconAnimVm { get; private set; }
+
+
+    private int _selectedAnimation;
+    public int SelectedAnimation
+    {
+        get => _selectedAnimation;
+        set
+        {
+            if (RaiseAndSetIfChanged(_selectedAnimation, value, v => _selectedAnimation = v))
+            {
+                RaisePropertyChanged(nameof(SelectedAnimationImage));
+                IconAnimVm?.OnIdChanged();
+            }
+        }
+    }
+
+    public object? SelectedAnimationImage => _cachedSpriteProvider.GetSprite(SpriteType.IconInstS, SelectedAnimation);
 }
 
 
@@ -109,19 +131,16 @@ public class BuildingViewModel : ViewModelBase
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private Building _model = new();
 
-    public BuildingViewModel(BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, IAnimGuiManager animManager, BuildingId id, Building model)
+    public BuildingViewModel(BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, BuildingId id, Building model)
     {
         _parent = parent;
         _kingdomService = kingdomService;
         _cachedSpriteProvider = cachedSpriteProvider;
         Id = (int)id;
         _model = model;
-        IconAnimVm = new(animManager, AnimationTypeId.IconInst, () => Sprite1); // TODO: this needs moving to its own module
     }
 
     public int Id { get; private set; }
-
-    public AnimationViewModel? IconAnimVm { get; private set; }
 
     public string Name
     {

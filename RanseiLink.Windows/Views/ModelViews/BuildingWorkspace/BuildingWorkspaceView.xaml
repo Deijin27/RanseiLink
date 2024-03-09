@@ -34,6 +34,13 @@
             VirtualizingPanel.ScrollUnit="Pixel"
             ItemTemplateSelector="{StaticResource miniTemplateSelector}">
         </ItemsControl>
+        <GroupBox Header="Icon Animated Image" DockPanel.Dock="Bottom">
+            <DockPanel>
+                <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding SelectedAnimationImage}"/>
+                <local:AnimationView DockPanel.Dock="Bottom" DataContext="{Binding IconAnimVm}"/>
+                <controls:NumberBox Margin="5" Value="{Binding SelectedAnimation}" Max="84"/>
+            </DockPanel>
+        </GroupBox>
         <ScrollViewer>
             <local:BuildingView DataContext="{Binding SelectedItem}"/>
         </ScrollViewer>

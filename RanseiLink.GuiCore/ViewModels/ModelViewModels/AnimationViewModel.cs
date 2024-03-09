@@ -45,7 +45,12 @@ public class AnimationViewModel : ViewModelBase
     {
         get => _manager.IsOverriden(_type, _id());
     }
-    
+
+    public void OnIdChanged()
+    {
+        RaisePropertyChanged(nameof(IsOverriden));
+        RevertCommand.RaiseCanExecuteChanged();
+    }
 
     public ICommand ImportCommand { get; }
     public ICommand ExportCommand { get; }
