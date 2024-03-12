@@ -34,7 +34,7 @@
             VirtualizingPanel.ScrollUnit="Pixel"
             ItemTemplateSelector="{StaticResource miniTemplateSelector}">
         </ItemsControl>
-        <GroupBox Header="Icon Animated Image" DockPanel.Dock="Bottom">
+        <GroupBox Header="Icon Animated Image" DockPanel.Dock="Bottom" Margin="10,0" HorizontalAlignment="Left">
             <DockPanel>
                 <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding SelectedAnimationImage}"/>
                 <local:AnimationView DockPanel.Dock="Bottom" DataContext="{Binding IconAnimVm}"/>
@@ -42,7 +42,41 @@
             </DockPanel>
         </GroupBox>
         <ScrollViewer>
-            <local:BuildingView DataContext="{Binding SelectedItem}"/>
+            <WrapPanel>
+                <local:BuildingView DataContext="{Binding SelectedItem}"/>
+
+                <GroupBox Header="Scenario Info" DataContext="{Binding ScenarioBuildingVm}" Grid.IsSharedSizeScope="True">
+                    <DockPanel>
+                        <Grid Margin="10,5,10,5" DockPanel.Dock="Top" TextElement.FontWeight="Bold">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Scenario"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="InitialExp"/>
+                                <ColumnDefinition Width="Auto" SharedSizeGroup="Unknown"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0">Scenario</TextBlock>
+                            <TextBlock Grid.Column="1">Initial Exp</TextBlock>
+                            <TextBlock Grid.Column="2">Unknown</TextBlock>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Slots}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="10,5,10,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="Scenario"/>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="InitialExp"/>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="Unknown"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Scenario}" Margin="0,0,5,0"/>
+                                        <controls:NumberBox Margin="0,0,5,0" Grid.Column="1" Max="255" Value="{Binding InitialExp}" Width="100" HorizontalAlignment="Left"/>
+                                        <controls:NumberBox Grid.Column="2" Value="{Binding Unknown2}" Width="100"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </GroupBox>
+            </WrapPanel>
+            
         </ScrollViewer>
         
     </DockPanel>

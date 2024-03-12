@@ -6,6 +6,7 @@ using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -28,6 +29,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
 {
     private readonly IBuildingService _buildingService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    private readonly ScenarioBuildingViewModel _scenarioBuildingVm;
 
     public ObservableCollection<object> Items { get; } = [];
 
@@ -42,19 +44,22 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         IJumpService jumpService, 
         IIdToNameService idToNameService, 
         ICachedSpriteProvider cachedSpriteProvider,
-        IAnimGuiManager animManager)
+        IAnimGuiManager animManager,
+        IScenarioBuildingService scenarioBuildingService)
     {
+
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
         JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
         _buildingService = buildingService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        _scenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
         ItemClickedCommand = new RelayCommand<object>(ItemClicked);
         // load the building view models
         var vms = new List<BuildingViewModel>();
         foreach (var id in buildingService.ValidIds())
         {
             var model = buildingService.Retrieve(id);
-            var vm = new BuildingViewModel(this, kingdomService, cachedSpriteProvider, (BuildingId)id, model);
+            var vm = new BuildingViewModel(_scenarioBuildingVm, this, kingdomService, cachedSpriteProvider, (BuildingId)id, model);
             vms.Add(vm);
         }
 
@@ -63,15 +68,19 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         {
             Items.Add(new BuildingSimpleKingdomMiniViewModel(cachedSpriteProvider, kingdom));
             var intKingdom = (int)kingdom;
+            int slot = 0;
             foreach (var vm in vms.Where(x => x.Kingdom == intKingdom))
             {
+                vm.Slot = slot++;
                 Items.Add(vm);
             }
         }
-        _selectedItem = vms.First();
+        SelectItem(vms.First());
 
         IconAnimVm = new(animManager, AnimationTypeId.IconInst, () => SelectedAnimation);
     }
+
+    public ScenarioBuildingViewModel ScenarioBuildingVm => _scenarioBuildingVm;
 
     public List<SelectorComboBoxItem> BuildingItems { get; }
 
@@ -83,20 +92,22 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     public object SelectedItem
     {
         get => _selectedItem;
-        set
-        {
-            if (RaiseAndSetIfChanged(ref _selectedItem, value))
-            {
-            }
-        }
     }
 
     private void ItemClicked(object? sender)
     {
-        if (sender is BuildingViewModel)
+        if (sender is BuildingViewModel buildingVm)
         {
-            SelectedItem = sender;
+            SelectItem(buildingVm);
         }
+    }
+
+    [MemberNotNull(nameof(_selectedItem))]
+    private void SelectItem(BuildingViewModel buildingVm)
+    {
+        _selectedItem = buildingVm;
+        RaisePropertyChanged(nameof(SelectedItem));
+        _scenarioBuildingVm.SetSelected((KingdomId)buildingVm.Kingdom, buildingVm.Slot);
     }
 
 
@@ -131,14 +142,17 @@ public class BuildingViewModel : ViewModelBase
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private Building _model = new();
 
-    public BuildingViewModel(BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, BuildingId id, Building model)
+    public BuildingViewModel(ScenarioBuildingViewModel sbvm, BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, BuildingId id, Building model)
     {
+        ScenarioBuildingVm = sbvm;   
         _parent = parent;
         _kingdomService = kingdomService;
         _cachedSpriteProvider = cachedSpriteProvider;
         Id = (int)id;
         _model = model;
     }
+
+    public ScenarioBuildingViewModel ScenarioBuildingVm { get; }
 
     public int Id { get; private set; }
 
@@ -149,6 +163,8 @@ public class BuildingViewModel : ViewModelBase
     }
 
     public List<SelectorComboBoxItem> BuildingItems => _parent.BuildingItems;
+
+    public int Slot { get; set; }
 
     public int Kingdom
     {

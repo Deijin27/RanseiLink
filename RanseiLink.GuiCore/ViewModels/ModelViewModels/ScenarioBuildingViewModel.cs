@@ -10,14 +10,19 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class ScenarioBuildingSlotItem : ViewModelBase
 {
     private readonly ScenarioBuilding _model;
+    private readonly ScenarioId _scenario;
     private readonly KingdomId _kingdomId;
     private readonly int _slot;
-    public ScenarioBuildingSlotItem(ScenarioBuilding model, KingdomId kingdom, int slot)
+    public ScenarioBuildingSlotItem(ScenarioBuilding model, ScenarioId scenario, KingdomId kingdom, int slot)
     {
         _slot = slot;
         _kingdomId = kingdom;
         _model = model;
+        _scenario = scenario;
     }
+
+    public ScenarioId Scenario => _scenario;
+    public KingdomId Kingdom => _kingdomId;
 
     public int Slot => _slot;
 
@@ -34,38 +39,18 @@ public class ScenarioBuildingSlotItem : ViewModelBase
     }
 }
 
-public class ScenarioBuildingKingdomItem : ViewModelBase
+public class ScenarioBuildingViewModel(IScenarioBuildingService scenarioBuildingService) : ViewModelBase
 {
-    public ScenarioBuildingKingdomItem(ScenarioBuilding model, KingdomId kingdom, string kingdomName)
+    public void SetSelected(KingdomId kingdom, int slot)
     {
-        Kingdom = kingdomName;
-        for (int i = 0; i < ScenarioBuilding.SlotCount; i++)
+        Slots.Clear();
+        foreach (var scenarioId in scenarioBuildingService.ValidIds())
         {
-            Slots.Add(new ScenarioBuildingSlotItem(model, kingdom, i));
-        }
-    }
-    public string Kingdom { get; }
-
-    public ObservableCollection<ScenarioBuildingSlotItem> Slots { get; } = new();
-
-}
-
-public class ScenarioBuildingViewModel
-{
-    private readonly IIdToNameService _idToNameService;
-    public ScenarioBuildingViewModel(IIdToNameService idToNameService)
-    {
-        _idToNameService = idToNameService;
-    }
-
-    public void SetModel(int scenario, ScenarioBuilding model)
-    {
-        KingdomItems.Clear();
-        foreach (var item in EnumUtil.GetValuesExceptDefaults<KingdomId>().Select(i => new ScenarioBuildingKingdomItem(model, i, _idToNameService.IdToName<IKingdomService>((int)i))))
-        {
-            KingdomItems.Add(item);
+            var model = scenarioBuildingService.Retrieve(scenarioId);
+            Slots.Add(new ScenarioBuildingSlotItem(model, (ScenarioId)scenarioId, kingdom, slot));
         }
     }
 
-    public ObservableCollection<ScenarioBuildingKingdomItem> KingdomItems { get; } = new();
+    public ObservableCollection<ScenarioBuildingSlotItem> Slots { get; } = [];
+
 }

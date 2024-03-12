@@ -41,7 +41,6 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, MaxLinkPokemonSelectorEditorModule>();
         builder.Register<EditorModule, ScenarioWarriorWorkspaceEditorModule>();
         builder.Register<EditorModule, ScenarioAppearPokemonSelectorEditorModule>();
-        builder.Register<EditorModule, ScenarioBuildingSelectorEditorModule>();
         builder.Register<EditorModule, EventSpeakerSelectorEditorModule>();
         builder.Register<EditorModule, ItemSelectorEditorModule>();
         builder.Register<EditorModule, BuildingWorkspaceEditorModule>();

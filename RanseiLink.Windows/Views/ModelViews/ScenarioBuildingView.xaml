@@ -6,12 +6,11 @@
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
-             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance vm:ScenarioKingdomViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding KingdomItems, Mode=OneTime}" Grid.IsSharedSizeScope="True" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
         <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type vm:ScenarioBuildingKingdomItem}">
+            <DataTemplate>
                 <GroupBox Header="{Binding Kingdom}">
                     <ItemsControl ItemsSource="{Binding Slots}">
                         <ItemsControl.ItemTemplate>
