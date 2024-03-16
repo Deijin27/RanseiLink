@@ -27,16 +27,10 @@ public class BuildingSimpleKingdomMiniViewModel : ViewModelBase
 
 public class BuildingWorkspaceViewModel : ViewModelBase
 {
-    private readonly IBuildingService _buildingService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly ScenarioBuildingViewModel _scenarioBuildingVm;
 
     public ObservableCollection<object> Items { get; } = [];
-
-    public void Deactivate()
-    {
-        _buildingService.Save();
-    }
 
     public BuildingWorkspaceViewModel(
         IBuildingService buildingService, 
@@ -50,7 +44,6 @@ public class BuildingWorkspaceViewModel : ViewModelBase
 
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
         JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
-        _buildingService = buildingService;
         _cachedSpriteProvider = cachedSpriteProvider;
         _scenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
         ItemClickedCommand = new RelayCommand<object>(ItemClicked);
@@ -108,6 +101,18 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         _selectedItem = buildingVm;
         RaisePropertyChanged(nameof(SelectedItem));
         _scenarioBuildingVm.SetSelected((KingdomId)buildingVm.Kingdom, buildingVm.Slot);
+    }
+
+    public void SelectById(int id)
+    {
+        foreach (var item in Items)
+        {
+            if (item is BuildingViewModel vm && vm.Id == id)
+            {
+                SelectItem(vm);
+                break;
+            }
+        }
     }
 
 

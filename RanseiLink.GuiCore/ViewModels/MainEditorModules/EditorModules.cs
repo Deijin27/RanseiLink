@@ -199,23 +199,40 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
 }
 
 [EditorModule]
-public class BuildingWorkspaceEditorModule : EditorModule
+public class BuildingWorkspaceEditorModule : EditorModule, ISelectableModule
 {
     public const string Id = "building_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Building";
 
     public override object? ViewModel => _viewModel;
+
+    private IBuildingService? _buildingService;
+    private IScenarioBuildingService? _scenarioBuildingService;
     private BuildingWorkspaceViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
+        _buildingService = modServices.Get<IBuildingService>();
+        _scenarioBuildingService = modServices.Get<IScenarioBuildingService>();
         _viewModel = modServices.Get<BuildingWorkspaceViewModel>();
     }
 
     public override void Deactivate()
     {
-        _viewModel?.Deactivate();
+        _scenarioBuildingService?.Save();
+        _buildingService?.Save();
+    }
+
+    public override void OnPatchingRom()
+    {
+        _scenarioBuildingService?.Save();
+        _buildingService?.Save();
+    }
+
+    public void Select(int selectId)
+    {
+        _viewModel?.SelectById(selectId);
     }
 }
 

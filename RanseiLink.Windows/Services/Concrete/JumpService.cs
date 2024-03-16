@@ -1,6 +1,4 @@
 ﻿#nullable enable
-using RanseiLink.Windows.ViewModels;
-
 namespace RanseiLink.Windows.Services.Concrete;
 
 internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpService 
@@ -26,14 +24,9 @@ internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpServ
         {
             return;
         }
-        if (module.ViewModel is not SelectorViewModel selectorViewModel)
+        if (module is ISelectableModule selectableModule)
         {
-            return;
-        }
-        selectorViewModel.Selected = selectId;
-        if (selectorViewModel.Selected != selectId)
-        {
-            return;
+            selectableModule.Select(selectId);
         }
         mainEditorViewModel.CurrentModuleId = moduleId;
     }
@@ -46,35 +39,4 @@ internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpServ
         }
         mainEditorViewModel.CurrentModuleId = moduleId;
     }
-
-    public void JumpToNested(string moduleId, int outerSelectedId, int innerSelectedId)
-    {
-        if (!mainEditorViewModel.TryGetModule(moduleId, out var module))
-        {
-            return;
-        }
-        if (module.ViewModel is not SelectorViewModel scenarioSelectorViewModel)
-        {
-            return;
-        }
-        scenarioSelectorViewModel.Selected = outerSelectedId;
-
-        if (scenarioSelectorViewModel.Selected != outerSelectedId)
-        {
-            return;
-        }
-
-        if (scenarioSelectorViewModel.NestedViewModel is SelectorViewModel nestedSelectorViewModel)
-        {
-            nestedSelectorViewModel.Selected = innerSelectedId;
-
-            if (nestedSelectorViewModel.Selected != innerSelectedId)
-            {
-                return;
-            }
-        }
-
-        mainEditorViewModel.CurrentModuleId = moduleId;
-    }
-
 }

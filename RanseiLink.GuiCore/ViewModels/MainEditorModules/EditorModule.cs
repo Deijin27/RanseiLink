@@ -53,7 +53,7 @@ public abstract class EditorModule
 
 }
 
-public abstract class BaseSelectorEditorModule<TService> : EditorModule where TService : IModelService
+public abstract class BaseSelectorEditorModule<TService> : EditorModule, ISelectableModule where TService : IModelService
 {
     public override object? ViewModel => _viewModel;
 
@@ -70,11 +70,25 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule where TS
         _selectorVmFactory = modServices.Get<ISelectorViewModelFactory>();
         if (_service == null)
         {
-            throw new System.Exception("what the fuck");
+            throw new System.Exception($"Service '{typeof(TService).FullName}' not registered");
         }
     }
 
     public override void Deactivate() => _service?.Save();
     public override void OnPatchingRom() => _service?.Save();
+
+    public virtual void Select(int selectId)
+    {
+        if (_viewModel == null)
+        {
+            return;
+        }
+        _viewModel.Selected = selectId;
+    }
+}
+
+public interface ISelectableModule
+{
+    void Select(int selectId);
 }
 
