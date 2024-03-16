@@ -25,7 +25,7 @@ public class AbilityViewModel : ViewModelBase
         _msgService = msgService;
         _model = new Ability();
 
-        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonSelectorEditorModule.Id, pk.Id); });
+        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
     }
 
     public void SetModel(AbilityId id, Ability model)

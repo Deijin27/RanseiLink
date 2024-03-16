@@ -30,7 +30,7 @@ public class WpfServiceModule : IModule
         builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
 
 
-        builder.Register<EditorModule, PokemonSelectorEditorModule>();
+        builder.Register<EditorModule, PokemonWorkspaceModule>();
         builder.Register<EditorModule, AbilitySelectorEditorModule>();
         builder.Register<EditorModule, WarriorSkillSelectorEditorModule>();
         builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
@@ -106,6 +106,7 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
         builder.Register<BuildingWorkspaceViewModel>();
+        builder.Register<PokemonWorkspaceViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

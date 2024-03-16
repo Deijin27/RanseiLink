@@ -54,8 +54,8 @@
                 <views:MapView/>
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type cvm:PokemonViewModel}">
-                <views:PokemonView/>
+            <DataTemplate DataType="{x:Type cvm:PokemonWorkspaceViewModel}">
+                <views:PokemonWorkspaceView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type cvm:MoveViewModel}">

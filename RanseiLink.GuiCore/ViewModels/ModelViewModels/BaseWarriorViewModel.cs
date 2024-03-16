@@ -29,7 +29,7 @@ public class BaseWarriorViewModel : ViewModelBase
 
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
-        JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonSelectorEditorModule.Id, id));
+        JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
         JumpToSpeakerMessagesCommand = new RelayCommand(() =>
         {
             jumpService.JumpToMessageFilter($"{{{PnaConstNames.SpeakerId}:{SpeakerId}}}", false);

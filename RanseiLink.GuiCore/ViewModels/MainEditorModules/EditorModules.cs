@@ -7,17 +7,46 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.GuiCore.ViewModels;
 
 [EditorModule]
-public class PokemonSelectorEditorModule : BaseSelectorEditorModule<IPokemonService>
+public class PokemonWorkspaceModule : EditorModule, ISelectableModule
 {
-    public const string Id = "pokemon_selector";
+    public const string Id = "pokemon_workspace";
+    private PokemonWorkspaceViewModel? _viewModel;
+    private IPokemonService? _pokemonService;
+
     public override string UniqueId => Id;
     public override string ListName => "Pokemon";
+
+    public override object? ViewModel => _viewModel;
+
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<PokemonViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((PokemonId)id, _service.Retrieve(id)));
+        _pokemonService = modServices.Get<IPokemonService>();
+        var vm = modServices.Get<PokemonWorkspaceViewModel>();
+        _viewModel = vm;
     }
+
+    public void Select(int selectId)
+    {
+        if (_viewModel != null)
+        {
+            _viewModel.SearchText = null;
+            _viewModel.SelectById(selectId);
+        }
+    }
+
+    public override void OnPatchingRom()
+    {
+        base.OnPatchingRom();
+        _pokemonService?.Save();
+    }
+
+    public override void Deactivate()
+    {
+        base.Deactivate();
+        _pokemonService?.Save();
+    }
+
 }
 
 //public class PokemonGridEditorModule : IEditorModule
