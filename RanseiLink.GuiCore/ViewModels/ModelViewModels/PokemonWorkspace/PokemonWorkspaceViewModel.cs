@@ -25,15 +25,10 @@ public class PokemonWorkspaceViewModel : ViewModelBase
             _allMiniVms.Add(miniVm);
         }
         Items = new(_allMiniVms);
-        Items.CollectionChanged += Items_CollectionChanged;
 
         SelectById(0);
 
         PokemonViewModel.PropertyChanged += PokemonViewModel_PropertyChanged;
-    }
-
-    private void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
     }
 
     private bool _ignorePropertyChanged;
