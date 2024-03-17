@@ -33,7 +33,14 @@ public static class CellAnimationSerialiser
             res ??= new RLAnimationResource(XDocument.Load(animationXml));
             var dir = Path.GetDirectoryName(animationXml)!;
             LINK.Unpack(animLinkFile, tempAnim);
-            var anim = G2DR.LoadCellImgFromFolder(tempAnim);
+            var anim = G2DR.LoadAnimImgFromFolder(tempAnim);
+
+            var valid = ValidateAnim(res, anim.Nanr);
+            if (valid.IsFailed)
+            {
+                return valid;
+            }
+
             var nanr = ImportAnimationXml(res, dir, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
             G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
@@ -48,6 +55,42 @@ public static class CellAnimationSerialiser
             Directory.Delete(tempAnim, true);
         }
     }
+
+    private static Result ValidateAnim(RLAnimationResource res, NANR anim)
+    {
+        // Animation is corrupt if you use a different amount of animations
+        // to what were originally in the slot.
+        // This is very annoying, why does it even matter??????
+
+        var requiredAnimCount = anim.AnimationBanks.Banks.Count;
+        if (res.Animations.Count > requiredAnimCount)
+        {
+            return Result.Fail($"This particular slot can only have up to {requiredAnimCount} animations.");
+        }
+
+        // if it's less, we can add blank ones to the resource
+        if (res.Animations.Count < requiredAnimCount)
+        {
+            var diff = requiredAnimCount - res.Animations.Count;
+
+            for (int i = 0; i < diff; i++)
+            {
+                // create a unique name for the anim
+                string name;
+                int n = 0;
+                do
+                {
+                    name = $"CellAnime{n++}";
+                }
+                while (res.Animations.Any(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase)));
+
+                res.Animations.Add(new RLAnimationResource.Anim(name, []));
+            }
+        }
+
+        return Result.Ok();
+    }
+
 
     public static void Export(CellImageSettings settings, RLAnimationFormat fmt, string outputFolder, string bgLinkFile, string? animLinkFile = null)
     {
@@ -405,7 +448,6 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 targetFrame.Duration = (ushort)frame.Duration;
             }
         }
-
         return nanr;
     }
 
