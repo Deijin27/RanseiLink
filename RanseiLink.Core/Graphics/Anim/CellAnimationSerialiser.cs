@@ -183,13 +183,16 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             var palette = new Palette(ncgr.Pixels.Format, true);
             for (int i = 0; i < 15; i++)
             {
-                palette.Add(Color.Black);
+                // adding transparent because a different color may be used in the image
+                // this ensures these slots remain unused
+                palette.Add(Color.Transparent);
             }
             var pixels = ImageUtil.SharedPalettePixelsFromImage(image, palette, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
             ncgr.Pixels.Data = pixels;
             ncgr.Pixels.TilesPerRow = (short)(image.Width / 8);
             ncgr.Pixels.TilesPerColumn = (short)(image.Height / 8);
 
+            // now the transparents will be interpreted as black so it's probably fine to not swap them out
             var newPalette = PaletteUtil.From32bitColors(palette);
             if (newPalette.Length > nclr.Palettes.Palette.Length)
             {
