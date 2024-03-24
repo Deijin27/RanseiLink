@@ -1,5 +1,4 @@
-﻿#nullable enable
-using RanseiLink.Core;
+﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
@@ -23,12 +22,21 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         IIdToNameService idToNameService, 
         ICachedSpriteProvider cachedSpriteProvider,
         IAnimGuiManager animManager,
-        IScenarioBuildingService scenarioBuildingService)
+        IScenarioBuildingService scenarioBuildingService,
+        CopyPasteViewModel copyPasteVm)
     {
 
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
         JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
         _cachedSpriteProvider = cachedSpriteProvider;
+        CopyPasteVm = copyPasteVm;
+        CopyPasteVm.ModelPasted += (_, __) => 
+        {
+            if (SelectedItem is BuildingViewModel bvm)
+            {
+                SelectItem(bvm);
+            }
+        };
         _scenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
         ItemClickedCommand = new RelayCommand<object>(ItemClicked);
         // load the building view models
@@ -83,6 +91,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     private void SelectItem(BuildingViewModel buildingVm)
     {
         _selectedItem = buildingVm;
+        CopyPasteVm.Model = buildingVm.Model;
         RaisePropertyChanged(nameof(SelectedItem));
         _scenarioBuildingVm.SetSelected((KingdomId)buildingVm.Kingdom, buildingVm.Slot);
     }
@@ -118,4 +127,6 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     }
 
     public object? SelectedAnimationImage => _cachedSpriteProvider.GetSprite(SpriteType.IconInstS, SelectedAnimation);
+
+    public CopyPasteViewModel CopyPasteVm { get; }
 }

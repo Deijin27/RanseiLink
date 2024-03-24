@@ -55,14 +55,6 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <local:BuildingMiniView IsEnabled="False" Margin="2" Grid.ColumnSpan="2"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.ColumnSpan="2" 
-            VerticalAlignment="Center" HorizontalAlignment="Right" 
-            Margin="0,0,35,0" Height="15">
-            <TextBlock FontSize="10" Text="{Binding Id, StringFormat='ID: {0} | '}" d:Text="ID: 200 | "/>
-            <TextBlock FontSize="10" Text="{Binding KingdomName, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: Dragnor" Margin="2,0,0,0"/>
-        </StackPanel>
-
         <TextBlock Text="Name" Grid.Row="1" />
         <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="18"/>
 

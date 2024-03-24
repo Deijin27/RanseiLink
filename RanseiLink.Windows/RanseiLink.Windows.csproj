@@ -142,6 +142,9 @@
     <Compile Update="Views\ModelViews\ItemView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\SelectorViews\CopyPasteView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\SelectorViews\SelectorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -312,6 +315,9 @@
     <Page Update="Views\ModelViews\ItemView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\SelectorViews\CopyPasteView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="Views\SelectorViews\SelectorView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

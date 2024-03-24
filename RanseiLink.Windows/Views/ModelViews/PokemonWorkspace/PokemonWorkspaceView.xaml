@@ -38,7 +38,12 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <local:PokemonMiniView Margin="0,0,0,5" Grid.Row="0" Grid.Column="1" IsEnabled="False" DataContext="{Binding SelectedMiniVm}" />
+        <DockPanel Margin="0,0,0,5" Grid.Row="0" Grid.Column="1">
+            <local:CopyPasteView DataContext="{Binding PokemonViewModel.CopyPasteVm}"
+                                 DockPanel.Dock="Right" Margin="5,0,0,0"/>
+            <local:PokemonMiniView  IsEnabled="False" DataContext="{Binding SelectedMiniVm}" />
+        </DockPanel>
+        
 
         <ScrollViewer Grid.Row="1" Grid.Column="1">
             <local:PokemonView DataContext="{Binding PokemonViewModel}"/>

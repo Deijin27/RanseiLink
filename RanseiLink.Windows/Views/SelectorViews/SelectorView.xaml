@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              d:DataContext="{d:DesignInstance vm:SelectorViewModel}"
+             xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -14,12 +15,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <DockPanel Margin="10,0,10,0">
-            <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14f;" Text="Paste Data"
-                                 Command="{Binding PasteCommand}"
-                                 Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVisibility}}"/>
-            <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14d;" Text="Copy Data" Margin="5,0"
-                                 Command="{Binding CopyCommand}"
-                                 Visibility="{Binding CopyPasteVisible, Converter={StaticResource Converter.BoolToVisibility}}"/>
+            <local:CopyPasteView DockPanel.Dock="Right" 
+                     DataContext="{Binding CopyPasteVm}" 
+                     Visibility="{Binding DataContext.CopyPasteVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Converter.BoolToVisibility}}"
+                     Margin="5,0,0,0"/>
             <ComboBox Grid.Row="0" Height="20" 
                       ItemsSource="{Binding DisplayItems}" 
                       SelectedValue="{Binding Selected, Mode=TwoWay}"

@@ -41,6 +41,23 @@
                 <controls:NumberBox Margin="5" Value="{Binding SelectedAnimation}" Max="84"/>
             </DockPanel>
         </GroupBox>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <local:BuildingMiniView IsEnabled="False" Margin="2" DataContext="{Binding SelectedItem}"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="0"
+                VerticalAlignment="Center" HorizontalAlignment="Right" 
+                Margin="0,0,8,0" Height="15">
+                <TextBlock FontSize="10" Text="{Binding SelectedItem.Id, StringFormat='ID: {0} | '}" d:Text="ID: 200 | "/>
+                <TextBlock FontSize="10" Text="{Binding SelectedItem.KingdomName, StringFormat='Kingdom: {0}'}" d:Text="Kingdom: Dragnor" Margin="2,0,0,0"/>
+            </StackPanel>
+            <local:CopyPasteView Grid.Column="1" Grid.Row="1" Margin="0,5,0,0" DataContext="{Binding CopyPasteVm}"/>
+        </Grid>
         <ScrollViewer>
             <WrapPanel>
                 <local:BuildingView DataContext="{Binding SelectedItem}"/>

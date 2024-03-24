@@ -28,9 +28,11 @@ public class PokemonViewModel : ViewModelBase
         IOverrideDataProvider spriteProvider, 
         SpriteItemViewModel.Factory spriteItemVmFactory, 
         IAsyncDialogService dialogService, 
-        IPokemonAnimationService animationService)
+        IPokemonAnimationService animationService,
+        CopyPasteViewModel copyPasteVm)
     {
         _animationService = animationService;
+        CopyPasteVm = copyPasteVm;
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
@@ -52,12 +54,15 @@ public class PokemonViewModel : ViewModelBase
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
         RevertAnimationCommand = new RelayCommand(RevertAnimation, () => IsAnimationOverwritten);
+
+        CopyPasteVm.ModelPasted += (_, __) => SetModel(_id, _model);
     }
 
     public void SetModel(PokemonId id, Pokemon model)
     {
         _model = model;
         _id = id;
+        CopyPasteVm.Model = model;
         Evolutions.Clear();
         for (int i = 0; i < _model.Evolutions.Count; i++)
         {
@@ -455,4 +460,6 @@ public class PokemonViewModel : ViewModelBase
     }
 
     public bool IsAnimationOverwritten => _animationService.IsAnimationOverwritten(_id);
+
+    public CopyPasteViewModel CopyPasteVm { get; }
 }

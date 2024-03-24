@@ -11,7 +11,9 @@ public class BuildingViewModel : ViewModelBase
     private readonly BuildingWorkspaceViewModel _parent;
     private readonly IKingdomService _kingdomService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
-    private Building _model = new();
+    private readonly Building _model;
+
+    public Building Model => _model;
 
     public BuildingViewModel(ScenarioBuildingViewModel sbvm, BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, BuildingId id, Building model)
     {

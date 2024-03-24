@@ -8,15 +8,14 @@ public interface ISelectorViewModelFactory
     SelectorViewModel Create(IModelService service, object nestedViewModel, Action<int> onSelectedChanged, bool scrollEnabled = true);
 }
 
-public class SelectorViewModelFactory(IClipboardService clipboardService, IAsyncDialogService dialogService) : ISelectorViewModelFactory
+public class SelectorViewModelFactory(CopyPasteViewModel copyPasteVm) : ISelectorViewModelFactory
 {
     public SelectorViewModel Create(IModelService service, object nestedViewModel, Action<int> onSelectedChanged, bool scrollEnabled = true)
     {
         if (scrollEnabled)
         {
             return new SelectorViewModel(
-                dialogService,
-                clipboardService,
+                copyPasteVm,
                 service,
                 service.GetComboBoxItemsExceptDefault(),
                 nestedViewModel,
@@ -27,8 +26,7 @@ public class SelectorViewModelFactory(IClipboardService clipboardService, IAsync
         else
         {
             return new SelectorViewModelWithoutScroll(
-                dialogService,
-                clipboardService,
+                copyPasteVm,
                 service,
                 service.GetComboBoxItemsExceptDefault(),
                 nestedViewModel,
@@ -43,8 +41,7 @@ public class SelectorViewModelFactory(IClipboardService clipboardService, IAsync
         if (scrollEnabled)
         {
             return new SelectorViewModel(
-                dialogService,
-                clipboardService,
+                copyPasteVm,
                 service,
                 displayItems,
                 nestedViewModel,
@@ -55,8 +52,7 @@ public class SelectorViewModelFactory(IClipboardService clipboardService, IAsync
         else
         {
             return new SelectorViewModelWithoutScroll(
-                dialogService,
-                clipboardService,
+                copyPasteVm,
                 service,
                 displayItems,
                 nestedViewModel,

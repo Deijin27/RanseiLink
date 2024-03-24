@@ -29,6 +29,8 @@ public class WpfServiceModule : IModule
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
         builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
 
+        builder.Register<CopyPasteViewModel>(Reuse.Transient);
+
 
         builder.Register<EditorModule, PokemonWorkspaceModule>();
         builder.Register<EditorModule, AbilitySelectorEditorModule>();
