@@ -17,7 +17,7 @@ public class BaseWarriorViewModel : ViewModelBase
     private WarriorNameTable _nameTable;
     private WarriorId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
-    public BaseWarriorViewModel(IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
+    public BaseWarriorViewModel(CopyPasteViewModel copyPasteVm, IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
         IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IAsyncDialogService dialogService)
     {
         _model = new BaseWarrior();
@@ -28,7 +28,7 @@ public class BaseWarriorViewModel : ViewModelBase
         _spriteItemVmFactory = spriteItemVmFactory;
 
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
-        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(BaseWarriorSelectorEditorModule.Id, id));
+        JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorWorkspaceModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
         JumpToSpeakerMessagesCommand = new RelayCommand(() =>
         {
@@ -41,14 +41,19 @@ public class BaseWarriorViewModel : ViewModelBase
         BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
         PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
         SpeakerItems = EnumUtil.GetValues<SpeakerId>().Select(x => new SelectorComboBoxItem((int)x, ((int)x).ToString())).ToList();
+        CopyPasteVm = copyPasteVm;
+        CopyPasteVm.ModelPasted += (_, __) => SetModel(_id, _model);
     }
 
     public void SetModel(WarriorId id, BaseWarrior model)
     {
         _id = id;
         _model = model;
+        CopyPasteVm.Model = model;
         RaiseAllPropertiesChanged();
     }
+
+    public CopyPasteViewModel CopyPasteVm { get; }
 
     public List<SelectorComboBoxItem> WarriorSkillItems { get; }
     public List<SelectorComboBoxItem> BaseWarriorItems { get; }

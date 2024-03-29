@@ -58,6 +58,10 @@
                 <views:PokemonWorkspaceView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:WarriorWorkspaceViewModel}">
+                <views:WarriorWorkspaceView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:MoveViewModel}">
                 <views:MoveView/>
             </DataTemplate>

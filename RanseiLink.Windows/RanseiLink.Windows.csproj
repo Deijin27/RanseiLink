@@ -109,7 +109,10 @@
     <Compile Update="Views\ModelViews\AnimationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\WarriorMiniView.xaml.cs">
+    <Compile Update="Views\ModelViews\WarriorWorkspace\WarriorWorkspaceView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ModelViews\WarriorWorkspace\WarriorMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\SwSimpleKingdomMiniView.xaml.cs">
@@ -136,7 +139,7 @@
     <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioPokemonView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\ModelViews\BaseWarriorView.xaml.cs">
+    <Compile Update="Views\ModelViews\WarriorWorkspace\BaseWarriorView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ModelViews\ItemView.xaml.cs">
@@ -308,7 +311,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\ModelViews\BaseWarriorView.xaml">
+    <Page Update="Views\ModelViews\WarriorWorkspace\BaseWarriorView.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

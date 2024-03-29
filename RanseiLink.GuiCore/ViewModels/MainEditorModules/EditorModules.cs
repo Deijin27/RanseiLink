@@ -49,6 +49,49 @@ public class PokemonWorkspaceModule : EditorModule, ISelectableModule
 
 }
 
+[EditorModule]
+public class WarriorWorkspaceModule : EditorModule, ISelectableModule
+{
+    public const string Id = "warrior_workspace";
+    private WarriorWorkspaceViewModel? _viewModel;
+    private IBaseWarriorService? _service;
+
+    public override string UniqueId => Id;
+    public override string ListName => "Warrior";
+
+    public override object? ViewModel => _viewModel;
+
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<IBaseWarriorService>();
+        var vm = modServices.Get<WarriorWorkspaceViewModel>();
+        _viewModel = vm;
+    }
+
+    public void Select(int selectId)
+    {
+        if (_viewModel != null)
+        {
+            _viewModel.SearchText = null;
+            _viewModel.SelectById(selectId);
+        }
+    }
+
+    public override void OnPatchingRom()
+    {
+        base.OnPatchingRom();
+        _service?.Save();
+    }
+
+    public override void Deactivate()
+    {
+        base.Deactivate();
+        _service?.Save();
+    }
+
+}
+
 //public class PokemonGridEditorModule : IEditorModule
 //{
 //    public const string Id = "pokemon_grid";
@@ -138,20 +181,6 @@ public class WarriorNameTableEditorModule : EditorModule
     }
     public override void Deactivate() => _service?.Save();
     public override void OnPatchingRom() => _service?.Save();
-}
-
-[EditorModule]
-public class BaseWarriorSelectorEditorModule : BaseSelectorEditorModule<IBaseWarriorService>
-{
-    public const string Id = "base_warrior_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Base Warrior";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<BaseWarriorViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((WarriorId)id, _service.Retrieve(id)));
-    }
 }
 
 [EditorModule]

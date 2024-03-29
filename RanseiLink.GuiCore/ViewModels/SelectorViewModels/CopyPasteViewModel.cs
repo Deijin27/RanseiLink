@@ -71,5 +71,7 @@ public class CopyPasteViewModel
             await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Could not Paste", "Failed to load data from clipboard", MessageBoxType.Error));
             return;
         }
+
+        ModelPasted?.Invoke(this, EventArgs.Empty);
     }
 }

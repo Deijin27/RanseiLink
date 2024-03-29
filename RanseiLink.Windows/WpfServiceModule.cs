@@ -33,12 +33,12 @@ public class WpfServiceModule : IModule
 
 
         builder.Register<EditorModule, PokemonWorkspaceModule>();
+        builder.Register<EditorModule, WarriorWorkspaceModule>();
         builder.Register<EditorModule, AbilitySelectorEditorModule>();
         builder.Register<EditorModule, WarriorSkillSelectorEditorModule>();
         builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
         builder.Register<EditorModule, MoveSelectorEditorModule>();
         builder.Register<EditorModule, WarriorNameTableEditorModule>();
-        builder.Register<EditorModule, BaseWarriorSelectorEditorModule>();
         builder.Register<EditorModule, MaxLinkSelectorEditorModule>();
         builder.Register<EditorModule, MaxLinkPokemonSelectorEditorModule>();
         builder.Register<EditorModule, ScenarioWarriorWorkspaceEditorModule>();
@@ -109,6 +109,7 @@ public class WpfModServiceModule : IModule
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
         builder.Register<BuildingWorkspaceViewModel>();
         builder.Register<PokemonWorkspaceViewModel>();
+        builder.Register<WarriorWorkspaceViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

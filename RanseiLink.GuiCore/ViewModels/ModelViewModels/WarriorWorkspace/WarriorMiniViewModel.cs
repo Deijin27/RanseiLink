@@ -48,4 +48,20 @@ public class WarriorMiniViewModel : ViewModelBase
     public object? Image => _spriteProvider.GetSprite(SpriteType.StlBushouS, _model.Sprite);
 
     public ICommand SelectCommand { get; }
+
+    public void NotifyPropertyChanged(string? name)
+    {
+        switch (name)
+        {
+            case nameof(Name):
+            case nameof(Type1):
+            case nameof(Image):
+                RaisePropertyChanged(name);
+                break;
+            case nameof(Type2):
+                RaisePropertyChanged(name);
+                RaisePropertyChanged(nameof(HasType2));
+                break;
+        }
+    }
 }
