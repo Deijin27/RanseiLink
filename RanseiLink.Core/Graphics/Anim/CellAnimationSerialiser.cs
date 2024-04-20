@@ -10,14 +10,14 @@ namespace RanseiLink.Core.Graphics;
 public enum RLAnimationFormat
 {
     OneImagePerCell,
-    OneImagePerBank
+    OneImagePerCluster
 }
 
 public static class CellAnimationSerialiser
 {
 
     /// <summary>
-    /// If format is <see cref="RLAnimationFormat.OneImagePerBank"/> then width/height are unnecessary
+    /// If format is <see cref="RLAnimationFormat.OneImagePerCluster"/> then width/height are unnecessary
     /// </summary>
     public static void ExportAnimationOnly(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, RLAnimationFormat fmt, string? background)
     {
@@ -262,9 +262,9 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         ExportNanr(nanr, res);
 
         // save cells
-        if (fmt == RLAnimationFormat.OneImagePerBank)
+        if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
-            ExportOneImagePerBank(ncer, ncgr, nclr, outputFolder, width, height, settings, dims, res);
+            ExportOneImagePerCluster(ncer, ncgr, nclr, outputFolder, width, height, settings, dims, res);
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
@@ -289,26 +289,26 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static void ExportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims, RLAnimationResource res)
+    private static void ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims, RLAnimationResource res)
     {
         if (width <= 0 || height <= 0)
         {
-            throw new Exception($"With format {RLAnimationFormat.OneImagePerBank} width and height must be specified");
+            throw new Exception($"With format {RLAnimationFormat.OneImagePerCluster} width and height must be specified");
         }
         var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
 
         for (int bankId = 0; bankId < ncer.CellBanks.Banks.Count; bankId++)
         {
-            // save bank image
+            // save cluster image
             var bankImage = images[bankId];
             var fileName = $"{bankId.ToString().PadLeft(4, '0')}.png";
             bankImage.SaveAsPng(Path.Combine(outputFolder, fileName));
             bankImage.Dispose();
 
-            // save bank data
+            // save cluster data
             var cellBank = ncer.CellBanks.Banks[bankId];
-            var bankData = new RLAnimationResource.CellBankInfo(bankId.ToString()) { File = fileName };
-            res.Cells.Add(bankData);
+            var bankData = new RLAnimationResource.ClusterInfo(bankId.ToString()) { File = fileName };
+            res.Clusters.Add(bankData);
 
             foreach (var cell in cellBank)
             {
@@ -343,8 +343,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
             // save bank data
             var cellBank = ncer.CellBanks.Banks[bankId];
-            var bankData = new RLAnimationResource.CellBankInfo(bankId.ToString());
-            res.Cells.Add(bankData);
+            var clusterData = new RLAnimationResource.ClusterInfo(bankId.ToString());
+            res.Clusters.Add(clusterData);
 
             for (int cellId = 0; cellId < cellBank.Count; cellId++)
             {
@@ -385,7 +385,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Palette = cell.IndexPalette,
                     DoubleSize = cell.DoubleSize,
                 };
-                bankData.Cells.Add(cellData);
+                clusterData.Cells.Add(cellData);
             }
         }
     }
@@ -407,7 +407,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         var nameToCellBankId = new Dictionary<string, ushort>();
 
         var fmt = res.Format;
-        if (fmt == RLAnimationFormat.OneImagePerBank)
+        if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
             ImportOneImagePerBank(ncer, ncgr, nclr, settings, dims, res, dir, nameToCellBankId);
         }
@@ -454,9 +454,9 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
     private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
         var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
-        for (int i = 0; i < res.Cells.Count; i++)
+        for (int i = 0; i < res.Clusters.Count; i++)
         {
-            var cellBankInfo = res.Cells[i];
+            var cellBankInfo = res.Clusters[i];
             List<Image<Rgba32>> images = [];
             imageGroups.Add(images);
             var bank = new CellBank();
@@ -519,12 +519,12 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
     private static void ImportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToCellBankId)
     {
-        var fmt = RLAnimationFormat.OneImagePerBank;
+        var fmt = RLAnimationFormat.OneImagePerCluster;
         List<Image<Rgba32>> images = [];
 
-        for (int i = 0; i < res.Cells.Count; i++)
+        for (int i = 0; i < res.Clusters.Count; i++)
         {
-            var cellBankInfo = res.Cells[i];
+            var cellBankInfo = res.Clusters[i];
             var bank = new CellBank();
             // store the mapping of name to bank to use later when loading animations
             nameToCellBankId.Add(cellBankInfo.Name, (ushort)i);

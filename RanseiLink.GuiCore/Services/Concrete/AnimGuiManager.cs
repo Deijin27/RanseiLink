@@ -17,7 +17,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
         if (info.ExportFormat == null)
         {
             formats = Enum.GetValues<RLAnimationFormat>();
-            format = RLAnimationFormat.OneImagePerBank;
+            format = RLAnimationFormat.OneImagePerCluster;
         }
         else
         {

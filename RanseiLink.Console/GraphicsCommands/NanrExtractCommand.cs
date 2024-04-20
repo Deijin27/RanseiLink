@@ -19,7 +19,7 @@ public class NanrExtractCommand : ICommand
     public PositionRelativeTo PositionRelativeTo { get; set; } = PositionRelativeTo.TopLeft;
 
     [CommandOption("format", 'f', Description = "Serialisation format")]
-    public RLAnimationFormat Format { get; set; } = RLAnimationFormat.OneImagePerBank;
+    public RLAnimationFormat Format { get; set; } = RLAnimationFormat.OneImagePerCluster;
 
     [CommandOption("width", 'w', Description = "If no background is specified, the width the images should be")]
     public int Width { get; set; }

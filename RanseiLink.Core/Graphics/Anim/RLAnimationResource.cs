@@ -8,14 +8,14 @@ public class RLAnimationResource
 {
     public string? Background { get; set; }
     public RLAnimationFormat Format { get; set; }
-    public List<CellBankInfo> Cells { get; }
+    public List<ClusterInfo> Clusters { get; }
     public List<Anim> Animations { get; }
 
     public RLAnimationResource(RLAnimationFormat format, string? background = null)
     {
         Format = format;
         Background = background;
-        Cells = [];
+        Clusters = [];
         Animations = [];
     }
 
@@ -25,13 +25,13 @@ public class RLAnimationResource
         Background = root.Attribute("background")?.Value;
         var cellCollection = root.ElementRequired("cell_collection");
         Format = cellCollection.AttributeEnum<RLAnimationFormat>("format");
-        Cells = cellCollection.Elements("image").Select(x => new CellBankInfo(x)).ToList();
+        Clusters = cellCollection.Elements("cluster").Select(x => new ClusterInfo(x)).ToList();
         Animations = root.ElementRequired("animation_collection").Elements("animation").Select(x => new Anim(x)).ToList();
     }
 
     public XDocument Serialise()
     {
-        var cellElem = new XElement("cell_collection", Cells.Select(x => x.Serialise()));
+        var cellElem = new XElement("cell_collection", Clusters.Select(x => x.Serialise()));
         cellElem.Add(new XAttribute("format", Format));
         var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
 
@@ -88,14 +88,14 @@ public class RLAnimationResource
 
         public AnimFrame(XElement frameElem)
         {
-            Image = frameElem.AttributeStringNonEmpty("image");
+            Image = frameElem.AttributeStringNonEmpty("cluster");
             Duration = frameElem.AttributeInt("duration");
         }
 
         public XElement Serialise()
         {
             return new XElement("frame",
-                new XAttribute("image", Image),
+                new XAttribute("cluster", Image),
                 new XAttribute("duration", Duration)
                 );
         }
@@ -179,17 +179,17 @@ public class RLAnimationResource
         }
     }
 
-    public class CellBankInfo
+    public class ClusterInfo
     {
         public List<CellInfo> Cells { get; }
         public string Name { get; }
         public string? File { get; set; }
 
-        public CellBankInfo(XElement groupElem)
+        public ClusterInfo(XElement groupElem)
         {
             Name = groupElem.AttributeStringNonEmpty("name");
             File = groupElem.Attribute("file")?.Value;
-            Cells = new();
+            Cells = [];
             foreach (var cellElement in groupElem.Elements("cell"))
             {
                 var cell = new CellInfo(cellElement);
@@ -197,24 +197,24 @@ public class RLAnimationResource
             }
         }
 
-        public CellBankInfo(string name)
+        public ClusterInfo(string name)
         {
-            Cells = new();
+            Cells = [];
             Name = name;
         }
 
         public XElement Serialise()
         {
-            var groupElem = new XElement("image", new XAttribute("name", Name));
+            var clusterElem = new XElement("cluster", new XAttribute("name", Name));
             if (!string.IsNullOrEmpty(File))
             {
-                groupElem.Add(new XAttribute("file", File));
+                clusterElem.Add(new XAttribute("file", File));
             }
             foreach (var cell in Cells)
             {
-                groupElem.Add(cell.Serialise());
+                clusterElem.Add(cell.Serialise());
             }
-            return groupElem;
+            return clusterElem;
         }
     }
 }
