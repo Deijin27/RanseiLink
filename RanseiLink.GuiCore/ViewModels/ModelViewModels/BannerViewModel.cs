@@ -34,49 +34,49 @@ public class BannerViewModel : ViewModelBase
     public string AllTitles
     {
         get => _allTitles;
-        set => RaiseAndSetIfChanged(ref _allTitles, value ?? string.Empty);
+        set => Set(ref _allTitles, value ?? string.Empty);
     }
 
     public string JapaneseTitle
     {
         get => _bannerInfo.JapaneseTitle;
-        set => RaiseAndSetIfChanged(JapaneseTitle, value, v => _bannerInfo.JapaneseTitle = value);
+        set => Set(JapaneseTitle, value, v => _bannerInfo.JapaneseTitle = value);
     }
 
     public string EnglishTitle
     {
         get => _bannerInfo.EnglishTitle;
-        set => RaiseAndSetIfChanged(EnglishTitle, value, v => _bannerInfo.EnglishTitle = value);
+        set => Set(EnglishTitle, value, v => _bannerInfo.EnglishTitle = value);
     }
 
     public string FrenchTitle
     {
         get => _bannerInfo.FrenchTitle;
-        set => RaiseAndSetIfChanged(FrenchTitle, value, v => _bannerInfo.FrenchTitle = value);
+        set => Set(FrenchTitle, value, v => _bannerInfo.FrenchTitle = value);
     }
 
     public string GermanTitle
     {
         get => _bannerInfo.GermanTitle;
-        set => RaiseAndSetIfChanged(GermanTitle, value, v => _bannerInfo.GermanTitle = value);
+        set => Set(GermanTitle, value, v => _bannerInfo.GermanTitle = value);
     }
 
     public string ItalianTitle
     {
         get => _bannerInfo.ItalianTitle;
-        set => RaiseAndSetIfChanged(ItalianTitle, value, v => _bannerInfo.ItalianTitle = value);
+        set => Set(ItalianTitle, value, v => _bannerInfo.ItalianTitle = value);
     }
 
     public string SpanishTitle
     {
         get => _bannerInfo.SpanishTitle;
-        set => RaiseAndSetIfChanged(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
+        set => Set(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
     }
 
     public object? DisplayImage
     {
         get => _displayImage;
-        private set => RaiseAndSetIfChanged(ref _displayImage, value);
+        private set => Set(ref _displayImage, value);
     }
 
     private void UpdateDisplayImage()

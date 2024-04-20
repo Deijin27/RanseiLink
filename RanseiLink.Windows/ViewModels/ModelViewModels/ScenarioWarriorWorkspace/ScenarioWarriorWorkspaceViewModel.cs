@@ -290,24 +290,24 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public bool ShowArmy
     {
         get => _showArmy;
-        set => RaiseAndSetIfChanged(ref _showArmy, value);
+        set => Set(ref _showArmy, value);
     }
     public bool ShowFree
     {
         get => _showFree;
-        set => RaiseAndSetIfChanged(ref _showFree, value);
+        set => Set(ref _showFree, value);
     }
     public bool ShowUnassigned
     {
         get => _showUnassigned;
-        set => RaiseAndSetIfChanged(ref _showUnassigned, value);
+        set => Set(ref _showUnassigned, value);
     }
     public object SelectedItem
     {
         get => _selectedItem;
         set 
         {
-            if (RaiseAndSetIfChanged(ref _selectedItem, value))
+            if (Set(ref _selectedItem, value))
             {
                 if (value is SwMiniViewModel spVm)
                 {

@@ -44,7 +44,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
         get => _isSelected;
         set
         {
-            if (RaiseAndSetIfChanged(ref _isSelected, value) && value)
+            if (Set(ref _isSelected, value) && value)
             {
                 UpdateNested();
             }
@@ -56,7 +56,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
         get => _warrior.GetScenarioPokemon(_slot);
         set
         {
-            if (RaiseAndSetIfChanged(ScenarioPokemonId, value, v => _warrior.SetScenarioPokemon(_slot, value)))
+            if (Set(ScenarioPokemonId, value, v => _warrior.SetScenarioPokemon(_slot, value)))
             {
                 UpdateNested();
                 UpdatePokemonImage();
@@ -80,7 +80,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
     public object NestedVm
     {
         get => _nestedVm;
-        set => RaiseAndSetIfChanged(ref _nestedVm, value);
+        set => Set(ref _nestedVm, value);
     }
 
     public object PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
@@ -95,6 +95,6 @@ public class SwPokemonSlotViewModel : ViewModelBase
         {
             _pokemonImageId = (int)_spService.Retrieve(ScenarioPokemonId).Pokemon;
         }
-        RaisePropertyChanged(nameof(PokemonImage));
+        Notify(nameof(PokemonImage));
     }
 }

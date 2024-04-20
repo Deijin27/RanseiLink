@@ -18,7 +18,7 @@ public class WarriorNameTableItem : ViewModelBase
     public string Name
     {
         get => _table.GetEntry(Index);
-        set => RaiseAndSetIfChanged(Name, value, v => _table.SetEntry(Index, v));
+        set => Set(Name, value, v => _table.SetEntry(Index, v));
     }
 }
 public class WarriorNameTableViewModel : ViewModelBase
@@ -49,7 +49,7 @@ public class WarriorNameTableViewModel : ViewModelBase
         get => _searchTerm;
         set
         {
-            if (RaiseAndSetIfChanged(ref _searchTerm, value))
+            if (Set(ref _searchTerm, value))
             {
                 Search();
             }

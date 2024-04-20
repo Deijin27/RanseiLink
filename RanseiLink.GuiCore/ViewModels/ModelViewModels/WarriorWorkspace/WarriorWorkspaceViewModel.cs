@@ -65,7 +65,7 @@ public class WarriorWorkspaceViewModel : ViewModelBase
         get => _searchText;
         set
         {
-            if (RaiseAndSetIfChanged(ref _searchText, value))
+            if (Set(ref _searchText, value))
             {
                 Search();
             }
@@ -128,7 +128,7 @@ public class WarriorWorkspaceViewModel : ViewModelBase
     public WarriorMiniViewModel? SelectedMiniVm
     {
         get => _selectedMiniVm;
-        set => RaiseAndSetIfChanged(ref _selectedMiniVm, value);
+        set => Set(ref _selectedMiniVm, value);
     }
 
     public BaseWarriorViewModel WarriorViewModel { get; }

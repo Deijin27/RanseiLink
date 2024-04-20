@@ -69,31 +69,31 @@ public class MapGimmickViewModel : ViewModelBase
     public GimmickId Gimmick
     {
         get => GimmickItem.Gimmick;
-        set => RaiseAndSetIfChanged(Gimmick, value, v => GimmickItem.Gimmick = v);
+        set => Set(Gimmick, value, v => GimmickItem.Gimmick = v);
     }
 
     public byte X
     {
         get => GimmickItem.Position.X;
-        set => RaiseAndSetIfChanged(X, value, v => GimmickItem.Position.X = v);
+        set => Set(X, value, v => GimmickItem.Position.X = v);
     }
 
     public byte Y
     {
         get => GimmickItem.Position.Y;
-        set => RaiseAndSetIfChanged(Y, value, v => GimmickItem.Position.Y = v);
+        set => Set(Y, value, v => GimmickItem.Position.Y = v);
     }
 
     public Orientation Orientation
     {
         get => GimmickItem.Orientation;
-        set => RaiseAndSetIfChanged(Orientation, value, v => GimmickItem.Orientation = value);
+        set => Set(Orientation, value, v => GimmickItem.Orientation = value);
     }
 
     public int UnknownValue
     {
         get => GimmickItem.UnknownValue;
-        set => RaiseAndSetIfChanged(UnknownValue, value, v => GimmickItem.UnknownValue = value);
+        set => Set(UnknownValue, value, v => GimmickItem.UnknownValue = value);
     }
 
     public string Params
@@ -121,7 +121,7 @@ public class MapGimmickViewModel : ViewModelBase
                 GimmickItem.UnknownList.Clear();
                 GimmickItem.UnknownList.AddRange(newList);
             }
-            RaisePropertyChanged();
+            Notify();
         }
     }
 

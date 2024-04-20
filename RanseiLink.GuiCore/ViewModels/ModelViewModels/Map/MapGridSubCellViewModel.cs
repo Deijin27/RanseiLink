@@ -19,9 +19,9 @@ public class MapGridSubCellViewModel : ViewModelBase
         get => Parent.TerrainEntry.SubCellZValues[_entryId];
         set
         {
-            if (RaiseAndSetIfChanged(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value))
+            if (Set(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value))
             {
-                RaisePropertyChanged(nameof(Info));
+                Notify(nameof(Info));
             }
         }
     }

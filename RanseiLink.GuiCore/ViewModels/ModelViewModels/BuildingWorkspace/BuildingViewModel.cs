@@ -32,7 +32,7 @@ public class BuildingViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+        set => Set(_model.Name, value, v => _model.Name = v);
     }
 
     public List<SelectorComboBoxItem> BuildingItems => _parent.BuildingItems;
@@ -44,9 +44,9 @@ public class BuildingViewModel : ViewModelBase
         get => (int)_model.Kingdom;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
+            if (Set(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
             {
-                RaisePropertyChanged(nameof(KingdomName));
+                Notify(nameof(KingdomName));
             }
         }
     }
@@ -56,67 +56,67 @@ public class BuildingViewModel : ViewModelBase
     public int Building1
     {
         get => (int)_model.Building1;
-        set => RaiseAndSetIfChanged(_model.Building1, (BuildingId)value, v => _model.Building1 = v);
+        set => Set(_model.Building1, (BuildingId)value, v => _model.Building1 = v);
     }
 
     public int Building2
     {
         get => (int)_model.Building2;
-        set => RaiseAndSetIfChanged(_model.Building2, (BuildingId)value, v => _model.Building2 = v);
+        set => Set(_model.Building2, (BuildingId)value, v => _model.Building2 = v);
     }
 
     public int Building3
     {
         get => (int)_model.Building3;
-        set => RaiseAndSetIfChanged(_model.Building3, (BuildingId)value, v => _model.Building3 = v);
+        set => Set(_model.Building3, (BuildingId)value, v => _model.Building3 = v);
     }
 
     public int Building4
     {
         get => (int)_model.Building4;
-        set => RaiseAndSetIfChanged(_model.Building4, (BuildingId)value, v => _model.Building4 = v);
+        set => Set(_model.Building4, (BuildingId)value, v => _model.Building4 = v);
     }
 
     public int Building5
     {
         get => (int)_model.Building5;
-        set => RaiseAndSetIfChanged(_model.Building5, (BuildingId)value, v => _model.Building5 = v);
+        set => Set(_model.Building5, (BuildingId)value, v => _model.Building5 = v);
     }
 
     public int Building6
     {
         get => (int)_model.Building6;
-        set => RaiseAndSetIfChanged(_model.Building6, (BuildingId)value, v => _model.Building6 = v);
+        set => Set(_model.Building6, (BuildingId)value, v => _model.Building6 = v);
     }
 
     public int Building7
     {
         get => (int)_model.Building7;
-        set => RaiseAndSetIfChanged(_model.Building7, (BuildingId)value, v => _model.Building7 = v);
+        set => Set(_model.Building7, (BuildingId)value, v => _model.Building7 = v);
     }
 
     public int Building8
     {
         get => (int)_model.Building8;
-        set => RaiseAndSetIfChanged(_model.Building8, (BuildingId)value, v => _model.Building8 = v);
+        set => Set(_model.Building8, (BuildingId)value, v => _model.Building8 = v);
     }
 
     public BattleConfigId BattleConfig1
     {
         get => _model.BattleConfig1;
-        set => RaiseAndSetIfChanged(_model.BattleConfig1, value, v => _model.BattleConfig1 = v);
+        set => Set(_model.BattleConfig1, value, v => _model.BattleConfig1 = v);
     }
 
     public BattleConfigId BattleConfig2
     {
         get => _model.BattleConfig2;
-        set => RaiseAndSetIfChanged(_model.BattleConfig2, value, v => _model.BattleConfig2 = v);
+        set => Set(_model.BattleConfig2, value, v => _model.BattleConfig2 = v);
     }
 
     public BattleConfigId BattleConfig3
     {
         get => _model.BattleConfig3;
-        set => RaiseAndSetIfChanged(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
+        set => Set(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
     }
 
     public int Sprite1
@@ -124,9 +124,9 @@ public class BuildingViewModel : ViewModelBase
         get => _model.Sprite1;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Sprite1, value, v => _model.Sprite1 = v))
+            if (Set(_model.Sprite1, value, v => _model.Sprite1 = v))
             {
-                RaisePropertyChanged(nameof(Sprite1Image));
+                Notify(nameof(Sprite1Image));
             }
         }
     }
@@ -138,9 +138,9 @@ public class BuildingViewModel : ViewModelBase
         get => _model.Sprite2;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Sprite2, value, v => _model.Sprite2 = v))
+            if (Set(_model.Sprite2, value, v => _model.Sprite2 = v))
             {
-                RaisePropertyChanged(nameof(Sprite2Image)); 
+                Notify(nameof(Sprite2Image)); 
             }
         }
     }
@@ -152,9 +152,9 @@ public class BuildingViewModel : ViewModelBase
         get => _model.Sprite3;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Sprite3, value, v => _model.Sprite3 = v))
+            if (Set(_model.Sprite3, value, v => _model.Sprite3 = v))
             {
-                RaisePropertyChanged(nameof(Sprite3Image));
+                Notify(nameof(Sprite3Image));
             }
         }
     }
@@ -164,7 +164,7 @@ public class BuildingViewModel : ViewModelBase
     public BuildingFunctionId Function
     {
         get => _model.Function;
-        set => RaiseAndSetIfChanged(_model.Function, value, v => _model.Function = v);
+        set => Set(_model.Function, value, v => _model.Function = v);
     }
 
     public ICommand JumpToBattleConfigCommand => _parent.JumpToBattleConfigCommand;

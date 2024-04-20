@@ -15,7 +15,7 @@ public class MoveRangeViewModel : ViewModelBase
     public void SetModel(MoveRange model)
     {
         _model = model;
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     #region Row0

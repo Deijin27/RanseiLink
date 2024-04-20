@@ -38,9 +38,9 @@ public class PopulateDefaultSpriteViewModel : ViewModelBase, IModalDialogViewMod
         get => _file;
         set
         {
-            if (RaiseAndSetIfChanged(ref _file, value))
+            if (Set(ref _file, value))
             {
-                RaisePropertyChanged(nameof(OkEnabled));
+                Notify(nameof(OkEnabled));
             }
         }
     }

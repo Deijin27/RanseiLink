@@ -72,13 +72,13 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _cachedMsgBlockService.RebuildCache();
         var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
         SetCurrentModule(module, true);
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     public object? CurrentVm
     {
         get => _currentVm;
-        private set => RaiseAndSetIfChanged(ref _currentVm, value);
+        private set => Set(ref _currentVm, value);
     }
 
     public string? CurrentModuleId
@@ -99,7 +99,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         get => _selectedModuleItem;
         set
         {
-            if (RaiseAndSetIfChanged(ref _selectedModuleItem, value))
+            if (Set(ref _selectedModuleItem, value))
             {
                 SetCurrentModule(value?.ModuleId);
                 _forwardModuleStack.Clear();
@@ -113,7 +113,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     public ModInfo? Mod
     {
         get => _mod;
-        private set => RaiseAndSetIfChanged(ref _mod, value);
+        private set => Set(ref _mod, value);
     }
     public ObservableCollection<EditorModuleListItem> ListItems { get; } = new();
     private Dictionary<string, EditorModule> UninitialisedModules { get; } = new();
@@ -196,7 +196,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _currentModule?.OnPageOpening();
 
         _selectedModuleItem = ListItems.FirstOrDefault(x => x.ModuleId == moduleId);
-        RaisePropertyChanged(nameof(SelectedModuleItem));
+        Notify(nameof(SelectedModuleItem));
     }
 
     #region Module Initialisation
@@ -341,7 +341,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     public bool PluginPopupOpen
     {
         get => _pluginPopupOpen;
-        set => RaiseAndSetIfChanged(ref _pluginPopupOpen, value);
+        set => Set(ref _pluginPopupOpen, value);
     }
 
     private async void RunPlugin(PluginInfo chosen)

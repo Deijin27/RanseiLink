@@ -18,13 +18,13 @@ public class EventSpeakerViewModel : ViewModelBase
     public void SetModel(EventSpeaker model)
     {
         _model = model;
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     public string Name
     {
         get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+        set => Set(_model.Name, value, v => _model.Name = v);
     }
 
     public int Sprite
@@ -32,9 +32,9 @@ public class EventSpeakerViewModel : ViewModelBase
         get => _model.Sprite;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Sprite, value, v => _model.Sprite = v))
+            if (Set(_model.Sprite, value, v => _model.Sprite = v))
             {
-                RaisePropertyChanged(nameof(SpritePath));
+                Notify(nameof(SpritePath));
             }
         }
     }

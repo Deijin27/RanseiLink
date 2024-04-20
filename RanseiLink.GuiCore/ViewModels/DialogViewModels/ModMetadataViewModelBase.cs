@@ -22,26 +22,26 @@ public class ModMetadataViewModelBase : ViewModelBase
     public string? Name
     {
         get => Metadata.Name;
-        set => RaiseAndSetIfChanged(Metadata.Name, value, v => Metadata.Name = v);
+        set => Set(Metadata.Name, value, v => Metadata.Name = v);
     }
 
     public string? Author
     {
         get => Metadata.Author;
-        set => RaiseAndSetIfChanged(Metadata.Author, value, v => Metadata.Author = v);
+        set => Set(Metadata.Author, value, v => Metadata.Author = v);
     }
 
     public string? Version
     {
         get => Metadata.Version;
-        set => RaiseAndSetIfChanged(Metadata.Version, value, v => Metadata.Version = v);
+        set => Set(Metadata.Version, value, v => Metadata.Version = v);
     }
 
     private string _tagToAdd = "";
     public string TagToAdd
     {
         get => _tagToAdd;
-        set => RaiseAndSetIfChanged(ref _tagToAdd, value);
+        set => Set(ref _tagToAdd, value);
     }
 
     public ICommand AddTagCommand { get; }

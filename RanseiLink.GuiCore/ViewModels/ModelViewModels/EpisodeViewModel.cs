@@ -42,7 +42,7 @@ public class EpisodeViewModel : ViewModelBase
             UnlockedKingdomItems.Add(new UnlockedKingdomItem(model, kingdom, kingdomName));
         }
 
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     public int Id { get; private set; }
@@ -50,7 +50,7 @@ public class EpisodeViewModel : ViewModelBase
     public int Order
     {
         get => _model.Order;
-        set => RaiseAndSetIfChanged(_model.Order, value, v => _model.Order = value);
+        set => Set(_model.Order, value, v => _model.Order = value);
     }
 
     public List<ScenarioId> ScenarioItems { get; } = EnumUtil.GetValues<ScenarioId>().ToList();
@@ -58,7 +58,7 @@ public class EpisodeViewModel : ViewModelBase
     public ScenarioId Scenario
     {
         get => _model.Scenario;
-        set => RaiseAndSetIfChanged(_model.Scenario, value, v => _model.Scenario = v);
+        set => Set(_model.Scenario, value, v => _model.Scenario = v);
     }
 
     public List<SelectorComboBoxItem> UnlockConditionItems { get; }
@@ -66,7 +66,7 @@ public class EpisodeViewModel : ViewModelBase
     public int UnlockCondition
     {
         get => (int)_model.UnlockCondition;
-        set => RaiseAndSetIfChanged(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
+        set => Set(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
     }
 
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
@@ -74,13 +74,13 @@ public class EpisodeViewModel : ViewModelBase
     public EpisodeClearConditionId ClearCondition
     {
         get => _model.ClearCondition;
-        set => RaiseAndSetIfChanged(_model.ClearCondition, value, v => _model.ClearCondition = v);
+        set => Set(_model.ClearCondition, value, v => _model.ClearCondition = v);
     }
 
     public int Difficulty
     {
         get => _model.Difficulty;
-        set => RaiseAndSetIfChanged(_model.Difficulty, value, v => _model.Difficulty = value);
+        set => Set(_model.Difficulty, value, v => _model.Difficulty = value);
     }
 
     public string Name
@@ -114,7 +114,7 @@ public class EpisodeViewModel : ViewModelBase
         public bool IsStartKingdom
         {
             get => _model.IsStartKingdom(_kingdom);
-            set => RaiseAndSetIfChanged(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
+            set => Set(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
         }
     }
 
@@ -134,7 +134,7 @@ public class EpisodeViewModel : ViewModelBase
         public bool IsUnlockedKingdom
         {
             get => _model.IsUnlockedKingdom(_kingdom);
-            set => RaiseAndSetIfChanged(IsUnlockedKingdom, value, v => _model.SetIsUnlockedKingdom(_kingdom, v));
+            set => Set(IsUnlockedKingdom, value, v => _model.SetIsUnlockedKingdom(_kingdom, v));
         }
     }
 

@@ -74,7 +74,7 @@ public class PokemonViewModel : ViewModelBase
         {
             HabitatItems.Add(new HabitatItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
         }
-        RaiseAllPropertiesChanged();
+        NotifyAll();
         RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
 
@@ -90,130 +90,130 @@ public class PokemonViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+        set => Set(_model.Name, value, v => _model.Name = v);
     }
 
     public TypeId Type1
     {
         get => _model.Type1;
-        set => RaiseAndSetIfChanged(_model.Type1, value, v => _model.Type1 = v);
+        set => Set(_model.Type1, value, v => _model.Type1 = v);
     }
     public TypeId Type2
     {
         get => _model.Type2;
-        set => RaiseAndSetIfChanged(_model.Type2, value, v => _model.Type2 = v);
+        set => Set(_model.Type2, value, v => _model.Type2 = v);
     }
 
     public int Move
     {
         get => (int)_model.Move;
-        set => RaiseAndSetIfChanged(_model.Move, (MoveId)value, v => _model.Move = v);
+        set => Set(_model.Move, (MoveId)value, v => _model.Move = v);
     }
 
     public int Ability1
     {
         get => (int)_model.Ability1;
-        set => RaiseAndSetIfChanged(_model.Ability1, (AbilityId)value, v => _model.Ability1 = v);
+        set => Set(_model.Ability1, (AbilityId)value, v => _model.Ability1 = v);
     }
     public int Ability2
     {
         get => (int)_model.Ability2;
-        set => RaiseAndSetIfChanged(_model.Ability2, (AbilityId)value, v => _model.Ability2 = v);
+        set => Set(_model.Ability2, (AbilityId)value, v => _model.Ability2 = v);
     }
     public int Ability3
     {
         get => (int)_model.Ability3;
-        set => RaiseAndSetIfChanged(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
+        set => Set(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
     public int Hp
     {
         get => _model.Hp;
-        set => RaiseAndSetIfChanged(_model.Hp, value, v => _model.Hp = v);
+        set => Set(_model.Hp, value, v => _model.Hp = v);
     }
 
     public int Atk
     {
         get => _model.Atk;
-        set => RaiseAndSetIfChanged(_model.Atk, value, v => _model.Atk = v);
+        set => Set(_model.Atk, value, v => _model.Atk = v);
     }
 
     public int Def
     {
         get => _model.Def;
-        set => RaiseAndSetIfChanged(_model.Def, value, v => _model.Def = v);
+        set => Set(_model.Def, value, v => _model.Def = v);
     }
 
     public int Spe
     {
         get => _model.Spe;
-        set => RaiseAndSetIfChanged(_model.Spe, value, v => _model.Spe = v);
+        set => Set(_model.Spe, value, v => _model.Spe = v);
     }
 
     public bool IsLegendary
     {
         get => _model.IsLegendary;
-        set => RaiseAndSetIfChanged(_model.IsLegendary, value, v => _model.IsLegendary = v);
+        set => Set(_model.IsLegendary, value, v => _model.IsLegendary = v);
     }
 
     public IdleMotionId IdleMotion
     {
         get => _model.IdleMotion;
-        set => RaiseAndSetIfChanged(_model.IdleMotion, value, v => _model.IdleMotion = v);
+        set => Set(_model.IdleMotion, value, v => _model.IdleMotion = v);
     }
 
     public int NameOrderIndex
     {
         get => _model.NameOrderIndex;
-        set => RaiseAndSetIfChanged(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
+        set => Set(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
     }
 
     public int NationalPokedexNumber
     {
         get => _model.NationalPokedexNumber;
-        set => RaiseAndSetIfChanged(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
+        set => Set(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
     }
 
     public int MovementRange
     {
         get => _model.MovementRange;
-        set => RaiseAndSetIfChanged(_model.MovementRange, value, v => _model.MovementRange = value);
+        set => Set(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
     public int CatchRate
     {
         get => _model.CatchRate;
-        set => RaiseAndSetIfChanged(_model.CatchRate, value, v => _model.CatchRate = v);
+        set => Set(_model.CatchRate, value, v => _model.CatchRate = v);
     }
 
     public int UnknownAnimationValue
     {
         get => _model.UnknownAnimationValue;
-        set => RaiseAndSetIfChanged(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
+        set => Set(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
     }
 
     public int BattleIntroSpriteOffset
     {
         get => _model.BattleIntroSpriteOffset;
-        set => RaiseAndSetIfChanged(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
+        set => Set(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
     }
 
     public int Weight
     {
         get => _model.Weight;
-        set => RaiseAndSetIfChanged(_model.Weight, value, v => _model.Weight = v);
+        set => Set(_model.Weight, value, v => _model.Weight = v);
     }
 
     public bool AsymmetricBattleSprite
     {
         get => _model.AsymmetricBattleSprite;
-        set => RaiseAndSetIfChanged(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
+        set => Set(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
     }
 
     public bool LongAttackAnimation
     {
         get => _model.LongAttackAnimation;
-        set => RaiseAndSetIfChanged(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
+        set => Set(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
     }
 
     public EvolutionConditionId EvolutionCondition1
@@ -221,9 +221,9 @@ public class PokemonViewModel : ViewModelBase
         get => _model.EvolutionCondition1;
         set
         {
-            if (RaiseAndSetIfChanged(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value))
+            if (Set(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value))
             {
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition1Name));
+                Notify(nameof(QuantityForEvolutionCondition1Name));
             }
         }
     }
@@ -233,9 +233,9 @@ public class PokemonViewModel : ViewModelBase
         get => _model.QuantityForEvolutionCondition1;
         set 
         {
-            if (RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value))
+            if (Set(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value))
             {
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition1Name));
+                Notify(nameof(QuantityForEvolutionCondition1Name));
             }
         }
     }
@@ -272,9 +272,9 @@ public class PokemonViewModel : ViewModelBase
         get => _model.EvolutionCondition2;
         set
         {
-            if (RaiseAndSetIfChanged(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value))
+            if (Set(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value))
             {
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition2Name));
+                Notify(nameof(QuantityForEvolutionCondition2Name));
             }
         }
     }
@@ -284,9 +284,9 @@ public class PokemonViewModel : ViewModelBase
         get => _model.QuantityForEvolutionCondition2;
         set
         {
-            if (RaiseAndSetIfChanged(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value))
+            if (Set(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value))
             {
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition2Name));
+                Notify(nameof(QuantityForEvolutionCondition2Name));
             }
         }
     }
@@ -311,13 +311,13 @@ public class PokemonViewModel : ViewModelBase
         public bool EncounterableAtDefaultArea
         {
             get => _model.GetEncounterable(_kingdom, false);
-            set => RaiseAndSetIfChanged(EncounterableAtDefaultArea, value, v => _model.SetEncounterable(_kingdom, false, v));
+            set => Set(EncounterableAtDefaultArea, value, v => _model.SetEncounterable(_kingdom, false, v));
         }
 
         public bool EncounterableWithLevel2Area
         {
             get => _model.GetEncounterable(_kingdom, true);
-            set => RaiseAndSetIfChanged(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(_kingdom, true, v));
+            set => Set(EncounterableWithLevel2Area, value, v => _model.SetEncounterable(_kingdom, true, v));
         }
     }
 
@@ -334,7 +334,7 @@ public class PokemonViewModel : ViewModelBase
         public int Id
         {
             get => (int)_evolutionTable[_id];
-            set => RaiseAndSetIfChanged(Id, value, v => _evolutionTable[_id] = (PokemonId)v);
+            set => Set(Id, value, v => _evolutionTable[_id] = (PokemonId)v);
         }
         public List<SelectorComboBoxItem> Options { get; }
     }
@@ -384,7 +384,7 @@ public class PokemonViewModel : ViewModelBase
         var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
         _dialogService.ShowDialog(vm);
 
-        RaisePropertyChanged(nameof(SmallSpritePath));
+        Notify(nameof(SmallSpritePath));
 
     }
 
@@ -414,7 +414,7 @@ public class PokemonViewModel : ViewModelBase
             return;
         }
 
-        RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        Notify(nameof(IsAnimationOverwritten));
         RevertAnimationCommand.RaiseCanExecuteChanged();
     }
 
@@ -455,7 +455,7 @@ public class PokemonViewModel : ViewModelBase
     private void RevertAnimation()
     {
         _animationService.RevertAnimation(_id);
-        RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        Notify(nameof(IsAnimationOverwritten));
         RevertAnimationCommand.RaiseCanExecuteChanged();
     }
 

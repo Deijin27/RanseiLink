@@ -40,7 +40,7 @@ public class GimmickViewModel : ViewModelBase
         Id = id;
         _model = model;
         UpdatePreviewAnimation(true);
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     public GimmickId Id { get; private set; }
@@ -48,43 +48,43 @@ public class GimmickViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => RaiseAndSetIfChanged(_model.Name, value, v => _model.Name = v);
+        set => Set(_model.Name, value, v => _model.Name = v);
     }
 
     public GimmickObjectId State1Sprite
     {
         get => _model.State1Object;
-        set => RaiseAndSetIfChanged(_model.State1Object, value, v => _model.State1Object = v);
+        set => Set(_model.State1Object, value, v => _model.State1Object = v);
     }
 
     public GimmickObjectId State2Sprite
     {
         get => _model.State2Object;
-        set => RaiseAndSetIfChanged(_model.State2Object, value, v => _model.State2Object = v);
+        set => Set(_model.State2Object, value, v => _model.State2Object = v);
     }
 
     public MoveEffectId Effect
     {
         get => _model.Effect;
-        set => RaiseAndSetIfChanged(_model.Effect, value, v => _model.Effect = v);
+        set => Set(_model.Effect, value, v => _model.Effect = v);
     }
 
     public TypeId AttackType
     {
         get => _model.AttackType;
-        set => RaiseAndSetIfChanged(_model.AttackType, value, v => _model.AttackType = v);
+        set => Set(_model.AttackType, value, v => _model.AttackType = v);
     }
 
     public TypeId DestroyType
     {
         get => _model.DestroyType;
-        set => RaiseAndSetIfChanged(_model.DestroyType, value, v => _model.DestroyType = v);
+        set => Set(_model.DestroyType, value, v => _model.DestroyType = v);
     }
 
     public GimmickRangeId Range
     {
         get => _model.Range;
-        set => RaiseAndSetIfChanged(_model.Range, value, v => _model.Range = v);
+        set => Set(_model.Range, value, v => _model.Range = v);
     }
 
     public MoveAnimationId Animation1
@@ -92,7 +92,7 @@ public class GimmickViewModel : ViewModelBase
         get => _model.Animation1;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Animation1, value, v => _model.Animation1 = v))
+            if (Set(_model.Animation1, value, v => _model.Animation1 = v))
             {
                 OnAnimationChanged();
             }
@@ -104,7 +104,7 @@ public class GimmickViewModel : ViewModelBase
         get => _model.Animation2;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Animation2, value, v => _model.Animation2 = v))
+            if (Set(_model.Animation2, value, v => _model.Animation2 = v))
             {
                 OnAnimationChanged();
             }
@@ -120,14 +120,14 @@ public class GimmickViewModel : ViewModelBase
     public string? CurrentPreviewAnimationUri
     {
         get => _currentPreviewAnimationUri;
-        set => RaiseAndSetIfChanged(ref _currentPreviewAnimationUri, value);
+        set => Set(ref _currentPreviewAnimationUri, value);
     }
 
     private string? _currentPreviewAnimationName;
     public string? CurrentPreviewAnimationName
     {
         get => _currentPreviewAnimationName;
-        set => RaiseAndSetIfChanged(ref _currentPreviewAnimationName, value);
+        set => Set(ref _currentPreviewAnimationName, value);
     }
 
     private GimmickAnimationPreviewMode PreviewAnimationMode { get; set; } = GimmickAnimationPreviewMode.One;
@@ -154,8 +154,8 @@ public class GimmickViewModel : ViewModelBase
         };
         if (!suppressPropertyChanged)
         {
-            RaisePropertyChanged(nameof(CurrentPreviewAnimationUri));
-            RaisePropertyChanged(nameof(CurrentPreviewAnimationName));
+            Notify(nameof(CurrentPreviewAnimationUri));
+            Notify(nameof(CurrentPreviewAnimationName));
         }
     }
 
@@ -169,9 +169,9 @@ public class GimmickViewModel : ViewModelBase
         get => _model.Image;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Image, value, v => _model.Image = v))
+            if (Set(_model.Image, value, v => _model.Image = v))
             {
-                RaisePropertyChanged(nameof(ImagePath));
+                Notify(nameof(ImagePath));
             }
         }
     }

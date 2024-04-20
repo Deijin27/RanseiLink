@@ -76,9 +76,9 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => _file;
         set
         {
-            if (RaiseAndSetIfChanged(ref _file, value))
+            if (Set(ref _file, value))
             {
-                RaisePropertyChanged(nameof(OkEnabled));
+                Notify(nameof(OkEnabled));
             }
         }
     }
@@ -89,6 +89,6 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public ModInfo? ModInfo
     {
         get => _modInfo;
-        set => RaiseAndSetIfChanged(ref _modInfo, value);
+        set => Set(ref _modInfo, value);
     }
 }

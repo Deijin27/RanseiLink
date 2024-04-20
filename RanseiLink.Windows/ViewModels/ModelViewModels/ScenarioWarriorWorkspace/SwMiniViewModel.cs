@@ -75,9 +75,9 @@ public class SwMiniViewModel(
         get => (int)_model.Warrior;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Warrior, (WarriorId)value, v => _model.Warrior = v))
+            if (Set(_model.Warrior, (WarriorId)value, v => _model.Warrior = v))
             {
-                RaisePropertyChanged(nameof(WarriorName));
+                Notify(nameof(WarriorName));
                 UpdateWarriorImage();
             }
         }
@@ -91,7 +91,7 @@ public class SwMiniViewModel(
         set
         {
             var oldClass = _model.Class;
-            if (RaiseAndSetIfChanged(_model.Class, value, v => _model.Class = v))
+            if (Set(_model.Class, value, v => _model.Class = v))
             {
                 if (Class == WarriorClassId.ArmyLeader || oldClass == WarriorClassId.ArmyLeader)
                 {
@@ -106,9 +106,9 @@ public class SwMiniViewModel(
         get => (int)_model.Kingdom;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
+            if (Set(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v))
             {
-                RaisePropertyChanged(nameof(KingdomName));
+                Notify(nameof(KingdomName));
             }
         }
     }
@@ -128,13 +128,13 @@ public class SwMiniViewModel(
     public int Army
     {
         get => _model.Army;
-        set => RaiseAndSetIfChanged(_model.Army, value, v => _model.Army = v);
+        set => Set(_model.Army, value, v => _model.Army = v);
     }
 
     public int Item
     {
         get => (int)_model.Item;
-        set => RaiseAndSetIfChanged(_model.Item, (ItemId)value, v => _model.Item = v);
+        set => Set(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
     public object WarriorImage => spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
@@ -152,7 +152,7 @@ public class SwMiniViewModel(
             _warriorImageId = baseWarriorService.Retrieve(Warrior).Sprite;
         }
         
-        RaisePropertyChanged(nameof(WarriorImage));
+        Notify(nameof(WarriorImage));
     }
 
     public int ScenarioPokemon
@@ -163,7 +163,7 @@ public class SwMiniViewModel(
             if (ScenarioPokemon != value)
             {
                 _model.SetScenarioPokemon(0, value);
-                RaisePropertyChanged();
+                Notify();
                 UpdateStrength();
             }
         }
@@ -171,7 +171,7 @@ public class SwMiniViewModel(
 
     public void UpdateStrength()
     {
-        RaisePropertyChanged(nameof(Strength));
+        Notify(nameof(Strength));
     }
 
     bool _suppressUpdateNested = false;
@@ -181,7 +181,7 @@ public class SwMiniViewModel(
         get => _selectedItem;
         set
         {
-            if (RaiseAndSetIfChanged(ref _selectedItem, value))
+            if (Set(ref _selectedItem, value))
             {
                 if (!_suppressUpdateNested)
                 {

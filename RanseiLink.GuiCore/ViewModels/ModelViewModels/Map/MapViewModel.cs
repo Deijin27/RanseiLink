@@ -92,11 +92,11 @@ public class MapViewModel : ViewModelBase
             PokemonPositions.Add(new MapPokemonPositionViewModel(this, Map.PositionSection.Positions, i));
         }
         Draw();
-        RaisePropertyChanged(nameof(Is3dModelOverriden));
+        Notify(nameof(Is3dModelOverriden));
         RevertModelCommand.RaiseCanExecuteChanged();
         RemoveSelectedGimmickCommand.RaiseCanExecuteChanged();
-        RaisePropertyChanged(nameof(Width));
-        RaisePropertyChanged(nameof(Height));
+        Notify(nameof(Width));
+        Notify(nameof(Height));
     }
     public bool Is3dModelOverriden => _mapManager.IsOverriden(_id);
     public RelayCommand RevertModelCommand { get; }
@@ -119,9 +119,9 @@ public class MapViewModel : ViewModelBase
         get => _terrainBrush;
         set 
         { 
-            if (RaiseAndSetIfChanged(ref _terrainBrush, value)) 
+            if (Set(ref _terrainBrush, value)) 
             {
-                RaisePropertyChanged(nameof(TerrainBrushImagePath));
+                Notify(nameof(TerrainBrushImagePath));
             } 
         }
     }
@@ -130,25 +130,25 @@ public class MapViewModel : ViewModelBase
     public bool TerrainPaintingActive
     {
         get => _terrainPaintingActive;
-        set => RaiseAndSetIfChanged(ref _terrainPaintingActive, value);
+        set => Set(ref _terrainPaintingActive, value);
     }
 
     public bool ElevationPaintingActive
     {
         get => _elevationPaintingActive;
-        set => RaiseAndSetIfChanged(ref _elevationPaintingActive, value);
+        set => Set(ref _elevationPaintingActive, value);
     }
 
     public float ElevationToPaint
     {
         get => _elevationToPaint;
-        set => RaiseAndSetIfChanged(ref _elevationToPaint, value);
+        set => Set(ref _elevationToPaint, value);
     }
 
     public bool PaintElevationEntireCell
     {
         get => _paintElevationEntireCell;
-        set => RaiseAndSetIfChanged(ref _paintElevationEntireCell, value);
+        set => Set(ref _paintElevationEntireCell, value);
     }
 
     public MapRenderMode RenderMode
@@ -156,7 +156,7 @@ public class MapViewModel : ViewModelBase
         get => _mapRenderMode;
         set
         {
-            if (RaiseAndSetIfChanged(ref _mapRenderMode, value))
+            if (Set(ref _mapRenderMode, value))
             {
                 Draw();
             }
@@ -168,7 +168,7 @@ public class MapViewModel : ViewModelBase
         get => _hideGimmicks;
         set
         {
-            if (RaiseAndSetIfChanged(ref _hideGimmicks, value))
+            if (Set(ref _hideGimmicks, value))
             {
                 Draw();
             }
@@ -180,7 +180,7 @@ public class MapViewModel : ViewModelBase
         get => _hidePokemonMarkers;
         set
         {
-            if (RaiseAndSetIfChanged(ref _hidePokemonMarkers, value))
+            if (Set(ref _hidePokemonMarkers, value))
             {
                 Draw();
             }
@@ -196,7 +196,7 @@ public class MapViewModel : ViewModelBase
     public MapGridSubCellViewModel? MouseOverItem
     {
         get => _mouseOverItem;
-        set => RaiseAndSetIfChanged(ref _mouseOverItem, value);
+        set => Set(ref _mouseOverItem, value);
     }
 
     public MapGimmickViewModel? SelectedGimmick
@@ -204,7 +204,7 @@ public class MapViewModel : ViewModelBase
         get => _selectedGimmick;
         set
         {
-            if (RaiseAndSetIfChanged(ref _selectedGimmick, value))
+            if (Set(ref _selectedGimmick, value))
             {
                 if (value != null)
                 {
@@ -220,7 +220,7 @@ public class MapViewModel : ViewModelBase
         get => _selectedPokemonPosition;
         set
         {
-            if (RaiseAndSetIfChanged(ref _selectedPokemonPosition, value) && value != null)
+            if (Set(ref _selectedPokemonPosition, value) && value != null)
             {
                 SelectedCell = Matrix[value.Y][value.X];
             }
@@ -243,7 +243,7 @@ public class MapViewModel : ViewModelBase
                 {
                     _selectedCell.IsSelected = true;
                 }
-                RaisePropertyChanged();
+                Notify();
             }
         }
     }
@@ -328,8 +328,8 @@ public class MapViewModel : ViewModelBase
 
         _selectedGimmick = SelectedCell.Gimmicks.FirstOrDefault();
         _selectedPokemonPosition = SelectedCell.Pokemon.FirstOrDefault();
-        RaisePropertyChanged(nameof(SelectedGimmick));
-        RaisePropertyChanged(nameof(SelectedPokemonPosition));
+        Notify(nameof(SelectedGimmick));
+        Notify(nameof(SelectedPokemonPosition));
     }
 
     private void RemoveSelectedGimmick()
@@ -341,7 +341,7 @@ public class MapViewModel : ViewModelBase
             Map.GimmickSection.Items.Remove(_selectedGimmick.GimmickItem);
             Gimmicks.Remove(_selectedGimmick);
             _selectedGimmick = null;
-            RaisePropertyChanged(nameof(SelectedGimmick));
+            Notify(nameof(SelectedGimmick));
         }
     }
 
@@ -400,8 +400,8 @@ public class MapViewModel : ViewModelBase
         // reset selected cell in case it's out of range
         SelectedCell = Matrix[0][0];
         Draw();
-        RaisePropertyChanged(nameof(Width));
-        RaisePropertyChanged(nameof(Height));
+        Notify(nameof(Width));
+        Notify(nameof(Height));
         
     }
 
@@ -413,13 +413,13 @@ public class MapViewModel : ViewModelBase
     public async void Revert3dModel()
     {
         await _mapManager.RevertModelToDefault(_id);
-        RaisePropertyChanged(nameof(Is3dModelOverriden));
+        Notify(nameof(Is3dModelOverriden));
     }
 
     private async void ImportObj()
     {
         await _mapManager.ImportObj(_id);
-        RaisePropertyChanged(nameof(Is3dModelOverriden));
+        Notify(nameof(Is3dModelOverriden));
     }
 
     private async void ExportObj()
@@ -430,7 +430,7 @@ public class MapViewModel : ViewModelBase
     private async void ImportPac()
     {
         await _mapManager.ImportPac(_id);
-        RaisePropertyChanged(nameof(Is3dModelOverriden));
+        Notify(nameof(Is3dModelOverriden));
     }
 
     private async void ExportPac()

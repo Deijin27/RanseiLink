@@ -60,7 +60,7 @@ public class BattleConfigViewModel : ViewModelBase
     {
         Id = id;
         _model = model;
-        RaiseAllPropertiesChanged();
+        NotifyAll();
     }
 
     public ICommand View3DModelCommand { get; }
@@ -70,7 +70,7 @@ public class BattleConfigViewModel : ViewModelBase
     public MapId Map
     {
         get => _model.MapId;
-        set => RaiseAndSetIfChanged(_model.MapId, value, v => _model.MapId = value);
+        set => Set(_model.MapId, value, v => _model.MapId = value);
     }
 
     public int Minimap
@@ -78,9 +78,9 @@ public class BattleConfigViewModel : ViewModelBase
         get => _model.Minimap;
         set
         {
-            if (RaiseAndSetIfChanged(_model.Minimap, value, v => _model.Minimap = value))
+            if (Set(_model.Minimap, value, v => _model.Minimap = value))
             {
-                RaisePropertyChanged(nameof(MinimapSpritePath));
+                Notify(nameof(MinimapSpritePath));
             }
         }
     }
@@ -90,9 +90,9 @@ public class BattleConfigViewModel : ViewModelBase
         get => _model.MinimapVariant;
         set 
         { 
-            if (RaiseAndSetIfChanged(_model.MinimapVariant, value, v => _model.MinimapVariant = value)) 
+            if (Set(_model.MinimapVariant, value, v => _model.MinimapVariant = value)) 
             {
-                RaisePropertyChanged(nameof(MinimapSpritePath));
+                Notify(nameof(MinimapSpritePath));
             } 
         }
     }
@@ -113,31 +113,31 @@ public class BattleConfigViewModel : ViewModelBase
     public int Unknown
     {
         get => _model.Unknown;
-        set => RaiseAndSetIfChanged(_model.Unknown, value, v => _model.Unknown = v);
+        set => Set(_model.Unknown, value, v => _model.Unknown = v);
     }
 
     public int NumberOfTurns
     {
         get => _model.NumberOfTurns;
-        set => RaiseAndSetIfChanged(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
+        set => Set(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
     }
 
     public Rgb15 UpperAtmosphereColor
     {
         get => _model.UpperAtmosphereColor;
-        set => RaiseAndSetIfChanged(_model.UpperAtmosphereColor, value, v => _model.UpperAtmosphereColor = v);
+        set => Set(_model.UpperAtmosphereColor, value, v => _model.UpperAtmosphereColor = v);
     }
 
     public Rgb15 MiddleAtmosphereColor
     {
         get => _model.MiddleAtmosphereColor;
-        set => RaiseAndSetIfChanged(_model.MiddleAtmosphereColor, value, v => _model.MiddleAtmosphereColor = v);
+        set => Set(_model.MiddleAtmosphereColor, value, v => _model.MiddleAtmosphereColor = v);
     }
 
     public Rgb15 LowerAtmosphereColor
     {
         get => _model.LowerAtmosphereColor;
-        set => RaiseAndSetIfChanged(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
+        set => Set(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
     }
 
     #region Victory Conditions
@@ -145,31 +145,31 @@ public class BattleConfigViewModel : ViewModelBase
     public bool VictoryCondition_Unknown_Aurora
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
+        set => Set(VictoryCondition_Unknown_Aurora, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
     }
 
     public bool VictoryCondition_Unknown_ViperiaDragnor
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_ViperiaDragnor) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_ViperiaDragnor, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
+        set => Set(VictoryCondition_Unknown_ViperiaDragnor, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
     }
 
     public bool VictoryCondition_Unknown_Greenleaf
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_Greenleaf) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Greenleaf, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
+        set => Set(VictoryCondition_Unknown_Greenleaf, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
     }
 
     public bool VictoryCondition_HoldAllBannersFor5Turns
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_HoldAllBannersFor5Turns, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
+        set => Set(VictoryCondition_HoldAllBannersFor5Turns, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool VictoryCondition_ClaimAllBanners
     {
         get => (_model.VictoryCondition & BattleVictoryConditionFlags.ClaimAllBanners) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_ClaimAllBanners, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
+        set => Set(VictoryCondition_ClaimAllBanners, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
     }
 
     #endregion
@@ -179,31 +179,31 @@ public class BattleConfigViewModel : ViewModelBase
     public bool DefeatCondition_Unknown_Aurora
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
-        set => RaiseAndSetIfChanged(VictoryCondition_Unknown_Aurora, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
+        set => Set(VictoryCondition_Unknown_Aurora, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
     }
 
     public bool DefeatCondition_Unknown_ViperiaDragnor
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_ViperiaDragnor) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_Unknown_ViperiaDragnor, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
+        set => Set(DefeatCondition_Unknown_ViperiaDragnor, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
     }
 
     public bool DefeatCondition_Unknown_Greenleaf
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_Greenleaf) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_Unknown_Greenleaf, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
+        set => Set(DefeatCondition_Unknown_Greenleaf, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
     }
 
     public bool DefeatCondition_HoldAllBannersFor5Turns
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_HoldAllBannersFor5Turns, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
+        set => Set(DefeatCondition_HoldAllBannersFor5Turns, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
     }
 
     public bool DefeatCondition_ClaimAllBanners
     {
         get => (_model.DefeatCondition & BattleVictoryConditionFlags.ClaimAllBanners) != 0;
-        set => RaiseAndSetIfChanged(DefeatCondition_ClaimAllBanners, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
+        set => Set(DefeatCondition_ClaimAllBanners, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
     }
 
     #endregion
@@ -219,73 +219,73 @@ public class BattleConfigViewModel : ViewModelBase
     public int Treasure1
     {
         get => (int)_model.Treasure1;
-        set => RaiseAndSetIfChanged(_model.Treasure1, (ItemId)value, v => _model.Treasure1 = v);
+        set => Set(_model.Treasure1, (ItemId)value, v => _model.Treasure1 = v);
     }
 
     public int Treasure2
     {
         get => (int)_model.Treasure2;
-        set => RaiseAndSetIfChanged(_model.Treasure2, (ItemId)value, v => _model.Treasure2 = v);
+        set => Set(_model.Treasure2, (ItemId)value, v => _model.Treasure2 = v);
     }
 
     public int Treasure3
     {
         get => (int)_model.Treasure3;
-        set => RaiseAndSetIfChanged(_model.Treasure3, (ItemId)value, v => _model.Treasure3 = v);
+        set => Set(_model.Treasure3, (ItemId)value, v => _model.Treasure3 = v);
     }
 
     public int Treasure4
     {
         get => (int)_model.Treasure4;
-        set => RaiseAndSetIfChanged(_model.Treasure4, (ItemId)value, v => _model.Treasure4 = v);
+        set => Set(_model.Treasure4, (ItemId)value, v => _model.Treasure4 = v);
     }
 
     public int Treasure5
     {
         get => (int)_model.Treasure5;
-        set => RaiseAndSetIfChanged(_model.Treasure5, (ItemId)value, v => _model.Treasure5 = v);
+        set => Set(_model.Treasure5, (ItemId)value, v => _model.Treasure5 = v);
     }
 
     public int Treasure6
     {
         get => (int)_model.Treasure6;
-        set => RaiseAndSetIfChanged(_model.Treasure6, (ItemId)value, v => _model.Treasure6 = v);
+        set => Set(_model.Treasure6, (ItemId)value, v => _model.Treasure6 = v);
     }
 
     public int Treasure7
     {
         get => (int)_model.Treasure7;
-        set => RaiseAndSetIfChanged(_model.Treasure7, (ItemId)value, v => _model.Treasure7 = v);
+        set => Set(_model.Treasure7, (ItemId)value, v => _model.Treasure7 = v);
     }
 
     public int Treasure8
     {
         get => (int)_model.Treasure8;
-        set => RaiseAndSetIfChanged(_model.Treasure8, (ItemId)value, v => _model.Treasure8 = v);
+        set => Set(_model.Treasure8, (ItemId)value, v => _model.Treasure8 = v);
     }
 
     public int Treasure9
     {
         get => (int)_model.Treasure9;
-        set => RaiseAndSetIfChanged(_model.Treasure9, (ItemId)value, v => _model.Treasure9 = v);
+        set => Set(_model.Treasure9, (ItemId)value, v => _model.Treasure9 = v);
     }
 
     public int Treasure10
     {
         get => (int)_model.Treasure10;
-        set => RaiseAndSetIfChanged(_model.Treasure10, (ItemId)value, v => _model.Treasure10 = v);
+        set => Set(_model.Treasure10, (ItemId)value, v => _model.Treasure10 = v);
     }
 
     public int Treasure11
     {
         get => (int)_model.Treasure11;
-        set => RaiseAndSetIfChanged(_model.Treasure11, (ItemId)value, v => _model.Treasure11 = v);
+        set => Set(_model.Treasure11, (ItemId)value, v => _model.Treasure11 = v);
     }
 
     public int Treasure12
     {
         get => (int)_model.Treasure12;
-        set => RaiseAndSetIfChanged(_model.Treasure12, (ItemId)value, v => _model.Treasure12 = v);
+        set => Set(_model.Treasure12, (ItemId)value, v => _model.Treasure12 = v);
     }
 
     public async void View3DModel()

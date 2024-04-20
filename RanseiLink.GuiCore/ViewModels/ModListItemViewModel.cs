@@ -85,7 +85,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public object? Banner
     {
         get => _banner;
-        set => RaiseAndSetIfChanged(ref _banner, value);
+        set => Set(ref _banner, value);
     }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
 

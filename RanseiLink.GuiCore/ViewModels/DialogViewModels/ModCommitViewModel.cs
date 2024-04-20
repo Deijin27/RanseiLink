@@ -66,9 +66,9 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => _file;
         set
         {
-            if (RaiseAndSetIfChanged(ref _file, value))
+            if (Set(ref _file, value))
             {
-                RaisePropertyChanged(nameof(OkEnabled));
+                Notify(nameof(OkEnabled));
             }
         }
     }
@@ -78,7 +78,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public bool IncludeSprites
     {
         get => _includeSprites;
-        set => RaiseAndSetIfChanged(ref _includeSprites, value);
+        set => Set(ref _includeSprites, value);
     }
 
     public ModInfo ModInfo { get; }

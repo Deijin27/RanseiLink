@@ -92,7 +92,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     {
         _selectedItem = buildingVm;
         CopyPasteVm.Model = buildingVm.Model;
-        RaisePropertyChanged(nameof(SelectedItem));
+        Notify(nameof(SelectedItem));
         _scenarioBuildingVm.SetSelected((KingdomId)buildingVm.Kingdom, buildingVm.Slot);
     }
 
@@ -118,9 +118,9 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         get => _selectedAnimation;
         set
         {
-            if (RaiseAndSetIfChanged(_selectedAnimation, value, v => _selectedAnimation = v))
+            if (Set(_selectedAnimation, value, v => _selectedAnimation = v))
             {
-                RaisePropertyChanged(nameof(SelectedAnimationImage));
+                Notify(nameof(SelectedAnimationImage));
                 IconAnimVm?.OnIdChanged();
             }
         }

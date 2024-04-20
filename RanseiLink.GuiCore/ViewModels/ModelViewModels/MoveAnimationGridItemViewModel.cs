@@ -30,12 +30,12 @@ public class MoveAnimationGridItemViewModel : MoveAnimationViewModelBase
     public int UnknownA
     {
         get => _model.UnknownA;
-        set => RaiseAndSetIfChanged(_model.UnknownA, value, v => _model.UnknownA = value);
+        set => Set(_model.UnknownA, value, v => _model.UnknownA = value);
     }
 
     public int UnknownB
     {
         get => _model.UnknownB;
-        set => RaiseAndSetIfChanged(_model.UnknownB, value, v => _model.UnknownB = value);
+        set => Set(_model.UnknownB, value, v => _model.UnknownB = value);
     }
 }

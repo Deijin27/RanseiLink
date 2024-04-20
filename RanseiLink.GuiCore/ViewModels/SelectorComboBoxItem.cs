@@ -22,8 +22,8 @@ public class SelectorComboBoxItem : ViewModelBase
     {
         _name = newValue;
         _idAndName = $"{IdString} - {newValue}";
-        RaisePropertyChanged(nameof(Name));
-        RaisePropertyChanged(nameof(IdAndName));
+        Notify(nameof(Name));
+        Notify(nameof(IdAndName));
     }
 }
 
