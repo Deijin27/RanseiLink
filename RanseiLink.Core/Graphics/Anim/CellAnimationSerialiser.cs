@@ -305,10 +305,10 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
         {
             // save cluster image
-            var bankImage = images[clusterId];
+            var clusterImage = images[clusterId];
             var fileName = $"{clusterId.ToString().PadLeft(4, '0')}.png";
-            bankImage.SaveAsPng(Path.Combine(outputFolder, fileName));
-            bankImage.Dispose();
+            clusterImage.SaveAsPng(Path.Combine(outputFolder, fileName));
+            clusterImage.Dispose();
 
             // save cluster data
             var cluster = ncer.Clusters.Clusters[clusterId];
