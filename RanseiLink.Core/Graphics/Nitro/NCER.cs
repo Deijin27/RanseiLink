@@ -36,7 +36,7 @@ public class NCER
 
     public NCER()
     {
-        CellBanks = new();
+        Clusters = new();
         Labels = new();
         Unknown = new();
     }
@@ -60,7 +60,7 @@ public class NCER
         }
 
         // read 
-        CellBanks = new CEBK(br);
+        Clusters = new CEBK(br);
         Labels = new LABL(br);
         Unknown = new UEXT(br);
 
@@ -68,7 +68,7 @@ public class NCER
     }
 
     public ushort Version { get; set; }
-    public CEBK CellBanks { get; set; }
+    public CEBK Clusters { get; set; }
     public LABL Labels { get; set; }
     public UEXT Unknown { get; set; }
 
@@ -86,7 +86,7 @@ public class NCER
 
         bw.Pad(header.HeaderLength);
 
-        CellBanks.WriteTo(bw);
+        Clusters.WriteTo(bw);
         Labels.WriteTo(bw);
         Unknown.WriteTo(bw);
 
@@ -99,7 +99,7 @@ public class NCER
 }
 
 /// <summary>
-/// Cell Bank
+/// Cell Bank (Which I've nicknamed "Cluster")
 /// </summary>
 public class CEBK
 {
@@ -107,7 +107,7 @@ public class CEBK
 
     public byte BlockSize { get; set; }
     public ushort BankType { get; set; }
-    public List<CellBank> Banks { get; set; }
+    public List<Cluster> Clusters { get; set; }
     public UCAT? Ucat { get; set; }
 
     public struct SubHeader
@@ -149,7 +149,7 @@ public class CEBK
 
     public CEBK()
     {
-        Banks = new();
+        Clusters = new();
     }
 
     public CEBK(BinaryReader br)
@@ -177,11 +177,11 @@ public class CEBK
         {
             bankInfos[i] = new BankInfo(br, header.BankType);
         }
-        Banks = new List<CellBank>(header.NumberOfBanks);
+        Clusters = new List<Cluster>(header.NumberOfBanks);
         for (int i = 0; i < header.NumberOfBanks; i++)
         {
             var bankInfo = bankInfos[i];
-            var bank = new CellBank(bankInfo.NumberOfCells);
+            var bank = new Cluster(bankInfo.NumberOfCells);
             for (ushort j = 0; j < bankInfo.NumberOfCells; j++)
             {
                 var cell = new Cell(br);
@@ -193,7 +193,7 @@ public class CEBK
             bank.YMax = bankInfo.YMax;
             bank.XMin = bankInfo.XMin; 
             bank.YMin = bankInfo.YMin;
-            Banks.Add(bank);
+            Clusters.Add(bank);
         }
 
         if (header.UcatDataOffset != 0)
@@ -219,22 +219,22 @@ public class CEBK
         };
         var header = new SubHeader
         {
-            NumberOfBanks = (ushort)Banks.Count,
+            NumberOfBanks = (ushort)Clusters.Count,
             BankType = BankType,
             BlockSize = BlockSize,
             PartitionDataOffset = 0,
             BankDataOffset = SubHeader.Length
         };
 
-        bw.Pad(NitroChunkHeader.Length + SubHeader.Length + Banks.Count * BankInfo.Length(BankType));
+        bw.Pad(NitroChunkHeader.Length + SubHeader.Length + Clusters.Count * BankInfo.Length(BankType));
 
 
         // write banks
         var cellStart = bw.BaseStream.Position;
-        var bankInfo = new BankInfo[Banks.Count];
-        for (var i = 0; i < Banks.Count; i++)
+        var bankInfo = new BankInfo[Clusters.Count];
+        for (var i = 0; i < Clusters.Count; i++)
         {
-            var bank = Banks[i];
+            var bank = Clusters[i];
             var info = new BankInfo
             {
                 NumberOfCells = (ushort)bank.Count,
@@ -408,11 +408,11 @@ public struct BankInfo
     }
 }
 
-public class CellBank : List<Cell>
+public class Cluster : List<Cell>
 {
-    public CellBank() : base() { }
-    public CellBank(int capacity) : base(capacity) { }
-    public CellBank(IEnumerable<Cell> collection) : base(collection) { }
+    public Cluster() : base() { }
+    public Cluster(int capacity) : base(capacity) { }
+    public Cluster(IEnumerable<Cell> collection) : base(collection) { }
 
 
     public ushort ReadOnlyCellInfo { get; set; }

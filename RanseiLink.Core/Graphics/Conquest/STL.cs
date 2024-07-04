@@ -246,8 +246,8 @@ namespace RanseiLink.Core.Graphics
             // but it works without them
             const TexFormat format = TexFormat.Pltt256;
             using var image = CellImageUtil.SingleBankToImage(
-                bank: ncer.CellBanks.Banks[0],
-                blockSize: ncer.CellBanks.BlockSize,
+                bank: ncer.Clusters.Clusters[0],
+                blockSize: ncer.Clusters.BlockSize,
                 new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), Width, Height,
                     IsTiled: tiled,
                     Format: format),
@@ -260,8 +260,8 @@ namespace RanseiLink.Core.Graphics
         {
             var imageInfo = CellImageUtil.SingleBankFromPng(
                 file: pngFile,
-                bank: ncer.CellBanks.Banks[0],
-                blockSize: ncer.CellBanks.BlockSize,
+                bank: ncer.Clusters.Clusters[0],
+                blockSize: ncer.Clusters.BlockSize,
                 tiled: tiled,
                 format: TexFormat.Pltt256,
                 settings: _settings

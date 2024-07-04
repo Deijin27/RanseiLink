@@ -23,7 +23,7 @@ public class NanrInfoCommand : ICommand
                     new XElement("Unknown3", bank.Unknown3),
                     new XElement("Frames", bank.Frames.Select(frame =>
                         new XElement("Frame",
-                            new XAttribute("CellBank", frame.CellBank),
+                            new XAttribute("Cluster", frame.Cluster),
                             new XAttribute("Duration", frame.Duration)
                             
                 )))))),

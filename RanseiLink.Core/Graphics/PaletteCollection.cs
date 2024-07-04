@@ -42,13 +42,13 @@ public class PaletteCollection : List<Palette>
         }
     }
 
-    public PaletteCollection(IReadOnlyList<CellBank> banks, TexFormat format, bool color0Transparent)
+    public PaletteCollection(IReadOnlyList<Cluster> banks, TexFormat format, bool color0Transparent)
         : this(banks.SelectMany(x => x).Max(x => x.IndexPalette) + 1, format, color0Transparent)
     {
 
     }
 
-    public PaletteCollection(CellBank bank, TexFormat format, bool color0Transparent)
+    public PaletteCollection(Cluster bank, TexFormat format, bool color0Transparent)
         : this(bank.Max(x => x.IndexPalette) + 1, format, color0Transparent)
     {
 

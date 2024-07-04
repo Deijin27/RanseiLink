@@ -66,8 +66,8 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
                 // to facilitate potentially filling in these gaps in the future,
                 // we enforce the 32x32 size, and add gaps
                 using var image = CellImageUtil.MultiBankToImage(
-                   banks: ncer.CellBanks.Banks,
-                   blockSize: ncer.CellBanks.BlockSize,
+                   banks: ncer.Clusters.Clusters,
+                   blockSize: ncer.Clusters.BlockSize,
                    imageInfo: new MultiPaletteImageInfo(
                        Pixels: ncgr.Pixels.Data,
                        Palette: palette, // <-- it's probably worth using this over NitroImageUtil because we can load the palette only once

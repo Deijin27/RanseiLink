@@ -78,10 +78,10 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
             var workingPixels = new List<byte>();
             CellImageUtil.SharedPaletteMultiBankFromImage(
                 image: subImage,
-                ncer.CellBanks.Banks,
+                ncer.Clusters.Clusters,
                 workingPixels,
                 workingPalette,
-                ncer.CellBanks.BlockSize,
+                ncer.Clusters.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
                 format: ncgr.Pixels.Format,
                 settings: _settings

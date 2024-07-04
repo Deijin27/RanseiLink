@@ -50,7 +50,7 @@ public class NANR
             anim.Unknown1 = 1;
             anim.Unknown2 = 2;
             anim.Unknown3 = 0;
-            anim.Frames.Add(new ABNK.Frame() { CellBank = (ushort)i, Duration = 4 });
+            anim.Frames.Add(new ABNK.Frame() { Cluster = (ushort)i, Duration = 4 });
             nanr.Labels.Names.Add($"CellAnime{i}");
             nanr.AnimationBanks.Banks.Add(anim);
         }
@@ -219,7 +219,7 @@ public class ABNK
                 }
                 // NB: two frames sometimes use the same numCell offset, so they're shared to save space, no dupes
                 br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Cells + frameOffsetData;
-                frame.CellBank = br.ReadUInt16();
+                frame.Cluster = br.ReadUInt16();
             }
         }
         if (tframes != subHeader.FrameCount)
@@ -277,11 +277,11 @@ public class ABNK
             {
                 var frame = anim.Frames[j];
                 // the cell values are not duplicated
-                var index = distinctCells.IndexOf(frame.CellBank);
+                var index = distinctCells.IndexOf(frame.Cluster);
                 if (index == -1)
                 {
                     index = distinctCells.Count;
-                    distinctCells.Add(frame.CellBank);
+                    distinctCells.Add(frame.Cluster);
                 }
                 bw.Write(Frame.DataLength_Cell * index);
                 bw.Write(frame.Duration);
@@ -331,8 +331,8 @@ public class ABNK
         /// </summary>
         public ushort Duration { get; set; }
         /// <summary>
-        /// Index of cell bank containing the cell image data to be drawn during this keyframe
+        /// Index of cell cluster containing the cell image data to be drawn during this keyframe
         /// </summary>
-        public ushort CellBank { get; set; }
+        public ushort Cluster { get; set; }
     }
 }

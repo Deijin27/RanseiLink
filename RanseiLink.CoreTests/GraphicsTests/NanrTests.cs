@@ -26,13 +26,13 @@ public class NanrTests
         }
         using (new AssertionScope())
         {
-            bank0.Frames[0].CellBank.Should().Be(3);
+            bank0.Frames[0].Cluster.Should().Be(3);
             bank0.Frames[0].Duration.Should().Be(8);
-            bank0.Frames[1].CellBank.Should().Be(2);
+            bank0.Frames[1].Cluster.Should().Be(2);
             bank0.Frames[1].Duration.Should().Be(8);
-            bank0.Frames[2].CellBank.Should().Be(1);
+            bank0.Frames[2].Cluster.Should().Be(1);
             bank0.Frames[2].Duration.Should().Be(8);
-            bank0.Frames[3].CellBank.Should().Be(0);
+            bank0.Frames[3].Cluster.Should().Be(0);
             bank0.Frames[3].Duration.Should().Be(180);
         }
 
@@ -47,13 +47,13 @@ public class NanrTests
         }
         using (new AssertionScope())
         {
-            bank1.Frames[0].CellBank.Should().Be(4);
+            bank1.Frames[0].Cluster.Should().Be(4);
             bank1.Frames[0].Duration.Should().Be(12);
-            bank1.Frames[1].CellBank.Should().Be(5);
+            bank1.Frames[1].Cluster.Should().Be(5);
             bank1.Frames[1].Duration.Should().Be(12);
-            bank1.Frames[2].CellBank.Should().Be(6);
+            bank1.Frames[2].Cluster.Should().Be(6);
             bank1.Frames[2].Duration.Should().Be(12);
-            bank1.Frames[3].CellBank.Should().Be(7);
+            bank1.Frames[3].Cluster.Should().Be(7);
             bank1.Frames[3].Duration.Should().Be(12);
         }
 
@@ -68,13 +68,13 @@ public class NanrTests
         }
         using (new AssertionScope())
         {
-            bank2.Frames[0].CellBank.Should().Be(8);
+            bank2.Frames[0].Cluster.Should().Be(8);
             bank2.Frames[0].Duration.Should().Be(12);
-            bank2.Frames[1].CellBank.Should().Be(9);
+            bank2.Frames[1].Cluster.Should().Be(9);
             bank2.Frames[1].Duration.Should().Be(12);
-            bank2.Frames[2].CellBank.Should().Be(10);
+            bank2.Frames[2].Cluster.Should().Be(10);
             bank2.Frames[2].Duration.Should().Be(12);
-            bank2.Frames[3].CellBank.Should().Be(11);
+            bank2.Frames[3].Cluster.Should().Be(11);
             bank2.Frames[3].Duration.Should().Be(12);
         }
 

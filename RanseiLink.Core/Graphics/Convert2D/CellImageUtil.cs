@@ -39,7 +39,7 @@ public record BankDimensions(int XShift, int YShift, int Width, int Height);
 public static class CellImageUtil
 {
 
-    public static BankDimensions InferDimensions(CellBank? bank, int width, int height, CellImageSettings settings)
+    public static BankDimensions InferDimensions(Cluster? bank, int width, int height, CellImageSettings settings)
     {
         int xShift = 0;
         int yShift = 0;
@@ -120,7 +120,7 @@ public static class CellImageUtil
         return cellImg;
     }
 
-    public static IReadOnlyList<Image<Rgba32>> SingleBankToMultipleImages(CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo)
+    public static IReadOnlyList<Image<Rgba32>> SingleBankToMultipleImages(Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo)
     {
         var images = new Image<Rgba32>[bank.Count];
 
@@ -133,7 +133,7 @@ public static class CellImageUtil
         return images;
     }
 
-    public static Image<Rgba32> SingleBankToImage(CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    public static Image<Rgba32> SingleBankToImage(Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
         var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height, settings);
 
@@ -172,14 +172,14 @@ public static class CellImageUtil
         return graphic;
     }
 
-    public static void SingleBankToPng(string file, CellBank bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    public static void SingleBankToPng(string file, Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
         using var graphic = SingleBankToImage(bank, blockSize, imageInfo, settings);
         graphic.SaveAsPng(file);
     }
 
 
-    public static Image<Rgba32> MultiBankToImage(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    public static Image<Rgba32> MultiBankToImage(IReadOnlyList<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
         if (banks.Count == 0)
         {
@@ -196,12 +196,12 @@ public static class CellImageUtil
         }
     }
 
-    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IReadOnlyList<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IReadOnlyList<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
         return banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, settings)).ToList();
     }
 
-    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiBankToMultipleImageGroups(IReadOnlyCollection<CellBank> banks, uint blockSize, MultiPaletteImageInfo imageInfo)
+    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiBankToMultipleImageGroups(IReadOnlyCollection<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo)
     {
         return banks.Select(bank => SingleBankToMultipleImages(bank, blockSize, imageInfo)).ToList();
     }
@@ -252,7 +252,7 @@ public static class CellImageUtil
             workingPixels.Add(0);
         }
     }
-    public static void SharedSingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, CellBank bank, uint blockSize,
+    public static void SharedSingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster bank, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
         bool tiled, TexFormat format)
     {
@@ -269,7 +269,7 @@ public static class CellImageUtil
         }
     }
 
-    public static MultiPaletteImageInfo SingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, CellBank bank, uint blockSize,
+    public static MultiPaletteImageInfo SingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster bank, uint blockSize,
         bool tiled, TexFormat format)
     {
         var workingPixels = new List<byte>();
@@ -287,7 +287,7 @@ public static class CellImageUtil
             );
     }
 
-    public static void SharedSingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
+    public static void SharedSingleBankFromImage(Image<Rgba32> image, Cluster bank, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
@@ -303,7 +303,7 @@ public static class CellImageUtil
         }
     }
 
-    public static MultiPaletteImageInfo SingleBankFromImage(Image<Rgba32> image, CellBank bank, uint blockSize,
+    public static MultiPaletteImageInfo SingleBankFromImage(Image<Rgba32> image, Cluster bank, uint blockSize,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
         var workingPixels = new List<byte>();
@@ -323,7 +323,7 @@ public static class CellImageUtil
             );
     }
 
-    public static MultiPaletteImageInfo SingleBankFromPng(string file, CellBank bank, uint blockSize, 
+    public static MultiPaletteImageInfo SingleBankFromPng(string file, Cluster bank, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (bank.Count == 0)
@@ -336,7 +336,7 @@ public static class CellImageUtil
         return SingleBankFromImage(image, bank, blockSize, tiled, format, settings);
     }
 
-    public static MultiPaletteImageInfo MultiBankFromPng(string file, IReadOnlyList<CellBank> banks, uint blockSize, 
+    public static MultiPaletteImageInfo MultiBankFromPng(string file, IReadOnlyList<Cluster> banks, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (banks.Any(x => x.Count == 0))
@@ -349,7 +349,7 @@ public static class CellImageUtil
         return MultiBankFromImage(image, banks, blockSize, tiled, format, settings, width, height);
     }
 
-    public static MultiPaletteImageInfo MultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, uint blockSize, 
+    public static MultiPaletteImageInfo MultiBankFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> banks, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (banks.Count == 0)
@@ -371,7 +371,7 @@ public static class CellImageUtil
         return new MultiPaletteImageInfo(workingPixels.ToArray(), workingPalette, width, height, tiled, format);
     }
 
-    public static void SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<CellBank> banks, 
+    public static void SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> banks, 
         List<byte> workingPixels, PaletteCollection workingPalette, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
@@ -401,7 +401,7 @@ public static class CellImageUtil
             cumulativeHeight += dims.Height;
         }
     }
-    public static MultiPaletteImageInfo MultiBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<CellBank> banks, uint blockSize, 
+    public static MultiPaletteImageInfo MultiBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<Cluster> banks, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (banks.Count == 0)
@@ -434,7 +434,7 @@ public static class CellImageUtil
             );
     }
 
-    public static MultiPaletteImageInfo MultiBankFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<CellBank> banks, uint blockSize,
+    public static MultiPaletteImageInfo MultiBankFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<Cluster> banks, uint blockSize,
         bool tiled, TexFormat format)
     {
         if (banks.Count == 0)

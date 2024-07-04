@@ -23,7 +23,7 @@ public class StlTests
         var nclr = NCLR.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".nclr"));
         var png = Path.Combine(TestConstants.EmbeddedTestDataFolder, filename + ".png");
 
-        ncer.CellBanks.Banks.Should().HaveCount(1);
+        ncer.Clusters.Clusters.Should().HaveCount(1);
 
         using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
@@ -47,8 +47,8 @@ public class StlTests
 
         var info = CellImageUtil.MultiBankFromImage(
             image,
-            ncer.CellBanks.Banks,
-            ncer.CellBanks.BlockSize,
+            ncer.Clusters.Clusters,
+            ncer.Clusters.BlockSize,
             ncgr.Pixels.IsTiled,
             ncgr.Pixels.Format,
             STL.Settings

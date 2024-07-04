@@ -16,11 +16,11 @@ public class NcerTests
     {
         var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_minimap_9.ncer"));
 
-        ncer.CellBanks.BlockSize.Should().Be(2);
-        var banks = ncer.CellBanks.Banks;
+        ncer.Clusters.BlockSize.Should().Be(2);
+        var banks = ncer.Clusters.Clusters;
         banks.Should().HaveCount(4);
 
-        ncer.CellBanks.Ucat.Should().NotBeNull();
+        ncer.Clusters.Ucat.Should().NotBeNull();
 
         ncer.Labels.Names.Should().ContainSingle()
             .Which.Should().Be("CellAnime0");
@@ -34,9 +34,9 @@ public class NcerTests
         var ncer = NCER.Load(Path.Combine(TestConstants.EmbeddedTestDataFolder, "test_ki2_aurora_anim.ncer"));
 
         // Cell section
-        ncer.CellBanks.BlockSize.Should().Be(2);
-        ncer.CellBanks.BankType.Should().Be(1);
-        var banks = ncer.CellBanks.Banks;
+        ncer.Clusters.BlockSize.Should().Be(2);
+        ncer.Clusters.BankType.Should().Be(1);
+        var banks = ncer.Clusters.Clusters;
         banks.Should().HaveCount(12);
 
         var bank0 = banks[0];
@@ -82,7 +82,7 @@ public class NcerTests
             cell.Scale.Should().Be(Scale.XLarge);
         }
 
-        ncer.CellBanks.Ucat.Should().BeNull();
+        ncer.Clusters.Ucat.Should().BeNull();
 
         // Labels section
         ncer.Labels.Names.Should().Equal(new string[] { "reflection", "flag_r", "flag_l" });

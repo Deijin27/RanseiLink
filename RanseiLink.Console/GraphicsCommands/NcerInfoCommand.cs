@@ -13,10 +13,10 @@ public class NcerInfoCommand : ICommand
     {
         var nanr = NCER.Load(FilePath);
 
-        var el = new XElement("CellBank",
-            new XAttribute("BlockSize", nanr.CellBanks.BlockSize),
-            new XAttribute("BankType", nanr.CellBanks.BankType),
-            new XElement("Banks", nanr.CellBanks.Banks.Select(SerialiseBank)),
+        var el = new XElement("Cluster",
+            new XAttribute("BlockSize", nanr.Clusters.BlockSize),
+            new XAttribute("BankType", nanr.Clusters.BankType),
+            new XElement("Banks", nanr.Clusters.Clusters.Select(SerialiseBank)),
             new XElement("Labels", nanr.Labels.Names.Select(name => new XElement("Name", name))),
             new XElement("Unknown", nanr.Unknown.Unknown)
             );
@@ -26,7 +26,7 @@ public class NcerInfoCommand : ICommand
         return default;
     }
 
-    private static XElement SerialiseBank(CellBank bank)
+    private static XElement SerialiseBank(Cluster bank)
     {
         var e = new XElement("Bank", bank.Select(SerialiseCell));
         e.Add(new XAttribute("ReadOnlyCellInfo", $"0x{bank.ReadOnlyCellInfo:X}"));
