@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
@@ -9,7 +10,7 @@ public class SwPokemonSlotViewModel : ViewModelBase
 {
     private readonly int _slot;
     private bool _isSelected;
-    private object _nestedVm;
+    private object? _nestedVm;
     private readonly ScenarioPokemonViewModel _scenarioPokemonVm;
     private readonly ScenarioWarrior _warrior;
     private readonly ScenarioId _scenario;
@@ -77,13 +78,13 @@ public class SwPokemonSlotViewModel : ViewModelBase
         }
     }
 
-    public object NestedVm
+    public object? NestedVm
     {
         get => _nestedVm;
         set => Set(ref _nestedVm, value);
     }
 
-    public object PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
+    public object? PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);
     private int _pokemonImageId;
     public void UpdatePokemonImage()
     {

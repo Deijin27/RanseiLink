@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 
 namespace RanseiLink.Windows.ViewModels;
@@ -21,7 +22,7 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
         return this;
     }
 
-    public object KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
+    public object? KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
 
     public KingdomId Kingdom => _kingdom;
 

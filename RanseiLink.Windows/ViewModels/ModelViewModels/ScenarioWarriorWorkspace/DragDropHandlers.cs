@@ -1,4 +1,5 @@
-﻿using GongSolutions.Wpf.DragDrop;
+﻿#nullable enable
+using GongSolutions.Wpf.DragDrop;
 
 namespace RanseiLink.Windows.ViewModels;
 

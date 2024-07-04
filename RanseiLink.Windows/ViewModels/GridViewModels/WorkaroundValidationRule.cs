@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿#nullable enable
+using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.ComponentModel;

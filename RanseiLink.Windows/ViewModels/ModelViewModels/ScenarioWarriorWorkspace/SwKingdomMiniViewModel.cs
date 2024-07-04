@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
@@ -11,7 +12,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
     public new delegate SwKingdomMiniViewModel Factory();
 
     private int _scenario;
-    private ScenarioKingdom _scenarioKingdom;
+    private ScenarioKingdom _scenarioKingdom = new();
 
     private readonly IScenarioKingdomService _scenarioKingdomService;
     private readonly IScenarioWarriorService _scenarioWarriorService;
@@ -32,7 +33,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         _strengthService = strengthService;
     }
 
-    public ICommand SelectCommand { get; private set; }
+    public ICommand? SelectCommand { get; private set; }
 
     public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom, ICommand itemClickedCommand)
     {
@@ -47,7 +48,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         return this;
     }
 
-    public object WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object? WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 

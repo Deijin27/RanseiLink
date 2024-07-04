@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Enums;
+﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
@@ -16,8 +17,8 @@ public class SwMiniViewModel(
     public delegate SwMiniViewModel Factory();
 
     private ScenarioId _scenario;
-    private ScenarioWarrior _model;
-    private ScenarioWarriorWorkspaceViewModel _parent;
+    private ScenarioWarrior _model = new();
+    private ScenarioWarriorWorkspaceViewModel _parent = null!;
 
     public SwMiniViewModel Init(
         int id,
@@ -51,14 +52,18 @@ public class SwMiniViewModel(
 
     public int Id { get; private set; }
 
-    private void SlotVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void SlotVm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(SwPokemonSlotViewModel.ScenarioPokemonId))
+        if (e.PropertyName != nameof(SwPokemonSlotViewModel.ScenarioPokemonId))
         {
-            var slotVm = (SwPokemonSlotViewModel)sender;
-            UpdateStrength();
-            _parent.UpdateScenarioPokemonComboItemName(slotVm.ScenarioPokemonId);
+            return;
         }
+        if (sender is not SwPokemonSlotViewModel slotVm)
+        {
+            return;
+        }
+        UpdateStrength();
+        _parent.UpdateScenarioPokemonComboItemName(slotVm.ScenarioPokemonId);
     }
 
     public ICommand JumpToBaseWarriorCommand => _parent.JumpToBaseWarriorCommand;
@@ -137,7 +142,7 @@ public class SwMiniViewModel(
         set => Set(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
-    public object WarriorImage => spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object? WarriorImage => spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 
@@ -175,8 +180,8 @@ public class SwMiniViewModel(
     }
 
     bool _suppressUpdateNested = false;
-    private SwPokemonSlotViewModel _selectedItem;
-    public SwPokemonSlotViewModel SelectedItem
+    private SwPokemonSlotViewModel? _selectedItem;
+    public SwPokemonSlotViewModel? SelectedItem
     {
         get => _selectedItem;
         set
@@ -185,7 +190,7 @@ public class SwMiniViewModel(
             {
                 if (!_suppressUpdateNested)
                 {
-                    value.UpdateNested();
+                    value?.UpdateNested();
                 }
             }
         }

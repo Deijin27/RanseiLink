@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     private static bool _showArmy = true;
     private static bool _showFree = false;
     private static bool _showUnassigned = false;
-    private object _selectedItem;
+    private object? _selectedItem;
 
     public ScenarioWarriorWorkspaceViewModel(
         SwMiniViewModel.Factory itemFactory,
@@ -43,14 +44,33 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         UnassignedItems.CollectionChanged += Items_CollectionChanged;
     }
 
-    private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_loading || !(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Move) || sender is not IList<object> items)
+        if (_loading)
         {
             return;
         }
 
-        var newItem = (SwMiniViewModel)e.NewItems[0];
+        if (!(e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Move))
+        {
+            return;
+        }
+
+        if (sender is not IList<object> items)
+        {
+            return;
+        }
+
+        if (e.NewItems == null)
+        {
+            return;
+        }
+
+        var newItem = e.NewItems[0] as SwMiniViewModel;
+        if (newItem == null)
+        {
+            return;
+        }
         var oldClass = newItem.Class;
         var oldArmy = newItem.Army;
 
@@ -124,7 +144,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
-    private ScenarioPokemonViewModel _spVm;
+    private ScenarioPokemonViewModel _spVm = null!;
 
     public void UpdateScenarioPokemonComboItemName(int id)
     {
@@ -135,7 +155,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
-    private IChildScenarioPokemonService _childSpService;
+    private IChildScenarioPokemonService _childSpService = null!;
 
     public ScenarioWarriorWorkspaceViewModel Init(ScenarioPokemonViewModel spVm)
     {
@@ -201,26 +221,30 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         _loading = false;
     }
 
-    private void KingdomItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void KingdomItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         // update the army of the warriors in a kingdom
         // to keep in sync with the army of the kingdom
-        if (e.PropertyName == nameof(SwKingdomMiniViewModel.Army))
+        if (e.PropertyName != nameof(SwKingdomMiniViewModel.Army))
         {
-            var kingdomItem = (SwKingdomMiniViewModel)sender;
-            // only need to recurse ones that will have an army
-            foreach (var warrior in Items.OfType<SwMiniViewModel>().Where(x => x.Kingdom == (int)kingdomItem.Kingdom))
-            {
-                warrior.Army = kingdomItem.Army;
-            }
-
-            // since the army has changed, the leader of this kingdom could have changed
-            // and if this kingdom contains a leader, the leader of other kingdoms could have changed too.
-            UpdateLeaders();
+            return;
         }
+        if (sender is not SwKingdomMiniViewModel kingdomItem)
+        {
+            return;
+        }
+        // only need to recurse ones that will have an army
+        foreach (var warrior in Items.OfType<SwMiniViewModel>().Where(x => x.Kingdom == (int)kingdomItem.Kingdom))
+        {
+            warrior.Army = kingdomItem.Army;
+        }
+
+        // since the army has changed, the leader of this kingdom could have changed
+        // and if this kingdom contains a leader, the leader of other kingdoms could have changed too.
+        UpdateLeaders();
     }
 
-    private void WarriorItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void WarriorItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(SwMiniViewModel.Strength))
         {
@@ -228,7 +252,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
-    private void SpVm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private void SpVm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(ScenarioPokemonViewModel.Pokemon))
         {
@@ -238,6 +262,11 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         if (SelectedItem is not SwMiniViewModel selectedSw)
         {
             // this should never be the case
+            return;
+        }
+
+        if (selectedSw.SelectedItem == null)
+        {
             return;
         }
 
@@ -278,7 +307,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public DragHandlerPro ItemDragHandler { get; }
     public DropHandlerPro ItemDropHandler { get; }
     public ICommand ItemClickedCommand { get; }
-    public List<SelectorComboBoxItem> ScenarioPokemonItems { get; private set; }
+    public List<SelectorComboBoxItem> ScenarioPokemonItems { get; private set; } = null!;
     public List<SelectorComboBoxItem> WarriorItems { get; }
     public List<SelectorComboBoxItem> KingdomItems { get; }
     public List<SelectorComboBoxItem> ItemItems { get; }
@@ -302,7 +331,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         get => _showUnassigned;
         set => Set(ref _showUnassigned, value);
     }
-    public object SelectedItem
+    public object? SelectedItem
     {
         get => _selectedItem;
         set 
@@ -311,13 +340,13 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
             {
                 if (value is SwMiniViewModel spVm)
                 {
-                    spVm.SelectedItem.UpdateNested();
+                    spVm.SelectedItem?.UpdateNested();
                 }
             }
         }
     }
 
-    private void ItemClicked(object sender)
+    private void ItemClicked(object? sender)
     {
         if (sender is SwMiniViewModel)
         {
