@@ -8,7 +8,7 @@ public class PluginFormLoader : IPluginFormLoader
 {
     private static PluginFormGroup GetOrAdd(Dictionary<string, PluginFormGroup> dict, string key)
     {
-        if (dict.TryGetValue(key, out PluginFormGroup value))
+        if (dict.TryGetValue(key, out PluginFormGroup? value))
             return value;
 
         var newGroup = new PluginFormGroup(key, new());
@@ -29,7 +29,7 @@ public class PluginFormLoader : IPluginFormLoader
                     member: property,
                     displayName: boolAttribute.DisplayName,
                     description: boolAttribute.Description,
-                    value: (bool)(property.GetValue(form))
+                    value: (bool)(property.GetValue(form)!)
                     ));
                 continue;
             }
@@ -41,7 +41,7 @@ public class PluginFormLoader : IPluginFormLoader
                     member: property,
                     displayName: intAttribute.DisplayName,
                     description: intAttribute.Description,
-                    value: (int)property.GetValue(form),
+                    value: (int)property.GetValue(form)!,
                     minValue: intAttribute.MinimumValue,
                     maxValue: intAttribute.MaximumValue
                     ));
@@ -64,10 +64,10 @@ public class PluginFormLoader : IPluginFormLoader
             var comboAttribute = property.GetCustomAttribute<CollectionOptionAttribute>();
             if (comboAttribute != null)
             {
-                ICollection values = comboAttribute.Mode switch
+                ICollection? values = comboAttribute.Mode switch
                 {
                     CollectionOptionAttribute.ItemsSourceMode.Collection => comboAttribute.ItemsSource,
-                    CollectionOptionAttribute.ItemsSourceMode.MemberName => form.GetType().GetProperty(comboAttribute.ItemsSourcePropertyName).GetValue(form) as ICollection,
+                    CollectionOptionAttribute.ItemsSourceMode.MemberName => form.GetType().GetProperty(comboAttribute.ItemsSourcePropertyName!)?.GetValue(form) as ICollection,
                     _ => throw new System.Exception($"Invalid {typeof(CollectionOptionAttribute.ItemsSourceMode).FullName}"),
                 };
 

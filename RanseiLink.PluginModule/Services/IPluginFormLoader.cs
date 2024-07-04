@@ -52,26 +52,26 @@ public class IntPluginFormItem : PluginFormOptionItem
 
 public class StringPluginFormItem : PluginFormOptionItem
 {
-    public StringPluginFormItem(PropertyInfo member, string displayName, string description, string value, int maxLength) : base(member, displayName, description)
+    public StringPluginFormItem(PropertyInfo member, string displayName, string description, string? value, int maxLength) : base(member, displayName, description)
     {
         Value = value;
         MaxLength = maxLength;
     }
-    public string Value { get; set; }
+    public string? Value { get; set; }
     public int MaxLength { get; }
 }
 
 public class CollectionPluginFormItem : PluginFormOptionItem
 {
-    public CollectionPluginFormItem(PropertyInfo member, string displayName, string description, object value, ICollection values) : base(member, displayName, description)
+    public CollectionPluginFormItem(PropertyInfo member, string displayName, string description, object? value, ICollection? values) : base(member, displayName, description)
     {
         Value = value;
         Values = values;
     }
-    public object Value { get; set; }
-    public ICollection Values { get; }
+    public object? Value { get; set; }
+    public ICollection? Values { get; }
 }
 
-public record TextPluginFormItem(string Value) : IPluginFormItem;
+public record TextPluginFormItem(string? Value) : IPluginFormItem;
 public record PluginFormGroup(string GroupName, List<IPluginFormItem> Items);
 public record PluginFormInfo(IPluginForm Form, List<IPluginFormItem> UngroupedItems, List<PluginFormGroup> Groups);

@@ -88,8 +88,8 @@ public class CollectionOptionAttribute : BasePluginOptionAttribute
         Mode = ItemsSourceMode.Collection;
     }
 
-    public string ItemsSourcePropertyName { get; }
-    public ICollection ItemsSource { get; }
+    public string? ItemsSourcePropertyName { get; }
+    public ICollection? ItemsSource { get; }
     public ItemsSourceMode Mode { get; }
 
     public enum ItemsSourceMode

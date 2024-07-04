@@ -66,7 +66,7 @@ public class PluginLoader : IPluginLoader
             {
                 try
                 {
-                    plugins.Add((TPlugin)Activator.CreateInstance(type));
+                    plugins.Add((TPlugin)Activator.CreateInstance(type)!);
                 }
                 catch (Exception e)
                 {
@@ -79,11 +79,11 @@ public class PluginLoader : IPluginLoader
     }
 
     private static readonly DirectoryInfo _pluginDirectory = new(Path.Combine(Environment.CurrentDirectory, "Plugins"));
-    private List<PluginInfo> _cache;
-    private PluginLoadFailureInfo _failureCache;
+    private List<PluginInfo>? _cache;
+    private PluginLoadFailureInfo? _failureCache;
     public IReadOnlyCollection<PluginInfo> LoadPlugins(out PluginLoadFailureInfo failures)
     {
-        if (_cache != null)
+        if (_cache != null && _failureCache != null)
         {
             failures = _failureCache;
             return _cache;
@@ -91,7 +91,7 @@ public class PluginLoader : IPluginLoader
         _cache = new List<PluginInfo>();
         foreach (var plugin in GenericLoadPlugins<Api.IPlugin, PluginAttribute>(_pluginDirectory, out failures))
         {
-            var attribute = plugin.GetType().GetCustomAttribute<PluginAttribute>();
+            var attribute = plugin.GetType().GetCustomAttribute<PluginAttribute>()!;
             _cache.Add(new PluginInfo(plugin, attribute.DisplayName, attribute.Author, attribute.Version));
         }
         _failureCache = failures;
