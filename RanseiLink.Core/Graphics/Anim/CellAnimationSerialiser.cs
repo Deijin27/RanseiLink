@@ -3,6 +3,7 @@ using RanseiLink.Core.Archive;
 using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Graphics;
@@ -256,37 +257,42 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
-        var res = new RLAnimationResource(fmt, background);
-
         // save animations
-        ExportNanr(nanr, res);
+        var anims = ExportNanr(nanr);
 
         // save cells
+        List<RLAnimationResource.ClusterInfo> clusters;
         if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
-            ExportOneImagePerCluster(ncer, ncgr, nclr, outputFolder, width, height, settings, dims, res);
+            clusters = ExportOneImagePerCluster(ncer, ncgr, nclr, outputFolder, width, height, settings, dims);
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
-            ExportOneImagePerCell(ncer, ncgr, nclr, outputFolder, dims, res);
+            clusters = ExportOneImagePerCell(ncer, ncgr, nclr, outputFolder, dims);
         }
         else
         {
             throw new ArgumentOutOfRangeException(nameof(fmt), fmt, null);
         }
+        
+        var res = new RLAnimationResource(fmt, background);
+        res.Animations.AddRange(anims);
+        res.Clusters.AddRange(clusters);
 
         var doc = res.Serialise();
         doc.Save(Path.Combine(outputFolder, "animation.xml"));
     }
 
-    private static void ExportNanr(NANR nanr, RLAnimationResource res)
+    private static List<RLAnimationResource.Anim> ExportNanr(NANR nanr)
     {
+        var anims = new List<RLAnimationResource.Anim>();
         for (int i = 0; i < nanr.AnimationBanks.Banks.Count; i++)
         {
             var anim = nanr.AnimationBanks.Banks[i];
             var name = nanr.Labels.Names[i];
-            res.Animations.Add(new RLAnimationResource.Anim(name, anim.Frames.Select(x => new RLAnimationResource.AnimFrame(ClusterToString(x.Cluster), x.Duration)).ToList()));
+            anims.Add(new RLAnimationResource.Anim(name, anim.Frames.Select(x => new RLAnimationResource.AnimFrame(ClusterToString(x.Cluster), x.Duration)).ToList()));
         }
+        return anims;
     }
 
     private static string ClusterToString(int clusterId)
@@ -294,13 +300,15 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return $"cluster_{clusterId}";
     }
 
-    private static void ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims, RLAnimationResource res)
+    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims)
     {
         if (width <= 0 || height <= 0)
         {
             throw new Exception($"With format {RLAnimationFormat.OneImagePerCluster} width and height must be specified");
         }
         var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
+
+        var clusters = new List<RLAnimationResource.ClusterInfo>();
 
         for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
         {
@@ -312,8 +320,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
             // save cluster data
             var cluster = ncer.Clusters.Clusters[clusterId];
-            var bankData = new RLAnimationResource.ClusterInfo(ClusterToString(clusterId)) { File = fileName };
-            res.Clusters.Add(bankData);
+            var clusterData = new RLAnimationResource.ClusterInfo(ClusterToString(clusterId)) { File = fileName };
+            clusters.Add(clusterData);
 
             foreach (var cell in cluster)
             {
@@ -329,17 +337,21 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Height = cell.Height,
                     Width = cell.Width,
                 };
-                bankData.Cells.Add(cellData);
+                clusterData.Cells.Add(cellData);
             }
         }
+
+        return clusters;
     }
 
     
 
-    private static void ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, BankDimensions dims, RLAnimationResource res)
+    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, BankDimensions dims)
     {
         var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
         var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
+
+        var clusters = new List<RLAnimationResource.ClusterInfo>();
 
         for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
         {
@@ -351,7 +363,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             // save bank data
             var cluster = ncer.Clusters.Clusters[clusterId];
             var clusterData = new RLAnimationResource.ClusterInfo(ClusterToString(clusterId));
-            res.Clusters.Add(clusterData);
+            clusters.Add(clusterData);
 
             for (int cellId = 0; cellId < cluster.Count; cellId++)
             {
@@ -395,6 +407,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 clusterData.Cells.Add(cellData);
             }
         }
+
+        return clusters;
     }
 
 
