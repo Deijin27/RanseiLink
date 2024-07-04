@@ -1,59 +1,59 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <nitro_cell_animation_resource>
   <cell_collection format="OneImagePerCluster">
-    <cluster name="0" file="0000.png" />
-    <cluster name="1" file="0001.png">
+    <cluster name="cluster_0" file="0000.png" />
+    <cluster name="cluster_1" file="0001.png">
       <cell x="97" y="3" width="64" height="32" flip_x="true" />
     </cluster>
-    <cluster name="2" file="0002.png">
+    <cluster name="cluster_2" file="0002.png">
       <cell x="97" y="3" width="64" height="32" />
     </cluster>
-    <cluster name="3" file="0003.png">
+    <cluster name="cluster_3" file="0003.png">
       <cell x="97" y="3" width="64" height="32" flip_y="true" />
     </cluster>
-    <cluster name="4" file="0004.png">
+    <cluster name="cluster_4" file="0004.png">
       <cell x="157" y="35" width="64" height="32" />
     </cluster>
-    <cluster name="5" file="0005.png">
+    <cluster name="cluster_5" file="0005.png">
       <cell x="157" y="35" width="64" height="32" />
     </cluster>
-    <cluster name="6" file="0006.png">
+    <cluster name="cluster_6" file="0006.png">
       <cell x="157" y="35" width="64" height="32" />
     </cluster>
-    <cluster name="7" file="0007.png">
+    <cluster name="cluster_7" file="0007.png">
       <cell x="157" y="35" width="64" height="32" />
     </cluster>
-    <cluster name="8" file="0008.png">
+    <cluster name="cluster_8" file="0008.png">
       <cell x="64" y="16" width="32" height="64" />
     </cluster>
-    <cluster name="9" file="0009.png">
+    <cluster name="cluster_9" file="0009.png">
       <cell x="64" y="16" width="32" height="64" />
     </cluster>
-    <cluster name="10" file="0010.png">
+    <cluster name="cluster_10" file="0010.png">
       <cell x="64" y="16" width="32" height="64" />
     </cluster>
-    <cluster name="11" file="0011.png">
+    <cluster name="cluster_11" file="0011.png">
       <cell x="64" y="16" width="32" height="64" />
     </cluster>
   </cell_collection>
   <animation_collection>
     <animation name="reflection">
-      <frame cluster="3" duration="8" />
-      <frame cluster="2" duration="8" />
-      <frame cluster="1" duration="8" />
-      <frame cluster="0" duration="180" />
+      <frame cluster="cluster_3" duration="8" />
+      <frame cluster="cluster_2" duration="8" />
+      <frame cluster="cluster_1" duration="8" />
+      <frame cluster="cluster_0" duration="180" />
     </animation>
     <animation name="flag_r">
-      <frame cluster="4" duration="12" />
-      <frame cluster="5" duration="12" />
-      <frame cluster="6" duration="12" />
-      <frame cluster="7" duration="12" />
+      <frame cluster="cluster_4" duration="12" />
+      <frame cluster="cluster_5" duration="12" />
+      <frame cluster="cluster_6" duration="12" />
+      <frame cluster="cluster_7" duration="12" />
     </animation>
     <animation name="flag_l">
-      <frame cluster="8" duration="12" />
-      <frame cluster="9" duration="12" />
-      <frame cluster="10" duration="12" />
-      <frame cluster="11" duration="12" />
+      <frame cluster="cluster_8" duration="12" />
+      <frame cluster="cluster_9" duration="12" />
+      <frame cluster="cluster_10" duration="12" />
+      <frame cluster="cluster_11" duration="12" />
     </animation>
   </animation_collection>
 </nitro_cell_animation_resource>

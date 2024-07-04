@@ -45,7 +45,7 @@ public class RLAnimationResource
 
     public class Anim
     {
-        public string Name { get; }
+        public string Name { get; set; }
         public List<AnimFrame> Frames { get; }
 
         public Anim(string name, List<AnimFrame> frames)
@@ -77,25 +77,25 @@ public class RLAnimationResource
 
     public class AnimFrame
     {
-        public string Image { get; }
+        public string Cluster { get; }
         public int Duration { get; }
 
-        public AnimFrame(string image, int duration)
+        public AnimFrame(string cluster, int duration)
         {
-            Image = image;
+            Cluster = cluster;
             Duration = duration;
         }
 
         public AnimFrame(XElement frameElem)
         {
-            Image = frameElem.AttributeStringNonEmpty("cluster");
+            Cluster = frameElem.AttributeStringNonEmpty("cluster");
             Duration = frameElem.AttributeInt("duration");
         }
 
         public XElement Serialise()
         {
             return new XElement("frame",
-                new XAttribute("cluster", Image),
+                new XAttribute("cluster", Cluster),
                 new XAttribute("duration", Duration)
                 );
         }
