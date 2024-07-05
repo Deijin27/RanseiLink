@@ -424,29 +424,32 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         ncer.Clusters.Clusters.Clear();
         ncer.Labels.Names.Clear();
 
-        // load the cell info
-        var nameToClusterId = new Dictionary<string, ushort>();
+        // Generate a map of cluster name to ID to be used to import the animations
+        var nameToClusterId = GenerateClusterMap(res);
 
         var fmt = res.Format;
         if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
-            ImportOneImagePerBank(ncer, ncgr, nclr, settings, dims, res, dir, nameToClusterId);
+            ImportOneImagePerCluster(ncer, ncgr, nclr, settings, dims, res, dir);
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
-            ImportOneImagePerCell(ncer, ncgr, nclr, dims, res, dir, nameToClusterId);
+            ImportOneImagePerCell(ncer, ncgr, nclr, dims, res, dir);
         }
         else
         {
             throw new Exception($"Invalid serialisation format {res.Format}");
         }
 
-        NANR nanr = ImportNanr(ncer, res, nameToClusterId);
+        NANR nanr = ImportNanr(res, nameToClusterId);
+
+        // for some reason it stores animation names in here as well as the LABL section in NANR
+        ncer.Labels.Names.AddRange(nanr.Labels.Names); 
 
         return nanr;
     }
 
-    private static NANR ImportNanr(NCER ncer, RLAnimationResource res, Dictionary<string, ushort> nameToClusterId)
+    private static NANR ImportNanr(RLAnimationResource res, Dictionary<string, ushort> nameToClusterId)
     {
         // load the animations
         var nanr = new NANR();
@@ -456,14 +459,13 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             // TODO: set datatype, unknowns1,2,3
             nanr.AnimationBanks.Banks.Add(targetAnim);
             nanr.Labels.Names.Add(anim.Name);
-            ncer.Labels.Names.Add(anim.Name); // for some reason it stores animation names in here
             foreach (var frame in anim.Frames)
             {
                 var targetFrame = new ABNK.Frame();
                 targetAnim.Frames.Add(targetFrame);
                 if (!nameToClusterId.TryGetValue(frame.Cluster, out var bankId))
                 {
-                    throw new Exception($"Animation '{anim.Name}' references cellImage of name '{frame.Cluster}' which doesn't exist");
+                    throw new Exception($"Animation '{anim.Name}' references cluster of name '{frame.Cluster}' which doesn't exist");
                 }
                 targetFrame.Cluster = bankId;
                 targetFrame.Duration = (ushort)frame.Duration;
@@ -472,17 +474,40 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return nanr;
     }
 
-    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToClusterId)
+    private static void CalculateShapeAndScale(Cell cell)
     {
-        var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
+        var size = CellImageUtil.GetCellSize(cell.Width, cell.Height);
+        if (size == null)
+        {
+            throw new Exception($"Disallowed cell width and height ({cell.Width}, {cell.Height})");
+        }
+        cell.Shape = size.Shape;
+        cell.Scale = size.Scale;
+    }
+
+    private static Dictionary<string, ushort> GenerateClusterMap(RLAnimationResource res)
+    {
+        var nameToClusterId = new Dictionary<string, ushort>();
         for (int i = 0; i < res.Clusters.Count; i++)
         {
             var clusterInfo = res.Clusters[i];
+            if (nameToClusterId.ContainsKey(clusterInfo.Name))
+            {
+                throw new Exception($"More than one cluster has the same name {clusterInfo.Name}");
+            }
+            nameToClusterId.Add(clusterInfo.Name, (ushort)i);
+        }
+        return nameToClusterId;
+    }
+
+    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir)
+    {
+        var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
+        foreach (var clusterInfo in res.Clusters)
+        {
             List<Image<Rgba32>> images = [];
             imageGroups.Add(images);
             var bank = new Cluster();
-            // store the mapping of name to bank to use later when loading animations
-            nameToClusterId.Add(clusterInfo.Name, (ushort)i);
             ncer.Clusters.Clusters.Add(bank);
 
             foreach (var cellInfo in clusterInfo.Cells)
@@ -496,7 +521,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     FlipY = cellInfo.FlipY,
                     DoubleSize = cellInfo.DoubleSize,
                     IndexPalette = (byte)cellInfo.Palette,
-                    Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit 
+                    Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit
                 };
                 bank.Add(cell);
                 if (string.IsNullOrEmpty(cellInfo.File))
@@ -527,28 +552,14 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static void CalculateShapeAndScale(Cell cell)
-    {
-        var size = CellImageUtil.GetCellSize(cell.Width, cell.Height);
-        if (size == null)
-        {
-            throw new Exception($"Disallowed cell width and height ({cell.Width}, {cell.Height})");
-        }
-        cell.Shape = size.Shape;
-        cell.Scale = size.Scale;
-    }
-
-    private static void ImportOneImagePerBank(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir, Dictionary<string, ushort> nameToClusterId)
+    private static void ImportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir)
     {
         var fmt = RLAnimationFormat.OneImagePerCluster;
         List<Image<Rgba32>> images = [];
 
-        for (int i = 0; i < res.Clusters.Count; i++)
+        foreach (var clusterInfo in res.Clusters)
         {
-            var clusterInfo = res.Clusters[i];
             var bank = new Cluster();
-            // store the mapping of name to bank to use later when loading animations
-            nameToClusterId.Add(clusterInfo.Name, (ushort)i);
             ncer.Clusters.Clusters.Add(bank);
 
             foreach (var cellInfo in clusterInfo.Cells)
