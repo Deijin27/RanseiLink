@@ -30,6 +30,7 @@ public class BaseWarriorViewModel : ViewModelBase
         JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorWorkspaceModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
+        JumpToWarriorNameCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorNameTableEditorModule.Id, id));
         JumpToSpeakerMessagesCommand = new RelayCommand(() =>
         {
             jumpService.JumpToMessageFilter($"{{{PnaConstNames.SpeakerId}:{SpeakerId}}}", false);
@@ -64,6 +65,7 @@ public class BaseWarriorViewModel : ViewModelBase
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToPokemonCommand { get; }
     public ICommand JumpToSpeakerMessagesCommand { get; }
+    public ICommand JumpToWarriorNameCommand { get; }
 
     public int SpeakerId
     {
