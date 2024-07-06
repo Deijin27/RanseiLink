@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<nitro_cell_animation_resource>
+<nitro_cell_animation_resource version="1">
   <cell_collection format="OneImagePerCluster">
     <cluster name="cluster_0" file="0000.png" />
     <cluster name="cluster_1" file="0001.png">

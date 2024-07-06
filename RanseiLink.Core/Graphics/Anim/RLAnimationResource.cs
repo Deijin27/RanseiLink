@@ -6,6 +6,7 @@ namespace RanseiLink.Core.Graphics;
 
 public class RLAnimationResource
 {
+    public const int Version = 1;
     public string? Background { get; set; }
     public RLAnimationFormat Format { get; set; }
     public List<ClusterInfo> Clusters { get; }
@@ -22,6 +23,12 @@ public class RLAnimationResource
     public RLAnimationResource(XDocument doc)
     {
         var root = doc.ElementRequired("nitro_cell_animation_resource");
+        var version = root.AttributeInt("version");
+        if (version != Version)
+        {
+            throw new Exception($"Unknown animation format version '{version}'");
+        }
+
         Background = root.Attribute("background")?.Value;
         var cellCollection = root.ElementRequired("cell_collection");
         Format = cellCollection.AttributeEnum<RLAnimationFormat>("format");
@@ -35,7 +42,9 @@ public class RLAnimationResource
         cellElem.Add(new XAttribute("format", Format));
         var animationElem = new XElement("animation_collection", Animations.Select(x => x.Serialise()));
 
-        var root = new XElement("nitro_cell_animation_resource", cellElem, animationElem);
+        var versionAttr = new XAttribute("version", Version);
+
+        var root = new XElement("nitro_cell_animation_resource", versionAttr, cellElem, animationElem);
         if (Background != null)
         {
             root.Add(new XAttribute("background", Background));
