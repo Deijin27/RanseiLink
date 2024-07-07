@@ -65,8 +65,8 @@ public class IconInstSDefaultPopulater : IMiscItemDefaultPopulater
                 // Not all building ids have icons
                 // to facilitate potentially filling in these gaps in the future,
                 // we enforce the 32x32 size, and add gaps
-                using var image = CellImageUtil.MultiBankToImage(
-                   banks: ncer.Clusters.Clusters,
+                using var image = CellImageUtil.MultiClusterToImage(
+                   clusters: ncer.Clusters.Clusters,
                    blockSize: ncer.Clusters.BlockSize,
                    imageInfo: new MultiPaletteImageInfo(
                        Pixels: ncgr.Pixels.Data,

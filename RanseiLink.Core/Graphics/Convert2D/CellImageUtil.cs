@@ -34,39 +34,39 @@ public record CellImageSettings(
     bool Debug = false
     );
 
-public record BankDimensions(int XShift, int YShift, int Width, int Height);
+public record ClusterDimensions(int XShift, int YShift, int Width, int Height);
 
 public static class CellImageUtil
 {
 
-    public static BankDimensions InferDimensions(Cluster? bank, int width, int height, CellImageSettings settings)
+    public static ClusterDimensions InferDimensions(Cluster? cluster, int width, int height, CellImageSettings settings)
     {
         int xShift = 0;
         int yShift = 0;
 
         if (settings.Prt == PositionRelativeTo.MinCell)
         {
-            if (bank == null || bank.Count == 0)
+            if (cluster == null || cluster.Count == 0)
             {
-                // if the bank is empty, we still return bank dimensoins which are
+                // if the cluster is empty, we still return cluster dimensoins which are
                 // just the width and height with everything else as default
                 // The other values will not be used, so it doesn't matter
                 // The width and height should be the values passed in.
                 // this will lead to a transparent, blank placeholder image to be produced.
                 // but default the width and height to non-zero values
                 // for the case where the user doesn't provide them to remain valid image
-                return new BankDimensions(0, 0, Math.Max(width, 1), Math.Max(height, 1));
+                return new ClusterDimensions(0, 0, Math.Max(width, 1), Math.Max(height, 1));
             }
-            int minY = bank.Min(i => i.YOffset + yShift);
-            int minX = bank.Min(i => i.XOffset + xShift);
+            int minY = cluster.Min(i => i.YOffset + yShift);
+            int minX = cluster.Min(i => i.XOffset + xShift);
             yShift -= minY;
             xShift -= minX;
 
             if (width <= 0 || height <= 0)
             {
                 // scale dimensions to fit cells
-                int maxY = bank.Max(i => i.YOffset + i.Height);
-                int maxX = bank.Max(i => i.XOffset + i.Width);
+                int maxY = cluster.Max(i => i.YOffset + i.Height);
+                int maxX = cluster.Max(i => i.XOffset + i.Width);
                 width = Math.Max(maxX - minX, width);
                 height = Math.Max(maxY - minY, height);
             }
@@ -90,7 +90,7 @@ public static class CellImageUtil
             yShift = 0;
         }
 
-        return new BankDimensions(xShift, yShift, width, height);
+        return new ClusterDimensions(xShift, yShift, width, height);
     }
 
     public static Image<Rgba32> CellToImage(Cell cell, uint blockSize, MultiPaletteImageInfo imageInfo)
@@ -120,29 +120,36 @@ public static class CellImageUtil
         return cellImg;
     }
 
-    public static IReadOnlyList<Image<Rgba32>> SingleBankToMultipleImages(Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo)
+    /// <summary>
+    /// For a cluster, create one image per cell
+    /// </summary>
+    public static IReadOnlyList<Image<Rgba32>> SingleClusterToMultipleImages(Cluster cluster, uint blockSize, MultiPaletteImageInfo imageInfo)
     {
-        var images = new Image<Rgba32>[bank.Count];
+        var images = new Image<Rgba32>[cluster.Count];
 
-        for (int i = 0; i < bank.Count; i++)
+        for (int i = 0; i < cluster.Count; i++)
         {
-            var cell = bank[i];
+            var cell = cluster[i];
             var image = CellToImage(cell, blockSize, imageInfo);
             images[i] = image;
         }
         return images;
     }
 
-    public static Image<Rgba32> SingleBankToImage(Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    /// <summary>
+    /// For a cluster, create one image containing all cells.
+    /// The cells are draw at their x,y positions.
+    /// </summary>
+    public static Image<Rgba32> SingleClusterToImage(Cluster cluster, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        var dims = InferDimensions(bank, imageInfo.Width, imageInfo.Height, settings);
+        var dims = InferDimensions(cluster, imageInfo.Width, imageInfo.Height, settings);
 
         var graphic = new Image<Rgba32>(dims.Width, dims.Height);
         // for some reason the cells are drawn in reverse
         // while usually cells don't overlap, sometimes they do e.g. in castlemap illusio
-        for (int i = bank.Count - 1; i >= 0; i--)
+        for (int i = cluster.Count - 1; i >= 0; i--)
         {
-            Cell cell = bank[i];
+            Cell cell = cluster[i];
             using (var cellImg = CellToImage(cell, blockSize, imageInfo))
             {
                 graphic.Mutate(g =>
@@ -160,7 +167,7 @@ public static class CellImageUtil
             graphic.Mutate(g =>
             {
                 int i = 0;
-                foreach (var cell in bank)
+                foreach (var cell in cluster)
                 {
                     g.DrawText(i.ToString(), SystemFonts.CreateFont("Arial", 9), Color.Black, new PointF(cell.XOffset + 2 + dims.XShift, cell.YOffset + 2 + dims.YShift));
                     g.Draw(Pens.Solid(Color.Red, 1), new RectangleF(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width - 1, cell.Height - 1));
@@ -172,38 +179,50 @@ public static class CellImageUtil
         return graphic;
     }
 
-    public static void SingleBankToPng(string file, Cluster bank, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    /// <summary>
+    /// For a cluster, create one image containing all cells, then save as a png to a file
+    /// </summary>
+    public static void SingleClusterToPng(string file, Cluster cluster, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        using var graphic = SingleBankToImage(bank, blockSize, imageInfo, settings);
+        using var graphic = SingleClusterToImage(cluster, blockSize, imageInfo, settings);
         graphic.SaveAsPng(file);
     }
 
-
-    public static Image<Rgba32> MultiBankToImage(IReadOnlyList<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    /// <summary>
+    /// For a set of cluters, create one image for each cluster containing all of its cells, 
+    /// then stack these images vertically into a single image.
+    /// </summary>
+    public static Image<Rgba32> MultiClusterToImage(IReadOnlyList<Cluster> clusters, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        if (banks.Count == 0)
+        if (clusters.Count == 0)
         {
-            throw new Exception("Can't load image with no cell banks");
+            throw new Exception("Can't load image with no cell clusters");
         }
-        else if (banks.Count == 1)
+        else if (clusters.Count == 1)
         {
-            return SingleBankToImage(banks[0], blockSize, imageInfo, settings);
+            return SingleClusterToImage(clusters[0], blockSize, imageInfo, settings);
         }
         else
         {
-            var images = MultiBankToMultipleImages(banks, blockSize, imageInfo, settings);
+            var images = MultiClusterToMultipleImages(clusters, blockSize, imageInfo, settings);
             return ImageUtil.CombineImagesVertically(images);
         }
     }
 
-    public static IReadOnlyList<Image<Rgba32>> MultiBankToMultipleImages(IReadOnlyList<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
+    /// <summary>
+    /// For a set of clusters, create one image for each cluster containing all of its cells.
+    /// </summary>
+    public static IReadOnlyList<Image<Rgba32>> MultiClusterToMultipleImages(IReadOnlyList<Cluster> clusters, uint blockSize, MultiPaletteImageInfo imageInfo, CellImageSettings settings)
     {
-        return banks.Select(bank => SingleBankToImage(bank, blockSize, imageInfo, settings)).ToList();
+        return clusters.Select(cluster => SingleClusterToImage(cluster, blockSize, imageInfo, settings)).ToList();
     }
 
-    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiBankToMultipleImageGroups(IReadOnlyCollection<Cluster> banks, uint blockSize, MultiPaletteImageInfo imageInfo)
+    /// <summary>
+    /// For a set of clusters, create one image per cell of each cluster.
+    /// </summary>
+    public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> MultiClusterToMultipleImageGroups(IReadOnlyCollection<Cluster> clusters, uint blockSize, MultiPaletteImageInfo imageInfo)
     {
-        return banks.Select(bank => SingleBankToMultipleImages(bank, blockSize, imageInfo)).ToList();
+        return clusters.Select(cluster => SingleClusterToMultipleImages(cluster, blockSize, imageInfo)).ToList();
     }
 
     /// <summary>
@@ -252,30 +271,38 @@ public static class CellImageUtil
             workingPixels.Add(0);
         }
     }
-    public static void SharedSingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster bank, uint blockSize,
+
+    /// <summary>
+    /// Using a provided palette and pixel buffer, import cluster pixel data from a set of images, each image representing one cell of the cluster
+    /// </summary>
+    public static void SharedSingleClusterFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster cluster, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
         bool tiled, TexFormat format)
     {
-        if (images.Count != bank.Count)
+        if (images.Count != cluster.Count)
         {
-            throw new ArgumentException($"Images did not have the same number of items as cell bank ({images.Count} vs {bank.Count})");
+            throw new ArgumentException($"Images did not have the same number of items as cell cluster ({images.Count} vs {cluster.Count})");
         }
 
-        for (int i = 0; i < bank.Count; i++)
+        for (int i = 0; i < cluster.Count; i++)
         {
             var image = images[i];
-            var cell = bank[i];
+            var cell = cluster[i];
             CellFromImage(image, cell, blockSize, workingPixels, workingPalette, tiled, format);
         }
     }
 
-    public static MultiPaletteImageInfo SingleBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster bank, uint blockSize,
+
+    /// <summary>
+    /// Import cluster pixel data from a set of images, each image representing one cell of the cluster
+    /// </summary>
+    public static MultiPaletteImageInfo SingleClusterFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster cluster, uint blockSize,
         bool tiled, TexFormat format)
     {
         var workingPixels = new List<byte>();
-        var workingPalette = new PaletteCollection(bank, format, true);
+        var workingPalette = new PaletteCollection(cluster, format, true);
 
-        SharedSingleBankFromMultipleImages(images, bank, blockSize, workingPixels, workingPalette, tiled, format);
+        SharedSingleClusterFromMultipleImages(images, cluster, blockSize, workingPixels, workingPalette, tiled, format);
 
         return new MultiPaletteImageInfo(
             Pixels: workingPixels.ToArray(),
@@ -287,15 +314,19 @@ public static class CellImageUtil
             );
     }
 
-    public static void SharedSingleBankFromImage(Image<Rgba32> image, Cluster bank, uint blockSize,
+    /// <summary>
+    /// Using a provided palette and pixel buffer, import cluster pixel data from a single image where
+    /// each cell is read from the x,y positions specified in <paramref name="cluster"/>
+    /// </summary>
+    public static void SharedSingleClusterFromImage(Image<Rgba32> image, Cluster cluster, uint blockSize,
         List<byte> workingPixels, PaletteCollection workingPalette,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
-        var dims = InferDimensions(bank, image.Width, image.Height, settings);
+        var dims = InferDimensions(cluster, image.Width, image.Height, settings);
 
-        for (int i = 0; i < bank.Count; i++)
+        for (int i = 0; i < cluster.Count; i++)
         {
-            var cell = bank[i];
+            var cell = cluster[i];
             using (var cellImg = ImageUtil.SafeCrop(image, new Rectangle(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height)))
             {
                 CellFromImage(cellImg, cell, blockSize, workingPixels, workingPalette, tiled, format);
@@ -303,14 +334,18 @@ public static class CellImageUtil
         }
     }
 
-    public static MultiPaletteImageInfo SingleBankFromImage(Image<Rgba32> image, Cluster bank, uint blockSize,
+    /// <summary>
+    /// Import cluster pixel data from a single image where
+    /// each cell is read from the x,y positions specified in <paramref name="cluster"/>
+    /// </summary>
+    public static MultiPaletteImageInfo SingleClusterFromImage(Image<Rgba32> image, Cluster cluster, uint blockSize,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
         var workingPixels = new List<byte>();
-        var workingPalette = new PaletteCollection(bank, format, true);
+        var workingPalette = new PaletteCollection(cluster, format, true);
         
 
-        SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
+        SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
 
         workingPalette.SetColor0(Color.Magenta);
         return new MultiPaletteImageInfo(
@@ -323,103 +358,119 @@ public static class CellImageUtil
             );
     }
 
-    public static MultiPaletteImageInfo SingleBankFromPng(string file, Cluster bank, uint blockSize, 
+    /// Import cluster pixel data from a single png image file where
+    /// each cell is read from the x,y positions specified in <paramref name="cluster"/>
+    /// </summary>
+    public static MultiPaletteImageInfo SingleClusterFromPng(string file, Cluster cluster, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings)
     {
-        if (bank.Count == 0)
+        if (cluster.Count == 0)
         {
-            throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
+            throw new Exception($"Tried to load png with empty cluster (when loading file '{file}')");
         }
 
         using var image = ImageUtil.LoadPngBetterError(file);
 
-        return SingleBankFromImage(image, bank, blockSize, tiled, format, settings);
+        return SingleClusterFromImage(image, cluster, blockSize, tiled, format, settings);
     }
 
-    public static MultiPaletteImageInfo MultiBankFromPng(string file, IReadOnlyList<Cluster> banks, uint blockSize, 
+    /// <summary>
+    /// Import pixel data of multiple clusters from png image file where each cluster is stacked vertically
+    /// </summary>
+    public static MultiPaletteImageInfo MultiClusterFromPng(string file, IReadOnlyList<Cluster> clusters, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
-        if (banks.Any(x => x.Count == 0))
+        if (clusters.Any(x => x.Count == 0))
         {
-            throw new Exception($"Tried to load png with empty bank (when loading file '{file}')");
+            throw new Exception($"Tried to load png with empty cluster (when loading file '{file}')");
         }
 
         using var image = ImageUtil.LoadPngBetterError(file);
 
-        return MultiBankFromImage(image, banks, blockSize, tiled, format, settings, width, height);
+        return MultiClusterFromImage(image, clusters, blockSize, tiled, format, settings, width, height);
     }
 
-    public static MultiPaletteImageInfo MultiBankFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> banks, uint blockSize, 
+    /// <summary>
+    /// Import pixel data of multiple clusters from an image where each cluster is stacked vertically
+    /// </summary>
+    public static MultiPaletteImageInfo MultiClusterFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> clusters, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
-        if (banks.Count == 0)
+        if (clusters.Count == 0)
         {
-            throw new Exception("Can't load image with no cell banks");
+            throw new Exception("Can't load image with no cell clusters");
         }
-        if (banks.Count == 1)
+        if (clusters.Count == 1)
         {
-            return SingleBankFromImage(image, banks[0], blockSize, tiled, format, settings);
+            return SingleClusterFromImage(image, clusters[0], blockSize, tiled, format, settings);
         }
 
 
-        var workingPalette = new PaletteCollection(banks, format, true);
+        var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
 
-        SharedPaletteMultiBankFromImage(image, banks, workingPixels, workingPalette, blockSize, tiled, format, settings, width, height);
+        SharedPaletteMultiClusterFromImage(image, clusters, workingPixels, workingPalette, blockSize, tiled, format, settings, width, height);
         workingPalette.SetColor0(Color.Magenta);
 
         return new MultiPaletteImageInfo(workingPixels.ToArray(), workingPalette, width, height, tiled, format);
     }
 
-    public static void SharedPaletteMultiBankFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> banks, 
+    /// <summary>
+    /// Using a single palette and pixel buffer, mport pixel data of multiple clusters from an image where each cluster is stacked vertically
+    /// </summary>
+    public static void SharedPaletteMultiClusterFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> clusters, 
         List<byte> workingPixels, PaletteCollection workingPalette, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
-        if (banks.Count == 0)
+        if (clusters.Count == 0)
         {
-            throw new Exception("Can't load image with no cell banks");
+            throw new Exception("Can't load image with no cell clusters");
         }
 
-        if (banks.Count == 1)
+        if (clusters.Count == 1)
         {
-            SharedSingleBankFromImage(image, banks[0], blockSize, workingPixels, workingPalette, tiled, format, settings);
+            SharedSingleClusterFromImage(image, clusters[0], blockSize, workingPixels, workingPalette, tiled, format, settings);
             return;
         }
 
         var cumulativeHeight = 0;
-        foreach (var bank in banks)
+        foreach (var cluster in clusters)
         {
-            var dims = InferDimensions(bank, width, height, settings);
+            var dims = InferDimensions(cluster, width, height, settings);
             using (var subImage = image.Clone(g =>
             {
                 g.Crop(new Rectangle(0, cumulativeHeight, dims.Width, dims.Height));
 
             }))
             {
-                SharedSingleBankFromImage(subImage, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
+                SharedSingleClusterFromImage(subImage, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
             }
             cumulativeHeight += dims.Height;
         }
     }
-    public static MultiPaletteImageInfo MultiBankFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<Cluster> banks, uint blockSize, 
+
+    /// <summary>
+    /// Import cluster pixel data from a set of one image per cluster
+    /// </summary>
+    public static MultiPaletteImageInfo MultiClusterFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, IReadOnlyList<Cluster> clusters, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings)
     {
-        if (banks.Count == 0)
+        if (clusters.Count == 0)
         {
-            throw new ArgumentException("Can't load image with no cell banks");
+            throw new ArgumentException("Can't load image with no cell clusters");
         }
-        if (banks.Count != images.Count)
+        if (clusters.Count != images.Count)
         {
-            throw new ArgumentException($"Images did not have the same number of items as banks ({images.Count} vs {banks.Count})");
+            throw new ArgumentException($"Images did not have the same number of items as clusters ({images.Count} vs {clusters.Count})");
         }
 
-        var workingPalette = new PaletteCollection(banks, format, true);
+        var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
-        for (int i = 0; i < banks.Count; i++)
+        for (int i = 0; i < clusters.Count; i++)
         {
-            var bank = banks[i];
+            var cluster = clusters[i];
             var image = images[i];
-            SharedSingleBankFromImage(image, bank, blockSize, workingPixels, workingPalette, tiled, format, settings);
+            SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
         }
 
         workingPalette.SetColor0(Color.Magenta);
@@ -434,25 +485,28 @@ public static class CellImageUtil
             );
     }
 
-    public static MultiPaletteImageInfo MultiBankFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<Cluster> banks, uint blockSize,
+    /// <summary>
+    /// Import cluster pixel data from a set of one image per cell.
+    /// </summary>
+    public static MultiPaletteImageInfo MultiClusterFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<Cluster> clusters, uint blockSize,
         bool tiled, TexFormat format)
     {
-        if (banks.Count == 0)
+        if (clusters.Count == 0)
         {
-            throw new ArgumentException("Can't load image with no cell banks");
+            throw new ArgumentException("Can't load image with no cell clusters");
         }
-        if (banks.Count != imageGroups.Count)
+        if (clusters.Count != imageGroups.Count)
         {
-            throw new ArgumentException($"ImageGroups did not have the same number of items as banks ({imageGroups.Count} vs {banks.Count})");
+            throw new ArgumentException($"ImageGroups did not have the same number of items as clusters ({imageGroups.Count} vs {clusters.Count})");
         }
 
-        var workingPalette = new PaletteCollection(banks, format, true);
+        var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
-        for (int i = 0; i < banks.Count; i++)
+        for (int i = 0; i < clusters.Count; i++)
         {
-            var bank = banks[i];
+            var cluster = clusters[i];
             var imageGroup = imageGroups[i];
-            SharedSingleBankFromMultipleImages(imageGroup, bank, blockSize, workingPixels, workingPalette, tiled, format);
+            SharedSingleClusterFromMultipleImages(imageGroup, cluster, blockSize, workingPixels, workingPalette, tiled, format);
         }
 
         workingPalette.SetColor0(Color.Magenta);
@@ -467,10 +521,12 @@ public static class CellImageUtil
             );
     }
 
-
+    /// <summary>
+    /// Get the width and height of a cell for a given shape and scale.
+    /// </summary>
     public static CellSize GetCellSize(Shape shape, Scale scale)
     {
-        if (!s_scaleShapeLookup.TryGetValue(shape, out var scaleDict))
+        if (!__scaleShapeLookup.TryGetValue(shape, out var scaleDict))
         {
             throw new ArgumentException($"Invalid cell shape {shape}");
         }
@@ -481,22 +537,26 @@ public static class CellImageUtil
         return size;
     }
 
+    /// <summary>
+    /// Get the shape and scale of a cell for a given width and height.
+    /// Returns null if they are not valid sizes.
+    /// </summary>
     public static CellSize? GetCellSize(int width, int height)
     {
-        if (s_widthHeightLookup.TryGetValue(width, out var heightDict) && heightDict.TryGetValue(height, out var size))
+        if (__widthHeightLookup.TryGetValue(width, out var heightDict) && heightDict.TryGetValue(height, out var size))
         {
             return size;
         }
         return null;
     }
 
-    private static readonly Dictionary<Shape, Dictionary<Scale, CellSize>> s_scaleShapeLookup;
-    private static readonly Dictionary<int, Dictionary<int, CellSize>> s_widthHeightLookup;
+    private static readonly Dictionary<Shape, Dictionary<Scale, CellSize>> __scaleShapeLookup;
+    private static readonly Dictionary<int, Dictionary<int, CellSize>> __widthHeightLookup;
 
     static CellImageUtil()
     {
-        ValidCellSizes = new[]
-        {
+        ValidCellSizes =
+        [
             new CellSize(Shape.Square, Scale.Small, 8, 8),
             new CellSize(Shape.Square, Scale.Medium, 16, 16),
             new CellSize(Shape.Square, Scale.Large, 32, 32),
@@ -511,24 +571,24 @@ public static class CellImageUtil
             new CellSize(Shape.Tall, Scale.Medium, 8, 32),
             new CellSize(Shape.Tall, Scale.Large, 16, 32),
             new CellSize(Shape.Tall, Scale.XLarge, 32, 64),
-        };
+        ];
 
-        s_scaleShapeLookup = new();
-        s_widthHeightLookup = new();
+        __scaleShapeLookup = [];
+        __widthHeightLookup = [];
 
         foreach (var size in ValidCellSizes)
         {
-            if (!s_scaleShapeLookup.TryGetValue(size.Shape, out var scaleDict))
+            if (!__scaleShapeLookup.TryGetValue(size.Shape, out var scaleDict))
             {
-                scaleDict = new();
-                s_scaleShapeLookup[size.Shape] = scaleDict;
+                scaleDict = [];
+                __scaleShapeLookup[size.Shape] = scaleDict;
             }
             scaleDict[size.Scale] = size;
 
-            if (!s_widthHeightLookup.TryGetValue(size.Width, out var heightDict))
+            if (!__widthHeightLookup.TryGetValue(size.Width, out var heightDict))
             {
-                heightDict = new();
-                s_widthHeightLookup[size.Width] = heightDict;
+                heightDict = [];
+                __widthHeightLookup[size.Width] = heightDict;
             }
             heightDict[size.Height] = size;
         }

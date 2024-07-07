@@ -76,7 +76,7 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
                 g.Crop(new Rectangle(0, (id * height), width, height)));
 
             var workingPixels = new List<byte>();
-            CellImageUtil.SharedPaletteMultiBankFromImage(
+            CellImageUtil.SharedPaletteMultiClusterFromImage(
                 image: subImage,
                 ncer.Clusters.Clusters,
                 workingPixels,

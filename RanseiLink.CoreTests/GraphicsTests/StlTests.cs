@@ -45,7 +45,7 @@ public class StlTests
 
         using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, Settings);
 
-        var info = CellImageUtil.MultiBankFromImage(
+        var info = CellImageUtil.MultiClusterFromImage(
             image,
             ncer.Clusters.Clusters,
             ncer.Clusters.BlockSize,

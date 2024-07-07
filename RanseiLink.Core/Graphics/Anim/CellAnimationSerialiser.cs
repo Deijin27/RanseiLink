@@ -300,7 +300,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return $"cluster_{clusterId}";
     }
 
-    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, BankDimensions dims)
+    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, ClusterDimensions dims)
     {
         if (width <= 0 || height <= 0)
         {
@@ -346,7 +346,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
     
 
-    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, BankDimensions dims)
+    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, ClusterDimensions dims)
     {
         var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
         var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
@@ -500,7 +500,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return nameToClusterId;
     }
 
-    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, BankDimensions dims, RLAnimationResource res, string dir)
+    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims, RLAnimationResource res, string dir)
     {
         var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
         foreach (var clusterInfo in res.Clusters)
@@ -552,7 +552,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static void ImportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, BankDimensions dims, RLAnimationResource res, string dir)
+    private static void ImportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, ClusterDimensions dims, RLAnimationResource res, string dir)
     {
         var fmt = RLAnimationFormat.OneImagePerCluster;
         List<Image<Rgba32>> images = [];

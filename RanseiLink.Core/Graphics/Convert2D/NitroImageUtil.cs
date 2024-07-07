@@ -28,8 +28,8 @@ public static class NitroImageUtil
             (width, height) = InferDimsTiled(ncgr, 8);
         }
 
-        return CellImageUtil.MultiBankToImage(
-            banks: ncer.Clusters.Clusters,
+        return CellImageUtil.MultiClusterToImage(
+            clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
@@ -45,8 +45,8 @@ public static class NitroImageUtil
 
     public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
     {
-        return CellImageUtil.MultiBankToMultipleImages(
-            banks: ncer.Clusters.Clusters,
+        return CellImageUtil.MultiClusterToMultipleImages(
+            clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
@@ -62,8 +62,8 @@ public static class NitroImageUtil
 
     public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> NcerToMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr)
     {
-        return CellImageUtil.MultiBankToMultipleImageGroups(
-            banks: ncer.Clusters.Clusters,
+        return CellImageUtil.MultiClusterToMultipleImageGroups(
+            clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             imageInfo: new MultiPaletteImageInfo(
                 Pixels: ncgr.Pixels.Data,
@@ -98,9 +98,9 @@ public static class NitroImageUtil
         {
             (width, height) = InferDimsTiled(ncgr, 8);
         }
-        var imageInfo = CellImageUtil.MultiBankFromImage(
+        var imageInfo = CellImageUtil.MultiClusterFromImage(
                 image: image,
-                banks: ncer.Clusters.Clusters,
+                clusters: ncer.Clusters.Clusters,
                 blockSize: ncer.Clusters.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
                 format: ncgr.Pixels.Format,
@@ -147,9 +147,9 @@ public static class NitroImageUtil
 
     public static void NcerFromMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<Image<Rgba32>> images, CellImageSettings settings)
     {
-        var imageInfo = CellImageUtil.MultiBankFromMultipleImages(
+        var imageInfo = CellImageUtil.MultiClusterFromMultipleImages(
             images: images,
-            banks: ncer.Clusters.Clusters,
+            clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             tiled: ncgr.Pixels.IsTiled,
             format: ncgr.Pixels.Format,
@@ -161,9 +161,9 @@ public static class NitroImageUtil
 
     public static void NcerFromMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups)
     {
-        var imageInfo = CellImageUtil.MultiBankFromMultipleImageGroups(
+        var imageInfo = CellImageUtil.MultiClusterFromMultipleImageGroups(
             imageGroups: imageGroups,
-            banks: ncer.Clusters.Clusters,
+            clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             tiled: ncgr.Pixels.IsTiled,
             format: ncgr.Pixels.Format

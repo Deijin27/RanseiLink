@@ -245,8 +245,8 @@ namespace RanseiLink.Core.Graphics
             // maybe we should have an option to pass in the width and still calculated those values,
             // but it works without them
             const TexFormat format = TexFormat.Pltt256;
-            using var image = CellImageUtil.SingleBankToImage(
-                bank: ncer.Clusters.Clusters[0],
+            using var image = CellImageUtil.SingleClusterToImage(
+                cluster: ncer.Clusters.Clusters[0],
                 blockSize: ncer.Clusters.BlockSize,
                 new MultiPaletteImageInfo(Pixels, new PaletteCollection(Palette, format, true), Width, Height,
                     IsTiled: tiled,
@@ -258,9 +258,9 @@ namespace RanseiLink.Core.Graphics
 
         public static STL LoadPng(NCER ncer, string pngFile, bool tiled)
         {
-            var imageInfo = CellImageUtil.SingleBankFromPng(
+            var imageInfo = CellImageUtil.SingleClusterFromPng(
                 file: pngFile,
-                bank: ncer.Clusters.Clusters[0],
+                cluster: ncer.Clusters.Clusters[0],
                 blockSize: ncer.Clusters.BlockSize,
                 tiled: tiled,
                 format: TexFormat.Pltt256,
