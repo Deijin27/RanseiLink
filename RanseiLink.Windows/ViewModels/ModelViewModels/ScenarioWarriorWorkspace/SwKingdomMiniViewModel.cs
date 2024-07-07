@@ -72,14 +72,14 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         {
             _warriorImageId = _baseWarriorService.Retrieve(warrior).Sprite;
         }
-        Notify(nameof(WarriorImage));
+        RaisePropertyChanged(nameof(WarriorImage));
     }
 
     public int Strength => _strengthService.CalculateScenarioKingdomStrength((ScenarioId)_scenario, Kingdom, Army);
 
     public void UpdateStrength()
     {
-        Notify(nameof(Strength));
+        RaisePropertyChanged(nameof(Strength));
     }
 
     public void UpdateLeader()
@@ -94,7 +94,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         {
             if (Kingdom != KingdomId.Default)
             {
-                Set(Army, value, v => _scenarioKingdom.SetArmy(Kingdom, v));
+                SetProperty(Army, value, v => _scenarioKingdom.SetArmy(Kingdom, v));
             }
         }
     }

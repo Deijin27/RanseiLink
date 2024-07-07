@@ -13,12 +13,12 @@ public class ModifyMapDimensionsViewModel : ViewModelBase, IModalDialogViewModel
     public int Width
     {
         get => _width;
-        set => Set(ref _width, value);
+        set => SetProperty(ref _width, value);
     }
     public int Height
     {
         get => _height;
-        set => Set(ref _height, value);
+        set => SetProperty(ref _height, value);
     }
 
     public bool Result { get; private set; }

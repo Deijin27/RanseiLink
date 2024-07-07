@@ -21,7 +21,7 @@ public class AppearItem : ViewModelBase
     public bool CanAppear
     {
         get => _model.GetCanAppear(_id);
-        set => Set(CanAppear, value, v => _model.SetCanAppear(_id, v));
+        set => SetProperty(CanAppear, value, v => _model.SetCanAppear(_id, v));
     }
 
     public string Pokemon { get; set; }

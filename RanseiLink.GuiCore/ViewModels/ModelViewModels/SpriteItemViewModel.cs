@@ -52,7 +52,7 @@ public class SpriteItemViewModel : ViewModelBase
     public object? DisplayImage
     {
         get => _displayImage;
-        private set => Set(ref _displayImage, value);  
+        private set => SetProperty(ref _displayImage, value);  
     }
 
     private void UpdateDisplayImage()
@@ -66,7 +66,7 @@ public class SpriteItemViewModel : ViewModelBase
         {
             _spriteProvider.ClearOverride(_spriteType, Id);
             _isOverride = false;
-            Notify(nameof(IsOverride));
+            RaisePropertyChanged(nameof(IsOverride));
             RevertCommand.RaiseCanExecuteChanged();
             _displayFile = _spriteProvider.GetSpriteFile(_spriteType, Id).File;
             if (File.Exists(_displayFile))
@@ -96,7 +96,7 @@ public class SpriteItemViewModel : ViewModelBase
             var file = _spriteProvider.GetSpriteFile(_spriteType, Id);
             _displayFile = file.File;
             _isOverride = file.IsOverride;
-            Notify(nameof(IsOverride));
+            RaisePropertyChanged(nameof(IsOverride));
             RevertCommand.RaiseCanExecuteChanged();
             UpdateDisplayImage();
             RaiseSpriteModified();

@@ -37,7 +37,7 @@ public class MapGridCellViewModel : ViewModelBase
         SubCell7 = new(this, 7, renderMode);
         SubCell8 = new(this, 8, renderMode);
 
-        Pokemon.CollectionChanged += (s, e) => Notify(nameof(PokemonMarkerVisibility));
+        Pokemon.CollectionChanged += (s, e) => RaisePropertyChanged(nameof(PokemonMarkerVisibility));
     }
 
     public void AddGimmick(MapGimmickViewModel gimmickViewModel)
@@ -61,7 +61,7 @@ public class MapGridCellViewModel : ViewModelBase
 
     private void UpdateVisibleGimmick()
     {
-        Notify(nameof(GimmickMarkerVisibility));
+        RaisePropertyChanged(nameof(GimmickMarkerVisibility));
         if (Gimmicks.Any() && !_hideGimmicks)
         {
             var gimmick = Gimmicks.Last();
@@ -76,7 +76,7 @@ public class MapGridCellViewModel : ViewModelBase
     public bool IsSelected
     {
         get => _isSelected;
-        set => Set(ref _isSelected, value);
+        set => SetProperty(ref _isSelected, value);
     }
 
     public int X { get; }
@@ -85,25 +85,25 @@ public class MapGridCellViewModel : ViewModelBase
     public TerrainId Terrain
     {
         get => TerrainEntry.Terrain;
-        set => Set(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);
+        set => SetProperty(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);
     }
 
     public Unknown3 Unknown3
     {
         get => TerrainEntry.Unknown3;
-        set => Set(TerrainEntry.Unknown3, value, v => TerrainEntry.Unknown3 = v);
+        set => SetProperty(TerrainEntry.Unknown3, value, v => TerrainEntry.Unknown3 = v);
     }
 
     public int Unknown4
     {
         get => TerrainEntry.Unknown4;
-        set => Set(TerrainEntry.Unknown4, (byte)value, v => TerrainEntry.Unknown4 = v);
+        set => SetProperty(TerrainEntry.Unknown4, (byte)value, v => TerrainEntry.Unknown4 = v);
     }
 
     public OrientationAlt Orientation
     {
         get => TerrainEntry.Orientation;
-        set => Set(TerrainEntry.Orientation, value, v => TerrainEntry.Orientation = v);
+        set => SetProperty(TerrainEntry.Orientation, value, v => TerrainEntry.Orientation = v);
     }
 
     public bool GimmickMarkerVisibility
@@ -146,7 +146,7 @@ public class MapGridCellViewModel : ViewModelBase
     public string? GimmickImagePath
     {
         get => _gimmickImagePath;
-        set => Set(ref _gimmickImagePath, value);
+        set => SetProperty(ref _gimmickImagePath, value);
     }
 
     public MapGridSubCellViewModel SubCell0 { get; }

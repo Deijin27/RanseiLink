@@ -24,22 +24,22 @@ public class PokemonMiniViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => Set(_model.Name, value, v => _model.Name = v);
+        set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
     public TypeId Type1
     {
         get => _model.Type1;
-        set => Set(_model.Type1, value, v => _model.Type1 = v);
+        set => SetProperty(_model.Type1, value, v => _model.Type1 = v);
     }
     public TypeId Type2
     {
         get => _model.Type2;
         set
         {
-            if (Set(_model.Type2, value, v => _model.Type2 = v))
+            if (SetProperty(_model.Type2, value, v => _model.Type2 = v))
             {
-                Notify(nameof(HasType2));
+                RaisePropertyChanged(nameof(HasType2));
             }
         }
     }
@@ -57,11 +57,11 @@ public class PokemonMiniViewModel : ViewModelBase
             case nameof(Name):
             case nameof(Type1):
             case nameof(Image):
-                Notify(name);
+                RaisePropertyChanged(name);
                 break;
             case nameof(Type2):
-                Notify(name);
-                Notify(nameof(HasType2));
+                RaisePropertyChanged(name);
+                RaisePropertyChanged(nameof(HasType2));
                 break;
         }
     }

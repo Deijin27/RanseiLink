@@ -92,7 +92,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         get => _matchCase;
         set
         {
-            if (Set(ref _matchCase, value))
+            if (SetProperty(ref _matchCase, value))
             {
                 Search();
             }
@@ -105,9 +105,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         get => _useRegex;
         set
         {
-            if (Set(ref _useRegex, value))
+            if (SetProperty(ref _useRegex, value))
             {
-                Notify(nameof(RegexInvalid));
+                RaisePropertyChanged(nameof(RegexInvalid));
                 Search();
             }
         }
@@ -117,14 +117,14 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     public bool AddRemoveVisible
     {
         get => _addRemoveVisible;
-        set => Set(ref _addRemoveVisible, value);
+        set => SetProperty(ref _addRemoveVisible, value);
     }
 
     private bool _replaceVisible = false;
     public bool ReplaceVisible
     {
         get => _replaceVisible;
-        set => Set(ref _replaceVisible, value);
+        set => SetProperty(ref _replaceVisible, value);
     }
 
     private string _searchTerm = "";
@@ -133,9 +133,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         get => _searchTerm;
         set
         {
-            if (Set(ref _searchTerm, value))
+            if (SetProperty(ref _searchTerm, value))
             {
-                Notify(nameof(RegexInvalid));
+                RaisePropertyChanged(nameof(RegexInvalid));
                 Search();
             }
         }
@@ -145,7 +145,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     public string ReplaceWith
     {
         get => _replaceWith;
-        set => Set(ref _replaceWith, value);
+        set => SetProperty(ref _replaceWith, value);
     }
 
     public bool RegexInvalid => UseRegex && !TryGenerateRegex(SearchTerm, RegexOptions.CultureInvariant, out var _);
@@ -160,7 +160,7 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     public MsgViewModel? SelectedItem
     {
         get => _selectedItem;
-        set => Set(ref _selectedItem, value);
+        set => SetProperty(ref _selectedItem, value);
     }
 
     public RelayCommand AddCommand { get; }

@@ -54,7 +54,7 @@ public class MoveViewModel : ViewModelBase
         Id = (int)id;
         _model = model;
         UpdatePreviewAnimation(true);
-        NotifyAll();
+        RaiseAllPropertiesChanged();
     }
 
     public int Id { get; private set; }
@@ -62,115 +62,115 @@ public class MoveViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => Set(_model.Name, value, v => _model.Name = v);
+        set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
     public bool MovementFlag_MovementOrKnockback
     {
         get => (_model.MovementFlags & MoveMovementFlags.MovementOrKnockback) != 0;
-        set => Set(MovementFlag_MovementOrKnockback, value, v => _model.MovementFlags ^= MoveMovementFlags.MovementOrKnockback);
+        set => SetProperty(MovementFlag_MovementOrKnockback, value, v => _model.MovementFlags ^= MoveMovementFlags.MovementOrKnockback);
     }
 
     public bool MovementFlag_InvertMovementDirection
     {
         get => (_model.MovementFlags & MoveMovementFlags.InvertMovementDirection) != 0;
-        set => Set(MovementFlag_InvertMovementDirection, value, v => _model.MovementFlags ^= MoveMovementFlags.InvertMovementDirection);
+        set => SetProperty(MovementFlag_InvertMovementDirection, value, v => _model.MovementFlags ^= MoveMovementFlags.InvertMovementDirection);
     }
 
     public bool MovementFlag_DoubleMovementDistance
     {
         get => (_model.MovementFlags & MoveMovementFlags.DoubleMovementDistance) != 0;
-        set => Set(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
+        set => SetProperty(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
     public MoveMovementId Movement
     {
         get => _model.Movement;
-        set => Set(_model.Movement, value, v => _model.Movement = v);
+        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
     }
 
     public MoveUnknownOptionId UnknownOption
     {
         get => _model.UnknownOption;
-        set => Set(_model.UnknownOption, value, v => _model.UnknownOption = v);
+        set => SetProperty(_model.UnknownOption, value, v => _model.UnknownOption = v);
     }
 
     public int UnknownValue_6_28_4
     {
         get => _model.UnknownValue_6_28_4;
-        set => Set(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
+        set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
     }
 
     public TypeId Type
     {
         get => _model.Type;
-        set => Set(_model.Type, value, v => _model.Type = v);
+        set => SetProperty(_model.Type, value, v => _model.Type = v);
     }
 
     public int Power
     {
         get => _model.Power;
-        set => Set(_model.Power, value, v => _model.Power = v);
+        set => SetProperty(_model.Power, value, v => _model.Power = v);
     }
 
     public int Accuracy
     {
         get => _model.Accuracy;
-        set => Set(_model.Accuracy, value, v => _model.Accuracy = v);
+        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
     }
 
     public MoveRangeId Range
     {
         get => _model.Range;
-        set => Set(_model.Range, value, v => _model.Range = v);
+        set => SetProperty(_model.Range, value, v => _model.Range = v);
     }
 
     public MoveEffectId Effect1
     {
         get => _model.Effect1;
-        set => Set(_model.Effect1, value, v => _model.Effect1 = v);
+        set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
     public int Effect1Chance
     {
         get => _model.Effect1Chance;
-        set => Set(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
+        set => SetProperty(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
     }
 
     public MoveEffectId Effect2
     {
         get => _model.Effect2;
-        set => Set(_model.Effect2, value, v => _model.Effect2 = v);
+        set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
     public int Effect2Chance
     {
         get => _model.Effect2Chance;
-        set => Set(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
+        set => SetProperty(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
     }
 
     public MoveEffectId Effect3
     {
         get => _model.Effect3;
-        set => Set(_model.Effect3, value, v => _model.Effect3 = v);
+        set => SetProperty(_model.Effect3, value, v => _model.Effect3 = v);
     }
 
     public int Effect3Chance
     {
         get => _model.Effect3Chance;
-        set => Set(_model.Effect3Chance, value, v => _model.Effect3Chance = v);
+        set => SetProperty(_model.Effect3Chance, value, v => _model.Effect3Chance = v);
     }
 
     public MoveEffectId Effect4
     {
         get => _model.Effect4;
-        set => Set(_model.Effect4, value, v => _model.Effect4 = v);
+        set => SetProperty(_model.Effect4, value, v => _model.Effect4 = v);
     }
 
     public int Effect4Chance
     {
         get => _model.Effect4Chance;
-        set => Set(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
+        set => SetProperty(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
     }
 
     public MoveAnimationId StartupAnimation
@@ -178,7 +178,7 @@ public class MoveViewModel : ViewModelBase
         get => _model.StartupAnimation;
         set
         {
-            if (Set(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
+            if (SetProperty(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
             {
                 OnAnimationChanged();
             }
@@ -190,7 +190,7 @@ public class MoveViewModel : ViewModelBase
         get => _model.ProjectileAnimation;
         set
         {
-            if (Set(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
+            if (SetProperty(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
             {
                 OnAnimationChanged();
             }
@@ -202,7 +202,7 @@ public class MoveViewModel : ViewModelBase
         get => _model.ImpactAnimation;
         set
         {
-            if (Set(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
+            if (SetProperty(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
             {
                 OnAnimationChanged();
             }
@@ -214,7 +214,7 @@ public class MoveViewModel : ViewModelBase
         get => _model.AdditionalAnimation;
         set
         {
-            if (Set(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v))
+            if (SetProperty(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v))
             {
                 OnAnimationChanged();
             }
@@ -226,7 +226,7 @@ public class MoveViewModel : ViewModelBase
         get => _model.MovementAnimation;
         set
         {
-            if (Set(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
+            if (SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
             {
                 OnAnimationChanged();
             }
@@ -247,14 +247,14 @@ public class MoveViewModel : ViewModelBase
     public string? CurrentPreviewAnimationUri
     {
         get => _currentPreviewAnimationUri;
-        set => Set(ref _currentPreviewAnimationUri, value);
+        set => SetProperty(ref _currentPreviewAnimationUri, value);
     }
 
     private string? _currentPreviewAnimationName;
     public string? CurrentPreviewAnimationName
     {
         get => _currentPreviewAnimationName;
-        set => Set(ref _currentPreviewAnimationName, value);
+        set => SetProperty(ref _currentPreviewAnimationName, value);
     }
 
     private MoveAnimationPreviewMode PreviewAnimationMode { get; set; } = MoveAnimationPreviewMode.Startup;
@@ -293,8 +293,8 @@ public class MoveViewModel : ViewModelBase
         };
         if (!suppressPropertyChanged)
         {
-            Notify(nameof(CurrentPreviewAnimationUri));
-            Notify(nameof(CurrentPreviewAnimationName));
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationUri));
+            RaisePropertyChanged(nameof(CurrentPreviewAnimationName));
         }
     }
 

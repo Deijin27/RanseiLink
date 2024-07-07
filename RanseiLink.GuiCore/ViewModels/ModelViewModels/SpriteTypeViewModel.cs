@@ -35,7 +35,7 @@ public class SpriteTypeViewModel : ViewModelBase
         get => _selectedType;
         set
         {
-            if (Set(ref _selectedType, value))
+            if (SetProperty(ref _selectedType, value))
             {
                 UpdateList();
                 UpdateInfo(value);
@@ -46,7 +46,7 @@ public class SpriteTypeViewModel : ViewModelBase
     public string DimensionInfo
     {
         get => _dimensionInfo;
-        set => Set(ref _dimensionInfo, value);
+        set => SetProperty(ref _dimensionInfo, value);
     }
 
     public IReadOnlyCollection<IGraphicsInfo> SpriteTypeItems { get; } = GraphicsInfoResource.All;
@@ -105,7 +105,7 @@ public class SpriteTypeViewModel : ViewModelBase
                 progress.Report(new ProgressInfo(Progress: ++count));
             }
             Items = new ObservableCollection<SpriteItemViewModel>(newItems);
-            Notify(nameof(Items));
+            RaisePropertyChanged(nameof(Items));
         });
     }
 

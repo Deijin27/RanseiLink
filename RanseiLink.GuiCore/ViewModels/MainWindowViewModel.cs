@@ -54,7 +54,7 @@ public class MainWindowViewModel : ViewModelBase
             if (_currentVm != value)
             {
                 _currentVm = value;
-                Notify();
+                RaisePropertyChanged();
             }
         }
     }
@@ -63,7 +63,7 @@ public class MainWindowViewModel : ViewModelBase
     public bool BackButtonVisible
     {
         get => _backButtonVisible;
-        set => Set(ref _backButtonVisible, value);
+        set => SetProperty(ref _backButtonVisible, value);
     }
 
     public ICommand BackButtonCommand { get; }

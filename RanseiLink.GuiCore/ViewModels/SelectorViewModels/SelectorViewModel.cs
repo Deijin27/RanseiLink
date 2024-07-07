@@ -25,7 +25,7 @@ public class SelectorViewModel : ViewModelBase
         _nestedViewModel = nestedViewModel;
         _selected = DisplayItems.First().Id;
         UpdateNestedViewModel();
-        Notify(nameof(Selected));
+        RaisePropertyChanged(nameof(Selected));
         CopyPasteVisible = service != null && service.RetrieveObject(0) is IDataWrapper;
         CopyPasteVm = copyPasteVm;
         CopyPasteVm.ModelPasted += CopyPasteVm_ModelPasted;
@@ -35,7 +35,7 @@ public class SelectorViewModel : ViewModelBase
     public object NestedViewModel
     {
         get => _nestedViewModel;
-        set => Set(ref _nestedViewModel, value);
+        set => SetProperty(ref _nestedViewModel, value);
     }
 
 
@@ -52,7 +52,7 @@ public class SelectorViewModel : ViewModelBase
         {
             DisplayItems.Add(item);
         }
-        Notify(nameof(Selected));
+        RaisePropertyChanged(nameof(Selected));
     }
 
     public ObservableCollection<SelectorComboBoxItem> DisplayItems { get; } = [];
@@ -70,7 +70,7 @@ public class SelectorViewModel : ViewModelBase
             {
                 _selected = value;
                 UpdateNestedViewModel();
-                Notify();
+                RaisePropertyChanged();
                 UpdateCopyPaste();
             }
         }

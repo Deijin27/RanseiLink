@@ -41,7 +41,7 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
     public RLAnimationFormat SelectedFormat
     {
         get => _selectedFormat;
-        set => Set(ref  _selectedFormat, value);
+        set => SetProperty(ref  _selectedFormat, value);
     }
 
     public bool Result { get; private set; }
@@ -68,9 +68,9 @@ public class AnimExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => _folder;
         set
         {
-            if (Set(ref _folder, value))
+            if (SetProperty(ref _folder, value))
             {
-                Notify(nameof(OkEnabled));
+                RaisePropertyChanged(nameof(OkEnabled));
             }
         }
     }

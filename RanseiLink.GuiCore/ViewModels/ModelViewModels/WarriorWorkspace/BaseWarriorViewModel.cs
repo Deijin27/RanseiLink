@@ -51,7 +51,7 @@ public class BaseWarriorViewModel : ViewModelBase
         _id = id;
         _model = model;
         CopyPasteVm.Model = model;
-        NotifyAll();
+        RaiseAllPropertiesChanged();
     }
 
     public CopyPasteViewModel CopyPasteVm { get; }
@@ -70,13 +70,13 @@ public class BaseWarriorViewModel : ViewModelBase
     public int SpeakerId
     {
         get => (int)_model.SpeakerId;
-        set => Set(_model.SpeakerId, (SpeakerId)value, v => _model.SpeakerId = v);
+        set => SetProperty(_model.SpeakerId, (SpeakerId)value, v => _model.SpeakerId = v);
     }
 
     public GenderId Gender
     {
         get => _model.Gender;
-        set => Set(_model.Gender, value, v => _model.Gender = v);
+        set => SetProperty(_model.Gender, value, v => _model.Gender = v);
     }
 
     public int WarriorName
@@ -84,9 +84,9 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.WarriorName;
         set
         {
-            if (Set(_model.WarriorName, value, v => _model.WarriorName = v))
+            if (SetProperty(_model.WarriorName, value, v => _model.WarriorName = v))
             {
-                Notify(nameof(WarriorNameValue));
+                RaisePropertyChanged(nameof(WarriorNameValue));
             }
         }
     }
@@ -96,85 +96,85 @@ public class BaseWarriorViewModel : ViewModelBase
     public TypeId Speciality1
     {
         get => _model.Speciality1;
-        set => Set(_model.Speciality1, value, v => _model.Speciality1 = v);
+        set => SetProperty(_model.Speciality1, value, v => _model.Speciality1 = v);
     }
 
     public TypeId Speciality2
     {
         get => _model.Speciality2;
-        set => Set(_model.Speciality2, value, v => _model.Speciality2 = v);
+        set => SetProperty(_model.Speciality2, value, v => _model.Speciality2 = v);
     }
 
     public TypeId Weakness1
     {
         get => _model.Weakness1;
-        set => Set(_model.Weakness1, value, v => _model.Weakness1 = v);
+        set => SetProperty(_model.Weakness1, value, v => _model.Weakness1 = v);
     }
 
     public TypeId Weakness2
     {
         get => _model.Weakness2;
-        set => Set(_model.Weakness2, value, v => _model.Weakness2 = v);
+        set => SetProperty(_model.Weakness2, value, v => _model.Weakness2 = v);
     }
 
     public int Skill
     {
         get => (int)_model.Skill;
-        set => Set(_model.Skill, (WarriorSkillId)value, v => _model.Skill = v);
+        set => SetProperty(_model.Skill, (WarriorSkillId)value, v => _model.Skill = v);
     }
 
     public int RankUp
     {
         get => (int)_model.RankUp;
-        set => Set(_model.RankUp, (WarriorId)value, v => _model.RankUp = v);
+        set => SetProperty(_model.RankUp, (WarriorId)value, v => _model.RankUp = v);
     }
 
     public int Power
     {
         get => _model.Power;
-        set => Set(_model.Power, value, v => _model.Power = v);
+        set => SetProperty(_model.Power, value, v => _model.Power = v);
     }
 
     public int Wisdom
     {
         get => _model.Wisdom;
-        set => Set(_model.Wisdom, value, v => _model.Wisdom = v);
+        set => SetProperty(_model.Wisdom, value, v => _model.Wisdom = v);
     }
 
     public int Charisma
     {
         get => _model.Charisma;
-        set => Set(_model.Charisma, value, v => _model.Charisma = v);
+        set => SetProperty(_model.Charisma, value, v => _model.Charisma = v);
     }
 
     public int Capacity
     {
         get => _model.Capacity;
-        set => Set(_model.Capacity, value, v => _model.Capacity = v);
+        set => SetProperty(_model.Capacity, value, v => _model.Capacity = v);
     }
 
     public int RankUpPokemon1
     {
         get => (int)_model.RankUpPokemon1;
-        set => Set(_model.RankUpPokemon1, (PokemonId)value, v => _model.RankUpPokemon1 = v);
+        set => SetProperty(_model.RankUpPokemon1, (PokemonId)value, v => _model.RankUpPokemon1 = v);
     }
 
     public int RankUpPokemon2
     {
         get => (int)_model.RankUpPokemon2;
-        set => Set(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
+        set => SetProperty(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
     }
 
     public int RankUpLink
     {
         get => _model.RankUpLink;
-        set => Set(_model.RankUpLink, value, v => _model.RankUpLink = value);
+        set => SetProperty(_model.RankUpLink, value, v => _model.RankUpLink = value);
     }
 
     public RankUpConditionId RankUpCondition1
     {
         get => _model.RankUpCondition1;
-        set => Set(_model.RankUpCondition1, value, v => _model.RankUpCondition1 = value);
+        set => SetProperty(_model.RankUpCondition1, value, v => _model.RankUpCondition1 = value);
     }
 
     public RankUpConditionId RankUpCondition2
@@ -182,10 +182,10 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.RankUpCondition2;
         set
         {
-            if (Set(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value))
+            if (SetProperty(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = value))
             {
-                Notify(nameof(Quantity1ForRankUpConditionName));
-                Notify(nameof(Quantity2ForRankUpConditionName));
+                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
+                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
             }
         }
     }
@@ -195,9 +195,9 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.Quantity1ForRankUpCondition;
         set 
         { 
-            if (Set(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value)) 
+            if (SetProperty(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = value)) 
             {
-                Notify(nameof(Quantity1ForRankUpConditionName));
+                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
             } 
         }
     }
@@ -207,9 +207,9 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.Quantity2ForRankUpCondition;
         set
         {
-            if (Set(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value))
+            if (SetProperty(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = value))
             {
-                Notify(nameof(Quantity2ForRankUpConditionName));
+                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
             }
         }
     }
@@ -247,9 +247,9 @@ public class BaseWarriorViewModel : ViewModelBase
         get => _model.Sprite;
         set
         { 
-            if (Set(_model.Sprite, value, v => _model.Sprite = v))
+            if (SetProperty(_model.Sprite, value, v => _model.Sprite = v))
             {
-                Notify(nameof(SmallSpritePath));
+                RaisePropertyChanged(nameof(SmallSpritePath));
             }
         }
     }
@@ -272,7 +272,7 @@ public class BaseWarriorViewModel : ViewModelBase
         var vm = new ImageListViewModel(sprites, _spriteItemVmFactory);
         await _dialogService.ShowDialog(vm);
 
-        Notify(nameof(SmallSpritePath));
+        RaisePropertyChanged(nameof(SmallSpritePath));
 
     }
 }

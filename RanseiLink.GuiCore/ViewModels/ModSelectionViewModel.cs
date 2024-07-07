@@ -23,7 +23,7 @@ public class FilterableTag(string tag) : ViewModelBase
         get => _checked;
         set
         {
-            if (Set(ref _checked, value))
+            if (SetProperty(ref _checked, value))
             {
                 CheckedChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -44,7 +44,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public bool OutdatedModsExist
     {
         get => _outdatedModsExist;
-        set => Set(ref _outdatedModsExist, value);
+        set => SetProperty(ref _outdatedModsExist, value);
     }
 
     public ObservableCollection<FilterableTag> FilterableTags { get; } = [];

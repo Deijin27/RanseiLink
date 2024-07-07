@@ -56,11 +56,11 @@ public class WarriorMiniViewModel : ViewModelBase
             case nameof(Name):
             case nameof(Type1):
             case nameof(Image):
-                Notify(name);
+                RaisePropertyChanged(name);
                 break;
             case nameof(Type2):
-                Notify(name);
-                Notify(nameof(HasType2));
+                RaisePropertyChanged(name);
+                RaisePropertyChanged(nameof(HasType2));
                 break;
         }
     }

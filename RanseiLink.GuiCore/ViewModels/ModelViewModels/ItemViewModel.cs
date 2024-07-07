@@ -24,7 +24,7 @@ public class ItemViewModel : ViewModelBase
     {
         Id = (int)id;
         _model = model;
-        NotifyAll();
+        RaiseAllPropertiesChanged();
     }
 
     public List<SelectorComboBoxItem> ItemItems { get; }
@@ -36,73 +36,73 @@ public class ItemViewModel : ViewModelBase
     public string Name
     {
         get => _model.Name;
-        set => Set(_model.Name, value, v => _model.Name = v);
+        set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
     public PurchaseMethodId PurchaseMethod
     {
         get => _model.PurchaseMethod;
-        set => Set(_model.PurchaseMethod, value, v => _model.PurchaseMethod = v);
+        set => SetProperty(_model.PurchaseMethod, value, v => _model.PurchaseMethod = v);
     }
 
     public ItemCategoryId Category
     {
         get => _model.Category;
-        set => Set(_model.Category, value, v => _model.Category = v);
+        set => SetProperty(_model.Category, value, v => _model.Category = v);
     }
 
     public ItemEffectId Effect
     {
         get => _model.Effect;
-        set => Set(_model.Effect, value, v => _model.Effect = v);
+        set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
     public int EffectDuration
     {
         get => _model.EffectDuration;
-        set => Set(_model.EffectDuration, value, v => _model.EffectDuration = v);
+        set => SetProperty(_model.EffectDuration, value, v => _model.EffectDuration = v);
     }
 
     public int CraftingIngredient1
     {
         get => (int)_model.CraftingIngredient1;
-        set => Set(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
+        set => SetProperty(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
     }
 
     public int CraftingIngredient1Amount
     {
         get => _model.CraftingIngredient1Amount;
-        set => Set(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
+        set => SetProperty(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
     }
 
     public int CraftingIngredient2
     {
         get => (int)_model.CraftingIngredient2;
-        set => Set(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
+        set => SetProperty(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
     }
 
     public int CraftingIngredient2Amount
     {
         get => _model.CraftingIngredient2Amount;
-        set => Set(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
+        set => SetProperty(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
     }
 
     public int UnknownItem
     {
         get => (int)_model.UnknownItem;
-        set => Set(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
+        set => SetProperty(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
     }
 
     public int ShopPriceMultiplier // max = 511
     {
         get => _model.ShopPriceMultiplier;
-        set => Set(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
+        set => SetProperty(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
     }
 
     public int QuantityForEffect
     {
         get => _model.QuantityForEffect;
-        set => Set(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
+        set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
     }
     public string Description
     {

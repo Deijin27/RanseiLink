@@ -25,12 +25,12 @@ public class ScenarioBuildingSlotItem : ViewModelBase
     public int InitialExp
     {
         get => _model.GetInitialExp(_kingdomId, _slot);
-        set => Set(InitialExp, value, v => _model.SetInitialExp(_kingdomId, _slot, v));
+        set => SetProperty(InitialExp, value, v => _model.SetInitialExp(_kingdomId, _slot, v));
     }
 
     public int Unknown2
     {
         get => _model.GetUnknown2(_kingdomId, _slot);
-        set => Set(Unknown2, value, v => _model.SetUnknown2(_kingdomId, _slot, v));
+        set => SetProperty(Unknown2, value, v => _model.SetUnknown2(_kingdomId, _slot, v));
     }
 }

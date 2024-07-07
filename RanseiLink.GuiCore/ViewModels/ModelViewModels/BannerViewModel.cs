@@ -34,49 +34,49 @@ public class BannerViewModel : ViewModelBase
     public string AllTitles
     {
         get => _allTitles;
-        set => Set(ref _allTitles, value ?? string.Empty);
+        set => SetProperty(ref _allTitles, value ?? string.Empty);
     }
 
     public string JapaneseTitle
     {
         get => _bannerInfo.JapaneseTitle;
-        set => Set(JapaneseTitle, value, v => _bannerInfo.JapaneseTitle = value);
+        set => SetProperty(JapaneseTitle, value, v => _bannerInfo.JapaneseTitle = value);
     }
 
     public string EnglishTitle
     {
         get => _bannerInfo.EnglishTitle;
-        set => Set(EnglishTitle, value, v => _bannerInfo.EnglishTitle = value);
+        set => SetProperty(EnglishTitle, value, v => _bannerInfo.EnglishTitle = value);
     }
 
     public string FrenchTitle
     {
         get => _bannerInfo.FrenchTitle;
-        set => Set(FrenchTitle, value, v => _bannerInfo.FrenchTitle = value);
+        set => SetProperty(FrenchTitle, value, v => _bannerInfo.FrenchTitle = value);
     }
 
     public string GermanTitle
     {
         get => _bannerInfo.GermanTitle;
-        set => Set(GermanTitle, value, v => _bannerInfo.GermanTitle = value);
+        set => SetProperty(GermanTitle, value, v => _bannerInfo.GermanTitle = value);
     }
 
     public string ItalianTitle
     {
         get => _bannerInfo.ItalianTitle;
-        set => Set(ItalianTitle, value, v => _bannerInfo.ItalianTitle = value);
+        set => SetProperty(ItalianTitle, value, v => _bannerInfo.ItalianTitle = value);
     }
 
     public string SpanishTitle
     {
         get => _bannerInfo.SpanishTitle;
-        set => Set(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
+        set => SetProperty(SpanishTitle, value, v => _bannerInfo.SpanishTitle = value);
     }
 
     public object? DisplayImage
     {
         get => _displayImage;
-        private set => Set(ref _displayImage, value);
+        private set => SetProperty(ref _displayImage, value);
     }
 
     private void UpdateDisplayImage()

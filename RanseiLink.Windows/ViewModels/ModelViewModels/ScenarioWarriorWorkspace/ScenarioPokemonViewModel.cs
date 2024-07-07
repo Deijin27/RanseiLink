@@ -22,13 +22,13 @@ public class ScenarioPokemonViewModel : ViewModelBase
     public string IvQuickSetSource
     {
         get => _ivQuickSetSource;
-        set => Set(ref _ivQuickSetSource, value);
+        set => SetProperty(ref _ivQuickSetSource, value);
     }
 
     public string LinkQuickSetSource
     {
         get => _linkQuickSetSource;
-        set => Set(ref _linkQuickSetSource, value);
+        set => SetProperty(ref _linkQuickSetSource, value);
     }
 
     public ScenarioPokemonViewModel(
@@ -76,7 +76,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         _scenario = scenario;
         _id = id;
         ReloadAbilities();
-        NotifyAll();
+        RaiseAllPropertiesChanged();
     }
 
     public ICommand JumpToPokemonCommand { get; }
@@ -90,7 +90,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         get => (int)_model.Pokemon;
         set
         {
-            if (Set(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v))
+            if (SetProperty(_model.Pokemon, (PokemonId)value, v => _model.Pokemon = v))
             {
                 ReloadAbilities();
             }
@@ -100,7 +100,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
     public int Ability
     {
         get => (int)_model.Ability;
-        set => Set(_model.Ability, (AbilityId)value, v => _model.Ability = v);
+        set => SetProperty(_model.Ability, (AbilityId)value, v => _model.Ability = v);
     }
 
     private bool ValidateIv(int value)
@@ -115,7 +115,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         {
             if (ValidateIv(value))
             {
-                Set(_model.HpIv, value, v => _model.HpIv = v);
+                SetProperty(_model.HpIv, value, v => _model.HpIv = v);
             }
         }
     }
@@ -127,7 +127,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         {
             if (ValidateIv(value))
             {
-                Set(_model.AtkIv, value, v => _model.AtkIv = v);
+                SetProperty(_model.AtkIv, value, v => _model.AtkIv = v);
             }
         }
     }
@@ -139,7 +139,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         {
             if (ValidateIv(value))
             {
-                Set(_model.DefIv, value, v => _model.DefIv = v);
+                SetProperty(_model.DefIv, value, v => _model.DefIv = v);
             }
         }
     }
@@ -151,7 +151,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         {
             if (ValidateIv(value))
             {
-                Set(_model.SpeIv, value, v => _model.SpeIv = v);
+                SetProperty(_model.SpeIv, value, v => _model.SpeIv = v);
             }
         }
     }
@@ -169,7 +169,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
                 if (newValue != _model.Exp)
                 {
                     _model.Exp = newValue;
-                    Notify();
+                    RaisePropertyChanged();
                 }
             }
         }

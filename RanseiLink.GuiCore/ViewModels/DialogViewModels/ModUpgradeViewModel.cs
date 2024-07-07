@@ -38,9 +38,9 @@ public class ModUpgradeViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => _file;
         set
         {
-            if (Set(ref _file, value))
+            if (SetProperty(ref _file, value))
             {
-                Notify(nameof(OkEnabled));
+                RaisePropertyChanged(nameof(OkEnabled));
             }
         }
     }

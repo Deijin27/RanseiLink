@@ -67,7 +67,7 @@ public class PokemonWorkspaceViewModel : ViewModelBase
         get => _searchText;
         set
         {
-            if (Set(ref _searchText, value))
+            if (SetProperty(ref _searchText, value))
             {
                 Search();
             }
@@ -130,7 +130,7 @@ public class PokemonWorkspaceViewModel : ViewModelBase
     public PokemonMiniViewModel? SelectedMiniVm
     {
         get => _selectedMiniVm;
-        set => Set(ref _selectedMiniVm, value);
+        set => SetProperty(ref _selectedMiniVm, value);
     }
 
     public PokemonViewModel PokemonViewModel { get; }

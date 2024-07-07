@@ -52,9 +52,9 @@ public class ModExportViewModel : ViewModelBase, IModalDialogViewModel<bool>
         get => _folder;
         set
         {
-            if (Set(ref _folder, value))
+            if (SetProperty(ref _folder, value))
             {
-                Notify(nameof(OkEnabled));
+                RaisePropertyChanged(nameof(OkEnabled));
             }
         }
     }
