@@ -3,7 +3,6 @@ using RanseiLink.Core.Archive;
 using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Graphics;
@@ -502,7 +501,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
     private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims, RLAnimationResource res, string dir)
     {
-        var imageGroups = new List<IReadOnlyList<Image<Rgba32>>>();
+        var imageGroups = new List<List<Image<Rgba32>>>();
         foreach (var clusterInfo in res.Clusters)
         {
             List<Image<Rgba32>> images = [];
@@ -540,6 +539,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             // TODO: cluster.ReadOnlyCellInfo = ?;
         }
 
+        SimplifyPalette(ncer, ncgr.Pixels.Format.PaletteSize(), imageGroups);
+
         // import the image data
         NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
 
@@ -559,8 +560,8 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
         foreach (var clusterInfo in res.Clusters)
         {
-            var bank = new Cluster();
-            ncer.Clusters.Clusters.Add(bank);
+            var cluster = new Cluster();
+            ncer.Clusters.Clusters.Add(cluster);
 
             foreach (var cellInfo in clusterInfo.Cells)
             {
@@ -590,7 +591,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Height = cellInfo.Height,
                 };
                 CalculateShapeAndScale(cell);
-                bank.Add(cell);
+                cluster.Add(cell);
             }
 
             // image path is relative to the location of the xml file
@@ -601,9 +602,23 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             var imgPath = Path.Combine(dir, FileUtil.NormalizePath(clusterInfo.File));
             images.Add(ImageUtil.LoadPngBetterError(imgPath));
 
-            bank.EstimateMinMaxValues();
+            cluster.EstimateMinMaxValues();
             // TODO: cluster.ReadOnlyCellInfo = ?;
+
+            if (cluster.Count > 1)
+            {
+                var firstCellPalette = cluster[0].IndexPalette;
+                foreach (var cell in cluster)
+                {
+                    if (cell.IndexPalette != firstCellPalette)
+                    {
+                        throw new Exception($"All cells of a cluster must use the same palette for mode '{nameof(RLAnimationFormat.OneImagePerCluster)}'");
+                    }
+                }
+            }
         }
+
+        //SimplifyPalette(ncer, ncgr.Pixels.Format.PaletteSize(), images);
 
         // import the image data
         NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
@@ -615,4 +630,90 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
+    private static void SimplifyPalette(NCER ncer, int paletteSize, List<Image<Rgba32>> images)
+    {
+        var paletteToClusterMap = new Dictionary<byte, List<int>>();
+        for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
+        {
+            var cluster = ncer.Clusters.Clusters[clusterId];
+            if (cluster.Count == 0)
+            {
+                continue;
+            }
+
+            // validation that all cells use the same palette should have already been done
+            var firstCellPalette = cluster[0].IndexPalette;
+            
+            if (!paletteToClusterMap.TryGetValue(firstCellPalette, out var list))
+            {
+                list = [];
+                paletteToClusterMap[firstCellPalette] = list;
+            }
+            list.Add(clusterId);
+        }
+
+        foreach (var (palette, clustersIds) in paletteToClusterMap)
+        {
+            var sharedPaletteImgs = clustersIds.Select(x => images[x]).ToArray();
+            var combined = ImageUtil.CombineImagesVertically(sharedPaletteImgs);
+            var simplified = ImageSimplifier.SimplifyPalette(combined, paletteSize);
+            if (!simplified)
+            {
+                continue;
+            }
+            var cumulativeHeight = 0;
+            for (int i = 0; i < clustersIds.Count; i++)
+            {
+                var clusterId = clustersIds[i];
+                var originalImg = sharedPaletteImgs[i];
+                var newImage = ImageUtil.Crop(combined, new Rectangle(0, cumulativeHeight, originalImg.Width, originalImg.Height));
+                cumulativeHeight += originalImg.Height;
+                originalImg.Dispose();
+                images[clusterId] = newImage;
+            }
+        }
+    }
+
+    private static void SimplifyPalette(NCER ncer, int paletteSize, List<List<Image<Rgba32>>> imageGroups)
+    {
+        var paletteToClusterMap = new Dictionary<byte, List<(int ClusterId, int CellId)>>();
+        for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
+        {
+            var cluster = ncer.Clusters.Clusters[clusterId];
+            for (int cellId = 0; cellId < cluster.Count; cellId++)
+            {
+                var cell = cluster[cellId];
+                var palette = cell.IndexPalette;
+
+                if (!paletteToClusterMap.TryGetValue(palette, out var list))
+                {
+                    list = [];
+                    paletteToClusterMap[palette] = list;
+                }
+                list.Add((clusterId, cellId));
+            }
+        }
+
+        foreach (var (palette, ids) in paletteToClusterMap)
+        {
+            var sharedPaletteImgs = ids.Select(x => imageGroups[x.ClusterId][x.CellId]).ToArray();
+            var combined = ImageUtil.CombineImagesVertically(sharedPaletteImgs);
+            var simplified = ImageSimplifier.SimplifyPalette(combined, paletteSize);
+            if (!simplified)
+            {
+                continue;
+            }
+            var cumulativeHeight = 0;
+            for (int i = 0; i < ids.Count; i++)
+            {
+                var (clusterId, cellId) = ids[i];
+                var originalImg = sharedPaletteImgs[i];
+                var newImage = ImageUtil.Crop(combined, new Rectangle(0, cumulativeHeight, originalImg.Width, originalImg.Height));
+                cumulativeHeight += originalImg.Height;
+                originalImg.Dispose();
+                imageGroups[clusterId][cellId] = newImage;
+            }
+        }
+
+    }
 }

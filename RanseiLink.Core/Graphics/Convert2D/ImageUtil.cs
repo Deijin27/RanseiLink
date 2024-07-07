@@ -299,6 +299,12 @@ public static class ImageUtil
         return combinedImage;
     }
 
+    public static Image<TPixel> Crop<TPixel>(Image<TPixel> image, Rectangle cropRectangle) where TPixel : unmanaged, IPixel<TPixel>
+    {
+        return image.Clone(g => g.Crop(cropRectangle));
+    }
+
+
     /// <summary>
     /// Safely crop an image. If a portion of the cropRectangle is outside of the image bounds, 
     /// that portion of the resulting image will be transparent.
