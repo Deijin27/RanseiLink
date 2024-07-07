@@ -14,7 +14,6 @@ public static class ImageSimplifier
     /// <param name="imagePath">Path of image file to simplify</param>
     /// <param name="maximumColors">Palette capacity of image</param>
     /// <returns>True if the image was simplified. False if simplification was not necessary</returns>
-    /// <exception cref="UnknownImageFormatException"></exception>
     public static bool SimplifyPalette(string imagePath, int maximumColors)
     {
         string saveFile = FileUtil.MakeUniquePath(Path.Combine(
@@ -31,19 +30,30 @@ public static class ImageSimplifier
     /// <param name="maximumColors">Palette capacity of image</param>
     /// <param name="saveFile">File to save simplified version of image to</param>
     /// <returns>True if the image was simplified. False if simplification was not necessary</returns>
-    /// <exception cref="UnknownImageFormatException"></exception>
     public static bool SimplifyPalette(string imagePath, int maximumColors, string saveFile)
     {
-        Image<Rgba32> img;
-        try
+        Image<Rgba32> img = ImageUtil.LoadPngBetterError(imagePath);
+
+        var simplified = SimplifyPalette(img, maximumColors);
+        if (simplified)
         {
-            img = Image.Load<Rgba32>(imagePath);
-        }
-        catch (UnknownImageFormatException e)
-        {
-            throw new UnknownImageFormatException(e.Message + $" File='{imagePath}'");
+            img.Save(saveFile);
         }
 
+        img.Dispose();
+
+        return simplified;
+    }
+
+    /// <summary>
+    /// Reduce the number of colors in an image with quantization.
+    /// This will modify the provided image, so make sure to do it on a clone if you want to preserve the original.
+    /// </summary>
+    /// <param name="img">Image to simplify</param>
+    /// <param name="maximumColors">Palette capacity of image</param>
+    /// <returns>True if the image was simplified. False if simplification was not necessary</returns>
+    public static bool SimplifyPalette(Image<Rgba32> img, int maximumColors)
+    {
         var transparentPixelsBefore = new List<Point>();
         // Create a lookup of colors to points
         var colors = new HashSet<Rgba32>();
@@ -111,11 +121,6 @@ public static class ImageSimplifier
                 }
             }
         }
-
-
-        img.Save(saveFile);
-
-        img.Dispose();
 
         return true;
     }
