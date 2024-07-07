@@ -121,17 +121,18 @@ public static class NitroImageUtil
         }
 
         var palSize = imageInfo.Format.PaletteSize();
-        if (imageInfo.Palette.Any(x => x.Count > palSize))
-        {
-            throw new InvalidPaletteException($"Palette length exceeds allowed length {palSize} when importing image");
-        }
 
         Rgb15[] mergedPalette = new Rgb15[imageInfo.Palette.Count * palSize];
         // do this even if there's only one palette because it should be padded to the correct length
         for (int i = 0; i < imageInfo.Palette.Count; i++)
         {
-            var pal = PaletteUtil.From32bitColors(imageInfo.Palette[i]);
-            pal.CopyTo(mergedPalette, i * palSize);
+            Palette pal = imageInfo.Palette[i];
+            if (pal.Count > palSize)
+            {
+                throw new InvalidPaletteException($"Length ({pal.Count}) of palette at index {i} exceeds allowed length {palSize} when importing image");
+            }
+            var pal32 = PaletteUtil.From32bitColors(imageInfo.Palette[i]);
+            pal32.CopyTo(mergedPalette, i * palSize);
         }
 
         nclr.Palettes.Palette = mergedPalette;
