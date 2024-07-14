@@ -284,6 +284,11 @@ public static class CellImageUtil
             throw new ArgumentException($"Images did not have the same number of items as cell cluster ({images.Count} vs {cluster.Count})");
         }
 
+        if (cluster.Count == 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < cluster.Count; i++)
         {
             var image = images[i];
@@ -322,6 +327,11 @@ public static class CellImageUtil
         List<byte> workingPixels, PaletteCollection workingPalette,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
+        if (cluster.Count == 0)
+        {
+            return;
+        }
+
         var dims = InferDimensions(cluster, image.Width, image.Height, settings);
 
         for (int i = 0; i < cluster.Count; i++)

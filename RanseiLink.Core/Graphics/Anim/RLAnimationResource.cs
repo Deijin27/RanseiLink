@@ -117,7 +117,7 @@ public class RLAnimationResource
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public int Palette { get; set; }
+        public byte Palette { get; set; }
         public bool FlipX { get; set; }
         public bool FlipY { get; set; }
         public bool DoubleSize { get; set; }
@@ -175,7 +175,7 @@ public class RLAnimationResource
             FlipX = element.AttributeBool("flip_x", false);
             FlipY = element.AttributeBool("flip_y", false);
             DoubleSize = element.AttributeBool("double_size", false);
-            Palette = (byte)element.AttributeInt("palette", 0);
+            Palette = element.AttributeByte("palette", 0);
 
             Width = element.AttributeInt("width", -1);
             Height = element.AttributeInt("height", -1);
@@ -193,13 +193,15 @@ public class RLAnimationResource
         public List<CellInfo> Cells { get; }
         public string Name { get; }
         public string? File { get; set; }
+        public byte Palette { get; set; }
 
-        public ClusterInfo(XElement groupElem)
+        public ClusterInfo(XElement element)
         {
-            Name = groupElem.AttributeStringNonEmpty("name");
-            File = groupElem.Attribute("file")?.Value;
+            Name = element.AttributeStringNonEmpty("name");
+            Palette = element.AttributeByte("palette", 0);
+            File = element.Attribute("file")?.Value;
             Cells = [];
-            foreach (var cellElement in groupElem.Elements("cell"))
+            foreach (var cellElement in element.Elements("cell"))
             {
                 var cell = new CellInfo(cellElement);
                 Cells.Add(cell);
@@ -218,6 +220,10 @@ public class RLAnimationResource
             if (!string.IsNullOrEmpty(File))
             {
                 clusterElem.Add(new XAttribute("file", File));
+            }
+            if (Palette != 0)
+            {
+                clusterElem.Add(new XAttribute("palette", Palette));
             }
             foreach (var cell in Cells)
             {

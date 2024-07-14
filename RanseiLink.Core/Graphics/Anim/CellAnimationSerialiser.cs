@@ -4,6 +4,8 @@ using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Xml.Linq;
+using static RanseiLink.Core.Graphics.RLAnimationResource;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -523,12 +525,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit
                 };
                 bank.Add(cell);
-                if (string.IsNullOrEmpty(cellInfo.File))
-                {
-                    throw new Exception($"Missing required attribute 'file' on cell for format {RLAnimationFormat.OneImagePerCell}");
-                }
-                var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
-                var img = ImageUtil.LoadPngBetterError(imgPath);
+                var img = LoadCellImg(dir, cellInfo);
                 images.Add(img);
                 cell.Width = img.Width;
                 cell.Height = img.Height;
@@ -538,8 +535,6 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             bank.EstimateMinMaxValues();
             // TODO: cluster.ReadOnlyCellInfo = ?;
         }
-
-        SimplifyPalette(ncer, ncgr.Pixels.Format.PaletteSize(), imageGroups);
 
         // import the image data
         NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
@@ -586,7 +581,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     FlipX = cellInfo.FlipX,
                     FlipY = cellInfo.FlipY,
                     DoubleSize = cellInfo.DoubleSize,
-                    IndexPalette = (byte)cellInfo.Palette,
+                    IndexPalette = clusterInfo.Palette,
                     Width = cellInfo.Width,
                     Height = cellInfo.Height,
                 };
@@ -594,13 +589,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 cluster.Add(cell);
             }
 
-            // image path is relative to the location of the xml file
-            if (string.IsNullOrEmpty(clusterInfo.File))
-            {
-                throw new Exception($"Missing required attribute 'file' on cell group for format {fmt}");
-            }
-            var imgPath = Path.Combine(dir, FileUtil.NormalizePath(clusterInfo.File));
-            images.Add(ImageUtil.LoadPngBetterError(imgPath));
+            images.Add(LoadClusterImg(dir, clusterInfo));
 
             cluster.EstimateMinMaxValues();
             // TODO: cluster.ReadOnlyCellInfo = ?;
@@ -618,8 +607,6 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             }
         }
 
-        //SimplifyPalette(ncer, ncgr.Pixels.Format.PaletteSize(), images);
-
         // import the image data
         NitroImageUtil.NcerFromMultipleImages(ncer, ncgr, nclr, images, settings);
 
@@ -630,24 +617,125 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static void SimplifyPalette(NCER ncer, int paletteSize, List<Image<Rgba32>> images)
+    private static Image<Rgba32> LoadClusterImg(string dir, RLAnimationResource.ClusterInfo clusterInfo)
     {
-        var paletteToClusterMap = new Dictionary<byte, List<int>>();
-        for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
+        if (clusterInfo.Cells.Count > 0)
         {
-            var cluster = ncer.Clusters.Clusters[clusterId];
-            if (cluster.Count == 0)
+            // image path is relative to the location of the xml file
+            if (string.IsNullOrEmpty(clusterInfo.File))
+            {
+                throw new Exception($"Missing required attribute 'file' on cluster for format {RLAnimationFormat.OneImagePerCluster}");
+            }
+            var imgPath = Path.Combine(dir, FileUtil.NormalizePath(clusterInfo.File));
+            return ImageUtil.LoadPngBetterError(imgPath);
+        }
+        else
+        {
+            return new Image<Rgba32>(1, 1);
+        }
+    }
+
+    private static Image<Rgba32> LoadCellImg(string dir, RLAnimationResource.CellInfo cellInfo)
+    {
+        if (string.IsNullOrEmpty(cellInfo.File))
+        {
+            throw new Exception($"Missing required attribute 'file' on cell for format {RLAnimationFormat.OneImagePerCell}");
+        }
+        var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
+        var img = ImageUtil.LoadPngBetterError(imgPath);
+        return img;
+    }
+
+    private static void SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string saveDir)
+    {
+        // I could copy to temp dir, then save to there and move / delete based on if we did simplify
+        // OR 
+        // Save the files, creating the directory only if needed, then copy later on.
+
+        if (res.Format == RLAnimationFormat.OneImagePerCluster)
+        {
+            var paletteIndexes = new List<byte?>();
+            var images = new List<Image<Rgba32>>();
+            foreach (var cluster in res.Clusters)
+            {
+                paletteIndexes.Add(cluster.Palette);
+                images.Add(LoadClusterImg(dir, cluster));
+            }
+            var simplified = SimplifyPalettePerCluster(paletteIndexes, paletteSize, images);
+            if (simplified)
+            {
+                for (int i = 0; i < res.Clusters.Count; i++)
+                {
+                    var cluster = res.Clusters[i];
+                    var img = images[i];
+                    var imgPath = Path.Combine(saveDir, FileUtil.NormalizePath(cluster.File!));
+                    img.SaveAsPng(imgPath);
+                }
+            }
+        }
+        else if (res.Format == RLAnimationFormat.OneImagePerCell)
+        {
+            var palettesIndexes = new List<List<byte>>();
+            var imageGroups = new List<List<Image<Rgba32>>>();
+            foreach (var cluster in res.Clusters)
+            {
+                var indexes = new List<byte>();
+                var images = new List<Image<Rgba32>>();
+                palettesIndexes.Add(indexes);
+                imageGroups.Add(images);
+                foreach (var cell in cluster.Cells)
+                {
+                    indexes.Add(cell.Palette);
+                    images.Add(LoadCellImg(dir, cell));
+                }
+            }
+            var simplified = SimplifyPalettePerCell(palettesIndexes, paletteSize, imageGroups);
+            if (simplified)
+            {
+                for (int i = 0; i < res.Clusters.Count; i++)
+                {
+                    var cluster = res.Clusters[i];
+                    var imgGroup = imageGroups[i];
+                    for (int j = 0; j < cluster.Cells.Count; j++)
+                    {
+                        var cell = cluster.Cells[j];
+                        var img = imgGroup[j];
+                        var imgPath = Path.Combine(saveDir, FileUtil.NormalizePath(cell.File!));
+                        img.SaveAsPng(imgPath);
+                    }
+                }
+            }
+        }
+        else
+        {
+            throw new Exception($"Unknown animation format {res.Format}");
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="paletteIndexes"></param>
+    /// <param name="paletteSize"></param>
+    /// <param name="images"></param>
+    /// <returns>True if any were simplified</returns>
+    private static bool SimplifyPalettePerCluster(List<byte?> paletteIndexes, int paletteSize, List<Image<Rgba32>> images)
+    {
+        bool anySimplified = false;
+
+        var paletteToClusterMap = new Dictionary<byte, List<int>>();
+        for (int clusterId = 0; clusterId < paletteIndexes.Count; clusterId++)
+        {
+            var paletteOpt = paletteIndexes[clusterId];
+            if (paletteOpt == null)
             {
                 continue;
             }
-
-            // validation that all cells use the same palette should have already been done
-            var firstCellPalette = cluster[0].IndexPalette;
-            
-            if (!paletteToClusterMap.TryGetValue(firstCellPalette, out var list))
+            var palette = paletteOpt.Value;
+            if (!paletteToClusterMap.TryGetValue(palette, out var list))
             {
                 list = [];
-                paletteToClusterMap[firstCellPalette] = list;
+                paletteToClusterMap[palette] = list;
             }
             list.Add(clusterId);
         }
@@ -661,29 +749,39 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             {
                 continue;
             }
+            anySimplified = true;
             var cumulativeHeight = 0;
             for (int i = 0; i < clustersIds.Count; i++)
             {
                 var clusterId = clustersIds[i];
-                var originalImg = sharedPaletteImgs[i];
+                var originalImg = sharedPaletteImgs[i]!;
                 var newImage = ImageUtil.Crop(combined, new Rectangle(0, cumulativeHeight, originalImg.Width, originalImg.Height));
                 cumulativeHeight += originalImg.Height;
                 originalImg.Dispose();
                 images[clusterId] = newImage;
             }
         }
+
+        return anySimplified;
     }
 
-    private static void SimplifyPalette(NCER ncer, int paletteSize, List<List<Image<Rgba32>>> imageGroups)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="paletteIndexes"></param>
+    /// <param name="paletteSize"></param>
+    /// <param name="images"></param>
+    /// <returns>True if any were simplified</returns>
+    private static bool SimplifyPalettePerCell(List<List<byte>> palettesIndexes, int paletteSize, List<List<Image<Rgba32>>> imageGroups)
     {
+        bool anySimplified = false;
         var paletteToClusterMap = new Dictionary<byte, List<(int ClusterId, int CellId)>>();
-        for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
+        for (int clusterId = 0; clusterId < palettesIndexes.Count; clusterId++)
         {
-            var cluster = ncer.Clusters.Clusters[clusterId];
+            var cluster = palettesIndexes[clusterId];
             for (int cellId = 0; cellId < cluster.Count; cellId++)
             {
-                var cell = cluster[cellId];
-                var palette = cell.IndexPalette;
+                var palette = cluster[cellId];
 
                 if (!paletteToClusterMap.TryGetValue(palette, out var list))
                 {
@@ -703,6 +801,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             {
                 continue;
             }
+            anySimplified = true;
             var cumulativeHeight = 0;
             for (int i = 0; i < ids.Count; i++)
             {
@@ -715,5 +814,6 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             }
         }
 
+        return anySimplified;
     }
 }

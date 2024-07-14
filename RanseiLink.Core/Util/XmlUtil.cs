@@ -67,6 +67,30 @@ public static class XmlUtil
         return result;
     }
 
+    public static byte AttributeByte(this XElement element, XName name)
+    {
+        var a = element.AttributeRequired(name);
+        if (!byte.TryParse(a.Value, out var result))
+        {
+            ThrowXmlUtilException($"Element '{element.Name}' attribute '{name}' value must be valid byte number {byte.MinValue}-{byte.MaxValue}, but was '{a.Value}'");
+        }
+        return result;
+    }
+
+    public static byte AttributeByte(this XElement element, XName name, byte defaultValue)
+    {
+        var a = element.Attribute(name);
+        if (a == null)
+        {
+            return defaultValue;
+        }
+        if (!byte.TryParse(a.Value, out var result))
+        {
+            return defaultValue;
+        }
+        return result;
+    }
+
     public static TEnum AttributeEnum<TEnum>(this XElement element, XName name) where TEnum : struct, Enum
     {
         var a = element.AttributeRequired(name);
