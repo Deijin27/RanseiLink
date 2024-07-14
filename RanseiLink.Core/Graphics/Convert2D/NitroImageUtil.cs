@@ -21,6 +21,18 @@ public static class NitroImageUtil
         return (width, height);
     }
 
+    public static MultiPaletteImageInfo GetImgInfo(NCGR ncgr, NCLR nclr, int width = -1, int height = -1)
+    {
+        return new MultiPaletteImageInfo(
+                Pixels: ncgr.Pixels.Data,
+                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
+                Width: width,
+                Height: height,
+                IsTiled: ncgr.Pixels.IsTiled,
+                Format: ncgr.Pixels.Format
+                );
+    }
+
     public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (width < 0 || height < 0)
@@ -31,14 +43,7 @@ public static class NitroImageUtil
         return CellImageUtil.MultiClusterToImage(
             clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
-            imageInfo: new MultiPaletteImageInfo(
-                Pixels: ncgr.Pixels.Data,
-                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
-                Width: width,
-                Height: height,
-                IsTiled: ncgr.Pixels.IsTiled,
-                Format: ncgr.Pixels.Format
-                ),
+            imageInfo: GetImgInfo(ncgr, nclr, width, height),
             settings: settings
             );
     }
@@ -48,14 +53,7 @@ public static class NitroImageUtil
         return CellImageUtil.MultiClusterToMultipleImages(
             clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
-            imageInfo: new MultiPaletteImageInfo(
-                Pixels: ncgr.Pixels.Data,
-                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
-                Width: width,
-                Height: height,
-                IsTiled: ncgr.Pixels.IsTiled,
-                Format: ncgr.Pixels.Format
-                ),
+            imageInfo: GetImgInfo(ncgr, nclr, width, height),
             settings: settings
             );
     }
@@ -65,14 +63,7 @@ public static class NitroImageUtil
         return CellImageUtil.MultiClusterToMultipleImageGroups(
             clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
-            imageInfo: new MultiPaletteImageInfo(
-                Pixels: ncgr.Pixels.Data,
-                Palette: new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true),
-                Width: -1,
-                Height: -1,
-                IsTiled: ncgr.Pixels.IsTiled,
-                Format: ncgr.Pixels.Format
-                )
+            imageInfo: GetImgInfo(ncgr, nclr, -1, -1)
             );
     }
 

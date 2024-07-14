@@ -13,8 +13,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <valueConverters:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
-        <valueConverters:LinkToBrushConverter x:Key="Converter.LinkToBrush"/>
-        <valueConverters:GreaterThanNumberToVisiblityConverter Number="49" x:Key="Converter.AboveLinkThresholdToVisibility"/>
     </UserControl.Resources>
     <DockPanel>
         <StackPanel Margin="10,10,10,0" Orientation="Horizontal" DockPanel.Dock="Top">
@@ -43,23 +41,9 @@
                         <Image Grid.Column="0" Margin="0,0,0,0" Stretch="None" Height="19"
                                Source="{Binding Sprite}"
                                />
-                        <TextBlock Text="{Binding Name}" Grid.Column="2">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding MaxLinkValue}" Value="100">
-                                            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        <Ellipse 
-                            Visibility="{Binding MaxLinkValue, Converter={StaticResource Converter.AboveLinkThresholdToVisibility}}" 
-                            Stroke="Black" StrokeThickness="1" Width="8" Height="8" Grid.Column="3" 
-                            Fill="{Binding MaxLinkValue, Converter={StaticResource Converter.LinkToBrush}}"
-                            />
-                        <controls:NumberBox Value="{Binding MaxLinkValue, Mode=TwoWay}" Max="100" Grid.Column="4" Width="100" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Name}" Grid.Column="2"/>
+                        <Image Source="{Binding LinkImg}" Grid.Column="3" />
+                        <controls:NumberBox Margin="4,0,0,0" Value="{Binding MaxLinkValue, Mode=TwoWay}" Max="100" Grid.Column="4" Width="100" HorizontalAlignment="Left"/>
                         <controls:NumberButtonPanel Grid.Column="6" HorizontalAlignment="Left" Value="{Binding MaxLinkValue}" Items="{Binding MaxLinkQuickSetter.ValuesSource}"/>
                     </Grid>
                 </DataTemplate>

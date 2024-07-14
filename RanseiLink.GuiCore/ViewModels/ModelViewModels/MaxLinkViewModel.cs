@@ -1,9 +1,11 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using SixLabors.ImageSharp;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -12,8 +14,10 @@ public class WarriorMaxLinkListItem : ViewModelBase
 {
     private readonly MaxLink _model;
     private readonly Func<object> _sprite;
+    private readonly Func<int, object?> _getLinkImg;
+
     public WarriorMaxLinkListItem(int pokemonId, MaxLink model, string name, Func<object> sprite, int itemId,
-        IMaxLinkQuickSetter maxLinkQuickSetter)
+        IMaxLinkQuickSetter maxLinkQuickSetter, Func<int, object?> getLinkImg)
     {
         _model = model;
         _pokemonId = pokemonId;
@@ -21,6 +25,8 @@ public class WarriorMaxLinkListItem : ViewModelBase
         _sprite = sprite;
         Id = itemId;
         MaxLinkQuickSetter = maxLinkQuickSetter;
+        _getLinkImg = getLinkImg;
+        UpdateLinkImg();
     }
     public int MaxLinkValue
     {
@@ -30,12 +36,27 @@ public class WarriorMaxLinkListItem : ViewModelBase
             // validate because this can come from the user's custom quick setter
             if (value >= 0 && value <= 100)
             {
-                SetProperty(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v));
+                if (SetProperty(MaxLinkValue, value, v => _model.SetMaxLink(_pokemonId, v)))
+                {
+                    UpdateLinkImg();
+                }
             }
         }
     }
 
-    private int _pokemonId;
+    private void UpdateLinkImg()
+    {
+        LinkImg = _getLinkImg(MaxLinkValue);
+    }
+
+    public object? LinkImg
+    {
+        get => _linkImg;
+        set => SetProperty(ref _linkImg, value);
+    }
+
+    private readonly int _pokemonId;
+    private object? _linkImg;
 
     /// <summary>
     /// This ID is sortable
@@ -67,6 +88,7 @@ public abstract class MaxLinkViewModelBase : ViewModelBase, IMaxLinkQuickSetter
     protected readonly IOverrideDataProvider _overrideDataProvider;
     protected readonly ICachedSpriteProvider _cachedSpriteProvider;
     protected readonly IBaseWarriorService _baseWarriorService;
+    private readonly IPathToImageConverter _pathToImageConverter;
     private readonly CollectionSorter<WarriorMaxLinkListItem> _sorter;
 
     protected int _id;
@@ -74,16 +96,83 @@ public abstract class MaxLinkViewModelBase : ViewModelBase, IMaxLinkQuickSetter
     protected MaxLinkViewModelBase(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
         ICachedSpriteProvider spriteProvider,
-        IBaseWarriorService baseWarriorService)
+        IBaseWarriorService baseWarriorService,
+        IPathToImageConverter pathToImageConverter)
     {
         _baseWarriorService = baseWarriorService;
+        _pathToImageConverter = pathToImageConverter;
         _cachedSpriteProvider = spriteProvider;
         _overrideDataProvider = overrideDataProvider;
         _idToNameService = idToNameService;
         SortItems = EnumUtil.GetValues<MaxLinkSortMode>().ToList();
 
+        LoadImages();
+
         Items = [];
         _sorter = new(Items);
+    }
+
+    private static object? __goldImage;
+    private static object? __silverImage;
+    private static object? __bronzeImage;
+    private static bool __loaded;
+
+    protected object? GetLinkImage(int value)
+    {
+        if (value < 50 || value > 100)
+        {
+            return null;
+        }
+        else if (value >= 90)
+        {
+            return __goldImage;
+        }
+        else if (value >= 70)
+        {
+            return __silverImage;
+        }
+        else
+        {
+            return __bronzeImage;
+        }
+    }
+
+    private void LoadImages()
+    {
+        if (__loaded)
+        {
+            return;
+        }
+
+        __loaded = true;
+
+        var file = _overrideDataProvider.GetDataFile(FileUtil.NormalizePath("graphics/ikusa/04_01_parts_ikusamap_lo.G2DR"));
+
+        if (!File.Exists(file.File))
+        {
+            return;
+        }
+
+        var g2dr = G2DR.LoadCellImgFromFile(file.File);
+        var imgInfo = NitroImageUtil.GetImgInfo(g2dr.Ncgr, g2dr.Nclr);
+        var settings = new CellImageSettings(PositionRelativeTo.MinCell);
+
+        object? loadImg(int cluster)
+        {
+            using var img = CellImageUtil.SingleClusterToImage(
+                cluster: g2dr.Ncer.Clusters.Clusters[cluster],
+                blockSize: g2dr.Ncer.Clusters.BlockSize,
+                imgInfo,
+                settings
+            );
+            var temp = Path.GetTempFileName();
+            img.SaveAsPng(temp);
+            return _pathToImageConverter.TryConvert(temp);
+        }
+
+        __goldImage = loadImg(67);
+        __silverImage = loadImg(74);
+        __bronzeImage = loadImg(81);
     }
 
     protected void OnSetModel()
@@ -147,8 +236,9 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
     public MaxLinkWarriorViewModel(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
         ICachedSpriteProvider spriteProvider,
-        IBaseWarriorService baseWarriorService
-        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService)
+        IBaseWarriorService baseWarriorService,
+        IPathToImageConverter pathToImageConverter
+        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService, pathToImageConverter)
     {
         
     }
@@ -162,7 +252,7 @@ public class MaxLinkWarriorViewModel : MaxLinkViewModelBase
             var pidInt = (int)pid;
             var name = _idToNameService.IdToName<IPokemonService>(pidInt);
             var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlPokemonS, pidInt);
-            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt, this));
+            Items.Add(new WarriorMaxLinkListItem(pidInt, model, name, sprite, pidInt, this, GetLinkImage));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
         OnSetModel();
@@ -188,8 +278,9 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
     public MaxLinkPokemonViewModel(IIdToNameService idToNameService,
         IOverrideDataProvider overrideDataProvider,
         ICachedSpriteProvider spriteProvider,
-        IBaseWarriorService baseWarriorService
-        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService)
+        IBaseWarriorService baseWarriorService,
+        IPathToImageConverter pathToImageConverter 
+        ) : base(idToNameService, overrideDataProvider, spriteProvider, baseWarriorService, pathToImageConverter)
     {
     }
 
@@ -204,7 +295,7 @@ public class MaxLinkPokemonViewModel : MaxLinkViewModelBase
             var name = _baseWarriorService.IdToName(widInt);
             var sprite = () => _cachedSpriteProvider.GetSprite(SpriteType.StlBushouS, warrior.Sprite);
             var model = maxLinkService.Retrieve(widInt);
-            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt, this));
+            Items.Add(new WarriorMaxLinkListItem(id, model, name, sprite, widInt, this, GetLinkImage));
         }
         RaisePropertyChanged(nameof(SmallSpritePath));
         OnSetModel();
