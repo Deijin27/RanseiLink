@@ -10,6 +10,8 @@
         }
     }
 
+    // Get latest font from https://github.com/google/material-design-icons/blob/master/variablefont/MaterialSymbolsOutlined%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf
+    // Find an icon's code by name https://fonts.google.com/icons?icon.size=24&icon.color=%23e8eaed
     public enum IconId
     {
         search = 0xe8b6,
@@ -51,6 +53,8 @@
         chevron_down = 0xe5cf,
         rotate_right = 0xe41a, 
         rotate_left = 0xe419,
+        keep = 0xe6aa,
+        fiber_new = 0xe05e,
 
     }
 }

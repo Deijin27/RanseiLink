@@ -1,6 +1,8 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
+using RanseiLink.GuiCore.Settings;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -39,6 +41,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly IDispatcherService _dispatcherService;
+    private readonly PinnedModsSetting _pinnedModsSetting;
     private bool _outdatedModsExist;
 
     public bool OutdatedModsExist
@@ -80,6 +83,11 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _itemViewModelFactory = modListItemViewModelFactory;
         _fdhFactory = fdhFactory;
         _dispatcherService = dispatcherService;
+        _pinnedModsSetting = _settingService.Get<PinnedModsSetting>();
+        foreach (var item in _pinnedModsSetting.Value)
+        {
+            _pinnedModsFolders.Add(item);
+        }
         ReportBugCommand = new RelayCommand(() => IssueReporter.ReportBug(appInfoService.Version));
 
         RefreshModItems();
@@ -148,23 +156,62 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         OutdatedModsExist = _modService.GetModInfoPreviousVersions().Any();
     }
 
+    /// <summary>
+    /// The folder paths of newly created mods
+    /// </summary>
+    private readonly HashSet<string> _newModsFolders = new(StringComparer.OrdinalIgnoreCase);
+
+
+    /// <summary>
+    /// The folder paths of pinned mods
+    /// </summary>
+    private readonly HashSet<string> _pinnedModsFolders = new(StringComparer.OrdinalIgnoreCase);
+
     public void RefreshModItems()
     {
+        var modListItems = new List<IModListItemViewModel>();
+        foreach (var mi in _modService.GetAllModInfo())
+        {
+            var item = _itemViewModelFactory(mi, GetKnownTags);
+            modListItems.Add(item);
+
+            item.IsPinned = _pinnedModsFolders.Contains(mi.FolderPath);
+            item.IsNew = _newModsFolders.Contains(mi.FolderPath);
+            item.RequestRefresh += RefreshModItems;
+            item.RequestRemove += RemoveItem;
+            item.IsPinnedChanged += Mod_IsPinnedChanged;
+        }
+
+        var sortedMods = modListItems
+            .OrderBy(x => !x.IsPinned)
+            .ThenBy(x => !x.IsNew)
+            .ThenBy(i => i.Mod.Name);
+
         // If necessary, I could do the stuff before showing the dialog for the fast things, then not have to do this locking
         _dispatcherService.Invoke(() =>
         {
             ModItems.Clear();
             AllItems.Clear();
-            foreach (var mi in _modService.GetAllModInfo().OrderBy(i => i.Name))
+
+            foreach (var item in sortedMods)
             {
-                var item = _itemViewModelFactory(mi, GetKnownTags);
-                item.RequestRefresh += RefreshModItems;
-                item.RequestRemove += RemoveItem;
                 ModItems.Add(item);
                 AllItems.Add(item);
             }
             ReloadTags();
         });
+    }
+
+    private void Mod_IsPinnedChanged(IModListItemViewModel mod)
+    {
+        _pinnedModsFolders.Clear();
+        foreach (var item in AllItems.Where(x => x.IsPinned))
+        {
+            _pinnedModsFolders.Add(item.Mod.FolderPath);
+        }
+        _pinnedModsSetting.Value = _pinnedModsFolders.ToArray();
+        _settingService.Save();
+        RefreshModItems();
     }
 
     private List<string> GetKnownTags()
@@ -196,6 +243,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             try
             {
                 newMod = _modService.Create(vm.File, vm.Metadata);
+                _newModsFolders.Add(newMod.FolderPath);
             }
             catch (Exception e)
             {

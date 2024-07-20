@@ -3,6 +3,7 @@ using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
+using System.Diagnostics;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -11,10 +12,16 @@ public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod, F
 public interface IModListItemViewModel
 {
     void UpdateBanner();
+
     event Action<IModListItemViewModel> RequestRemove;
     event Action RequestRefresh;
+    event Action<IModListItemViewModel> IsPinnedChanged;
     ModInfo Mod { get; }
+    bool IsPinned { get; set; }
+    bool IsNew { get; set; }
 }
+
+[DebuggerDisplay("ModListItemViewModel: {Name}")]
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
     private readonly IModManager _modService;
@@ -48,6 +55,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         
         PluginItems = pluginLoader.LoadPlugins(out var _);
 
+        TogglePinCommand = new RelayCommand(() => TogglePin());
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
         ExportModCommand = new RelayCommand(() => ExportMod(Mod));
         EditModInfoCommand = new RelayCommand(() => EditModInfo(Mod));
@@ -62,6 +70,13 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
                 UseShellExecute = true
             });
         });
+    }
+
+    public string Name => Mod?.Name ?? "<Unknown>";
+
+    private void TogglePin()
+    {
+        IsPinned = !IsPinned;
     }
 
     /// <summary>
@@ -81,6 +96,31 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         Banner = _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
     }
 
+    private bool _isPinned;
+    public bool IsPinned
+    {
+        get => _isPinned;
+        set
+        {
+            if (SetProperty(ref _isPinned, value))
+            {
+                IsPinnedChanged?.Invoke(this);
+            }
+        }
+    }
+
+    private bool _isNew;
+    public bool IsNew
+    {
+        get => _isNew;
+        set => SetProperty(ref _isNew, value);
+    }
+
+    public void SetPinnedWithoutEvent(bool isPinned)
+    {
+        _isPinned = isPinned;
+    }
+
     private object? _banner;
     public object? Banner
     {
@@ -88,6 +128,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         set => SetProperty(ref _banner, value);
     }
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
+    public ICommand TogglePinCommand { get; }
 
     private Func<List<string>> _getKnownTags = null!;
 
@@ -100,6 +141,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public ICommand RunPluginCommand { get; }
     public ICommand ShowInExplorerCommand { get; }
     public event Action<IModListItemViewModel>? RequestRemove;
+    public event Action<IModListItemViewModel>? IsPinnedChanged;
     public event Action? RequestRefresh;
 
     #region Mod Specific Command Implementations

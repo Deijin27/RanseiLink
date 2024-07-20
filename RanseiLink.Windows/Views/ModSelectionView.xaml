@@ -94,6 +94,11 @@
                                         <controls:IconControl Icon="library_add" />
                                     </MenuItem.Icon>
                                 </MenuItem>
+                                <MenuItem Header="Toggle Pin" Command="{Binding TogglePinCommand}">
+                                    <MenuItem.Icon>
+                                        <controls:IconControl Icon="keep" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
                                 <Separator/>
                                 <MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
                                     <MenuItem.Icon>
@@ -136,7 +141,11 @@
                             </ContextMenu>
                         </Button.ContextMenu>
                         <DockPanel>
+                            <controls:IconControl Icon="keep" DockPanel.Dock="Left" Visibility="{Binding IsPinned, Converter={StaticResource Converter.BoolToVisibility}}"/>
+                            <controls:IconControl Icon="fiber_new" DockPanel.Dock="Left" Visibility="{Binding IsNew, Converter={StaticResource Converter.BoolToVisibility}}"/>
                             <Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                        
+                            <!--<TextBlock DockPanel.Dock="Left" Text="(New)"/>-->
                             <controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
                         </DockPanel>
                     </Button>
