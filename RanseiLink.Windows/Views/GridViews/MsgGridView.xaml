@@ -22,10 +22,10 @@
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Regex" IsChecked="{Binding UseRegex}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="10,0,0,0" Content="Match Case" IsChecked="{Binding MatchCase}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
-                <controls:IconButton Margin="10,0,0,0" Icon="&#xe14a;" Text="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
+                <controls:IconButton Margin="10,0,0,0" Icon="backspace" Text="Clear" Command="{Binding ClearCommand}" DockPanel.Dock="Right"/>
                 <Button Margin="10,0,0,0" Height="20" Padding="5,0" Content="Search" Command="{Binding SearchCommand}" DockPanel.Dock="Right"/>
 
-                <TextBlock DockPanel.Dock="Left" Style="{StaticResource IconTextBlockStyle}" Text="&#xe8b6;" Margin="10,0" />
+                <controls:IconControl DockPanel.Dock="Left" Icon="search"  Margin="10,0" />
                 <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20">
                     <TextBox.Style>
                         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">

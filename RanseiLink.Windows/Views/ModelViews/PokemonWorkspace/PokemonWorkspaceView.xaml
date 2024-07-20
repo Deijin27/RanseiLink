@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              mc:Ignorable="d" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
@@ -20,7 +21,7 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,5" VerticalAlignment="Center">
-            <TextBlock DockPanel.Dock="Left" Text="&#xe8b6;" Style="{StaticResource IconTextBlockStyle}" Margin="0,0,5,0" TextAlignment="Right" VerticalAlignment="Center"/>
+            <controls:IconControl DockPanel.Dock="Left" Icon="search" Margin="0,0,5,0" />
             <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalAlignment="Center"/>
         </DockPanel>
 

@@ -149,8 +149,8 @@
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
                 <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
-                <controls:IconButton Icon="&#xf707;" Text="Modify Dimensions" Command="{Binding ModifyMapDimensionsCommand}"/>
-                <controls:IconButton Icon="&#xe8f4;" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
+                <controls:IconButton Icon="resize" Text="Modify Dimensions" Command="{Binding ModifyMapDimensionsCommand}"/>
+                <controls:IconButton Icon="visibility" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
             </StackPanel>
 
             <TabControl Margin="0,20,0,0">
@@ -191,8 +191,8 @@
                 <TabItem Header="Gimmicks">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  Margin="5">
-                            <controls:IconButton Icon="&#xe145;" Text="Add New" Click="AddGimmickButton_Click"/>
-                            <controls:IconButton Icon="&#xe872;" Text="Remove Selected" Margin="5,0,0,0" Command="{Binding RemoveSelectedGimmickCommand}"/>
+                            <controls:IconButton Icon="add" Text="Add New" Click="AddGimmickButton_Click"/>
+                            <controls:IconButton Icon="delete" Text="Remove Selected" Margin="5,0,0,0" Command="{Binding RemoveSelectedGimmickCommand}"/>
                         </StackPanel>
                         <DataGrid x:Name="GimmickDataGrid" CanUserAddRows="True" AutoGenerateColumns="False" ItemsSource="{Binding Gimmicks}"
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
@@ -217,21 +217,11 @@
                                                 <RowDefinition Height="22"/>
                                                 <RowDefinition Height="22"/>
                                             </Grid.RowDefinitions>
-                                            <Button Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1">
-                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5ce;"/>
-                                            </Button>
-                                            <Button Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1">
-                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cb;"/>
-                                            </Button>
-                                            <Button Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1">
-                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe41a;"/>
-                                            </Button>
-                                            <Button Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1">
-                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cc;"/>
-                                            </Button>
-                                            <Button Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2">
-                                                <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe5cf;"/>
-                                            </Button>
+                                            <controls:IconButton Icon="chevron_up" Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1"/>
+                                            <controls:IconButton Icon="chevron_left" Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1"/>
+                                            <controls:IconButton Icon="rotate_right" Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1"/>
+                                            <controls:IconButton Icon="chevron_right" Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1"/>
+                                            <controls:IconButton Icon="chevron_down" Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2"/>
                                         </Grid>
                                         <Grid Margin="5">
                                             <Grid.ColumnDefinitions>
@@ -363,7 +353,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center"  Visibility="{Binding Is3dModelOverriden, Converter={StaticResource Converter.BoolToVisibility}}">
-                            <TextBlock VerticalAlignment="Center" Foreground="#80c468" Text="&#xe86c;" Style="{StaticResource IconTextBlockStyle}"/>
+                            <controls:IconControl Foreground="#80c468" Icon="check_circle"/>
                             <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="3D Model is Overwritten"/>
                         </StackPanel>
                         

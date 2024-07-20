@@ -6,6 +6,7 @@
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
+        xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         xmlns:local="clr-namespace:RanseiLink.Windows.Dialogs"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:RanseiLink.Windows.Views"
@@ -20,7 +21,7 @@
               dd:DragDrop.DropHandler="{Binding RomDropHandler}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
                     <TextBlock Text="Drop an unchanged copy&#x0a; of the rom here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                    <ContentPresenter Height="50" Content="{StaticResource LoadRomIcon}"/>
+                    <controls:IconControl Icon="download" Size="60" Height="60"/>
                     <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
                     <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>

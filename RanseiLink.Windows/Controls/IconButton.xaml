@@ -11,7 +11,7 @@
                 <ColumnDefinition Width="13"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Style="{DynamicResource IconTextBlockStyle}"  Height="Auto" FontSize="14" x:Name="IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe145;"/>
+            <TextBlock Style="{DynamicResource IconTextBlockStyle}"  Height="Auto" FontSize="14" x:Name="IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe574;"/>
             <TextBlock Height="Auto" Visibility="Collapsed" Grid.Column="1" x:Name="TextTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,0" Text="Add New"/>
         </Grid>
     </Button>

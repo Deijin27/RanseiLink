@@ -9,9 +9,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel Orientation="Horizontal">
-        <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14d;" Text="Copy Data" 
+        <controls:IconButton DockPanel.Dock="Right" Icon="content_copy" Text="Copy Data" 
             Command="{Binding CopyCommand}"/>
-        <controls:IconButton DockPanel.Dock="Right" Icon="&#xe14f;" Text="Paste Data" Margin="5,0,0,0"
+        <controls:IconButton DockPanel.Dock="Right" Icon="content_paste" Text="Paste Data" Margin="5,0,0,0"
             Command="{Binding PasteCommand}"
                                  />
     </StackPanel>

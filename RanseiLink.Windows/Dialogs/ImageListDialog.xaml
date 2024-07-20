@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+        xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         d:DataContext="{d:DesignInstance vm:ImageListViewModel, IsDesignTimeCreatable=False}"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
@@ -30,17 +31,17 @@
                                     <ContextMenu>
                                         <MenuItem Header="Import Override" Command="{Binding SetOverrideCommand}">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe890;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                                <controls:IconControl Icon="input"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Header="Revert to Default" Command="{Binding RevertCommand}">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xe166;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                                <controls:IconControl Icon="undo"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <MenuItem Header="Export Image" Command="{Binding ExportCommand}">
                                             <MenuItem.Icon>
-                                                <TextBlock Text="&#xebbe;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                                <controls:IconControl Icon="output"/>
                                             </MenuItem.Icon>
                                         </MenuItem>
                                     </ContextMenu>

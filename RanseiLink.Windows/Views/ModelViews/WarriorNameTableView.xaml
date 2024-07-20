@@ -4,13 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance vm:WarriorNameTableViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" Margin="5">
-            <TextBlock DockPanel.Dock="Left" Text="&#xe8b6;" Style="{StaticResource IconTextBlockStyle}" Margin="10,0" TextAlignment="Right" VerticalAlignment="Center"/>
+            <controls:IconControl DockPanel.Dock="Left" Icon="search" Margin="0,0,5,0" />
             <TextBox Text="{Binding SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="20" VerticalAlignment="Center" Margin="0,0,5,0"/>
         </DockPanel>
         <ItemsControl Margin="10" ItemsSource="{Binding Items}" Style="{StaticResource ItemsControlVirtualizedStyle}">

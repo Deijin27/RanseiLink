@@ -119,8 +119,8 @@
             <GroupBox Header="Evolutions" Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-                        <controls:IconButton Icon="&#xe145;" Text="Add New" Command="{Binding AddEvolutionCommand}"/>
-                        <controls:IconButton Icon="&#xE872;" Text="Remove Last" Margin="5,0,0,0" Command="{Binding RemoveEvolutionCommand}"/>
+                        <controls:IconButton Icon="add" Text="Add New" Command="{Binding AddEvolutionCommand}"/>
+                        <controls:IconButton Icon="delete" Text="Remove Last" Margin="5,0,0,0" Command="{Binding RemoveEvolutionCommand}"/>
                     </StackPanel>
                     <ScrollViewer>
                         <ItemsControl ItemsSource="{Binding Evolutions}">
@@ -187,7 +187,7 @@
 
             <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
                 <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
-                <controls:IconButton Icon="&#xe3f4;" Text="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
+                <controls:IconButton Icon="image" Text="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
 
             <GroupBox Header="Battle Model Animations" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="5">
@@ -199,10 +199,10 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Visibility="{Binding IsAnimationOverwritten, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Text="&#xe86c;" Style="{StaticResource IconTextBlockStyle}"/>
-                        <controls:IconButton Grid.Column="1" Icon="&#xebbe;" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
-                        <controls:IconButton Grid.Column="2" Icon="&#xe890;" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
-                        <controls:IconButton Grid.Column="3" Icon="&#xe166;" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
+                        <controls:IconControl Visibility="{Binding IsAnimationOverwritten, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Icon="check_circle" />
+                        <controls:IconButton Grid.Column="1" Icon="output" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
+                        <controls:IconButton Grid.Column="2" Icon="input" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
+                        <controls:IconButton Grid.Column="3" Icon="undo" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
                     </Grid>
 
                     <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" VerticalAlignment="Center" Margin="0,0,0,7"/>

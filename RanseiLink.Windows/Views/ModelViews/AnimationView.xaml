@@ -14,9 +14,9 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <TextBlock Visibility="{Binding IsOverriden, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Text="&#xe86c;" Style="{StaticResource IconTextBlockStyle}"/>
-        <controls:IconButton Grid.Column="1" Icon="&#xebbe;" Text="Export" Command="{Binding ExportCommand}" Margin="5,0,5,0"/>
-        <controls:IconButton Grid.Column="2" Icon="&#xe890;" Text="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
-        <controls:IconButton Grid.Column="3" Icon="&#xe166;" Text="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
+        <controls:IconControl Visibility="{Binding IsOverriden, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Icon="check_circle"/>
+        <controls:IconButton Grid.Column="1" Icon="output" Text="Export" Command="{Binding ExportCommand}" Margin="5,0,5,0"/>
+        <controls:IconButton Grid.Column="2" Icon="input" Text="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
+        <controls:IconButton Grid.Column="3" Icon="undo" Text="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
     </Grid>
 </UserControl>

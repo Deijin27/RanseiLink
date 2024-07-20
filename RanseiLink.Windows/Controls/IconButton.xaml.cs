@@ -11,15 +11,15 @@ namespace RanseiLink.Windows.Controls
         public IconButton()
         {
             InitializeComponent();
-            IconTextBlock.Text = Icon;
+            IconTextBlock.Text = IconUtil.IconToStr(Icon);
             TextTextBlock.Text = Text;
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             nameof(Icon),
-            typeof(string),
+            typeof(IconId),
             typeof(IconButton),
-            new PropertyMetadata("\xe88b", OnIconPropertyChanged)
+            new PropertyMetadata(IconId.category, OnIconPropertyChanged)
             );
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
@@ -43,9 +43,9 @@ namespace RanseiLink.Windows.Controls
             new PropertyMetadata(null, OnCommandParameterPropertyChanged)
             );
 
-        public string Icon
+        public IconId Icon
         {
-            get => (string)GetValue(IconProperty);
+            get => (IconId)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
@@ -81,7 +81,7 @@ namespace RanseiLink.Windows.Controls
             {
                 return;
             }
-            c.IconTextBlock.Text = e.NewValue as string;
+            c.IconTextBlock.Text = IconUtil.IconToStr((IconId)e.NewValue);
         }
 
         public static void OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

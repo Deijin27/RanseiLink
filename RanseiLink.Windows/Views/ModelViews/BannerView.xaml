@@ -45,8 +45,7 @@
             <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
                 <Border  Background="{StaticResource ButtonBackgroundBrush}" Width="150" Height="150">
                     <Grid>
-                        <TextBlock FontFamily="{StaticResource MaterialIcons}" Text="&#xe3f4;" FontSize="80" Height="95" 
-                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <controls:IconControl Icon="image" Size="80" />
                         <Image Source="{Binding DisplayImage}" Width="150" Height="150" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     </Grid>
                 </Border>

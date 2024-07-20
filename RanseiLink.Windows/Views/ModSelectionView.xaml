@@ -18,8 +18,8 @@
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
                     </StackPanel.Resources>
-                    <controls:IconButton Icon="&#xe89c;" Text="Create Mod" Command="{Binding CreateModCommand}"/>
-                    <controls:IconButton Icon="&#xe890;" Text="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <controls:IconButton Icon="note_add" Text="Create Mod" Command="{Binding CreateModCommand}"/>
+                    <controls:IconButton Icon="input" Text="Import Mod" Command="{Binding ImportModCommand}"/>
                     <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
                             Upgrade Old Mods
@@ -35,14 +35,14 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
-                    <controls:IconButton Icon="&#xe868;" Command="{Binding ReportBugCommand}" Text="Report Bug"/>
+                    <controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Text="Report Bug"/>
                 </StackPanel>
             </Grid>
             
         </Border>
 
         <DockPanel Margin="5" DockPanel.Dock="Top">
-            <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Style="{StaticResource IconTextBlockStyle}">&#xf05b;</TextBlock>
+            <controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />
             <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -76,28 +76,28 @@
                             <ContextMenu>
                                 <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe255;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="publish"/>
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Export mod" Command="{Binding ExportModCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xebbe;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="output" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Edit mod info" Command="{Binding EditModInfoCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe745;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="edit_note" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Create new mod based on this" Command="{Binding CreateModBasedOnCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe02e;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="library_add" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <Separator/>
                                 <MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe87b;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="extension" />
                                     </MenuItem.Icon>
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="{x:Type MenuItem}">
@@ -125,12 +125,12 @@
                                 <Separator/>
                                 <MenuItem Header="Delete" Command="{Binding DeleteModCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe872;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="delete" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Open folder in file explorer" Command="{Binding ShowInExplorerCommand}">
                                     <MenuItem.Icon>
-                                        <TextBlock Text="&#xe2c8;" Style="{DynamicResource IconTextBlockStyle}"/>
+                                        <controls:IconControl Icon="folder_open" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                             </ContextMenu>

@@ -92,9 +92,9 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock VerticalAlignment="Center" Margin="0,0,5,0" Style="{StaticResource IconTextBlockStyle}" Text="&#xea0b;"/>
+            <controls:IconControl Icon="bolt" Margin="0,0,5,0" />
             <TextBox Grid.Column="1" VerticalAlignment="Center" Text="{Binding IvQuickSetSource, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="15,0,5,0" Style="{StaticResource IconTextBlockStyle}" Text="&#xe157;"/>
+            <controls:IconControl Icon="bolt" Margin="15,0,5,0" />
             <TextBox Grid.Column="3" VerticalAlignment="Center" Text="{Binding LinkQuickSetSource, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </Grid>

@@ -100,13 +100,13 @@
 
             <TextBlock Text="Animation 1" Grid.Row="0" Grid.Column="0"/>
             <DockPanel Grid.Row="0" Grid.Column="1">
-                <controls:IconButton Margin="5,0,0,0" Icon="&#xe8f4;" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.One}"/>
+                <controls:IconButton Margin="5,0,0,0" Icon="visibility" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.One}"/>
                 <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding Animation1}"/>
             </DockPanel>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Animation 2"/>
             <DockPanel Grid.Row="1" Grid.Column="1">
-                <controls:IconButton Margin="5,0,0,0" Icon="&#xe8f4;" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.Two}"/>
+                <controls:IconButton Margin="5,0,0,0" Icon="visibility" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.Two}"/>
                 <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding Animation2}"/>
             </DockPanel>
 

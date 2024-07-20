@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
@@ -20,7 +21,7 @@
               dd:DragDrop.DropHandler="{Binding RomDropHandler}">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Opacity="0.9">
                     <TextBlock Text="Drop an unchanged copy&#x0a; of the rom here" TextAlignment="Center" FontSize="15" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-                    <ContentPresenter Height="50" Content="{StaticResource LoadRomIcon}"/>
+                    <controls:IconControl Icon="download" Size="60" Height="60"/>
                     <TextBlock Text="{Binding File, Mode=OneWay}" Margin="10" TextWrapping="Wrap" Height="30"/>
                     <Button Command="{Binding FilePickerCommand}" Width="130" Margin="10,0,10,0">Or use file picker</Button>
                 </StackPanel>
