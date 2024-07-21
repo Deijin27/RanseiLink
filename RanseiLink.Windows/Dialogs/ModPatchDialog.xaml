@@ -1,4 +1,4 @@
-﻿<Window x:Class="RanseiLink.Windows.Dialogs.ModCommitDialog"
+﻿<Window x:Class="RanseiLink.Windows.Dialogs.ModPatchDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -12,7 +12,7 @@
         xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         xmlns:dd="urn:gong-wpf-dragdrop"
-        d:DataContext="{d:DesignInstance vm:ModCommitViewModel, IsDesignTimeCreatable=False}"
+        d:DataContext="{d:DesignInstance vm:ModPatchViewModel, IsDesignTimeCreatable=False}"
         Title="Patch rom" Height="225" Width="550" Background="Transparent">
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
@@ -28,13 +28,13 @@
             </Grid>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
-                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Apply Mod" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Apply" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
             <Border Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel>
-                    <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Apply mod to rom</TextBlock>
+                    <TextBlock FontSize="18" Margin="10" FontWeight="DemiBold">Patch Rom With Mod</TextBlock>
                     <controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
                     <CheckBox Margin="10" Content="Include sprites in patch" IsChecked="{Binding IncludeSprites}"
                               ToolTip="If you change lots of sprites, you can speed up the patches by not including them every time."/>

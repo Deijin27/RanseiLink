@@ -148,7 +148,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private async Task PatchRom(ModInfo mod)
     {
-        var vm = new ModCommitViewModel(_dialogService, _settingService, mod, _fdhFactory);
+        var vm = new ModPatchViewModel(_dialogService, _settingService, mod, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;

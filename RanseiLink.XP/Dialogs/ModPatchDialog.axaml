@@ -6,9 +6,9 @@
 		xmlns:dd="clr-namespace:RanseiLink.XP.DragDrop"
 		xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
 		Height="225" Width="550"
-        x:Class="RanseiLink.XP.Dialogs.ModCommitDialog"
+        x:Class="RanseiLink.XP.Dialogs.ModPatchDialog"
 		Classes="dialog"
-        Title="Apply Mod to Rom">
+        Title="Patch Rom With Mod">
 	<DockPanel>
 		<Grid Width="200" DockPanel.Dock="Left" Background="{DynamicResource WindowTransparentBackgroundBrush}"
 		  dd:DragDrop.IsDropTarget="True"
@@ -25,7 +25,7 @@
 			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
 		</StackPanel>
 		<StackPanel Margin="20" Spacing="10">
-			<TextBlock FontSize="18" FontWeight="DemiBold">Apply mod to rom</TextBlock>
+			<TextBlock FontSize="18" FontWeight="DemiBold">Patch Rom With Mod</TextBlock>
 			<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
 			<CheckBox Content="Include sprites in patch" IsChecked="{Binding IncludeSprites}"
 					  ToolTip.Tip="If you change lots of sprites, you can speed up the patches by not including them every time."/>

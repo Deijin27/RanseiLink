@@ -5,9 +5,9 @@ namespace RanseiLink.Windows.Dialogs;
 /// <summary>
 /// Interaction logic for ModCreationDialog.xaml
 /// </summary>
-public partial class ModCommitDialog : Window
+public partial class ModPatchDialog : Window
 {
-    public ModCommitDialog()
+    public ModPatchDialog()
     {
         InitializeComponent();
     }

@@ -54,7 +54,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Failed to load some plugins", loadFailures.ToString()));
         }
 
-        CommitRomCommand = new RelayCommand(CommitRom);
+        PatchRomCommand = new RelayCommand(PatchRom);
 
         RegisterModules(modules);
 
@@ -267,15 +267,15 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     #region Rom
 
-    public ICommand CommitRomCommand { get; }
+    public ICommand PatchRomCommand { get; }
 
-    private async Task CommitRom()
+    private async Task PatchRom()
     {
         if (Mod == null)
         {
             return;
         }
-        var vm = new ModCommitViewModel(_dialogService, _settingService, Mod, _fdhFactory);
+        var vm = new ModPatchViewModel(_dialogService, _settingService, Mod, _fdhFactory);
         if (!await _dialogService.ShowDialogWithResult(vm))
         {
             return;

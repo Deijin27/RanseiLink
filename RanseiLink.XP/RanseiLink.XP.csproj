@@ -68,8 +68,8 @@
     <Compile Update="Dialogs\ModDeleteDialog.axaml.cs">
       <DependentUpon>ModDeleteDialog.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Dialogs\ModCommitDialog.axaml.cs">
-      <DependentUpon>ModCommitDialog.axaml</DependentUpon>
+    <Compile Update="Dialogs\ModPatchDialog.axaml.cs">
+      <DependentUpon>ModPatchDialog.axaml</DependentUpon>
     </Compile>
     <Compile Update="Dialogs\ModEditInfoDialog.axaml.cs">
       <DependentUpon>ModEditInfoDialog.axaml</DependentUpon>

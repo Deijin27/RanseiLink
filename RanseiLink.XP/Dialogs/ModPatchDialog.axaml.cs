@@ -2,9 +2,9 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 namespace RanseiLink.XP.Dialogs;
-public partial class ModCommitDialog : Window
+public partial class ModPatchDialog : Window
 {
-    public ModCommitDialog()
+    public ModPatchDialog()
     {
         InitializeComponent();
     }

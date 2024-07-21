@@ -80,7 +80,7 @@
                 </ListView>
             </Popup>
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding CommitRomCommand}" Width="30" Height="30" Margin="5" ToolTip="Write to rom" Style="{StaticResource RoundedGrayHoverButtonStyle}">
+                <Button Command="{Binding PatchRomCommand}" Width="30" Height="30" Margin="5" ToolTip="Patch Rom" Style="{StaticResource RoundedGrayHoverButtonStyle}">
                     <controls:IconControl Icon="publish" Size="16"/>
                 </Button>
                 <!-- hit test stuff prevents double trigger when clicking on button to close popup -->

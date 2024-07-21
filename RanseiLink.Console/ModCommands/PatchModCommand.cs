@@ -2,8 +2,8 @@
 
 namespace RanseiLink.Console.ModCommands;
 
-[Command("commit mod", Description = "Commit current mod to rom.")]
-public class CommitModCommand(ICurrentModService currentModService, IModPatchingService modPatcher) : ICommand
+[Command("patch mod", Description = "Patch rom with current mod")]
+public class PatchModCommand(ICurrentModService currentModService, IModPatchingService modPatcher) : ICommand
 {
     [CommandParameter(0, Description = "Path to rom file.", Name = "path", Converter = typeof(PathConverter))]
     public string Path { get; set; }

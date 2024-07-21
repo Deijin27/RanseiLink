@@ -2,9 +2,9 @@
 
 namespace RanseiLink.GuiCore.Settings;
 
-public class RecentCommitRomSetting : StringSetting
+public class RecentPatchRomSetting : StringSetting
 {
-    public RecentCommitRomSetting() : base("RecentCommitRom") 
+    public RecentPatchRomSetting() : base("RecentCommitRom") 
     {
         IsHidden = true;
         Name = "Recent Patch Rom";

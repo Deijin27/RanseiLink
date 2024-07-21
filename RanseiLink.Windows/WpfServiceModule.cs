@@ -62,7 +62,7 @@ public class WpfServiceModule : IModule
         var locator = new RegistryDialogLocator();
 
         locator.Register<ImageListDialog, ImageListViewModel>();
-        locator.Register<ModCommitDialog, ModCommitViewModel>();
+        locator.Register<ModPatchDialog, ModPatchViewModel>();
         locator.Register<ModCreateBasedOnDialog, ModCreateBasedOnViewModel>();
         locator.Register<ModCreationDialog, ModCreationViewModel>();
         locator.Register<ModDeleteDialog, ModDeleteViewModel>();

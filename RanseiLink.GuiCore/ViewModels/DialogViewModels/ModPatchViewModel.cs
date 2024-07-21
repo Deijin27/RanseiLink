@@ -4,18 +4,18 @@ using RanseiLink.GuiCore.DragDrop;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
+public class ModPatchViewModel : ViewModelBase, IModalDialogViewModel<bool>
 {
     private string _file;
     private bool _includeSprites = true;
-    private readonly RecentCommitRomSetting _recentCommitRomSetting;
+    private readonly RecentPatchRomSetting _recentPatchRomSetting;
     private readonly PatchSpritesSetting _patchSpritesSetting;
     private readonly ISettingService _settingService;
 
-    public ModCommitViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
+    public ModPatchViewModel(IAsyncDialogService dialogService, ISettingService settingService, ModInfo modInfo, IFileDropHandlerFactory fdhFactory)
     {
         _settingService = settingService;
-        _recentCommitRomSetting = settingService.Get<RecentCommitRomSetting>();
+        _recentPatchRomSetting = settingService.Get<RecentPatchRomSetting>();
         _patchSpritesSetting = settingService.Get<PatchSpritesSetting>();
         ModInfo = modInfo;
         RomDropHandler = fdhFactory.NewRomDropHandler();
@@ -24,7 +24,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
             File = f;
         };
 
-        _file = _recentCommitRomSetting.Value;
+        _file = _recentPatchRomSetting.Value;
         _includeSprites = _patchSpritesSetting.Value;
 
         FilePickerCommand = new RelayCommand(async () =>
@@ -45,7 +45,7 @@ public class ModCommitViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
         if (result)
         {
-            _recentCommitRomSetting.Value = File;
+            _recentPatchRomSetting.Value = File;
             _patchSpritesSetting.Value = IncludeSprites;
             _settingService.Save();
             

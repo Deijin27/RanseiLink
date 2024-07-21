@@ -175,9 +175,9 @@ public class EditorModuleTests
 
     private void PrepareForPatch()
     {
-        _settingService.Setup(i => i.Get<RecentCommitRomSetting>()).Returns(new RecentCommitRomSetting());
+        _settingService.Setup(i => i.Get<RecentPatchRomSetting>()).Returns(new RecentPatchRomSetting());
         _settingService.Setup(i => i.Get<PatchSpritesSetting>()).Returns(new PatchSpritesSetting());
-        _dialogService.Setup(i => i.ShowDialog(It.IsAny<ModCommitViewModel>())).Callback((object vm) => ((ModCommitViewModel)vm).OnClosing(true));
+        _dialogService.Setup(i => i.ShowDialog(It.IsAny<ModPatchViewModel>())).Callback((object vm) => ((ModPatchViewModel)vm).OnClosing(true));
         _patchingService.Setup(i => i.CanPatch(It.IsAny<ModInfo>(), It.IsAny<string>(), It.IsAny<PatchOptions>())).Returns(Result.Ok());
 
         _dialogService.Setup(i => i.ProgressDialog(It.IsAny<Action<IProgress<ProgressInfo>>>(), It.IsAny<bool>()))
@@ -191,7 +191,7 @@ public class EditorModuleTests
 
         PrepareForPatch();
 
-        _mainEditorVm.CommitRomCommand.Execute(null);
+        _mainEditorVm.PatchRomCommand.Execute(null);
 
         _cachedMsgBlockService.Verify(i => i.SaveChangedBlocks(), Times.Once());
     }
@@ -211,7 +211,7 @@ public class EditorModuleTests
         _moduleA.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
         _moduleC.Verify(i => i.Initialise(It.IsAny<IServiceGetter>()), Times.Never());
 
-        _mainEditorVm.CommitRomCommand.Execute(null);
+        _mainEditorVm.PatchRomCommand.Execute(null);
 
         _moduleA.Verify(i => i.OnPatchingRom(), Times.Never());
         _moduleC.Verify(i => i.OnPatchingRom(), Times.Never());
