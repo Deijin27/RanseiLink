@@ -199,7 +199,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <controls:IconControl Visibility="{Binding IsAnimationOverwritten, Converter={StaticResource Converter.BoolToVisibility}}" Foreground="#80c468" Icon="check_circle" />
+                        <controls:OverrideControl IsOverride="{Binding IsAnimationOverwritten}"/>
                         <controls:IconButton Grid.Column="1" Icon="output" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
                         <controls:IconButton Grid.Column="2" Icon="input" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
                         <controls:IconButton Grid.Column="3" Icon="undo" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>

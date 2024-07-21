@@ -5,6 +5,9 @@
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Controls/IconControl.xaml"/>
+        <ResourceDictionary Source="Controls/OverrideControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+    
+
     
 </ResourceDictionary>

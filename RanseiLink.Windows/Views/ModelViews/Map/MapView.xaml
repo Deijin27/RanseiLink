@@ -352,9 +352,9 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center"  Visibility="{Binding Is3dModelOverriden, Converter={StaticResource Converter.BoolToVisibility}}">
-                            <controls:IconControl Foreground="#80c468" Icon="check_circle"/>
-                            <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="3D Model is Overwritten"/>
+                        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                            <controls:OverrideControl IsOverride="{Binding Is3dModelOverriden}"/>
+                            <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="3D Model Overriden"/>
                         </StackPanel>
                         
                         <Button Margin="4" Grid.Column="0" Grid.Row="1" Command="{Binding ExportObjCommand}">Export 3D Model as OBJ</Button>

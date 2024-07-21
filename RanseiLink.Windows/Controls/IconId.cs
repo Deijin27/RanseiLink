@@ -55,6 +55,7 @@
         rotate_left = 0xe419,
         keep = 0xe6aa,
         fiber_new = 0xe05e,
+        circle = 0xef4a,
 
     }
 }
