@@ -271,7 +271,8 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             progress.Report(new ProgressInfo("Importing mod..."));
             try
             {
-                _modService.Import(vm.File);
+                var importedMod = _modService.Import(vm.File);
+                _newModsFolders.Add(importedMod.FolderPath);
 
             }
             catch (Exception e)
