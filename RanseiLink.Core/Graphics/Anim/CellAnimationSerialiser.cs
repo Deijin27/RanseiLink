@@ -4,8 +4,6 @@ using RanseiLink.Core.Resources;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Xml.Linq;
-using static RanseiLink.Core.Graphics.RLAnimationResource;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -321,7 +319,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
             // save cluster data
             var cluster = ncer.Clusters.Clusters[clusterId];
-            var clusterData = new RLAnimationResource.ClusterInfo(ClusterToString(clusterId)) { File = fileName };
+            var clusterData = new RLAnimationResource.ClusterInfo(ClusterToString(clusterId))
+            {
+                File = fileName,
+                Palette = cluster.Count > 0 ? cluster[0].IndexPalette : (byte)0
+            };
             clusters.Add(clusterData);
 
             foreach (var cell in cluster)
@@ -333,19 +335,21 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Y = cell.YOffset + dims.YShift,
                     FlipX = cell.FlipX,
                     FlipY = cell.FlipY,
-                    Palette = cell.IndexPalette,
+                    Palette = 0, // palette is stored on cluster
                     DoubleSize = cell.DoubleSize,
                     Height = cell.Height,
                     Width = cell.Width,
                 };
+                if (clusterData.Palette != cell.IndexPalette)
+                {
+                    throw new Exception($"Cannot export with format {nameof(RLAnimationFormat.OneImagePerCluster)} because not all cells in cluster {clusterId} use the same palette");
+                }
                 clusterData.Cells.Add(cellData);
             }
         }
 
         return clusters;
     }
-
-    
 
     private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, ClusterDimensions dims)
     {
@@ -534,7 +538,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     FlipX = cellInfo.FlipX,
                     FlipY = cellInfo.FlipY,
                     DoubleSize = cellInfo.DoubleSize,
-                    IndexPalette = (byte)cellInfo.Palette,
+                    IndexPalette = cellInfo.Palette,
                     Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit
                 };
                 bank.Add(cell);
