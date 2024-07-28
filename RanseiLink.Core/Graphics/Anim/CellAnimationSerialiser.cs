@@ -425,8 +425,15 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         ncer.Clusters.Clusters.Clear();
         ncer.Labels.Names.Clear();
 
+        var requiresAdditionalEmptyCluster = res.Animations.SelectMany(x => x.Frames).Any(x => string.IsNullOrEmpty(x.Cluster));
+        if (requiresAdditionalEmptyCluster)
+        {
+            ncer.Clusters.Clusters.Add(new Cluster());
+        }
+
         // Generate a map of cluster name to ID to be used to import the animations
-        var nameToClusterId = GenerateClusterMap(res);
+        var nameToClusterId = GenerateClusterMap(res, requiresAdditionalEmptyCluster);
+        
 
         var fmt = res.Format;
         if (fmt == RLAnimationFormat.OneImagePerCluster)
@@ -464,7 +471,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             {
                 var targetFrame = new ABNK.Frame();
                 targetAnim.Frames.Add(targetFrame);
-                if (!nameToClusterId.TryGetValue(frame.Cluster, out var bankId))
+                if (!nameToClusterId.TryGetValue(frame.Cluster ?? "", out var bankId))
                 {
                     throw new Exception($"Animation '{anim.Name}' references cluster of name '{frame.Cluster}' which doesn't exist");
                 }
@@ -486,9 +493,15 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         cell.Scale = size.Scale;
     }
 
-    private static Dictionary<string, ushort> GenerateClusterMap(RLAnimationResource res)
+    private static Dictionary<string, ushort> GenerateClusterMap(RLAnimationResource res, bool requiresAdditionalEmptyCluster)
     {
         var nameToClusterId = new Dictionary<string, ushort>();
+        int shift = 0;
+        if (requiresAdditionalEmptyCluster)
+        {
+            nameToClusterId[""] = 0;
+            shift = 1;
+        }
         for (int i = 0; i < res.Clusters.Count; i++)
         {
             var clusterInfo = res.Clusters[i];
@@ -496,7 +509,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             {
                 throw new Exception($"More than one cluster has the same name {clusterInfo.Name}");
             }
-            nameToClusterId.Add(clusterInfo.Name, (ushort)i);
+            nameToClusterId.Add(clusterInfo.Name, (ushort)(i + shift));
         }
         return nameToClusterId;
     }

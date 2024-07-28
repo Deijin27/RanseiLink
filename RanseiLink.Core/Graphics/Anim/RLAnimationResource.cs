@@ -66,7 +66,7 @@ public class RLAnimationResource
         public Anim(XElement animElem)
         {
             Name = animElem.AttributeStringNonEmpty("name");
-            Frames = new List<AnimFrame>();
+            Frames = [];
             foreach (var frameElem in animElem.Elements("frame"))
             {
                 Frames.Add(new AnimFrame(frameElem));
@@ -86,7 +86,7 @@ public class RLAnimationResource
 
     public class AnimFrame
     {
-        public string Cluster { get; }
+        public string? Cluster { get; }
         public int Duration { get; }
 
         public AnimFrame(string cluster, int duration)
@@ -97,16 +97,19 @@ public class RLAnimationResource
 
         public AnimFrame(XElement frameElem)
         {
-            Cluster = frameElem.AttributeStringNonEmpty("cluster");
+            Cluster = frameElem.Attribute("cluster")?.Value;
             Duration = frameElem.AttributeInt("duration");
         }
 
         public XElement Serialise()
         {
-            return new XElement("frame",
-                new XAttribute("cluster", Cluster),
-                new XAttribute("duration", Duration)
-                );
+            var e = new XElement("frame");
+            if (Cluster != null)
+            {
+                e.Add(new XAttribute("cluster", Cluster));
+            }
+            e.Add(new XAttribute("duration", Duration));
+            return e;
         }
     }
 
