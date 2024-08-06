@@ -13,23 +13,17 @@ public static class LINK
 
     private static string FileIndexToExtension(long fileIndex)
     {
-        switch (fileIndex)
+        return fileIndex switch
         {
-            case 0:
-                return ".nanr";
-            case 1:
-                return ".ncgr";
-            case 2:
-                return ".ncer";
-            case 3:
-                return ".ncgr";
-            case 4:
-                return ".nclr";
-            case 5:
-                return ".nscr";
-            default:
-                throw new Exception();
+            0 => ".nanr",
+            1 => ".ncgr",
+            2 => ".ncer",
+            3 => ".ncgr",
+            4 => ".nclr",
+            5 => ".nscr",
+            _ => throw new Exception(),
         };
+        ;
     }
 
     /// <summary>

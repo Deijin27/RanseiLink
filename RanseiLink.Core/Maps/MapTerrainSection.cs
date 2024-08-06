@@ -91,7 +91,7 @@ public class MapTerrainEntry
     public override string ToString()
     {
         var sb = new StringBuilder();
-        foreach (int b in SubCellZValues)
+        foreach (var b in SubCellZValues)
         {
             sb.Append($"{b,9:X}");
         }
@@ -108,7 +108,7 @@ public class MapTerrainSection
     public List<List<MapTerrainEntry>> MapMatrix { get; }
     public MapTerrainSection(BinaryReader br, ushort width, ushort height)
     {
-        MapMatrix = new List<List<MapTerrainEntry>>();
+        MapMatrix = [];
 
         for (int y = 0; y < height; y++)
         {

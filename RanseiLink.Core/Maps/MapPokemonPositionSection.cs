@@ -4,11 +4,11 @@ public class MapPokemonPositionSection
 {
     public Position[] Positions { get; }
 
-    private const int PositionsCount = 64;
+    private const int __positionsCount = 64;
     public MapPokemonPositionSection(BinaryReader br)
     {
-        Positions = new Position[PositionsCount];
-        for (int i = 0; i < PositionsCount; i++)
+        Positions = new Position[__positionsCount];
+        for (int i = 0; i < __positionsCount; i++)
         {
             Positions[i] = new Position(br);
         }

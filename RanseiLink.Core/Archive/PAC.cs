@@ -20,18 +20,19 @@ public static class PAC
 
     public static string FileTypeNumberToExtension(FileTypeNumber fileType)
     {
-        switch (fileType)
+        return fileType switch
         {
-            case FileTypeNumber.NSBMD: return ".nsbmd"; // nitro sdk binary model data
-            case FileTypeNumber.NSBTX: return ".nsbtx"; // nitro sdk binary texture
-            case FileTypeNumber.NSBTP: return ".nsbtp"; // nitro sdk binary texture pattern
-            case FileTypeNumber.UNKNOWN3: return ".unknown3";
-            case FileTypeNumber.NSBMA: return ".nsbma"; // nitro sdk binary material animation
-            case FileTypeNumber.PAT: return ".pat"; // in pokemon model pacs this is a stripped down version of nsbtp
-            case FileTypeNumber.CHAR: return ".char";
-            case FileTypeNumber.NSBTA: return ".nsbta"; // nitro sdk binary texture animation
-            default: return "";
+            FileTypeNumber.NSBMD => ".nsbmd",// nitro sdk binary model data
+            FileTypeNumber.NSBTX => ".nsbtx",// nitro sdk binary texture
+            FileTypeNumber.NSBTP => ".nsbtp",// nitro sdk binary texture pattern
+            FileTypeNumber.UNKNOWN3 => ".unknown3",
+            FileTypeNumber.NSBMA => ".nsbma",// nitro sdk binary material animation
+            FileTypeNumber.PAT => ".pat",// in pokemon model pacs this is a stripped down version of nsbtp
+            FileTypeNumber.CHAR => ".char",
+            FileTypeNumber.NSBTA => ".nsbta",// nitro sdk binary texture animation
+            _ => "",
         };
+        ;
     }
 
     public static FileTypeNumber ExtensionToFileTypeNumber(string extension)

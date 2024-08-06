@@ -43,7 +43,7 @@ public class MapGimmickItem
     public Position Position { get; set; }
     public Orientation Orientation { get; set; }
     public int UnknownValue { get; set; }
-    public List<(ushort, ushort)> UnknownList { get; set; } = new List<(ushort, ushort)>(); // usage seems to depend on gimmick type
+    public List<(ushort, ushort)> UnknownList { get; set; } = []; // usage seems to depend on gimmick type
 
     public MapGimmickItem()
     {
@@ -104,7 +104,7 @@ public class MapGimmickSection
 
     public MapGimmickSection(BinaryReader br, ushort gimmickCount)
     {
-        Items = new List<MapGimmickItem>();
+        Items = [];
 
         if (gimmickCount == 0)
         {
@@ -126,7 +126,7 @@ public class MapGimmickSection
         var initOffset = bw.BaseStream.Position;
         bw.Seek(Items.Count * 4, SeekOrigin.Current);
 
-        List<int> itemStarts = new List<int>();
+        var itemStarts = new List<int>();
 
         // write items
         foreach (var item in Items)
