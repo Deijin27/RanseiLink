@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Settings;
+﻿#nullable enable
+using RanseiLink.Core.Settings;
 
 namespace RanseiLink.Console.Settings;
 

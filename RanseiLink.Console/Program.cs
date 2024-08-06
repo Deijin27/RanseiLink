@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿#nullable enable
+using System.Reflection;
 using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
@@ -21,7 +22,7 @@ internal class Program
 
         // build application with clifx
         return await new CliApplicationBuilder()
-           .SetVersion(Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion)
+           .SetVersion(Assembly.GetEntryAssembly()!.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion)
            .SetTitle("RanseiLink Console")
            .SetDescription("Pokemon Conquest ROM Editor")
            .AddCommandsFromThisAssembly()

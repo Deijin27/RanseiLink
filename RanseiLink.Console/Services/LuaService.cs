@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core;
+﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 using NLua;
@@ -14,7 +15,7 @@ public class LuaService(IModServiceContainer modServiceContainer) : ILuaService
 {
     public void RunScript(string scriptFilePath)
     {
-        Directory.SetCurrentDirectory(Path.GetDirectoryName(scriptFilePath));
+        Directory.SetCurrentDirectory(Path.GetDirectoryName(scriptFilePath)!);
 
         string fileName = Path.GetFileName(scriptFilePath);
 

@@ -1,20 +1,22 @@
-﻿using RanseiLink.Console.Settings;
+﻿#nullable enable
+using RanseiLink.Console.Settings;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RanseiLink.Console.Services;
 
 public interface ICurrentModService
 {
-    bool TryGetCurrentMod(out ModInfo currentMod);
-    bool TryGetCurrentModServiceGetter(out IServiceGetter currentModKernel);
+    bool TryGetCurrentMod(out ModInfo? currentMod);
+    bool TryGetCurrentModServiceGetter(out IServiceGetter? currentModKernel);
 }
 
 public class CurrentModService(ISettingService settingService, IModManager modManager, IModServiceGetterFactory modKernelFactory) : ICurrentModService
 {
     private readonly CurrentConsoleModSlotSetting _currentConsoleModSlotSetting = settingService.Get<CurrentConsoleModSlotSetting>();
 
-    public bool TryGetCurrentMod(out ModInfo currentMod)
+    public bool TryGetCurrentMod([NotNullWhen(true)] out ModInfo? currentMod)
     {
         var currentModSlot = _currentConsoleModSlotSetting.Value;
         var allModInfo = modManager.GetAllModInfo();
@@ -27,7 +29,7 @@ public class CurrentModService(ISettingService settingService, IModManager modMa
         return false;
     }
 
-    public bool TryGetCurrentModServiceGetter(out IServiceGetter currentModServiceGetter)
+    public bool TryGetCurrentModServiceGetter([NotNullWhen(true)] out IServiceGetter? currentModServiceGetter)
     {
         if (!TryGetCurrentMod(out var currentMod))
         {

@@ -1,4 +1,5 @@
-﻿namespace RanseiLink.Console;
+﻿#nullable enable
+namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {
@@ -10,7 +11,7 @@ public static partial class RenderExtensions
         }
     }
 
-    private static void WriteProperty(this IConsole console, object propertyName, object propertyValue)
+    private static void WriteProperty(this IConsole console, object propertyName, object? propertyValue)
     {
         using (console.WithForegroundColor(ConsoleColor.White))
         {

@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿#nullable enable
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Text;
 
 namespace RanseiLink.Console;

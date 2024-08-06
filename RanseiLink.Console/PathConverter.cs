@@ -1,10 +1,14 @@
-﻿
+﻿#nullable enable
 namespace RanseiLink.Console;
 
-internal class PathConverter : CliFx.Extensibility.BindingConverter<string>
+internal class PathConverter : CliFx.Extensibility.BindingConverter<string?>
 {
-    public override string Convert(string rawValue)
+    public override string? Convert(string? rawValue)
     {
+        if (rawValue == null)
+        {
+            return null;
+        }
         if (rawValue.StartsWith('"'))
         {
             rawValue = rawValue[1..];
