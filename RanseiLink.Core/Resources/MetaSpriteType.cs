@@ -1,11 +1,10 @@
 ﻿
-namespace RanseiLink.Core.Resources
+namespace RanseiLink.Core.Resources;
+
+public enum MetaSpriteType
 {
-    public enum MetaSpriteType
-    {
-        STL,
-        SCBG,
-        PKMDL,
-        Misc
-    }
+    STL,
+    SCBG,
+    PKMDL,
+    Misc
 }

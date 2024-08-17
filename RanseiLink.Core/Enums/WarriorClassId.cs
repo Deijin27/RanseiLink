@@ -1,13 +1,12 @@
 ﻿
-namespace RanseiLink.Core.Enums
+namespace RanseiLink.Core.Enums;
+
+public enum WarriorClassId
 {
-    public enum WarriorClassId
-    {
-        ArmyLeader,
-        ArmyMember,
-        FreeWarrior_1,
-        FreeWarrior_2,
-        FreeWarrior_3,
-        Default
-    }
+    ArmyLeader,
+    ArmyMember,
+    FreeWarrior_1,
+    FreeWarrior_2,
+    FreeWarrior_3,
+    Default
 }

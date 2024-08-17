@@ -1,11 +1,10 @@
 ﻿
-namespace RanseiLink.Core.Enums
+namespace RanseiLink.Core.Enums;
+
+public enum MoveMovementId
 {
-    public enum MoveMovementId
-    {
-        MoveUser,
-        Unused_1,
-        KnockbackTarget,
-        Default
-    }
+    MoveUser,
+    Unused_1,
+    KnockbackTarget,
+    Default
 }

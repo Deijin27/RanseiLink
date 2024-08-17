@@ -1,77 +1,76 @@
 ﻿using RanseiLink.Core.Enums;
 
-namespace RanseiLink.Core.Models
+namespace RanseiLink.Core.Models;
+
+public class ScenarioPokemon : BaseDataWindow
 {
-    public class ScenarioPokemon : BaseDataWindow
+    public const int DataLength = 8;
+
+    public ScenarioPokemon(byte[] data) : base(data, DataLength) { }
+    public ScenarioPokemon() : base(new byte[DataLength], DataLength) { }
+
+    public PokemonId Pokemon
     {
-        public const int DataLength = 8;
-
-        public ScenarioPokemon(byte[] data) : base(data, DataLength) { }
-        public ScenarioPokemon() : base(new byte[DataLength], DataLength) { }
-
-        public PokemonId Pokemon
+        get
         {
-            get
-            {
-                byte value = GetByte(0);
-                return value == 200 ? PokemonId.Default : (PokemonId)value;
-            }
-            set
-            {
-                byte byteVal = value == PokemonId.Default ? (byte)200 : (byte)value;
-                SetByte(0, byteVal);
-            }
+            byte value = GetByte(0);
+            return value == 200 ? PokemonId.Default : (PokemonId)value;
         }
-
-        public AbilityId Ability
+        set
         {
-            get => (AbilityId)GetInt(1, 20, 8);
-            set => SetInt(1, 20, 8, (int)value);
+            byte byteVal = value == PokemonId.Default ? (byte)200 : (byte)value;
+            SetByte(0, byteVal);
         }
+    }
 
-        public int HpIv
-        {
-            get => GetInt(1, 0, 5);
-            set => SetInt(1, 0, 5, value);
-        }
+    public AbilityId Ability
+    {
+        get => (AbilityId)GetInt(1, 20, 8);
+        set => SetInt(1, 20, 8, (int)value);
+    }
 
-        public int AtkIv
-        {
-            get => GetInt(1, 5, 5);
-            set => SetInt(1, 5, 5, value);
-        }
+    public int HpIv
+    {
+        get => GetInt(1, 0, 5);
+        set => SetInt(1, 0, 5, value);
+    }
 
-        public int DefIv
-        {
-            get => GetInt(1, 10, 5);
-            set => SetInt(1, 10, 5, value);
-        }
+    public int AtkIv
+    {
+        get => GetInt(1, 5, 5);
+        set => SetInt(1, 5, 5, value);
+    }
 
-        public int SpeIv
-        {
-            get => GetInt(1, 15, 5);
-            set => SetInt(1, 15, 5, value);
-        }
+    public int DefIv
+    {
+        get => GetInt(1, 10, 5);
+        set => SetInt(1, 10, 5, value);
+    }
 
-        public ushort Exp
-        {
-            get => GetUInt16(2);
-            set => SetUInt16(2, value);
-        }
+    public int SpeIv
+    {
+        get => GetInt(1, 15, 5);
+        set => SetInt(1, 15, 5, value);
+    }
 
-        /// <summary>
-        /// In memory: For wild pokemon this seems to store hp, but not for players pokemon
-        /// </summary>
-        public byte U1
-        {
-            get => GetByte(1);
-            set => SetByte(1, value);
-        }
+    public ushort Exp
+    {
+        get => GetUInt16(2);
+        set => SetUInt16(2, value);
+    }
 
-        public EnergyId Energy
-        {
-            get => (EnergyId)GetInt(1, 29, 3);
-            set => SetInt(1, 29, 3, (int)value);
-        }
+    /// <summary>
+    /// In memory: For wild pokemon this seems to store hp, but not for players pokemon
+    /// </summary>
+    public byte U1
+    {
+        get => GetByte(1);
+        set => SetByte(1, value);
+    }
+
+    public EnergyId Energy
+    {
+        get => (EnergyId)GetInt(1, 29, 3);
+        set => SetInt(1, 29, 3, (int)value);
     }
 }

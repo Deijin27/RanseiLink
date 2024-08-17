@@ -1,8 +1,7 @@
 ﻿
-namespace RanseiLink.Core.Models
+namespace RanseiLink.Core.Models;
+
+public interface ICloneable<T>
 {
-    public interface ICloneable<T>
-    {
-        T Clone();
-    }
+    T Clone();
 }

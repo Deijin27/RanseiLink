@@ -1,146 +1,145 @@
 ﻿using RanseiLink.Core.Enums;
 
-namespace RanseiLink.Core.Models
+namespace RanseiLink.Core.Models;
+
+/// <summary>
+/// Move
+/// </summary>
+public class Move : BaseDataWindow
 {
-    /// <summary>
-    /// Move
-    /// </summary>
-    public class Move : BaseDataWindow
+    public const int DataLength = 0x24;
+    public Move(byte[] data) : base(data, DataLength) { }
+    public Move() : base(new byte[DataLength], DataLength) { }
+
+    public string Name
     {
-        public const int DataLength = 0x24;
-        public Move(byte[] data) : base(data, DataLength) { }
-        public Move() : base(new byte[DataLength], DataLength) { }
+        get => GetPaddedUtf8String(0, 14);
+        set => SetPaddedUtf8String(0, 14, value);
+    }
 
-        public string Name
-        {
-            get => GetPaddedUtf8String(0, 14);
-            set => SetPaddedUtf8String(0, 14, value);
-        }
+    public MoveMovementFlags MovementFlags
+    {
+        get => (MoveMovementFlags)GetInt(3, 24, 8);
+        set => SetInt(3, 24, 8, (int)value);
+    }
 
-        public MoveMovementFlags MovementFlags
-        {
-            get => (MoveMovementFlags)GetInt(3, 24, 8);
-            set => SetInt(3, 24, 8, (int)value);
-        }
+    public TypeId Type
+    {
+        get => (TypeId)GetInt(4, 0, 5);
+        set => SetInt(4, 0, 5, (int)value);
+    }
 
-        public TypeId Type
-        {
-            get => (TypeId)GetInt(4, 0, 5);
-            set => SetInt(4, 0, 5, (int)value);
-        }
+    public int Power
+    {
+        get => GetInt(4, 5, 8);
+        set => SetInt(4, 5, 8, value);
+    }
 
-        public int Power
-        {
-            get => GetInt(4, 5, 8);
-            set => SetInt(4, 5, 8, value);
-        }
+    public MoveEffectId Effect1
+    {
+        get => (MoveEffectId)GetInt(4, 13, 7);
+        set => SetInt(4, 13, 7, (int)value);
+    }
 
-        public MoveEffectId Effect1
-        {
-            get => (MoveEffectId)GetInt(4, 13, 7);
-            set => SetInt(4, 13, 7, (int)value);
-        }
+    public int Effect1Chance
+    {
+        get => GetInt(4, 20, 7);
+        set => SetInt(4, 20, 7, value);
+    }
 
-        public int Effect1Chance
-        {
-            get => GetInt(4, 20, 7);
-            set => SetInt(4, 20, 7, value);
-        }
+    public MoveRangeId Range
+    {
+        get => (MoveRangeId)GetInt(4, 27, 5);
+        set => SetInt(4, 27, 5, (int)value);
+    }
 
-        public MoveRangeId Range
-        {
-            get => (MoveRangeId)GetInt(4, 27, 5);
-            set => SetInt(4, 27, 5, (int)value);
-        }
+    public MoveEffectId Effect2
+    {
+        get => (MoveEffectId)GetInt(6, 0, 7);
+        set => SetInt(6, 0, 7, (int)value);
+    }
 
-        public MoveEffectId Effect2
-        {
-            get => (MoveEffectId)GetInt(6, 0, 7);
-            set => SetInt(6, 0, 7, (int)value);
-        }
+    public int Effect2Chance
+    {
+        get => GetInt(6, 7, 7);
+        set => SetInt(6, 7, 7, value);
+    }
 
-        public int Effect2Chance
-        {
-            get => GetInt(6, 7, 7);
-            set => SetInt(6, 7, 7, value);
-        }
+    public MoveEffectId Effect3
+    {
+        get => (MoveEffectId)GetInt(6, 14, 7);
+        set => SetInt(6, 14, 7, (int)value);
+    }
 
-        public MoveEffectId Effect3
-        {
-            get => (MoveEffectId)GetInt(6, 14, 7);
-            set => SetInt(6, 14, 7, (int)value);
-        }
+    public int Effect3Chance
+    {
+        get => GetInt(6, 21, 7);
+        set => SetInt(6, 21, 7, value);
+    }
 
-        public int Effect3Chance
-        {
-            get => GetInt(6, 21, 7);
-            set => SetInt(6, 21, 7, value);
-        }
+    public MoveEffectId Effect4
+    {
+        get => (MoveEffectId)GetInt(7, 0, 7);
+        set => SetInt(7, 0, 7, (int)value);
+    }
 
-        public MoveEffectId Effect4
-        {
-            get => (MoveEffectId)GetInt(7, 0, 7);
-            set => SetInt(7, 0, 7, (int)value);
-        }
+    public int Effect4Chance
+    {
+        get => GetInt(7, 7, 7);
+        set => SetInt(7, 7, 7, value);
+    }
 
-        public int Effect4Chance
-        {
-            get => GetInt(7, 7, 7);
-            set => SetInt(7, 7, 7, value);
-        }
+    public int Accuracy
+    {
+        get => GetInt(7, 19, 7);
+        set => SetInt(7, 19, 7, value);
+    }
 
-        public int Accuracy
-        {
-            get => GetInt(7, 19, 7);
-            set => SetInt(7, 19, 7, value);
-        }
+    public MoveAnimationId StartupAnimation
+    {
+        get => (MoveAnimationId)GetInt(5, 0, 9);
+        set => SetInt(5, 0, 9, (int)value);
+    }
 
-        public MoveAnimationId StartupAnimation
-        {
-            get => (MoveAnimationId)GetInt(5, 0, 9);
-            set => SetInt(5, 0, 9, (int)value);
-        }
+    public MoveAnimationId ProjectileAnimation
+    {
+        get => (MoveAnimationId)GetInt(5, 9, 9);
+        set => SetInt(5, 9, 9, (int)value);
+    }
 
-        public MoveAnimationId ProjectileAnimation
-        {
-            get => (MoveAnimationId)GetInt(5, 9, 9);
-            set => SetInt(5, 9, 9, (int)value);
-        }
+    public MoveAnimationId ImpactAnimation
+    {
+        get => (MoveAnimationId)GetInt(5, 18, 9);
+        set => SetInt(5, 18, 9, (int)value);
+    }
 
-        public MoveAnimationId ImpactAnimation
-        {
-            get => (MoveAnimationId)GetInt(5, 18, 9);
-            set => SetInt(5, 18, 9, (int)value);
-        }
+    public MoveAnimationId AdditionalAnimation
+    {
+        get => (MoveAnimationId)GetInt(8, 0, 9);
+        set => SetInt(8, 0, 9, (int)value);
+    }
 
-        public MoveAnimationId AdditionalAnimation
-        {
-            get => (MoveAnimationId)GetInt(8, 0, 9);
-            set => SetInt(8, 0, 9, (int)value);
-        }
+    public MoveUnknownOptionId UnknownOption
+    {
+        get => (MoveUnknownOptionId)GetInt(7, 26, 4);
+        set => SetInt(7, 26, 4, (int)value);
+    }
 
-        public MoveUnknownOptionId UnknownOption
-        {
-            get => (MoveUnknownOptionId)GetInt(7, 26, 4);
-            set => SetInt(7, 26, 4, (int)value);
-        }
+    public MoveMovementId Movement
+    {
+        get => (MoveMovementId)GetInt(7, 30, 2);
+        set => SetInt(7, 30, 2, (int)value);
+    }
 
-        public MoveMovementId Movement
-        {
-            get => (MoveMovementId)GetInt(7, 30, 2);
-            set => SetInt(7, 30, 2, (int)value);
-        }
+    public MoveMovementAnimationId MovementAnimation
+    {
+        get => (MoveMovementAnimationId)GetInt(7, 14, 5);
+        set => SetInt(7, 14, 5, (int)value);
+    }
 
-        public MoveMovementAnimationId MovementAnimation
-        {
-            get => (MoveMovementAnimationId)GetInt(7, 14, 5);
-            set => SetInt(7, 14, 5, (int)value);
-        }
-
-        public int UnknownValue_6_28_4
-        {
-            get => GetInt(6, 28, 4);
-            set => SetInt(6, 28, 4, value);
-        }
+    public int UnknownValue_6_28_4
+    {
+        get => GetInt(6, 28, 4);
+        set => SetInt(6, 28, 4, value);
     }
 }

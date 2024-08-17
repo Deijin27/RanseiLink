@@ -1,65 +1,64 @@
 ﻿using RanseiLink.Core.Maps;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IMapService
 {
-    public interface IMapService
+    PSLM Retrieve(MapId id);
+    void Save(MapId id, PSLM model);
+    string MapFolderPath { get; }
+    ICollection<MapId> GetMapIds();
+    string GetFilePath(MapId mapId);
+}
+
+public class MapService : IMapService
+{
+    private readonly ModInfo _modInfo;
+    public MapService(ModInfo mod)
     {
-        PSLM Retrieve(MapId id);
-        void Save(MapId id, PSLM model);
-        string MapFolderPath { get; }
-        ICollection<MapId> GetMapIds();
-        string GetFilePath(MapId mapId);
+        _modInfo = mod;
     }
 
-    public class MapService : IMapService
+    public PSLM Retrieve(MapId id)
     {
-        private readonly ModInfo _modInfo;
-        public MapService(ModInfo mod)
+        string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
+        using (var br = new BinaryReader(File.OpenRead(file)))
         {
-            _modInfo = mod;
+            return new PSLM(br);
         }
+    }
 
-        public PSLM Retrieve(MapId id)
+    public void Save(MapId id, PSLM model)
+    {
+        string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
+        var temp = Path.GetTempFileName();
+        using (var bw = new BinaryWriter(File.Create(temp)))
         {
-            string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
-            using (var br = new BinaryReader(File.OpenRead(file)))
+            model.WriteTo(bw);
+        }
+        // safety measure to help protect against corruption
+        File.Replace(temp, file, null);
+    }
+
+    public string MapFolderPath => Path.Combine(_modInfo.FolderPath, Constants.MapFolderPath);
+
+    public ICollection<MapId> GetMapIds()
+    {
+        var files = Directory.GetFiles(MapFolderPath);
+        List<MapId> result = new List<MapId>();
+        foreach (var file in files)
+        {
+            if (MapId.TryParseInternalFileName(Path.GetFileName(file), out var map))
             {
-                return new PSLM(br);
+                result.Add(map);
             }
         }
 
-        public void Save(MapId id, PSLM model)
-        {
-            string file = Path.Combine(MapFolderPath, id.ToInternalPslmName());
-            var temp = Path.GetTempFileName();
-            using (var bw = new BinaryWriter(File.Create(temp)))
-            {
-                model.WriteTo(bw);
-            }
-            // safety measure to help protect against corruption
-            File.Replace(temp, file, null);
-        }
+        return result;
+    }
 
-        public string MapFolderPath => Path.Combine(_modInfo.FolderPath, Constants.MapFolderPath);
-
-        public ICollection<MapId> GetMapIds()
-        {
-            var files = Directory.GetFiles(MapFolderPath);
-            List<MapId> result = new List<MapId>();
-            foreach (var file in files)
-            {
-                if (MapId.TryParseInternalFileName(Path.GetFileName(file), out var map))
-                {
-                    result.Add(map);
-                }
-            }
-
-            return result;
-        }
-
-        public string GetFilePath(MapId mapId)
-        {
-            return Path.Combine(MapFolderPath, mapId.ToInternalPslmName());
-        }
+    public string GetFilePath(MapId mapId)
+    {
+        return Path.Combine(MapFolderPath, mapId.ToInternalPslmName());
     }
 }

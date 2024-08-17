@@ -1,28 +1,27 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 
-namespace RanseiLink.Core.Services.ModelServices
+namespace RanseiLink.Core.Services.ModelServices;
+
+public interface IScenarioKingdomService : IModelService<ScenarioKingdom>
 {
-    public interface IScenarioKingdomService : IModelService<ScenarioKingdom>
+}
+
+public class ScenarioKingdomService : BaseScenarioModelService<ScenarioKingdom>, IScenarioKingdomService
+{
+    public ScenarioKingdomService(ModInfo mod) : base(mod.FolderPath, 0, 10)
     {
     }
 
-    public class ScenarioKingdomService : BaseScenarioModelService<ScenarioKingdom>, IScenarioKingdomService
+    public ScenarioKingdom Retrieve(ScenarioId id) => Retrieve((int)id);
+
+    protected override string IdToRelativePath(int id)
     {
-        public ScenarioKingdomService(ModInfo mod) : base(mod.FolderPath, 0, 10)
-        {
-        }
+        return Constants.ScenarioKingdomPathFromId(id);
+    }
 
-        public ScenarioKingdom Retrieve(ScenarioId id) => Retrieve((int)id);
-
-        protected override string IdToRelativePath(int id)
-        {
-            return Constants.ScenarioKingdomPathFromId(id);
-        }
-
-        public override string IdToName(int id)
-        {
-            return ((ScenarioId)id).ToString();
-        }
+    public override string IdToName(int id)
+    {
+        return ((ScenarioId)id).ToString();
     }
 }
