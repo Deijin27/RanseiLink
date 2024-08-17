@@ -9,7 +9,7 @@ public interface IKingdomService : IModelService<Kingdom>
 
 public class KingdomService : BaseDataModelService<Kingdom>, IKingdomService
 {
-    private KingdomService(string KingdomDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) 
+    private KingdomService(string KingdomDatFile, ConquestGameCode culture) 
         : base(KingdomDatFile, 0, 16, () => new Kingdom(culture), 17) 
     {
     }

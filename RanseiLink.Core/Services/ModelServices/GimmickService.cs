@@ -10,7 +10,7 @@ public interface IGimmickService : IModelService<Gimmick>
 
 public class GimmickService : BaseDataModelService<Gimmick>, IGimmickService
 {
-    private GimmickService(string GimmickDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) 
+    private GimmickService(string GimmickDatFile, ConquestGameCode culture) 
         : base(GimmickDatFile, 0, 147, () => new Gimmick(culture)) 
     {
     }

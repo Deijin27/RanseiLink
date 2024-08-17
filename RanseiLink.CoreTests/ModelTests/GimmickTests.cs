@@ -20,7 +20,7 @@ public class GimmickTests
                 0x41, 0x20, 0x2A, 0x00,
                 0xFF, 0x07, 0x01, 0x04,
                 0x4A, 0x69, 0x73, 0x03,
-        });
+        }, ConquestGameCode.VPYT);
 
         a.Name.Should().Be("Pillar of Fire");
         a.Image.Should().Be(10);
@@ -39,7 +39,7 @@ public class GimmickTests
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        Gimmick a = new Gimmick
+        Gimmick a = new Gimmick(ConquestGameCode.VPYT)
         {
             Name = "Pillar of Fire",
             Image = 24,

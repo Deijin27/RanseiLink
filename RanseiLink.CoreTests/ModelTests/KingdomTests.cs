@@ -16,7 +16,7 @@ public class KingdomTests
                 0x41, 0x10, 0x00, 0x00,
                 0x31, 0x10, 0x12, 0x05,
                 0x42, 0x44, 0x00, 0x2E,
-        });
+        }, ConquestGameCode.VPYT);
 
         a.Name.Should().Be("Aurora");
         a.BattleConfig.Should().Be(BattleConfigId.Aurora);
@@ -25,7 +25,7 @@ public class KingdomTests
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        Kingdom a = new Kingdom
+        Kingdom a = new Kingdom(ConquestGameCode.VPYT)
         {
             Name = "Aurora",
             BattleConfig = BattleConfigId.Yakasha

@@ -9,12 +9,12 @@ public class Gimmick : BaseDataWindow
     private readonly int _cultureNameLength;
     private readonly int _cultureBinOffset;
 
-    public Gimmick(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+    public Gimmick(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) 
     {
         _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0xE : 0x10;
         _cultureBinOffset = culture == ConquestGameCode.VPYJ ? 0 : 1;
     }
-    public Gimmick(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
+    public Gimmick(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
     public string Name
     {

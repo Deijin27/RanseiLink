@@ -10,7 +10,7 @@ public class Kingdom : BaseDataWindow
     private readonly int _cultureBinOffset;
     private readonly int _cultureFirstByteDataOffset;
     private readonly int _cultureSecondByteOffset;
-    public Kingdom(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+    public Kingdom(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) 
     {
         _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0x8 : 0xA;
         _cultureBinOffset = culture == ConquestGameCode.VPYJ ? 0 : 1;
@@ -18,7 +18,7 @@ public class Kingdom : BaseDataWindow
         _cultureSecondByteOffset = culture == ConquestGameCode.VPYJ ? 16 : 0;
     }
 
-    public Kingdom(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)]) { }
+    public Kingdom(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
     public string Name
     {

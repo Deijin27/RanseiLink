@@ -9,7 +9,7 @@ public interface IWarriorSkillService : IModelService<WarriorSkill>
 
 public class WarriorSkillService : BaseDataModelService<WarriorSkill>, IWarriorSkillService
 {
-    private WarriorSkillService(string WarriorSkillDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) 
+    private WarriorSkillService(string WarriorSkillDatFile, ConquestGameCode culture) 
         : base(WarriorSkillDatFile, 0, 72, () => new WarriorSkill(culture)) 
     {
     }

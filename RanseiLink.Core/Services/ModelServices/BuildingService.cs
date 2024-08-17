@@ -9,7 +9,7 @@ public interface IBuildingService : IModelService<Building>
 
 public class BuildingService : BaseDataModelService<Building>, IBuildingService
 {
-    private BuildingService(string BuildingDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) 
+    private BuildingService(string BuildingDatFile, ConquestGameCode culture) 
         : base(BuildingDatFile, 0, 118, () => new Building(culture), 119) 
     {
     }

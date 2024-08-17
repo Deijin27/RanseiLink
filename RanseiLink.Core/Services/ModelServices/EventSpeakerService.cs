@@ -9,7 +9,7 @@ public interface IEventSpeakerService : IModelService<EventSpeaker>
 
 public class EventSpeakerService : BaseDataModelService<EventSpeaker>, IEventSpeakerService
 {
-    private EventSpeakerService(string EventSpeakerDatFile, ConquestGameCode culture = ConquestGameCode.VPYT) 
+    private EventSpeakerService(string EventSpeakerDatFile, ConquestGameCode culture) 
         : base(EventSpeakerDatFile, 0, 59, () => new EventSpeaker(culture)) 
     {
     }

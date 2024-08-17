@@ -17,7 +17,7 @@ public class WarriorSkillTests
                 0x00, 0x00, 0x00, 0x01,
                 0x85, 0x09, 0x80, 0x66,
                 0x28, 0xB8, 0x06, 0x00
-        });
+        }, ConquestGameCode.VPYT);
 
         a.Name.Should().Be("Mayhem");
         a.Effect1Amount.Should().Be(1);
@@ -33,7 +33,7 @@ public class WarriorSkillTests
     [Fact]
     public void AccessorsSetCorrectValues()
     {
-        WarriorSkill a = new WarriorSkill()
+        WarriorSkill a = new WarriorSkill(ConquestGameCode.VPYT)
         {
             Name = "Mayhem",
             Effect1Amount = 1,

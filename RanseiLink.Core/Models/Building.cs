@@ -10,13 +10,13 @@ public class Building : BaseDataWindow
     private readonly int _cultureBinOffset;
     private readonly int _cultureBC1Offset;
 
-    public Building(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+    public Building(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) 
     {
         _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0x10 : 0x12;
         _cultureBinOffset = culture == ConquestGameCode.VPYJ ? 0 : 1;
         _cultureBC1Offset = culture == ConquestGameCode.VPYJ ? 16 : 0;
     }
-    public Building(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
+    public Building(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
     public string Name
     {

@@ -7,11 +7,11 @@ public class EventSpeaker : BaseDataWindow
     public static int DataLength(ConquestGameCode culture) => culture == ConquestGameCode.VPYJ ? 0xC : 0x12;
 
     private readonly int _cultureNameLength;
-    public EventSpeaker(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+    public EventSpeaker(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) 
     {
         _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0xA : 0x10;
     }
-    public EventSpeaker(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
+    public EventSpeaker(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
     public string Name
     {

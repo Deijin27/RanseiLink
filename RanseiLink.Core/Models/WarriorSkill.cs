@@ -7,13 +7,13 @@ public class WarriorSkill : BaseDataWindow
     public static int DataLength(ConquestGameCode culture) => culture == ConquestGameCode.VPYJ ? 0x18 : 0x1C;
     private readonly int _cultureNameLength;
     private readonly int _cultureBinOffset;
-    public WarriorSkill(byte[] data, ConquestGameCode culture = ConquestGameCode.VPYT) : base(data, DataLength(culture)) 
+    public WarriorSkill(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) 
     {
         // the name has 4 fewer bytes in the japanese version of the game
         _cultureNameLength = culture == ConquestGameCode.VPYJ ? 0xE : 0x12;
         _cultureBinOffset = culture == ConquestGameCode.VPYJ ? 0 : 1;
     }
-    public WarriorSkill(ConquestGameCode culture = ConquestGameCode.VPYT) : this(new byte[DataLength(culture)], culture) { }
+    public WarriorSkill(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
     public string Name
     {
