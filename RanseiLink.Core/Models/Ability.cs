@@ -2,9 +2,6 @@
 
 namespace RanseiLink.Core.Models;
 
-/// <summary>
-/// Tokusei
-/// </summary>
 public class Ability : BaseDataWindow
 {
     public const int DataLength = 0x14;
