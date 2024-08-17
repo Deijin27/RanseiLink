@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Services.ModelServices
     {
     }
 
-    public class ScenarioAppearPokemonService : BaseModelService<ScenarioAppearPokemon>, IScenarioAppearPokemonService
+    public class ScenarioAppearPokemonService : BaseScenarioModelService<ScenarioAppearPokemon>, IScenarioAppearPokemonService
     {
         public ScenarioAppearPokemonService(ModInfo mod) : base(mod.FolderPath, 0, 10)
         {
@@ -15,35 +15,13 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public ScenarioAppearPokemon Retrieve(ScenarioId id) => Retrieve((int)id);
 
-        public override void Reload()
+        protected override string IdToRelativePath(int id)
         {
-            _cache.Clear();
-            for (int id = _minId; id <= _maxId; id++)
-            {
-                using (var br = new BinaryReader(File.OpenRead(Path.Combine(_dataFile, Constants.ScenarioAppearPokemonPathFromId(id)))))
-                {
-                    _cache.Add(new ScenarioAppearPokemon(br.ReadBytes(ScenarioAppearPokemon.DataLength)));
-                }
-            }
-        }
-
-        public override void Save()
-        {
-            for (int id = _minId; id <= _maxId; id++)
-            {
-                using (var bw = new BinaryWriter(File.OpenWrite(Path.Combine(_dataFile, Constants.ScenarioAppearPokemonPathFromId(id)))))
-                {
-                    bw.Write(_cache[id].Data);
-                } 
-            }
+            return Constants.ScenarioAppearPokemonPathFromId(id);
         }
 
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
             return ((ScenarioId)id).ToString();
         }
     } 

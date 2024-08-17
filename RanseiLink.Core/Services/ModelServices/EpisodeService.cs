@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Services.ModelServices
     {
     }
 
-    public class EpisodeService : BaseModelService<Episode>, IEpisodeService
+    public class EpisodeService : BaseNewableDataModelService<Episode>, IEpisodeService
     {
         private EpisodeService(string abilityDatFile) : base(abilityDatFile, 0, 37, 511) { }
 
@@ -15,36 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public Episode Retrieve(EpisodeId id) => Retrieve((int)id);
 
-        public override void Reload()
-        {
-            _cache.Clear();
-            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    _cache.Add(new Episode(br.ReadBytes(Episode.DataLength)));
-                }
-            }
-                
-        }
-
-        public override void Save()
-        {
-            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    bw.Write(_cache[id].Data);
-                }
-            }
-        }
-
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
             return ((EpisodeId)id).ToString();
         }
     }

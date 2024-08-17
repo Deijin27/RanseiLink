@@ -23,6 +23,16 @@ namespace RanseiLink.Core.Models
             return ~(-1 << bitCount);
         }
 
+        public void Read(Stream stream)
+        {
+            stream.Read(Data, 0, Data.Length);
+        }
+
+        public void Write(Stream stream)
+        {
+            stream.Write(Data, 0, Data.Length);
+        }
+
         public byte GetByte(int offset) => Data[offset];
         public void SetByte(int offset, byte value) => Data[offset] = value;
 

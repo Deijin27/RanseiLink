@@ -42,6 +42,24 @@ public static class Extensions
         bw.Write((byte)0);
     }
 
+    internal static void Pad(this Stream stream, int count)
+    {
+        stream.Write(new byte[count]);
+    }
+
+    internal static int ReadInt32(this Stream stream)
+    {
+        var buffer = new byte[4];
+        stream.Read(buffer, 0, buffer.Length);
+        return BitConverter.ToInt32(buffer, 0);
+    }
+
+    internal static void WriteInt32(this Stream stream, int value)
+    {
+        var buffer = BitConverter.GetBytes(value);
+        stream.Write(buffer, 0, buffer.Length);
+    }
+
     /// <summary>
     /// Write zero padding
     /// </summary>

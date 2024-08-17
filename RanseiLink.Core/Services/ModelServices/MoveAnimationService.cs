@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Services.ModelServices
     {
     }
 
-    public class MoveAnimationService : BaseModelService<MoveAnimation>, IMoveAnimationService
+    public class MoveAnimationService : BaseNewableDataModelService<MoveAnimation>, IMoveAnimationService
     {
         private MoveAnimationService(string MoveAnimationDatFile) : base(MoveAnimationDatFile, 0, 254) { }
 
@@ -15,35 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public MoveAnimation Retrieve(MoveAnimationId id) => Retrieve((int)id);
 
-        public override void Reload()
-        {
-            _cache.Clear();
-            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    _cache.Add(new MoveAnimation(br.ReadBytes(MoveAnimation.DataLength)));
-                }
-            }
-        }
-
-        public override void Save()
-        {
-            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    bw.Write(_cache[id].Data);
-                }
-            }
-        }
-
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
             return ((MoveAnimationId)id).ToString();
         }
     } 

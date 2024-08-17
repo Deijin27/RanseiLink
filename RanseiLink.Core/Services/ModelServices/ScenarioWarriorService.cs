@@ -26,10 +26,6 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
             return ((ScenarioId)id).ToString();
         }
 
@@ -50,45 +46,17 @@ namespace RanseiLink.Core.Services.ModelServices
         }
     }
 
-    public class ChildScenarioWarriorService : BaseModelService<ScenarioWarrior>, IChildScenarioWarriorService
+    public class ChildScenarioWarriorService : BaseNewableDataModelService<ScenarioWarrior>, IChildScenarioWarriorService
     {
-        private readonly IBaseWarriorService _WarriorService;
-        public ChildScenarioWarriorService(string scenarioWarriorDatFile, IBaseWarriorService WarriorService) : base(scenarioWarriorDatFile, 0, 209)
+        private readonly IBaseWarriorService _warriorService;
+        public ChildScenarioWarriorService(string scenarioWarriorDatFile, IBaseWarriorService warriorService) : base(scenarioWarriorDatFile, 0, 209)
         {
-            _WarriorService = WarriorService;
-        }
-
-        public override void Reload()
-        {
-            _cache.Clear();
-            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    _cache.Add(new ScenarioWarrior(br.ReadBytes(ScenarioWarrior.DataLength)));
-                }
-            }
-                
-        }
-
-        public override void Save()
-        {
-            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    bw.Write(_cache[id].Data);
-                }
-            }
+            _warriorService = warriorService;
         }
 
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
-            return _WarriorService.IdToName((int)_cache[id].Warrior);
+            return _warriorService.IdToName((int)Retrieve(id).Warrior);
         }
     } 
 }

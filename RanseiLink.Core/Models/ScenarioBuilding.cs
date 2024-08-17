@@ -10,9 +10,11 @@ namespace RanseiLink.Core.Models
         /// </summary>
         public const int SlotCount = 7;
         private const int _bytesPerSlot = 2;
-        public ScenarioBuilding(byte[] data) : base(data, DataLength, false)
+        private ScenarioBuilding(byte[] data) : base(data, DataLength, false)
         {
         }
+
+        public ScenarioBuilding() : this(new byte[DataLength]) { }
 
         private int GetBaseOffset(int kingdom, int slot) => kingdom * SlotCount * _bytesPerSlot + slot * _bytesPerSlot;
 

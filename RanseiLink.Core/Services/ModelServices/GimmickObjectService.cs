@@ -7,7 +7,7 @@ namespace RanseiLink.Core.Services.ModelServices
     {
     }
 
-    public class GimmickObjectService : BaseModelService<GimmickObject>, IGimmickObjectService
+    public class GimmickObjectService : BaseNewableDataModelService<GimmickObject>, IGimmickObjectService
     {
         private GimmickObjectService(string GimmickObjectDatFile) : base(GimmickObjectDatFile, 0, 99) { }
 
@@ -15,35 +15,8 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public GimmickObject Retrieve(GimmickObjectId id) => Retrieve((int)id);
 
-        public override void Reload()
-        {
-            _cache.Clear();
-            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    _cache.Add(new GimmickObject(br.ReadBytes(GimmickObject.DataLength)));
-                }
-            }
-        }
-
-        public override void Save()
-        {
-            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
-            {
-                for (int id = _minId; id <= _maxId; id++)
-                {
-                    bw.Write(_cache[id].Data);
-                }
-            }
-        }
-
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
             return ((GimmickObjectId)id).ToString();
         }
     } 

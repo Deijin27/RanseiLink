@@ -7,10 +7,10 @@ namespace RanseiLink.Core.Services.ModelServices
     {
     }
 
-    public class PokemonService : BaseModelService<Pokemon>, IPokemonService
+    public class PokemonService : BaseNewableDataModelService<Pokemon>, IPokemonService
     {
-        private const int _defaultEvoId = 1400;
-        private const long _evoTableOffset = 0x25C0;
+        private const int __defaultEvoId = 1400;
+        private const long __evoTableOffset = 0x25C0;
 
         public static PokemonService Load(string pokemonDatFile) => new PokemonService(pokemonDatFile);
         private PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
@@ -18,82 +18,67 @@ namespace RanseiLink.Core.Services.ModelServices
 
         public Pokemon Retrieve(PokemonId id) => Retrieve((int)id);
 
-        public override void Reload()
+        public override void PostLoad(Stream stream)
         {
-            _cache.Clear();
-            using (var br = new BinaryReader(File.OpenRead(_dataFile)))
-            {
-                // get the evolution table
-                br.BaseStream.Position = _evoTableOffset;
-                int length = br.ReadInt32();
-                List<PokemonId> evoTable = br.ReadBytes(length).Select(i => (PokemonId)i).ToList();
+            // get the evolution table
+            stream.Position = __evoTableOffset;
+            var length = stream.ReadInt32();
+            var buffer = new byte[length];
+            stream.Read(buffer, 0, length);
 
-                // get the pokemon, filling in their evolutions as you go
-                br.BaseStream.Position = 0;
-                for (int id = _minId; id <= _maxId; id++)
+            // put the data onto the pokemon
+            foreach (var pokemon in Enumerate())
+            {
+                int minEvo = pokemon.MinEvolutionTableEntry;
+                int maxEvo = pokemon.MaxEvolutionTableEntry;
+                if (minEvo != __defaultEvoId && maxEvo != __defaultEvoId)
                 {
-                    var data = br.ReadBytes(Pokemon.DataLength);
-                    var pokemon = new Pokemon(data);
-                    _cache.Add(pokemon);
-                    int minEvo = (int)pokemon.MinEvolutionTableEntry;
-                    int maxEvo = (int)pokemon.MaxEvolutionTableEntry;
-                    if (minEvo != _defaultEvoId && maxEvo != _defaultEvoId)
+                    for (int i = minEvo; i <= maxEvo; i++)
                     {
-                        for (int i = minEvo; i <= maxEvo; i++)
-                        {
-                            pokemon.Evolutions.Add(evoTable[i]);
-                        }
+                        pokemon.Evolutions.Add((PokemonId)buffer[i]);
                     }
                 }
             }
         }
 
-        public override void Save()
+        public override void PostSave(Stream stream)
         {
-            // update evolutions in pokemon models and build new evolution table
-            List<PokemonId> evoTable = new List<PokemonId>();
-            using (var bw = new BinaryWriter(File.OpenWrite(_dataFile)))
+            var evoTable = new List<PokemonId>();
+
+            foreach (var pokemon in Enumerate())
             {
-                for (int id = _minId; id <= _maxId; id++)
+                if (pokemon.Evolutions.Count == 0)
                 {
-                    Pokemon pokemon = _cache[id];
-                    if (pokemon.Evolutions.Count == 0)
-                    {
-                        pokemon.MinEvolutionTableEntry = _defaultEvoId;
-                        pokemon.MaxEvolutionTableEntry = _defaultEvoId;
-                    }
-                    else
-                    {
-                        pokemon.MinEvolutionTableEntry = evoTable.Count;
-                        foreach (var evo in pokemon.Evolutions)
-                        {
-                            evoTable.Add(evo);
-                        }
-                        pokemon.MaxEvolutionTableEntry = evoTable.Count - 1;
-                    }
-                    bw.Write(pokemon.Data);
+                    pokemon.MinEvolutionTableEntry = __defaultEvoId;
+                    pokemon.MaxEvolutionTableEntry = __defaultEvoId;
                 }
-                // write the evolution table
-                bw.BaseStream.Position = _evoTableOffset;
-                int length = evoTable.Count;
-                bw.Write(length);
-                bw.Write(evoTable.Select(i => (byte)i).ToArray());
-                // this is padded to be divisible by 4
-                if (length % 4 != 0)
+                else
                 {
-                    bw.Pad(4 - (length % 4));
+                    pokemon.MinEvolutionTableEntry = evoTable.Count;
+                    foreach (var evo in pokemon.Evolutions)
+                    {
+                        evoTable.Add(evo);
+                    }
+                    pokemon.MaxEvolutionTableEntry = evoTable.Count - 1;
                 }
-                bw.BaseStream.SetLength(bw.BaseStream.Position);
             }
+
+            // write the evolution table
+            stream.Position = __evoTableOffset;
+            int length = evoTable.Count;
+            stream.WriteInt32(length);
+            stream.Write(evoTable.Select(i => (byte)i).ToArray());
+            // this is padded to be divisible by 4
+            if (length % 4 != 0)
+            {
+                stream.Pad(4 - (length % 4));
+            }
+            stream.SetLength(stream.Position);
         }
 
         public override string IdToName(int id)
         {
-            if (!ValidateId(id))
-            {
-                throw new ArgumentOutOfRangeException(nameof(id));
-            }
-            return _cache[id].Name;
+            return Retrieve(id).Name;
         }
     }
 }
