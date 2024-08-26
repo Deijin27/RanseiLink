@@ -43,22 +43,9 @@ public class NcerMinimapTests
 
         var newPixels = ncgr.Pixels.Data;
         var newPalette = PaletteUtil.To32bitColors(nclr.Palettes.Palette);
+        // ensure only one palette, else we would need to check per cell instead
+        newPalette.Should().HaveCount(ncgr.Pixels.Format.PaletteSize());
 
-        // Ensure palette has been maintained
-        Rgba32 black = Color.Black;
-        newPalette.Should().HaveSameCount(oldPalette);
-        // skip 1 because it's transparency which we don't care about
-        // ignore black because it's used for padding
-        var oldPaletteSorted = oldPalette.Skip(1).Where(x => x != black).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
-        var newPaletteSorted = newPalette.Skip(1).Where(x => x != black).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();
-        newPaletteSorted.Should().Equal(oldPaletteSorted);
-
-        // Ensure pixels point to the same colors
-        newPixels.Should().HaveSameCount(oldPixels);
-
-        var oldPixelsAsColors = oldPixels.Select(x => x == 0 ? (Rgba32)Color.Transparent : oldPalette[x]).ToArray();
-        var newPixelsAsColors = newPixels.Select(x => x == 0 ? (Rgba32)Color.Transparent : newPalette[x]).ToArray();
-
-        newPixelsAsColors.Should().Equal(oldPixelsAsColors);
+        GraphicsAssertions.PixelsAndPaletteAreEquivalent(oldPixels, newPixels, oldPalette, newPalette);
     }
 }

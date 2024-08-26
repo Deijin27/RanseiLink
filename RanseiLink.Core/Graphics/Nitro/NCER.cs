@@ -428,14 +428,16 @@ public class Cluster : List<Cell>
 
     public void EstimateMinMaxValues()
     {
-        XMax = 0;
-        YMax = 0;
         if (Count == 0)
         {
+            XMax = 0;
+            YMax = 0;
             XMin = 0;
             YMin = 0;
             return;
         }
+        XMax = int.MinValue;
+        YMax= int.MinValue;
         XMin = int.MaxValue;
         YMin = int.MaxValue;
         foreach (var cell in this)
@@ -473,7 +475,6 @@ public class Cell
     }
     public int Width { get; set; }
     public int Height { get; set; }
-    public ushort CellId { get; set; }
 
     public int YOffset { get; set; }
     public RotateOrScale RotateOrScale { get; set; }

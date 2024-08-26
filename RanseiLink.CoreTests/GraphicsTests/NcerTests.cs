@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Graphics;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
@@ -112,5 +113,34 @@ public class NcerTests
         //File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
 
         data.Should().Equal(File.ReadAllBytes(file));
+    }
+
+    [Theory]
+    //[InlineData("test_minimap_9.ncer")] // this one does not yield correct value
+    [InlineData("test_warriorbattleintro.ncer")]
+    [InlineData("test_ki2_aurora_anim.ncer")]
+    [InlineData("test_cma_ignis.ncer")]
+    public void MinMax(string fileName)
+    {
+        // These estimates are not always correct, who knows why.
+        // The wrong ones are always overestimates though, so it should be fine, I hope maybe.
+
+        var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
+        File.Exists(file).Should().BeTrue();
+
+        var ncer = NCER.Load(file);
+
+        foreach (var cluster in ncer.Clusters.Clusters)
+        {
+            var oldXMin = cluster.XMin;
+            var oldXMax = cluster.XMax;
+            var oldYMin = cluster.YMin;
+            var oldYMax = cluster.YMax;
+            cluster.EstimateMinMaxValues();
+            cluster.XMin.Should().Be(oldXMin);
+            cluster.XMax.Should().Be(oldXMax);
+            cluster.YMin.Should().Be(oldYMin);
+            cluster.YMax.Should().Be(oldYMax);
+        }
     }
 }

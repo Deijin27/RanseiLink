@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
@@ -141,6 +143,19 @@ public static class FileUtil
             using (var fs = File.OpenRead(file))
             {
                 return sha.ComputeHash(fs);
+            }
+        }
+    }
+
+    public static byte[] Sha256Image(Image<Rgba32> image)
+    {
+        using (var sha = SHA256.Create())
+        {
+            using (var ms = new MemoryStream())
+            {
+                image.SaveAsPng(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+                return sha.ComputeHash(ms);
             }
         }
     }

@@ -93,16 +93,10 @@ public static class CellImageUtil
         return new ClusterDimensions(xShift, yShift, width, height);
     }
 
+
     public static Image<Rgba32> CellToImage(Cell cell, uint blockSize, MultiPaletteImageInfo imageInfo)
     {
-        int tileOffset = cell.TileOffset << (byte)blockSize;
-
-        var startByte = tileOffset * 0x20;
-        if (imageInfo.Format == TexFormat.Pltt16)
-        {
-            startByte *= 2; // account for compression e.g. pokemon conquest minimaps
-        }
-        byte[] cellPixels = imageInfo.Pixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
+        byte[] cellPixels = GetCellPixels(cell, blockSize, imageInfo.Format, imageInfo.Pixels);
 
         var cellImg = ImageUtil.SpriteToImage(new SpriteImageInfo(cellPixels, imageInfo.Palette[cell.IndexPalette], cell.Width, cell.Height, imageInfo.IsTiled, imageInfo.Format));
 
@@ -116,8 +110,21 @@ public static class CellImageUtil
                     g.Flip(FlipMode.Vertical);
             });
         }
-        
+
         return cellImg;
+    }
+
+    public static byte[] GetCellPixels(Cell cell, uint blockSize, TexFormat format, byte[] allPixels)
+    {
+        int tileOffset = cell.TileOffset << (byte)blockSize;
+
+        var startByte = tileOffset * 0x20;
+        if (format == TexFormat.Pltt16)
+        {
+            startByte *= 2; // account for compression e.g. pokemon conquest minimaps
+        }
+        byte[] cellPixels = allPixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
+        return cellPixels;
     }
 
     /// <summary>

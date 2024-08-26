@@ -22,7 +22,15 @@ public static class CellAnimationSerialiser
     public static void ExportAnimationOnly(CellImageSettings settings, string outputFolder, string animLinkFile, int width, int height, RLAnimationFormat fmt, string? background)
     {
         var anim = G2DR.LoadAnimFromFile(animLinkFile);
-        ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, outputFolder, width, height, settings, fmt, background);
+        var exportData = ExportAnimationXml(anim.Nanr, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings, fmt, background);
+        var doc = exportData.Res.Serialise();
+        doc.Save(Path.Combine(outputFolder, "animation.xml"));
+
+        foreach (var (fileName, img) in exportData.Images)
+        {
+            img.SaveAsPng(Path.Combine(outputFolder, fileName));
+            img.Dispose();
+        }
     }
 
     public static Result ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile, RLAnimationResource? res = null)
@@ -41,7 +49,11 @@ public static class CellAnimationSerialiser
                 return valid;
             }
 
-            var nanr = ImportAnimationXml(res, dir, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
+            var images = LoadImages(dir, res);
+
+            var data = new FullExportData(res, images);
+
+            var nanr = ImportAnimationXml(data, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
             G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
             return Result.Ok();
@@ -54,6 +66,44 @@ public static class CellAnimationSerialiser
         {
             Directory.Delete(tempAnim, true);
         }
+    }
+
+    private static Dictionary<string, Image<Rgba32>> LoadImages(string dir, RLAnimationResource res)
+    {
+        var images = new Dictionary<string, Image<Rgba32>>(StringComparer.OrdinalIgnoreCase);
+
+        var fileNames = new HashSet<string>();
+
+        foreach (var cluster in res.Clusters)
+        {
+            fileNames.Add(cluster.File ?? "");
+
+            foreach (var cell in cluster.Cells)
+            {
+                fileNames.Add(cell.File ?? "");
+                if (string.IsNullOrEmpty(cell.File) && res.Format == RLAnimationFormat.OneImagePerCell)
+                {
+                    throw new Exception($"Missing required attribute 'file' on cell for format {RLAnimationFormat.OneImagePerCell}");
+                }
+            }
+        }
+
+        foreach (var fileName in fileNames)
+        {
+            Image<Rgba32> image;
+            if (fileName == "")
+            {
+                image = new Image<Rgba32>(1, 1);
+            }
+            else
+            {
+                image = ImageUtil.LoadPngBetterError(Path.Combine(dir, FileUtil.NormalizePath(fileName)));
+            }
+
+            images[fileName] = image;
+        }
+
+        return images;
     }
 
     private static Result ValidateAnim(RLAnimationResource res, NANR anim)
@@ -166,46 +216,6 @@ public static class CellAnimationSerialiser
         }
     }
 
-    /*
-public static void DeserialiseFromScratch(string inputFolder, string outputBgLinkFile, string? outputAnimLinkFile = null)
-{
-   // technically we will always have the background file default to work off of
-   var tempBg = FileUtil.GetTemporaryDirectory();
-   try
-   {
-       var ncgr = new NCGR();
-       var nclr = new NCLR();
-
-       // TODO: set up the ncgr and nclr properly
-       var (width, height) = DeserialiseBackground(inputFolder, ncgr, nclr);
-       // G2DR.SaveScreenToFile(tempBg, nscr, ncgr, nclr, NcgrSlot.Slot1);
-   }
-   finally
-   {
-       Directory.Delete(tempBg, true);
-   }
-
-   // load animation
-   if (outputAnimLinkFile != null)
-   {
-       var tempAnim = FileUtil.GetTemporaryDirectory();
-       try
-       {
-           var ncer = new NCER();
-           var ncgr = new NCGR();
-           var nclr = new NCLR();
-           // TODO: set up the nanr, ncgr and nclr properly
-           var nanr = DeserialiseAnimationXml(Path.Combine(inputFolder, "animation.xml"), ncer, ncgr, nclr);
-           // G2DR.SaveAnimToFile(tempAnim, nanr, ncer, ncgr, nclr, NcgrSlot.Slot1);
-       }
-       finally
-       {
-           Directory.Delete(tempAnim, true);
-       }
-   }
-}
-*/
-
     public static (int width, int height) ExportBackground(NCGR ncgr, NCLR nclr, string outputFolder, string outputFileName)
     {
         using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
@@ -252,7 +262,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return (image.Width, image.Height);
     }
 
-    public static void ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, RLAnimationFormat fmt, string? background)
+    public static FullExportData ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings, RLAnimationFormat fmt, string? background)
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
@@ -260,26 +270,26 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         var anims = ExportNanr(nanr);
 
         // save cells
-        List<RLAnimationResource.ClusterInfo> clusters;
+        ExportData exportData;
         if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
-            clusters = ExportOneImagePerCluster(ncer, ncgr, nclr, outputFolder, width, height, settings, dims);
+            exportData = ExportOneImagePerCluster(ncer, ncgr, nclr, width, height, settings, dims);
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
-            clusters = ExportOneImagePerCell(ncer, ncgr, nclr, outputFolder, dims);
+            exportData = ExportOneImagePerCell(ncer, ncgr, nclr, dims);
         }
         else
         {
             throw new ArgumentOutOfRangeException(nameof(fmt), fmt, null);
         }
-        
+
+
         var res = new RLAnimationResource(fmt, background);
         res.Animations.AddRange(anims);
-        res.Clusters.AddRange(clusters);
+        res.Clusters.AddRange(exportData.Clusters);
 
-        var doc = res.Serialise();
-        doc.Save(Path.Combine(outputFolder, "animation.xml"));
+        return new(res, exportData.Images);
     }
 
     private static List<RLAnimationResource.Anim> ExportNanr(NANR nanr)
@@ -299,23 +309,26 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return $"cluster_{clusterId}";
     }
 
-    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, int width, int height, CellImageSettings settings, ClusterDimensions dims)
+    public record FullExportData(RLAnimationResource Res, Dictionary<string, Image<Rgba32>> Images);
+    public record ExportData(List<RLAnimationResource.ClusterInfo> Clusters, Dictionary<string, Image<Rgba32>> Images);
+
+    private static ExportData ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings, ClusterDimensions dims)
     {
         if (width <= 0 || height <= 0)
         {
             throw new Exception($"With format {RLAnimationFormat.OneImagePerCluster} width and height must be specified");
         }
-        var images = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
+        var imagesList = NitroImageUtil.NcerToMultipleImages(ncer, ncgr, nclr, settings, width, height);
 
         var clusters = new List<RLAnimationResource.ClusterInfo>();
+        var images = new Dictionary<string, Image<Rgba32>>();
 
         for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
         {
             // save cluster image
-            var clusterImage = images[clusterId];
+            var clusterImage = imagesList[clusterId];
             var fileName = $"{clusterId.ToString().PadLeft(4, '0')}.png";
-            clusterImage.SaveAsPng(Path.Combine(outputFolder, fileName));
-            clusterImage.Dispose();
+            images[fileName] = clusterImage;
 
             // save cluster data
             var cluster = ncer.Clusters.Clusters[clusterId];
@@ -348,21 +361,21 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             }
         }
 
-        return clusters;
+        return new(clusters, images);
     }
 
-    private static List<RLAnimationResource.ClusterInfo> ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, string outputFolder, ClusterDimensions dims)
+    private static ExportData ExportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims)
     {
-        var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName)>();
+        var distinctImages = new List<(int TileOffset, int IndexPalette, byte[] Hash, string FileName, Image<Rgba32> Image)>();
         var imageGroups = NitroImageUtil.NcerToMultipleImageGroups(ncer, ncgr, nclr);
 
         var clusters = new List<RLAnimationResource.ClusterInfo>();
+        var images = new Dictionary<string, Image<Rgba32>>();
 
         for (int clusterId = 0; clusterId < ncer.Clusters.Clusters.Count; clusterId++)
         {
             // prepare image folders
             string folderName = clusterId.ToString().PadLeft(4, '0');
-            //Directory.CreateDirectory(Path.Combine(outputFolder, folderName));
             var group = imageGroups[clusterId];
 
             // save bank data
@@ -377,11 +390,10 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 // save cell image
                 var cellImage = group[cellId];
                 var fileName = $"{folderName}_{cellId.ToString().PadLeft(4, '0')}.png";
-                var filePath = Path.Combine(outputFolder, fileName);
-                cellImage.SaveAsPng(filePath);
+                
 
                 // only save distinct images
-                var sha = FileUtil.Sha256File(filePath);
+                var sha = FileUtil.Sha256Image(cellImage);
                 bool found = false;
                 foreach (var tup in distinctImages)
                 {
@@ -390,12 +402,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     {
                         found = true;
                         fileName = tup.FileName;
-                        File.Delete(filePath);
                     }
                 }
                 if (!found)
                 {
-                    distinctImages.Add((cell.TileOffset, cell.IndexPalette, sha, fileName));
+                    distinctImages.Add((cell.TileOffset, cell.IndexPalette, sha, fileName, cellImage));
                 }
                 // save cell data
 
@@ -413,16 +424,15 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             }
         }
 
-        return clusters;
+        return new(clusters, distinctImages.ToDictionary(x => x.FileName, x => x.Image));
     }
-
-
 
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR ImportAnimationXml(RLAnimationResource res, string dir, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
+    public static NANR ImportAnimationXml(FullExportData data, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
     {
+        var res = data.Res;
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
         // clear it ready for adding our own cell banks
@@ -437,16 +447,17 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
 
         // Generate a map of cluster name to ID to be used to import the animations
         var nameToClusterId = GenerateClusterMap(res, requiresAdditionalEmptyCluster);
-        
+
+        var innerData = new ExportData(res.Clusters, data.Images);
 
         var fmt = res.Format;
         if (fmt == RLAnimationFormat.OneImagePerCluster)
         {
-            ImportOneImagePerCluster(ncer, ncgr, nclr, settings, dims, res, dir);
+            ImportOneImagePerCluster(ncer, ncgr, nclr, settings, dims, innerData);
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
-            ImportOneImagePerCell(ncer, ncgr, nclr, dims, res, dir);
+            ImportOneImagePerCell(ncer, ncgr, nclr, dims, innerData);
         }
         else
         {
@@ -518,10 +529,10 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         return nameToClusterId;
     }
 
-    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims, RLAnimationResource res, string dir)
+    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims, ExportData data)
     {
         var imageGroups = new List<List<Image<Rgba32>>>();
-        foreach (var clusterInfo in res.Clusters)
+        foreach (var clusterInfo in data.Clusters)
         {
             List<Image<Rgba32>> images = [];
             imageGroups.Add(images);
@@ -542,10 +553,13 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                     Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit
                 };
                 bank.Add(cell);
-                var img = LoadCellImg(dir, cellInfo);
-                images.Add(img);
-                cell.Width = img.Width;
-                cell.Height = img.Height;
+                if (!data.Images.TryGetValue(cellInfo.File ?? string.Empty, out var image))
+                {
+                    throw new Exception($"Failed to find image '{cellInfo.File}' for cell of cluster '{clusterInfo.Name}' in mode '{nameof(RLAnimationFormat.OneImagePerCell)}'");
+                }
+                images.Add(image);
+                cell.Width = image.Width;
+                cell.Height = image.Height;
                 CalculateShapeAndScale(cell);
             }
 
@@ -565,12 +579,12 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static void ImportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, ClusterDimensions dims, RLAnimationResource res, string dir)
+    private static void ImportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, ClusterDimensions dims, ExportData data)
     {
         var fmt = RLAnimationFormat.OneImagePerCluster;
         List<Image<Rgba32>> images = [];
 
-        foreach (var clusterInfo in res.Clusters)
+        foreach (var clusterInfo in data.Clusters)
         {
             var cluster = new Cluster();
             ncer.Clusters.Clusters.Add(cluster);
@@ -606,7 +620,12 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 cluster.Add(cell);
             }
 
-            images.Add(LoadClusterImg(dir, clusterInfo));
+            if (!data.Images.TryGetValue(clusterInfo.File ?? string.Empty, out var image))
+            {
+                throw new Exception($"Failed to find image '{clusterInfo.File}' for cluster '{clusterInfo.Name}' in mode '{nameof(RLAnimationFormat.OneImagePerCluster)}'");
+            }
+
+            images.Add(image);
 
             cluster.EstimateMinMaxValues();
             // TODO: cluster.ReadOnlyCellInfo = ?;
@@ -634,40 +653,16 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
         }
     }
 
-    private static Image<Rgba32> LoadClusterImg(string dir, RLAnimationResource.ClusterInfo clusterInfo)
-    {
-        if (clusterInfo.Cells.Count > 0)
-        {
-            // image path is relative to the location of the xml file
-            if (string.IsNullOrEmpty(clusterInfo.File))
-            {
-                throw new Exception($"Missing required attribute 'file' on cluster for format {RLAnimationFormat.OneImagePerCluster}");
-            }
-            var imgPath = Path.Combine(dir, FileUtil.NormalizePath(clusterInfo.File));
-            return ImageUtil.LoadPngBetterError(imgPath);
-        }
-        else
-        {
-            return new Image<Rgba32>(1, 1);
-        }
-    }
-
-    private static Image<Rgba32> LoadCellImg(string dir, RLAnimationResource.CellInfo cellInfo)
-    {
-        if (string.IsNullOrEmpty(cellInfo.File))
-        {
-            throw new Exception($"Missing required attribute 'file' on cell for format {RLAnimationFormat.OneImagePerCell}");
-        }
-        var imgPath = Path.Combine(dir, FileUtil.NormalizePath(cellInfo.File));
-        var img = ImageUtil.LoadPngBetterError(imgPath);
-        return img;
-    }
+    
 
     private static void SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string saveDir)
     {
         // I could copy to temp dir, then save to there and move / delete based on if we did simplify
         // OR 
         // Save the files, creating the directory only if needed, then copy later on.
+
+        var imageLookup = LoadImages(dir, res);
+        var savedImageFileNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         if (res.Format == RLAnimationFormat.OneImagePerCluster)
         {
@@ -676,7 +671,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
             foreach (var cluster in res.Clusters)
             {
                 paletteIndexes.Add(cluster.Palette);
-                images.Add(LoadClusterImg(dir, cluster));
+                images.Add(imageLookup[cluster.File ?? ""]);
             }
             var simplified = SimplifyPalettePerCluster(paletteIndexes, paletteSize, images);
             if (simplified)
@@ -685,7 +680,11 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 {
                     var cluster = res.Clusters[i];
                     var img = images[i];
-                    var imgPath = Path.Combine(saveDir, FileUtil.NormalizePath(cluster.File!));
+                    if (string.IsNullOrEmpty(cluster.File) || savedImageFileNames.Contains(cluster.File))
+                    {
+                        continue;
+                    }
+                    var imgPath = Path.Combine(saveDir, FileUtil.NormalizePath(cluster.File));
                     img.SaveAsPng(imgPath);
                 }
             }
@@ -703,7 +702,7 @@ public static void DeserialiseFromScratch(string inputFolder, string outputBgLin
                 foreach (var cell in cluster.Cells)
                 {
                     indexes.Add(cell.Palette);
-                    images.Add(LoadCellImg(dir, cell));
+                    images.Add(imageLookup[cell.File ?? ""]);
                 }
             }
             var simplified = SimplifyPalettePerCell(palettesIndexes, paletteSize, imageGroups);
