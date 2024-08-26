@@ -615,6 +615,7 @@ public static class CellAnimationSerialiser
                     IndexPalette = clusterInfo.Palette,
                     Width = cellInfo.Width,
                     Height = cellInfo.Height,
+                    Depth = nclr.Palettes.Format == TexFormat.Pltt16 ? BitDepth.e4Bit : BitDepth.e8Bit
                 };
                 CalculateShapeAndScale(cell);
                 cluster.Add(cell);
