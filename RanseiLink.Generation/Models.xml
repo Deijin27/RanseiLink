@@ -1,0 +1,45 @@
+﻿<Models>
+    <Model Name="Ability" DataLength="0x14">
+        <StringProperty Name="Name" Index="0" MaxLength="14" />
+        <Property Index="3, 24, 2" Name="Effect1Amount" />
+        <Property Index="4,  0, 5" Name="Effect1" Type="AbilityEffectId" />
+        <Property Index="4,  5, 5" Name="Effect2" Type="AbilityEffectId" />
+        <Property Index="4, 10, 2" Name="Effect2Amount" />
+    </Model>
+    <Model Name="BaseWarrior" DataLength="0x14">
+        <Property Index="0,  0, 8" Name="Sprite" />
+        <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
+        <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
+        <Property Index="0, 17, 8" Name="WarriorName" />
+        <Property Index="1,  0, 5" Name="Speciality1" Type="TypeId" />
+        <Property Index="1,  5, 5" Name="Speciality2" Type="TypeId" />
+        <Property Index="1, 10, 5" Name="Weakness1" Type="TypeId" />
+        <Property Index="1, 15, 5" Name="Weakness2" Type="TypeId" />
+        <Property Index="2,  0, 7" Name="Skill" Type="WarriorSkillId" />
+        <Property Index="3,  0, 7" Name="Power" />
+        <Property Index="3,  7, 7" Name="Wisdom" />
+        <Property Index="3, 14, 7" Name="Charisma" />
+        <Property Index="3, 21, 4" Name="Capacity" />
+        <Property Index="2, 24, 4" Name="RankUpCondition1" Type="RankUpConditionId" />
+        <Property Index="2, 28, 4" Name="RankUpCondition2" Type="RankUpConditionId" />
+        <Property Index="4,  9, 9" Name="Quantity1ForRankUpCondition"/>
+        <Property Index="4, 18, 9" Name="Quantity2ForRankUpCondition"/>
+        <Property Index="2, 15, 9" Name="RankUp" Type="WarriorId"/>
+        <Property Index="1, 20, 9" Name="RankUpPokemon1" Type="PokemonId"/>
+        <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
+        <Property Index="0, 25, 7" Name="RankUpLink"/>
+    </Model>
+	<Model Name="BattleConfig" DataLength="0x18">
+		<Property Index="0,  0,  6" Name="Map" />
+		<Property Index="0,  6,  5" Name="MapVariant" />
+		<Property Index="2, 13,  5" Name="Minimap" />
+		<Property Index="2, 10,  3" Name="MinimapVariant" />
+		<Property Index="2, 18,  6" Name="Unknown" />
+		<Property Index="0, 11, 15" Name="UpperAtmosphereColor" Type="Rgb15" />
+		<Property Index="1,  0, 15" Name="MiddleAtmosphereColor" Type="Rgb15" />
+		<Property Index="1, 15, 15" Name="LowerAtmosphereColor" Type="Rgb15" />
+		<Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
+		<Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
+		<Property Index="2, 24,  5" Name="NumberOfTurns" />
+	</Model>
+</Models>
