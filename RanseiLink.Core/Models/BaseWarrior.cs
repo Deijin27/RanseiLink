@@ -133,5 +133,4 @@ public class BaseWarrior : BaseDataWindow
         get => GetInt(0, 25, 7);
         set => SetInt(0, 25, 7, value);
     }
-
 }
