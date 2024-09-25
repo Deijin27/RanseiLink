@@ -5,7 +5,7 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public class Ability : BaseDataWindow
+public partial class Ability : BaseDataWindow
 {
     public const int DataLength = 0x14;
     public Ability(byte[] data) : base(data, DataLength) { }

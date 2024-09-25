@@ -5,7 +5,7 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public class BaseWarrior : BaseDataWindow
+public partial class BaseWarrior : BaseDataWindow
 {
     public const int DataLength = 0x14;
     public BaseWarrior(byte[] data) : base(data, DataLength) { }
