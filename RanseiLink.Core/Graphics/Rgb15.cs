@@ -31,8 +31,13 @@ public struct Rgb15 : IEquatable<Rgb15>
         return (ushort)(R | G << 5 | B << 10);
     }
 
+    public static explicit operator ushort(Rgb15 c) => c.ToUInt16();
+    public static explicit operator Rgb15(ushort n) => From(n);
+    public static explicit operator Rgb15(int n) => From((ushort)n);
+
     public static bool operator ==(Rgb15 obj1, Rgb15 obj2) => obj1.Equals(obj2);
     public static bool operator !=(Rgb15 obj1, Rgb15 obj2) => !obj1.Equals(obj2);
+
 
     public override bool Equals(object? obj)
     {
