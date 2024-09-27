@@ -18,7 +18,7 @@ public class MoveRange : BaseDataWindow
 
     public void SetInRange(int id, bool value)
     {
-        SetInt(0, id, 1, value ? 1 : 0);
+        SetInt(0, 0 + id, 1, value ? 1 : 0);
     }
 
 }
