@@ -71,6 +71,7 @@
 		<!-- Max shop price / 100 -->
         <Property Index="7,  9, 9" Name="ShopPriceMultiplier" />
         <Property Index="7, 18, 9" Name="QuantityForEffect" />
+		<FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
     </Model>
     <Model Name="Pokemon" DataLength="0x30">
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
