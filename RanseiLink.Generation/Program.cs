@@ -67,7 +67,7 @@ internal class Program
 
             var sourceFilePath = GetSourceFilePathName();
             var slnFolder = Path.GetDirectoryName(Path.GetDirectoryName(sourceFilePath))!;
-            var location = Path.Combine(slnFolder, "RanseiLink.Core", "Models", $"{name}.Generated.cs");
+            var location = Path.Combine(slnFolder, "RanseiLink.Core", "Models", $"{name}.generated.cs");
             File.WriteAllText(location, sb.ToString(), Encoding.UTF8);
         }
     }
