@@ -15,8 +15,8 @@ public partial class ScenarioWarrior : BaseDataWindow
 
     public WarriorId Warrior
     {
-        get => (WarriorId)GetByte(0);
-        set => SetByte(0, (byte)value);
+        get => (WarriorId)GetInt(0, 0, 8);
+        set => SetInt(0, 0, 8, (int)value);
     }
 
     public WarriorClassId Class
