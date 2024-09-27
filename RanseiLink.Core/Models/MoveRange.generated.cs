@@ -5,7 +5,7 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public class MoveRange : BaseDataWindow
+public partial class MoveRange : BaseDataWindow
 {
     public const int DataLength = 0x4;
     public MoveRange(byte[] data) : base(data, DataLength) { }
@@ -20,5 +20,4 @@ public class MoveRange : BaseDataWindow
     {
         SetInt(0, 0 + id, 1, value ? 1 : 0);
     }
-
 }
