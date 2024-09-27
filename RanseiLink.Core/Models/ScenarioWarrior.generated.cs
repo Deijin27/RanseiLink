@@ -8,9 +8,7 @@ namespace RanseiLink.Core.Models;
 public partial class ScenarioWarrior : BaseDataWindow
 {
     public const int DataLength = 0x20;
-
     public ScenarioWarrior(byte[] data) : base(data, DataLength) { }
-
     public ScenarioWarrior() : this(new byte[DataLength]) { }
 
     public WarriorId Warrior
