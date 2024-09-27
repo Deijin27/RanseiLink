@@ -29,7 +29,7 @@
         <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
         <Property Index="0, 25, 7" Name="RankUpLink"/>
     </Model>
-	<Model Name="BattleConfig" DataLength="0x18">
+    <Model Name="BattleConfig" DataLength="0x18">
         <Property Index="0,  0,  6" Name="Map" />
         <Property Index="0,  6,  5" Name="MapVariant" />
         <Property Index="2, 13,  5" Name="Minimap" />
@@ -41,14 +41,81 @@
         <Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
         <Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
         <Property Index="2, 24,  5" Name="NumberOfTurns" />
-	</Model>
-	<!--
-	Idea for how to do the models that vary by culture (usually due to allocating different number of bytes for name
-	<Model Name="Building" Cultural="true" DataLength="0x24" DataLength_VPYJ="0x20">
-		<StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
-	</Model>
-	-->
-	<Model Name>
-        <Property/>
-	</Model>
+    </Model>
+    <!--
+    Idea for how to do the models that vary by culture (usually due to allocating different number of bytes for name
+    <Model Name="Building" Cultural="true" DataLength="0x24" DataLength_VPYJ="0x20">
+	    <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
+    </Model>
+    -->
+    <Model Name="Episode" DataLength="0x8">
+        <Property Index="0,  0, 9" Name="Order" />
+        <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
+        <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
+        <Property Index="1,  6, 3" Name="Difficulty" />
+        <Property Index="1, 26, 4" Name="ClearCondition" Type="EpisodeClearConditionId" />
+    </Model>
+    <Model Name="Item" DataLength="0x24">
+        <StringProperty Name="Name" Index="0" MaxLength="20"/>
+        <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
+        <Property Index="5, 19, 2" Name="Category" Type="ItemCategoryId" />
+        <Property Index="5, 21, 5" Name="Effect" Type="ItemEffectId" />
+        <Property Index="5, 26, 3" Name="EffectDuration" />
+        <Property Index="6,  0, 9" Name="CraftingIngredient1" Type="ItemId" />
+        <Property Index="6,  9, 7" Name="CraftingIngredient1Amount" />
+        <Property Index="6, 16, 9" Name="CraftingIngredient2" Type="ItemId" />
+        <Property Index="6, 25, 7" Name="CraftingIngredient2Amount" />
+        <Property Index="7,  0, 9" Name="UnknownItem" Type="ItemId" />
+		<!-- Max shop price / 100 -->
+        <Property Index="7,  9, 9" Name="ShopPriceMultiplier" />
+        <Property Index="7, 18, 9" Name="QuantityForEffect" />
+    </Model>
+    <Model Name="Pokemon" DataLength="0x30">
+        <StringProperty Name="Name" Index="0" MaxLength="10"/>
+        <Property Index=" 3,  0,  9" Name="Hp" />
+        <Property Index=" 3, 10,  4" Name="EvolutionCondition1" Type="EvolutionConditionId" />
+        <Property Index=" 3, 14,  4" Name="EvolutionCondition2" Type="EvolutionConditionId" />
+        <Property Index=" 3, 29,  2" Name="IdleMotion" Type="IdleMotionId"/>
+        <Property Index=" 4,  0,  9" Name="Atk" />
+        <Property Index=" 4, 10,  9" Name="Def" />
+        <Property Index=" 4, 20,  9" Name="Spe" />
+        <Property Index=" 4, 30,  1" Name="IsLegendary" Type="bool" />
+        <Property Index=" 4, 31,  1" Name="AsymmetricBattleSprite" Type="bool" />
+        <Property Index=" 7, 31,  1" Name="LongAttackAnimation" Type="bool" />
+        <Property Index=" 5,  0,  5" Name="Type1" Type="TypeId" />
+        <Property Index=" 5,  5,  5" Name="Type2" Type="TypeId" />
+        <Property Index=" 5, 10,  8" Name="Move" Type="MoveId" />
+        <Property Index=" 6,  0,  8" Name="Ability1" Type="AbilityId" />
+        <Property Index=" 6,  9,  8" Name="Ability2" Type="AbilityId" />
+        <Property Index=" 6, 18,  8" Name="Ability3" Type="AbilityId" />
+        <Property Index=" 7,  0,  9" Name="QuantityForEvolutionCondition1" />
+        <Property Index=" 7, 18,  9" Name="QuantityForEvolutionCondition2" />
+        <Property Index=" 7, 27,  3" Name="MovementRange" />
+        <Property Index=" 8,  0, 11" Name="MinEvolutionTableEntry" />
+        <Property Index=" 8, 11, 11" Name="MaxEvolutionTableEntry" />
+        <Property Index=" 8, 22, 10" Name="NationalPokedexNumber" />
+        <Property Index="11,  0,  8" Name="NameOrderIndex" />
+        <Property Index=" 2, 24,  8" Name="CatchRate" />
+        <Property Index=" 3, 18,  4" Name="UnknownAnimationValue" />
+        <Property Index=" 3, 23,  3" Name="BattleIntroSpriteOffset" />
+        <Property Index=" 3, 26,  3" Name="Weight" />
+    </Model>
+    <Model Name="ScenarioPokemon" DataLength="0x8">
+        <Property Index="1, 20,  8" Name="Ability" Type="AbilityId" />
+        <Property Index="1,  0,  5" Name="HpIv" />
+        <Property Index="1,  5,  5" Name="AtkIv" />
+        <Property Index="1, 10,  5" Name="DefIv" />
+        <Property Index="1, 15,  5" Name="SpeIv" />
+        <Property Index="0, 16, 16" Name="Exp" Type="ushort"/>
+		<!-- In memory: For wild pokemon this seems to store hp, but not for players pokemon -->
+        <Property Index="0,  8,  8" Name="U1" Type="byte" />
+        <Property Index="1, 29,  3" Name="Energy" Type="EnergyId" />
+    </Model>
+    <Model Name="ScenarioWarrior" DataLength="0x20">
+        <Property Index="0,  0, 8" Name="Warrior" Type="WarriorId" />
+        <Property Index="0,  9, 3" Name="Class" Type="WarriorClassId" />
+        <Property Index="0, 12, 5" Name="Kingdom" Type="KingdomId" />
+        <Property Index="0, 17, 5" Name="Army" />
+        <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
+    </Model>
 </Models>

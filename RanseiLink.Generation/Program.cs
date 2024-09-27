@@ -37,18 +37,25 @@ internal class Program
                 if (propertyElement.Name == "Property")
                 {
                     var propType = propertyElement.Attribute("Type")?.Value ?? "int";
-                    var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ");
-                    string castForward = "";
-                    string castBack = "";
-                    if (propType != "int")
-                    {
-                        castForward = $"({propType})";
-                        castBack = $"(int)";
-                    }
+                    var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
+                    
                     sb.AppendLine($"    public {propType} {propName}");
                     sb.AppendLine("    {");
-                    sb.AppendLine($"        get => {castForward}GetInt({index});");
-                    sb.AppendLine($"        set => SetInt({index}, {castBack}value);");
+                    if (propType == "bool")
+                    {
+                        sb.AppendLine($"        get => GetInt({index}) == 1;");
+                        sb.AppendLine($"        set => SetInt({index}, value ? 1 : 0);");
+                    }
+                    else if (propType == "int")
+                    {
+                        sb.AppendLine($"        get => GetInt({index});");
+                        sb.AppendLine($"        set => SetInt({index}, value);");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"        get => ({propType})GetInt({index});");
+                        sb.AppendLine($"        set => SetInt({index}, (int)value);");
+                    }
                     sb.AppendLine("    }");
                 }
                 else if (propertyElement.Name == "StringProperty")
