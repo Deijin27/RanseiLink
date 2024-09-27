@@ -82,4 +82,24 @@ public partial class Item : BaseDataWindow
         get => GetInt(7, 18, 9);
         set => SetInt(7, 18, 9, value);
     }
+
+    public bool GetPurchasable(KingdomId id)
+    {
+        return GetPurchasable((int)id);
+    }
+
+    public bool GetPurchasable(int id)
+    {
+        return GetInt(8, 0 + id, 1) == 1;
+    }
+
+    public void SetPurchasable(KingdomId id, bool value)
+    {
+        SetPurchasable((int)id, value);
+    }
+
+    public void SetPurchasable(int id, bool value)
+    {
+        SetInt(8, 0 + id, 1, value ? 1 : 0);
+    }
 }
