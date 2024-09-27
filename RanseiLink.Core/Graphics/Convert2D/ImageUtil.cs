@@ -102,11 +102,17 @@ public static class ImageUtil
         }
     }
 
-    public static SpriteImageInfo SpriteFromImage(Image<Rgba32> image, bool tiled, TexFormat format, bool color0ToTransparent)
+    public static SpriteImageInfo SpriteFromImage(Image<Rgba32> image, bool tiled, TexFormat format, bool color0ToTransparent, int prePadPalette = 0)
     {
         int width = image.Width;
         int height = image.Height;
         var palette = new Palette(format, color0ToTransparent);
+        for (int i = 0; i < prePadPalette; i++)
+        {
+            // adding transparent because a different color may be used in the image
+            // this ensures these slots remain unused
+            palette.Add(Color.Transparent);
+        }
 
         byte[] pixels = SharedPalettePixelsFromImage(image, palette, tiled, format, color0ToTransparent);
 

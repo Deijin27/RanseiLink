@@ -13,6 +13,8 @@ public enum RLAnimationFormat
     OneImagePerCluster
 }
 
+public record ImportResult(string SimplifiedFolder, bool WasSimplified);
+
 public static class CellAnimationSerialiser
 {
 
@@ -33,7 +35,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static Result ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile, RLAnimationResource? res = null)
+    public static Result<ImportResult> ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile, RLAnimationResource? res = null)
     {
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
@@ -43,20 +45,22 @@ public static class CellAnimationSerialiser
             LINK.Unpack(animLinkFile, tempAnim);
             var anim = G2DR.LoadAnimImgFromFolder(tempAnim);
 
-            var valid = ValidateAnim(res, anim.Nanr);
+            var valid = ValidateAndFixupAnim(res, anim.Nanr);
             if (valid.IsFailed)
             {
                 return valid;
             }
 
-            var images = LoadImages(dir, res);
+            var (wasSimplified, simplifiedDir) = SimplifyPalette(dir, res, anim.Ncgr.Pixels.Format.PaletteSize());
 
-            var data = new FullExportData(res, images);
+            var images = LoadImages(wasSimplified ? simplifiedDir : dir, res);
+
+            var data = new ResAndImages(res, images);
 
             var nanr = ImportAnimationXml(data, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
             G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempAnim, outputAnimLinkFile);
-            return Result.Ok();
+            return Result.Ok(new ImportResult(simplifiedDir, wasSimplified));
         }
         catch (Exception ex)
         {
@@ -106,13 +110,13 @@ public static class CellAnimationSerialiser
         return images;
     }
 
-    private static Result ValidateAnim(RLAnimationResource res, NANR anim)
+    private static Result ValidateAndFixupAnim(RLAnimationResource res, NANR existingAnim)
     {
         // Animation is corrupt if you use a different amount of animations
         // to what were originally in the slot.
         // This is very annoying, why does it even matter??????
 
-        var requiredAnimCount = anim.AnimationBanks.Banks.Count;
+        var requiredAnimCount = existingAnim.AnimationBanks.Banks.Count;
         if (res.Animations.Count > requiredAnimCount)
         {
             return Result.Fail($"This particular slot can only have up to {requiredAnimCount} animations.");
@@ -154,7 +158,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    public static Result ImportAnimAndBackground(AnimationTypeId type, CellImageSettings settings,
+    public static Result<ImportResult> ImportAnimAndBackground(AnimationTypeInfo info, CellImageSettings settings,
         string animationXml, string animLinkFile, string outputAnimLinkFile,
         string bgLinkFile, string outputBgLinkFile)
     {
@@ -170,8 +174,9 @@ public static class CellAnimationSerialiser
             // load background
             var dir = Path.GetDirectoryName(animationXml)!;
             var backgroundFile = Path.Combine(dir, FileUtil.NormalizePath(res.Background));
+            FileUtil.CopyFilesRecursively(dir, Path.Combine());
 
-            var bgResult = ImportBackground(type, backgroundFile, bgLinkFile, outputBgLinkFile);
+            var bgResult = ImportBackground(info, backgroundFile, bgLinkFile, outputBgLinkFile);
             if (bgResult.IsFailed)
             {
                 return bgResult.ToResult();
@@ -194,14 +199,14 @@ public static class CellAnimationSerialiser
     /// <param name="bgLinkFile">Absolute path of current background link file to inherit information from</param>
     /// <param name="outputBgLinkFile">Absolute path to put the output background link file</param>
     /// <returns>Width and height of the background that was imported</returns>
-    public static Result<(int width, int height)> ImportBackground(AnimationTypeId type, string bgImage, string bgLinkFile, string outputBgLinkFile)
+    public static Result<(int width, int height)> ImportBackground(AnimationTypeInfo info, string bgImage, string bgLinkFile, string outputBgLinkFile)
     {
         var tempBg = FileUtil.GetTemporaryDirectory();
         try
         {
             LINK.Unpack(bgLinkFile, tempBg);
             var bg = G2DR.LoadImgFromFolder(tempBg);
-            var res = ImportBackground(type, bgImage, bg.Ncgr, bg.Nclr);
+            var res = ImportBackground(info, bgImage, bg.Ncgr, bg.Nclr);
             G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
             LINK.Pack(tempBg, outputBgLinkFile);
             return Result.Ok(res);
@@ -225,44 +230,25 @@ public static class CellAnimationSerialiser
         return (image.Width, image.Height);
     }
 
-    public static (int width, int height) ImportBackground(AnimationTypeId type, string inputFile, NCGR ncgr, NCLR nclr)
+    public static (int width, int height) ImportBackground(AnimationTypeInfo info, string inputFile, NCGR ncgr, NCLR nclr)
     {
         using var image = ImageUtil.LoadPngBetterError(inputFile);
 
-        if (type == AnimationTypeId.Castlemap)
+        int prePadPalette = 0;
+        if (info.Id == AnimationTypeId.Castlemap)
         {
+            prePadPalette = 15; // 16, but the first is already there due to the color0 transparent
             // we pre-pad the palette because the first 16 are used for something
             // idk why, but if you fill it up the colors of portions of the image are messed up.
-            var palette = new Palette(ncgr.Pixels.Format, true);
-            for (int i = 0; i < 15; i++)
-            {
-                // adding transparent because a different color may be used in the image
-                // this ensures these slots remain unused
-                palette.Add(Color.Transparent);
-            }
-            var pixels = ImageUtil.SharedPalettePixelsFromImage(image, palette, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: true);
-            ncgr.Pixels.Data = pixels;
-            ncgr.Pixels.TilesPerRow = (short)(image.Width / 8);
-            ncgr.Pixels.TilesPerColumn = (short)(image.Height / 8);
+        }
+        NitroImageUtil.NcgrFromImage(ncgr, nclr, image, 
+            color0ToTransparent: true, 
+            prePadPalette: prePadPalette);
 
-            // now the transparents will be interpreted as black so it's probably fine to not swap them out
-            var newPalette = PaletteUtil.From32bitColors(palette);
-            if (newPalette.Length > nclr.Palettes.Palette.Length)
-            {
-                // this should not be hit because it should be filtered out by the palette simplifier
-                throw new InvalidPaletteException($"Palette length exceeds current palette when importing image {newPalette.Length} vs {nclr.Palettes.Palette.Length}");
-            }
-            newPalette.CopyTo(nclr.Palettes.Palette, 0);
-        }
-        else
-        {
-            NitroImageUtil.NcgrFromImage(ncgr, nclr, image);
-        }
-        
         return (image.Width, image.Height);
     }
 
-    public static FullExportData ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings, RLAnimationFormat fmt, string? background)
+    public static ResAndImages ExportAnimationXml(NANR nanr, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings, RLAnimationFormat fmt, string? background)
     {
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
 
@@ -309,7 +295,7 @@ public static class CellAnimationSerialiser
         return $"cluster_{clusterId}";
     }
 
-    public record FullExportData(RLAnimationResource Res, Dictionary<string, Image<Rgba32>> Images);
+    public record ResAndImages(RLAnimationResource Res, Dictionary<string, Image<Rgba32>> Images);
     public record ExportData(List<RLAnimationResource.ClusterInfo> Clusters, Dictionary<string, Image<Rgba32>> Images);
 
     private static ExportData ExportOneImagePerCluster(NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings, ClusterDimensions dims)
@@ -430,7 +416,7 @@ public static class CellAnimationSerialiser
     /// <summary>
     /// Warning: will throw an exception on failure
     /// </summary>
-    public static NANR ImportAnimationXml(FullExportData data, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
+    public static NANR ImportAnimationXml(ResAndImages data, NCER ncer, NCGR ncgr, NCLR nclr, int width, int height, CellImageSettings settings)
     {
         var res = data.Res;
         var dims = CellImageUtil.InferDimensions(null, width, height, settings);
@@ -656,8 +642,10 @@ public static class CellAnimationSerialiser
 
     
 
-    private static void SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string saveDir)
+    private static (bool wasSimplified, string saveDir) SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string? saveDir = null)
     {
+        saveDir = Path.Combine(Path.GetDirectoryName(dir)!, Path.GetFileName(dir) + " - Simplified");
+        FileUtil.CopyFilesRecursively(dir, saveDir);
         // I could copy to temp dir, then save to there and move / delete based on if we did simplify
         // OR 
         // Save the files, creating the directory only if needed, then copy later on.
@@ -689,6 +677,7 @@ public static class CellAnimationSerialiser
                     img.SaveAsPng(imgPath);
                 }
             }
+            return (simplified, saveDir);
         }
         else if (res.Format == RLAnimationFormat.OneImagePerCell)
         {
@@ -722,6 +711,7 @@ public static class CellAnimationSerialiser
                     }
                 }
             }
+            return (simplified, saveDir);
         }
         else
         {

@@ -35,8 +35,6 @@ public static class FileUtil
                     .Replace('\\', Path.DirectorySeparatorChar);
     }
 
-
-
     /// <summary>
     /// Create an empty file if it doesn't already exist. Pass the option <paramref name="overwriteExisting"/> to replace an existing file.
     /// </summary>
@@ -72,13 +70,15 @@ public static class FileUtil
     /// <param name="targetPath"></param>
     public static void CopyFilesRecursively(string sourcePath, string targetPath)
     {
-        foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+        var dirs = Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
+        foreach (string dirPath in dirs)
         {
-            Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            Directory.CreateDirectory(string.Concat(targetPath, dirPath.AsSpan(sourcePath.Length)));
         }
-        foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+        foreach (string file in files)
         {
-            File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            File.Copy(file, string.Concat(targetPath, file.AsSpan(sourcePath.Length)), true);
         }
     }
 

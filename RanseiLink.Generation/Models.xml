@@ -30,16 +30,25 @@
         <Property Index="0, 25, 7" Name="RankUpLink"/>
     </Model>
 	<Model Name="BattleConfig" DataLength="0x18">
-		<Property Index="0,  0,  6" Name="Map" />
-		<Property Index="0,  6,  5" Name="MapVariant" />
-		<Property Index="2, 13,  5" Name="Minimap" />
-		<Property Index="2, 10,  3" Name="MinimapVariant" />
-		<Property Index="2, 18,  6" Name="Unknown" />
-		<Property Index="0, 11, 15" Name="UpperAtmosphereColor" Type="Rgb15" />
-		<Property Index="1,  0, 15" Name="MiddleAtmosphereColor" Type="Rgb15" />
-		<Property Index="1, 15, 15" Name="LowerAtmosphereColor" Type="Rgb15" />
-		<Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
-		<Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
-		<Property Index="2, 24,  5" Name="NumberOfTurns" />
+        <Property Index="0,  0,  6" Name="Map" />
+        <Property Index="0,  6,  5" Name="MapVariant" />
+        <Property Index="2, 13,  5" Name="Minimap" />
+        <Property Index="2, 10,  3" Name="MinimapVariant" />
+        <Property Index="2, 18,  6" Name="Unknown" />
+        <Property Index="0, 11, 15" Name="UpperAtmosphereColor" Type="Rgb15" />
+        <Property Index="1,  0, 15" Name="MiddleAtmosphereColor" Type="Rgb15" />
+        <Property Index="1, 15, 15" Name="LowerAtmosphereColor" Type="Rgb15" />
+        <Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
+        <Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
+        <Property Index="2, 24,  5" Name="NumberOfTurns" />
+	</Model>
+	<!--
+	Idea for how to do the models that vary by culture (usually due to allocating different number of bytes for name
+	<Model Name="Building" Cultural="true" DataLength="0x24" DataLength_VPYJ="0x20">
+		<StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
+	</Model>
+	-->
+	<Model Name>
+        <Property/>
 	</Model>
 </Models>

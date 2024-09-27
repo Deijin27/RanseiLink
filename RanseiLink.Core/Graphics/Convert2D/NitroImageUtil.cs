@@ -167,9 +167,15 @@ public static class NitroImageUtil
     /// <summary>
     /// Import image data into a pre-existing ncgr. This will modify the ncgr and nclr.
     /// </summary>
-    public static void NcgrFromImage(NCGR ncgr, NCLR nclr, Image<Rgba32> image, bool color0ToTransparent = true)
+    public static void NcgrFromImage(NCGR ncgr, NCLR nclr, Image<Rgba32> image, bool color0ToTransparent = true, int prePadPalette = 0)
     {
-        var imageInfo = ImageUtil.SpriteFromImage(image, ncgr.Pixels.IsTiled, ncgr.Pixels.Format, color0ToTransparent: color0ToTransparent);
+        var imageInfo = ImageUtil.SpriteFromImage(
+            image: image, 
+            tiled: ncgr.Pixels.IsTiled, 
+            format: ncgr.Pixels.Format, 
+            color0ToTransparent: color0ToTransparent, 
+            prePadPalette: prePadPalette
+            );
         ncgr.Pixels.Data = imageInfo.Pixels;
         ncgr.Pixels.TilesPerRow = (short)(imageInfo.Width / 8);
         ncgr.Pixels.TilesPerColumn = (short)(imageInfo.Height / 8);
