@@ -43,17 +43,14 @@ public partial class ScenarioPokemon : BaseDataWindow
 
     public ushort Exp
     {
-        get => GetUInt16(2);
-        set => SetUInt16(2, value);
+        get => (ushort)GetInt(0, 16, 16);
+        set => SetInt(0, 16, 16, (int)value);
     }
 
-    /// <summary>
-    /// In memory: For wild pokemon this seems to store hp, but not for players pokemon
-    /// </summary>
     public byte U1
     {
-        get => GetByte(1);
-        set => SetByte(1, value);
+        get => (byte)GetInt(0, 8, 8);
+        set => SetInt(0, 8, 8, (int)value);
     }
 
     public EnergyId Energy
