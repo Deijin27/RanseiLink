@@ -41,43 +41,43 @@ public partial class Episode : BaseDataWindow
         set => SetInt(1, 26, 4, (int)value);
     }
 
-    public bool GetIsStartKingdom(KingdomId kingdomId)
+    public bool GetIsStartKingdom(KingdomId id)
     {
-        return GetIsStartKingdom((int)kingdomId);
+        return GetIsStartKingdom((int)id);
     }
 
-    public bool GetIsStartKingdom(int kingdomId)
+    public bool GetIsStartKingdom(int id)
     {
-        return GetInt(0, 13 + kingdomId, 1) == 1;
+        return GetInt(0, 13 + id, 1) == 1;
     }
 
-    public void SetIsStartKingdom(KingdomId kingdomId, bool value)
+    public void SetIsStartKingdom(KingdomId id, bool value)
     {
-        SetIsStartKingdom((int)kingdomId, value);
+        SetIsStartKingdom((int)id, value);
     }
 
-    public void SetIsStartKingdom(int kingdomId, bool value)
+    public void SetIsStartKingdom(int id, bool value)
     {
-        SetInt(0, 13 + kingdomId, 1, value ? 1 : 0);
+        SetInt(0, 13 + id, 1, value ? 1 : 0);
     }
 
-    public bool GetIsUnlockedKingdom(KingdomId kingdomId)
+    public bool GetIsUnlockedKingdom(KingdomId id)
     {
-        return GetIsUnlockedKingdom((int)kingdomId);
+        return GetIsUnlockedKingdom((int)id);
     }
 
-    public bool GetIsUnlockedKingdom(int kingdomId)
+    public bool GetIsUnlockedKingdom(int id)
     {
-        return GetInt(1, 9 + kingdomId, 1) == 1;
+        return GetInt(1, 9 + id, 1) == 1;
     }
 
-    public void SetIsUnlockedKingdom(KingdomId kingdomId, bool value)
+    public void SetIsUnlockedKingdom(KingdomId id, bool value)
     {
-        SetIsUnlockedKingdom((int)kingdomId, value);
+        SetIsUnlockedKingdom((int)id, value);
     }
 
-    public void SetIsUnlockedKingdom(int kingdomId, bool value)
+    public void SetIsUnlockedKingdom(int id, bool value)
     {
-        SetInt(1, 9 + kingdomId, 1, value ? 1 : 0);
+        SetInt(1, 9 + id, 1, value ? 1 : 0);
     }
 }
