@@ -58,6 +58,38 @@ internal class Program
                     }
                     sb.AppendLine("    }");
                 }
+                else if (propertyElement.Name == "FlagProperty")
+                {
+                    var idType = propertyElement.Attribute("IdType")?.Value ?? "int";
+                    var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
+
+                    if (idType != "int")
+                    {
+                        sb.AppendLine($"    public bool Get{propName}({idType} id)");
+                        sb.AppendLine("    {");
+                        sb.AppendLine($"        return Get{propName}((int)id);");
+                        sb.AppendLine("    }");
+                        sb.AppendLine();
+                    }
+                    sb.AppendLine($"    public bool Get{propName}(int id)");
+                    sb.AppendLine("    {");
+                    sb.AppendLine($"        return GetInt({index} + id, 1) == 1;");
+                    sb.AppendLine("    }");
+                    sb.AppendLine();
+
+                    if (idType != "int")
+                    {
+                        sb.AppendLine($"    public void Set{propName}({idType} id, bool value)");
+                        sb.AppendLine("    {");
+                        sb.AppendLine($"        Set{propName}((int)id, value);");
+                        sb.AppendLine("    }");
+                        sb.AppendLine();
+                    }
+                    sb.AppendLine($"    public void Set{propName}(int id, bool value)");
+                    sb.AppendLine("    {");
+                    sb.AppendLine($"        SetInt({index} + id, 1, value ? 1 : 0);");
+                    sb.AppendLine("    }");
+                }
                 else if (propertyElement.Name == "StringProperty")
                 {
                     var index = propertyElement.Attribute("Index")!.Value;

@@ -54,6 +54,8 @@
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
         <Property Index="1,  6, 3" Name="Difficulty" />
         <Property Index="1, 26, 4" Name="ClearCondition" Type="EpisodeClearConditionId" />
+		<FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
+		<FlagProperty Index="1, 9" Name="IsUnlockedKingdom" IdType="KingdomId" />
     </Model>
     <Model Name="Item" DataLength="0x24">
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
