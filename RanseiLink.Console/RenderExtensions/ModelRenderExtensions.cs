@@ -226,12 +226,12 @@ public static partial class RenderExtensions
         console.WriteProperty("Difficulty", model.Difficulty);
         console.WriteProperty("Scenario", model.Scenario);
         console.WriteProperty("Start Kingdoms", "");
-        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.IsStartKingdom))
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsStartKingdom))
         {
             console.Output.WriteLine($"      - {kingdom}");
         }
         console.WriteProperty("Unlocked Kingdoms", "");
-        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.IsUnlockedKingdom))
+        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsUnlockedKingdom))
         {
             console.Output.WriteLine($"      - {kingdom}");
         }

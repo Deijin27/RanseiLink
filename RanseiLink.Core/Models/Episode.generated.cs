@@ -40,4 +40,44 @@ public partial class Episode : BaseDataWindow
         get => (EpisodeClearConditionId)GetInt(1, 26, 4);
         set => SetInt(1, 26, 4, (int)value);
     }
+
+    public bool GetIsStartKingdom(KingdomId kingdomId)
+    {
+        return GetIsStartKingdom((int)kingdomId);
+    }
+
+    public void SetIsStartKingdom(KingdomId kingdomId, bool value)
+    {
+        SetIsStartKingdom((int)kingdomId, value);
+    }
+
+    public bool GetIsUnlockedKingdom(KingdomId kingdomId)
+    {
+        return GetIsUnlockedKingdom((int)kingdomId);
+    }
+
+    public void SetIsUnlockedKingdom(KingdomId kingdomId, bool value)
+    {
+        SetIsUnlockedKingdom((int)kingdomId, value);
+    }
+
+    public bool GetIsStartKingdom(int kingdomId)
+    {
+        return GetInt(0, 13 + kingdomId, 1) == 1;
+    }
+
+    public void SetIsStartKingdom(int kingdomId, bool value)
+    {
+        SetInt(0, 13 + kingdomId, 1, value ? 1 : 0);
+    }
+
+    public bool GetIsUnlockedKingdom(int kingdomId)
+    {
+        return GetInt(1, 9 + kingdomId, 1) == 1;
+    }
+
+    public void SetIsUnlockedKingdom(int kingdomId, bool value)
+    {
+        SetInt(1, 9 + kingdomId, 1, value ? 1 : 0);
+    }
 }

@@ -113,7 +113,7 @@ public class EpisodeViewModel : ViewModelBase
 
         public bool IsStartKingdom
         {
-            get => _model.IsStartKingdom(_kingdom);
+            get => _model.GetIsStartKingdom(_kingdom);
             set => SetProperty(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
         }
     }
@@ -133,7 +133,7 @@ public class EpisodeViewModel : ViewModelBase
 
         public bool IsUnlockedKingdom
         {
-            get => _model.IsUnlockedKingdom(_kingdom);
+            get => _model.GetIsUnlockedKingdom(_kingdom);
             set => SetProperty(IsUnlockedKingdom, value, v => _model.SetIsUnlockedKingdom(_kingdom, v));
         }
     }
