@@ -35,7 +35,7 @@ public partial class Episode : BaseDataWindow
         set => SetInt(1, 6, 3, value);
     }
 
-    public EpisodeClearConditionId ClearCondition 
+    public EpisodeClearConditionId ClearCondition
     {
         get => (EpisodeClearConditionId)GetInt(1, 26, 4);
         set => SetInt(1, 26, 4, (int)value);

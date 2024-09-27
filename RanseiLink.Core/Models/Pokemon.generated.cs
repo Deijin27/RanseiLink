@@ -28,6 +28,7 @@ public partial class Pokemon : BaseDataWindow
         get => (EvolutionConditionId)GetInt(3, 10, 4);
         set => SetInt(3, 10, 4, (int)value);
     }
+
     public EvolutionConditionId EvolutionCondition2
     {
         get => (EvolutionConditionId)GetInt(3, 14, 4);

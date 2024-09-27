@@ -9,7 +9,7 @@ public partial class ScenarioPokemon : BaseDataWindow
 {
     public const int DataLength = 0x8;
     public ScenarioPokemon(byte[] data) : base(data, DataLength) { }
-    public ScenarioPokemon() : base(new byte[DataLength], DataLength) { }
+    public ScenarioPokemon() : this(new byte[DataLength]) { }
 
     public AbilityId Ability
     {
