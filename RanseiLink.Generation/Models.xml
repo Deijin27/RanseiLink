@@ -73,6 +73,9 @@
         <Property Index="7, 18, 9" Name="QuantityForEffect" />
 		<FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
     </Model>
+	<Model Name="MoveRange" DataLength="0x4">
+		<FlagProperty Index="0, 0" Name="InRange"/>
+	</Model>
     <Model Name="Pokemon" DataLength="0x30">
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
         <Property Index=" 3,  0,  9" Name="Hp" />
