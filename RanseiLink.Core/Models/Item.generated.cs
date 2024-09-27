@@ -9,7 +9,7 @@ public partial class Item : BaseDataWindow
 {
     public const int DataLength = 0x24;
     public Item(byte[] data) : base(data, DataLength) { }
-    public Item() : base(new byte[DataLength], DataLength) { }
+    public Item() : this(new byte[DataLength]) { }
 
     public string Name
     {
@@ -71,9 +71,6 @@ public partial class Item : BaseDataWindow
         set => SetInt(7, 0, 9, (int)value);
     }
 
-    /// <summary>
-    /// Max shop price / 100
-    /// </summary>
     public int ShopPriceMultiplier
     {
         get => GetInt(7, 9, 9);

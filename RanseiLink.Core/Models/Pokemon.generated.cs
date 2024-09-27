@@ -9,7 +9,7 @@ public partial class Pokemon : BaseDataWindow
 {
     public const int DataLength = 0x30;
     public Pokemon(byte[] data) : base(data, DataLength) { }
-    public Pokemon() : base(new byte[DataLength], DataLength) { }
+    public Pokemon() : this(new byte[DataLength]) { }
 
     public string Name
     {
