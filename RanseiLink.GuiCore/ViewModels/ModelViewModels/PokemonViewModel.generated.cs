@@ -15,6 +15,66 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Hp
+    {
+        get => _model.Hp;
+        set => SetProperty(_model.Hp, value, v => _model.Hp = v);
+    }
+
+    public EvolutionConditionId EvolutionCondition1
+    {
+        get => _model.EvolutionCondition1;
+        set => SetProperty(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
+    }
+
+    public EvolutionConditionId EvolutionCondition2
+    {
+        get => _model.EvolutionCondition2;
+        set => SetProperty(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
+    }
+
+    public IdleMotionId IdleMotion
+    {
+        get => _model.IdleMotion;
+        set => SetProperty(_model.IdleMotion, value, v => _model.IdleMotion = v);
+    }
+
+    public int Atk
+    {
+        get => _model.Atk;
+        set => SetProperty(_model.Atk, value, v => _model.Atk = v);
+    }
+
+    public int Def
+    {
+        get => _model.Def;
+        set => SetProperty(_model.Def, value, v => _model.Def = v);
+    }
+
+    public int Spe
+    {
+        get => _model.Spe;
+        set => SetProperty(_model.Spe, value, v => _model.Spe = v);
+    }
+
+    public bool IsLegendary
+    {
+        get => _model.IsLegendary;
+        set => SetProperty(_model.IsLegendary, value, v => _model.IsLegendary = v);
+    }
+
+    public bool AsymmetricBattleSprite
+    {
+        get => _model.AsymmetricBattleSprite;
+        set => SetProperty(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
+    }
+
+    public bool LongAttackAnimation
+    {
+        get => _model.LongAttackAnimation;
+        set => SetProperty(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
+    }
+
     public TypeId Type1
     {
         get => _model.Type1;
@@ -48,46 +108,22 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
-    public int Hp
+    public int QuantityForEvolutionCondition1
     {
-        get => _model.Hp;
-        set => SetProperty(_model.Hp, value, v => _model.Hp = v);
+        get => _model.QuantityForEvolutionCondition1;
+        set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
     }
 
-    public int Atk
+    public int QuantityForEvolutionCondition2
     {
-        get => _model.Atk;
-        set => SetProperty(_model.Atk, value, v => _model.Atk = v);
+        get => _model.QuantityForEvolutionCondition2;
+        set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
     }
 
-    public int Def
+    public int MovementRange
     {
-        get => _model.Def;
-        set => SetProperty(_model.Def, value, v => _model.Def = v);
-    }
-
-    public int Spe
-    {
-        get => _model.Spe;
-        set => SetProperty(_model.Spe, value, v => _model.Spe = v);
-    }
-
-    public bool IsLegendary
-    {
-        get => _model.IsLegendary;
-        set => SetProperty(_model.IsLegendary, value, v => _model.IsLegendary = v);
-    }
-
-    public IdleMotionId IdleMotion
-    {
-        get => _model.IdleMotion;
-        set => SetProperty(_model.IdleMotion, value, v => _model.IdleMotion = v);
-    }
-
-    public int NameOrderIndex
-    {
-        get => _model.NameOrderIndex;
-        set => SetProperty(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
+        get => _model.MovementRange;
+        set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = value);
     }
 
     public int NationalPokedexNumber
@@ -96,10 +132,10 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
     }
 
-    public int MovementRange
+    public int NameOrderIndex
     {
-        get => _model.MovementRange;
-        set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = value);
+        get => _model.NameOrderIndex;
+        set => SetProperty(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
     }
 
     public int CatchRate
@@ -124,41 +160,5 @@ public partial class PokemonViewModel : ViewModelBase
     {
         get => _model.Weight;
         set => SetProperty(_model.Weight, value, v => _model.Weight = v);
-    }
-
-    public bool AsymmetricBattleSprite
-    {
-        get => _model.AsymmetricBattleSprite;
-        set => SetProperty(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
-    }
-
-    public bool LongAttackAnimation
-    {
-        get => _model.LongAttackAnimation;
-        set => SetProperty(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
-    }
-
-    public EvolutionConditionId EvolutionCondition1
-    {
-        get => _model.EvolutionCondition1;
-        set => SetProperty(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
-    }
-
-    public int QuantityForEvolutionCondition1
-    {
-        get => _model.QuantityForEvolutionCondition1;
-        set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
-    }
-
-    public EvolutionConditionId EvolutionCondition2
-    {
-        get => _model.EvolutionCondition2;
-        set => SetProperty(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
-    }
-
-    public int QuantityForEvolutionCondition2
-    {
-        get => _model.QuantityForEvolutionCondition2;
-        set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
     }
 }
