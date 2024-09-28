@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class EpisodeViewModel : ViewModelBase
+public partial class EpisodeViewModel : ViewModelBase
 {
     private Episode _model;
     private readonly ICachedMsgBlockService _msgService;
@@ -47,41 +47,11 @@ public class EpisodeViewModel : ViewModelBase
 
     public int Id { get; private set; }
 
-    public int Order
-    {
-        get => _model.Order;
-        set => SetProperty(_model.Order, value, v => _model.Order = value);
-    }
-
     public List<ScenarioId> ScenarioItems { get; } = EnumUtil.GetValues<ScenarioId>().ToList();
-
-    public ScenarioId Scenario
-    {
-        get => _model.Scenario;
-        set => SetProperty(_model.Scenario, value, v => _model.Scenario = v);
-    }
 
     public List<SelectorComboBoxItem> UnlockConditionItems { get; }
 
-    public int UnlockCondition
-    {
-        get => (int)_model.UnlockCondition;
-        set => SetProperty(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
-    }
-
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
-
-    public EpisodeClearConditionId ClearCondition
-    {
-        get => _model.ClearCondition;
-        set => SetProperty(_model.ClearCondition, value, v => _model.ClearCondition = v);
-    }
-
-    public int Difficulty
-    {
-        get => _model.Difficulty;
-        set => SetProperty(_model.Difficulty, value, v => _model.Difficulty = value);
-    }
 
     public string Name
     {
