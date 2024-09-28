@@ -12,7 +12,7 @@ public class EventSpeakerViewModel : ViewModelBase
     public EventSpeakerViewModel(IOverrideDataProvider overrideSpriteProvider)
     {
         _spriteProvider = overrideSpriteProvider;
-        _model = new EventSpeaker();
+        _model = new EventSpeaker(Core.Enums.ConquestGameCode.VPYT);
     }
 
     public void SetModel(EventSpeaker model)

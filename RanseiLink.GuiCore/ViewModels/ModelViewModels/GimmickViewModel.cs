@@ -19,7 +19,7 @@ public class GimmickViewModel : ViewModelBase
 
     public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService)
     {
-        _model = new Gimmick();
+        _model = new Gimmick(Core.Enums.ConquestGameCode.VPYT);
 
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;

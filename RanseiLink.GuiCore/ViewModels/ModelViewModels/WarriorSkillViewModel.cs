@@ -23,7 +23,7 @@ public class WarriorSkillViewModel : ViewModelBase
         _msgService = msgService;
         _baseWarriorService = baseWarriorService;
         _cachedSpriteProvider = cachedSpriteProvider;
-        _model = new WarriorSkill();
+        _model = new WarriorSkill(Core.Enums.ConquestGameCode.VPYT);
 
         _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => { if (wa != null) jumpService.JumpTo(WarriorWorkspaceModule.Id, wa.Id); });
     }

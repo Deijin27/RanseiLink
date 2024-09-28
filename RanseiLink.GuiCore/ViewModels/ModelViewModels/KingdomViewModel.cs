@@ -8,7 +8,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager) : ViewModelBase
 {
-    private Kingdom _model = new();
+    private Kingdom _model = new(Core.Enums.ConquestGameCode.VPYT);
 
     public void SetModel(KingdomId id, Kingdom model)
     {
