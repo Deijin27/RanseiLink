@@ -29,7 +29,7 @@
         <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
         <Property Index="0, 25, 7" Name="RankUpLink"/>
     </Model>
-    <Model Name="BattleConfig" DataLength="0x18">
+    <Model Name="BattleConfig" DataLength="0x18" ViewModel="true">
         <Property Index="0,  0,  6" Name="Map" />
         <Property Index="0,  6,  5" Name="MapVariant" />
         <Property Index="2, 13,  5" Name="Minimap" />
