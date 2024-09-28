@@ -5,7 +5,7 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public class MoveAnimation : BaseDataWindow
+public partial class MoveAnimation : BaseDataWindow
 {
     public const int DataLength = 0x4;
     public MoveAnimation(byte[] data) : base(data, DataLength) { }

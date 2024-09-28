@@ -5,7 +5,7 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public class GimmickObject : BaseDataWindow
+public partial class GimmickObject : BaseDataWindow
 {
     public const int DataLength = 0x4;
     public GimmickObject(byte[] data) : base(data, DataLength) { }

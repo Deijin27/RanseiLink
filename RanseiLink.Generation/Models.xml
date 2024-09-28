@@ -57,6 +57,8 @@
 		<FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
 		<FlagProperty Index="1, 9" Name="IsUnlockedKingdom" IdType="KingdomId" />
     </Model>
+	<Model Name="GimmickObject" DataLength="0x4">
+	</Model>
     <Model Name="Item" DataLength="0x24">
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
         <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
@@ -96,6 +98,10 @@
 		<Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
 		<Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
 		<Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
+	</Model>
+	<Model Name="MoveAnimation" DataLength="0x4">
+		<Property Index="0,  0, 16" Name="UnknownA" />
+		<Property Index="0, 16, 16" Name="UnknownB" />
 	</Model>
 	<Model Name="MoveRange" DataLength="0x4">
 		<FlagProperty Index="0, 0" Name="InRange"/>
