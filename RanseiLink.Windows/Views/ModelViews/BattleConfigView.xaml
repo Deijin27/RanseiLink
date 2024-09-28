@@ -57,7 +57,7 @@
                     Command="{Binding JumpToMapCommand}" CommandParameter="{Binding Map}"/>
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <controls:IconButton Icon="visibility" ToolTip="View 3D Model" DockPanel.Dock="Right" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" />
-                <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding Map, Mode=TwoWay}"/>
+                <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding MapId, Mode=TwoWay}"/>
                 
             </DockPanel>
             

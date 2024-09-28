@@ -80,7 +80,7 @@ public partial class BattleConfigViewModel : ViewModelBase
 
     public BattleConfigId Id { get; private set; }
 
-    public MapId Map
+    public MapId MapId
     {
         get => _model.MapId;
         set => SetProperty(_model.MapId, value, v => _model.MapId = value);

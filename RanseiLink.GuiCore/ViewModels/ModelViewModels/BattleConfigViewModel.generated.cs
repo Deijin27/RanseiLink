@@ -9,28 +9,34 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class BattleConfigViewModel : ViewModelBase
 {
+    public int Map
+    {
+        get => _model.Map;
+        set => SetProperty(_model.Map, value, v => _model.Map = v);
+    }
+
+    public int MapVariant
+    {
+        get => _model.MapVariant;
+        set => SetProperty(_model.MapVariant, value, v => _model.MapVariant = v);
+    }
+
     public int Minimap
     {
         get => _model.Minimap;
-        set => SetProperty(_model.Minimap, value, v => _model.Minimap = value);
+        set => SetProperty(_model.Minimap, value, v => _model.Minimap = v);
     }
 
     public int MinimapVariant
     {
         get => _model.MinimapVariant;
-        set => SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = value);
+        set => SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = v);
     }
 
     public int Unknown
     {
         get => _model.Unknown;
         set => SetProperty(_model.Unknown, value, v => _model.Unknown = v);
-    }
-
-    public int NumberOfTurns
-    {
-        get => _model.NumberOfTurns;
-        set => SetProperty(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
     }
 
     public Rgb15 UpperAtmosphereColor
@@ -49,5 +55,23 @@ public partial class BattleConfigViewModel : ViewModelBase
     {
         get => _model.LowerAtmosphereColor;
         set => SetProperty(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
+    }
+
+    public BattleVictoryConditionFlags VictoryCondition
+    {
+        get => _model.VictoryCondition;
+        set => SetProperty(_model.VictoryCondition, value, v => _model.VictoryCondition = v);
+    }
+
+    public BattleVictoryConditionFlags DefeatCondition
+    {
+        get => _model.DefeatCondition;
+        set => SetProperty(_model.DefeatCondition, value, v => _model.DefeatCondition = v);
+    }
+
+    public int NumberOfTurns
+    {
+        get => _model.NumberOfTurns;
+        set => SetProperty(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
     }
 }
