@@ -73,6 +73,30 @@
         <Property Index="7, 18, 9" Name="QuantityForEffect" />
 		<FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
     </Model>
+	<Model Name="Move" DataLength="0x24">
+		<StringProperty Name="Name" Index="0" MaxLength="14"/>
+		<Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
+		<Property Index="4,  0, 5" Name="Type" Type="TypeId" />
+		<Property Index="4,  5, 8" Name="Power" />
+		<Property Index="4, 13, 7" Name="Effect1" Type="MoveEffectId" />
+		<Property Index="4, 20, 7" Name="Effect1Chance" />
+		<Property Index="4, 27, 5" Name="Range" Type="MoveRangeId" />
+		<Property Index="6,  0, 7" Name="Effect2" Type="MoveEffectId" />
+		<Property Index="6,  7, 7" Name="Effect2Chance" />
+		<Property Index="6, 14, 7" Name="Effect3" Type="MoveEffectId" />
+		<Property Index="6, 21, 7" Name="Effect3Chance" />
+		<Property Index="7,  0, 7" Name="Effect4" Type="MoveEffectId" />
+		<Property Index="7,  7, 7" Name="Effect4Chance" />
+		<Property Index="7, 19, 7" Name="Accuracy" />
+		<Property Index="5,  0, 9" Name="StartupAnimation" Type="MoveAnimationId" />
+		<Property Index="5,  9, 9" Name="ProjectileAnimation" Type="MoveAnimationId" />
+		<Property Index="5, 18, 9" Name="ImpactAnimation" Type="MoveAnimationId" />
+		<Property Index="8,  0, 9" Name="AdditionalAnimation" Type="MoveAnimationId" />
+		<Property Index="7, 26, 4" Name="UnknownOption" Type="MoveUnknownOptionId" />
+		<Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
+		<Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
+		<Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
+	</Model>
 	<Model Name="MoveRange" DataLength="0x4">
 		<FlagProperty Index="0, 0" Name="InRange"/>
 	</Model>
