@@ -15,7 +15,7 @@ public enum MoveAnimationPreviewMode
     Movement,
 }
 
-public class MoveViewModel : ViewModelBase
+public partial class MoveViewModel : ViewModelBase
 {
     private MoveId _id;
     private Move _model;
@@ -46,6 +46,22 @@ public class MoveViewModel : ViewModelBase
 
         JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
+
+        PropertyChanged += MoveViewModel_PropertyChanged;
+    }
+
+    private void MoveViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(StartupAnimation):
+            case nameof(ProjectileAnimation):
+            case nameof(ImpactAnimation):
+            case nameof(AdditionalAnimation):
+            case nameof(MovementAnimation):
+                OnAnimationChanged();
+                break;
+        }
     }
 
     public void SetModel(MoveId id, Move model)
@@ -58,12 +74,6 @@ public class MoveViewModel : ViewModelBase
     }
 
     public int Id { get; private set; }
-
-    public string Name
-    {
-        get => _model.Name;
-        set => SetProperty(_model.Name, value, v => _model.Name = v);
-    }
 
     public bool MovementFlag_MovementOrKnockback
     {
@@ -83,156 +93,6 @@ public class MoveViewModel : ViewModelBase
         set => SetProperty(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
-    public MoveMovementId Movement
-    {
-        get => _model.Movement;
-        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
-    }
-
-    public MoveUnknownOptionId UnknownOption
-    {
-        get => _model.UnknownOption;
-        set => SetProperty(_model.UnknownOption, value, v => _model.UnknownOption = v);
-    }
-
-    public int UnknownValue_6_28_4
-    {
-        get => _model.UnknownValue_6_28_4;
-        set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
-    }
-
-    public TypeId Type
-    {
-        get => _model.Type;
-        set => SetProperty(_model.Type, value, v => _model.Type = v);
-    }
-
-    public int Power
-    {
-        get => _model.Power;
-        set => SetProperty(_model.Power, value, v => _model.Power = v);
-    }
-
-    public int Accuracy
-    {
-        get => _model.Accuracy;
-        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
-    }
-
-    public MoveRangeId Range
-    {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
-    }
-
-    public MoveEffectId Effect1
-    {
-        get => _model.Effect1;
-        set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
-    }
-
-    public int Effect1Chance
-    {
-        get => _model.Effect1Chance;
-        set => SetProperty(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
-    }
-
-    public MoveEffectId Effect2
-    {
-        get => _model.Effect2;
-        set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
-    }
-
-    public int Effect2Chance
-    {
-        get => _model.Effect2Chance;
-        set => SetProperty(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
-    }
-
-    public MoveEffectId Effect3
-    {
-        get => _model.Effect3;
-        set => SetProperty(_model.Effect3, value, v => _model.Effect3 = v);
-    }
-
-    public int Effect3Chance
-    {
-        get => _model.Effect3Chance;
-        set => SetProperty(_model.Effect3Chance, value, v => _model.Effect3Chance = v);
-    }
-
-    public MoveEffectId Effect4
-    {
-        get => _model.Effect4;
-        set => SetProperty(_model.Effect4, value, v => _model.Effect4 = v);
-    }
-
-    public int Effect4Chance
-    {
-        get => _model.Effect4Chance;
-        set => SetProperty(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
-    }
-
-    public MoveAnimationId StartupAnimation
-    {
-        get => _model.StartupAnimation;
-        set
-        {
-            if (SetProperty(_model.StartupAnimation, value, v => _model.StartupAnimation = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-    public MoveAnimationId ProjectileAnimation
-    {
-        get => _model.ProjectileAnimation;
-        set
-        {
-            if (SetProperty(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-    public MoveAnimationId ImpactAnimation
-    {
-        get => _model.ImpactAnimation;
-        set
-        {
-            if (SetProperty(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-    public MoveAnimationId AdditionalAnimation
-    {
-        get => _model.AdditionalAnimation;
-        set
-        {
-            if (SetProperty(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-    public MoveMovementAnimationId MovementAnimation
-    {
-        get => _model.MovementAnimation;
-        set
-        {
-            if (SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.MoveDescription, Id);
@@ -240,8 +100,6 @@ public class MoveViewModel : ViewModelBase
     }
 
     public ICommand JumpToMoveRangeCommand { get; }
-
-
 
     private string? _currentPreviewAnimationUri;
     public string? CurrentPreviewAnimationUri
