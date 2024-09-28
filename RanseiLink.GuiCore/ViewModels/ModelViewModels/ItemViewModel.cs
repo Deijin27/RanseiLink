@@ -6,7 +6,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class ItemViewModel : ViewModelBase
+public partial class ItemViewModel : ViewModelBase
 {
     private Item _model;
     private readonly ICachedMsgBlockService _msgService;
@@ -33,77 +33,6 @@ public class ItemViewModel : ViewModelBase
 
     public int Id { get; private set; }
 
-    public string Name
-    {
-        get => _model.Name;
-        set => SetProperty(_model.Name, value, v => _model.Name = v);
-    }
-
-    public PurchaseMethodId PurchaseMethod
-    {
-        get => _model.PurchaseMethod;
-        set => SetProperty(_model.PurchaseMethod, value, v => _model.PurchaseMethod = v);
-    }
-
-    public ItemCategoryId Category
-    {
-        get => _model.Category;
-        set => SetProperty(_model.Category, value, v => _model.Category = v);
-    }
-
-    public ItemEffectId Effect
-    {
-        get => _model.Effect;
-        set => SetProperty(_model.Effect, value, v => _model.Effect = v);
-    }
-
-    public int EffectDuration
-    {
-        get => _model.EffectDuration;
-        set => SetProperty(_model.EffectDuration, value, v => _model.EffectDuration = v);
-    }
-
-    public int CraftingIngredient1
-    {
-        get => (int)_model.CraftingIngredient1;
-        set => SetProperty(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
-    }
-
-    public int CraftingIngredient1Amount
-    {
-        get => _model.CraftingIngredient1Amount;
-        set => SetProperty(_model.CraftingIngredient1Amount, value, v => _model.CraftingIngredient1Amount = v);
-    }
-
-    public int CraftingIngredient2
-    {
-        get => (int)_model.CraftingIngredient2;
-        set => SetProperty(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
-    }
-
-    public int CraftingIngredient2Amount
-    {
-        get => _model.CraftingIngredient2Amount;
-        set => SetProperty(_model.CraftingIngredient2Amount, value, v => _model.CraftingIngredient2Amount = v);
-    }
-
-    public int UnknownItem
-    {
-        get => (int)_model.UnknownItem;
-        set => SetProperty(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
-    }
-
-    public int ShopPriceMultiplier // max = 511
-    {
-        get => _model.ShopPriceMultiplier;
-        set => SetProperty(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
-    }
-
-    public int QuantityForEffect
-    {
-        get => _model.QuantityForEffect;
-        set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
-    }
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription, Id);
