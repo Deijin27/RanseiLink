@@ -15,24 +15,6 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public MoveMovementId Movement
-    {
-        get => _model.Movement;
-        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
-    }
-
-    public MoveUnknownOptionId UnknownOption
-    {
-        get => _model.UnknownOption;
-        set => SetProperty(_model.UnknownOption, value, v => _model.UnknownOption = v);
-    }
-
-    public int UnknownValue_6_28_4
-    {
-        get => _model.UnknownValue_6_28_4;
-        set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
-    }
-
     public TypeId Type
     {
         get => _model.Type;
@@ -45,18 +27,6 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Power, value, v => _model.Power = v);
     }
 
-    public int Accuracy
-    {
-        get => _model.Accuracy;
-        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
-    }
-
-    public MoveRangeId Range
-    {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
-    }
-
     public MoveEffectId Effect1
     {
         get => _model.Effect1;
@@ -67,6 +37,12 @@ public partial class MoveViewModel : ViewModelBase
     {
         get => _model.Effect1Chance;
         set => SetProperty(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
+    }
+
+    public MoveRangeId Range
+    {
+        get => _model.Range;
+        set => SetProperty(_model.Range, value, v => _model.Range = v);
     }
 
     public MoveEffectId Effect2
@@ -105,6 +81,12 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
     }
 
+    public int Accuracy
+    {
+        get => _model.Accuracy;
+        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
+    }
+
     public MoveAnimationId StartupAnimation
     {
         get => _model.StartupAnimation;
@@ -129,9 +111,27 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v);
     }
 
+    public MoveUnknownOptionId UnknownOption
+    {
+        get => _model.UnknownOption;
+        set => SetProperty(_model.UnknownOption, value, v => _model.UnknownOption = v);
+    }
+
+    public MoveMovementId Movement
+    {
+        get => _model.Movement;
+        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
+    }
+
     public MoveMovementAnimationId MovementAnimation
     {
         get => _model.MovementAnimation;
         set => SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
+    }
+
+    public int UnknownValue_6_28_4
+    {
+        get => _model.UnknownValue_6_28_4;
+        set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
     }
 }
