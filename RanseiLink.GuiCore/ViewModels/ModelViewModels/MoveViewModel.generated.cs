@@ -15,6 +15,12 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public MoveMovementFlags MovementFlags
+    {
+        get => _model.MovementFlags;
+        set => SetProperty(_model.MovementFlags, value, v => _model.MovementFlags = v);
+    }
+
     public TypeId Type
     {
         get => _model.Type;

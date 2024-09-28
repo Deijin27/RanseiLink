@@ -16,8 +16,11 @@ internal class Program
         Dictionary<string, string> idsWithModels = [];
         foreach (var modelElement in models)
         {
-            var name = modelElement.Attribute("Name")!.Value;
-            idsWithModels[name + "Id"] = name;
+            if (modelElement.Elements().Any(x => x.Attribute("Name")?.Value == "Name") || modelElement.Attribute("Name")!.Value == "Episode")
+            {
+                var name = modelElement.Attribute("Name")!.Value;
+                idsWithModels[name + "Id"] = name;
+            }
         }
 
         foreach (var modelElement in models)
