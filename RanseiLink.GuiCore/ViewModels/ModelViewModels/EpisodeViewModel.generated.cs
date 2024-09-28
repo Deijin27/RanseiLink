@@ -12,7 +12,7 @@ public partial class EpisodeViewModel : ViewModelBase
     public int Order
     {
         get => _model.Order;
-        set => SetProperty(_model.Order, value, v => _model.Order = value);
+        set => SetProperty(_model.Order, value, v => _model.Order = v);
     }
 
     public ScenarioId Scenario
@@ -27,15 +27,17 @@ public partial class EpisodeViewModel : ViewModelBase
         set => SetProperty(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
     }
 
+    public int Difficulty
+    {
+        get => _model.Difficulty;
+        set => SetProperty(_model.Difficulty, value, v => _model.Difficulty = v);
+    }
+
     public EpisodeClearConditionId ClearCondition
     {
         get => _model.ClearCondition;
         set => SetProperty(_model.ClearCondition, value, v => _model.ClearCondition = v);
     }
 
-    public int Difficulty
-    {
-        get => _model.Difficulty;
-        set => SetProperty(_model.Difficulty, value, v => _model.Difficulty = value);
-    }
+
 }

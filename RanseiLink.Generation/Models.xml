@@ -48,7 +48,7 @@
 	    <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
     </Model>
     -->
-    <Model Name="Episode" DataLength="0x8">
+    <Model Name="Episode" DataLength="0x8" ViewModel="true">
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
