@@ -1,12 +1,11 @@
-﻿#nullable enable
-using RanseiLink.Core.Enums;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class AbilityViewModel : ViewModelBase
+public partial class AbilityViewModel : ViewModelBase
 {
     private Ability _model;
     private readonly ICachedMsgBlockService _msgService;
@@ -37,36 +36,6 @@ public class AbilityViewModel : ViewModelBase
     }
 
     public int Id { get; private set; }
-
-    public string Name
-    {
-        get => _model.Name;
-        set => SetProperty(_model.Name, value, v => _model.Name = v);
-    }
-
-    public AbilityEffectId Effect1
-    {
-        get => _model.Effect1;
-        set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
-    }
-
-    public int Effect1Amount
-    {
-        get => _model.Effect1Amount;
-        set => SetProperty(_model.Effect1Amount, value, v => _model.Effect1Amount = value);
-    }
-
-    public AbilityEffectId Effect2
-    {
-        get => _model.Effect2;
-        set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
-    }
-
-    public int Effect2Amount
-    {
-        get => _model.Effect2Amount;
-        set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
-    }
 
     public string Description
     {
