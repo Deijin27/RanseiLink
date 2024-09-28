@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class BattleConfigViewModel : ViewModelBase
+public partial class BattleConfigViewModel : ViewModelBase
 {
     private BattleConfig _model;
     private readonly IAsyncDialogService _dialogService;
@@ -50,6 +50,19 @@ public class BattleConfigViewModel : ViewModelBase
                 throw new System.Exception("Minimap file unexpected path");
             }
         }
+
+        this.PropertyChanged += BattleConfigViewModel_PropertyChanged;
+    }
+
+    private void BattleConfigViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Minimap):
+            case nameof(MinimapVariant):
+                RaisePropertyChanged(nameof(MinimapSpritePath));
+                break;
+        }
     }
 
     public record MinimapInfo(int Minimap, int MinimapVariant);
@@ -73,30 +86,6 @@ public class BattleConfigViewModel : ViewModelBase
         set => SetProperty(_model.MapId, value, v => _model.MapId = value);
     }
 
-    public int Minimap
-    {
-        get => _model.Minimap;
-        set
-        {
-            if (SetProperty(_model.Minimap, value, v => _model.Minimap = value))
-            {
-                RaisePropertyChanged(nameof(MinimapSpritePath));
-            }
-        }
-    }
-
-    public int MinimapVariant
-    {
-        get => _model.MinimapVariant;
-        set 
-        { 
-            if (SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = value)) 
-            {
-                RaisePropertyChanged(nameof(MinimapSpritePath));
-            } 
-        }
-    }
-
     public string? MinimapSpritePath 
     { 
         get 
@@ -108,36 +97,6 @@ public class BattleConfigViewModel : ViewModelBase
             }
             return _overrideDataProvider.GetSpriteFile(SpriteType.Minimap, idx).File; 
         } 
-    }
-
-    public int Unknown
-    {
-        get => _model.Unknown;
-        set => SetProperty(_model.Unknown, value, v => _model.Unknown = v);
-    }
-
-    public int NumberOfTurns
-    {
-        get => _model.NumberOfTurns;
-        set => SetProperty(_model.NumberOfTurns, value, v => _model.NumberOfTurns = v);
-    }
-
-    public Rgb15 UpperAtmosphereColor
-    {
-        get => _model.UpperAtmosphereColor;
-        set => SetProperty(_model.UpperAtmosphereColor, value, v => _model.UpperAtmosphereColor = v);
-    }
-
-    public Rgb15 MiddleAtmosphereColor
-    {
-        get => _model.MiddleAtmosphereColor;
-        set => SetProperty(_model.MiddleAtmosphereColor, value, v => _model.MiddleAtmosphereColor = v);
-    }
-
-    public Rgb15 LowerAtmosphereColor
-    {
-        get => _model.LowerAtmosphereColor;
-        set => SetProperty(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
     }
 
     #region Victory Conditions
