@@ -15,16 +15,16 @@ public partial class AbilityViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Effect1Amount
+    {
+        get => _model.Effect1Amount;
+        set => SetProperty(_model.Effect1Amount, value, v => _model.Effect1Amount = v);
+    }
+
     public AbilityEffectId Effect1
     {
         get => _model.Effect1;
         set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
-    }
-
-    public int Effect1Amount
-    {
-        get => _model.Effect1Amount;
-        set => SetProperty(_model.Effect1Amount, value, v => _model.Effect1Amount = value);
     }
 
     public AbilityEffectId Effect2
@@ -36,6 +36,6 @@ public partial class AbilityViewModel : ViewModelBase
     public int Effect2Amount
     {
         get => _model.Effect2Amount;
-        set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = value);
+        set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
     }
 }
