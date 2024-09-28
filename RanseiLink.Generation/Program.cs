@@ -11,12 +11,21 @@ internal class Program
     {
         var doc = LoadResourceDoc("Models.xml");
 
-        foreach (var modelElement in doc.Element("Models")!.Elements("Model"))
+        var models = doc.Element("Models")!.Elements("Model");
+
+        Dictionary<string, string> idsWithModels = [];
+        foreach (var modelElement in models)
+        {
+            var name = modelElement.Attribute("Name")!.Value;
+            idsWithModels[name + "Id"] = name;
+        }
+
+        foreach (var modelElement in models)
         {
             GenerateModel(modelElement);
             if (modelElement.Attribute("ViewModel")?.Value == "true")
             {
-                GenerateViewModel(modelElement);
+                GenerateViewModel(modelElement, idsWithModels);
             }
         }
     }
@@ -119,7 +128,7 @@ internal class Program
         File.WriteAllText(location, sb.ToString(), Encoding.UTF8);
     }
 
-    private static void GenerateViewModel(XElement modelElement)
+    private static void GenerateViewModel(XElement modelElement, Dictionary<string, string> idsWithModels)
     {
         var name = modelElement.Attribute("Name")!.Value;
 
@@ -149,12 +158,22 @@ internal class Program
             if (propertyElement.Name == "Property")
             {
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
-
-                sb.AppendLine($"    public {propType} {propName}");
-                sb.AppendLine("    {");
-                sb.AppendLine($"        get => _model.{propName};");
-                sb.AppendLine($"        set => SetProperty(_model.{propName}, value, v => _model.{propName} = v);");
-                sb.AppendLine("    }");
+                if (idsWithModels.TryGetValue(propType, out var model))
+                {
+                    sb.AppendLine($"    public int {propName}");
+                    sb.AppendLine("    {");
+                    sb.AppendLine($"        get => (int)_model.{propName};");
+                    sb.AppendLine($"        set => SetProperty(_model.{propName}, ({propType})value, v => _model.{propName} = v);");
+                    sb.AppendLine("    }");
+                }
+                else
+                {
+                    sb.AppendLine($"    public {propType} {propName}");
+                    sb.AppendLine("    {");
+                    sb.AppendLine($"        get => _model.{propName};");
+                    sb.AppendLine($"        set => SetProperty(_model.{propName}, value, v => _model.{propName} = v);");
+                    sb.AppendLine("    }");
+                }
             }
             else if (propertyElement.Name == "FlagProperty")
             {

@@ -80,4 +80,5 @@ public partial class ItemViewModel : ViewModelBase
         get => _model.QuantityForEffect;
         set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
     }
+
 }
