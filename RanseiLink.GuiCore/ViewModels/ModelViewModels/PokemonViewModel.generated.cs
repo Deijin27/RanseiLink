@@ -24,13 +24,13 @@ public partial class PokemonViewModel : ViewModelBase
     public EvolutionConditionId EvolutionCondition1
     {
         get => _model.EvolutionCondition1;
-        set => SetProperty(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = value);
+        set => SetProperty(_model.EvolutionCondition1, value, v => _model.EvolutionCondition1 = v);
     }
 
     public EvolutionConditionId EvolutionCondition2
     {
         get => _model.EvolutionCondition2;
-        set => SetProperty(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = value);
+        set => SetProperty(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = v);
     }
 
     public IdleMotionId IdleMotion
@@ -80,6 +80,7 @@ public partial class PokemonViewModel : ViewModelBase
         get => _model.Type1;
         set => SetProperty(_model.Type1, value, v => _model.Type1 = v);
     }
+
     public TypeId Type2
     {
         get => _model.Type2;
@@ -97,11 +98,13 @@ public partial class PokemonViewModel : ViewModelBase
         get => (int)_model.Ability1;
         set => SetProperty(_model.Ability1, (AbilityId)value, v => _model.Ability1 = v);
     }
+
     public int Ability2
     {
         get => (int)_model.Ability2;
         set => SetProperty(_model.Ability2, (AbilityId)value, v => _model.Ability2 = v);
     }
+
     public int Ability3
     {
         get => (int)_model.Ability3;
@@ -111,19 +114,31 @@ public partial class PokemonViewModel : ViewModelBase
     public int QuantityForEvolutionCondition1
     {
         get => _model.QuantityForEvolutionCondition1;
-        set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = value);
+        set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = v);
     }
 
     public int QuantityForEvolutionCondition2
     {
         get => _model.QuantityForEvolutionCondition2;
-        set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = value);
+        set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = v);
     }
 
     public int MovementRange
     {
         get => _model.MovementRange;
-        set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = value);
+        set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = v);
+    }
+
+    public int MinEvolutionTableEntry
+    {
+        get => _model.MinEvolutionTableEntry;
+        set => SetProperty(_model.MinEvolutionTableEntry, value, v => _model.MinEvolutionTableEntry = v);
+    }
+
+    public int MaxEvolutionTableEntry
+    {
+        get => _model.MaxEvolutionTableEntry;
+        set => SetProperty(_model.MaxEvolutionTableEntry, value, v => _model.MaxEvolutionTableEntry = v);
     }
 
     public int NationalPokedexNumber
