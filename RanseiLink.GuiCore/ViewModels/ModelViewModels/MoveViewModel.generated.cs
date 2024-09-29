@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class MoveViewModel : ViewModelBase
 {
     private Move _model = new();
+    private MoveId _id;
 
     public string Name
     {

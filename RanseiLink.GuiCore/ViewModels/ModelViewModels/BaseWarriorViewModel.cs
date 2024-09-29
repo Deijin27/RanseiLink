@@ -14,7 +14,6 @@ public partial class BaseWarriorViewModel : ViewModelBase
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
     private readonly IAsyncDialogService _dialogService;
     private WarriorNameTable _nameTable;
-    private WarriorId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public BaseWarriorViewModel(CopyPasteViewModel copyPasteVm, IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
         IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IAsyncDialogService dialogService)

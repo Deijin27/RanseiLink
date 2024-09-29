@@ -28,6 +28,7 @@ public partial class EpisodeViewModel : ViewModelBase
 
     public void SetModel(EpisodeId id, Episode model)
     {
+        _id = id;
         Id = (int)id;
         _model = model;
 

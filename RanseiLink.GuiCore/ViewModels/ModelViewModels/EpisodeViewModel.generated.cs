@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class EpisodeViewModel : ViewModelBase
 {
     private Episode _model = new();
+    private EpisodeId _id;
 
     public int Order
     {

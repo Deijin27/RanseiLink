@@ -20,6 +20,7 @@ public partial class ItemViewModel : ViewModelBase
 
     public void SetModel(ItemId id, Item model)
     {
+        _id = id;
         Id = (int)id;
         _model = model;
         RaiseAllPropertiesChanged();

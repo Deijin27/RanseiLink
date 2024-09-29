@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class PokemonViewModel : ViewModelBase
 {
     private Pokemon _model = new();
+    private PokemonId _id;
 
     public string Name
     {

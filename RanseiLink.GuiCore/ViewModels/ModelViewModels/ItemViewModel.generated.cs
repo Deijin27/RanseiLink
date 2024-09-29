@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class ItemViewModel : ViewModelBase
 {
     private Item _model = new();
+    private ItemId _id;
 
     public string Name
     {

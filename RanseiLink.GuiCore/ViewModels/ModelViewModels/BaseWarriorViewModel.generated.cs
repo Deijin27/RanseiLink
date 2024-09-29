@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class BaseWarriorViewModel : ViewModelBase
 {
     private BaseWarrior _model = new();
+    private WarriorId _id;
 
     public int Sprite
     {

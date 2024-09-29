@@ -11,6 +11,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public partial class AbilityViewModel : ViewModelBase
 {
     private Ability _model = new();
+    private AbilityId _id;
 
     public string Name
     {

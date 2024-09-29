@@ -17,7 +17,6 @@ public partial class PokemonViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IAsyncDialogService _dialogService;
     private readonly IPokemonAnimationService _animationService;
-    private PokemonId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public PokemonViewModel(
         IJumpService jumpService, 

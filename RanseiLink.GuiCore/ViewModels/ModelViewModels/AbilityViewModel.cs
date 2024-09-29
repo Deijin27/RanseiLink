@@ -10,7 +10,6 @@ public partial class AbilityViewModel : ViewModelBase
     private readonly ICachedMsgBlockService _msgService;
     private readonly IPokemonService _pokemonService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
-    private AbilityId _id;
 
     public AbilityViewModel(
         ICachedMsgBlockService msgService,
