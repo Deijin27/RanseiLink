@@ -31,13 +31,19 @@ public partial class EpisodeViewModel : ViewModelBase
         _id = id;
         _model = model;
 
-        StartKingdomItems.Clear();
-        UnlockedKingdomItems.Clear();
+        IsStartKingdomItems.Clear();
+        IsUnlockedKingdomItems.Clear();
         foreach (KingdomId kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
         {
             string kingdomName = _idToNameService.IdToName<IKingdomService>((int)kingdom);
-            StartKingdomItems.Add(new StartKingdomItem(model, kingdom, kingdomName));
-            UnlockedKingdomItems.Add(new UnlockedKingdomItem(model, kingdom, kingdomName));
+            IsStartKingdomItems.Add(new CheckBoxViewModel(kingdomName, 
+                () => _model.GetIsStartKingdom(kingdom), 
+                v => _model.SetIsStartKingdom(kingdom, v)
+                ));
+            IsUnlockedKingdomItems.Add(new CheckBoxViewModel(kingdomName,
+                () => _model.GetIsUnlockedKingdom(kingdom),
+                v => _model.SetIsUnlockedKingdom(kingdom, v)
+                ));
         }
 
         RaiseAllPropertiesChanged();
@@ -49,47 +55,6 @@ public partial class EpisodeViewModel : ViewModelBase
 
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
 
-    public ObservableCollection<StartKingdomItem> StartKingdomItems { get; } = new();
-    public ObservableCollection<UnlockedKingdomItem> UnlockedKingdomItems { get; } = new();
-
-    public class StartKingdomItem : ViewModelBase
-    {
-        private readonly KingdomId _kingdom;
-        private readonly Episode _model;
-        public string KingdomName { get; }
-
-        public StartKingdomItem(Episode episode, KingdomId kingdom, string kingdomName)
-        {
-            _kingdom = kingdom;
-            _model = episode;
-            KingdomName = kingdomName;
-        }
-
-        public bool IsStartKingdom
-        {
-            get => _model.GetIsStartKingdom(_kingdom);
-            set => SetProperty(IsStartKingdom, value, v => _model.SetIsStartKingdom(_kingdom, v));
-        }
-    }
-
-    public class UnlockedKingdomItem : ViewModelBase
-    {
-        private readonly KingdomId _kingdom;
-        private readonly Episode _model;
-        public string KingdomName { get; }
-
-        public UnlockedKingdomItem(Episode episode, KingdomId kingdom, string kingdomName)
-        {
-            _kingdom = kingdom;
-            _model = episode;
-            KingdomName = kingdomName;
-        }
-
-        public bool IsUnlockedKingdom
-        {
-            get => _model.GetIsUnlockedKingdom(_kingdom);
-            set => SetProperty(IsUnlockedKingdom, value, v => _model.SetIsUnlockedKingdom(_kingdom, v));
-        }
-    }
-
+    public ObservableCollection<CheckBoxViewModel> IsStartKingdomItems { get; } = [];
+    public ObservableCollection<CheckBoxViewModel> IsUnlockedKingdomItems { get; } = [];
 }

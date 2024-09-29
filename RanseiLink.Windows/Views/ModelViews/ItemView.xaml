@@ -125,25 +125,18 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="Purchasable in Kingdom" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
-                <UniformGrid Columns="3">
-                    <CheckBox Content="Aurora" IsChecked="{Binding Purchasable_Aurora, Mode=TwoWay}"/>
-                    <CheckBox Content="Ignis" IsChecked="{Binding Purchasable_Ignis, Mode=TwoWay}"/>
-                    <CheckBox Content="Fontaine" IsChecked="{Binding Purchasable_Fontaine, Mode=TwoWay}"/>
-                    <CheckBox Content="Violight" IsChecked="{Binding Purchasable_Violight, Mode=TwoWay}"/>
-                    <CheckBox Content="Greenleaf" IsChecked="{Binding Purchasable_Greenleaf, Mode=TwoWay}"/>
-                    <CheckBox Content="Nixtorm" IsChecked="{Binding Purchasable_Nixtorm, Mode=TwoWay}"/>
-                    <CheckBox Content="Pugilis" IsChecked="{Binding Purchasable_Pugilis, Mode=TwoWay}"/>
-                    <CheckBox Content="Viperia" IsChecked="{Binding Purchasable_Viperia, Mode=TwoWay}"/>
-                    <CheckBox Content="Terrera" IsChecked="{Binding Purchasable_Terrera, Mode=TwoWay}"/>
-                    <CheckBox Content="Avia" IsChecked="{Binding Purchasable_Avia, Mode=TwoWay}"/>
-                    <CheckBox Content="Illusio" IsChecked="{Binding Purchasable_Illusio, Mode=TwoWay}"/>
-                    <CheckBox Content="Chrysalia" IsChecked="{Binding Purchasable_Chrysalia, Mode=TwoWay}"/>
-                    <CheckBox Content="Cragspur" IsChecked="{Binding Purchasable_Cragspur, Mode=TwoWay}"/>
-                    <CheckBox Content="Spectra" IsChecked="{Binding Purchasable_Spectra, Mode=TwoWay}"/>
-                    <CheckBox Content="Dragnor" IsChecked="{Binding Purchasable_Dragnor, Mode=TwoWay}"/>
-                    <CheckBox Content="Yakasha" IsChecked="{Binding Purchasable_Yakasha, Mode=TwoWay}"/>
-                    <CheckBox Content="Valora" IsChecked="{Binding Purchasable_Valora, Mode=TwoWay}"/>
-                </UniformGrid>
+                <ItemsControl ItemsSource="{Binding PurchasableItems}" Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Columns="3"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </GroupBox>
 
             <GroupBox Header="Description" Grid.Row="6" Grid.RowSpan="4" Grid.ColumnSpan="2">
