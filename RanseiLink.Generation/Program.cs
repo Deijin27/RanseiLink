@@ -16,7 +16,7 @@ internal class Program
         Dictionary<string, string> idsWithModels = [];
         foreach (var modelElement in models)
         {
-            if (modelElement.Elements().Any(x => x.Attribute("Name")?.Value == "Name") || modelElement.Attribute("Name")!.Value == "Episode")
+            if (modelElement.Elements().Any(x => x.Attribute("Name")?.Value == "Name"))
             {
                 var name = modelElement.Attribute("Name")!.Value;
                 var id = modelElement.Attribute("Id")?.Value ?? (name + "Id");
@@ -148,6 +148,7 @@ internal class Program
         sb.AppendLine("using RanseiLink.Core.Enums;");
         sb.AppendLine("using RanseiLink.Core.Graphics;");
         sb.AppendLine("using RanseiLink.Core.Models;");
+        sb.AppendLine("using RanseiLink.Core.Services;");
         sb.AppendLine();
         sb.AppendLine("namespace RanseiLink.GuiCore.ViewModels;");
         sb.AppendLine();
@@ -198,6 +199,21 @@ internal class Program
                 sb.AppendLine($"        get => _model.{propName};");
                 sb.AppendLine($"        set => SetProperty(_model.{propName}, value, v => _model.{propName} = v);");
                 sb.AppendLine("    }");
+            }
+            else if (propertyElement.Name == "MsgProperty")
+            {
+                var msgId = propertyElement.Attribute("Id")!.Value;
+                sb.AppendLine($"    public string {propName}");
+                sb.AppendLine("    {");
+                sb.AppendLine($"        get => _msgService.GetMsgOfType(MsgShortcut.{msgId}, Id);");
+                sb.AppendLine($"        set => _msgService.SetMsgOfType(MsgShortcut.{msgId}, Id, value);");
+                sb.AppendLine("    }");
+                /*
+                 public string Description
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
+    }*/
             }
         }
 

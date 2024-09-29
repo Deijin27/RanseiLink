@@ -29,17 +29,6 @@ public partial class ItemViewModel : ViewModelBase
 
     public ICommand JumpToItemCommand { get; }
 
-    public string Description
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription, Id, value);
-    }
-    public string Description2
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription2, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
-    }
-
     #region Purchasable
 
     public bool Purchasable_Aurora

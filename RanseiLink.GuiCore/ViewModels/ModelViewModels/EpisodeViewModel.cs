@@ -49,18 +49,6 @@ public partial class EpisodeViewModel : ViewModelBase
 
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
 
-    public string Name
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.EpisodeName, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeName, Id, value);
-    }
-
-    public string Description
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
-    }
-
     public ObservableCollection<StartKingdomItem> StartKingdomItems { get; } = new();
     public ObservableCollection<UnlockedKingdomItem> UnlockedKingdomItems { get; } = new();
 

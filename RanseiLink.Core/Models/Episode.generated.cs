@@ -82,4 +82,6 @@ public partial class Episode : BaseDataWindow
     {
         SetInt(1, 9 + id, 1, value ? 1 : 0);
     }
+
+
 }

@@ -144,4 +144,5 @@ public partial class Move : BaseDataWindow
         get => GetInt(6, 28, 4);
         set => SetInt(6, 28, 4, value);
     }
+
 }

@@ -5,6 +5,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -86,4 +87,16 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
     }
 
+
+    public string Description
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription, Id, value);
+    }
+
+    public string Description2
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription2, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
+    }
 }

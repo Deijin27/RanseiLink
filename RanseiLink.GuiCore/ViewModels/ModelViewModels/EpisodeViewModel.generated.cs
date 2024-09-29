@@ -5,6 +5,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -45,4 +46,16 @@ public partial class EpisodeViewModel : ViewModelBase
     }
 
 
+
+    public string Name
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.EpisodeName, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeName, Id, value);
+    }
+
+    public string Description
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
+    }
 }

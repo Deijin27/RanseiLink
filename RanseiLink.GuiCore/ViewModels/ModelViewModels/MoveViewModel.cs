@@ -87,12 +87,6 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(MovementFlag_DoubleMovementDistance, value, v => _model.MovementFlags ^= MoveMovementFlags.DoubleMovementDistance);
     }
 
-    public string Description
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.MoveDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.MoveDescription, Id, value);
-    }
-
     public ICommand JumpToMoveRangeCommand { get; }
 
     private string? _currentPreviewAnimationUri;

@@ -5,6 +5,9 @@
         <Property Index="4,  0, 5" Name="Effect1" Type="AbilityEffectId" />
         <Property Index="4,  5, 5" Name="Effect2" Type="AbilityEffectId" />
         <Property Index="4, 10, 2" Name="Effect2Amount" />
+		<MsgProperty Name="Description" Id="AbilityDescription"/>
+		<MsgProperty Name="HotSpringsDescription" Id="AbilityHotSpringsDescription"/>
+		<MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
     </Model>
     <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" ViewModel="true">
         <Property Index="0,  0, 8" Name="Sprite" />
@@ -56,6 +59,8 @@
         <Property Index="1, 26, 4" Name="ClearCondition" Type="EpisodeClearConditionId" />
 		<FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
 		<FlagProperty Index="1, 9" Name="IsUnlockedKingdom" IdType="KingdomId" />
+		<MsgProperty Name="Name" Id="EpisodeName"/>
+		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
 	<Model Name="GimmickObject" DataLength="0x4">
 	</Model>
@@ -74,6 +79,8 @@
         <Property Index="7,  9, 9" Name="ShopPriceMultiplier" />
         <Property Index="7, 18, 9" Name="QuantityForEffect" />
 		<FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
+		<MsgProperty Name="Description" Id="ItemDescription"/>
+		<MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
 	<Model Name="Move" DataLength="0x24" ViewModel="true">
 		<StringProperty Name="Name" Index="0" MaxLength="14"/>
@@ -98,6 +105,7 @@
 		<Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
 		<Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
 		<Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
+		<MsgProperty Name="Description" Id="MoveDescription"/>
 	</Model>
 	<Model Name="MoveAnimation" DataLength="0x4">
 		<Property Index="0,  0, 16" Name="UnknownA" />

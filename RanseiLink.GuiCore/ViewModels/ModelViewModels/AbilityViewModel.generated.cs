@@ -5,6 +5,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -42,5 +43,23 @@ public partial class AbilityViewModel : ViewModelBase
     {
         get => _model.Effect2Amount;
         set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
+    }
+
+    public string Description
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityDescription, Id, value);
+    }
+
+    public string HotSpringsDescription
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id, value);
+    }
+
+    public string HotSpringsDescription2
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
     }
 }

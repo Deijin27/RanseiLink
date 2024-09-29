@@ -5,6 +5,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -144,5 +145,11 @@ public partial class MoveViewModel : ViewModelBase
     {
         get => _model.UnknownValue_6_28_4;
         set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
+    }
+
+    public string Description
+    {
+        get => _msgService.GetMsgOfType(MsgShortcut.MoveDescription, Id);
+        set => _msgService.SetMsgOfType(MsgShortcut.MoveDescription, Id, value);
     }
 }

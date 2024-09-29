@@ -104,4 +104,6 @@ public partial class Item : BaseDataWindow
     {
         SetInt(8, 0 + id, 1, value ? 1 : 0);
     }
+
+
 }

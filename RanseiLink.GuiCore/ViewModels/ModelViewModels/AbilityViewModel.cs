@@ -31,24 +31,6 @@ public partial class AbilityViewModel : ViewModelBase
         RaiseAllPropertiesChanged();
     }
 
-    public string Description
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.AbilityDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityDescription, Id, value);
-    }
-
-    public string HotSpringsDescription
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id, value);
-    }
-
-    public string HotSpringsDescription2
-    {
-        get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
-    }
-
     private readonly ICommand _selectPokemonCommand;
 
     public List<PokemonMiniViewModel> PokemonWithAbility
