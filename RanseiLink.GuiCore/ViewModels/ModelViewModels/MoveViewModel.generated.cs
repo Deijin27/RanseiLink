@@ -10,7 +10,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class MoveViewModel : ViewModelBase
 {
-    private Move _model;
+    private Move _model = new();
 
     public string Name
     {

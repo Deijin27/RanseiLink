@@ -34,7 +34,6 @@ public partial class MoveViewModel : ViewModelBase
         _externalService = externalService;
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
-        _model = new Move();
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;

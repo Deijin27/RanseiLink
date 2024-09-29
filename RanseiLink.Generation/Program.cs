@@ -152,7 +152,7 @@ internal class Program
         sb.AppendLine();
         sb.AppendLine($"public partial class {name}ViewModel : ViewModelBase");
         sb.AppendLine("{");
-        sb.AppendLine($"    private {name} _model;");
+        sb.AppendLine($"    private {name} _model = new();");
         sb.AppendLine();
 
         bool first = true;

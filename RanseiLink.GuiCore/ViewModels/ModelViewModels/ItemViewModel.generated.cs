@@ -10,7 +10,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class ItemViewModel : ViewModelBase
 {
-    private Item _model;
+    private Item _model = new();
 
     public string Name
     {

@@ -23,7 +23,6 @@ public partial class BattleConfigViewModel : ViewModelBase
         IOverrideDataProvider overrideDataProvider,
         IMapViewerService mapViewerService)
     {
-        _model = new BattleConfig();
         _dialogService = dialogService;
         _overrideDataProvider = overrideDataProvider;
         _mapViewerService = mapViewerService;

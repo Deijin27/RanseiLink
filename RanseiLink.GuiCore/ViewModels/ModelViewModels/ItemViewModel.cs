@@ -12,7 +12,6 @@ public partial class ItemViewModel : ViewModelBase
     public ItemViewModel(ICachedMsgBlockService msgService, IJumpService jumpService, IIdToNameService idToNameService)
     {
         _msgService = msgService;
-        _model = new Item();
 
         JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
 

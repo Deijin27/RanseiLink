@@ -10,7 +10,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class PokemonViewModel : ViewModelBase
 {
-    private Pokemon _model;
+    private Pokemon _model = new();
 
     public string Name
     {

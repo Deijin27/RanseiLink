@@ -19,7 +19,6 @@ public partial class BaseWarriorViewModel : ViewModelBase
     public BaseWarriorViewModel(CopyPasteViewModel copyPasteVm, IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
         IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IAsyncDialogService dialogService)
     {
-        _model = new BaseWarrior();
         _dialogService = dialogService;
         _nameTable = baseWarriorService.NameTable;
         _spriteProvider = overrideSpriteProvider;

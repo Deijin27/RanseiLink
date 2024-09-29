@@ -10,7 +10,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class AbilityViewModel : ViewModelBase
 {
-    private Ability _model;
+    private Ability _model = new();
 
     public string Name
     {

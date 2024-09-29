@@ -21,7 +21,6 @@ public partial class AbilityViewModel : ViewModelBase
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
         _msgService = msgService;
-        _model = new Ability();
 
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
     }

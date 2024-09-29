@@ -10,7 +10,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class BattleConfigViewModel : ViewModelBase
 {
-    private BattleConfig _model;
+    private BattleConfig _model = new();
 
     public int Map
     {

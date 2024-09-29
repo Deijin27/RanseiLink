@@ -38,7 +38,6 @@ public partial class PokemonViewModel : ViewModelBase
         _itemService = itemService;
         _spriteProvider = spriteProvider;
         _dialogService = dialogService;
-        _model = new Pokemon();
 
         MoveItems = _idToNameService.GetComboBoxItemsExceptDefault<IMoveService>();
         AbilityItems = _idToNameService.GetComboBoxItemsPlusDefault<IAbilityService>();

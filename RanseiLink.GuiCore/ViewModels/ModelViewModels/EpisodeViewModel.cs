@@ -17,7 +17,6 @@ public partial class EpisodeViewModel : ViewModelBase
     {
         _idToNameService = idToNameService;
         _msgService = msgService;
-        _model = new Episode();
 
         UnlockConditionItems = episodeService
             .ValidIds()
