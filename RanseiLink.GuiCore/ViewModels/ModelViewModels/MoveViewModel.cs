@@ -18,7 +18,6 @@ public enum MoveAnimationPreviewMode
 public partial class MoveViewModel : ViewModelBase
 {
     private MoveId _id;
-    private Move _model;
     private readonly ICachedMsgBlockService _msgService;
     private readonly IExternalService _externalService;
     private readonly IPokemonService _pokemonService;

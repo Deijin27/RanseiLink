@@ -8,7 +8,6 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class ItemViewModel : ViewModelBase
 {
-    private Item _model;
     private readonly ICachedMsgBlockService _msgService;
     public ItemViewModel(ICachedMsgBlockService msgService, IJumpService jumpService, IIdToNameService idToNameService)
     {

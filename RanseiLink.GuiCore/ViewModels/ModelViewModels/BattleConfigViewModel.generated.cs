@@ -4,11 +4,14 @@
 
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Models;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class BattleConfigViewModel : ViewModelBase
 {
+    private BattleConfig _model;
+
     public int Map
     {
         get => _model.Map;

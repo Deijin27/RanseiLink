@@ -13,7 +13,6 @@ public partial class BaseWarriorViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
     private readonly IAsyncDialogService _dialogService;
-    private BaseWarrior _model;
     private WarriorNameTable _nameTable;
     private WarriorId _id;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;

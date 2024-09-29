@@ -4,11 +4,14 @@
 
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Models;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class EpisodeViewModel : ViewModelBase
 {
+    private Episode _model;
+
     public int Order
     {
         get => _model.Order;

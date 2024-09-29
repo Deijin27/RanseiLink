@@ -4,11 +4,14 @@
 
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Models;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class BaseWarriorViewModel : ViewModelBase
 {
+    private BaseWarrior _model;
+
     public int Sprite
     {
         get => _model.Sprite;

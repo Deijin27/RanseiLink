@@ -10,7 +10,6 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class PokemonViewModel : ViewModelBase
 {
-    private Pokemon _model;
     private readonly List<SelectorComboBoxItem> _evolutionEntryOptions;
     private readonly IIdToNameService _idToNameService;
     private readonly IKingdomService _kingdomService;

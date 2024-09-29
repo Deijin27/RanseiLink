@@ -4,11 +4,14 @@
 
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Models;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class ItemViewModel : ViewModelBase
 {
+    private Item _model;
+
     public string Name
     {
         get => _model.Name;

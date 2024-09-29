@@ -11,7 +11,6 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class BattleConfigViewModel : ViewModelBase
 {
-    private BattleConfig _model;
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IMapViewerService _mapViewerService;

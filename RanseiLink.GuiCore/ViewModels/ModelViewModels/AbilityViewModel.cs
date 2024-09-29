@@ -7,7 +7,6 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public partial class AbilityViewModel : ViewModelBase
 {
-    private Ability _model;
     private readonly ICachedMsgBlockService _msgService;
     private readonly IPokemonService _pokemonService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;

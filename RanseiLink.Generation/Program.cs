@@ -145,11 +145,14 @@ internal class Program
         sb.AppendLine();
         sb.AppendLine("using RanseiLink.Core.Enums;");
         sb.AppendLine("using RanseiLink.Core.Graphics;");
+        sb.AppendLine("using RanseiLink.Core.Models;");
         sb.AppendLine();
         sb.AppendLine("namespace RanseiLink.GuiCore.ViewModels;");
         sb.AppendLine();
         sb.AppendLine($"public partial class {name}ViewModel : ViewModelBase");
         sb.AppendLine("{");
+        sb.AppendLine($"    private {name} _model;");
+        sb.AppendLine();
 
         bool first = true;
         foreach (var propertyElement in modelElement.Elements())
