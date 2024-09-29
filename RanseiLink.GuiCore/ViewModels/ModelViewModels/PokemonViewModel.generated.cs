@@ -136,7 +136,8 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = v);
     }
 
-    public int MovementRange_Max => 7;
+    public int MovementRange_Max => 6;
+    public int MovementRange_Min => 1;
     public int MovementRange
     {
         get => _model.MovementRange;

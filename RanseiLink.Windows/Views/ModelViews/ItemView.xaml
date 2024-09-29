@@ -55,10 +55,10 @@
             <ComboBox Grid.Row="2" Grid.Column="1" SelectedItem="{Binding Effect}" ItemsSource="{x:Static const:EnumProvider.ItemEffectItems}"/>
 
             <TextBlock Text="Effect Duration" Grid.Row="3"/>
-            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding EffectDuration}" Max="7"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding EffectDuration}" Max="{Binding EffectDuration_Max}"/>
 
             <TextBlock Text="Quantity For Effect" Grid.Row="4"  />
-            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding QuantityForEffect}" Max="511"/>
+            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding QuantityForEffect}" Max="{Binding QuantityForEffect_Max}"/>
 
             <GroupBox Grid.Row="6" Header="Crafting" Grid.ColumnSpan="2" Grid.RowSpan="6">
                 <Grid Margin="5">
@@ -79,14 +79,14 @@
                     <ComboBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding CraftingIngredient1}" ItemsSource="{Binding ItemItems}" Style="{StaticResource SelectorComboBoxStyle}"/>
                     
                     <TextBlock Grid.Row="1" Text="Ingredient 1 Amount"/>
-                    <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding CraftingIngredient1Amount}" Max="127"/>
+                    <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding CraftingIngredient1Amount}" Max="{Binding CraftingIngredient1Amount_Max}"/>
                     
                     <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Ingredient 2" Grid.Row="2" ToolTip="Jump to selected item" 
                             Command="{Binding JumpToItemCommand}" CommandParameter="{Binding CraftingIngredient2}"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding CraftingIngredient2}" ItemsSource="{Binding ItemItems}" Style="{StaticResource SelectorComboBoxStyle}"/>
                     
                     <TextBlock Grid.Row="3" Text="Ingredient 2 Amount"/>
-                    <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding CraftingIngredient2Amount}" Max="127"/>
+                    <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding CraftingIngredient2Amount}" Max="{Binding CraftingIngredient2Amount_Max}"/>
 
                     <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Unknown Item" Grid.Row="4" ToolTip="Jump to selected item" 
                             Command="{Binding JumpToItemCommand}" CommandParameter="{Binding UnknownItem}"/>
@@ -98,7 +98,7 @@
             <ComboBox Grid.Row="12" Grid.Column="1" SelectedItem="{Binding PurchaseMethod}" ItemsSource="{x:Static const:EnumProvider.PurchaseMethodItems}"/>
 
             <TextBlock Text="Shop Price Multiplier" Grid.Row="13" ToolTip="Max shop price / 100" />
-            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="511"/>
+            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding ShopPriceMultiplier}" Max="{Binding ShopPriceMultiplier_Max}"/>
 
         </Grid>
         <Grid Margin="10">

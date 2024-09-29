@@ -63,7 +63,7 @@
             
 
             <TextBlock Text="Number of Turns" Grid.Row="1"/>
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="31"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="{Binding NumberOfTurns_Max}"/>
 
             <TextBlock Text="Upper Atmosphere Color" Grid.Row="2"/>
             <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="2" ShowAlpha="False" 
@@ -173,13 +173,13 @@
             </GroupBox>
 
             <TextBlock Grid.Row="12">Minimap</TextBlock>
-            <controls:NumberBox Value="{Binding Minimap}" Grid.Row="12" Grid.Column="1"/>
+            <controls:NumberBox Value="{Binding Minimap}" Grid.Row="12" Grid.Column="1" Max="{Binding Minimap_Max}"/>
 
             <TextBlock Grid.Row="13">Minimap Variant</TextBlock>
-            <controls:NumberBox Value="{Binding MinimapVariant}" Grid.Row="13" Grid.Column="1"/>
+            <controls:NumberBox Value="{Binding MinimapVariant}" Grid.Row="13" Grid.Column="1" Max="{Binding MinimapVariant_Max}"/>
 
             <TextBlock Grid.Row="14">Unknown</TextBlock>
-            <controls:NumberBox Value="{Binding Unknown}" Grid.Row="14" Grid.Column="1"/>
+            <controls:NumberBox Value="{Binding Unknown}" Grid.Row="14" Grid.Column="1" Max="{Binding Unknown_Max}"/>
 
             <Image Grid.Row="15" Grid.ColumnSpan="2" Width="128" Height="96" Stretch="None" Source="{Binding MinimapSpritePath, Converter={StaticResource Converter.PathToImage}}"/>
         </Grid>

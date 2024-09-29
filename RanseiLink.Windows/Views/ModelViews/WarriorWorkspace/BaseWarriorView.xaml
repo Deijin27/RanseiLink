@@ -50,7 +50,7 @@
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior Name" Grid.Row="0" ToolTip="Jump to selected warrior name" 
         Command="{Binding JumpToWarriorNameCommand}" CommandParameter="{Binding WarriorName}"/>
             <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1">
-                <controls:NumberBox Width="80"  Value="{Binding WarriorName, Mode=TwoWay}" Max="209"/>
+                <controls:NumberBox Width="80"  Value="{Binding WarriorName, Mode=TwoWay}" Max="{Binding WarriorName_Max}"/>
                 <TextBlock Text="{Binding WarriorNameValue}"/>
             </UniformGrid>
             
@@ -84,16 +84,16 @@
             <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding WarriorSkillItems}" SelectedValue="{Binding Skill, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Power" Grid.Row="9" />
-            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="127"/>
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Power, Mode=TwoWay}" Max="{Binding Power_Max}"/>
 
             <TextBlock Text="Wisdom" Grid.Row="10" />
-            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="127"/>
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Wisdom, Mode=TwoWay}" Max="{Binding Wisdom_Max}"/>
 
             <TextBlock Text="Charisma" Grid.Row="11" />
-            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="127"/>
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Charisma, Mode=TwoWay}" Max="{Binding Charisma_Max}"/>
 
             <TextBlock Text="Capacity" Grid.Row="12" />
-            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="8"/>
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Capacity, Mode=TwoWay}" Max="{Binding Capacity_Max}"/>
 
             <TextBlock Text="Gender" Grid.Row="13"/>
             <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GenderItems}" SelectedItem="{Binding Gender, Mode=TwoWay}"/>
@@ -135,7 +135,7 @@
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="100"/>
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="{Binding RankUpLink_Max}"/>
 
             <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
                 <Grid>

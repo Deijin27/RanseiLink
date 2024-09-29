@@ -134,7 +134,7 @@
         <Property Index=" 6, 18,  8" Name="Ability3" Type="AbilityId" />
         <Property Index=" 7,  0,  9" Name="QuantityForEvolutionCondition1" />
         <Property Index=" 7, 18,  9" Name="QuantityForEvolutionCondition2" />
-        <Property Index=" 7, 27,  3" Name="MovementRange" />
+        <Property Index=" 7, 27,  3" Name="MovementRange" Min="1" Max="6"/>
         <Property Index=" 8,  0, 11" Name="MinEvolutionTableEntry" />
         <Property Index=" 8, 11, 11" Name="MaxEvolutionTableEntry" />
         <Property Index=" 8, 22, 10" Name="NationalPokedexNumber" />

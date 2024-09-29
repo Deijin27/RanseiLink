@@ -47,7 +47,7 @@
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" />
 
             <TextBlock Text="Order" Grid.Row="1"/>
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Order}" Max="511"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Order}" Max="{Binding Order_Max}"/>
 
             <TextBlock Text="Scenario" Grid.Row="2" />
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ScenarioItems}" SelectedItem="{Binding Scenario, Mode=TwoWay}"/>
@@ -59,7 +59,7 @@
             <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding ClearConditionItems}" SelectedItem="{Binding ClearCondition, Mode=TwoWay}"/>
 
             <TextBlock Text="Difficulty" Grid.Row="5" />
-            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding Difficulty}" Max="4"/>
+            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding Difficulty}" Max="{Binding Difficulty_Max}"/>
 
             <GroupBox Header="Description" Grid.Row="6" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>

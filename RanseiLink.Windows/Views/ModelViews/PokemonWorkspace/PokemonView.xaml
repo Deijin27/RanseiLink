@@ -92,26 +92,26 @@
             <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding AbilityItems}" SelectedValue="{Binding Ability3, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="HP" Grid.Row="7" />
-            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Hp, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Hp, Mode=TwoWay}" Max="{Binding Hp_Max}"/>
 
             <TextBlock Text="Atk" Grid.Row="8" />
-            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Atk, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Atk, Mode=TwoWay}" Max="{Binding Atk_Max}"/>
 
             <TextBlock Text="Def" Grid.Row="9" />
-            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Def, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Def, Mode=TwoWay}" Max="{Binding Def_Max}"/>
 
             <TextBlock Text="Spe" Grid.Row="10" />
-            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Spe, Mode=TwoWay}" Max="{Binding Spe_Max}"/>
 
             <TextBlock Text="Movement Range" Grid.Row="11"/>
-            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding MovementRange, Mode=TwoWay}" Min="1" Max="6"/>
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding MovementRange, Mode=TwoWay}" Min="{Binding MovementRange_Min}" Max="{Binding MovementRange_Max}"/>
 
             <TextBlock Text="National Dex Number" Grid.Row="12" Grid.Column="0" />
-            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="{Binding NationalPokedexNumber_Max}"/>
 
             <!-- Have some option to auto generate name order index, changing it for all pokemon -->
             <TextBlock Text="Name Order Index" Grid.Row="13" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="511"/>
+            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="{Binding NameOrderIndex_Max}"/>
 
             <TextBlock Text="Idle Motion" Grid.Row="14" Grid.Column="0"/>
             <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
@@ -138,16 +138,16 @@
             <CheckBox VerticalAlignment="Center" Grid.Row="22" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
 
             <TextBlock Text="Catch Rate" Grid.Row="23" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="23" Grid.Column="1" Value="{Binding CatchRate}" Max="255"/>
+            <controls:NumberBox Grid.Row="23" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>
 
             <TextBlock Text="Unknown Anim. Val." Grid.Row="24" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="24" Grid.Column="1" Value="{Binding UnknownAnimationValue}"/>
+            <controls:NumberBox Grid.Row="24" Grid.Column="1" Value="{Binding UnknownAnimationValue}" Max="{Binding UnknownAnimationValue_Max}"/>
 
             <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="25" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="25" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}"/>
+            <controls:NumberBox Grid.Row="25" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}" Max="{Binding BattleIntroSpriteOffset_Max}"/>
 
             <TextBlock Text="Unknown ?Weight?" Grid.Row="26" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="26" Grid.Column="1" Value="{Binding Weight}"/>
+            <controls:NumberBox Grid.Row="26" Grid.Column="1" Value="{Binding Weight}" Max="{Binding Weight_Max}"/>
 
         </Grid>
 
