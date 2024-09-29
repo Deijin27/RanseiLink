@@ -214,6 +214,7 @@ internal class Program
             else if (propertyElement.Name == "StringProperty")
             {
                 sb.AppendLine();
+                sb.AppendLine($"    public int {propName}_MaxLength => {propertyElement.Attribute("MaxLength")!.Value};");
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        get => _model.{propName};");

@@ -53,7 +53,7 @@
             </Grid.Resources>
 
             <TextBlock Text="Name" Grid.Row="0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
 
             <TextBlock Text="Effect1" Grid.Row="1"/>
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>

@@ -16,6 +16,7 @@ public partial class PokemonViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
+    public int Name_MaxLength => 10;
     public string Name
     {
         get => _model.Name;
