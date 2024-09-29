@@ -22,6 +22,9 @@ internal class Program
                 idsWithModels[name + "Id"] = name;
             }
         }
+        idsWithModels["WarriorSkillId"] = "WarriorSkill";
+        idsWithModels["WarriorId"] = "BaseWarrior";
+        idsWithModels["SpeakerId"] = "Speaker";
 
         foreach (var modelElement in models)
         {

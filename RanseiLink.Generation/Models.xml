@@ -6,7 +6,7 @@
         <Property Index="4,  5, 5" Name="Effect2" Type="AbilityEffectId" />
         <Property Index="4, 10, 2" Name="Effect2Amount" />
     </Model>
-    <Model Name="BaseWarrior" DataLength="0x14">
+    <Model Name="BaseWarrior" DataLength="0x14" ViewModel="true">
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
