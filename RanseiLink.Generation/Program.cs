@@ -19,7 +19,8 @@ internal class Program
             if (modelElement.Elements().Any(x => x.Attribute("Name")?.Value == "Name") || modelElement.Attribute("Name")!.Value == "Episode")
             {
                 var name = modelElement.Attribute("Name")!.Value;
-                idsWithModels[name + "Id"] = name;
+                var id = modelElement.Attribute("Id")?.Value ?? (name + "Id");
+                idsWithModels[id] = name;
             }
         }
         idsWithModels["WarriorSkillId"] = "WarriorSkill";
