@@ -15,6 +15,7 @@ public partial class MoveViewModel : ViewModelBase
     private MoveId _id;
     public int Id => (int)_id;
 
+
     public string Name
     {
         get => _model.Name;
@@ -33,6 +34,7 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Type, value, v => _model.Type = v);
     }
 
+    public int Power_Max => 255;
     public int Power
     {
         get => _model.Power;
@@ -45,6 +47,7 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
+    public int Effect1Chance_Max => 127;
     public int Effect1Chance
     {
         get => _model.Effect1Chance;
@@ -63,6 +66,7 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
+    public int Effect2Chance_Max => 127;
     public int Effect2Chance
     {
         get => _model.Effect2Chance;
@@ -75,6 +79,7 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect3, value, v => _model.Effect3 = v);
     }
 
+    public int Effect3Chance_Max => 127;
     public int Effect3Chance
     {
         get => _model.Effect3Chance;
@@ -87,12 +92,14 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect4, value, v => _model.Effect4 = v);
     }
 
+    public int Effect4Chance_Max => 127;
     public int Effect4Chance
     {
         get => _model.Effect4Chance;
         set => SetProperty(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
     }
 
+    public int Accuracy_Max => 127;
     public int Accuracy
     {
         get => _model.Accuracy;
@@ -141,6 +148,7 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
     }
 
+    public int UnknownValue_6_28_4_Max => 15;
     public int UnknownValue_6_28_4
     {
         get => _model.UnknownValue_6_28_4;

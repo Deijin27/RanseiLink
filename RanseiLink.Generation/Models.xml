@@ -13,7 +13,7 @@
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
-        <Property Index="0, 17, 8" Name="WarriorName" />
+        <Property Index="0, 17, 8" Name="WarriorName" Max="209"/>
         <Property Index="1,  0, 5" Name="Speciality1" Type="TypeId" />
         <Property Index="1,  5, 5" Name="Speciality2" Type="TypeId" />
         <Property Index="1, 10, 5" Name="Weakness1" Type="TypeId" />
@@ -22,7 +22,7 @@
         <Property Index="3,  0, 7" Name="Power" />
         <Property Index="3,  7, 7" Name="Wisdom" />
         <Property Index="3, 14, 7" Name="Charisma" />
-        <Property Index="3, 21, 4" Name="Capacity" />
+        <Property Index="3, 21, 4" Name="Capacity" Max="8"/>
         <Property Index="2, 24, 4" Name="RankUpCondition1" Type="RankUpConditionId" />
         <Property Index="2, 28, 4" Name="RankUpCondition2" Type="RankUpConditionId" />
         <Property Index="4,  9, 9" Name="Quantity1ForRankUpCondition"/>
@@ -30,7 +30,7 @@
         <Property Index="2, 15, 9" Name="RankUp" Type="WarriorId"/>
         <Property Index="1, 20, 9" Name="RankUpPokemon1" Type="PokemonId"/>
         <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
-        <Property Index="0, 25, 7" Name="RankUpLink"/>
+        <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
     </Model>
     <Model Name="BattleConfig" DataLength="0x18" ViewModel="true">
         <Property Index="0,  0,  6" Name="Map" />
@@ -55,7 +55,7 @@
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
-        <Property Index="1,  6, 3" Name="Difficulty" />
+        <Property Index="1,  6, 3" Name="Difficulty" Max="4"/>
         <Property Index="1, 26, 4" Name="ClearCondition" Type="EpisodeClearConditionId" />
 		<FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
 		<FlagProperty Index="1, 9" Name="IsUnlockedKingdom" IdType="KingdomId" />

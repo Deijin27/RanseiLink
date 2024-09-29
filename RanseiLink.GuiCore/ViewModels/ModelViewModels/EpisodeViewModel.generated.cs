@@ -15,6 +15,8 @@ public partial class EpisodeViewModel : ViewModelBase
     private EpisodeId _id;
     public int Id => (int)_id;
 
+
+    public int Order_Max => 511;
     public int Order
     {
         get => _model.Order;
@@ -33,6 +35,7 @@ public partial class EpisodeViewModel : ViewModelBase
         set => SetProperty(_model.UnlockCondition, (EpisodeId)value, v => _model.UnlockCondition = v);
     }
 
+    public int Difficulty_Max => 4;
     public int Difficulty
     {
         get => _model.Difficulty;
@@ -44,8 +47,6 @@ public partial class EpisodeViewModel : ViewModelBase
         get => _model.ClearCondition;
         set => SetProperty(_model.ClearCondition, value, v => _model.ClearCondition = v);
     }
-
-
 
     public string Name
     {

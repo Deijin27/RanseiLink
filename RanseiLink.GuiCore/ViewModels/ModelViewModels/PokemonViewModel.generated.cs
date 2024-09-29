@@ -15,12 +15,14 @@ public partial class PokemonViewModel : ViewModelBase
     private PokemonId _id;
     public int Id => (int)_id;
 
+
     public string Name
     {
         get => _model.Name;
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Hp_Max => 511;
     public int Hp
     {
         get => _model.Hp;
@@ -45,18 +47,21 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.IdleMotion, value, v => _model.IdleMotion = v);
     }
 
+    public int Atk_Max => 511;
     public int Atk
     {
         get => _model.Atk;
         set => SetProperty(_model.Atk, value, v => _model.Atk = v);
     }
 
+    public int Def_Max => 511;
     public int Def
     {
         get => _model.Def;
         set => SetProperty(_model.Def, value, v => _model.Def = v);
     }
 
+    public int Spe_Max => 511;
     public int Spe
     {
         get => _model.Spe;
@@ -117,66 +122,77 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
+    public int QuantityForEvolutionCondition1_Max => 511;
     public int QuantityForEvolutionCondition1
     {
         get => _model.QuantityForEvolutionCondition1;
         set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = v);
     }
 
+    public int QuantityForEvolutionCondition2_Max => 511;
     public int QuantityForEvolutionCondition2
     {
         get => _model.QuantityForEvolutionCondition2;
         set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = v);
     }
 
+    public int MovementRange_Max => 7;
     public int MovementRange
     {
         get => _model.MovementRange;
         set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = v);
     }
 
+    public int MinEvolutionTableEntry_Max => 2047;
     public int MinEvolutionTableEntry
     {
         get => _model.MinEvolutionTableEntry;
         set => SetProperty(_model.MinEvolutionTableEntry, value, v => _model.MinEvolutionTableEntry = v);
     }
 
+    public int MaxEvolutionTableEntry_Max => 2047;
     public int MaxEvolutionTableEntry
     {
         get => _model.MaxEvolutionTableEntry;
         set => SetProperty(_model.MaxEvolutionTableEntry, value, v => _model.MaxEvolutionTableEntry = v);
     }
 
+    public int NationalPokedexNumber_Max => 1023;
     public int NationalPokedexNumber
     {
         get => _model.NationalPokedexNumber;
         set => SetProperty(_model.NationalPokedexNumber, value, v => _model.NationalPokedexNumber = v);
     }
 
+    public int NameOrderIndex_Max => 255;
     public int NameOrderIndex
     {
         get => _model.NameOrderIndex;
         set => SetProperty(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
     }
 
+    public int CatchRate_Max => 255;
     public int CatchRate
     {
         get => _model.CatchRate;
         set => SetProperty(_model.CatchRate, value, v => _model.CatchRate = v);
     }
 
+    public int UnknownAnimationValue_Max => 15;
     public int UnknownAnimationValue
     {
         get => _model.UnknownAnimationValue;
         set => SetProperty(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
     }
 
+    public int BattleIntroSpriteOffset_Max => 7;
     public int BattleIntroSpriteOffset
     {
         get => _model.BattleIntroSpriteOffset;
         set => SetProperty(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
     }
 
+    public int Weight_Max => 7;
     public int Weight
     {
         get => _model.Weight;

@@ -15,30 +15,36 @@ public partial class BattleConfigViewModel : ViewModelBase
     private BattleConfigId _id;
     public int Id => (int)_id;
 
+
+    public int Map_Max => 63;
     public int Map
     {
         get => _model.Map;
         set => SetProperty(_model.Map, value, v => _model.Map = v);
     }
 
+    public int MapVariant_Max => 31;
     public int MapVariant
     {
         get => _model.MapVariant;
         set => SetProperty(_model.MapVariant, value, v => _model.MapVariant = v);
     }
 
+    public int Minimap_Max => 31;
     public int Minimap
     {
         get => _model.Minimap;
         set => SetProperty(_model.Minimap, value, v => _model.Minimap = v);
     }
 
+    public int MinimapVariant_Max => 7;
     public int MinimapVariant
     {
         get => _model.MinimapVariant;
         set => SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = v);
     }
 
+    public int Unknown_Max => 63;
     public int Unknown
     {
         get => _model.Unknown;
@@ -75,6 +81,7 @@ public partial class BattleConfigViewModel : ViewModelBase
         set => SetProperty(_model.DefeatCondition, value, v => _model.DefeatCondition = v);
     }
 
+    public int NumberOfTurns_Max => 31;
     public int NumberOfTurns
     {
         get => _model.NumberOfTurns;

@@ -15,6 +15,7 @@ public partial class ItemViewModel : ViewModelBase
     private ItemId _id;
     public int Id => (int)_id;
 
+
     public string Name
     {
         get => _model.Name;
@@ -39,6 +40,7 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
+    public int EffectDuration_Max => 7;
     public int EffectDuration
     {
         get => _model.EffectDuration;
@@ -51,6 +53,7 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.CraftingIngredient1, (ItemId)value, v => _model.CraftingIngredient1 = v);
     }
 
+    public int CraftingIngredient1Amount_Max => 127;
     public int CraftingIngredient1Amount
     {
         get => _model.CraftingIngredient1Amount;
@@ -63,6 +66,7 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.CraftingIngredient2, (ItemId)value, v => _model.CraftingIngredient2 = v);
     }
 
+    public int CraftingIngredient2Amount_Max => 127;
     public int CraftingIngredient2Amount
     {
         get => _model.CraftingIngredient2Amount;
@@ -75,18 +79,19 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.UnknownItem, (ItemId)value, v => _model.UnknownItem = v);
     }
 
+    public int ShopPriceMultiplier_Max => 511;
     public int ShopPriceMultiplier
     {
         get => _model.ShopPriceMultiplier;
         set => SetProperty(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
     }
 
+    public int QuantityForEffect_Max => 511;
     public int QuantityForEffect
     {
         get => _model.QuantityForEffect;
         set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
     }
-
 
     public string Description
     {

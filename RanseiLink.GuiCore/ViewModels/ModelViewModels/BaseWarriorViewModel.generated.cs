@@ -15,6 +15,8 @@ public partial class BaseWarriorViewModel : ViewModelBase
     private WarriorId _id;
     public int Id => (int)_id;
 
+
+    public int Sprite_Max => 255;
     public int Sprite
     {
         get => _model.Sprite;
@@ -33,6 +35,7 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Gender, value, v => _model.Gender = v);
     }
 
+    public int WarriorName_Max => 209;
     public int WarriorName
     {
         get => _model.WarriorName;
@@ -69,24 +72,28 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Skill, (WarriorSkillId)value, v => _model.Skill = v);
     }
 
+    public int Power_Max => 127;
     public int Power
     {
         get => _model.Power;
         set => SetProperty(_model.Power, value, v => _model.Power = v);
     }
 
+    public int Wisdom_Max => 127;
     public int Wisdom
     {
         get => _model.Wisdom;
         set => SetProperty(_model.Wisdom, value, v => _model.Wisdom = v);
     }
 
+    public int Charisma_Max => 127;
     public int Charisma
     {
         get => _model.Charisma;
         set => SetProperty(_model.Charisma, value, v => _model.Charisma = v);
     }
 
+    public int Capacity_Max => 8;
     public int Capacity
     {
         get => _model.Capacity;
@@ -105,12 +112,14 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = v);
     }
 
+    public int Quantity1ForRankUpCondition_Max => 511;
     public int Quantity1ForRankUpCondition
     {
         get => _model.Quantity1ForRankUpCondition;
         set => SetProperty(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = v);
     }
 
+    public int Quantity2ForRankUpCondition_Max => 511;
     public int Quantity2ForRankUpCondition
     {
         get => _model.Quantity2ForRankUpCondition;
@@ -135,6 +144,7 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
     }
 
+    public int RankUpLink_Max => 100;
     public int RankUpLink
     {
         get => _model.RankUpLink;

@@ -15,12 +15,14 @@ public partial class AbilityViewModel : ViewModelBase
     private AbilityId _id;
     public int Id => (int)_id;
 
+
     public string Name
     {
         get => _model.Name;
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Effect1Amount_Max => 3;
     public int Effect1Amount
     {
         get => _model.Effect1Amount;
@@ -39,6 +41,7 @@ public partial class AbilityViewModel : ViewModelBase
         set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
+    public int Effect2Amount_Max => 3;
     public int Effect2Amount
     {
         get => _model.Effect2Amount;

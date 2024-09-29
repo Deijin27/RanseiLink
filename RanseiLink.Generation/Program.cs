@@ -161,19 +161,36 @@ internal class Program
         sb.AppendLine($"    public int Id => (int)_id;");
         sb.AppendLine();
 
-        bool first = true;
         foreach (var propertyElement in modelElement.Elements())
         {
             var propName = propertyElement.Attribute("Name")!.Value;
-            if (!first)
-            {
-                sb.AppendLine();
-            }
-            first = false;
-
+            
             if (propertyElement.Name == "Property")
             {
+                sb.AppendLine();
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
+                if (propType == "int")
+                {
+                    int max;
+                    var maxEl = propertyElement.Attribute("Max");
+                    if (maxEl != null)
+                    {
+                        max = int.Parse(maxEl.Value);
+                    }
+                    else
+                    {
+                        var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
+                        var bitCount = int.Parse(index.Split(',')[^1].Trim());
+                        max = ~(-1 << bitCount);
+                    }
+                    sb.AppendLine($"    public int {propName}_Max => {max};");
+
+                    var minEl = propertyElement.Attribute("Min");
+                    if (minEl != null)
+                    {
+                        sb.AppendLine($"    public int {propName}_Min => {int.Parse(minEl.Value)};");
+                    }
+                }
                 if (idsWithModels.TryGetValue(propType, out var model))
                 {
                     sb.AppendLine($"    public int {propName}");
@@ -196,6 +213,7 @@ internal class Program
             }
             else if (propertyElement.Name == "StringProperty")
             {
+                sb.AppendLine();
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        get => _model.{propName};");
@@ -204,6 +222,7 @@ internal class Program
             }
             else if (propertyElement.Name == "MsgProperty")
             {
+                sb.AppendLine();
                 var msgId = propertyElement.Attribute("Id")!.Value;
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
