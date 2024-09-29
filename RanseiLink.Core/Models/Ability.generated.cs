@@ -42,7 +42,4 @@ public partial class Ability : BaseDataWindow
         get => GetInt(4, 10, 2);
         set => SetInt(4, 10, 2, value);
     }
-
-
-
 }

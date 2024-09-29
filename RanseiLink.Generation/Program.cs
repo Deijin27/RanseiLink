@@ -61,12 +61,12 @@ internal class Program
         foreach (var propertyElement in modelElement.Elements())
         {
             var propName = propertyElement.Attribute("Name")!.Value;
-            sb.AppendLine();
             if (propertyElement.Name == "Property")
             {
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
                 var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
 
+                sb.AppendLine();
                 sb.AppendLine($"    public {propType} {propName}");
                 sb.AppendLine("    {");
                 if (propType == "bool")
@@ -91,6 +91,7 @@ internal class Program
                 var idType = propertyElement.Attribute("IdType")?.Value ?? "int";
                 var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
 
+                sb.AppendLine();
                 if (idType != "int")
                 {
                     sb.AppendLine($"    public bool Get{propName}({idType} id)");
@@ -122,6 +123,7 @@ internal class Program
             {
                 var index = propertyElement.Attribute("Index")!.Value;
                 var maxLength = propertyElement.Attribute("MaxLength")!.Value;
+                sb.AppendLine();
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        get => GetPaddedUtf8String({index}, {maxLength});");
