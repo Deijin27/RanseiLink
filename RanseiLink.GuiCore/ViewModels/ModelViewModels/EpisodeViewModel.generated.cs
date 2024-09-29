@@ -12,6 +12,7 @@ public partial class EpisodeViewModel : ViewModelBase
 {
     private Episode _model = new();
     private EpisodeId _id;
+    public int Id => (int)_id;
 
     public int Order
     {

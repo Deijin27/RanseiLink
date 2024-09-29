@@ -69,14 +69,12 @@ public partial class BattleConfigViewModel : ViewModelBase
 
     public void SetModel(BattleConfigId id, BattleConfig model)
     {
-        Id = id;
+        _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
 
     public ICommand View3DModelCommand { get; }
-
-    public BattleConfigId Id { get; private set; }
 
     public MapId MapId
     {
@@ -247,6 +245,6 @@ public partial class BattleConfigViewModel : ViewModelBase
 
     public async void View3DModel()
     {
-        await _mapViewerService.ShowDialog(Id);
+        await _mapViewerService.ShowDialog(_id);
     }
 }

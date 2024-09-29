@@ -12,6 +12,7 @@ public partial class AbilityViewModel : ViewModelBase
 {
     private Ability _model = new();
     private AbilityId _id;
+    public int Id => (int)_id;
 
     public string Name
     {

@@ -29,7 +29,6 @@ public partial class EpisodeViewModel : ViewModelBase
     public void SetModel(EpisodeId id, Episode model)
     {
         _id = id;
-        Id = (int)id;
         _model = model;
 
         StartKingdomItems.Clear();
@@ -43,8 +42,6 @@ public partial class EpisodeViewModel : ViewModelBase
 
         RaiseAllPropertiesChanged();
     }
-
-    public int Id { get; private set; }
 
     public List<ScenarioId> ScenarioItems { get; } = EnumUtil.GetValues<ScenarioId>().ToList();
 

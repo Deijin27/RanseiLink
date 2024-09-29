@@ -64,13 +64,10 @@ public partial class MoveViewModel : ViewModelBase
     public void SetModel(MoveId id, Move model)
     {
         _id = id;
-        Id = (int)id;
         _model = model;
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }
-
-    public int Id { get; private set; }
 
     public bool MovementFlag_MovementOrKnockback
     {

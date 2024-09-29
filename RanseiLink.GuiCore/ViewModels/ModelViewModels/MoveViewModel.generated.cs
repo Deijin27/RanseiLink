@@ -12,6 +12,7 @@ public partial class MoveViewModel : ViewModelBase
 {
     private Move _model = new();
     private MoveId _id;
+    public int Id => (int)_id;
 
     public string Name
     {

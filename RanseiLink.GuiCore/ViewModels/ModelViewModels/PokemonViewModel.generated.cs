@@ -12,6 +12,7 @@ public partial class PokemonViewModel : ViewModelBase
 {
     private Pokemon _model = new();
     private PokemonId _id;
+    public int Id => (int)_id;
 
     public string Name
     {

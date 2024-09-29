@@ -27,12 +27,9 @@ public partial class AbilityViewModel : ViewModelBase
     public void SetModel(AbilityId id, Ability model)
     {
         _id = id;
-        Id = (int)id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
-
-    public int Id { get; private set; }
 
     public string Description
     {

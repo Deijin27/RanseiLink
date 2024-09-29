@@ -12,6 +12,7 @@ public partial class BattleConfigViewModel : ViewModelBase
 {
     private BattleConfig _model = new();
     private BattleConfigId _id;
+    public int Id => (int)_id;
 
     public int Map
     {

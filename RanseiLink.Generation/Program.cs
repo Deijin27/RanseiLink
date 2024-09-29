@@ -155,6 +155,7 @@ internal class Program
         sb.AppendLine("{");
         sb.AppendLine($"    private {name} _model = new();");
         sb.AppendLine($"    private {id} _id;");
+        sb.AppendLine($"    public int Id => (int)_id;");
         sb.AppendLine();
 
         bool first = true;

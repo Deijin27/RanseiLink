@@ -21,7 +21,6 @@ public partial class ItemViewModel : ViewModelBase
     public void SetModel(ItemId id, Item model)
     {
         _id = id;
-        Id = (int)id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
@@ -29,8 +28,6 @@ public partial class ItemViewModel : ViewModelBase
     public List<SelectorComboBoxItem> ItemItems { get; }
 
     public ICommand JumpToItemCommand { get; }
-
-    public int Id { get; private set; }
 
     public string Description
     {

@@ -12,6 +12,7 @@ public partial class ItemViewModel : ViewModelBase
 {
     private Item _model = new();
     private ItemId _id;
+    public int Id => (int)_id;
 
     public string Name
     {
