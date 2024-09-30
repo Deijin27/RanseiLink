@@ -7,42 +7,21 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class AppearItem : ViewModelBase
+public class ScenarioAppearPokemonViewModel(IIdToNameService idToNameService) : ViewModelBase
 {
-    private readonly ScenarioAppearPokemon _model;
-    private readonly PokemonId _id;
-    public AppearItem(ScenarioAppearPokemon model, PokemonId id, string pokemonName)
-    {
-        _model = model;
-        _id = id;
-        Pokemon = pokemonName;
-    }
-
-    public bool CanAppear
-    {
-        get => _model.GetCanAppear(_id);
-        set => SetProperty(CanAppear, value, v => _model.SetCanAppear(_id, v));
-    }
-
-    public string Pokemon { get; set; }
-}
-
-public class ScenarioAppearPokemonViewModel : ViewModelBase
-{
-    private readonly IIdToNameService _idToNameService;
-    public ScenarioAppearPokemonViewModel(IIdToNameService idToNameService)
-    {
-        _idToNameService = idToNameService;
-    }
-
     public void SetModel(ScenarioAppearPokemon model)
     {
         AppearItems.Clear();
-        foreach (var item in EnumUtil.GetValuesExceptDefaults<PokemonId>().Select(i => new AppearItem(model, i, _idToNameService.IdToName<IPokemonService>((int)i))))
+        foreach (var id in EnumUtil.GetValuesExceptDefaults<PokemonId>())
         {
-            AppearItems.Add(item);  
+            var name = idToNameService.IdToName<IPokemonService>((int)id);
+            var vm = new CheckBoxViewModel(name, 
+                () => model.GetCanAppear(id),
+                v => model.SetCanAppear(id, v)
+                );
+            AppearItems.Add(vm);  
         }
     }
 
-    public ObservableCollection<AppearItem> AppearItems { get; } = new();
+    public ObservableCollection<CheckBoxViewModel> AppearItems { get; } = [];
 }

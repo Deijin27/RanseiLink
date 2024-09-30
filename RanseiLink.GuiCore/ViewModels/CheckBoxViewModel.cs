@@ -1,6 +1,6 @@
 ﻿namespace RanseiLink.GuiCore.ViewModels;
 
-public class CheckBoxViewModel
+public class CheckBoxViewModel : ViewModelBase
 {
     private readonly Func<bool> _getValue;
     private readonly Action<bool> _setValue;
@@ -16,6 +16,13 @@ public class CheckBoxViewModel
     public bool IsChecked
     {
         get => _getValue();
-        set => _setValue(value);
+        set
+        {
+            if (value != IsChecked)
+            {
+                _setValue(value);
+                RaisePropertyChanged();
+            }
+        }
     }
 }

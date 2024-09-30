@@ -11,8 +11,8 @@
     <Grid>
         <ItemsControl Margin="10" ItemsSource="{Binding AppearItems, Mode=OneTime}" Style="{StaticResource ItemsControlVirtualizedStyle}">
             <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type vm:AppearItem}">
-                    <CheckBox Margin="2" IsChecked="{Binding CanAppear, Mode=TwoWay}" Content="{Binding Pokemon}"/>
+                <DataTemplate>
+                    <CheckBox Margin="2" IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{Binding Name}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
