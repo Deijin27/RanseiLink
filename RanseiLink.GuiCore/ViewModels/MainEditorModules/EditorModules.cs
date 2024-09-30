@@ -238,7 +238,7 @@ public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventS
     {
         base.Initialise(modServices);
         var vm = modServices.Get<EventSpeakerViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((EventSpeakerId)id, _service.Retrieve(id)));
     }
 }
 

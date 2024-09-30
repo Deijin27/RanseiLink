@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 
@@ -25,8 +26,9 @@ public partial class EventSpeakerViewModel : ViewModelBase
         }
     }
 
-    public void SetModel(EventSpeaker model)
+    public void SetModel(EventSpeakerId id, EventSpeaker model)
     {
+        _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
