@@ -4,15 +4,25 @@ using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class EventSpeakerViewModel : ViewModelBase
+public partial class EventSpeakerViewModel : ViewModelBase
 {
-    private EventSpeaker _model;
     private readonly IOverrideDataProvider _spriteProvider;
 
     public EventSpeakerViewModel(IOverrideDataProvider overrideSpriteProvider)
     {
         _spriteProvider = overrideSpriteProvider;
-        _model = new EventSpeaker(Core.Enums.ConquestGameCode.VPYT);
+
+        this.PropertyChanged += EventSpeakerViewModel_PropertyChanged;
+    }
+
+    private void EventSpeakerViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Sprite):
+                RaisePropertyChanged(nameof(SpritePath));
+                break;
+        }
     }
 
     public void SetModel(EventSpeaker model)
@@ -21,24 +31,5 @@ public class EventSpeakerViewModel : ViewModelBase
         RaiseAllPropertiesChanged();
     }
 
-    public string Name
-    {
-        get => _model.Name;
-        set => SetProperty(_model.Name, value, v => _model.Name = v);
-    }
-
-    public int Sprite
-    {
-        get => _model.Sprite;
-        set
-        {
-            if (SetProperty(_model.Sprite, value, v => _model.Sprite = v))
-            {
-                RaisePropertyChanged(nameof(SpritePath));
-            }
-        }
-    }
-
     public string SpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouLL, Sprite).File;
-
 }

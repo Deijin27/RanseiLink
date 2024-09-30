@@ -81,6 +81,10 @@
 		<MsgProperty Name="Name" Id="EpisodeName"/>
 		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
+	<Model Name="EventSpeaker" ViewModel="true" Cultural="true">
+		<StringProperty Name="Name"/>
+		<Property Name="Sprite"/>
+	</Model>
 	<Model Name="GimmickObject" DataLength="0x4" Model="true">
 	</Model>
     <Model Name="Item" DataLength="0x24" Model="true" ViewModel="true">
