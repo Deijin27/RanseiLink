@@ -29,7 +29,11 @@ internal class Program
 
         foreach (var modelElement in models)
         {
-            GenerateModel(modelElement);
+            if (modelElement.Attribute("Model")?.Value == "true")
+            {
+                GenerateModel(modelElement);
+            }
+
             if (modelElement.Attribute("ViewModel")?.Value == "true")
             {
                 GenerateViewModel(modelElement, idsWithModels);

@@ -1,5 +1,5 @@
 ﻿<Models>
-    <Model Name="Ability" DataLength="0x14" ViewModel="true">
+    <Model Name="Ability" DataLength="0x14" Model="true" ViewModel="true">
         <StringProperty Name="Name" Index="0" MaxLength="14" />
         <Property Index="3, 24, 2" Name="Effect1Amount" />
         <Property Index="4,  0, 5" Name="Effect1" Type="AbilityEffectId" />
@@ -9,7 +9,7 @@
 		<MsgProperty Name="HotSpringsDescription" Id="AbilityHotSpringsDescription"/>
 		<MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
     </Model>
-    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" ViewModel="true">
+    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Model="true" ViewModel="true">
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
@@ -32,7 +32,7 @@
         <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
         <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
     </Model>
-    <Model Name="BattleConfig" DataLength="0x18" ViewModel="true">
+    <Model Name="BattleConfig" DataLength="0x18" Model="true" ViewModel="true">
         <Property Index="0,  0,  6" Name="Map" />
         <Property Index="0,  6,  5" Name="MapVariant" />
         <Property Index="2, 13,  5" Name="Minimap" />
@@ -51,7 +51,7 @@
 	    <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
     </Model>
     -->
-    <Model Name="Episode" DataLength="0x8" ViewModel="true">
+    <Model Name="Episode" DataLength="0x8" Model="true" ViewModel="true">
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
@@ -62,9 +62,9 @@
 		<MsgProperty Name="Name" Id="EpisodeName"/>
 		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
-	<Model Name="GimmickObject" DataLength="0x4">
+	<Model Name="GimmickObject" DataLength="0x4" Model="true">
 	</Model>
-    <Model Name="Item" DataLength="0x24" ViewModel="true">
+    <Model Name="Item" DataLength="0x24" Model="true" ViewModel="true">
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
         <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
         <Property Index="5, 19, 2" Name="Category" Type="ItemCategoryId" />
@@ -82,7 +82,7 @@
 		<MsgProperty Name="Description" Id="ItemDescription"/>
 		<MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
-	<Model Name="Move" DataLength="0x24" ViewModel="true">
+	<Model Name="Move" DataLength="0x24" Model="true" ViewModel="true">
 		<StringProperty Name="Name" Index="0" MaxLength="14"/>
 		<Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
 		<Property Index="4,  0, 5" Name="Type" Type="TypeId" />
@@ -107,14 +107,14 @@
 		<Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
 		<MsgProperty Name="Description" Id="MoveDescription"/>
 	</Model>
-	<Model Name="MoveAnimation" DataLength="0x4">
+	<Model Name="MoveAnimation" DataLength="0x4" Model="true">
 		<Property Index="0,  0, 16" Name="UnknownA" />
 		<Property Index="0, 16, 16" Name="UnknownB" />
 	</Model>
-	<Model Name="MoveRange" DataLength="0x4">
+	<Model Name="MoveRange" DataLength="0x4" Model="true">
 		<FlagProperty Index="0, 0" Name="InRange"/>
 	</Model>
-    <Model Name="Pokemon" DataLength="0x30" ViewModel="true">
+    <Model Name="Pokemon" DataLength="0x30" Model="true" ViewModel="true">
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
         <Property Index=" 3,  0,  9" Name="Hp" />
         <Property Index=" 3, 10,  4" Name="EvolutionCondition1" Type="EvolutionConditionId" />
@@ -144,7 +144,7 @@
         <Property Index=" 3, 23,  3" Name="BattleIntroSpriteOffset" />
         <Property Index=" 3, 26,  3" Name="Weight" />
     </Model>
-    <Model Name="ScenarioPokemon" DataLength="0x8">
+    <Model Name="ScenarioPokemon" DataLength="0x8" Model="true">
         <Property Index="1, 20,  8" Name="Ability" Type="AbilityId" />
         <Property Index="1,  0,  5" Name="HpIv" />
         <Property Index="1,  5,  5" Name="AtkIv" />
@@ -155,7 +155,7 @@
         <Property Index="0,  8,  8" Name="U1" Type="byte" />
         <Property Index="1, 29,  3" Name="Energy" Type="EnergyId" />
     </Model>
-    <Model Name="ScenarioWarrior" DataLength="0x20">
+    <Model Name="ScenarioWarrior" DataLength="0x20" Model="true">
         <Property Index="0,  0, 8" Name="Warrior" Type="WarriorId" />
         <Property Index="0,  9, 3" Name="Class" Type="WarriorClassId" />
         <Property Index="0, 12, 5" Name="Kingdom" Type="KingdomId" />
