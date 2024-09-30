@@ -109,19 +109,19 @@ public class KingdomViewModel(IJumpService jumpService, IIdToNameService idToNam
 
     public int Unknown1
     {
-        get => _model.Unknown_R2_C24_L3;
-        set => SetProperty(_model.Unknown_R2_C24_L3, value, v => _model.Unknown_R2_C24_L3 = v);
+        get => _model.Unknown1;
+        set => SetProperty(_model.Unknown1, value, v => _model.Unknown1 = v);
     }
 
     public int Unknown2
     {
-        get => _model.Unknown_R5_C22_L4;
-        set => SetProperty(_model.Unknown_R5_C22_L4, value, v => _model.Unknown_R5_C22_L4 = v);
+        get => _model.Unknown2;
+        set => SetProperty(_model.Unknown2, value, v => _model.Unknown2 = v);
     }
 
     public int Unknown3
     {
-        get => _model.Unknown_R5_C26_L4;
-        set => SetProperty(_model.Unknown_R5_C26_L4, value, v => _model.Unknown_R5_C26_L4 = v);
+        get => _model.Unknown3;
+        set => SetProperty(_model.Unknown3, value, v => _model.Unknown3 = v);
     }
 }

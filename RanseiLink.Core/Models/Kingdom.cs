@@ -26,7 +26,7 @@ public class Kingdom : BaseDataWindow
         set => SetPaddedUtf8String(0, _cultureNameLength, value);
     }
 
-    public int Unknown_R2_C24_L3
+    public int Unknown1
     {
         get => GetInt(2, _cultureFirstByteDataOffset, 3);
         set => SetInt(2, _cultureFirstByteDataOffset, 3, value);
@@ -141,14 +141,14 @@ public class Kingdom : BaseDataWindow
         set => SetInt(4 + _cultureBinOffset, 15, 7, (int)value);
     }
 
-    public int Unknown_R5_C22_L4
+    public int Unknown2
     {
         get => GetInt(4 + _cultureBinOffset, 22, 4);
         set => SetInt(4 + _cultureBinOffset, 22, 4, value);
     }
 
 
-    public int Unknown_R5_C26_L4
+    public int Unknown3
     {
         get => GetInt(4 + _cultureBinOffset, 26, 4);
         set => SetInt(4 + _cultureBinOffset, 26, 4, value);
