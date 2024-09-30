@@ -52,15 +52,4 @@ public abstract class ViewModelBase : INotifyPropertyChanged
         }
         return false;
     }
-
-    protected void LinkPropertyChanged(string sourceProperty, string targetProperty)
-    {
-        PropertyChanged += (s, e) =>
-        {
-            if (e.PropertyName == sourceProperty)
-            {
-                RaisePropertyChanged(targetProperty);
-            }
-        };
-    }
 }
