@@ -162,4 +162,18 @@
         <Property Index="0, 17, 5" Name="Army" />
         <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
     </Model>
+	<Model Name="WarriorSkill" ViewModel="true" Cultural="true">
+		<StringProperty Name="Name" />
+		<Property Name="Effect1Amount"/>
+		<Property Name="Effect1" Type="WarriorSkillEffectId"/>
+		<Property Name="Effect2" Type="WarriorSkillEffectId"/>
+		<Property Name="Effect2Amount"/>
+		<Property Name="Effect3" Type="WarriorSkillEffectId"/>
+		<Property Name="Duration"/>
+		<Property Name="Effect3Amount"/>
+		<Property Name="Target" Type="WarriorSkillTargetId"/>
+		<!--Animation: Seems to be unused-->
+		<Property Name="Animation" Type="MoveAnimationId"/>
+		<MsgProperty Name="Description" Id="WarriorSkillDescription"/>
+	</Model>
 </Models>

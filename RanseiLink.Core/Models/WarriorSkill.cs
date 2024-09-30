@@ -69,13 +69,9 @@ public class WarriorSkill : BaseDataWindow
         set => SetInt(5 + _cultureBinOffset, 8, 3, (int)value);
     }
 
-    /// <summary>
-    /// Seems to be unused.
-    /// </summary>
     public MoveAnimationId Animation
     {
         get => (MoveAnimationId)GetInt(5 + _cultureBinOffset, 11, 9);
         set => SetInt(5  + _cultureBinOffset, 11, 9, (int)value);
     }
-
 }

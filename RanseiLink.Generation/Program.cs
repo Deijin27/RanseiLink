@@ -160,7 +160,15 @@ internal class Program
         sb.AppendLine();
         sb.AppendLine($"public partial class {name}ViewModel : ViewModelBase");
         sb.AppendLine("{");
-        sb.AppendLine($"    private {name} _model = new();");
+        if (modelElement.Attribute("Cultural")?.Value == "true")
+        {
+            sb.AppendLine($"    private {name} _model = new(default);");
+        }
+        else
+        {
+            sb.AppendLine($"    private {name} _model = new();");
+        }
+
         sb.AppendLine($"    private {id} _id;");
         sb.AppendLine($"    public int Id => (int)_id;");
         sb.AppendLine();
@@ -175,7 +183,7 @@ internal class Program
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
                 if (propType == "int")
                 {
-                    int max;
+                    int? max = null;
                     var maxEl = propertyElement.Attribute("Max");
                     if (maxEl != null)
                     {
@@ -183,11 +191,18 @@ internal class Program
                     }
                     else
                     {
-                        var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
-                        var bitCount = int.Parse(index.Split(',')[^1].Trim());
-                        max = ~(-1 << bitCount);
+                        var indexEl = propertyElement.Attribute("Index");
+                        if (indexEl != null)
+                        {
+                            var index = indexEl.Value.Replace("  ", " ").Trim();
+                            var bitCount = int.Parse(index.Split(',')[^1].Trim());
+                            max = ~(-1 << bitCount);
+                        }
                     }
-                    sb.AppendLine($"    public int {propName}_Max => {max};");
+                    if (max != null)
+                    {
+                        sb.AppendLine($"    public int {propName}_Max => {max.Value};");
+                    }
 
                     var minEl = propertyElement.Attribute("Min");
                     if (minEl != null)
@@ -218,7 +233,11 @@ internal class Program
             else if (propertyElement.Name == "StringProperty")
             {
                 sb.AppendLine();
-                sb.AppendLine($"    public int {propName}_MaxLength => {propertyElement.Attribute("MaxLength")!.Value};");
+                var maxLenEl = propertyElement.Attribute("MaxLength");
+                if (maxLenEl != null)
+                {
+                    sb.AppendLine($"    public int {propName}_MaxLength => {maxLenEl.Value};");
+                }
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        get => _model.{propName};");
