@@ -85,6 +85,19 @@
 		<StringProperty Name="Name"/>
 		<Property Name="Sprite"/>
 	</Model>
+	<Model Name="Gimmick" ViewModel="true" Cultural="true">
+		<StringProperty Name="Name"/>
+		<Property Name="Image"/>
+		<Property Name="AttackType" Type="TypeId" Description="If attack damage caused by this, this is the type of the attack"/>
+		<Property Name="DestroyType" Type="TypeId" Description="The type of attack that can destroy this gimmick"/>
+		<Property Name="State1Sprite" Type="GimmickObjectId" Description="Sprite shown on bottom screen in battle"/>
+		<Property Name="State2Sprite" Type="GimmickObjectId"/>
+		<Property Name="Effect" Type="MoveEffectId"/>
+		<Property Name="UnknownQuantity1" Description="Seems like a multipurpose quantity. For some, this is probably attack power, others something else"/>
+		<Property Name="Animation1" Type="MoveAnimationId"/>
+		<Property Name="Animation2" Type="MoveAnimationId"/>
+		<Property Name="Range" Type="GimmickRangeId"/>
+	</Model>
 	<Model Name="GimmickObject" DataLength="0x4" Model="true">
 	</Model>
     <Model Name="Item" DataLength="0x24" Model="true" ViewModel="true">

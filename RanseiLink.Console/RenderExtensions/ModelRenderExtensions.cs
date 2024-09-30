@@ -259,8 +259,8 @@ public static partial class RenderExtensions
         console.WriteProperty("Animation 2", gimmick.Animation2);
         console.WriteProperty("Range", gimmick.Range);
         console.WriteProperty("Image", gimmick.Image);
-        console.WriteProperty("State-1 Sprite", gimmick.State1Object);
-        console.WriteProperty("State-2 Sprite", gimmick.State2Object);
+        console.WriteProperty("State-1 Sprite", gimmick.State1Sprite);
+        console.WriteProperty("State-2 Sprite", gimmick.State2Sprite);
         console.WriteProperty("Effect", gimmick.Effect);
     }
 

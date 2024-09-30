@@ -94,7 +94,7 @@ public class SceneRenderer : ISceneRenderer
             foreach (var gimmickId in pslm.GimmickSection.Items.Select(x => x.Gimmick).Distinct())
             {
                 var gimmick = _gimmickService.Retrieve((int)gimmickId);
-                var gimmickObject = (int)gimmick.State1Object;
+                var gimmickObject = (int)gimmick.State1Sprite;
                 if (gimmickObject > 97)
                 {
                     continue;

@@ -52,13 +52,13 @@ public class Gimmick : BaseDataWindow
     /// <summary>
     /// Sprite shown on bottom screen in battle
     /// </summary>
-    public GimmickObjectId State1Object
+    public GimmickObjectId State1Sprite
     {
         get => (GimmickObjectId)GetInt(4 + _cultureBinOffset, 11, 7);
         set => SetInt(4 + _cultureBinOffset, 11, 7, (int)value);
     }
 
-    public GimmickObjectId State2Object
+    public GimmickObjectId State2Sprite
     {
         get => (GimmickObjectId)GetInt(4 + _cultureBinOffset, 18, 7);
         set => SetInt(4 + _cultureBinOffset, 18, 7, (int)value);

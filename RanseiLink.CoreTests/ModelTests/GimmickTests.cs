@@ -26,8 +26,8 @@ public class GimmickTests
         a.Image.Should().Be(10);
         a.AttackType.Should().Be(TypeId.Fire);
         a.DestroyType.Should().Be(TypeId.Water);
-        a.State1Object.Should().Be(GimmickObjectId.PillarOfFire_Ignited);
-        a.State2Object.Should().Be(GimmickObjectId.PillarOfFire_Extinguished);
+        a.State1Sprite.Should().Be(GimmickObjectId.PillarOfFire_Ignited);
+        a.State2Sprite.Should().Be(GimmickObjectId.PillarOfFire_Extinguished);
         a.Effect.Should().Be(MoveEffectId.NoEffect);
         a.UnknownQuantity1.Should().Be(0);
         a.Animation1.Should().Be(MoveAnimationId.Default);
@@ -45,8 +45,8 @@ public class GimmickTests
             Image = 24,
             AttackType = TypeId.Dragon,
             DestroyType = TypeId.Ghost,
-            State1Object = GimmickObjectId.CogWheel,
-            State2Object = GimmickObjectId.DriftingIce,
+            State1Sprite = GimmickObjectId.CogWheel,
+            State2Sprite = GimmickObjectId.DriftingIce,
             Effect = MoveEffectId.ChanceToParalyzeTarget,
             UnknownQuantity1 = 4,
             Animation1 = MoveAnimationId.BlackSplatter,
@@ -58,8 +58,8 @@ public class GimmickTests
         a.Image.Should().Be(24);
         a.AttackType.Should().Be(TypeId.Dragon);
         a.DestroyType.Should().Be(TypeId.Ghost);
-        a.State1Object.Should().Be(GimmickObjectId.CogWheel);
-        a.State2Object.Should().Be(GimmickObjectId.DriftingIce);
+        a.State1Sprite.Should().Be(GimmickObjectId.CogWheel);
+        a.State2Sprite.Should().Be(GimmickObjectId.DriftingIce);
         a.Effect.Should().Be(MoveEffectId.ChanceToParalyzeTarget);
         a.UnknownQuantity1.Should().Be(4);
         a.Animation1.Should().Be(MoveAnimationId.BlackSplatter);

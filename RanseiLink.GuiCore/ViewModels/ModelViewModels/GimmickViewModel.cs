@@ -11,16 +11,13 @@ public enum GimmickAnimationPreviewMode
     Two
 }
 
-public class GimmickViewModel : ViewModelBase
+public partial class GimmickViewModel : ViewModelBase
 {
-    private Gimmick _model;
     private readonly IExternalService _externalService;
     private readonly IOverrideDataProvider _spriteProvider;
 
     public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService)
     {
-        _model = new Gimmick(Core.Enums.ConquestGameCode.VPYT);
-
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;
 
@@ -33,88 +30,33 @@ public class GimmickViewModel : ViewModelBase
         });
 
         UpdatePreviewAnimation(false);
+
+        PropertyChanged += GimmickViewModel_PropertyChanged;
+    }
+
+    private void GimmickViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(Animation1):
+            case nameof(Animation2):
+                OnAnimationChanged();
+                break;
+            case nameof(Image):
+                RaisePropertyChanged(nameof(ImagePath));
+                break;
+        }
     }
 
     public void SetModel(GimmickId id, Gimmick model)
     {
-        Id = id;
+        _id = id;
         _model = model;
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }
 
-    public GimmickId Id { get; private set; }
-
-    public string Name
-    {
-        get => _model.Name;
-        set => SetProperty(_model.Name, value, v => _model.Name = v);
-    }
-
-    public GimmickObjectId State1Sprite
-    {
-        get => _model.State1Object;
-        set => SetProperty(_model.State1Object, value, v => _model.State1Object = v);
-    }
-
-    public GimmickObjectId State2Sprite
-    {
-        get => _model.State2Object;
-        set => SetProperty(_model.State2Object, value, v => _model.State2Object = v);
-    }
-
-    public MoveEffectId Effect
-    {
-        get => _model.Effect;
-        set => SetProperty(_model.Effect, value, v => _model.Effect = v);
-    }
-
-    public TypeId AttackType
-    {
-        get => _model.AttackType;
-        set => SetProperty(_model.AttackType, value, v => _model.AttackType = v);
-    }
-
-    public TypeId DestroyType
-    {
-        get => _model.DestroyType;
-        set => SetProperty(_model.DestroyType, value, v => _model.DestroyType = v);
-    }
-
-    public GimmickRangeId Range
-    {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
-    }
-
-    public MoveAnimationId Animation1
-    {
-        get => _model.Animation1;
-        set
-        {
-            if (SetProperty(_model.Animation1, value, v => _model.Animation1 = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-    public MoveAnimationId Animation2
-    {
-        get => _model.Animation2;
-        set
-        {
-            if (SetProperty(_model.Animation2, value, v => _model.Animation2 = v))
-            {
-                OnAnimationChanged();
-            }
-        }
-    }
-
-
     public ICommand JumpToGimmickRangeCommand { get; }
-
-
 
     private string? _currentPreviewAnimationUri;
     public string? CurrentPreviewAnimationUri
@@ -164,18 +106,5 @@ public class GimmickViewModel : ViewModelBase
         return _externalService.GetMoveAnimationUri(id);
     }
 
-    public int Image
-    {
-        get => _model.Image;
-        set
-        {
-            if (SetProperty(_model.Image, value, v => _model.Image = v))
-            {
-                RaisePropertyChanged(nameof(ImagePath));
-            }
-        }
-    }
-
     public string ImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image).File;
 }
-
