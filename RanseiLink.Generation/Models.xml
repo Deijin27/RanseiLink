@@ -101,8 +101,25 @@
 		<MsgProperty Name="Description" Id="ItemDescription"/>
 		<MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
-	<Model Name="Kingdom">
+	<Model Name="Kingdom" ViewModel="true" Cultural ="true">
 		<StringProperty Name="Name"/>
+		<Property Name="Unknown1"/>
+		<Property Name="MapConnection0" Type="KingdomId"/>
+		<Property Name="MapConnection1" Type="KingdomId"/>
+		<Property Name="MapConnection2" Type="KingdomId"/>
+		<Property Name="MapConnection3" Type="KingdomId"/>
+		<Property Name="MapConnection4" Type="KingdomId"/>
+		<Property Name="MapConnection5" Type="KingdomId"/>
+		<Property Name="MapConnection6" Type="KingdomId"/>
+		<Property Name="MapConnection7" Type="KingdomId"/>
+		<Property Name="MapConnection8" Type="KingdomId"/>
+		<Property Name="MapConnection9" Type="KingdomId"/>
+		<Property Name="MapConnection10" Type="KingdomId"/>
+		<Property Name="MapConnection11" Type="KingdomId"/>
+		<Property Name="MapConnection12" Type="KingdomId"/>
+		<Property Name="BattleConfig" Type="BattleConfigId"/>
+		<Property Name="Unknown2"/>
+		<Property Name="Unknown3"/>
 	</Model>
 	<Model Name="Move" DataLength="0x24" Model="true" ViewModel="true">
 		<StringProperty Name="Name" Index="0" MaxLength="14"/>
