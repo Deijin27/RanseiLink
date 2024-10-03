@@ -6,6 +6,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -47,6 +48,10 @@ public partial class EpisodeViewModel : ViewModelBase
         get => _model.ClearCondition;
         set => SetProperty(_model.ClearCondition, value, v => _model.ClearCondition = v);
     }
+
+    public ObservableCollection<CheckBoxViewModel> IsStartKingdomItems { get; } = [];
+
+    public ObservableCollection<CheckBoxViewModel> IsUnlockedKingdomItems { get; } = [];
 
     public string Name
     {

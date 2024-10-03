@@ -54,7 +54,4 @@ public partial class EpisodeViewModel : ViewModelBase
     public List<SelectorComboBoxItem> UnlockConditionItems { get; }
 
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
-
-    public ObservableCollection<CheckBoxViewModel> IsStartKingdomItems { get; } = [];
-    public ObservableCollection<CheckBoxViewModel> IsUnlockedKingdomItems { get; } = [];
 }

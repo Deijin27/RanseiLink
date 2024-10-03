@@ -203,6 +203,7 @@ internal class Program
         sb.AppendLine("using RanseiLink.Core.Graphics;");
         sb.AppendLine("using RanseiLink.Core.Models;");
         sb.AppendLine("using RanseiLink.Core.Services;");
+        sb.AppendLine("using System.Collections.ObjectModel;");
         sb.AppendLine();
         sb.AppendLine("namespace RanseiLink.GuiCore.ViewModels;");
         sb.AppendLine();
@@ -281,6 +282,8 @@ internal class Program
             }
             else if (propertyElement.Name == "FlagProperty")
             {
+                sb.AppendLine();
+                sb.AppendLine($"    public ObservableCollection<CheckBoxViewModel> {propName}Items {{ get; }} = [];");
             }
             else if (propertyElement.Name == "StringProperty")
             {

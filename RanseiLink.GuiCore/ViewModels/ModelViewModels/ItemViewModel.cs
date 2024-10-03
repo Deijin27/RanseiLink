@@ -4,7 +4,6 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -43,6 +42,4 @@ public partial class ItemViewModel : ViewModelBase
     public List<SelectorComboBoxItem> ItemItems { get; }
 
     public ICommand JumpToItemCommand { get; }
-
-    public ObservableCollection<CheckBoxViewModel> PurchasableItems { get; } = [];
 }

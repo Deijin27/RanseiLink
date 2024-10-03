@@ -6,6 +6,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -93,6 +94,8 @@ public partial class ItemViewModel : ViewModelBase
         get => _model.QuantityForEffect;
         set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
     }
+
+    public ObservableCollection<CheckBoxViewModel> PurchasableItems { get; } = [];
 
     public string Description
     {
