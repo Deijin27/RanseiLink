@@ -1,11 +1,12 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
-using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
+using RanseiLink.Core;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -71,6 +72,24 @@ public partial class BattleConfigViewModel : ViewModelBase
     {
         _id = id;
         _model = model;
+
+        DefeatConditionItems.Clear();
+        VictoryConditionItems.Clear();
+        foreach (var (item, name) in EnumUtil.GetValuesWithNames<BattleVictoryConditionFlags>())
+        {
+            if (item != 0)
+            {
+                DefeatConditionItems.Add(new CheckBoxViewModel(name,
+                     () => (_model.DefeatCondition & item) != 0,
+                     v => _model.DefeatCondition ^= item
+                ));
+                VictoryConditionItems.Add(new CheckBoxViewModel(name,
+                     () => (_model.VictoryCondition & item) != 0,
+                     v => _model.VictoryCondition ^= item
+                ));
+            }
+        }
+
         RaiseAllPropertiesChanged();
     }
 
@@ -95,74 +114,8 @@ public partial class BattleConfigViewModel : ViewModelBase
         } 
     }
 
-    #region Victory Conditions
-
-    public bool VictoryCondition_Unknown_Aurora
-    {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
-        set => SetProperty(VictoryCondition_Unknown_Aurora, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
-    }
-
-    public bool VictoryCondition_Unknown_ViperiaDragnor
-    {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_ViperiaDragnor) != 0;
-        set => SetProperty(VictoryCondition_Unknown_ViperiaDragnor, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
-    }
-
-    public bool VictoryCondition_Unknown_Greenleaf
-    {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.Unknown_Greenleaf) != 0;
-        set => SetProperty(VictoryCondition_Unknown_Greenleaf, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
-    }
-
-    public bool VictoryCondition_HoldAllBannersFor5Turns
-    {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => SetProperty(VictoryCondition_HoldAllBannersFor5Turns, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
-    }
-
-    public bool VictoryCondition_ClaimAllBanners
-    {
-        get => (_model.VictoryCondition & BattleVictoryConditionFlags.ClaimAllBanners) != 0;
-        set => SetProperty(VictoryCondition_ClaimAllBanners, value, v => _model.VictoryCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
-    }
-
-    #endregion
-
-    #region Defeat Conditions
-
-    public bool DefeatCondition_Unknown_Aurora
-    {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_AuroraDragnor) != 0;
-        set => SetProperty(VictoryCondition_Unknown_Aurora, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_AuroraDragnor);
-    }
-
-    public bool DefeatCondition_Unknown_ViperiaDragnor
-    {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_ViperiaDragnor) != 0;
-        set => SetProperty(DefeatCondition_Unknown_ViperiaDragnor, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_ViperiaDragnor);
-    }
-
-    public bool DefeatCondition_Unknown_Greenleaf
-    {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.Unknown_Greenleaf) != 0;
-        set => SetProperty(DefeatCondition_Unknown_Greenleaf, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.Unknown_Greenleaf);
-    }
-
-    public bool DefeatCondition_HoldAllBannersFor5Turns
-    {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.HoldAllBannersFor5Turns) != 0;
-        set => SetProperty(DefeatCondition_HoldAllBannersFor5Turns, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.HoldAllBannersFor5Turns);
-    }
-
-    public bool DefeatCondition_ClaimAllBanners
-    {
-        get => (_model.DefeatCondition & BattleVictoryConditionFlags.ClaimAllBanners) != 0;
-        set => SetProperty(DefeatCondition_ClaimAllBanners, value, v => _model.DefeatCondition ^= BattleVictoryConditionFlags.ClaimAllBanners);
-    }
-
-    #endregion
-
+    public ObservableCollection<CheckBoxViewModel> DefeatConditionItems { get; } = [];
+    public ObservableCollection<CheckBoxViewModel> VictoryConditionItems { get; } = [];
 
     public ICollection<MapId> MapItems { get; }
 

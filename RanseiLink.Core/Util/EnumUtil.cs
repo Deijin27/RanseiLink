@@ -1,4 +1,7 @@
-﻿namespace RanseiLink.Core;
+﻿using System.ComponentModel;
+using System.Reflection;
+
+namespace RanseiLink.Core;
 
 
 [AttributeUsage(AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
@@ -16,6 +19,32 @@ public static class EnumUtil
     public static IEnumerable<T> GetValues<T>()
     {
         return Enum.GetValues(typeof(T)).Cast<T>();
+    }
+
+    public static IEnumerable<(T value, string name)> GetValuesWithNames<T>()
+    {
+        foreach (var value in GetValues<T>())
+        {
+            var memberName = value?.ToString();
+            if (memberName == null)
+            {
+                continue;
+            }
+            var memberInfo = typeof(T).GetMember(memberName);
+            if (memberInfo.Length == 0)
+            {
+                continue;
+            }
+            var attr = memberInfo[0].GetCustomAttribute<DescriptionAttribute>();
+            if (attr == null)
+            {
+                yield return (value, memberName);
+            }
+            else
+            {
+                yield return (value, attr.Description);
+            }
+        }
     }
 
     public static IEnumerable<T> GetValuesExceptDefaults<T>()

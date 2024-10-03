@@ -93,7 +93,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <GroupBox Header="Start Kingdoms" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
-                <ItemsControl ItemsSource="{Binding IsStartKingdomItems}" Grid.IsSharedSizeScope="True">
+                <ItemsControl ItemsSource="{Binding IsStartKingdomItems}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}"/>
@@ -107,7 +107,7 @@
                 </ItemsControl>
             </GroupBox>
             <GroupBox Header="Unlocked Kingdoms" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="11">
-                <ItemsControl ItemsSource="{Binding IsUnlockedKingdomItems}" Grid.IsSharedSizeScope="True">
+                <ItemsControl ItemsSource="{Binding IsUnlockedKingdomItems}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}"/>

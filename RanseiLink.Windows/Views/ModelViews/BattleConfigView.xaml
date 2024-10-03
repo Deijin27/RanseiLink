@@ -151,25 +151,23 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="Victory Conditions" ToolTip="In addition to 'defeat all enemies'" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
-                <StackPanel>
-                    <CheckBox Content="Unknown 1 (Dragnor/Aurora)" IsChecked="{Binding VictoryCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Unknown 2 (Dragnor/Viperia)" IsChecked="{Binding VictoryCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Unknown 3 (Greenleaf)" IsChecked="{Binding VictoryCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Hold All Banners For 5 Turns" IsChecked="{Binding VictoryCondition_HoldAllBannersFor5Turns, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Claim All Banners" IsChecked="{Binding VictoryCondition_ClaimAllBanners, Mode=TwoWay}" />
-
-                </StackPanel>
+                <ItemsControl ItemsSource="{Binding VictoryConditionItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </GroupBox>
 
             <GroupBox Header="Defeat Conditions" ToolTip="In addition to 'all allies are defeated'" Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="6" Padding="10">
-                <StackPanel>
-                    <CheckBox Content="Unknown 1 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Aurora, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Unknown 2 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_ViperiaDragnor, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Unknown 3 (unused for defeat)" IsChecked="{Binding DefeatCondition_Unknown_Greenleaf, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Hold All Banners For 5 Turns" IsChecked="{Binding DefeatCondition_HoldAllBannersFor5Turns, Mode=TwoWay}" Margin="0,0,0,13"/>
-                    <CheckBox Content="Claim All Banners" IsChecked="{Binding DefeatCondition_ClaimAllBanners, Mode=TwoWay}" />
-
-                </StackPanel>
+                <ItemsControl ItemsSource="{Binding DefeatConditionItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Name}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </GroupBox>
 
             <TextBlock Grid.Row="12">Minimap</TextBlock>
