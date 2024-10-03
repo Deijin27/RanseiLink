@@ -35,7 +35,7 @@ public class BaseWarriorService : BaseNewableDataModelService<BaseWarrior>, IBas
 
     public override string IdToName(int id)
     {
-        var warriorNameId = Retrieve(id).WarriorName;
+        var warriorNameId = Retrieve(id).Name;
         if (!NameTable.ValidateId(warriorNameId))
         {
             return "";
