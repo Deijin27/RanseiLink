@@ -13,7 +13,7 @@
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
-        <Property Index="0, 17, 8" Name="WarriorName" Max="209"/>
+        <Property Index="0, 17, 8" Name="Name" Max="209"/>
         <Property Index="1,  0, 5" Name="Speciality1" Type="TypeId" />
         <Property Index="1,  5, 5" Name="Speciality2" Type="TypeId" />
         <Property Index="1, 10, 5" Name="Weakness1" Type="TypeId" />
@@ -81,9 +81,10 @@
 		<MsgProperty Name="Name" Id="EpisodeName"/>
 		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
-	<Model Name="EventSpeaker" ViewModel="true" Cultural="true">
+	<Model Name="EventSpeaker" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
+		<!--<Field Name="_cultureNameLength" Value="0x10" Value_VPYJ="0xA"/>-->
 		<StringProperty Name="Name"/>
-		<Property Name="Sprite"/>
+		<ByteProperty Name="Sprite"/>
 	</Model>
 	<Model Name="Gimmick" ViewModel="true" Cultural="true">
 		<StringProperty Name="Name"/>

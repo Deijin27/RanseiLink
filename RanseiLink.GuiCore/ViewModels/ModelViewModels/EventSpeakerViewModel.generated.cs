@@ -22,6 +22,7 @@ public partial class EventSpeakerViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Sprite_Max => 255;
     public int Sprite
     {
         get => _model.Sprite;

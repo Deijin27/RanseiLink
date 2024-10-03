@@ -47,10 +47,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Warrior Name" Grid.Row="0" ToolTip="Jump to selected warrior name" 
-        Command="{Binding JumpToWarriorNameCommand}" CommandParameter="{Binding WarriorName}"/>
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Name" Grid.Row="0" ToolTip="Jump to selected warrior name" 
+        Command="{Binding JumpToWarriorNameCommand}" CommandParameter="{Binding Name}"/>
             <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1">
-                <controls:NumberBox Width="80"  Value="{Binding WarriorName, Mode=TwoWay}" Max="{Binding WarriorName_Max}"/>
+                <controls:NumberBox Width="80"  Value="{Binding Name, Mode=TwoWay}" Max="{Binding Name_Max}"/>
                 <TextBlock Text="{Binding WarriorNameValue}"/>
             </UniformGrid>
             

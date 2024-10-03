@@ -35,11 +35,11 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Gender, value, v => _model.Gender = v);
     }
 
-    public int WarriorName_Max => 209;
-    public int WarriorName
+    public int Name_Max => 209;
+    public int Name
     {
-        get => _model.WarriorName;
-        set => SetProperty(_model.WarriorName, value, v => _model.WarriorName = v);
+        get => _model.Name;
+        set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
     public TypeId Speciality1

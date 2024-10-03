@@ -31,7 +31,7 @@ public partial class BaseWarrior : BaseDataWindow
         set => SetInt(0, 16, 1, (int)value);
     }
 
-    public int WarriorName
+    public int Name
     {
         get => GetInt(0, 17, 8);
         set => SetInt(0, 17, 8, value);
