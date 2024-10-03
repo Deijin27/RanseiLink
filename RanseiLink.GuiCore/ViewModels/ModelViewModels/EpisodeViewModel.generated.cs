@@ -64,4 +64,6 @@ public partial class EpisodeViewModel : ViewModelBase
         get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
     }
+
+    public List<SelectorComboBoxItem> EpisodeItems { get; }
 }

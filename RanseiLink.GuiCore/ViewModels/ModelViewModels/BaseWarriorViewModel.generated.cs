@@ -151,4 +151,12 @@ public partial class BaseWarriorViewModel : ViewModelBase
         get => _model.RankUpLink;
         set => SetProperty(_model.RankUpLink, value, v => _model.RankUpLink = v);
     }
+
+    public List<SelectorComboBoxItem> SpeakerItems { get; }
+
+    public List<SelectorComboBoxItem> WarriorSkillItems { get; }
+
+    public List<SelectorComboBoxItem> BaseWarriorItems { get; }
+
+    public List<SelectorComboBoxItem> PokemonItems { get; }
 }

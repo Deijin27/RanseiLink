@@ -201,4 +201,8 @@ public partial class PokemonViewModel : ViewModelBase
         get => _model.Weight;
         set => SetProperty(_model.Weight, value, v => _model.Weight = v);
     }
+
+    public List<SelectorComboBoxItem> MoveItems { get; }
+
+    public List<SelectorComboBoxItem> AbilityItems { get; }
 }

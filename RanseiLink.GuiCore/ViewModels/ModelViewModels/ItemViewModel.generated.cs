@@ -108,4 +108,6 @@ public partial class ItemViewModel : ViewModelBase
         get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription2, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
     }
+
+    public List<SelectorComboBoxItem> ItemItems { get; }
 }

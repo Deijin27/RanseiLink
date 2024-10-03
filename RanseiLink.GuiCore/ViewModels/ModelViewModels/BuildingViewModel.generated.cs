@@ -118,4 +118,8 @@ public partial class BuildingViewModel : ViewModelBase
         get => _model.Function;
         set => SetProperty(_model.Function, value, v => _model.Function = v);
     }
+
+    public List<SelectorComboBoxItem> BuildingItems { get; }
+
+    public List<SelectorComboBoxItem> KingdomItems { get; }
 }

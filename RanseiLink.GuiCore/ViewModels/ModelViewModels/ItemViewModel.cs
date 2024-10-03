@@ -39,7 +39,5 @@ public partial class ItemViewModel : ViewModelBase
         RaiseAllPropertiesChanged();
     }
 
-    public List<SelectorComboBoxItem> ItemItems { get; }
-
     public ICommand JumpToItemCommand { get; }
 }

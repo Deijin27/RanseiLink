@@ -222,6 +222,8 @@ internal class Program
         sb.AppendLine($"    public int Id => (int)_id;");
         sb.AppendLine();
 
+        var propTypes = new HashSet<string>();
+
         foreach (var propertyElement in modelElement.Elements())
         {
             var propName = propertyElement.Attribute("Name")!.Value;
@@ -230,6 +232,7 @@ internal class Program
             {
                 sb.AppendLine();
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
+                propTypes.Add(propType);
                 if (propType == "int")
                 {
                     int? max = null;
@@ -314,6 +317,15 @@ internal class Program
         get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
         set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
     }*/
+            }
+        }
+
+        foreach (var propType in propTypes)
+        {
+            if (idsWithModels.TryGetValue(propType, out var modelName))
+            {
+                sb.AppendLine();
+                sb.AppendLine($"    public List<SelectorComboBoxItem> {modelName}Items {{ get; }}");
             }
         }
 

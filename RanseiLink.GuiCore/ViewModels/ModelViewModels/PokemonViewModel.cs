@@ -98,10 +98,6 @@ public partial class PokemonViewModel : ViewModelBase
     public ICommand JumpToMoveCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
 
-    public List<SelectorComboBoxItem> MoveItems { get; }
-    public List<SelectorComboBoxItem> AbilityItems { get; }
-
-
     public string QuantityForEvolutionCondition1Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition1, _model.QuantityForEvolutionCondition1);
 
     private string GetNameOfQuantityForEvolutionCondition(EvolutionConditionId id, int quantity)

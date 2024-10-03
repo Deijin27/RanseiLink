@@ -22,6 +22,8 @@ public partial class BuildingViewModel : ViewModelBase
         _cachedSpriteProvider = cachedSpriteProvider;
         _id = id;
         _model = model;
+        BuildingItems = parent.BuildingItems;
+        KingdomItems = parent.KingdomItems;
 
         this.PropertyChanged += BuildingViewModel_PropertyChanged;
     }
@@ -46,8 +48,6 @@ public partial class BuildingViewModel : ViewModelBase
     }
 
     public ScenarioBuildingViewModel ScenarioBuildingVm { get; }
-
-    public List<SelectorComboBoxItem> BuildingItems => _parent.BuildingItems;
 
     public int Slot { get; set; }
 

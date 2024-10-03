@@ -124,4 +124,6 @@ public partial class KingdomViewModel : ViewModelBase
         get => _model.Unknown3;
         set => SetProperty(_model.Unknown3, value, v => _model.Unknown3 = v);
     }
+
+    public List<SelectorComboBoxItem> KingdomItems { get; }
 }

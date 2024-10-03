@@ -53,7 +53,7 @@
             <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding ScenarioItems}" SelectedItem="{Binding Scenario, Mode=TwoWay}"/>
 
             <TextBlock Text="Unlock Condition" Grid.Row="3"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding UnlockConditionItems}" SelectedValue="{Binding UnlockCondition, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding EpisodeItems}" SelectedValue="{Binding UnlockCondition, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Clear Condition" Grid.Row="4"/>
             <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding ClearConditionItems}" SelectedItem="{Binding ClearCondition, Mode=TwoWay}"/>

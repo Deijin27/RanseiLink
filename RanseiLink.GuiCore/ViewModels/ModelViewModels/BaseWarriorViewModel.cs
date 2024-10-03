@@ -78,11 +78,6 @@ public partial class BaseWarriorViewModel : ViewModelBase
 
     public CopyPasteViewModel CopyPasteVm { get; }
 
-    public List<SelectorComboBoxItem> WarriorSkillItems { get; }
-    public List<SelectorComboBoxItem> BaseWarriorItems { get; }
-    public List<SelectorComboBoxItem> PokemonItems { get; }
-    public List<SelectorComboBoxItem> SpeakerItems { get; }
-
     public ICommand JumpToWarriorSkillCommand { get; }
     public ICommand JumpToBaseWarriorCommand { get; }
     public ICommand JumpToPokemonCommand { get; }

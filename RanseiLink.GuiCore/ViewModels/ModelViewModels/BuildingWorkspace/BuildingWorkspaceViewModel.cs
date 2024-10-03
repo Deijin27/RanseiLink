@@ -27,6 +27,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     {
 
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
+        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
         JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
         _cachedSpriteProvider = cachedSpriteProvider;
         CopyPasteVm = copyPasteVm;
@@ -68,6 +69,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
     public ScenarioBuildingViewModel ScenarioBuildingVm => _scenarioBuildingVm;
 
     public List<SelectorComboBoxItem> BuildingItems { get; }
+    public List<SelectorComboBoxItem> KingdomItems { get; }
 
     public ICommand JumpToBattleConfigCommand { get; }
 

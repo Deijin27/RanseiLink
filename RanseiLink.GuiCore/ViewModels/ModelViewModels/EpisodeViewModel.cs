@@ -18,7 +18,7 @@ public partial class EpisodeViewModel : ViewModelBase
         _idToNameService = idToNameService;
         _msgService = msgService;
 
-        UnlockConditionItems = episodeService
+        EpisodeItems = episodeService
             .ValidIds()
             .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
             .Append(new SelectorComboBoxItem(38, "Default"))
@@ -50,8 +50,6 @@ public partial class EpisodeViewModel : ViewModelBase
     }
 
     public List<ScenarioId> ScenarioItems { get; } = EnumUtil.GetValues<ScenarioId>().ToList();
-
-    public List<SelectorComboBoxItem> UnlockConditionItems { get; }
 
     public List<EpisodeClearConditionId> ClearConditionItems { get; } = EnumUtil.GetValues<EpisodeClearConditionId>().ToList();
 }
