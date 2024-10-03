@@ -44,6 +44,18 @@
         <Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
         <Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
         <Property Index="2, 24,  5" Name="NumberOfTurns" />
+		<ByteProperty Index="12" Name="Treasure1" Type="ItemId"/>
+		<ByteProperty Index="13" Name="Treasure2" Type="ItemId"/>
+		<ByteProperty Index="14" Name="Treasure3" Type="ItemId"/>
+		<ByteProperty Index="15" Name="Treasure4" Type="ItemId"/>
+		<ByteProperty Index="16" Name="Treasure5" Type="ItemId"/>
+		<ByteProperty Index="17" Name="Treasure6" Type="ItemId"/>
+		<ByteProperty Index="18" Name="Treasure7" Type="ItemId"/>
+		<ByteProperty Index="19" Name="Treasure8" Type="ItemId"/>
+		<ByteProperty Index="20" Name="Treasure9" Type="ItemId"/>
+		<ByteProperty Index="21" Name="Treasure10" Type="ItemId"/>
+		<ByteProperty Index="22" Name="Treasure11" Type="ItemId"/>
+		<ByteProperty Index="23" Name="Treasure12" Type="ItemId"/>
     </Model>
 	<Model Name="Building" Cultural="true" ViewModel="true">
 		<StringProperty Name="Name" />

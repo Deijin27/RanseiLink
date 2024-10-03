@@ -78,4 +78,76 @@ public partial class BattleConfig : BaseDataWindow
         get => GetInt(2, 24, 5);
         set => SetInt(2, 24, 5, value);
     }
+
+    public ItemId Treasure1
+    {
+        get => (ItemId)GetByte(12);
+        set => SetByte(12, (byte)value);
+    }
+
+    public ItemId Treasure2
+    {
+        get => (ItemId)GetByte(13);
+        set => SetByte(13, (byte)value);
+    }
+
+    public ItemId Treasure3
+    {
+        get => (ItemId)GetByte(14);
+        set => SetByte(14, (byte)value);
+    }
+
+    public ItemId Treasure4
+    {
+        get => (ItemId)GetByte(15);
+        set => SetByte(15, (byte)value);
+    }
+
+    public ItemId Treasure5
+    {
+        get => (ItemId)GetByte(16);
+        set => SetByte(16, (byte)value);
+    }
+
+    public ItemId Treasure6
+    {
+        get => (ItemId)GetByte(17);
+        set => SetByte(17, (byte)value);
+    }
+
+    public ItemId Treasure7
+    {
+        get => (ItemId)GetByte(18);
+        set => SetByte(18, (byte)value);
+    }
+
+    public ItemId Treasure8
+    {
+        get => (ItemId)GetByte(19);
+        set => SetByte(19, (byte)value);
+    }
+
+    public ItemId Treasure9
+    {
+        get => (ItemId)GetByte(20);
+        set => SetByte(20, (byte)value);
+    }
+
+    public ItemId Treasure10
+    {
+        get => (ItemId)GetByte(21);
+        set => SetByte(21, (byte)value);
+    }
+
+    public ItemId Treasure11
+    {
+        get => (ItemId)GetByte(22);
+        set => SetByte(22, (byte)value);
+    }
+
+    public ItemId Treasure12
+    {
+        get => (ItemId)GetByte(23);
+        set => SetByte(23, (byte)value);
+    }
 }
