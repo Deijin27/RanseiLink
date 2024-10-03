@@ -49,7 +49,7 @@ public partial class BaseWarriorViewModel : ViewModelBase
     {
         switch (e.PropertyName)
         {
-            case nameof(WarriorName):
+            case nameof(Name):
                 RaisePropertyChanged(nameof(WarriorNameValue));
                 break;
             case nameof(Sprite):
@@ -89,7 +89,7 @@ public partial class BaseWarriorViewModel : ViewModelBase
     public ICommand JumpToSpeakerMessagesCommand { get; }
     public ICommand JumpToWarriorNameCommand { get; }
 
-    public string WarriorNameValue => _nameTable.GetEntry(WarriorName);
+    public string WarriorNameValue => _nameTable.GetEntry(Name);
 
     public string Quantity1ForRankUpConditionName => GetNameOfQuantityForRankUpCondition(RankUpCondition2, Quantity1ForRankUpCondition);
 
