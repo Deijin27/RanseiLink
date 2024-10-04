@@ -76,12 +76,6 @@
 		<Property Index="8, 21, 7" Index_VPYJ="7, 21, 7" Name="Sprite3" Max="84"/>
 		<Property Index="8, 28, 4" Index_VPYJ="7, 28, 4" Name="Function" Type="BuildingFunctionId"/>
 	</Model>
-    <!--
-    Idea for how to do the models that vary by culture (usually due to allocating different number of bytes for name
-    <Model Name="Building" Cultural="true" DataLength="0x24" DataLength_VPYJ="0x20">
-	    <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0x10" />
-    </Model>
-    -->
     <Model Name="Episode" DataLength="0x8" Model="true" ViewModel="true">
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
@@ -219,8 +213,7 @@
         <Property Index="1, 10,  5" Name="DefIv" />
         <Property Index="1, 15,  5" Name="SpeIv" />
         <Property Index="0, 16, 16" Name="Exp" Type="ushort"/>
-		<!-- In memory: For wild pokemon this seems to store hp, but not for players pokemon -->
-        <Property Index="0,  8,  8" Name="U1" Type="byte" />
+        <Property Index="0,  8,  8" Name="U1" Type="byte" Description="In memory: For wild pokemon this seems to store hp, but not for players pokemon"/>
         <Property Index="1, 29,  3" Name="Energy" Type="EnergyId" />
     </Model>
     <Model Name="ScenarioWarrior" DataLength="0x20" Model="true">
@@ -240,8 +233,7 @@
 		<Property Name="Duration"/>
 		<Property Name="Effect3Amount"/>
 		<Property Name="Target" Type="WarriorSkillTargetId"/>
-		<!--Animation: Seems to be unused-->
-		<Property Name="Animation" Type="MoveAnimationId"/>
+		<Property Name="Animation" Type="MoveAnimationId" Description="Seems to be unused"/>
 		<MsgProperty Name="Description" Id="WarriorSkillDescription"/>
 	</Model>
 </Models>
