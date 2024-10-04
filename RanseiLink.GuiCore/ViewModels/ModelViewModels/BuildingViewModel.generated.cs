@@ -96,21 +96,21 @@ public partial class BuildingViewModel : ViewModelBase
         set => SetProperty(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
     }
 
-    public int Sprite1_Max => 127;
+    public int Sprite1_Max => 84;
     public int Sprite1
     {
         get => _model.Sprite1;
         set => SetProperty(_model.Sprite1, value, v => _model.Sprite1 = v);
     }
 
-    public int Sprite2_Max => 127;
+    public int Sprite2_Max => 84;
     public int Sprite2
     {
         get => _model.Sprite2;
         set => SetProperty(_model.Sprite2, value, v => _model.Sprite2 = v);
     }
 
-    public int Sprite3_Max => 127;
+    public int Sprite3_Max => 84;
     public int Sprite3
     {
         get => _model.Sprite3;
