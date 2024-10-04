@@ -39,6 +39,35 @@ internal class Program
         }
     }
 
+    public class CultureParams
+    {
+        public CultureParams(XElement element, string attrName, Func<string, object[]> attrValueToParams)
+        {
+            var defaultAttr = element.Attribute(attrName) ?? throw new Exception($"Missing default attr of '{attrName}'");
+            DefaultParams = attrValueToParams(defaultAttr.Value);
+
+            var prefix = attrName + "_";
+            foreach (var attr in element.Attributes())
+            {
+                if (attr.Name.LocalName.StartsWith(prefix))
+                {
+                    var culture = attr.Name.LocalName[prefix.Length..];
+                    Cultures[culture] = attrValueToParams(attr.Value);
+                }
+            }
+        }
+
+        public object[] DefaultParams { get; }
+
+        public Dictionary<string, object[]> Cultures { get; } = [];
+    }
+
+    public enum Accessor
+    {
+        Get,
+        Set,
+    }
+
     private static void GenerateModel(XElement modelElement)
     {
         var name = modelElement.Attribute("Name")!.Value;
@@ -59,22 +88,20 @@ internal class Program
         sb.AppendLine("{");
         if (cultural)
         {
+            sb.AppendLine("    private ConquestGameCode _culture;");
+            var dataLengthParams = new CultureParams(modelElement, "DataLength", v => [v]);
             sb.AppendLine("    public static int DataLength(ConquestGameCode culture)");
             sb.AppendLine("    {");
             sb.AppendLine("        return culture switch");
             sb.AppendLine("        {");
-            foreach (var attribute in modelElement.Attributes())
+            foreach (var i in dataLengthParams.Cultures)
             {
-                if (attribute.Name.LocalName.StartsWith("DataLength_"))
-                {
-                    var culture = attribute.Name.LocalName["DataLength_".Length..];
-                    sb.AppendLine($"            ConquestGameCode.{culture} => {attribute.Value},");
-                }
+                sb.AppendLine(string.Format($"            ConquestGameCode.{i.Key} => {{0}},", i.Value));
             }
-            sb.AppendLine($"            _ => {dataLength}");
+            sb.AppendLine(string.Format("            _ => {0}", dataLengthParams.DefaultParams));
             sb.AppendLine("        };");
             sb.AppendLine("    }");
-            sb.AppendLine($"    public {name}(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) {{ }}");
+            sb.AppendLine($"    public {name}(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) {{ _culture = culture; }}");
             sb.AppendLine($"    public {name}(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) {{ }}");
         }
         else
@@ -83,7 +110,51 @@ internal class Program
             sb.AppendLine($"    public {name}(byte[] data) : base(data, DataLength) {{ }}");
             sb.AppendLine($"    public {name}() : this(new byte[DataLength]) {{ }}");
         }
-        
+
+        void writeAccessor(Accessor accessor, string formatString, CultureParams cultureParams)
+        {
+            string @get;
+            string @return;
+            if (accessor == Accessor.Get)
+            {
+                @get = "get";
+                @return = "return ";
+            }
+            else
+            {
+                @get = "set";
+                @return = "";
+            }
+
+            var formattedDefault = string.Format(formatString, cultureParams.DefaultParams);
+            if (cultural)
+            {
+                sb.AppendLine($"        {@get}");
+                sb.AppendLine("        {");
+                string condition = "if";
+                foreach (var kvp in cultureParams.Cultures)
+                {
+                    var formattedCultural = string.Format(formatString, kvp.Value);
+                    sb.AppendLine($"            {condition} (_culture == ConquestGameCode.{kvp.Key})");
+                    sb.AppendLine("            {");
+                    sb.AppendLine($"                {@return}{formattedCultural};");
+                    sb.AppendLine("            }");
+
+
+
+                    condition = "else if";
+                }
+                sb.AppendLine("            else");
+                sb.AppendLine("            {");
+                sb.AppendLine($"                {@return}{formattedDefault};");
+                sb.AppendLine("            }");
+                sb.AppendLine("        }");
+            }
+            else
+            {
+                sb.AppendLine($"        {@get} => {formattedDefault};");
+            }
+        }
 
         foreach (var propertyElement in modelElement.Elements())
         {
@@ -91,50 +162,50 @@ internal class Program
             if (propertyElement.Name == "Property")
             {
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
-                var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
+                var index = new CultureParams(propertyElement, "Index", v => [v.Replace("  ", " ").Trim()]);
 
                 sb.AppendLine();
                 sb.AppendLine($"    public {propType} {propName}");
                 sb.AppendLine("    {");
                 if (propType == "bool")
                 {
-                    sb.AppendLine($"        get => GetInt({index}) == 1;");
-                    sb.AppendLine($"        set => SetInt({index}, value ? 1 : 0);");
+                    writeAccessor(Accessor.Get, "GetInt({0}) == 1", index);
+                    writeAccessor(Accessor.Set, "SetInt({0}, value ? 1 : 0)", index);
                 }
                 else if (propType == "int")
                 {
-                    sb.AppendLine($"        get => GetInt({index});");
-                    sb.AppendLine($"        set => SetInt({index}, value);");
+                    writeAccessor(Accessor.Get, "GetInt({0})", index);
+                    writeAccessor(Accessor.Set, "SetInt({0}, value)", index);
                 }
                 else
                 {
-                    sb.AppendLine($"        get => ({propType})GetInt({index});");
-                    sb.AppendLine($"        set => SetInt({index}, (int)value);");
+                    writeAccessor(Accessor.Get, $"({propType})GetInt({{0}})", index);
+                    writeAccessor(Accessor.Set, "SetInt({0}, (int)value)", index);
                 }
                 sb.AppendLine("    }");
             }
             else if (propertyElement.Name == "ByteProperty")
             {
                 var propType = propertyElement.Attribute("Type")?.Value ?? "int";
-                var index = propertyElement.Attribute("Index")!.Value.Replace("  ", " ").Trim();
+                var index = new CultureParams(propertyElement, "Index", v => [v.Replace("  ", " ").Trim()]);
 
                 sb.AppendLine();
                 sb.AppendLine($"    public {propType} {propName}");
                 sb.AppendLine("    {");
                 if (propType == "bool")
                 {
-                    sb.AppendLine($"        get => GetByte({index}) == 1;");
-                    sb.AppendLine($"        set => SetByte({index}, value ? 1 : 0);");
+                    writeAccessor(Accessor.Get, "GetByte({0}) == 1", index);
+                    writeAccessor(Accessor.Set, "SetByte({0}, value ? 1 : 0)", index);
                 }
                 else if (propType == "int")
                 {
-                    sb.AppendLine($"        get => GetByte({index});");
-                    sb.AppendLine($"        set => SetByte({index}, (byte)value);");
+                    writeAccessor(Accessor.Get, "GetByte({0})", index);
+                    writeAccessor(Accessor.Set, "SetByte({0}, (byte)value)", index);
                 }
                 else
                 {
-                    sb.AppendLine($"        get => ({propType})GetByte({index});");
-                    sb.AppendLine($"        set => SetByte({index}, (byte)value);");
+                    writeAccessor(Accessor.Get, $"({propType})GetByte({{0}})", index);
+                    writeAccessor(Accessor.Set, "SetByte({0}, (byte)value)", index);
                 }
                 sb.AppendLine("    }");
             }
@@ -174,12 +245,12 @@ internal class Program
             else if (propertyElement.Name == "StringProperty")
             {
                 var index = propertyElement.Attribute("Index")!.Value;
-                var maxLength = propertyElement.Attribute("MaxLength")!.Value;
+                var maxLength = new CultureParams(propertyElement, "MaxLength", v => [v]);
                 sb.AppendLine();
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
-                sb.AppendLine($"        get => GetPaddedUtf8String({index}, {maxLength});");
-                sb.AppendLine($"        set => SetPaddedUtf8String({index}, {maxLength}, value);");
+                writeAccessor(Accessor.Get, $"GetPaddedUtf8String({index}, {{0}})", maxLength);
+                writeAccessor(Accessor.Set, $"SetPaddedUtf8String({index}, {{0}}, value)", maxLength);
                 sb.AppendLine("    }");
             }
         }
