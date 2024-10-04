@@ -71,9 +71,9 @@
 		<Property Index="7,  0, 7" Index_VPYJ="6, 16, 7" Name="BattleConfig1" Type="BattleConfigId"/>
 		<Property Index="7,  7, 7" Index_VPYJ="6, 23, 7" Name="BattleConfig2" Type="BattleConfigId"/>
 		<Property Index="8,  0, 7" Index_VPYJ="7,  0, 7" Name="BattleConfig3" Type="BattleConfigId"/>
-		<Property Index="8,  7, 7" Index_VPYJ="7,  7, 7" Name="Sprite1"/>
-		<Property Index="8, 14, 7" Index_VPYJ="7, 14, 7" Name="Sprite2"/>
-		<Property Index="8, 21, 7" Index_VPYJ="7, 21, 7" Name="Sprite3"/>
+		<Property Index="8,  7, 7" Index_VPYJ="7,  7, 7" Name="Sprite1" Max="84"/>
+		<Property Index="8, 14, 7" Index_VPYJ="7, 14, 7" Name="Sprite2" Max="84"/>
+		<Property Index="8, 21, 7" Index_VPYJ="7, 21, 7" Name="Sprite3" Max="84"/>
 		<Property Index="8, 28, 4" Index_VPYJ="7, 28, 4" Name="Function" Type="BuildingFunctionId"/>
 	</Model>
     <!--
