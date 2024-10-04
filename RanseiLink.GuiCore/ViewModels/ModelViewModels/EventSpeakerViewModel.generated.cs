@@ -17,7 +17,7 @@ public partial class EventSpeakerViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
-    public int Name_MaxLength => 0x10;
+    public int Name_MaxLength => _model.Name_MaxLength;
     public string Name
     {
         get => _model.Name;

@@ -13,10 +13,14 @@ public partial class Move : BaseDataWindow
     public Move(byte[] data) : base(data, DataLength) { }
     public Move() : this(new byte[DataLength]) { }
 
+    public int Name_MaxLength
+    {
+        get => 14;
+    }
     public string Name
     {
-        get => GetPaddedUtf8String(0, 14);
-        set => SetPaddedUtf8String(0, 14, value);
+        get => GetPaddedUtf8String(0, Name_MaxLength);
+        set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
     public MoveMovementFlags MovementFlags

@@ -247,10 +247,14 @@ internal class Program
                 var index = propertyElement.Attribute("Index")!.Value;
                 var maxLength = new CultureParams(propertyElement, "MaxLength", v => [v]);
                 sb.AppendLine();
+                sb.AppendLine($"    public int {propName}_MaxLength");
+                sb.AppendLine("    {");
+                writeAccessor(Accessor.Get, "{0}", maxLength);
+                sb.AppendLine("    }");
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
-                writeAccessor(Accessor.Get, $"GetPaddedUtf8String({index}, {{0}})", maxLength);
-                writeAccessor(Accessor.Set, $"SetPaddedUtf8String({index}, {{0}}, value)", maxLength);
+                sb.AppendLine($"        get => GetPaddedUtf8String({index}, {propName}_MaxLength);");
+                sb.AppendLine($"        set => SetPaddedUtf8String({index}, {propName}_MaxLength, value);");
                 sb.AppendLine("    }");
             }
         }
@@ -365,7 +369,7 @@ internal class Program
                 var maxLenEl = propertyElement.Attribute("MaxLength");
                 if (maxLenEl != null)
                 {
-                    sb.AppendLine($"    public int {propName}_MaxLength => {maxLenEl.Value};");
+                    sb.AppendLine($"    public int {propName}_MaxLength => _model.{propName}_MaxLength;");
                 }
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");

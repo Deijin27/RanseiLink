@@ -13,10 +13,14 @@ public partial class Ability : BaseDataWindow
     public Ability(byte[] data) : base(data, DataLength) { }
     public Ability() : this(new byte[DataLength]) { }
 
+    public int Name_MaxLength
+    {
+        get => 14;
+    }
     public string Name
     {
-        get => GetPaddedUtf8String(0, 14);
-        set => SetPaddedUtf8String(0, 14, value);
+        get => GetPaddedUtf8String(0, Name_MaxLength);
+        set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
     public int Effect1Amount

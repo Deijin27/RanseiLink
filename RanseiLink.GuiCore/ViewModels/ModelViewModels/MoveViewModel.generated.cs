@@ -17,7 +17,7 @@ public partial class MoveViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
-    public int Name_MaxLength => 14;
+    public int Name_MaxLength => _model.Name_MaxLength;
     public string Name
     {
         get => _model.Name;

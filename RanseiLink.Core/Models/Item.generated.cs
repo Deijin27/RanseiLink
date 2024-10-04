@@ -13,10 +13,14 @@ public partial class Item : BaseDataWindow
     public Item(byte[] data) : base(data, DataLength) { }
     public Item() : this(new byte[DataLength]) { }
 
+    public int Name_MaxLength
+    {
+        get => 20;
+    }
     public string Name
     {
-        get => GetPaddedUtf8String(0, 20);
-        set => SetPaddedUtf8String(0, 20, value);
+        get => GetPaddedUtf8String(0, Name_MaxLength);
+        set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
     public PurchaseMethodId PurchaseMethod

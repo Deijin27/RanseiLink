@@ -13,10 +13,14 @@ public partial class Pokemon : BaseDataWindow
     public Pokemon(byte[] data) : base(data, DataLength) { }
     public Pokemon() : this(new byte[DataLength]) { }
 
+    public int Name_MaxLength
+    {
+        get => 10;
+    }
     public string Name
     {
-        get => GetPaddedUtf8String(0, 10);
-        set => SetPaddedUtf8String(0, 10, value);
+        get => GetPaddedUtf8String(0, Name_MaxLength);
+        set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
     public int Hp

@@ -21,30 +21,24 @@ public partial class EventSpeaker : BaseDataWindow
     public EventSpeaker(byte[] data, ConquestGameCode culture) : base(data, DataLength(culture)) { _culture = culture; }
     public EventSpeaker(ConquestGameCode culture) : this(new byte[DataLength(culture)], culture) { }
 
-    public string Name
+    public int Name_MaxLength
     {
         get
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return GetPaddedUtf8String(0, 0xA);
+                return 0xA;
             }
             else
             {
-                return GetPaddedUtf8String(0, 0x10);
+                return 0x10;
             }
         }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetPaddedUtf8String(0, 0xA, value);
-            }
-            else
-            {
-                SetPaddedUtf8String(0, 0x10, value);
-            }
-        }
+    }
+    public string Name
+    {
+        get => GetPaddedUtf8String(0, Name_MaxLength);
+        set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
     public int Sprite
