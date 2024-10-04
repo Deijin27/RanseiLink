@@ -11,12 +11,9 @@
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance vm:MaxLinkViewModelBase, IsDesignTimeCreatable=False}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <valueConverters:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
-    </UserControl.Resources>
     <DockPanel>
         <StackPanel Margin="10,10,10,0" Orientation="Horizontal" DockPanel.Dock="Top">
-            <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" 
+            <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" 
                    Height="30" 
                    RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"
                    />

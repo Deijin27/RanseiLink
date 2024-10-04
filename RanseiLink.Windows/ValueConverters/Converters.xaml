@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters">
+    
+    <vc:PokemonTypeToBrushConverter x:Key="Converter.PokemonTypeToBrush"/>
+    <BooleanToVisibilityConverter x:Key="Converter.BoolToVisibility"/>
+    <vc:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
+    <vc:InvertBoolToVisibilityConverter x:Key="Converter.InvertBoolToVisibility"/>
+    <vc:InvertBoolConverter x:Key="Converter.InvertBool" />
+    <vc:Rgb555ToColorConverter x:Key="Converter.Rgb555ToColor"/>
+    <vc:BoolAggregateAndValueConverter x:Key="Converter.BoolAggregateAnd"/>
+    <vc:NotNullConverter x:Key="Converter.NotNull"/>
+    <vc:ZeroToVisiblityConverter x:Key="Converter.ZeroToVis"/>
+    <vc:TerrainToBrushConverter x:Key="Converter.TerrainToBrush"/>
+    <vc:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis"/>
+    <vc:SubCellToBrushConverter x:Key="Converter.SubCellToBrush"/>
+    <vc:GreaterThanZeroToVisiblityConverter x:Key="Converter.GTZeroToVis"/>
+    <vc:MoveEffectIdToQuantityNameConverter x:Key="Converter.MoveEffectIdToQuantityName"/>
+    <vc:ColorToBrushConverter x:Key="Converter.ColorToBrush" />
+    <BorderGapMaskConverter x:Key="Converter.BorderGapMask"/>
+    
+</ResourceDictionary>

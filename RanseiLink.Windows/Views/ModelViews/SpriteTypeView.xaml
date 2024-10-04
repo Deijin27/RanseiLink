@@ -11,9 +11,6 @@
              d:DataContext="{d:DesignInstance vm:SpriteTypeViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <vc:ZeroToVisiblityConverter x:Key="Converter.ZeroToVis"/>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

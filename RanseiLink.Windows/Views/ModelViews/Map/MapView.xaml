@@ -11,13 +11,6 @@
              d:DataContext="{d:DesignInstance Type=vm:MapViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">
-    <UserControl.Resources>
-        <vc:TerrainToBrushConverter x:Key="Converter.TerrainToBrush"/>
-        <vc:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis"/>
-        <vc:SubCellToBrushConverter x:Key="Converter.SubCellToBrush"/>
-        <vc:GreaterThanZeroToVisiblityConverter x:Key="Converter.GTZeroToVis"/>
-        <vc:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
-    </UserControl.Resources>
     <DockPanel Margin="10">
         <DockPanel Margin="10" DockPanel.Dock="Left">
             <Border HorizontalAlignment="Left" Width="{Binding ElementName=MatrixElement, Path=ActualWidth}" DockPanel.Dock="Top" BorderThickness="0.5" BorderBrush="Gray" Background="{DynamicResource WindowTransparentBackgroundBrush}" DataContext="{Binding MouseOverItem}" Padding="2">
@@ -114,7 +107,7 @@
                                                    HorizontalAlignment="Center" 
                                                    VerticalAlignment="Center" 
                                                    Stretch="Uniform"
-                                                   Source="{Binding GimmickImagePath, Converter={StaticResource Converter.PathToImage}}"
+                                                   Source="{Binding GimmickImagePath, Converter={StaticResource Converter.PathToImageSource}}"
                                                    />
                                             <Rectangle Grid.Column="0" 
                                                        Grid.Row="0" 
@@ -302,7 +295,7 @@
                         <CheckBox IsChecked="{Binding TerrainPaintingActive}" Grid.Row="1" Grid.ColumnSpan="2">Terrain Painting Active</CheckBox>
                         <TextBlock Grid.Row="2" Height="20">Terrain Brush</TextBlock>
                         <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding TerrainBrush}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
-                        <Image Grid.Row="3" Grid.Column="0" Width="30" Height="30" Stretch="Uniform" Source="{Binding TerrainBrushImagePath, Converter={StaticResource Converter.PathToImage}}"/>
+                        <Image Grid.Row="3" Grid.Column="0" Width="30" Height="30" Stretch="Uniform" Source="{Binding TerrainBrushImagePath, Converter={StaticResource Converter.PathToImageSource}}"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Elevation">

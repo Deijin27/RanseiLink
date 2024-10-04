@@ -146,7 +146,6 @@
     
     <!-- Row Header -->
 
-    <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter"/>
     <Style x:Key="RowHeaderGripperStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Height" Value="8"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -177,7 +176,7 @@
                                 Background="{TemplateBinding Background}">
                             <StackPanel Orientation="Horizontal">
                                 <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
-                                <Control SnapsToDevicePixels="false" Template="{Binding ValidationErrorTemplate, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Visibility="{Binding (Validation.HasError), Converter={StaticResource bool2VisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"/>
+                                <Control SnapsToDevicePixels="false" Template="{Binding ValidationErrorTemplate, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Visibility="{Binding (Validation.HasError), Converter={StaticResource Converter.BoolToVisibility}, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"/>
                             </StackPanel>
                         </Border>
                         <Thumb x:Name="PART_TopHeaderGripper" Style="{StaticResource RowHeaderGripperStyle}" VerticalAlignment="Top"/>

@@ -13,8 +13,7 @@
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
              d:DesignHeight="950" d:DesignWidth="800">
     <UserControl.Resources>
-        <valueConverters:EvolutionConditionIdToQuantityNameConverter x:Key="evolutionConditionIdToQuantityNameConverter"/>
-        <valueConverters:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
+        
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -186,7 +185,7 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
-                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
+                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
                 <controls:IconButton Icon="image" Text="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
 

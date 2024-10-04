@@ -15,9 +15,7 @@
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         d:DataContext="{d:DesignInstance vm:SimplifyPaletteViewModel, IsDesignTimeCreatable=false}"
         Title="Patch rom" Background="{DynamicResource WindowBackgroundBrush}">
-    <Window.Resources>
-        <conv:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
-    </Window.Resources>
+
     <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" MouseDown="TopBar_MouseDown">
         <DockPanel>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">

@@ -12,9 +12,6 @@
         <WindowChrome CaptionHeight="30" 
                       ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisConv"/>
-    </Window.Resources>
     <Border BorderBrush="{DynamicResource WindowBorderBrush}">
         <!--This is a hack fix for a bug with full screen cropping to the resize border thickness-->
         <Border.Style>
@@ -43,7 +40,7 @@
             <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Background="Transparent">
                 <Button DockPanel.Dock="Left" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
                     Command="{Binding BackButtonCommand}"
-                    Visibility="{Binding BackButtonVisible, Converter={StaticResource BoolToVisConv}}"
+                    Visibility="{Binding BackButtonVisible, Converter={StaticResource Converter.BoolToVisibility}}"
                     FontFamily="{StaticResource MaterialIcons}"
                     Width="45" Height="30"
                     FontSize="13"

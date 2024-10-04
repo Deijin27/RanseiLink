@@ -10,10 +10,6 @@
              d:DataContext="{d:DesignInstance vm:MainEditorViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="420" d:DesignWidth="800">
-    <UserControl.Resources>
-        <vc:InvertBoolToVisibilityConverter x:Key="Converter.InvertBoolToVisibility"/>
-        <vc:InvertBoolConverter x:Key="Converter.InvertBool" />
-    </UserControl.Resources>
     <UserControl.InputBindings>
         <KeyBinding Key="Left" Modifiers="Ctrl" Command="{Binding GoBackInModuleStackCommand}"/>
         <KeyBinding Key="Right" Modifiers="Ctrl" Command="{Binding GoForwardInModuleStackCommand}"/>

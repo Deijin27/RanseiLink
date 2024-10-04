@@ -16,7 +16,8 @@
                         <ResourceDictionary Source="Styles/Colors/Dark.xaml" />
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
-               
+
+                <ResourceDictionary Source="ValueConverters/Converters.xaml"/>
                 <ResourceDictionary Source="Styles/Icons.xaml"/>
                 <ResourceDictionary Source="Styles/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -170,9 +171,6 @@
                 <Setter Property="TextSearch.TextPath" Value="Name"/>
                 <Setter Property="Height" Value="20"/>
             </Style>
-
-            <vc:PokemonTypeToBrushConverter x:Key="Converter.PokemonTypeToBrush"/>
-            <BooleanToVisibilityConverter x:Key="Converter.BoolToVisibility"/>
 
         </ResourceDictionary>
     </Application.Resources>

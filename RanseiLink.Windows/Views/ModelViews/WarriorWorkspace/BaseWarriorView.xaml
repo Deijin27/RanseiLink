@@ -21,7 +21,6 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Height" Value="20"/>
         </Style>
-        <vc:PathToImageSourceConverter x:Key="Converter.PathToImage"/>
     </UserControl.Resources>
     <WrapPanel>
         <Grid Margin="10">
@@ -58,7 +57,7 @@
             <TextBlock Text="Sprite" Grid.Row="1"/>
             <UniformGrid Grid.Row="1" Grid.Column="1" Rows="1">
                 <controls:NumberBox  Value="{Binding Sprite}"/>
-                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImage}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
             </UniformGrid>
 
             <Button Grid.Row="2" Grid.ColumnSpan="2" Content="View Sprites" Height="20" Command="{Binding ViewSpritesCommand}"/>

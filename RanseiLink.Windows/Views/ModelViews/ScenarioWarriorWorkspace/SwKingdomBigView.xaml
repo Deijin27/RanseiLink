@@ -13,9 +13,6 @@
              d:DataContext="{d:DesignInstance vm:SwKingdomMiniViewModel, IsDesignTimeCreatable=False}">
     <Grid>
         <Grid.Resources>
-            <vc:InvertBoolConverter x:Key="invertBoolConverter"/>
-            <vc:BoolAggregateAndValueConverter x:Key="boolAggregateAndConverter"/>
-            <vc:NotNullConverter x:Key="Converter.NotNull"/>
 
             <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
                 <Setter Property="Height" Value="20"/>

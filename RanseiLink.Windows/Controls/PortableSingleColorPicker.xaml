@@ -10,15 +10,14 @@
              mc:Ignorable="d" >
     <UserControl.Resources>
         <ResourceDictionary>
-            <converters:InvertBoolConverter x:Key="BoolToInvertedBoolConverter" />
-            <converters:ColorToBrushConverter x:Key="ColorToBrushConverter" />
+            
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <ToggleButton Padding="0" Margin="0"
-                          IsEnabled="{Binding Path=IsOpen, ElementName=popup, Converter={StaticResource BoolToInvertedBoolConverter}}"
+                          IsEnabled="{Binding Path=IsOpen, ElementName=popup, Converter={StaticResource Converter.InvertBool}}"
                           x:Name="toggleButton"  Panel.ZIndex="1"
-                          Background="{Binding Path=SelectedColor, ElementName=uc, Converter={StaticResource ColorToBrushConverter}}">
+                          Background="{Binding Path=SelectedColor, ElementName=uc, Converter={StaticResource Converter.ColorToBrush}}">
         </ToggleButton>
         <Popup Name="popup" StaysOpen="False" IsOpen="{Binding Path=IsChecked, ElementName=toggleButton, Mode=TwoWay}">
             <Border BorderThickness="1" BorderBrush="{DynamicResource WindowBorderBrush}" Background="{DynamicResource WindowBackgroundBrush}">

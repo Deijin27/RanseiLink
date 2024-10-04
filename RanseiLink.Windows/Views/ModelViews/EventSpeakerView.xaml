@@ -22,7 +22,6 @@
             <Setter Property="Height" Value="20"/>
         </Style>
 
-        <conv:PathToImageSourceConverter x:Key="Converter.PathToImageSource"/>
     </UserControl.Resources>
     <Grid Margin="10">
         <Grid.ColumnDefinitions>

@@ -53,7 +53,7 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Left">
             <ItemsControl
                 Margin="0,0,10,0"
-                Visibility="{Binding ShowArmy, Converter={StaticResource bool2VisibilityConverter}}"
+                Visibility="{Binding ShowArmy, Converter={StaticResource Converter.BoolToVisibility}}"
                 ItemsSource="{Binding Items}" 
                 Style="{StaticResource ItemsControlVirtualizedStyle}"
                 VirtualizingPanel.ScrollUnit="Pixel"
@@ -66,7 +66,7 @@
                 dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
             </ItemsControl>
             <ItemsControl  
-                Visibility="{Binding ShowFree, Converter={StaticResource bool2VisibilityConverter}}"
+                Visibility="{Binding ShowFree, Converter={StaticResource Converter.BoolToVisibility}}"
                 Margin="0,0,10,0"
                 ItemsSource="{Binding WildItems}" 
                 Style="{StaticResource ItemsControlVirtualizedStyle}"
@@ -80,7 +80,7 @@
                 dd:DragDrop.DragAdornerTemplateSelector="{StaticResource miniTemplateSelector}">
             </ItemsControl>
             <ItemsControl 
-                Visibility="{Binding ShowUnassigned, Converter={StaticResource bool2VisibilityConverter}}"
+                Visibility="{Binding ShowUnassigned, Converter={StaticResource Converter.BoolToVisibility}}"
                 HorizontalAlignment="Left" 
                 Margin="0,0,10,0"
                 ItemsSource="{Binding UnassignedItems}" 
