@@ -19,7 +19,7 @@ public class BaseWarriorTests
 
         a.Sprite.Should().Be(23);
         a.Gender.Should().Be(GenderId.Female);
-        a.WarriorName.Should().Be(118);
+        a.Name.Should().Be(118);
         a.Speciality1.Should().Be(TypeId.Poison);
         a.Speciality2.Should().Be(TypeId.Flying);
         a.Weakness1.Should().Be(TypeId.Psychic);
@@ -47,7 +47,7 @@ public class BaseWarriorTests
         {
             Sprite = 128,
             Gender = GenderId.Male,
-            WarriorName = 4,
+            Name = 4,
             Speciality1 = TypeId.Fire,
             Speciality2 = TypeId.Water,
             Weakness1 = TypeId.Dark,
@@ -69,7 +69,7 @@ public class BaseWarriorTests
 
         a.Sprite.Should().Be(128);
         a.Gender.Should().Be(GenderId.Male);
-        a.WarriorName.Should().Be(4);
+        a.Name.Should().Be(4);
         a.Speciality1.Should().Be(TypeId.Fire);
         a.Speciality2.Should().Be(TypeId.Water);
         a.Weakness1.Should().Be(TypeId.Dark);

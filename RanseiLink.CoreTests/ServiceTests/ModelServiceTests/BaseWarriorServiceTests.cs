@@ -41,10 +41,10 @@ public class BaseWarriorServiceTests
         var nameTable = service.NameTable;
 
         var oichi = service.Retrieve((int)WarriorId.Oichi_1);
-        nameTable.GetEntry(oichi.WarriorName).Should().Be("Oichi");
+        nameTable.GetEntry(oichi.Name).Should().Be("Oichi");
 
         var shingen = service.Retrieve((int)WarriorId.Shingen_2);
-        nameTable.GetEntry(shingen.WarriorName).Should().Be("Shingen");
+        nameTable.GetEntry(shingen.Name).Should().Be("Shingen");
     }
 
     [Fact]
