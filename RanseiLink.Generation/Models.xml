@@ -117,8 +117,7 @@
         <Property Index="6, 16, 9" Name="CraftingIngredient2" Type="ItemId" />
         <Property Index="6, 25, 7" Name="CraftingIngredient2Amount" />
         <Property Index="7,  0, 9" Name="UnknownItem" Type="ItemId" />
-		<!-- Max shop price / 100 -->
-        <Property Index="7,  9, 9" Name="ShopPriceMultiplier" />
+        <Property Index="7,  9, 9" Name="ShopPriceMultiplier" Description="Max shop price / 100" />
         <Property Index="7, 18, 9" Name="QuantityForEffect" />
 		<FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
 		<MsgProperty Name="Description" Id="ItemDescription"/>
