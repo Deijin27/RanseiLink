@@ -17,12 +17,14 @@ public partial class GimmickViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
+    public int Name_MaxLength => _model.Name_MaxLength;
     public string Name
     {
         get => _model.Name;
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Image_Max => 255;
     public int Image
     {
         get => _model.Image;
@@ -59,6 +61,7 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
+    public int UnknownQuantity1_Max => 255;
     public int UnknownQuantity1
     {
         get => _model.UnknownQuantity1;
