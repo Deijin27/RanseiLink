@@ -17,12 +17,14 @@ public partial class WarriorSkillViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
+    public int Name_MaxLength => _model.Name_MaxLength;
     public string Name
     {
         get => _model.Name;
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Effect1Amount_Max => 255;
     public int Effect1Amount
     {
         get => _model.Effect1Amount;
@@ -41,6 +43,7 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
+    public int Effect2Amount_Max => 255;
     public int Effect2Amount
     {
         get => _model.Effect2Amount;
@@ -53,12 +56,14 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Effect3, value, v => _model.Effect3 = v);
     }
 
+    public int Duration_Max => 7;
     public int Duration
     {
         get => _model.Duration;
         set => SetProperty(_model.Duration, value, v => _model.Duration = v);
     }
 
+    public int Effect3Amount_Max => 255;
     public int Effect3Amount
     {
         get => _model.Effect3Amount;

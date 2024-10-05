@@ -222,17 +222,17 @@
         <Property Index="0, 17, 5" Name="Army" />
         <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
     </Model>
-	<Model Name="WarriorSkill" ViewModel="true" Cultural="true">
-		<StringProperty Name="Name" />
-		<Property Name="Effect1Amount"/>
-		<Property Name="Effect1" Type="WarriorSkillEffectId"/>
-		<Property Name="Effect2" Type="WarriorSkillEffectId"/>
-		<Property Name="Effect2Amount"/>
-		<Property Name="Effect3" Type="WarriorSkillEffectId"/>
-		<Property Name="Duration"/>
-		<Property Name="Effect3Amount"/>
-		<Property Name="Target" Type="WarriorSkillTargetId"/>
-		<Property Name="Animation" Type="MoveAnimationId" Description="Seems to be unused"/>
+	<Model Name="WarriorSkill" DataLength="0x1C" DataLength_VPYJ="0x18" Model="true" ViewModel="true" Cultural="true">
+		<StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0xE" />
+		<Property Index="4, 24, 8" Index_VPYJ="3, 24, 8" Name="Effect1Amount"/>
+		<Property Index="5,  0, 7" Index_VPYJ="4,  0, 7" Name="Effect1" Type="WarriorSkillEffectId"/>
+		<Property Index="5,  7, 7" Index_VPYJ="4,  7, 7" Name="Effect2" Type="WarriorSkillEffectId"/>
+		<Property Index="5, 14, 8" Index_VPYJ="4, 14, 8" Name="Effect2Amount"/>
+		<Property Index="5, 22, 7" Index_VPYJ="4, 22, 7" Name="Effect3" Type="WarriorSkillEffectId"/>
+		<Property Index="5, 29, 3" Index_VPYJ="4, 29, 3" Name="Duration"/>
+		<Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="Effect3Amount"/>
+		<Property Index="6,  8, 3" Index_VPYJ="5,  8, 3" Name="Target" Type="WarriorSkillTargetId"/>
+		<Property Index="6, 11, 9" Index_VPYJ="5, 11, 9" Name="Animation" Type="MoveAnimationId" Description="Seems to be unused"/>
 		<MsgProperty Name="Description" Id="WarriorSkillDescription"/>
 	</Model>
 </Models>
