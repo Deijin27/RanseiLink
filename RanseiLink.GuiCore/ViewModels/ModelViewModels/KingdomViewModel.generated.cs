@@ -17,12 +17,14 @@ public partial class KingdomViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
+    public int Name_MaxLength => _model.Name_MaxLength;
     public string Name
     {
         get => _model.Name;
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Unknown1_Max => 7;
     public int Unknown1
     {
         get => _model.Unknown1;
@@ -113,12 +115,14 @@ public partial class KingdomViewModel : ViewModelBase
         set => SetProperty(_model.BattleConfig, value, v => _model.BattleConfig = v);
     }
 
+    public int Unknown2_Max => 15;
     public int Unknown2
     {
         get => _model.Unknown2;
         set => SetProperty(_model.Unknown2, value, v => _model.Unknown2 = v);
     }
 
+    public int Unknown3_Max => 15;
     public int Unknown3
     {
         get => _model.Unknown3;
