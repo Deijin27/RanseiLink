@@ -37,6 +37,27 @@ public static partial class RenderExtensions
         console.WriteProperty("Treasure11", model.Treasure11);
         console.WriteProperty("Treasure12", model.Treasure12);
     }
+    public static void Render(this IConsole console, Building model, BuildingId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Building1", model.Building1);
+        console.WriteProperty("Building2", model.Building2);
+        console.WriteProperty("Building3", model.Building3);
+        console.WriteProperty("Building4", model.Building4);
+        console.WriteProperty("Building5", model.Building5);
+        console.WriteProperty("Building6", model.Building6);
+        console.WriteProperty("Building7", model.Building7);
+        console.WriteProperty("Building8", model.Building8);
+        console.WriteProperty("Kingdom", model.Kingdom);
+        console.WriteProperty("BattleConfig1", model.BattleConfig1);
+        console.WriteProperty("BattleConfig2", model.BattleConfig2);
+        console.WriteProperty("BattleConfig3", model.BattleConfig3);
+        console.WriteProperty("Sprite1", model.Sprite1);
+        console.WriteProperty("Sprite2", model.Sprite2);
+        console.WriteProperty("Sprite3", model.Sprite3);
+        console.WriteProperty("Function", model.Function);
+    }
     public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
     {
         console.WriteTitle(id.ToString());

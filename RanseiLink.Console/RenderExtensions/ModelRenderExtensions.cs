@@ -264,13 +264,6 @@ public static partial class RenderExtensions
         console.WriteProperty("Effect", gimmick.Effect);
     }
 
-    public static void Render(this IConsole console, Building building, BuildingId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", building.Name);
-        console.WriteProperty("Kingdom", building.Kingdom.ToString());
-    }
-
     public static void Render(this IConsole console, Item item, ItemId id)
     {
         console.WriteTitle($"{id}");
