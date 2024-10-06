@@ -462,9 +462,9 @@ internal class Program
             var name = modelElement.Attribute("Name")!.Value;
             var id = modelElement.Attribute("Id")?.Value ?? (name + "Id");
 
-            sb.AppendLine($"    public static void Render(this IConsole console, {name} model, {id} id)");
+            sb.AppendLine($"    public static void Render(this IConsole console, {name} model, object title)");
             sb.AppendLine("    {");
-            sb.AppendLine($"        console.WriteTitle(id.ToString());");
+            sb.AppendLine($"        console.WriteTitle(title);");
             foreach (var propertyElement in modelElement.Elements())
             {
                 var prop = propertyElement.Name.LocalName;

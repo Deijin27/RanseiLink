@@ -10,18 +10,18 @@ namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {
-    public static void Render(this IConsole console, Ability model, AbilityId id)
+    public static void Render(this IConsole console, Ability model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Effect1Amount", model.Effect1Amount);
         console.WriteProperty("Effect1", model.Effect1);
         console.WriteProperty("Effect2", model.Effect2);
         console.WriteProperty("Effect2Amount", model.Effect2Amount);
     }
-    public static void Render(this IConsole console, BaseWarrior model, WarriorId id)
+    public static void Render(this IConsole console, BaseWarrior model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Sprite", model.Sprite);
         console.WriteProperty("SpeakerId", model.SpeakerId);
         console.WriteProperty("Gender", model.Gender);
@@ -44,9 +44,9 @@ public static partial class RenderExtensions
         console.WriteProperty("RankUpPokemon2", model.RankUpPokemon2);
         console.WriteProperty("RankUpLink", model.RankUpLink);
     }
-    public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
+    public static void Render(this IConsole console, BattleConfig model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Map", model.Map);
         console.WriteProperty("MapVariant", model.MapVariant);
         console.WriteProperty("Minimap", model.Minimap);
@@ -71,9 +71,9 @@ public static partial class RenderExtensions
         console.WriteProperty("Treasure11", model.Treasure11);
         console.WriteProperty("Treasure12", model.Treasure12);
     }
-    public static void Render(this IConsole console, Building model, BuildingId id)
+    public static void Render(this IConsole console, Building model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Building1", model.Building1);
         console.WriteProperty("Building2", model.Building2);
@@ -92,24 +92,24 @@ public static partial class RenderExtensions
         console.WriteProperty("Sprite3", model.Sprite3);
         console.WriteProperty("Function", model.Function);
     }
-    public static void Render(this IConsole console, Episode model, EpisodeId id)
+    public static void Render(this IConsole console, Episode model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Order", model.Order);
         console.WriteProperty("Scenario", model.Scenario);
         console.WriteProperty("UnlockCondition", model.UnlockCondition);
         console.WriteProperty("Difficulty", model.Difficulty);
         console.WriteProperty("ClearCondition", model.ClearCondition);
     }
-    public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
+    public static void Render(this IConsole console, EventSpeaker model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Sprite", model.Sprite);
     }
-    public static void Render(this IConsole console, Gimmick model, GimmickId id)
+    public static void Render(this IConsole console, Gimmick model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Image", model.Image);
         console.WriteProperty("AttackType", model.AttackType);
@@ -122,9 +122,9 @@ public static partial class RenderExtensions
         console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
-    public static void Render(this IConsole console, Item model, ItemId id)
+    public static void Render(this IConsole console, Item model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("PurchaseMethod", model.PurchaseMethod);
         console.WriteProperty("Category", model.Category);
@@ -138,9 +138,9 @@ public static partial class RenderExtensions
         console.WriteProperty("ShopPriceMultiplier", model.ShopPriceMultiplier);
         console.WriteProperty("QuantityForEffect", model.QuantityForEffect);
     }
-    public static void Render(this IConsole console, Kingdom model, KingdomId id)
+    public static void Render(this IConsole console, Kingdom model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Unknown1", model.Unknown1);
         console.WriteProperty("MapConnection0", model.MapConnection0);
@@ -160,9 +160,9 @@ public static partial class RenderExtensions
         console.WriteProperty("Unknown2", model.Unknown2);
         console.WriteProperty("Unknown3", model.Unknown3);
     }
-    public static void Render(this IConsole console, Move model, MoveId id)
+    public static void Render(this IConsole console, Move model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("MovementFlags", model.MovementFlags);
         console.WriteProperty("Type", model.Type);
@@ -186,9 +186,9 @@ public static partial class RenderExtensions
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
         console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
     }
-    public static void Render(this IConsole console, Pokemon model, PokemonId id)
+    public static void Render(this IConsole console, Pokemon model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Hp", model.Hp);
         console.WriteProperty("EvolutionCondition1", model.EvolutionCondition1);
@@ -218,9 +218,9 @@ public static partial class RenderExtensions
         console.WriteProperty("BattleIntroSpriteOffset", model.BattleIntroSpriteOffset);
         console.WriteProperty("Weight", model.Weight);
     }
-    public static void Render(this IConsole console, WarriorSkill model, WarriorSkillId id)
+    public static void Render(this IConsole console, WarriorSkill model, object title)
     {
-        console.WriteTitle(id.ToString());
+        console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Effect1Amount", model.Effect1Amount);
         console.WriteProperty("Effect1", model.Effect1);
