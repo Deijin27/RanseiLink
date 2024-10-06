@@ -73,6 +73,21 @@ public static partial class RenderExtensions
         console.WriteProperty("Name", model.Name);
         console.WriteProperty("Sprite", model.Sprite);
     }
+    public static void Render(this IConsole console, Gimmick model, GimmickId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Image", model.Image);
+        console.WriteProperty("AttackType", model.AttackType);
+        console.WriteProperty("DestroyType", model.DestroyType);
+        console.WriteProperty("State1Sprite", model.State1Sprite);
+        console.WriteProperty("State2Sprite", model.State2Sprite);
+        console.WriteProperty("Effect", model.Effect);
+        console.WriteProperty("UnknownQuantity1", model.UnknownQuantity1);
+        console.WriteProperty("Animation1", model.Animation1);
+        console.WriteProperty("Animation2", model.Animation2);
+        console.WriteProperty("Range", model.Range);
+    }
     public static void Render(this IConsole console, WarriorSkill model, WarriorSkillId id)
     {
         console.WriteTitle(id.ToString());

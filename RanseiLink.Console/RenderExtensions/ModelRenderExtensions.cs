@@ -230,21 +230,6 @@ public static partial class RenderExtensions
 
     }
 
-    public static void Render(this IConsole console, Gimmick gimmick, GimmickId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", gimmick.Name);
-        console.WriteProperty("Attack Type", gimmick.AttackType);
-        console.WriteProperty("Destroy Type", gimmick.DestroyType);
-        console.WriteProperty("Animation 1", gimmick.Animation1);
-        console.WriteProperty("Animation 2", gimmick.Animation2);
-        console.WriteProperty("Range", gimmick.Range);
-        console.WriteProperty("Image", gimmick.Image);
-        console.WriteProperty("State-1 Sprite", gimmick.State1Sprite);
-        console.WriteProperty("State-2 Sprite", gimmick.State2Sprite);
-        console.WriteProperty("Effect", gimmick.Effect);
-    }
-
     public static void Render(this IConsole console, Item item, ItemId id)
     {
         console.WriteTitle($"{id}");
