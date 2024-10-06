@@ -181,32 +181,7 @@ public static partial class RenderExtensions
                 throw new ArgumentException($"Unexpected {nameof(MoveEffectId)} value of {id}");
         }
     }
-    /*
-    public static void Render(this IConsole console, Episode model, EpisodeId id)
-    {
-        console.WriteProperty("Start Kingdoms", "");
-        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsStartKingdom))
-        {
-            console.Output.WriteLine($"      - {kingdom}");
-        }
-        console.WriteProperty("Unlocked Kingdoms", "");
-        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsUnlockedKingdom))
-        {
-            console.Output.WriteLine($"      - {kingdom}");
-        }
-
-    }
-    */
-    /*
-    public static void Render(this IConsole console, Item item, ItemId id)
-    {
-        console.WriteProperty("Purchasable", "");
-        foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(item.GetPurchasable))
-        {
-            console.Output.WriteLine($"      - {kingdom}");
-        }
-    }
-    */
+    
     public static void Render(this IConsole console, MaxLink maxSync, WarriorId id)
     {
         console.WriteTitle($"{id}");
