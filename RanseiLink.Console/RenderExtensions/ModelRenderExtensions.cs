@@ -391,17 +391,4 @@ public static partial class RenderExtensions
             }
         }
     }
-
-    public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Map", model.MapId);
-        console.WriteProperty("Number Of Turns", model.NumberOfTurns);
-        console.WriteProperty("Victory Condition", model.VictoryCondition);
-        console.WriteProperty("Defeat Condition", model.DefeatCondition);
-        console.WriteProperty("Upper Atmosphere Color", model.UpperAtmosphereColor);
-        console.WriteProperty("Middle Atmosphere Color", model.MiddleAtmosphereColor);
-        console.WriteProperty("Lower Atmosphere Color", model.LowerAtmosphereColor);
-
-    }
 }

@@ -10,6 +10,33 @@ namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {
+    public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Map", model.Map);
+        console.WriteProperty("MapVariant", model.MapVariant);
+        console.WriteProperty("Minimap", model.Minimap);
+        console.WriteProperty("MinimapVariant", model.MinimapVariant);
+        console.WriteProperty("Unknown", model.Unknown);
+        console.WriteProperty("UpperAtmosphereColor", model.UpperAtmosphereColor);
+        console.WriteProperty("MiddleAtmosphereColor", model.MiddleAtmosphereColor);
+        console.WriteProperty("LowerAtmosphereColor", model.LowerAtmosphereColor);
+        console.WriteProperty("VictoryCondition", model.VictoryCondition);
+        console.WriteProperty("DefeatCondition", model.DefeatCondition);
+        console.WriteProperty("NumberOfTurns", model.NumberOfTurns);
+        console.WriteProperty("Treasure1", model.Treasure1);
+        console.WriteProperty("Treasure2", model.Treasure2);
+        console.WriteProperty("Treasure3", model.Treasure3);
+        console.WriteProperty("Treasure4", model.Treasure4);
+        console.WriteProperty("Treasure5", model.Treasure5);
+        console.WriteProperty("Treasure6", model.Treasure6);
+        console.WriteProperty("Treasure7", model.Treasure7);
+        console.WriteProperty("Treasure8", model.Treasure8);
+        console.WriteProperty("Treasure9", model.Treasure9);
+        console.WriteProperty("Treasure10", model.Treasure10);
+        console.WriteProperty("Treasure11", model.Treasure11);
+        console.WriteProperty("Treasure12", model.Treasure12);
+    }
     public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
     {
         console.WriteTitle(id.ToString());
