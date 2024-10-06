@@ -175,7 +175,7 @@
 	<Model Name="MoveRange" DataLength="0x4" Model="true">
 		<FlagProperty Index="0, 0" Name="InRange"/>
 	</Model>
-    <Model Name="Pokemon" DataLength="0x30" Model="true" ViewModel="true">
+    <Model Name="Pokemon" DataLength="0x30" Render="true" Model="true" ViewModel="true">
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
         <Property Index=" 3,  0,  9" Name="Hp" />
         <Property Index=" 3, 10,  4" Name="EvolutionCondition1" Type="EvolutionConditionId" />

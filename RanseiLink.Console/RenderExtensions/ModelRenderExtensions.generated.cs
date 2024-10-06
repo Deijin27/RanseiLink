@@ -186,6 +186,38 @@ public static partial class RenderExtensions
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
         console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
     }
+    public static void Render(this IConsole console, Pokemon model, PokemonId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Hp", model.Hp);
+        console.WriteProperty("EvolutionCondition1", model.EvolutionCondition1);
+        console.WriteProperty("EvolutionCondition2", model.EvolutionCondition2);
+        console.WriteProperty("IdleMotion", model.IdleMotion);
+        console.WriteProperty("Atk", model.Atk);
+        console.WriteProperty("Def", model.Def);
+        console.WriteProperty("Spe", model.Spe);
+        console.WriteProperty("IsLegendary", model.IsLegendary);
+        console.WriteProperty("AsymmetricBattleSprite", model.AsymmetricBattleSprite);
+        console.WriteProperty("LongAttackAnimation", model.LongAttackAnimation);
+        console.WriteProperty("Type1", model.Type1);
+        console.WriteProperty("Type2", model.Type2);
+        console.WriteProperty("Move", model.Move);
+        console.WriteProperty("Ability1", model.Ability1);
+        console.WriteProperty("Ability2", model.Ability2);
+        console.WriteProperty("Ability3", model.Ability3);
+        console.WriteProperty("QuantityForEvolutionCondition1", model.QuantityForEvolutionCondition1);
+        console.WriteProperty("QuantityForEvolutionCondition2", model.QuantityForEvolutionCondition2);
+        console.WriteProperty("MovementRange", model.MovementRange);
+        console.WriteProperty("MinEvolutionTableEntry", model.MinEvolutionTableEntry);
+        console.WriteProperty("MaxEvolutionTableEntry", model.MaxEvolutionTableEntry);
+        console.WriteProperty("NationalPokedexNumber", model.NationalPokedexNumber);
+        console.WriteProperty("NameOrderIndex", model.NameOrderIndex);
+        console.WriteProperty("CatchRate", model.CatchRate);
+        console.WriteProperty("UnknownAnimationValue", model.UnknownAnimationValue);
+        console.WriteProperty("BattleIntroSpriteOffset", model.BattleIntroSpriteOffset);
+        console.WriteProperty("Weight", model.Weight);
+    }
     public static void Render(this IConsole console, WarriorSkill model, WarriorSkillId id)
     {
         console.WriteTitle(id.ToString());

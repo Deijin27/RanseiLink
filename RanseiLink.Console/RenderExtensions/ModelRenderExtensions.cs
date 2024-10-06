@@ -72,6 +72,7 @@ public static partial class RenderExtensions
         }
     }
 
+    /*
     public static void Render(this IConsole console, Pokemon pokemon, PokemonId id)
     {
         console.WriteTitle($"{id}");
@@ -117,7 +118,7 @@ public static partial class RenderExtensions
         console.WriteProperty("Default Encounterable", sb1.ToString().TrimEnd(',', ' '));
         console.WriteProperty("Lv2 Encounterable", sb2.ToString().TrimEnd(',', ' '));
     }
-
+    */
     private static string RenderQuantityForMoveEffect(MoveEffectId id, int value)
     {
         switch (id)
