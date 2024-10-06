@@ -123,7 +123,7 @@
 		<MsgProperty Name="Description" Id="ItemDescription"/>
 		<MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
-	<Model Name="Kingdom" DataLength="0x18" DataLength_VPYJ="0x14" Model="true" ViewModel="true" Cultural ="true">
+	<Model Name="Kingdom" DataLength="0x18" DataLength_VPYJ="0x14" Render="true" Model="true" ViewModel="true" Cultural ="true">
 		<StringProperty Name="Name" Index="0" MaxLength="10" MaxLength_VPYJ="8"/>
 		<Property Index="2, 24, 3" Index_VPYJ="2,  8, 3" Name="Unknown1"/>
 		<Property Index="2, 27, 5" Index_VPYJ="2, 11, 5" Name="MapConnection0" Type="KingdomId"/>

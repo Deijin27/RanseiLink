@@ -237,14 +237,6 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, Kingdom kingdom, KingdomId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", kingdom.Name);
-        console.WriteProperty("Battle Config", kingdom.BattleConfig);
-        console.WriteProperty("Can Battle", "\n    - " + string.Join("\n    - ", kingdom.MapConnections));
-    }
-
     public static void Render(this IConsole console, MaxLink maxSync, WarriorId id)
     {
         console.WriteTitle($"{id}");

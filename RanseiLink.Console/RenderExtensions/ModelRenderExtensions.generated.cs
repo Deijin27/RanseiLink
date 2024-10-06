@@ -113,6 +113,28 @@ public static partial class RenderExtensions
         console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
+    public static void Render(this IConsole console, Kingdom model, KingdomId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Unknown1", model.Unknown1);
+        console.WriteProperty("MapConnection0", model.MapConnection0);
+        console.WriteProperty("MapConnection1", model.MapConnection1);
+        console.WriteProperty("MapConnection2", model.MapConnection2);
+        console.WriteProperty("MapConnection3", model.MapConnection3);
+        console.WriteProperty("MapConnection4", model.MapConnection4);
+        console.WriteProperty("MapConnection5", model.MapConnection5);
+        console.WriteProperty("MapConnection6", model.MapConnection6);
+        console.WriteProperty("MapConnection7", model.MapConnection7);
+        console.WriteProperty("MapConnection8", model.MapConnection8);
+        console.WriteProperty("MapConnection9", model.MapConnection9);
+        console.WriteProperty("MapConnection10", model.MapConnection10);
+        console.WriteProperty("MapConnection11", model.MapConnection11);
+        console.WriteProperty("MapConnection12", model.MapConnection12);
+        console.WriteProperty("BattleConfig", model.BattleConfig);
+        console.WriteProperty("Unknown2", model.Unknown2);
+        console.WriteProperty("Unknown3", model.Unknown3);
+    }
     public static void Render(this IConsole console, Move model, MoveId id)
     {
         console.WriteTitle(id.ToString());
