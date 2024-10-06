@@ -285,25 +285,6 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, BaseWarrior model, WarriorId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Sprite", model.Sprite);
-        console.WriteProperty("Warrior Name Table Entry", model.Name);
-        console.WriteProperty("Specialities", $"{model.Speciality1} / {model.Speciality2}");
-        console.WriteProperty("Weaknesses", $"{model.Weakness1} / {model.Weakness2}");
-        console.WriteProperty("Skill", model.Skill);
-        console.WriteProperty("Stats", $"Power {model.Power} / Wisdom {model.Wisdom} / Charisma {model.Charisma}");
-        console.WriteProperty("Capacity", model.Capacity);
-        console.WriteProperty("Gender", model.Gender);
-        console.WriteProperty("Rank Up Into", model.RankUp);
-        console.WriteProperty("Rank Up Pokemon", $"{model.RankUpPokemon1} / {model.RankUpPokemon2}");
-        console.WriteProperty("Rank Up Link", $"{model.RankUpLink}%");
-        console.WriteProperty("Rank Up Condition 1", model.RankUpCondition1);
-        console.WriteProperty("Rank Up Condition 2",
-            $"{model.RankUpCondition2} ({RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity1ForRankUpCondition)}, {RenderQuantityForRankUpCondition(model.RankUpCondition2, model.Quantity2ForRankUpCondition)})");
-    }
-
     public static void Render(this IConsole console, ScenarioAppearPokemon model, ScenarioId id)
     {
         console.WriteTitle($"{id}");

@@ -9,7 +9,7 @@
 		<MsgProperty Name="HotSpringsDescription" Id="AbilityHotSpringsDescription"/>
 		<MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
     </Model>
-    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Model="true" ViewModel="true">
+    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Render="true" Model="true" ViewModel="true">
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />

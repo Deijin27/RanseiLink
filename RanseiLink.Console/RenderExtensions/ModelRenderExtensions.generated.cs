@@ -19,6 +19,31 @@ public static partial class RenderExtensions
         console.WriteProperty("Effect2", model.Effect2);
         console.WriteProperty("Effect2Amount", model.Effect2Amount);
     }
+    public static void Render(this IConsole console, BaseWarrior model, WarriorId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Sprite", model.Sprite);
+        console.WriteProperty("SpeakerId", model.SpeakerId);
+        console.WriteProperty("Gender", model.Gender);
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Speciality1", model.Speciality1);
+        console.WriteProperty("Speciality2", model.Speciality2);
+        console.WriteProperty("Weakness1", model.Weakness1);
+        console.WriteProperty("Weakness2", model.Weakness2);
+        console.WriteProperty("Skill", model.Skill);
+        console.WriteProperty("Power", model.Power);
+        console.WriteProperty("Wisdom", model.Wisdom);
+        console.WriteProperty("Charisma", model.Charisma);
+        console.WriteProperty("Capacity", model.Capacity);
+        console.WriteProperty("RankUpCondition1", model.RankUpCondition1);
+        console.WriteProperty("RankUpCondition2", model.RankUpCondition2);
+        console.WriteProperty("Quantity1ForRankUpCondition", model.Quantity1ForRankUpCondition);
+        console.WriteProperty("Quantity2ForRankUpCondition", model.Quantity2ForRankUpCondition);
+        console.WriteProperty("RankUp", model.RankUp);
+        console.WriteProperty("RankUpPokemon1", model.RankUpPokemon1);
+        console.WriteProperty("RankUpPokemon2", model.RankUpPokemon2);
+        console.WriteProperty("RankUpLink", model.RankUpLink);
+    }
     public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
     {
         console.WriteTitle(id.ToString());
