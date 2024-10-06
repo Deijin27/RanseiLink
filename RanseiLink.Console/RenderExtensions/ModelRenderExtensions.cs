@@ -75,12 +75,6 @@ public static partial class RenderExtensions
     /*
     public static void Render(this IConsole console, Pokemon pokemon, PokemonId id)
     {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", pokemon.Name);
-        console.WriteProperty("Types", $"{pokemon.Type1} / {pokemon.Type2}");
-        console.WriteProperty("Abilities", $"{pokemon.Ability1} / {pokemon.Ability2} / {pokemon.Ability3}");
-        console.WriteProperty("Move", pokemon.Move.ToString());
-
         console.WriteProperty("Evolution Conditions", string.Format("{0} {1}/ {2} {3}",
             pokemon.EvolutionCondition1,
             RenderQuantityForEvolutionCondition(pokemon.EvolutionCondition1, pokemon.QuantityForEvolutionCondition1),
@@ -92,12 +86,6 @@ public static partial class RenderExtensions
         {
             console.Output.WriteLine($"      - {evo}");
         }
-
-        console.WriteProperty("Stats", $"{pokemon.Hp} HP / {pokemon.Atk} Atk / {pokemon.Def} Def / {pokemon.Spe} Spe");
-        console.WriteProperty("Movement Range", pokemon.MovementRange.ToString());
-        console.WriteProperty("Is Legendary", pokemon.IsLegendary.ToString());
-        console.WriteProperty("NatDex Number", pokemon.NationalPokedexNumber.ToString());
-        console.WriteProperty("Name Alphabetical Sort Index", pokemon.NameOrderIndex.ToString());
 
         var sb1 = new StringBuilder();
         var sb2 = new StringBuilder();
@@ -114,9 +102,6 @@ public static partial class RenderExtensions
                 sb2.Append(", ");
             }
         }
-
-        console.WriteProperty("Default Encounterable", sb1.ToString().TrimEnd(',', ' '));
-        console.WriteProperty("Lv2 Encounterable", sb2.ToString().TrimEnd(',', ' '));
     }
     */
     private static string RenderQuantityForMoveEffect(MoveEffectId id, int value)
@@ -199,12 +184,6 @@ public static partial class RenderExtensions
     /*
     public static void Render(this IConsole console, Episode model, EpisodeId id)
     {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Order", model.Order);
-        console.WriteProperty("Unlock Condition", model.UnlockCondition);
-        console.WriteProperty("Clear Condition", model.ClearCondition);
-        console.WriteProperty("Difficulty", model.Difficulty);
-        console.WriteProperty("Scenario", model.Scenario);
         console.WriteProperty("Start Kingdoms", "");
         foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsStartKingdom))
         {
@@ -221,17 +200,6 @@ public static partial class RenderExtensions
     /*
     public static void Render(this IConsole console, Item item, ItemId id)
     {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", item.Name);
-        console.WriteProperty("Purchase Method", item.PurchaseMethod);
-        console.WriteProperty("Category", item.Category);
-        console.WriteProperty("Effect", item.Effect);
-        console.WriteProperty("Effect Duration", item.EffectDuration);
-        console.WriteProperty("Crafting Ingredient 1", $"{item.CraftingIngredient1} (amount: {item.CraftingIngredient1Amount})");
-        console.WriteProperty("Crafting Ingredient 2", $"{item.CraftingIngredient2} (amount: {item.CraftingIngredient2Amount})");
-        console.WriteProperty("Unknown Item", item.UnknownItem);
-        console.WriteProperty("Shop Price Multiplier", item.ShopPriceMultiplier);
-        console.WriteProperty("Quantity For Effect", item.QuantityForEffect);
         console.WriteProperty("Purchasable", "");
         foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(item.GetPurchasable))
         {
