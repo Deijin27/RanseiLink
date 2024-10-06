@@ -230,17 +230,6 @@ public static partial class RenderExtensions
 
     }
 
-    public static void Render(this IConsole console, WarriorSkill saihai, WarriorSkillId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", saihai.Name);
-        console.WriteProperty("Effect1", $"{saihai.Effect1} ({saihai.Effect1Amount})");
-        console.WriteProperty("Effect2", $"{saihai.Effect2} ({saihai.Effect2Amount})");
-        console.WriteProperty("Effect3", $"{saihai.Effect3} ({saihai.Effect3Amount})");
-        console.WriteProperty("Target", saihai.Target.ToString());
-        console.WriteProperty("Duration", saihai.Duration.ToString());
-    }
-
     public static void Render(this IConsole console, Gimmick gimmick, GimmickId id)
     {
         console.WriteTitle($"{id}");
