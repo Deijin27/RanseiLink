@@ -92,6 +92,15 @@ public static partial class RenderExtensions
         console.WriteProperty("Sprite3", model.Sprite3);
         console.WriteProperty("Function", model.Function);
     }
+    public static void Render(this IConsole console, Episode model, EpisodeId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Order", model.Order);
+        console.WriteProperty("Scenario", model.Scenario);
+        console.WriteProperty("UnlockCondition", model.UnlockCondition);
+        console.WriteProperty("Difficulty", model.Difficulty);
+        console.WriteProperty("ClearCondition", model.ClearCondition);
+    }
     public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
     {
         console.WriteTitle(id.ToString());

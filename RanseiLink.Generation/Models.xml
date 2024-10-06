@@ -76,7 +76,7 @@
 		<Property Index="8, 21, 7" Index_VPYJ="7, 21, 7" Name="Sprite3" Max="84"/>
 		<Property Index="8, 28, 4" Index_VPYJ="7, 28, 4" Name="Function" Type="BuildingFunctionId"/>
 	</Model>
-    <Model Name="Episode" DataLength="0x8" Model="true" ViewModel="true">
+    <Model Name="Episode" DataLength="0x8" Render="true" Model="true" ViewModel="true">
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />

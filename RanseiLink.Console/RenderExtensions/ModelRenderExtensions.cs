@@ -195,7 +195,7 @@ public static partial class RenderExtensions
                 throw new ArgumentException($"Unexpected {nameof(MoveEffectId)} value of {id}");
         }
     }
-
+    /*
     public static void Render(this IConsole console, Episode model, EpisodeId id)
     {
         console.WriteTitle($"{id}");
@@ -216,6 +216,7 @@ public static partial class RenderExtensions
         }
 
     }
+    */
     /*
     public static void Render(this IConsole console, Item item, ItemId id)
     {
