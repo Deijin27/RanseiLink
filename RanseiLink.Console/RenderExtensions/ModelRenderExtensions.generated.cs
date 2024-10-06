@@ -113,6 +113,22 @@ public static partial class RenderExtensions
         console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
+    public static void Render(this IConsole console, Item model, ItemId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("PurchaseMethod", model.PurchaseMethod);
+        console.WriteProperty("Category", model.Category);
+        console.WriteProperty("Effect", model.Effect);
+        console.WriteProperty("EffectDuration", model.EffectDuration);
+        console.WriteProperty("CraftingIngredient1", model.CraftingIngredient1);
+        console.WriteProperty("CraftingIngredient1Amount", model.CraftingIngredient1Amount);
+        console.WriteProperty("CraftingIngredient2", model.CraftingIngredient2);
+        console.WriteProperty("CraftingIngredient2Amount", model.CraftingIngredient2Amount);
+        console.WriteProperty("UnknownItem", model.UnknownItem);
+        console.WriteProperty("ShopPriceMultiplier", model.ShopPriceMultiplier);
+        console.WriteProperty("QuantityForEffect", model.QuantityForEffect);
+    }
     public static void Render(this IConsole console, Kingdom model, KingdomId id)
     {
         console.WriteTitle(id.ToString());

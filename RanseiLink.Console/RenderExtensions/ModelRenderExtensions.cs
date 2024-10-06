@@ -216,7 +216,7 @@ public static partial class RenderExtensions
         }
 
     }
-
+    /*
     public static void Render(this IConsole console, Item item, ItemId id)
     {
         console.WriteTitle($"{id}");
@@ -236,7 +236,7 @@ public static partial class RenderExtensions
             console.Output.WriteLine($"      - {kingdom}");
         }
     }
-
+    */
     public static void Render(this IConsole console, MaxLink maxSync, WarriorId id)
     {
         console.WriteTitle($"{id}");
