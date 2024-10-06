@@ -370,13 +370,6 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, EventSpeaker model, EventSpeakerId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", model.Name);
-        console.WriteProperty("Sprite", model.Sprite);
-    }
-
     public static void Render(this IConsole console, ScenarioKingdom model, ScenarioId id)
     {
         console.WriteTitle($"{id} (Army Assignment)");

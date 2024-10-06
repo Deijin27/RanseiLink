@@ -87,7 +87,7 @@
 		<MsgProperty Name="Name" Id="EpisodeName"/>
 		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
-	<Model Name="EventSpeaker" Model="true" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
+	<Model Name="EventSpeaker" Render="true" Model="true" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
 		<StringProperty Name="Name" Index="0" MaxLength="0x10" MaxLength_VPYJ="0xA"/>
 		<ByteProperty Name="Sprite" Index="0x11" Index_VPYJ="0xB"/>
 	</Model>
