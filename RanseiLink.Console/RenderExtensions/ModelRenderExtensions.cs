@@ -343,7 +343,7 @@ public static partial class RenderExtensions
     {
         console.WriteTitle($"{id}");
         console.WriteProperty("Sprite", model.Sprite);
-        console.WriteProperty("Warrior Name Table Entry", model.WarriorName);
+        console.WriteProperty("Warrior Name Table Entry", model.Name);
         console.WriteProperty("Specialities", $"{model.Speciality1} / {model.Speciality2}");
         console.WriteProperty("Weaknesses", $"{model.Weakness1} / {model.Weakness2}");
         console.WriteProperty("Skill", model.Skill);
