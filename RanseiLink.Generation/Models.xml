@@ -143,7 +143,7 @@
 		<Property Index="5, 22, 4" Index_VPYJ="4, 22, 4" Name="Unknown2"/>
 		<Property Index="5, 26, 4" Index_VPYJ="4, 26, 4" Name="Unknown3"/>
 	</Model>
-	<Model Name="Move" DataLength="0x24" Model="true" ViewModel="true">
+	<Model Name="Move" DataLength="0x24" Render="true" Model="true" ViewModel="true">
 		<StringProperty Name="Name" Index="0" MaxLength="14"/>
 		<Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
 		<Property Index="4,  0, 5" Name="Type" Type="TypeId" />

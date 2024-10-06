@@ -88,6 +88,32 @@ public static partial class RenderExtensions
         console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
+    public static void Render(this IConsole console, Move model, MoveId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("MovementFlags", model.MovementFlags);
+        console.WriteProperty("Type", model.Type);
+        console.WriteProperty("Power", model.Power);
+        console.WriteProperty("Effect1", model.Effect1);
+        console.WriteProperty("Effect1Chance", model.Effect1Chance);
+        console.WriteProperty("Range", model.Range);
+        console.WriteProperty("Effect2", model.Effect2);
+        console.WriteProperty("Effect2Chance", model.Effect2Chance);
+        console.WriteProperty("Effect3", model.Effect3);
+        console.WriteProperty("Effect3Chance", model.Effect3Chance);
+        console.WriteProperty("Effect4", model.Effect4);
+        console.WriteProperty("Effect4Chance", model.Effect4Chance);
+        console.WriteProperty("Accuracy", model.Accuracy);
+        console.WriteProperty("StartupAnimation", model.StartupAnimation);
+        console.WriteProperty("ProjectileAnimation", model.ProjectileAnimation);
+        console.WriteProperty("ImpactAnimation", model.ImpactAnimation);
+        console.WriteProperty("AdditionalAnimation", model.AdditionalAnimation);
+        console.WriteProperty("UnknownOption", model.UnknownOption);
+        console.WriteProperty("Movement", model.Movement);
+        console.WriteProperty("MovementAnimation", model.MovementAnimation);
+        console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
+    }
     public static void Render(this IConsole console, WarriorSkill model, WarriorSkillId id)
     {
         console.WriteTitle(id.ToString());
