@@ -443,7 +443,7 @@ internal class Program
         sb.AppendLine("#nullable enable");
         sb.AppendLine();
         sb.AppendLine("using RanseiLink.Core.Enums;");
-        sb.AppendLine("using RanseiLink.Core.Graphics;");
+        sb.AppendLine("using RanseiLink.Core;");
         sb.AppendLine("using RanseiLink.Core.Models;");
         sb.AppendLine();
         sb.AppendLine("namespace RanseiLink.Console;");
@@ -468,10 +468,23 @@ internal class Program
             foreach (var propertyElement in modelElement.Elements())
             {
                 var prop = propertyElement.Name.LocalName;
+                var propName = propertyElement.Attribute("Name")!.Value;
                 if (prop == "Property" || prop == "ByteProperty" || prop == "StringProperty")
                 {
-                    var propName = propertyElement.Attribute("Name")!.Value;
+                    
                     sb.AppendLine($"        console.WriteProperty(\"{propName}\", model.{propName});");
+                }
+                else if (prop == "FlagProperty")
+                {
+                    var idType = propertyElement.Attribute("IdType")?.Value ?? "int";
+                    if (idType != "int")
+                    {
+                        sb.AppendLine($"        console.WriteProperty(\"{propName}\", \"\");");
+                        sb.AppendLine($"        foreach (var i in EnumUtil.GetValuesExceptDefaults<{idType}>().Where(model.Get{propName}))");
+                        sb.AppendLine("        {");
+                        sb.AppendLine("            console.Output.WriteLine($\"      - {i}\");");
+                        sb.AppendLine("        }");
+                    }
                 }
             }
             sb.AppendLine("    }");

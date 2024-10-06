@@ -3,7 +3,7 @@
 #nullable enable
 
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Graphics;
+using RanseiLink.Core;
 using RanseiLink.Core.Models;
 
 namespace RanseiLink.Console;
@@ -100,6 +100,16 @@ public static partial class RenderExtensions
         console.WriteProperty("UnlockCondition", model.UnlockCondition);
         console.WriteProperty("Difficulty", model.Difficulty);
         console.WriteProperty("ClearCondition", model.ClearCondition);
+        console.WriteProperty("IsStartKingdom", "");
+        foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsStartKingdom))
+        {
+            console.Output.WriteLine($"      - {i}");
+        }
+        console.WriteProperty("IsUnlockedKingdom", "");
+        foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsUnlockedKingdom))
+        {
+            console.Output.WriteLine($"      - {i}");
+        }
     }
     public static void Render(this IConsole console, EventSpeaker model, object title)
     {
@@ -137,6 +147,11 @@ public static partial class RenderExtensions
         console.WriteProperty("UnknownItem", model.UnknownItem);
         console.WriteProperty("ShopPriceMultiplier", model.ShopPriceMultiplier);
         console.WriteProperty("QuantityForEffect", model.QuantityForEffect);
+        console.WriteProperty("Purchasable", "");
+        foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetPurchasable))
+        {
+            console.Output.WriteLine($"      - {i}");
+        }
     }
     public static void Render(this IConsole console, Kingdom model, object title)
     {
