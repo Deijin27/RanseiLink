@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.Console.ModelCommands;
@@ -24,7 +25,7 @@ public class ScenarioWarriorCommand(ICurrentModService currentModService) : ICom
 
         var model = service.Retrieve((int)ScenarioId).Retrieve(ScenarioWarriorId);
 
-        console.Render(model, ScenarioId, ScenarioWarriorId);
+        console.Render(model, $"Scenario = {ScenarioId}, Entry = {ScenarioWarriorId}");
 
         return default;
     }

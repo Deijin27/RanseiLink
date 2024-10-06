@@ -205,7 +205,7 @@
         <Property Index=" 3, 23,  3" Name="BattleIntroSpriteOffset" />
         <Property Index=" 3, 26,  3" Name="Weight" />
     </Model>
-    <Model Name="ScenarioPokemon" DataLength="0x8" Model="true">
+    <Model Name="ScenarioPokemon" DataLength="0x8" Render="true" Model="true">
         <Property Index="1, 20,  8" Name="Ability" Type="AbilityId" />
         <Property Index="1,  0,  5" Name="HpIv" />
         <Property Index="1,  5,  5" Name="AtkIv" />
@@ -215,7 +215,7 @@
         <Property Index="0,  8,  8" Name="U1" Type="byte" Description="In memory: For wild pokemon this seems to store hp, but not for players pokemon"/>
         <Property Index="1, 29,  3" Name="Energy" Type="EnergyId" />
     </Model>
-    <Model Name="ScenarioWarrior" DataLength="0x20" Model="true">
+    <Model Name="ScenarioWarrior" DataLength="0x20" Render="true" Model="true">
         <Property Index="0,  0, 8" Name="Warrior" Type="WarriorId" />
         <Property Index="0,  9, 3" Name="Class" Type="WarriorClassId" />
         <Property Index="0, 12, 5" Name="Kingdom" Type="KingdomId" />

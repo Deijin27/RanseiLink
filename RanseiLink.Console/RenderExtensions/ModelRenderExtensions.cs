@@ -216,27 +216,14 @@ public static partial class RenderExtensions
         }
     }
 
-    public static void Render(this IConsole console, ScenarioPokemon scenarioPokemon, ScenarioId scenarioId, int scenarioPokemonId)
-    {
-        console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioPokemonId}");
-        console.WriteProperty("Pokemon", scenarioPokemon.Pokemon.ToString());
-        console.WriteProperty("Ability", scenarioPokemon.Ability.ToString());
-        console.WriteProperty("IVs", $"Hp {scenarioPokemon.HpIv} / Atk {scenarioPokemon.AtkIv} / Def {scenarioPokemon.DefIv} / Spe {scenarioPokemon.SpeIv}");
-        console.WriteProperty("Init Exp", $"{scenarioPokemon.Exp} (Approx. Link = {Math.Round(Core.Services.LinkCalculator.CalculateLink(scenarioPokemon.Exp))}%)");
-    }
-
+    /*
     public static void Render(this IConsole console, ScenarioWarrior scenarioWarrior, ScenarioId scenarioId, int scenarioWarriorId)
     {
-        console.WriteTitle($"Scenario = {scenarioId}, Entry = {scenarioWarriorId}");
-        console.WriteProperty("Warrior", scenarioWarrior.Warrior);
-        console.WriteProperty("Class", scenarioWarrior.Class);
-        console.WriteProperty("Army", scenarioWarrior.Army);
-        console.WriteProperty("Kingdom", scenarioWarrior.Kingdom);
         console.WriteProperty("Scenario Pokemon", string.Join(", ", 
             Enumerable.Range(0, 8)
             .Select(i => scenarioWarrior.ScenarioPokemonIsDefault(i) ? "<default>" : scenarioWarrior.GetScenarioPokemon(i).ToString()))
             );
-    }
+    }*/
 
     public static void Render(this IConsole console, WarriorNameTable model)
     {

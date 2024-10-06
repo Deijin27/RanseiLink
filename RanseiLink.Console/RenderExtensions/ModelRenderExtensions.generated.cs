@@ -218,6 +218,27 @@ public static partial class RenderExtensions
         console.WriteProperty("BattleIntroSpriteOffset", model.BattleIntroSpriteOffset);
         console.WriteProperty("Weight", model.Weight);
     }
+    public static void Render(this IConsole console, ScenarioPokemon model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Ability", model.Ability);
+        console.WriteProperty("HpIv", model.HpIv);
+        console.WriteProperty("AtkIv", model.AtkIv);
+        console.WriteProperty("DefIv", model.DefIv);
+        console.WriteProperty("SpeIv", model.SpeIv);
+        console.WriteProperty("Exp", model.Exp);
+        console.WriteProperty("U1", model.U1);
+        console.WriteProperty("Energy", model.Energy);
+    }
+    public static void Render(this IConsole console, ScenarioWarrior model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Warrior", model.Warrior);
+        console.WriteProperty("Class", model.Class);
+        console.WriteProperty("Kingdom", model.Kingdom);
+        console.WriteProperty("Army", model.Army);
+        console.WriteProperty("Item", model.Item);
+    }
     public static void Render(this IConsole console, WarriorSkill model, object title)
     {
         console.WriteTitle(title);
