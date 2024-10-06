@@ -209,14 +209,6 @@ public static partial class RenderExtensions
         console.WriteProperty("Unused Effect Duplicates", $"{move.Effect3} {RenderQuantityForMoveEffect(move.Effect3, move.Effect3Chance)}/ {move.Effect4} {RenderQuantityForMoveEffect(move.Effect4, move.Effect4Chance)}");
     }
 
-    public static void Render(this IConsole console, Ability ability, AbilityId id)
-    {
-        console.WriteTitle($"{id}");
-        console.WriteProperty("Name", ability.Name);
-        console.WriteProperty("Effect1", $"{ability.Effect1} ({ability.Effect1Amount})");
-        console.WriteProperty("Effect2", $"{ability.Effect2} ({ability.Effect2Amount})");
-    }
-
     public static void Render(this IConsole console, Episode model, EpisodeId id)
     {
         console.WriteTitle($"{id}");

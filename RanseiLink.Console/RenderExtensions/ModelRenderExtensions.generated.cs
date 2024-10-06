@@ -10,6 +10,15 @@ namespace RanseiLink.Console;
 
 public static partial class RenderExtensions
 {
+    public static void Render(this IConsole console, Ability model, AbilityId id)
+    {
+        console.WriteTitle(id.ToString());
+        console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Effect1Amount", model.Effect1Amount);
+        console.WriteProperty("Effect1", model.Effect1);
+        console.WriteProperty("Effect2", model.Effect2);
+        console.WriteProperty("Effect2Amount", model.Effect2Amount);
+    }
     public static void Render(this IConsole console, BattleConfig model, BattleConfigId id)
     {
         console.WriteTitle(id.ToString());
