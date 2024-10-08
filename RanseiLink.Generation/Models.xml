@@ -130,6 +130,7 @@
 		<MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
 	<Model Name="Kingdom" DataLength="0x18" DataLength_VPYJ="0x14" Render="true" Model="true" ViewModel="true" Cultural ="true">
+		<Service MaxId="16" DefaultId="17"/>
 		<StringProperty Name="Name" Index="0" MaxLength="10" MaxLength_VPYJ="8"/>
 		<Property Index="2, 24, 3" Index_VPYJ="2,  8, 3" Name="Unknown1"/>
 		<Property Index="2, 27, 5" Index_VPYJ="2, 11, 5" Name="MapConnection0" Type="KingdomId"/>
@@ -150,6 +151,7 @@
 		<Property Index="5, 26, 4" Index_VPYJ="4, 26, 4" Name="Unknown3"/>
 	</Model>
 	<Model Name="Move" DataLength="0x24" Render="true" Model="true" ViewModel="true">
+		<Service MaxId="142"/>
 		<StringProperty Name="Name" Index="0" MaxLength="14"/>
 		<Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
 		<Property Index="4,  0, 5" Name="Type" Type="TypeId" />
