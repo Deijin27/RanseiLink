@@ -102,7 +102,7 @@ internal class Program
     {
         var name = modelElement.Attribute("Name")!.Value;
         bool cultural = modelElement.Attribute("Cultural")?.Value == "true";
-        var id = modelElement.Attribute("Id")?.Value ?? (name + "Id");
+        var id = serviceElement.Attribute("Id")?.Value ?? modelElement.Attribute("Id")?.Value ?? (name + "Id");
 
         var serviceName = serviceElement.Attribute("Name")?.Value ?? name;
         var minId = serviceElement.Attribute("MinId")?.Value ?? "0";

@@ -179,6 +179,8 @@
 		<Property Index="0, 16, 16" Name="UnknownB" />
 	</Model>
 	<Model Name="MoveRange" DataLength="0x4" Model="true">
+		<Service MaxId="29"/>
+		<Service MaxId="29" Name="GimmickRange" Id="GimmickRangeId"/>
 		<FlagProperty Index="0, 0" Name="InRange"/>
 	</Model>
     <Model Name="Pokemon" DataLength="0x30" Render="true" Model="true" ViewModel="true">
