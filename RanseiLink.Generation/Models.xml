@@ -34,6 +34,7 @@
         <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
     </Model>
     <Model Name="BattleConfig" DataLength="0x18" Render="true" Model="true" ViewModel="true">
+		<Service MaxId="46" DefaultId="47"/>
         <Property Index="0,  0,  6" Name="Map" />
         <Property Index="0,  6,  5" Name="MapVariant" />
         <Property Index="2, 13,  5" Name="Minimap" />
@@ -59,6 +60,7 @@
 		<ByteProperty Index="23" Name="Treasure12" Type="ItemId"/>
     </Model>
 	<Model Name="Building" DataLength="0x24" DataLength_VPYJ="0x20" Render="true" Cultural="true" Model="true" ViewModel="true">
+		<Service MaxId="118" DefaultId="119"/>
 		<StringProperty Name="Name" Index="0" MaxLength="18" MaxLength_VPYJ="16"/>
 		<ByteProperty Index="19" Index_VPYJ="17" Name="Building1" Type="BuildingId"/>
 		<ByteProperty Index="20" Index_VPYJ="18" Name="Building2" Type="BuildingId"/>

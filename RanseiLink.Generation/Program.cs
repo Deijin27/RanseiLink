@@ -146,7 +146,8 @@ internal class Program
         }
         sb.AppendLine(") {}");
         sb.AppendLine();
-        sb.AppendLine($"    public {serviceName}Service(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.{romPath})) {{}}");
+        var culturalInsert = cultural ? ", mod.GameCode" : "";
+        sb.AppendLine($"    public {serviceName}Service(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.{romPath}){culturalInsert}) {{}}");
         sb.AppendLine();
         sb.AppendLine($"    public {name} Retrieve({id} id) => Retrieve((int)id);");
         sb.AppendLine();
