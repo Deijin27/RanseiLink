@@ -97,6 +97,7 @@
 		<ByteProperty Name="Sprite" Index="0x11" Index_VPYJ="0xB"/>
 	</Model>
 	<Model Name="Gimmick" DataLength="0x28" DataLength_VPYJ="0x24" Render="true" Model="true" ViewModel="true" Cultural="true">
+		<Service MaxId="147"/>
 		<StringProperty Name="Name" Index="0" MaxLength="16" MaxLength_VPYJ="14"/>
 		<ByteProperty Index="17" Index_VPYJ="15" Name="Image" Description="Top screen square image when you hover over the object"/>
 		<Property Index="5,  0, 5" Index_VPYJ="4,  0, 5" Name="AttackType" Type="TypeId" Description="If attack damage caused by this, this is the type of the attack"/>
