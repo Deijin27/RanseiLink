@@ -1,5 +1,6 @@
 ﻿<Models>
     <Model Name="Ability" DataLength="0x14" Render="true" Model="true" ViewModel="true">
+		<Service MaxId="127" DefaultId="128"/>
         <StringProperty Name="Name" Index="0" MaxLength="14" />
         <Property Index="3, 24, 2" Name="Effect1Amount" />
         <Property Index="4,  0, 5" Name="Effect1" Type="AbilityEffectId" />
