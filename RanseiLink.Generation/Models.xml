@@ -80,6 +80,7 @@
 		<Property Index="8, 28, 4" Index_VPYJ="7, 28, 4" Name="Function" Type="BuildingFunctionId"/>
 	</Model>
     <Model Name="Episode" DataLength="0x8" Render="true" Model="true" ViewModel="true">
+		<Service MaxId="37" DefaultId="511"/>
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
@@ -91,6 +92,7 @@
 		<MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
 	<Model Name="EventSpeaker" Render="true" Model="true" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
+		<Service MaxId="59"/>
 		<StringProperty Name="Name" Index="0" MaxLength="0x10" MaxLength_VPYJ="0xA"/>
 		<ByteProperty Name="Sprite" Index="0x11" Index_VPYJ="0xB"/>
 	</Model>
@@ -108,6 +110,7 @@
 		<Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
 	</Model>
 	<Model Name="GimmickObject" DataLength="0x4" Model="true">
+		<Service MaxId="99"/>
 	</Model>
     <Model Name="Item" DataLength="0x24" Render="true" Model="true" ViewModel="true">
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
