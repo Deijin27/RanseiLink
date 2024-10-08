@@ -12,6 +12,7 @@ public partial interface IEpisodeService : IModelService<Episode> {}
 
 public partial class EpisodeService : BaseDataModelService<Episode>, IEpisodeService
 {
+    public static EpisodeService Load(string dataFile) => new EpisodeService(dataFile);
     private EpisodeService(string dataFile) : base(dataFile, 0, 37, () => new Episode(), 511) {}
 
     public EpisodeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EpisodeRomPath)) {}

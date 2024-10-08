@@ -12,6 +12,7 @@ public partial interface IMoveService : IModelService<Move> {}
 
 public partial class MoveService : BaseDataModelService<Move>, IMoveService
 {
+    public static MoveService Load(string dataFile) => new MoveService(dataFile);
     private MoveService(string dataFile) : base(dataFile, 0, 142, () => new Move()) {}
 
     public MoveService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRomPath)) {}

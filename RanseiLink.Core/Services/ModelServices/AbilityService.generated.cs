@@ -12,6 +12,7 @@ public partial interface IAbilityService : IModelService<Ability> {}
 
 public partial class AbilityService : BaseDataModelService<Ability>, IAbilityService
 {
+    public static AbilityService Load(string dataFile) => new AbilityService(dataFile);
     private AbilityService(string dataFile) : base(dataFile, 0, 127, () => new Ability(), 128) {}
 
     public AbilityService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.AbilityRomPath)) {}

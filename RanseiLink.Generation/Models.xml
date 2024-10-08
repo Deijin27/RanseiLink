@@ -114,6 +114,7 @@
 		<Service MaxId="99"/>
 	</Model>
     <Model Name="Item" DataLength="0x24" Render="true" Model="true" ViewModel="true">
+		<Service MaxId="133" DefaultId="134"/>
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
         <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
         <Property Index="5, 19, 2" Name="Category" Type="ItemCategoryId" />

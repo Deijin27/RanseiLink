@@ -12,6 +12,7 @@ public partial interface IEventSpeakerService : IModelService<EventSpeaker> {}
 
 public partial class EventSpeakerService : BaseDataModelService<EventSpeaker>, IEventSpeakerService
 {
+    public static EventSpeakerService Load(string dataFile, ConquestGameCode culture) => new EventSpeakerService(dataFile, culture);
     private EventSpeakerService(string dataFile, ConquestGameCode culture) : base(dataFile, 0, 59, () => new EventSpeaker(culture)) {}
 
     public EventSpeakerService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.EventSpeakerRomPath), mod.GameCode) {}

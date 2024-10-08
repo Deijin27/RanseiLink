@@ -12,6 +12,7 @@ public partial interface IBuildingService : IModelService<Building> {}
 
 public partial class BuildingService : BaseDataModelService<Building>, IBuildingService
 {
+    public static BuildingService Load(string dataFile, ConquestGameCode culture) => new BuildingService(dataFile, culture);
     private BuildingService(string dataFile, ConquestGameCode culture) : base(dataFile, 0, 118, () => new Building(culture), 119) {}
 
     public BuildingService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.BuildingRomPath), mod.GameCode) {}

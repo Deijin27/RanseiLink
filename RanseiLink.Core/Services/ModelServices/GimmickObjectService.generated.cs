@@ -12,6 +12,7 @@ public partial interface IGimmickObjectService : IModelService<GimmickObject> {}
 
 public partial class GimmickObjectService : BaseDataModelService<GimmickObject>, IGimmickObjectService
 {
+    public static GimmickObjectService Load(string dataFile) => new GimmickObjectService(dataFile);
     private GimmickObjectService(string dataFile) : base(dataFile, 0, 99, () => new GimmickObject()) {}
 
     public GimmickObjectService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickObjectRomPath)) {}

@@ -126,25 +126,12 @@ internal class Program
         sb.AppendLine();
         sb.AppendLine($"public partial class {serviceName}Service : BaseDataModelService<{name}>, I{serviceName}Service");
         sb.AppendLine("{");
-        sb.Append($"    private {serviceName}Service(string dataFile");
-        if ( cultural)
-        {
-            sb.Append(", ConquestGameCode culture");
-        }
-        sb.Append($") : base(dataFile, {minId}, {maxId}, ");
-        if (cultural)
-        {
-            sb.Append($"() => new {name}(culture)");
-        }
-        else
-        {
-            sb.Append($"() => new {name}()");
-        }
-        if (defaultId != null)
-        {
-            sb.Append($", {defaultId}");
-        }
-        sb.AppendLine(") {}");
+        var culturalInsert1 = cultural? ", ConquestGameCode culture" : "";
+        var culturalInsert2 = cultural ? "culture" : "";
+        var culturalInsert3 = cultural ? ", culture" : "";
+        var defaultInsert = defaultId != null ? $", {defaultId}" : "";
+        sb.AppendLine($"    public static {serviceName}Service Load(string dataFile{culturalInsert1}) => new {serviceName}Service(dataFile{culturalInsert3});");
+        sb.AppendLine($"    private {serviceName}Service(string dataFile{culturalInsert1}) : base(dataFile, {minId}, {maxId}, () => new {name}({culturalInsert2}){defaultInsert}) {{}}");
         sb.AppendLine();
         var culturalInsert = cultural ? ", mod.GameCode" : "";
         sb.AppendLine($"    public {serviceName}Service(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.{romPath}){culturalInsert}) {{}}");

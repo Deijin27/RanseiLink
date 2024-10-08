@@ -12,6 +12,7 @@ public partial interface IGimmickRangeService : IModelService<MoveRange> {}
 
 public partial class GimmickRangeService : BaseDataModelService<MoveRange>, IGimmickRangeService
 {
+    public static GimmickRangeService Load(string dataFile) => new GimmickRangeService(dataFile);
     private GimmickRangeService(string dataFile) : base(dataFile, 0, 29, () => new MoveRange()) {}
 
     public GimmickRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRangeRomPath)) {}

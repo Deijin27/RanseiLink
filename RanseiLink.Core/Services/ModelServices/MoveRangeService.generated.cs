@@ -12,6 +12,7 @@ public partial interface IMoveRangeService : IModelService<MoveRange> {}
 
 public partial class MoveRangeService : BaseDataModelService<MoveRange>, IMoveRangeService
 {
+    public static MoveRangeService Load(string dataFile) => new MoveRangeService(dataFile);
     private MoveRangeService(string dataFile) : base(dataFile, 0, 29, () => new MoveRange()) {}
 
     public MoveRangeService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveRangeRomPath)) {}
