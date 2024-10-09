@@ -4,8 +4,8 @@
     xmlns:local="clr-namespace:RanseiLink.Windows">
     
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Controls/IconControl.xaml"/>
-        <ResourceDictionary Source="Controls/OverrideControl.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/RanseiLink.Windows;component/Controls/IconControl.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/RanseiLink.Windows;component/Controls/OverrideControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     
 
