@@ -133,12 +133,9 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         {
             foreach (var item in AllItems)
             {
-                foreach (var tag in checkedTags)
+                if (checkedTags.All(tag => item.Mod.Tags.Contains(tag.Tag)))
                 {
-                    if (item.Mod.Tags.Contains(tag.Tag))
-                    {
-                        ModItems.Add(item);
-                    }
+                    ModItems.Add(item);
                 }
             }
         }
