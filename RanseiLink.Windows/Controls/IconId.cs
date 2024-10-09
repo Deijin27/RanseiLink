@@ -56,6 +56,8 @@
         keep = 0xe6aa,
         fiber_new = 0xe05e,
         circle = 0xef4a,
-
+        person = 0xe7fd,
+        language = 0xe894,
+        info = 0xe88e,
     }
 }

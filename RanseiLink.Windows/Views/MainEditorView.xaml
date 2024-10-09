@@ -24,13 +24,34 @@
             <RowDefinition/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Column="1" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
             <ContentControl Content="{Binding CurrentVm}" Margin="0"/>
         </Grid>
-        <controls:ModInfoControl ModInfo="{Binding Mod}"/>
+        <Grid Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" d:Text="My Mod"/>
+            <controls:IconControl ToolTip="Author" Grid.Row="1" Icon="person"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="1" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>
+            <controls:IconControl ToolTip="Version" Grid.Row="2" Icon="info"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
+            <!--
+            <controls:IconControl ToolTip="Region" Grid.Row="3" Icon="language"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.GameCode}" d:Text="VPYT"/>
+            -->
+        </Grid>
         
-        <ListView x:Name="editorListView" 
+        <ListView x:Name="editorListView"
                   Visibility="{Binding PluginPopupOpen, Converter={StaticResource Converter.InvertBoolToVisibility}}" 
                   Style="{StaticResource ListViewStyle1}" 
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
