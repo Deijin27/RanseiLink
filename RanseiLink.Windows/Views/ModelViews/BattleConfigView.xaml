@@ -53,7 +53,7 @@
 
             
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Map File" Grid.Row="0" ToolTip="Jump to selected map" 
-                    Command="{Binding JumpToMapCommand}" CommandParameter="{Binding Map}"/>
+                    Command="{Binding JumpToMapCommand}" CommandParameter="{Binding MapId}"/>
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <controls:IconButton Icon="visibility" ToolTip="View 3D Model" DockPanel.Dock="Right" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" />
                 <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding MapId, Mode=TwoWay}"/>
