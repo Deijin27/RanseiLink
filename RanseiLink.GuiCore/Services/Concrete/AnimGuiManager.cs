@@ -1,12 +1,14 @@
 ﻿#nullable enable
 using FluentResults;
 using RanseiLink.Core;
+using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
+using System.Xml.Linq;
 
 namespace RanseiLink.GuiCore.Services.Concrete;
 internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService dialogService, ISettingService settingService, ModInfo mod, IFolderDropHandler fdh) : IAnimGuiManager
@@ -39,15 +41,21 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
 
     public async Task<bool> Import(AnimationTypeId type, int id)
     {
+        // Get DataFiles for type
         var info = AnimationTypeInfoResource.Get(type);
         var (animLinkFile, bgLinkFile) = manager.GetDataFile(info, id);
 
+        var tempBg = FileUtil.GetTemporaryDirectory();
+
         string? outputAnimLinkFile = null;
         string? outputBgLinkFile = null;
-        Result<ImportResult> importResult;
 
         if (animLinkFile != null)
         {
+            // -- Anim & Background -->
+
+            // Choose an xml file to import
+
             var animationXml = await dialogService.ShowOpenSingleFileDialog(new(
                 "Choose an animation file to import", 
                 new FileDialogFilter("Nitro Cell Animation", ".xml")
@@ -56,37 +64,116 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
             {
                 return false;
             }
-            
+
+            var tempAnim = FileUtil.GetTemporaryDirectory();
+            var res = new RLAnimationResource(XDocument.Load(animationXml));
+
             outputAnimLinkFile = Path.GetTempFileName();
             if (bgLinkFile == null)
             {
-                // there is no background associated with this animation
-                importResult = CellAnimationSerialiser.ImportAnimation(
-                    new CellImageSettings(info.Prt),
-                    animLinkFile: animLinkFile.File,
-                    animationXml: animationXml,
-                    width: info.Width,
-                    height: info.Height,
-                    outputAnimLinkFile: outputAnimLinkFile
+                // -- Anim Only -->
+
+                // Load Anim
+
+                var dir = Path.GetDirectoryName(animationXml)!;
+                LINK.Unpack(animLinkFile.File, tempAnim);
+                var anim = G2DR.LoadAnimImgFromFolder(tempAnim);
+                var valid = CellAnimationSerialiser.ValidateAndFixupAnim(res, anim.Nanr);
+                if (valid.IsFailed)
+                {
+                    return false;
+                }
+
+                // Simplify palette, save to folder
+
+                var (wasSimplified, simplifiedDir) = CellAnimationSerialiser.SimplifyPalette(
+                    dir: dir,
+                    res: res,
+                    paletteSize: anim.Ncgr.Pixels.Format.PaletteSize()
                     );
+
+                if (wasSimplified)
+                {
+                    // TODO: Are you happy with simplified palette?
+                }
+
+                // Import Folder
+                var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
+                var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, info.Width, info.Height, new(info.Prt));
+                G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+                LINK.Pack(tempAnim, outputAnimLinkFile);
+
             }
             else
             {
-                outputBgLinkFile = Path.GetTempFileName();
-                // this has both background and animation
-                importResult = CellAnimationSerialiser.ImportAnimAndBackground(
-                    info: info,
-                    new CellImageSettings(info.Prt),
-                    animationXml: animationXml,
-                    animLinkFile: animLinkFile.File,
-                    outputAnimLinkFile: outputAnimLinkFile,
-                    bgLinkFile: bgLinkFile.File,
-                    outputBgLinkFile: outputBgLinkFile
+                // -- Anim & Background -->
+
+                // TODO: Load Background and Anim
+
+                var dir = Path.GetDirectoryName(animationXml)!;
+                LINK.Unpack(animLinkFile.File, tempAnim);
+                var anim = G2DR.LoadAnimImgFromFolder(tempAnim);
+                var valid = CellAnimationSerialiser.ValidateAndFixupAnim(res, anim.Nanr);
+                if (valid.IsFailed)
+                {
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(res.Background))
+                {
+                    // Background is required
+                    return false;
+                }
+
+                var bgImage = Path.Combine(dir, res.Background);
+                if (!File.Exists(bgImage))
+                {
+                    // File must exist
+                    return false;
+                }
+
+                LINK.Unpack(bgLinkFile.File, tempBg);
+                var bg = G2DR.LoadImgFromFolder(tempBg);
+                
+
+                // TODO: Simplify palette of both to folder
+
+                var (wasSimplified, simplifiedDir) = CellAnimationSerialiser.SimplifyPalette(
+                    dir: dir, 
+                    res: res, 
+                    paletteSize: anim.Ncgr.Pixels.Format.PaletteSize()
                     );
+                var simglifiedBg = Path.Combine(simplifiedDir, res.Background);
+                var wasBgSimplified = ImageSimplifier.SimplifyPalette(
+                    imagePath: bgImage, 
+                    maximumColors: bg.Ncgr.Pixels.Format.PaletteSize(), 
+                    saveFile: simglifiedBg
+                    );
+
+                if (wasSimplified || wasBgSimplified)
+                {
+                    // TODO: Are you happy with simplified palette?
+                }
+
+                outputBgLinkFile = Path.GetTempFileName();
+
+                // Import Folder
+                var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
+                var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, info.Width, info.Height, new(info.Prt));
+                G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+                LINK.Pack(tempAnim, outputAnimLinkFile);
+
+                var resl = CellAnimationSerialiser.ImportBackground(info, wasBgSimplified ? simglifiedBg : bgImage, bg.Ncgr, bg.Nclr);
+                G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
+                LINK.Pack(tempBg, outputBgLinkFile);
             }
         }
         else if (bgLinkFile != null)
         {
+            // -- Background Only -->
+
+            // Choose png to import
+
             // if there's no animation, e.g. for Castlemap aurora,
             // we just ask for a background
             var backgroundImg = await dialogService.ShowOpenSingleFileDialog(new(
@@ -97,24 +184,42 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
             {
                 return false;
             }
+
+            var bgImage = backgroundImg;
+            if (!File.Exists(bgImage))
+            {
+                // File must exist
+                return false;
+            }
+
+            LINK.Unpack(bgLinkFile.File, tempBg);
+            var bg = G2DR.LoadImgFromFolder(tempBg);
+
+            var simglifiedBg = FileUtil.MakeUniquePath(Path.Combine(Path.GetDirectoryName(bgImage)!, Path.GetFileNameWithoutExtension(bgImage) + "-Simplified", Path.GetExtension(bgImage)));
+            var wasBgSimplified = ImageSimplifier.SimplifyPalette(
+                imagePath: bgImage,
+                maximumColors: bg.Ncgr.Pixels.Format.PaletteSize(),
+                saveFile: simglifiedBg
+                );
+
+            if (wasBgSimplified)
+            {
+                // TODO: Are you happy with simplified palette?
+            }
+
+            // Import simplified image
+
             outputBgLinkFile = Path.GetTempFileName();
-            importResult = CellAnimationSerialiser.ImportBackground(
-                info: info,
-                bgImage: backgroundImg,
-                bgLinkFile: bgLinkFile.File,
-                outputBgLinkFile: outputBgLinkFile
-                ).ToResult();
+            var resl = CellAnimationSerialiser.ImportBackground(info, wasBgSimplified ? simglifiedBg : bgImage, bg.Ncgr, bg.Nclr);
+            G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
+            LINK.Pack(tempBg, outputBgLinkFile);
         }
         else
         {
             throw new Exception("Both animation and background link files were null");
         }
 
-        if (importResult.IsFailed)
-        {
-            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error Importing Animation", importResult.ToString(), MessageBoxType.Error));
-            return false;
-        }
+        // Set Override
 
         // Replace the current link files with the new ones
         manager.ClearOverride(info, id);

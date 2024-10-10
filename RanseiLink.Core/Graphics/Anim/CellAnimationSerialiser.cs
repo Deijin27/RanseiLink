@@ -40,26 +40,7 @@ public static class CellAnimationSerialiser
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
         {
-            res ??= new RLAnimationResource(XDocument.Load(animationXml));
-            var dir = Path.GetDirectoryName(animationXml)!;
-            LINK.Unpack(animLinkFile, tempAnim);
-            var anim = G2DR.LoadAnimImgFromFolder(tempAnim);
-
-            var valid = ValidateAndFixupAnim(res, anim.Nanr);
-            if (valid.IsFailed)
-            {
-                return valid;
-            }
-
-            var (wasSimplified, simplifiedDir) = SimplifyPalette(dir, res, anim.Ncgr.Pixels.Format.PaletteSize());
-
-            var images = LoadImages(wasSimplified ? simplifiedDir : dir, res);
-
-            var data = new ResAndImages(res, images);
-
-            var nanr = ImportAnimationXml(data, anim.Ncer, anim.Ncgr, anim.Nclr, width, height, settings);
-            G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
-            LINK.Pack(tempAnim, outputAnimLinkFile);
+            
             return Result.Ok(new ImportResult(simplifiedDir, wasSimplified));
         }
         catch (Exception ex)
@@ -72,7 +53,7 @@ public static class CellAnimationSerialiser
         }
     }
 
-    private static Dictionary<string, Image<Rgba32>> LoadImages(string dir, RLAnimationResource res)
+    public static Dictionary<string, Image<Rgba32>> LoadImages(string dir, RLAnimationResource res)
     {
         var images = new Dictionary<string, Image<Rgba32>>(StringComparer.OrdinalIgnoreCase);
 
@@ -110,7 +91,7 @@ public static class CellAnimationSerialiser
         return images;
     }
 
-    private static Result ValidateAndFixupAnim(RLAnimationResource res, NANR existingAnim)
+    public static Result ValidateAndFixupAnim(RLAnimationResource res, NANR existingAnim)
     {
         // Animation is corrupt if you use a different amount of animations
         // to what were originally in the slot.
@@ -204,11 +185,7 @@ public static class CellAnimationSerialiser
         var tempBg = FileUtil.GetTemporaryDirectory();
         try
         {
-            LINK.Unpack(bgLinkFile, tempBg);
-            var bg = G2DR.LoadImgFromFolder(tempBg);
-            var res = ImportBackground(info, bgImage, bg.Ncgr, bg.Nclr);
-            G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
-            LINK.Pack(tempBg, outputBgLinkFile);
+            
             return Result.Ok(res);
         }
         catch (Exception ex)
@@ -642,7 +619,7 @@ public static class CellAnimationSerialiser
 
     
 
-    private static (bool wasSimplified, string saveDir) SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string? saveDir = null)
+    public static (bool wasSimplified, string saveDir) SimplifyPalette(string dir, RLAnimationResource res, int paletteSize, string? saveDir = null)
     {
         saveDir = Path.Combine(Path.GetDirectoryName(dir)!, Path.GetFileName(dir) + " - Simplified");
         FileUtil.CopyFilesRecursively(dir, saveDir);
