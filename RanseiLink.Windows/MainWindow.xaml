@@ -37,15 +37,29 @@
             <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
             <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
 
-            <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  Background="Transparent">
-                <Button DockPanel.Dock="Left" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
-                    Command="{Binding BackButtonCommand}"
-                    Visibility="{Binding BackButtonVisible, Converter={StaticResource Converter.BoolToVisibility}}"
-                    FontFamily="{StaticResource MaterialIcons}"
-                    Width="45" Height="30"
-                    FontSize="13"
-                    ToolTip="Go Back"
-                    Style="{StaticResource GrayHoverButtonStyle}"/>
+            <Grid Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock FontSize="14" FontWeight="SemiBold"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+                        RanseiLink <Run Foreground="{StaticResource AltForegroundBrush}" FontSize="11" d:Text="1.0-beta" Text="{x:Static local:App.Version}"/>
+                </TextBlock>
+
+                <Button Grid.Column="2" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
+                        Command="{Binding BackButtonCommand}"
+                        Visibility="{Binding BackButtonVisible, Converter={StaticResource Converter.BoolToVisibility}}"
+                        FontFamily="{StaticResource MaterialIcons}"
+                        Width="45" Height="30"
+                        FontSize="13"
+                        ToolTip="Home"
+                        Style="{StaticResource GrayHoverButtonStyle}"/>
+            </Grid>
+
+            <DockPanel Grid.Row="0" Grid.Column="1" Background="Transparent">
+                
 
                 <Button DockPanel.Dock="Right" FontSize="13" Width="45" Height="30"  WindowChrome.IsHitTestVisibleInChrome="True"
                         FontFamily="{StaticResource MaterialIcons}" 
@@ -76,10 +90,7 @@
                         ToolTip="Toggle Theme"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
 
-                <TextBlock FontSize="12" FontWeight="SemiBold"
-                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-                        RanseiLink <Run Text="{x:Static local:App.Version}"/>
-                </TextBlock>
+                <TextBlock/>
             </DockPanel>
 
             <ContentControl Content="{Binding CurrentVm}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
