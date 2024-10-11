@@ -35,13 +35,14 @@ public static class CellAnimationSerialiser
         }
     }
 
+    /*
     public static Result<ImportResult> ImportAnimation(CellImageSettings settings, string animLinkFile, string animationXml, int width, int height, string outputAnimLinkFile, RLAnimationResource? res = null)
     {
         var tempAnim = FileUtil.GetTemporaryDirectory();
         try
         {
             
-            return Result.Ok(new ImportResult(simplifiedDir, wasSimplified));
+            return Result.Ok(new ImportResult());
         }
         catch (Exception ex)
         {
@@ -52,6 +53,7 @@ public static class CellAnimationSerialiser
             Directory.Delete(tempAnim, true);
         }
     }
+    */
 
     public static Dictionary<string, Image<Rgba32>> LoadImages(string dir, RLAnimationResource res)
     {
@@ -139,6 +141,7 @@ public static class CellAnimationSerialiser
         }
     }
 
+    /*
     public static Result<ImportResult> ImportAnimAndBackground(AnimationTypeInfo info, CellImageSettings settings,
         string animationXml, string animLinkFile, string outputAnimLinkFile,
         string bgLinkFile, string outputBgLinkFile)
@@ -197,6 +200,7 @@ public static class CellAnimationSerialiser
             Directory.Delete(tempBg, true);
         }
     }
+    */
 
     public static (int width, int height) ExportBackground(NCGR ncgr, NCLR nclr, string outputFolder, string outputFileName)
     {
