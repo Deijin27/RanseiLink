@@ -236,6 +236,7 @@
         <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
     </Model>
     <Model Name="WarriorSkill" DataLength="0x1C" DataLength_VPYJ="0x18" Render="true" Model="true" ViewModel="true" Cultural="true">
+        <Service MaxId="72"/>
         <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0xE" />
         <Property Index="4, 24, 8" Index_VPYJ="3, 24, 8" Name="Effect1Amount"/>
         <Property Index="5,  0, 7" Index_VPYJ="4,  0, 7" Name="Effect1" Type="WarriorSkillEffectId"/>
