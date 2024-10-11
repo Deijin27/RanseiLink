@@ -11,6 +11,7 @@
         <MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
     </Model>
     <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Render="true" Model="true" ViewModel="true">
+        <Service MaxId="251" DefaultId="252" RomPath="BaseBushouRomPath" IdToName="false"/>
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
