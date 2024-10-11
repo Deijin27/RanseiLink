@@ -39,6 +39,22 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
         return true;
     }
 
+    private async Task<bool> HappyWithSimplified(int palSize, string simplifiedDir)
+    {
+        var happyResult = await dialogService.ShowMessageBox(new(
+            "Palette Simplified",
+            $"The combined animation images used more than the allowed maximum colors of {palSize}.\n" +
+            $"A simplified version has been created at '{simplifiedDir}'.\n" +
+            $"Would you like to import this simplified version?",
+            [
+                new("Import Simplified", MessageBoxResult.Ok),
+                new("Cancel", MessageBoxResult.Cancel)
+            ],
+            MessageBoxType.Error));
+
+        return happyResult == MessageBoxResult.Ok;
+    }
+
     public async Task<bool> Import(AnimationTypeId type, int id)
     {
         // Get DataFiles for type
@@ -81,20 +97,25 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                 var valid = CellAnimationSerialiser.ValidateAndFixupAnim(res, anim.Nanr);
                 if (valid.IsFailed)
                 {
+                    await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Animation Import Error", valid.ToString(), MessageBoxType.Error));
                     return false;
                 }
 
                 // Simplify palette, save to folder
 
+                var palSize = anim.Ncgr.Pixels.Format.PaletteSize();
                 var (wasSimplified, simplifiedDir) = CellAnimationSerialiser.SimplifyPalette(
                     dir: dir,
                     res: res,
-                    paletteSize: anim.Ncgr.Pixels.Format.PaletteSize()
+                    paletteSize: palSize
                     );
 
                 if (wasSimplified)
                 {
-                    // TODO: Are you happy with simplified palette?
+                    if (!await HappyWithSimplified(palSize, simplifiedDir))
+                    {
+                        return false;
+                    }
                 }
 
                 // Import Folder
@@ -134,14 +155,15 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
 
                 LINK.Unpack(bgLinkFile.File, tempBg);
                 var bg = G2DR.LoadImgFromFolder(tempBg);
-                
+
 
                 // TODO: Simplify palette of both to folder
 
+                var palSize = anim.Ncgr.Pixels.Format.PaletteSize();
                 var (wasSimplified, simplifiedDir) = CellAnimationSerialiser.SimplifyPalette(
                     dir: dir, 
                     res: res, 
-                    paletteSize: anim.Ncgr.Pixels.Format.PaletteSize()
+                    paletteSize: palSize
                     );
                 var simglifiedBg = Path.Combine(simplifiedDir, res.Background);
                 var wasBgSimplified = ImageSimplifier.SimplifyPalette(
@@ -152,20 +174,25 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
 
                 if (wasSimplified || wasBgSimplified)
                 {
-                    // TODO: Are you happy with simplified palette?
+                    if (!await HappyWithSimplified(palSize, simplifiedDir))
+                    {
+                        return false;
+                    }
                 }
 
                 outputBgLinkFile = Path.GetTempFileName();
 
                 // Import Folder
-                var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
-                var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, info.Width, info.Height, new(info.Prt));
-                G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
-                LINK.Pack(tempAnim, outputAnimLinkFile);
-
                 var resl = CellAnimationSerialiser.ImportBackground(info, wasBgSimplified ? simglifiedBg : bgImage, bg.Ncgr, bg.Nclr);
                 G2DR.SaveImgToFolder(tempBg, bg.Ncgr, bg.Nclr, NcgrSlot.Infer);
                 LINK.Pack(tempBg, outputBgLinkFile);
+
+                var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
+                var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, resl.width, resl.height, new(info.Prt));
+                G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
+                LINK.Pack(tempAnim, outputAnimLinkFile);
+
+                
             }
         }
         else if (bgLinkFile != null)
@@ -195,16 +222,21 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
             LINK.Unpack(bgLinkFile.File, tempBg);
             var bg = G2DR.LoadImgFromFolder(tempBg);
 
+            var palSize = bg.Ncgr.Pixels.Format.PaletteSize();
             var simglifiedBg = FileUtil.MakeUniquePath(Path.Combine(Path.GetDirectoryName(bgImage)!, Path.GetFileNameWithoutExtension(bgImage) + "-Simplified", Path.GetExtension(bgImage)));
             var wasBgSimplified = ImageSimplifier.SimplifyPalette(
                 imagePath: bgImage,
-                maximumColors: bg.Ncgr.Pixels.Format.PaletteSize(),
+                maximumColors: palSize,
                 saveFile: simglifiedBg
                 );
 
             if (wasBgSimplified)
             {
                 // TODO: Are you happy with simplified palette?
+                if (!await HappyWithSimplified(palSize, simglifiedBg))
+                {
+                    return false;
+                }
             }
 
             // Import simplified image
