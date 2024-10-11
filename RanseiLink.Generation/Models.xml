@@ -153,6 +153,9 @@
         <Property Index="5, 22, 4" Index_VPYJ="4, 22, 4" Name="Unknown2"/>
         <Property Index="5, 26, 4" Index_VPYJ="4, 26, 4" Name="Unknown3"/>
     </Model>
+    <Model Name="MaxLink" Id="WarriorId">
+        <Service MaxId="251"/>
+    </Model>
     <Model Name="Move" DataLength="0x24" Render="true" Model="true" ViewModel="true">
         <Service MaxId="142"/>
         <StringProperty Name="Name" Index="0" MaxLength="14"/>
