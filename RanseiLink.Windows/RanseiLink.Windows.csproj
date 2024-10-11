@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<Resource Include="RanseiLinkIcon.png" />
     <Resource Include="Fonts\MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf" />
   </ItemGroup>
 

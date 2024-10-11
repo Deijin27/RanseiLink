@@ -43,8 +43,11 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock FontSize="14" FontWeight="SemiBold"
-                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
+
+                <Image Margin="10,0,6,0" Height="12" Stretch="Uniform" VerticalAlignment="Center" Source="RanseiLinkIcon.png"/>
+
+                <TextBlock Grid.Column="1" FontSize="14" FontWeight="SemiBold" Grid.ColumnSpan="3"
+                    HorizontalAlignment="Left" VerticalAlignment="Center">
                         RanseiLink <Run Foreground="{StaticResource AltForegroundBrush}" FontSize="11" d:Text="1.0-beta" Text="{x:Static local:App.Version}"/>
                 </TextBlock>
 
