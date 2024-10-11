@@ -3,20 +3,10 @@ using RanseiLink.Core.Models;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
-public interface IPokemonService : IModelService<Pokemon>
-{
-}
-
-public class PokemonService : BaseNewableDataModelService<Pokemon>, IPokemonService
+public partial class PokemonService
 {
     private const int __defaultEvoId = 1400;
     private const long __evoTableOffset = 0x25C0;
-
-    public static PokemonService Load(string pokemonDatFile) => new PokemonService(pokemonDatFile);
-    private PokemonService(string pokemonDatFile) : base(pokemonDatFile, 0, 199, 511) { }
-    public PokemonService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.PokemonRomPath)) { }
-
-    public Pokemon Retrieve(PokemonId id) => Retrieve((int)id);
 
     public override void PostLoad(Stream stream)
     {
@@ -74,10 +64,5 @@ public class PokemonService : BaseNewableDataModelService<Pokemon>, IPokemonServ
             stream.Pad(4 - (length % 4));
         }
         stream.SetLength(stream.Position);
-    }
-
-    public override string IdToName(int id)
-    {
-        return Retrieve(id).Name;
     }
 }
