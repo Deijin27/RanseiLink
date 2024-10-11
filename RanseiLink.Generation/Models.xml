@@ -179,6 +179,7 @@
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
     <Model Name="MoveAnimation" DataLength="0x4" Model="true">
+        <Service MaxId="254"/>
         <Property Index="0,  0, 16" Name="UnknownA" />
         <Property Index="0, 16, 16" Name="UnknownB" />
     </Model>
