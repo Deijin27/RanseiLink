@@ -1,5 +1,5 @@
 ﻿<Models>
-    <Model Name="Ability" DataLength="0x14" Render="true" Model="true" ViewModel="true">
+    <Model Name="Ability" DataLength="0x14" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="127" DefaultId="128"/>
         <StringProperty Name="Name" Index="0" MaxLength="14" />
         <Property Index="3, 24, 2" Name="Effect1Amount" />
@@ -10,7 +10,7 @@
         <MsgProperty Name="HotSpringsDescription" Id="AbilityHotSpringsDescription"/>
         <MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
     </Model>
-    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Render="true" Model="true" ViewModel="true">
+    <Model Name="BaseWarrior" Id="WarriorId" DataLength="0x14" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="251" DefaultId="252" RomPath="BaseBushouRomPath" IdToName="false"/>
         <Property Index="0,  0, 8" Name="Sprite" />
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
@@ -34,7 +34,7 @@
         <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
         <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
     </Model>
-    <Model Name="BattleConfig" DataLength="0x18" Render="true" Model="true" ViewModel="true">
+    <Model Name="BattleConfig" DataLength="0x18" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="46" DefaultId="47"/>
         <Property Index="0,  0,  6" Name="Map" />
         <Property Index="0,  6,  5" Name="MapVariant" />
@@ -60,7 +60,7 @@
         <ByteProperty Index="22" Name="Treasure11" Type="ItemId"/>
         <ByteProperty Index="23" Name="Treasure12" Type="ItemId"/>
     </Model>
-    <Model Name="Building" DataLength="0x24" DataLength_VPYJ="0x20" Render="true" Cultural="true" Model="true" ViewModel="true">
+    <Model Name="Building" DataLength="0x24" DataLength_VPYJ="0x20" Command="true" Render="true" Cultural="true" Model="true" ViewModel="true">
         <Service MaxId="118" DefaultId="119"/>
         <StringProperty Name="Name" Index="0" MaxLength="18" MaxLength_VPYJ="16"/>
         <ByteProperty Index="19" Index_VPYJ="17" Name="Building1" Type="BuildingId"/>
@@ -80,7 +80,7 @@
         <Property Index="8, 21, 7" Index_VPYJ="7, 21, 7" Name="Sprite3" Max="84"/>
         <Property Index="8, 28, 4" Index_VPYJ="7, 28, 4" Name="Function" Type="BuildingFunctionId"/>
     </Model>
-    <Model Name="Episode" DataLength="0x8" Render="true" Model="true" ViewModel="true">
+    <Model Name="Episode" DataLength="0x8" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="37" DefaultId="511"/>
         <Property Index="0,  0, 9" Name="Order" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
@@ -92,12 +92,12 @@
         <MsgProperty Name="Name" Id="EpisodeName"/>
         <MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
-    <Model Name="EventSpeaker" Render="true" Model="true" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
+    <Model Name="EventSpeaker" Command="true" Render="true" Model="true" ViewModel="true" Cultural="true" DataLength="0x12" DataLength_VPYJ="0xC">
         <Service MaxId="59"/>
         <StringProperty Name="Name" Index="0" MaxLength="0x10" MaxLength_VPYJ="0xA"/>
         <ByteProperty Name="Sprite" Index="0x11" Index_VPYJ="0xB"/>
     </Model>
-    <Model Name="Gimmick" DataLength="0x28" DataLength_VPYJ="0x24" Render="true" Model="true" ViewModel="true" Cultural="true">
+    <Model Name="Gimmick" DataLength="0x28" DataLength_VPYJ="0x24" Command="true" Render="true" Model="true" ViewModel="true" Cultural="true">
         <Service MaxId="147"/>
         <StringProperty Name="Name" Index="0" MaxLength="16" MaxLength_VPYJ="14"/>
         <ByteProperty Index="17" Index_VPYJ="15" Name="Image" Description="Top screen square image when you hover over the object"/>
@@ -114,7 +114,7 @@
     <Model Name="GimmickObject" DataLength="0x4" Model="true">
         <Service MaxId="99"/>
     </Model>
-    <Model Name="Item" DataLength="0x24" Render="true" Model="true" ViewModel="true">
+    <Model Name="Item" DataLength="0x24" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="133" DefaultId="134"/>
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
         <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
@@ -132,7 +132,7 @@
         <MsgProperty Name="Description" Id="ItemDescription"/>
         <MsgProperty Name="Description2" Id="ItemDescription2"/>
     </Model>
-    <Model Name="Kingdom" DataLength="0x18" DataLength_VPYJ="0x14" Render="true" Model="true" ViewModel="true" Cultural ="true">
+    <Model Name="Kingdom" DataLength="0x18" Command="true" DataLength_VPYJ="0x14" Render="true" Model="true" ViewModel="true" Cultural ="true">
         <Service MaxId="16" DefaultId="17"/>
         <StringProperty Name="Name" Index="0" MaxLength="10" MaxLength_VPYJ="8"/>
         <Property Index="2, 24, 3" Index_VPYJ="2,  8, 3" Name="Unknown1"/>
@@ -153,10 +153,10 @@
         <Property Index="5, 22, 4" Index_VPYJ="4, 22, 4" Name="Unknown2"/>
         <Property Index="5, 26, 4" Index_VPYJ="4, 26, 4" Name="Unknown3"/>
     </Model>
-    <Model Name="MaxLink" Id="WarriorId">
+    <Model Name="MaxLink" Id="WarriorId" Command="true">
         <Service MaxId="251"/>
     </Model>
-    <Model Name="Move" DataLength="0x24" Render="true" Model="true" ViewModel="true">
+    <Model Name="Move" DataLength="0x24" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="142"/>
         <StringProperty Name="Name" Index="0" MaxLength="14"/>
         <Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
@@ -192,7 +192,7 @@
         <Service MaxId="29" Name="GimmickRange" Id="GimmickRangeId"/>
         <FlagProperty Index="0, 0" Name="InRange"/>
     </Model>
-    <Model Name="Pokemon" DataLength="0x30" Render="true" Model="true" ViewModel="true">
+    <Model Name="Pokemon" DataLength="0x30" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="199" DefaultId="511"/>
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
         <Property Index=" 3,  0,  9" Name="Hp" />
@@ -240,7 +240,7 @@
         <Property Index="0, 17, 5" Name="Army" />
         <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
     </Model>
-    <Model Name="WarriorSkill" DataLength="0x1C" DataLength_VPYJ="0x18" Render="true" Model="true" ViewModel="true" Cultural="true">
+    <Model Name="WarriorSkill" DataLength="0x1C" DataLength_VPYJ="0x18" Command="true" Render="true" Model="true" ViewModel="true" Cultural="true">
         <Service MaxId="72"/>
         <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0xE" />
         <Property Index="4, 24, 8" Index_VPYJ="3, 24, 8" Name="Effect1Amount"/>

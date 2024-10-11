@@ -8,8 +8,8 @@ namespace RanseiLink.Console.Services;
 
 public interface ICurrentModService
 {
-    bool TryGetCurrentMod(out ModInfo? currentMod);
-    bool TryGetCurrentModServiceGetter(out IServiceGetter? currentModKernel);
+    bool TryGetCurrentMod([NotNullWhen(true)] out ModInfo? currentMod);
+    bool TryGetCurrentModServiceGetter([NotNullWhen(true)] out IServiceGetter? currentModKernel);
 }
 
 public class CurrentModService(ISettingService settingService, IModManager modManager, IModServiceGetterFactory modKernelFactory) : ICurrentModService
