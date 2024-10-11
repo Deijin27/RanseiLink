@@ -70,6 +70,7 @@ public static class FileUtil
     /// <param name="targetPath"></param>
     public static void CopyFilesRecursively(string sourcePath, string targetPath)
     {
+        Directory.CreateDirectory(targetPath);
         var dirs = Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories);
         var files = Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories);
         foreach (string dirPath in dirs)
