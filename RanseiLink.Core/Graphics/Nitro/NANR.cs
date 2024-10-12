@@ -220,6 +220,14 @@ public class ABNK
                 // NB: two frames sometimes use the same numCell offset, so they're shared to save space, no dupes
                 br.BaseStream.Position = initOffset + NitroChunkHeader.Length + subHeader.BlockOffset_Cells + frameOffsetData;
                 frame.Cluster = br.ReadUInt16();
+                if (anim.DataType == 1)
+                {
+                    frame.UnknownData = [];
+                    for (int bIndex = 0; bIndex < 7; bIndex++)
+                    {
+                        frame.UnknownData.Add(br.ReadUInt16());
+                    }
+                }
             }
         }
         if (tframes != subHeader.FrameCount)
@@ -269,21 +277,34 @@ public class ABNK
 
         subHeader.BlockOffset_Frames = (uint)(bw.BaseStream.Position - postNitroHeaderOffset);
 
-        var distinctCells = new List<ushort>();
+        var distinctCells = new List<ushort[]>();
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
             for (int j = 0; j < anim.Frames.Count; j++)
             {
                 var frame = anim.Frames[j];
+                ushort[] frameData;
+                if (frame.UnknownData == null)
+                {
+                    frameData = [frame.Cluster];
+                }
+                else 
+                {
+                    if (frame.UnknownData.Count != 7)
+                    {
+                        throw new Exception("Frame unknown data must be of length 7 ushorts");
+                    }
+                    frameData = frame.UnknownData.Prepend(frame.Cluster).ToArray();
+                }
                 // the cell values are not duplicated
-                var index = distinctCells.IndexOf(frame.Cluster);
+                var index = distinctCells.FindIndex(x => x.SequenceEqual(frameData));
                 if (index == -1)
                 {
                     index = distinctCells.Count;
-                    distinctCells.Add(frame.Cluster);
+                    distinctCells.Add(frameData);
                 }
-                bw.Write(Frame.DataLength_Cell * index);
+                bw.Write(Frame.DataLength_Cell(anim.DataType) * index);
                 bw.Write(frame.Duration);
                 bw.Write((ushort)0xBEEF);
             }
@@ -296,11 +317,14 @@ public class ABNK
         // make it disisible by 4?
         if (distinctCells.Count % 2 != 0)
         {
-            distinctCells.Add(0xCCCC);
+            distinctCells.Add([0xCCCC]);
         }
         foreach (var cell in distinctCells) 
         {
-            bw.Write(cell);
+            foreach (var cellDataEntry in cell)
+            {
+                bw.Write(cellDataEntry);
+            }
         }
         
         // write headers
@@ -325,7 +349,15 @@ public class ABNK
     public class Frame
     {
         public const int DataLength_Frame = 0x8;
-        public const int DataLength_Cell = 0x2;
+        public static int DataLength_Cell(ushort dataType)
+        {
+            var len = 2;
+            if (dataType == 1)
+            {
+                len += 2 * 7;
+            }
+            return len;
+        }
         /// <summary>
         /// Number of frames this is shown (60fps)
         /// </summary>
@@ -334,5 +366,7 @@ public class ABNK
         /// Index of cell cluster containing the cell image data to be drawn during this keyframe
         /// </summary>
         public ushort Cluster { get; set; }
+
+        public List<ushort>? UnknownData { get; set; }
     }
 }

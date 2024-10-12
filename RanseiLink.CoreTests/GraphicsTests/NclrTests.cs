@@ -47,6 +47,7 @@ public class NclrTests
     [InlineData("test_single.nclr")]
     [InlineData("test_multi.nclr")]
     [InlineData("test_cma_ignis.nclr")]
+    [InlineData("test_kico_ignis.nclr")]
     [InlineData("test_ki2_aurora_anim.nclr")]
     public void LoadSaveCycle(string fileName)
     {

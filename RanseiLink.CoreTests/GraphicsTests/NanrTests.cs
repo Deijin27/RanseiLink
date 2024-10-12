@@ -78,7 +78,7 @@ public class NanrTests
             bank2.Frames[3].Duration.Should().Be(12);
         }
 
-        nanr.Labels.Names.Should().Equal(new[] { "reflection", "flag_r", "flag_l" });
+        nanr.Labels.Names.Should().Equal(["reflection", "flag_r", "flag_l"]);
 
         nanr.Unknown.Unknown.Should().Be(0);
     }
@@ -86,6 +86,7 @@ public class NanrTests
     [Theory]
     [InlineData("test_ki2_aurora_anim.nanr")]
     [InlineData("test_cma_ignis.nanr")]
+    //[InlineData("test_kico_ignis.nanr")] // some random 0xCC values :(
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
@@ -99,7 +100,7 @@ public class NanrTests
         var data = mem.ToArray();
         mem.Dispose();
 
-        //File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
+        File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
 
         data.Should().Equal(File.ReadAllBytes(file));
     }

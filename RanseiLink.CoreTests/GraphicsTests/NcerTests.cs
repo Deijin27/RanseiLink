@@ -1,5 +1,4 @@
 ﻿using RanseiLink.Core.Graphics;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
@@ -86,7 +85,7 @@ public class NcerTests
         ncer.Clusters.Ucat.Should().BeNull();
 
         // Labels section
-        ncer.Labels.Names.Should().Equal(new string[] { "reflection", "flag_r", "flag_l" });
+        ncer.Labels.Names.Should().Equal(["reflection", "flag_r", "flag_l"]);
 
         // Unknown section
         ncer.Unknown.Unknown.Should().Be(0);
@@ -97,6 +96,7 @@ public class NcerTests
     [InlineData("test_warriorbattleintro.ncer")]
     [InlineData("test_ki2_aurora_anim.ncer")]
     [InlineData("test_cma_ignis.ncer")]
+    [InlineData("test_kico_ignis.ncer")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
@@ -120,6 +120,7 @@ public class NcerTests
     [InlineData("test_warriorbattleintro.ncer")]
     [InlineData("test_ki2_aurora_anim.ncer")]
     [InlineData("test_cma_ignis.ncer")]
+    //[InlineData("test_kico_ignis.ncer")] // these seem fixed to the size of the castle ignoring outer parts.
     public void MinMax(string fileName)
     {
         // These estimates are not always correct, who knows why.
