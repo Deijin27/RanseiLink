@@ -88,17 +88,23 @@ public class RLAnimationResource
     {
         public string? Cluster { get; }
         public int Duration { get; }
-
-        public AnimFrame(string cluster, int duration)
+        public byte[]? UnknownData { get; }
+        public AnimFrame(string cluster, int duration, byte[]? unknownData)
         {
             Cluster = cluster;
             Duration = duration;
+            UnknownData = unknownData;
         }
 
         public AnimFrame(XElement frameElem)
         {
             Cluster = frameElem.Attribute("cluster")?.Value;
             Duration = frameElem.AttributeInt("duration");
+            var unknownData = frameElem.Attribute("unknown_data")?.Value;
+            if (unknownData != null)
+            {
+                UnknownData = unknownData.Split(';').Select(byte.Parse).ToArray();
+            }
         }
 
         public XElement Serialise()
@@ -109,6 +115,10 @@ public class RLAnimationResource
                 e.Add(new XAttribute("cluster", Cluster));
             }
             e.Add(new XAttribute("duration", Duration));
+            if (UnknownData != null)
+            {
+                e.Add(new XAttribute("unknown_data", string.Join(';', UnknownData)));
+            }
             return e;
         }
     }

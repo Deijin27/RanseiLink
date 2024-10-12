@@ -222,11 +222,7 @@ public class ABNK
                 frame.Cluster = br.ReadUInt16();
                 if (anim.DataType == 1)
                 {
-                    frame.UnknownData = [];
-                    for (int bIndex = 0; bIndex < 7; bIndex++)
-                    {
-                        frame.UnknownData.Add(br.ReadUInt16());
-                    }
+                    frame.UnknownData = br.ReadBytes(14);
                 }
             }
         }
@@ -277,25 +273,25 @@ public class ABNK
 
         subHeader.BlockOffset_Frames = (uint)(bw.BaseStream.Position - postNitroHeaderOffset);
 
-        var distinctCells = new List<ushort[]>();
+        var distinctCells = new List<byte[]>();
         for (int i = 0; i < Banks.Count; i++)
         {
             var anim = Banks[i];
             for (int j = 0; j < anim.Frames.Count; j++)
             {
                 var frame = anim.Frames[j];
-                ushort[] frameData;
+                byte[] frameData;
                 if (frame.UnknownData == null)
                 {
-                    frameData = [frame.Cluster];
+                    frameData = BitConverter.GetBytes(frame.Cluster);
                 }
                 else 
                 {
-                    if (frame.UnknownData.Count != 7)
+                    if (frame.UnknownData.Length != 14)
                     {
                         throw new Exception("Frame unknown data must be of length 7 ushorts");
                     }
-                    frameData = frame.UnknownData.Prepend(frame.Cluster).ToArray();
+                    frameData = BitConverter.GetBytes(frame.Cluster).Concat(frame.UnknownData).ToArray();
                 }
                 // the cell values are not duplicated
                 var index = distinctCells.FindIndex(x => x.SequenceEqual(frameData));
@@ -317,7 +313,7 @@ public class ABNK
         // make it disisible by 4?
         if (distinctCells.Count % 2 != 0)
         {
-            distinctCells.Add([0xCCCC]);
+            distinctCells.Add([0xCC, 0xCC]);
         }
         foreach (var cell in distinctCells) 
         {
@@ -367,6 +363,6 @@ public class ABNK
         /// </summary>
         public ushort Cluster { get; set; }
 
-        public List<ushort>? UnknownData { get; set; }
+        public byte[]? UnknownData { get; set; }
     }
 }

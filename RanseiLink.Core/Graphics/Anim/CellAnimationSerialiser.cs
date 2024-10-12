@@ -266,7 +266,7 @@ public static class CellAnimationSerialiser
         {
             var anim = nanr.AnimationBanks.Banks[i];
             var name = nanr.Labels.Names[i];
-            anims.Add(new RLAnimationResource.Anim(name, anim.Frames.Select(x => new RLAnimationResource.AnimFrame(ClusterToString(x.Cluster), x.Duration)).ToList()));
+            anims.Add(new RLAnimationResource.Anim(name, anim.Frames.Select(x => new RLAnimationResource.AnimFrame(ClusterToString(x.Cluster), x.Duration, x.UnknownData)).ToList()));
         }
         return anims;
     }
@@ -459,6 +459,7 @@ public static class CellAnimationSerialiser
                 }
                 targetFrame.Cluster = bankId;
                 targetFrame.Duration = (ushort)frame.Duration;
+                targetFrame.UnknownData = frame.UnknownData;
             }
         }
         return nanr;
