@@ -168,7 +168,7 @@ public class NsbmdTests
         var data = mem.ToArray();
         mem.Dispose();
 
-        File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
+        //File.WriteAllBytes(Path.Combine(Core.FileUtil.DesktopDirectory, fileName + ".debug.bin"), data); // debug
 
         data.Should().Equal(File.ReadAllBytes(file));
     }
