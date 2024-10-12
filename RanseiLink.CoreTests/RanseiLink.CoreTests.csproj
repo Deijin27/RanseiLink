@@ -56,6 +56,18 @@
     <None Update="TestData\test_ki2_aurora_anim_serialised.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\test_kico_aurora.nanr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_kico_aurora.ncer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_kico_aurora.ncgr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_kico_aurora.nclr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_kico_ignis.nanr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

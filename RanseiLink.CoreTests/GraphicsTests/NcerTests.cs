@@ -97,6 +97,7 @@ public class NcerTests
     [InlineData("test_ki2_aurora_anim.ncer")]
     [InlineData("test_cma_ignis.ncer")]
     [InlineData("test_kico_ignis.ncer")]
+    [InlineData("test_kico_aurora.ncer")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);
@@ -121,6 +122,7 @@ public class NcerTests
     [InlineData("test_ki2_aurora_anim.ncer")]
     [InlineData("test_cma_ignis.ncer")]
     //[InlineData("test_kico_ignis.ncer")] // these seem fixed to the size of the castle ignoring outer parts.
+    //[InlineData("test_kico_aurora.ncer")] // whyyy is this wrong too :(
     public void MinMax(string fileName)
     {
         // These estimates are not always correct, who knows why.
