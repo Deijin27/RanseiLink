@@ -72,13 +72,13 @@ class Build : NukeBuild
 
             PublishConsole();
             PublishWpfWindows(win_x64);
-            PublishWindows(win_x64);
-            PublishWindows(win_arm64);
-            PublishLinux(linux_x64);
-            PublishLinux(linux_arm64);
-            PublishMac(mac_x64);
-            PublishMac(mac_arm64);
-            GetHashes();
+            //PublishWindows(win_x64);
+            //PublishWindows(win_arm64);
+            //PublishLinux(linux_x64);
+            //PublishLinux(linux_arm64);
+            //PublishMac(mac_x64);
+            //PublishMac(mac_arm64);
+            //GetHashes();
         });
 
 
@@ -168,7 +168,7 @@ class Build : NukeBuild
 
     private void PublishConsole()
     {
-        var proj = Solution.RanseiLink_Console;
+        var proj = Solution._App.RanseiLink_Console;
         var version = GetVersion(proj);
         var output = ArtifactsDirectory / $"{RanseiLink}-Console-{version}";
 
@@ -185,7 +185,7 @@ class Build : NukeBuild
 
     private void PublishWpfWindows(string runtime)
     {
-        var proj = Solution.RanseiLink_Windows;
+        var proj = Solution._App.RanseiLink_Windows;
         var version = GetVersion(proj);
         var output = ArtifactsDirectory / $"{RanseiLink}-Windows-{version}";
 
@@ -207,7 +207,7 @@ class Build : NukeBuild
 
     private void PublishWindows(string runtime)
     {
-        var proj = Solution.RanseiLink_XP;
+        var proj = Solution._App.RanseiLink_XP;
         var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
 
@@ -229,7 +229,7 @@ class Build : NukeBuild
 
     private void PublishLinux(string runtime)
     {
-        var proj = Solution.RanseiLink_XP;
+        var proj = Solution._App.RanseiLink_XP;
         var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
 
@@ -256,7 +256,7 @@ class Build : NukeBuild
 
     private void PublishMac(string runtime)
     {
-        var proj = Solution.RanseiLink_XP;
+        var proj = Solution._App.RanseiLink_XP;
         var version = GetVersion(proj);
         var output = GetOutput(version, runtime);
         var appFolder = output / $"{RanseiLink}.app";
