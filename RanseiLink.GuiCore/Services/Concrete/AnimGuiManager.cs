@@ -190,7 +190,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                     }
                     else
                     {
-                        Directory.Delete(dir, true);
+                        Directory.Delete(simplifiedDir, true);
                     }
 
                     outputBgLinkFile = Path.GetTempFileName();
