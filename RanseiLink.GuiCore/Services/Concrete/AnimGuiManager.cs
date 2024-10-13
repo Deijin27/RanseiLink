@@ -50,7 +50,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                 new("Import Simplified", MessageBoxResult.Ok),
                 new("Cancel", MessageBoxResult.Cancel)
             ],
-            MessageBoxType.Error));
+            MessageBoxType.Warning));
 
         return happyResult == MessageBoxResult.Ok;
     }
@@ -119,6 +119,10 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                             return false;
                         }
                     }
+                    else
+                    {
+                        Directory.Delete(simplifiedDir, true);
+                    }
 
                     // Import Folder
                     var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
@@ -183,6 +187,10 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                         {
                             return false;
                         }
+                    }
+                    else
+                    {
+                        Directory.Delete(dir, true);
                     }
 
                     outputBgLinkFile = Path.GetTempFileName();
