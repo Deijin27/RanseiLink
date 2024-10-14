@@ -438,7 +438,7 @@ public class BannerEditorModule : EditorModule
 
 
 [EditorModule]
-public class MapSelectorEditorModule : EditorModule
+public class MapSelectorEditorModule : EditorModule, ISelectableModule
 {
     public const string Id = "map_selector";
     public override string UniqueId => Id;
@@ -535,5 +535,14 @@ public class MapSelectorEditorModule : EditorModule
         {
             _service.Save((MapId)_viewModel.Selected, _currentMap);
         }
+    }
+
+    public void Select(int selectId)
+    {
+        if (_viewModel == null)
+        {
+            return;
+        }
+        _viewModel.Selected = selectId;
     }
 }
