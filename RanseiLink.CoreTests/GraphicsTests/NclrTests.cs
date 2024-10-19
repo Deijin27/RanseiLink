@@ -50,6 +50,7 @@ public class NclrTests
     [InlineData("test_kico_ignis.nclr")]
     [InlineData("test_kico_aurora.nclr")]
     [InlineData("test_ki2_aurora_anim.nclr")]
+    [InlineData("test_inst_powerplant.nclr")]
     public void LoadSaveCycle(string fileName)
     {
         var file = Path.Combine(TestConstants.EmbeddedTestDataFolder, fileName);

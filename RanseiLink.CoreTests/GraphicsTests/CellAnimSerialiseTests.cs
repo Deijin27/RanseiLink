@@ -28,6 +28,7 @@ public class CellAnimSerialiseTests
     [InlineData("test_cma_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.Castlemap)]
     [InlineData("test_kico_aurora", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle, false)]
     [InlineData("test_kico_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle, false)]
+    [InlineData("test_inst_powerplant", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconInst, false)]
     public void Convert(string testFileName, RLAnimationFormat fmt, AnimationTypeId type, bool checkClusterMinMax = true)
     {
         var prt = AnimationTypeInfoResource.Get(type).Prt;

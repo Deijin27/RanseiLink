@@ -41,6 +41,18 @@
     <None Update="TestData\test_default.nanr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="TestData\test_inst_powerplant.nanr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_inst_powerplant.ncer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_inst_powerplant.ncgr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\test_inst_powerplant.nclr">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\test_ki2_aurora_anim.nanr">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
