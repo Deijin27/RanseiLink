@@ -26,6 +26,7 @@ public class CellAnimSerialiseTests
     [InlineData("test_ki2_aurora_anim", RLAnimationFormat.OneImagePerCell, AnimationTypeId.KuniImage2)]
     //[InlineData("test_cma_ignis", RLAnimationFormat.OneImagePerCluster, AnimationTypeId.Castlemap)] // this one differs because part of one of the cells gets cropped
     [InlineData("test_cma_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.Castlemap)]
+    [InlineData("test_kico_aurora", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle, false)]
     [InlineData("test_kico_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle, false)]
     public void Convert(string testFileName, RLAnimationFormat fmt, AnimationTypeId type, bool checkClusterMinMax = true)
     {
