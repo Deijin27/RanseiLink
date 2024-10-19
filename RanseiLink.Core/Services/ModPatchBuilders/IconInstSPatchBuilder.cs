@@ -81,6 +81,7 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
                 ncer.Clusters.Clusters,
                 workingPixels,
                 workingPalette,
+                null,
                 ncer.Clusters.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
                 format: ncgr.Pixels.Format,

@@ -3,6 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.Fonts;
+using RanseiLink.Core.RomFs;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -29,8 +30,15 @@ public enum PositionRelativeTo
     Centre
 }
 
+/// <summary>
+/// Settings for when exporting/importing cell images
+/// </summary>
+/// <param name="Prt">Cell x and y offsets are relative to what?</param>
+/// <param name="ShareIndenticalPixelBuffers">If two cells have identical pixel buffers, the buffers will be shared. This is a bit slower because it has to hash and compare buffers.</param>
+/// <param name="Debug">Draw debug information on the cell images when exporting</param>
 public record CellImageSettings(
     PositionRelativeTo Prt = PositionRelativeTo.MinCell,
+    bool ShareIndenticalPixelBuffers = false,
     bool Debug = false
     );
 
@@ -235,7 +243,7 @@ public static class CellImageUtil
     /// <summary>
     /// Calculates the pixels, colors, and cell tile offset from an image. Requires some cell parameters, such as FlipX to be pre filled.
     /// </summary>
-    public static void CellFromImage(Image<Rgba32> image, Cell cell, uint blockSize, List<byte> workingPixels, PaletteCollection workingPalette,
+    public static void CellFromImage(Image<Rgba32> image, Cell cell, uint blockSize, List<byte> workingPixels, PaletteCollection workingPalette, PixelCache? pixelCache,
         bool tiled, TexFormat format)
     {
         // mutate image based on pre-configured cell parameters
@@ -262,7 +270,20 @@ public static class CellImageUtil
 
         // get pixels from image
         var pixels = ImageUtil.SharedPalettePixelsFromImage(image, workingPalette[cell.IndexPalette], tiled, format, color0ToTransparent: true);
+
+        if (pixelCache != null)
+        {
+            var newOffset = pixelCache.ResolveTileOffset(pixels, cell.TileOffset);
+            if (newOffset != cell.TileOffset)
+            {
+                // we are sharing the pixels of a previous one, so we don't need to write the pixels or padding
+                cell.TileOffset = newOffset;
+                return;
+            }
+        }
+
         workingPixels.AddRange(pixels);
+
 
         // pad to the correct length
         while (true)
@@ -292,11 +313,40 @@ public static class CellImageUtil
         }
     }
 
+    public record CachedPixelInfo(byte[] Bytes, int TileOffset);
+
+    public class PixelCache
+    {
+        private readonly Dictionary<long, List<CachedPixelInfo>> _dict = [];
+
+        /// <summary>
+        /// Either returns the tile offset passed in, or a previously cached one pointing to identical pixel buffer.
+        /// You should not write any data until after this method has been run.
+        /// </summary>
+        public int ResolveTileOffset(byte[] pixelBuffer, int newTileOffset)
+        {
+            var checksum = Checksum.BasicSum.Calculate(pixelBuffer);
+            if (_dict.TryGetValue(checksum, out var lst))
+            {
+                foreach (var item in lst)
+                {
+                    if (item.Bytes.SequenceEqual(pixelBuffer))
+                    {
+                        return item.TileOffset;
+                    }
+                }
+                lst.Add(new CachedPixelInfo(pixelBuffer, newTileOffset));
+            }
+            _dict.Add(checksum, [new CachedPixelInfo(pixelBuffer, newTileOffset)]);
+            return newTileOffset;
+        }
+    }
+
     /// <summary>
     /// Using a provided palette and pixel buffer, import cluster pixel data from a set of images, each image representing one cell of the cluster
     /// </summary>
     public static void SharedSingleClusterFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster cluster, uint blockSize,
-        List<byte> workingPixels, PaletteCollection workingPalette,
+        List<byte> workingPixels, PaletteCollection workingPalette, PixelCache? pixelCache,
         bool tiled, TexFormat format)
     {
         if (images.Count != cluster.Count)
@@ -314,7 +364,7 @@ public static class CellImageUtil
         {
             var image = images[i];
             var cell = cluster[i];
-            CellFromImage(image, cell, blockSize, workingPixels, workingPalette, tiled, format);
+            CellFromImage(image, cell, blockSize, workingPixels, workingPalette, pixelCache, tiled, format);
             if (cell.TileOffset == previousTileOffset)
             {
                 throw new Exception("Two cells had the same tile offset. We're not doing optimisations yet, so this should never happen");
@@ -328,12 +378,12 @@ public static class CellImageUtil
     /// Import cluster pixel data from a set of images, each image representing one cell of the cluster
     /// </summary>
     public static MultiPaletteImageInfo SingleClusterFromMultipleImages(IReadOnlyList<Image<Rgba32>> images, Cluster cluster, uint blockSize,
-        bool tiled, TexFormat format)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
         var workingPixels = new List<byte>();
         var workingPalette = new PaletteCollection(cluster, format, true);
-
-        SharedSingleClusterFromMultipleImages(images, cluster, blockSize, workingPixels, workingPalette, tiled, format);
+        var pixelCache = settings.ShareIndenticalPixelBuffers ? new PixelCache() : null;
+        SharedSingleClusterFromMultipleImages(images, cluster, blockSize, workingPixels, workingPalette, pixelCache, tiled, format);
 
         return new MultiPaletteImageInfo(
             Pixels: workingPixels.ToArray(),
@@ -350,7 +400,7 @@ public static class CellImageUtil
     /// each cell is read from the x,y positions specified in <paramref name="cluster"/>
     /// </summary>
     public static void SharedSingleClusterFromImage(Image<Rgba32> image, Cluster cluster, uint blockSize,
-        List<byte> workingPixels, PaletteCollection workingPalette,
+        List<byte> workingPixels, PaletteCollection workingPalette, PixelCache? pixelCache,
         bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (cluster.Count == 0)
@@ -365,7 +415,7 @@ public static class CellImageUtil
             var cell = cluster[i];
             using (var cellImg = ImageUtil.SafeCrop(image, new Rectangle(cell.XOffset + dims.XShift, cell.YOffset + dims.YShift, cell.Width, cell.Height)))
             {
-                CellFromImage(cellImg, cell, blockSize, workingPixels, workingPalette, tiled, format);
+                CellFromImage(cellImg, cell, blockSize, workingPixels, workingPalette, pixelCache, tiled, format);
             }
         }
     }
@@ -379,9 +429,9 @@ public static class CellImageUtil
     {
         var workingPixels = new List<byte>();
         var workingPalette = new PaletteCollection(cluster, format, true);
-        
+        var pixelCache = settings.ShareIndenticalPixelBuffers ? new PixelCache() : null;
 
-        SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
+        SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, pixelCache, tiled, format, settings);
 
         workingPalette.SetColor0(Color.Magenta);
         return new MultiPaletteImageInfo(
@@ -444,8 +494,9 @@ public static class CellImageUtil
 
         var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
+        var pixelCache = settings.ShareIndenticalPixelBuffers ? new PixelCache() : null;
 
-        SharedPaletteMultiClusterFromImage(image, clusters, workingPixels, workingPalette, blockSize, tiled, format, settings, width, height);
+        SharedPaletteMultiClusterFromImage(image, clusters, workingPixels, workingPalette, pixelCache, blockSize, tiled, format, settings, width, height);
         workingPalette.SetColor0(Color.Magenta);
 
         return new MultiPaletteImageInfo(workingPixels.ToArray(), workingPalette, width, height, tiled, format);
@@ -455,7 +506,7 @@ public static class CellImageUtil
     /// Using a single palette and pixel buffer, mport pixel data of multiple clusters from an image where each cluster is stacked vertically
     /// </summary>
     public static void SharedPaletteMultiClusterFromImage(Image<Rgba32> image, IReadOnlyList<Cluster> clusters, 
-        List<byte> workingPixels, PaletteCollection workingPalette, uint blockSize, 
+        List<byte> workingPixels, PaletteCollection workingPalette, PixelCache? pixelCache, uint blockSize, 
         bool tiled, TexFormat format, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (clusters.Count == 0)
@@ -465,7 +516,7 @@ public static class CellImageUtil
 
         if (clusters.Count == 1)
         {
-            SharedSingleClusterFromImage(image, clusters[0], blockSize, workingPixels, workingPalette, tiled, format, settings);
+            SharedSingleClusterFromImage(image, clusters[0], blockSize, workingPixels, workingPalette, pixelCache, tiled, format, settings);
             return;
         }
 
@@ -479,7 +530,7 @@ public static class CellImageUtil
 
             }))
             {
-                SharedSingleClusterFromImage(subImage, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
+                SharedSingleClusterFromImage(subImage, cluster, blockSize, workingPixels, workingPalette, pixelCache, tiled, format, settings);
             }
             cumulativeHeight += dims.Height;
         }
@@ -502,11 +553,12 @@ public static class CellImageUtil
 
         var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
+        var pixelCache = settings.ShareIndenticalPixelBuffers ? new PixelCache() : null;
         for (int i = 0; i < clusters.Count; i++)
         {
             var cluster = clusters[i];
             var image = images[i];
-            SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, tiled, format, settings);
+            SharedSingleClusterFromImage(image, cluster, blockSize, workingPixels, workingPalette, pixelCache, tiled, format, settings);
         }
 
         workingPalette.SetColor0(Color.Magenta);
@@ -525,7 +577,7 @@ public static class CellImageUtil
     /// Import cluster pixel data from a set of one image per cell.
     /// </summary>
     public static MultiPaletteImageInfo MultiClusterFromMultipleImageGroups(IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, IReadOnlyList<Cluster> clusters, uint blockSize,
-        bool tiled, TexFormat format)
+        bool tiled, TexFormat format, CellImageSettings settings)
     {
         if (clusters.Count == 0)
         {
@@ -538,11 +590,12 @@ public static class CellImageUtil
 
         var workingPalette = new PaletteCollection(clusters, format, true);
         var workingPixels = new List<byte>();
+        var pixelCache = settings.ShareIndenticalPixelBuffers ? new PixelCache() : null;
         for (int i = 0; i < clusters.Count; i++)
         {
             var cluster = clusters[i];
             var imageGroup = imageGroups[i];
-            SharedSingleClusterFromMultipleImages(imageGroup, cluster, blockSize, workingPixels, workingPalette, tiled, format);
+            SharedSingleClusterFromMultipleImages(imageGroup, cluster, blockSize, workingPixels, workingPalette, pixelCache, tiled, format);
         }
 
         workingPalette.SetColor0(Color.Magenta);

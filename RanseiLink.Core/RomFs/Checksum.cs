@@ -4,33 +4,33 @@ public static class Checksum
 {
 	public class CRC16
 	{
-    public readonly ushort[] table = new ushort[256];
+        public readonly ushort[] table = new ushort[256];
 
-    public CRC16(ushort polynomial = IBMReversedPolynomial)
-    {
-        ushort value;
-        ushort temp;
-        for (ushort i = 0; i < table.Length; ++i)
+        public CRC16(ushort polynomial = IBMReversedPolynomial)
         {
-            value = 0;
-            temp = i;
-            for (byte j = 0; j < 8; ++j)
+            ushort value;
+            ushort temp;
+            for (ushort i = 0; i < table.Length; ++i)
             {
-                if (((value ^ temp) & 0x0001) != 0)
+                value = 0;
+                temp = i;
+                for (byte j = 0; j < 8; ++j)
                 {
-                    value = (ushort)((value >> 1) ^ polynomial);
+                    if (((value ^ temp) & 0x0001) != 0)
+                    {
+                        value = (ushort)((value >> 1) ^ polynomial);
+                    }
+                    else
+                    {
+                        value >>= 1;
+                    }
+                    temp >>= 1;
                 }
-                else
-                {
-                    value >>= 1;
-                }
-                temp >>= 1;
+                table[i] = value;
             }
-            table[i] = value;
         }
-    }
 
-    public ushort Calculate(byte[] bytes, uint init = 0xFFFF)
+        public ushort Calculate(byte[] bytes, uint init = 0xFFFF)
 		{
 			uint crc = init;
 
@@ -44,4 +44,22 @@ public static class Checksum
 
 		public const ushort IBMReversedPolynomial = 0xA001;
 	}
+
+    public static class BasicSum
+    {
+        /// <summary>
+        /// Fast but not unique, so only use this for a quick check
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static int Calculate(byte[] bytes)
+        {
+            int result = bytes.Length;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                result += bytes[i];
+            }
+            return result;
+        }
+    }
 }

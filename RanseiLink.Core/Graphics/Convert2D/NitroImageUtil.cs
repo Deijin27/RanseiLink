@@ -151,14 +151,15 @@ public static class NitroImageUtil
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);
     }
 
-    public static void NcerFromMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups)
+    public static void NcerFromMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr, IReadOnlyList<IReadOnlyList<Image<Rgba32>>> imageGroups, CellImageSettings settings)
     {
         var imageInfo = CellImageUtil.MultiClusterFromMultipleImageGroups(
             imageGroups: imageGroups,
             clusters: ncer.Clusters.Clusters,
             blockSize: ncer.Clusters.BlockSize,
             tiled: ncgr.Pixels.IsTiled,
-            format: ncgr.Pixels.Format
+            format: ncgr.Pixels.Format, 
+            settings: settings
             );
 
         ProcessNcerImageInfo(imageInfo, ncgr, nclr);

@@ -44,7 +44,7 @@ public class CellAnimSerialiseTests
 
         int width = 256;
         int height = 120;
-        var settings = new CellImageSettings(prt);
+        var settings = new CellImageSettings(prt, ShareIndenticalPixelBuffers: true);
         string? backgroundFileName = null;
         var exportData = CellAnimationSerialiser.ExportAnimationXml(nanr, ncer, ncgr, nclr, width, height, settings, fmt, backgroundFileName);
 

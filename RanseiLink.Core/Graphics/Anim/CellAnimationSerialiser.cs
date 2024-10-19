@@ -424,7 +424,7 @@ public static class CellAnimationSerialiser
         }
         else if (fmt == RLAnimationFormat.OneImagePerCell)
         {
-            ImportOneImagePerCell(ncer, ncgr, nclr, dims, innerData);
+            ImportOneImagePerCell(ncer, ncgr, nclr, settings, dims, innerData);
         }
         else
         {
@@ -523,7 +523,7 @@ public static class CellAnimationSerialiser
         return nameToClusterId;
     }
 
-    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, ClusterDimensions dims, ExportData data)
+    private static void ImportOneImagePerCell(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, ClusterDimensions dims, ExportData data)
     {
         var imageGroups = new List<List<Image<Rgba32>>>();
         foreach (var clusterInfo in data.Clusters)
@@ -562,7 +562,7 @@ public static class CellAnimationSerialiser
         }
 
         // import the image data
-        NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups);
+        NitroImageUtil.NcerFromMultipleImageGroups(ncer, ncgr, nclr, imageGroups, settings);
 
         foreach (var group in imageGroups)
         {

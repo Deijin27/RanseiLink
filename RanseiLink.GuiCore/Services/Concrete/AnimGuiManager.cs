@@ -62,6 +62,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
             // Get DataFiles for type
             var info = AnimationTypeInfoResource.Get(type);
             var (animLinkFile, bgLinkFile) = manager.GetDataFile(info, id);
+            var cellImgSettings = new CellImageSettings(info.Prt, ShareIndenticalPixelBuffers: true);
 
             var tempBg = FileUtil.GetTemporaryDirectory();
 
@@ -126,7 +127,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
 
                     // Import Folder
                     var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
-                    var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, info.Width, info.Height, new(info.Prt));
+                    var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, info.Width, info.Height, cellImgSettings);
                     G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
                     LINK.Pack(tempAnim, outputAnimLinkFile);
 
@@ -201,7 +202,7 @@ internal class AnimGuiManager(ICellAnimationManager manager, IAsyncDialogService
                     LINK.Pack(tempBg, outputBgLinkFile);
 
                     var images = CellAnimationSerialiser.LoadImages(wasSimplified ? simplifiedDir : dir, res);
-                    var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, resl.width, resl.height, new(info.Prt));
+                    var nanr = CellAnimationSerialiser.ImportAnimationXml(new(res, images), anim.Ncer, anim.Ncgr, anim.Nclr, resl.width, resl.height, cellImgSettings);
                     G2DR.SaveAnimImgToFolder(tempAnim, nanr, anim.Ncer, anim.Ncgr, anim.Nclr, NcgrSlot.Infer);
                     LINK.Pack(tempAnim, outputAnimLinkFile);
 
