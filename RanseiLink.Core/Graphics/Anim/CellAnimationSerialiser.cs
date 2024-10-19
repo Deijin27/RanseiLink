@@ -449,6 +449,32 @@ public static class CellAnimationSerialiser
             // TODO: set datatype, unknowns1,2,3
             nanr.AnimationBanks.Banks.Add(targetAnim);
             nanr.Labels.Names.Add(anim.Name);
+            if (anim.Frames.Count == 0)
+            {
+                continue;
+            }
+            if (anim.Frames[0].UnknownData == null)
+            {
+                if (!anim.Frames.All(x => x.UnknownData == null))
+                {
+                    throw new Exception($"All anim frames must either have '{nameof(ABNK.Frame.UnknownData)}' or all of them must not have it");
+                }
+                targetAnim.DataType = 0;
+                targetAnim.Unknown1 = 1;
+                targetAnim.Unknown2 = 2;
+                targetAnim.Unknown3 = 0;
+            }
+            else
+            {
+                if (!anim.Frames.All(x => x.UnknownData != null))
+                {
+                    throw new Exception($"All anim frames must either have '{nameof(ABNK.Frame.UnknownData)}' or all of them must not have it");
+                }
+                targetAnim.DataType = 1;
+                targetAnim.Unknown1 = 1;
+                targetAnim.Unknown2 = 1;
+                targetAnim.Unknown3 = 0;
+            }
             foreach (var frame in anim.Frames)
             {
                 var targetFrame = new ABNK.Frame();
