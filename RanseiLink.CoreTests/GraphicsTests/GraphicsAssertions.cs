@@ -73,22 +73,22 @@ public static class GraphicsAssertions
 
         for (int animId = 0; animId < newNanr.AnimationBanks.Banks.Count; animId++)
         {
-            var newBank = newNanr.AnimationBanks.Banks[animId];
-            var oldBank = oldNanr.AnimationBanks.Banks[animId];
+            var newAnimBank = newNanr.AnimationBanks.Banks[animId];
+            var oldAnimBank = oldNanr.AnimationBanks.Banks[animId];
 
             using (new AssertionScope())
             {
-                newBank.DataType.Should().Be(oldBank.DataType);
-                newBank.Unknown1.Should().Be(oldBank.Unknown1);
-                newBank.Unknown2.Should().Be(oldBank.Unknown2);
-                newBank.Unknown3.Should().Be(oldBank.Unknown3);
-                newBank.Frames.Should().HaveSameCount(oldBank.Frames);
+                newAnimBank.DataType.Should().Be(oldAnimBank.DataType);
+                newAnimBank.Unknown1.Should().Be(oldAnimBank.Unknown1);
+                newAnimBank.Unknown2.Should().Be(oldAnimBank.Unknown2);
+                newAnimBank.Unknown3.Should().Be(oldAnimBank.Unknown3);
+                newAnimBank.Frames.Should().HaveSameCount(oldAnimBank.Frames);
             }
 
-            for (int frameId = 0; frameId < newBank.Frames.Count; frameId++)
+            for (int frameId = 0; frameId < newAnimBank.Frames.Count; frameId++)
             {
-                var newFrame = newBank.Frames[frameId];
-                var oldFrame = oldBank.Frames[frameId];
+                var newFrame = newAnimBank.Frames[frameId];
+                var oldFrame = oldAnimBank.Frames[frameId];
 
                 using (new AssertionScope())
                 {
@@ -99,7 +99,7 @@ public static class GraphicsAssertions
         }
     }
 
-    public static void AssertNcerEqual(NCER oldNcer, NCER newNcer)
+    public static void AssertNcerEqual(NCER oldNcer, NCER newNcer, bool checkClusterMinMax)
     {
         newNcer.Labels.Names.Should().Equal(oldNcer.Labels.Names);
         newNcer.Unknown.Unknown.Should().Be(oldNcer.Unknown.Unknown);
@@ -143,14 +143,17 @@ public static class GraphicsAssertions
                 }
             }
 
-            using (new AssertionScope())
+            if (checkClusterMinMax)
             {
-                // How is ReadOnlyCellInfo generated? Still needs to be figured out, but anims seem to work fine without it.
-                //newCluster.ReadOnlyCellInfo.Should().Be(oldCluster.ReadOnlyCellInfo);
-                newCluster.XMin.Should().Be(oldCluster.XMin);
-                newCluster.XMax.Should().Be(oldCluster.XMax);
-                newCluster.YMin.Should().Be(oldCluster.YMin);
-                newCluster.YMax.Should().Be(oldCluster.YMax);
+                using (new AssertionScope())
+                {
+                    // How is ReadOnlyCellInfo generated? Still needs to be figured out, but anims seem to work fine without it.
+                    //newCluster.ReadOnlyCellInfo.Should().Be(oldCluster.ReadOnlyCellInfo);
+                    newCluster.XMin.Should().Be(oldCluster.XMin);
+                    newCluster.XMax.Should().Be(oldCluster.XMax);
+                    newCluster.YMin.Should().Be(oldCluster.YMin);
+                    newCluster.YMax.Should().Be(oldCluster.YMax);
+                }
             }
         }
     }

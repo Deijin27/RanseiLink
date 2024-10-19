@@ -26,8 +26,8 @@ public class CellAnimSerialiseTests
     [InlineData("test_ki2_aurora_anim", RLAnimationFormat.OneImagePerCell, AnimationTypeId.KuniImage2)]
     //[InlineData("test_cma_ignis", RLAnimationFormat.OneImagePerCluster, AnimationTypeId.Castlemap)] // this one differs because part of one of the cells gets cropped
     [InlineData("test_cma_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.Castlemap)]
-    //[InlineData("test_kico_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle)]
-    public void Convert(string testFileName, RLAnimationFormat fmt, AnimationTypeId type)
+    [InlineData("test_kico_ignis", RLAnimationFormat.OneImagePerCell, AnimationTypeId.IconCastle, false)]
+    public void Convert(string testFileName, RLAnimationFormat fmt, AnimationTypeId type, bool checkClusterMinMax = true)
     {
         var prt = AnimationTypeInfoResource.Get(type).Prt;
         string ncerPath = Path.Combine(TestConstants.EmbeddedTestDataFolder, $"{testFileName}.ncer");
@@ -53,7 +53,7 @@ public class CellAnimSerialiseTests
 
         
         GraphicsAssertions.AssertNanrEqual(nanr, newNanr);
-        GraphicsAssertions.AssertNcerEqual(ncer, newNcer);
+        GraphicsAssertions.AssertNcerEqual(ncer, newNcer, checkClusterMinMax);
         // We can't do exact palette equivalency tests because there are some
         // unused colors in the original palettes which get lost in conversion
         GraphicsAssertions.CellPixelsAreEquivalent(ncer.Clusters, newNcer.Clusters, ncgr.Pixels.Format, oldPixels, newPixels, oldPalette, newPalette);
