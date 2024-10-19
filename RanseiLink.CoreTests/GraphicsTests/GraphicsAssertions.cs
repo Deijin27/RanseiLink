@@ -57,6 +57,7 @@ public static class GraphicsAssertions
 
                 var oldCellPixels = CellImageUtil.GetCellPixels(oldCell, oldCells.BlockSize, format, oldPixels);
                 var newCellPixels = CellImageUtil.GetCellPixels(newCell, newCells.BlockSize, format, newPixels);
+                newCellPixels.Should().HaveSameCount(oldCellPixels);
                 var oldPixelsAsColors = oldCellPixels.Select(x => x == 0 ? (Rgba32)Color.Transparent : oldPalette[oldCell.IndexPalette][x]).ToArray();
                 var newPixelsAsColors = newCellPixels.Select(x => x == 0 ? (Rgba32)Color.Transparent : newPalette[newCell.IndexPalette][x]).ToArray();
                 newPixelsAsColors.Should().Equal(oldPixelsAsColors);

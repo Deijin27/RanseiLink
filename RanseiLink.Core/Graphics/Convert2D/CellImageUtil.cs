@@ -267,15 +267,28 @@ public static class CellImageUtil
         // pad to the correct length
         while (true)
         {
-            if ((workingPixels.Count % 0x20) == 0)
+            var nextTileOffset = workingPixels.Count;
+            if (format == TexFormat.Pltt16)
             {
-                var total = workingPixels.Count / 0x20;
-                if (((total >> byteBlockSize) << byteBlockSize) == total)
+                if ((nextTileOffset % 2) != 0)
                 {
-                    break;
+                    workingPixels.Add(0);
+                    continue;
                 }
+                nextTileOffset /= 2;
             }
-            workingPixels.Add(0);
+            if ((nextTileOffset % 0x20) != 0)
+            {
+                workingPixels.Add(0);
+                continue;
+            }
+            nextTileOffset /= 0x20;
+            if (((nextTileOffset >> byteBlockSize) << byteBlockSize) != nextTileOffset)
+            {
+                workingPixels.Add(0);
+                continue;
+            }
+            break;
         }
     }
 
@@ -296,11 +309,17 @@ public static class CellImageUtil
             return;
         }
 
+        int previousTileOffset = -1;
         for (int i = 0; i < cluster.Count; i++)
         {
             var image = images[i];
             var cell = cluster[i];
             CellFromImage(image, cell, blockSize, workingPixels, workingPalette, tiled, format);
+            if (cell.TileOffset == previousTileOffset)
+            {
+                throw new Exception("Two cells had the same tile offset. We're not doing optimisations yet, so this should never happen");
+            }
+            previousTileOffset = cell.TileOffset;
         }
     }
 
