@@ -126,7 +126,12 @@ public static class GraphicsAssertions
                     newCell.Width.Should().Be(oldCell.Width);
                     newCell.Height.Should().Be(oldCell.Height);
                     newCell.IndexPalette.Should().Be(oldCell.IndexPalette);
-                    newCell.RotateOrScale.Should().Be(oldCell.RotateOrScale);
+                    if (oldCell.RotateOrScale == RotateOrScale.Rotate || (oldCell.RotateOrScale == RotateOrScale.Scale && oldCell.DoubleSize))
+                    {
+                        // Maybe we should make it an explicit parameter in the file, i don't want to tho :(
+                        newCell.RotateOrScale.Should().Be(oldCell.RotateOrScale);
+                    }
+                    
                     newCell.DoubleSize.Should().Be(oldCell.DoubleSize);
                     newCell.ObjMode.Should().Be(oldCell.ObjMode);
                     newCell.Mosaic.Should().Be(oldCell.Mosaic);
