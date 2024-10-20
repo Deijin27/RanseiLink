@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Services\GraphicsInfo.xml" />
-    <None Remove="Text\CharacterTable.tbl" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\GraphicsInfo.xml" />
     <EmbeddedResource Include="Resources\CharacterTable.tbl" />
   </ItemGroup>

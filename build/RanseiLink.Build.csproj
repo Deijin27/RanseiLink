@@ -12,11 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Info.plist" />
-    <None Remove="Resources\RanseiLink.icns" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Info.plist" />
     <EmbeddedResource Include="Resources\RanseiLink.icns" />
   </ItemGroup>
