@@ -359,17 +359,11 @@ public static class CellImageUtil
             return;
         }
 
-        int previousTileOffset = -1;
         for (int i = 0; i < cluster.Count; i++)
         {
             var image = images[i];
             var cell = cluster[i];
             CellFromImage(image, cell, blockSize, workingPixels, workingPalette, pixelCache, tiled, format);
-            if (cell.TileOffset == previousTileOffset)
-            {
-                throw new Exception("Two cells had the same tile offset. We're not doing optimisations yet, so this should never happen");
-            }
-            previousTileOffset = cell.TileOffset;
         }
     }
 
