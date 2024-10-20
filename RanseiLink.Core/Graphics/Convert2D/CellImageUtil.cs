@@ -131,7 +131,7 @@ public static class CellImageUtil
         {
             startByte *= 2; // account for compression e.g. pokemon conquest minimaps
         }
-        byte[] cellPixels = allPixels.Skip(startByte).Take(cell.Width * cell.Height).ToArray();
+        byte[] cellPixels = allPixels[startByte..(startByte + (cell.Width * cell.Height))];
         return cellPixels;
     }
 
