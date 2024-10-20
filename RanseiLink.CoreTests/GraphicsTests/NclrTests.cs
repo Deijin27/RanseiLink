@@ -40,7 +40,7 @@ public class NclrTests
 
         var pcm = ncgr.PaletteCollectionMap;
         pcm.Should().NotBeNull();
-        pcm!.Palettes.Should().Equal(new ushort[] { 0x00 });
+        pcm!.Palettes.Should().Equal([0x00]);
     }
 
     [Theory]

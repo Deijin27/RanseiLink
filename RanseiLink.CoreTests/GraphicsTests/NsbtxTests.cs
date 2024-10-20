@@ -29,7 +29,7 @@ public class NsbtxTests
         tex.Textures[10].Name.Should().Be("map02_00_11");
         tex.Textures[11].Name.Should().Be("map02_00_12");
 
-        tex.Textures[0].TextureData.Should().StartWith(new byte[] { 0x33, 0x3B, 0x4C, 0x5E, 0x48, 0x41, 0x4D, 0x63 });
+        tex.Textures[0].TextureData.Should().StartWith([0x33, 0x3B, 0x4C, 0x5E, 0x48, 0x41, 0x4D, 0x63]);
 
         //tex.Textures[0].TextureData.Should().HaveCount(0x100);
         //tex.Textures[1].TextureData.Should().HaveCount(0x20);
