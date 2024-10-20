@@ -2,9 +2,7 @@
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Graphics.ExternalFormats;
 using SixLabors.ImageSharp;
-using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
 
 namespace RanseiLink.CoreTests.GraphicsTests;
 
@@ -16,8 +14,8 @@ public class ObjTests
         var tempDir = FileUtil.GetTemporaryDirectory();
 
         var testMtl = new MTL();
-        testMtl.Materials.AddRange(new List<MTL.Material>
-        {
+        testMtl.Materials.AddRange(
+        [
             new MTL.Material("material1")
             {
                 SpecularColor = Color.Red,
@@ -40,49 +38,51 @@ public class ObjTests
                 SpecularTextureMapFile = "texSpecular2.png",
                 DiffuseTextureMapFile = "texDiffuse2.png,"
             }
-        });
+        ]);
 
-        var expected = new OBJ();
-        expected.MaterialLib = testMtl;
-        expected.Groups.AddRange(new List<OBJ.Group>
+        var expected = new OBJ
         {
+            MaterialLib = testMtl
+        };
+        expected.Groups.AddRange(
+        [
             new OBJ.Group("polygon")
             {
-                Vertices = new List<Vector3> { new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
-                Normals = new List<Vector3> { new Vector3(7, 8, 9), new Vector3(10, 11, 12), new Vector3(1.4f, 1.5f, 1.6f) },
-                TextureVertices = new List<Vector2> { new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f) },
-                Faces = new List<OBJ.Face>
-                {
+                Vertices = [new(1, 2, 3), new(4, 5, 6), new(1.1f, 1.2f, 1.3f)],
+                Normals = [new(7, 8, 9), new(10, 11, 12), new(1.4f, 1.5f, 1.6f)],
+                TextureVertices = [new(13, 14), new(16, 17), new(1.7f, 1.8f)],
+                Faces =
+                [
                     new OBJ.Face("material1")
                     {
-                        VertexIndices = new List<int> { 0, 1, 2 },
-                        NormalIndices = new List<int> { 0, 1, 2 },
-                        TexCoordIndices = new List<int> { 0, 1, 2 },
+                        VertexIndices = [0, 1, 2],
+                        NormalIndices = [0, 1, 2],
+                        TexCoordIndices = [0, 1, 2],
                     }
-                }
+                ]
             },
             new OBJ.Group("polygon1")
             {
-                Vertices = new List<Vector3> { new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f), new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
-                Normals = new List<Vector3> { new Vector3(7, 8, 9), new Vector3(10, 11, 12), new Vector3(1.4f, 1.5f, 1.6f), new Vector3(1, 2, 3), new Vector3(4, 5, 6), new Vector3(1.1f, 1.2f, 1.3f) },
-                TextureVertices = new List<Vector2> { new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f), new Vector2(13, 14), new Vector2(16, 17), new Vector2(1.7f, 1.8f) },
-                Faces = new List<OBJ.Face>
-                {
+                Vertices = [new(1, 2, 3), new(4, 5, 6), new(1.1f, 1.2f, 1.3f), new(1, 2, 3), new(4, 5, 6), new(1.1f, 1.2f, 1.3f)],
+                Normals = [new(7, 8, 9), new(10, 11, 12), new(1.4f, 1.5f, 1.6f), new(1, 2, 3), new(4, 5, 6), new(1.1f, 1.2f, 1.3f)],
+                TextureVertices = [new(13, 14), new(16, 17), new(1.7f, 1.8f), new(13, 14), new(16, 17), new(1.7f, 1.8f)],
+                Faces =
+                [
                     new OBJ.Face("material2")
                     {
-                        VertexIndices = new List<int> { 0, 1, 2 },
-                        NormalIndices = new List<int> { 0, 1, 2 },
-                        TexCoordIndices = new List<int> { 0, 1, 2 },
+                        VertexIndices = [0, 1, 2],
+                        NormalIndices = [0, 1, 2],
+                        TexCoordIndices = [0, 1, 2],
                     },
                     new OBJ.Face("material2")
                     {
-                        VertexIndices = new List<int> { 3, 4, 5 },
-                        NormalIndices = new List<int> { 3, 4, 5 },
-                        TexCoordIndices = new List<int> { 3, 4, 5 },
+                        VertexIndices = [3, 4, 5],
+                        NormalIndices = [3, 4, 5],
+                        TexCoordIndices = [3, 4, 5],
                     }
-                }
+                ]
             }
-        });
+        ]);
 
 
         string file = Path.Combine(tempDir, "testModel.obj");
@@ -98,7 +98,7 @@ public class ObjTests
         
     }
 
-    private void AssertMaterialIdentical(OBJ expected, OBJ actual)
+    private static void AssertMaterialIdentical(OBJ expected, OBJ actual)
     {
         actual.MaterialLib.Should().NotBeNull();
         actual.MaterialLib!.Materials.Should().NotBeNull().And.HaveCount(expected.MaterialLib!.Materials.Count);
@@ -119,7 +119,7 @@ public class ObjTests
         }
     }
 
-    private void AssertGroupsIdentical(OBJ expected, OBJ actual)
+    private static void AssertGroupsIdentical(OBJ expected, OBJ actual)
     {
         actual.Groups.Should().NotBeNull().And.HaveCount(expected.Groups.Count);
         for (int i = 0; i < expected.Groups.Count; i++)
