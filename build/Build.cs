@@ -54,9 +54,9 @@ class Build : NukeBuild
         {
             // This doesn't actually work atm, the project fails to build with EnableNoRestore
             // So just commenting this out until I can figure out what the issue is
-            //DotNetTasks.DotNetRestore(_ => _
-            //   .SetProjectFile(Solution)
-            //   );
+            DotNetTasks.DotNetRestore(_ => _
+               .SetProjectFile(Solution)
+               );
         });
 
     Target Compile => _ => _
@@ -64,11 +64,11 @@ class Build : NukeBuild
         .Executes(() =>
         {
             const string win_x64 = "win-x64";
-            const string win_arm64 = "win-arm64";
-            const string mac_x64 = "osx-x64";
-            const string mac_arm64 = "osx-arm64";
-            const string linux_x64 = "linux-x64";
-            const string linux_arm64 = "linux-arm64";
+            //const string win_arm64 = "win-arm64";
+            //const string mac_x64 = "osx-x64";
+            //const string mac_arm64 = "osx-arm64";
+            //const string linux_x64 = "linux-x64";
+            //const string linux_arm64 = "linux-arm64";
 
             PublishConsole();
             PublishWpfWindows(win_x64);
@@ -175,6 +175,7 @@ class Build : NukeBuild
         DotNetTasks.DotNetPublish(_ => _
             .SetProject(proj)
             .SetConfiguration(Configuration.Release)
+            .EnableNoRestore()
             .SetSelfContained(false)
             .SetOutput(output)
             .SetProperty("DebugType", "None")
@@ -192,6 +193,7 @@ class Build : NukeBuild
         DotNetTasks.DotNetPublish(_ => _
             .SetProject(proj)
             .SetConfiguration(Configuration.Release)
+            .EnableNoRestore()
             .SetRuntime(runtime)
             .SetSelfContained(true)
             .SetPublishSingleFile(true)

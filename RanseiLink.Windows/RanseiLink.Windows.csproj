@@ -3,12 +3,13 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
     <VersionPrefix>5.6</VersionPrefix>
-	<VersionSuffix>beta1</VersionSuffix>
+	<VersionSuffix>beta2</VersionSuffix>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
