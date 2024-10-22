@@ -17,6 +17,7 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Utilities.Collections;
+using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -36,15 +37,23 @@ class Build : NukeBuild
 
     const string RanseiLink = nameof(RanseiLink);
 
-    AbsolutePath SourceDirectory => RootDirectory / "RanseiLink.XP";
-    //AbsolutePath TestsDirectory => RootDirectory / "tests";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
 
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(x => x.DeleteDirectory());
+            var projects = Solution.AllProjects.Where(x => x.Name != "RanseiLink.Build").ToList();
+            Log.Information($"Cleaning {projects.Count} projects");
+            foreach (var projDir in projects.Select(x => x.Directory))
+            {
+                Log.Information($"Cleaning Project Directory: {projDir}");
+                foreach (var dir in projDir.GlobDirectories("**/bin", "**/obj"))
+                {
+                    Log.Information($"Deleting: {dir}");
+                    dir.DeleteDirectory();
+                }
+            }
             ArtifactsDirectory.CreateOrCleanDirectory();
         });
 
