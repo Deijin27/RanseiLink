@@ -52,8 +52,6 @@ class Build : NukeBuild
         .DependsOn(Clean)
         .Executes(() =>
         {
-            // This doesn't actually work atm, the project fails to build with EnableNoRestore
-            // So just commenting this out until I can figure out what the issue is
             DotNetTasks.DotNetRestore(_ => _
                .SetProjectFile(Solution)
                );
