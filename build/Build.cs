@@ -30,7 +30,7 @@ class Build : NukeBuild
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
 
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main () => Execute<Build>(x => x.Publish);
 
     [Solution(GenerateProjects = true)] 
     readonly Solution Solution;
@@ -70,6 +70,33 @@ class Build : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            // Not sure how I should build to be able to run tests, because the wpf is published as single exe so needs special treatment
+
+            //DotNetTasks.DotNetBuild(_ => _
+            //    .SetProjectFile(Solution)
+            //    .EnableNoRestore()
+            //    .SetProperty("DebugType", "None")
+            //    .SetProperty("DebugSymbols", "false")
+            //    .SetConfiguration(Configuration.Release)
+            //    );
+
+            //DotNetTasks.DotNetBuild(_ => _
+            //    .SetProjectFile(Solution._App.RanseiLink_Windows)
+            //    .EnableNoRestore()
+            //    .SetProperty("DebugType", "None")
+            //    .SetProperty("DebugSymbols", "false")
+            //    .SetSelfContained(true)
+            //    .SetPublishSingleFile(true)
+            //    .SetConfiguration(Configuration.Release)
+            //    );
+
+        });
+
+
+    Target Publish => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
             const string win_x64 = "win-x64";
             //const string win_arm64 = "win-arm64";
             //const string mac_x64 = "osx-x64";
@@ -86,6 +113,7 @@ class Build : NukeBuild
             //PublishMac(mac_x64);
             //PublishMac(mac_arm64);
             //GetHashes();
+
         });
 
 
@@ -183,6 +211,7 @@ class Build : NukeBuild
             .SetProject(proj)
             .SetConfiguration(Configuration.Release)
             .EnableNoRestore()
+            //.EnableNoBuild()
             .SetSelfContained(false)
             .SetOutput(output)
             .SetProperty("DebugType", "None")
@@ -201,6 +230,7 @@ class Build : NukeBuild
             .SetProject(proj)
             .SetConfiguration(Configuration.Release)
             .EnableNoRestore()
+            //.EnableNoBuild()
             .SetRuntime(runtime)
             .SetSelfContained(true)
             .SetPublishSingleFile(true)

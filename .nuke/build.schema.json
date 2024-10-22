@@ -32,6 +32,7 @@
       "enum": [
         "Clean",
         "Compile",
+        "Publish",
         "Restore"
       ]
     },
