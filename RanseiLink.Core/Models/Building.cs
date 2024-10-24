@@ -22,4 +22,11 @@ public partial class Building
             }
         }
     }
+
+    protected override void SetBytesFromDeserialise(byte[] data)
+    {
+        var kingdom = Kingdom;
+        base.SetBytesFromDeserialise(data);
+        Kingdom = kingdom;
+    }
 }

@@ -111,9 +111,21 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
 
     bool _doCompressionWhenSerializing;
 
+
+    protected virtual byte[] GetBytesToSerialise()
+    {
+        return Data;
+    }
+
+    protected virtual void SetBytesFromDeserialise(byte[] data)
+    {
+        // If we every modified the pasted data inside SetBytesFromDeserialise, this Datalength check in TryDeserialise would need to move
+        Data = data;
+    }
+
     public string Serialize()
     {
-        byte[] data = Data;
+        byte[] data = GetBytesToSerialise();
         if (_doCompressionWhenSerializing)
         {
             data = Compress(data);
@@ -144,13 +156,13 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
             data = Decompress(data);
         }
 
-
+        // If we every modified the pasted data inside SetBytesFromDeserialise, this check would need to move
         if (Data.Length != data.Length)
         {
             return false;
         }
 
-        Data = data;
+        SetBytesFromDeserialise(data);
         return true;
     }
 

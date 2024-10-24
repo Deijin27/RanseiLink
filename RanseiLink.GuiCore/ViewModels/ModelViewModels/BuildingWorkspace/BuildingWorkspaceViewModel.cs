@@ -35,7 +35,7 @@ public class BuildingWorkspaceViewModel : ViewModelBase
         {
             if (SelectedItem is BuildingViewModel bvm)
             {
-                SelectItem(bvm);
+                bvm.OnPasted();
             }
         };
         _scenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);

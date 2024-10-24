@@ -47,6 +47,11 @@ public partial class BuildingViewModel : ViewModelBase
         }
     }
 
+    internal void OnPasted()
+    {
+        RaiseAllPropertiesChanged();
+    }
+
     public ScenarioBuildingViewModel ScenarioBuildingVm { get; }
 
     public int Slot { get; set; }
