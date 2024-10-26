@@ -23,7 +23,7 @@ foreach ($folder in $pluginFolders)
     Write-Host "Gathering $pluginName"
 
     # Copy dll to output
-    $dllToCopy = "$pluginFolderName\bin\Debug\net6.0\$pluginName.dll"
+    $dllToCopy = "$pluginFolderName\bin\Debug\net8.0\$pluginName.dll"
     $dllDestination = "$Destination\$pluginName.dll"
     Copy-Item -Path $dllToCopy -Destination $dllDestination -Force
 }
