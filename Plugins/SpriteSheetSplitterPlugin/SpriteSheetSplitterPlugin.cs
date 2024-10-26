@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SpriteSheetSplitterPlugin;
 
-[Plugin("Sprite Sheet Splitter", "Deijin", "1.2")]
+[Plugin("Sprite Sheet Splitter", "Deijin", "1.3")]
 public class SpriteSheetSplitterPlugin : IPlugin
 {
     private IAsyncDialogService _dialogService;

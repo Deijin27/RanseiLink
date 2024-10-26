@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RandomizerPlugin;
 
-[Plugin("Randomizer", "Deijin", "3.1")]
+[Plugin("Randomizer", "Deijin", "3.2")]
 public class RandomizerPlugin : IPlugin
 {
     public async Task Run(IPluginContext context)

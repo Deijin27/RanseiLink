@@ -6,7 +6,7 @@ using static RanseiLink.Core.RomFs.RomFsNameTable;
 
 namespace DisableEventsPlugin;
 
-[Plugin("Disable Events", "Deijin", "1.2")]
+[Plugin("Disable Events", "Deijin", "1.3")]
 public class DisableEventsPlugin : IPlugin
 {
     public async Task Run(IPluginContext context)
