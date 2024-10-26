@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using SixLabors.ImageSharp.Formats;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -298,38 +299,55 @@ public class MapViewModel : ViewModelBase
         return newGimmick;
     }
 
-    public void OnSubCellClicked(MapGridSubCellViewModel clickedSubCell)
+    private void HandlePaint(MapGridSubCellViewModel clickedSubCell)
     {
-        SelectedCell = clickedSubCell.Parent;
-
         if (TerrainPaintingActive)
         {
-            SelectedCell.Terrain = TerrainBrush;
+            clickedSubCell.Parent.Terrain = TerrainBrush;
         }
         if (ElevationPaintingActive)
         {
+            var clickedCell = clickedSubCell.Parent;
             if (PaintElevationEntireCell)
             {
-                SelectedCell.SubCell0.Z = ElevationToPaint;
-                SelectedCell.SubCell1.Z = ElevationToPaint;
-                SelectedCell.SubCell2.Z = ElevationToPaint;
-                SelectedCell.SubCell3.Z = ElevationToPaint;
-                SelectedCell.SubCell4.Z = ElevationToPaint;
-                SelectedCell.SubCell5.Z = ElevationToPaint;
-                SelectedCell.SubCell6.Z = ElevationToPaint;
-                SelectedCell.SubCell7.Z = ElevationToPaint;
-                SelectedCell.SubCell8.Z = ElevationToPaint;
+                clickedCell.SubCell0.Z = ElevationToPaint;
+                clickedCell.SubCell1.Z = ElevationToPaint;
+                clickedCell.SubCell2.Z = ElevationToPaint;
+                clickedCell.SubCell3.Z = ElevationToPaint;
+                clickedCell.SubCell4.Z = ElevationToPaint;
+                clickedCell.SubCell5.Z = ElevationToPaint;
+                clickedCell.SubCell6.Z = ElevationToPaint;
+                clickedCell.SubCell7.Z = ElevationToPaint;
+                clickedCell.SubCell8.Z = ElevationToPaint;
             }
             else
             {
                 clickedSubCell.Z = ElevationToPaint;
             }
         }
+    }
 
-        _selectedGimmick = SelectedCell.Gimmicks.FirstOrDefault();
-        _selectedPokemonPosition = SelectedCell.Pokemon.FirstOrDefault();
-        RaisePropertyChanged(nameof(SelectedGimmick));
-        RaisePropertyChanged(nameof(SelectedPokemonPosition));
+    public void OnSubCellDragged(MapGridSubCellViewModel clickedSubCell)
+    {
+        // We entered the cell, and the mouse button is already down
+        HandlePaint(clickedSubCell);
+    }
+
+    public void OnSubCellClicked(MapGridSubCellViewModel clickedSubCell)
+    {
+        if (TerrainPaintingActive || ElevationPaintingActive)
+        {
+            HandlePaint(clickedSubCell);
+        }
+        else
+        {
+            var clickedCell = clickedSubCell.Parent;
+            SelectedCell = clickedCell;
+            _selectedGimmick = clickedCell.Gimmicks.FirstOrDefault();
+            _selectedPokemonPosition = clickedCell.Pokemon.FirstOrDefault();
+            RaisePropertyChanged(nameof(SelectedGimmick));
+            RaisePropertyChanged(nameof(SelectedPokemonPosition));
+        }
     }
 
     private void RemoveSelectedGimmick()

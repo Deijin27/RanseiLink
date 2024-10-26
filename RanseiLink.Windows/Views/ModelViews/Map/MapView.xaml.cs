@@ -17,6 +17,11 @@ public partial class MapView : UserControl
             && rect.DataContext is MapGridSubCellViewModel dc 
             && DataContext is MapViewModel vm)
         {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                vm.OnSubCellDragged(dc);
+            }
+
             vm.MouseOverItem = dc;
         }
     }
