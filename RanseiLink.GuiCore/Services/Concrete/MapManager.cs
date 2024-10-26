@@ -113,7 +113,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             var result = ModelExtractorGenerator.GenerateModel(settings);
             if (result.IsSuccess)
             {
-                PAC.Pack(tempFolder, tempPac);
+                PAC.Pack(tempFolder, tempPac, sharedFileCount: 0);
                 overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), tempPac);
                 success = true;
             }
