@@ -1,11 +1,9 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using SixLabors.ImageSharp;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -146,33 +144,10 @@ public abstract class MaxLinkViewModelBase : ViewModelBase, IMaxLinkQuickSetter
 
         __loaded = true;
 
-        var file = _overrideDataProvider.GetDataFile(FileUtil.NormalizePath("graphics/ikusa/04_01_parts_ikusamap_lo.G2DR"));
-
-        if (!File.Exists(file.File))
-        {
-            return;
-        }
-
-        var g2dr = G2DR.LoadCellImgFromFile(file.File);
-        var imgInfo = NitroImageUtil.GetImgInfo(g2dr.Ncgr, g2dr.Nclr);
-        var settings = new CellImageSettings(PositionRelativeTo.MinCell);
-
-        object? loadImg(int cluster)
-        {
-            using var img = CellImageUtil.SingleClusterToImage(
-                cluster: g2dr.Ncer.Clusters.Clusters[cluster],
-                blockSize: g2dr.Ncer.Clusters.BlockSize,
-                imgInfo,
-                settings
-            );
-            var temp = Path.GetTempFileName();
-            img.SaveAsPng(temp);
-            return _pathToImageConverter.TryConvert(temp);
-        }
-
-        __goldImage = loadImg(67);
-        __silverImage = loadImg(74);
-        __bronzeImage = loadImg(81);
+        var images = _cachedSpriteProvider.GetClusterImages("graphics/ikusa/04_01_parts_ikusamap_lo.G2DR", [67, 74, 81]);
+        __goldImage = images[0];
+        __silverImage = images[1];
+        __bronzeImage = images[2];
     }
 
     protected void OnSetModel()

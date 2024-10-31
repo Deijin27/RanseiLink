@@ -42,6 +42,7 @@ public class CoreModServiceModule : IModule
 
         builder.Register<IOverrideDataProvider, OverrideDataProvider>(Reuse.Singleton);
         builder.Register<ICellAnimationManager, CellAnimationManager>(Reuse.Singleton);
+        builder.Register<ISpriteService, SpriteService>(Reuse.Singleton);
 
         foreach (var type in GetType().Assembly.GetTypes())
         {

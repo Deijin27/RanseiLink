@@ -33,6 +33,9 @@ public static class NitroImageUtil
                 );
     }
 
+    /// <summary>
+    /// Convert all clusters of an NCER to a single combined image
+    /// </summary>
     public static Image<Rgba32> NcerToImage(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
     {
         if (width < 0 || height < 0)
@@ -48,6 +51,9 @@ public static class NitroImageUtil
             );
     }
 
+    /// <summary>
+    /// Convert all clusters of an NCER to separate images. One image per cluster.
+    /// </summary>
     public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
     {
         return CellImageUtil.MultiClusterToMultipleImages(
@@ -58,6 +64,35 @@ public static class NitroImageUtil
             );
     }
 
+    /// <summary>
+    /// Convert specific clusters of an NCER to separate images. One image per requested cluster.
+    /// </summary>
+    public static IReadOnlyList<Image<Rgba32>> NcerToMultipleImages(int[] clusters, NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
+    {
+        return CellImageUtil.MultiClusterToMultipleImages(
+            clusters: clusters.Select(i => ncer.Clusters.Clusters[i]).ToArray(),
+            blockSize: ncer.Clusters.BlockSize,
+            imageInfo: GetImgInfo(ncgr, nclr, width, height),
+            settings: settings
+            );
+    }
+
+    /// <summary>
+    /// Convert a single specific cluster of an NCER to a single image.
+    /// </summary>
+    public static Image<Rgba32> NcerSingleClusterToImage(int cluster, NCER ncer, NCGR ncgr, NCLR nclr, CellImageSettings settings, int width = -1, int height = -1)
+    {
+        return CellImageUtil.SingleClusterToImage(
+            cluster: ncer.Clusters.Clusters[cluster],
+            blockSize: ncer.Clusters.BlockSize,
+            imageInfo: GetImgInfo(ncgr, nclr, width, height),
+            settings: settings
+            );
+    }
+
+    /// <summary>
+    /// Convert all clusters of an NCER into lists of images. One list per cluster, one image per cell.
+    /// </summary>
     public static IReadOnlyList<IReadOnlyList<Image<Rgba32>>> NcerToMultipleImageGroups(NCER ncer, NCGR ncgr, NCLR nclr)
     {
         return CellImageUtil.MultiClusterToMultipleImageGroups(
@@ -67,6 +102,9 @@ public static class NitroImageUtil
             );
     }
 
+    /// <summary>
+    /// Convert an NCGR to an image
+    /// </summary>
     public static Image<Rgba32> NcgrToImage(NCGR ncgr, NCLR nclr)
     {
         return ImageUtil.SpriteToImage(

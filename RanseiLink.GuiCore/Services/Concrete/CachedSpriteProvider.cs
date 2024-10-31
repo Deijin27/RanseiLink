@@ -1,5 +1,8 @@
 ﻿#nullable enable
+using RanseiLink.Core.Graphics;
+using RanseiLink.Core;
 using RanseiLink.Core.Services;
+using SixLabors.ImageSharp;
 
 namespace RanseiLink.GuiCore.Services.Concrete;
 
@@ -62,5 +65,30 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         const int dim = 32;
         var img = LoadImage(SpriteType.IconInstS, 0);
         return _pathToImageConverter.TryCrop(img, 0, dim * id, dim, dim);
+    }
+
+    public IReadOnlyList<object?> GetClusterImages(string linkPath, int[] clusters)
+    {
+        var file = _overrideDataProvider.GetDataFile(FileUtil.NormalizePath(linkPath));
+
+        if (!File.Exists(file.File))
+        {
+            return new object?[clusters.Length];
+        }
+
+        var g2dr = G2DR.LoadCellImgFromFile(file.File);
+        var settings = new CellImageSettings(PositionRelativeTo.MinCell);
+
+        return NitroImageUtil.NcerToMultipleImages(clusters, g2dr.Ncer, g2dr.Ncgr, g2dr.Nclr, settings)
+            .Select(image =>
+            {
+                var temp = Path.GetTempFileName();
+                image.SaveAsPng(temp);
+                image.Dispose();
+                var result = _pathToImageConverter.TryConvert(temp);
+                File.Delete(temp);
+                return result;
+            })
+            .ToArray();
     }
 }

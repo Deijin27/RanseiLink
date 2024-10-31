@@ -9,5 +9,6 @@ namespace RanseiLink.GuiCore.Services;
 /// </summary>
 public interface ICachedSpriteProvider
 {
+    IReadOnlyList<object?> GetClusterImages(string linkPath, int[] clusters);
     object? GetSprite(SpriteType type, int id);
 }

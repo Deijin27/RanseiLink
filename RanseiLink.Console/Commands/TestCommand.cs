@@ -1,5 +1,12 @@
-﻿using RanseiLink.Core.Graphics;
+﻿using RanseiLink.Console.Services;
+using RanseiLink.Core.Enums;
+using RanseiLink.Core.Graphics;
+using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Util;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace RanseiLink.Console.Commands;
 
@@ -17,11 +24,6 @@ public  class TestCommand : ICommand
         return b.ToString("X").PadLeft(2, '0');
     }
 
-    [CommandParameter(0, Description = "Path of btx0 data file.", Name = "bmd0File")]
-    public string FilePath { get; set; }
-
-    [CommandOption("dump", 'd')]
-    public bool DumpOption { get; set; }
 
     void Dump(IConsole console, NSBMD bmd)
     {
@@ -102,22 +104,53 @@ public  class TestCommand : ICommand
         obj.Save(@$"C:\Users\Mia\Desktop\graphics\ikusa_map\{mdl.Name}-Unpacked\0000 - Extracted\{mdl.Name}.obj");
     }
 
+    public static void GetStuff(IMoveService moveService, IMoveRangeService moveRanges, ISpriteService spriteService)
+    {
+        var move = moveService.Retrieve((int)MoveId.DoubleSlap);
+        var range = moveRanges.Retrieve((int)move.Range);
+
+        using var baseImg = spriteService.GetMovePreview(move, range);
+
+        baseImg.SaveAsPng(@"C:\Users\Mia\Desktop\out.png");
+    }
+
+    public static Point GetPoint(int row, int column)
+    {
+        return new Point(
+            x: 18 + 6 * (row - column),
+            y: -3 + 3 * (column + row)
+            );
+    }
+
     public ValueTask ExecuteAsync(IConsole console)
     {
-        var bmd = new NSBMD(FilePath);
+        if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
+        {
+            console.Output.WriteLine("No mod selected");
+            return default;
+        }
 
-        if (DumpOption)
-        {
-            Dump(console, bmd);
-        }
-        else
-        {
-            console.Output.WriteLine(FixedPoint.Fix(0b_10000_00000, 1, 3, 6));
-            console.Output.WriteLine(FixedPoint.Fix(0b_01111_11111, 1, 3, 6));
-            console.Output.WriteLine(FixedPoint.InverseFix(7.9999999f, 1, 3, 6));
-            console.Output.WriteLine(FixedPoint.InverseFix(-8f, 1, 3, 6));
-            //Export(console, bmd);
-        }
+        GetStuff(
+            services.Get<IMoveService>(),
+            services.Get<IMoveRangeService>(),
+            services.Get<ISpriteService>()
+            );
+        
+
+        //var bmd = new NSBMD(FilePath);
+
+        //if (DumpOption)
+        //{
+        //    Dump(console, bmd);
+        //}
+        //else
+        //{
+        //    console.Output.WriteLine(FixedPoint.Fix(0b_10000_00000, 1, 3, 6));
+        //    console.Output.WriteLine(FixedPoint.Fix(0b_01111_11111, 1, 3, 6));
+        //    console.Output.WriteLine(FixedPoint.InverseFix(7.9999999f, 1, 3, 6));
+        //    console.Output.WriteLine(FixedPoint.InverseFix(-8f, 1, 3, 6));
+        //    //Export(console, bmd);
+        //}
 
         //if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         //{

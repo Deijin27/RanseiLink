@@ -32,13 +32,29 @@ public class Palette : List<Rgba32>
     }
 }
 
-public class PaletteCollection : List<Palette>
+public class PaletteCollection
 {
+    private readonly List<Palette> _palettes = [];
+
     public PaletteCollection(int numPalettes, TexFormat format, bool color0Transparent)
     {
         for (int i = 0; i < numPalettes; i++)
         {
-            Add(new(format.PaletteSize(), color0Transparent));
+            _palettes.Add(new(format.PaletteSize(), color0Transparent));
+        }
+    }
+
+    public int Count => _palettes.Count;
+
+    public Palette this[int index]
+    {
+        get
+        {
+            if (index >= Count)
+            {
+                index = 0;
+            }
+            return _palettes[index];
         }
     }
 
@@ -56,7 +72,7 @@ public class PaletteCollection : List<Palette>
 
     public void SetColor0(Color color)
     {
-        foreach (var palette in this)
+        foreach (var palette in _palettes)
         {
             palette[0] = color;
         }
@@ -78,7 +94,7 @@ public class PaletteCollection : List<Palette>
         for (int palId = 0; palId < paletteCount; palId++)
         {
             var pal = new Palette(paletteSize, color0Transparent);
-            Add(pal);
+            _palettes.Add(pal);
             int initColId = 0;
             if (color0Transparent)
             {
