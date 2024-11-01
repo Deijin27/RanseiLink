@@ -4,6 +4,7 @@ namespace RanseiLink.Core.Enums;
 /// <summary>
 /// UInt5
 /// </summary>
+[DefaultValues(NoType)]
 public enum TypeId
 {
     Normal,

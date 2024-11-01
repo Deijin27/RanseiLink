@@ -106,7 +106,7 @@ public  class TestCommand : ICommand
 
     public static void GetStuff(IMoveService moveService, IMoveRangeService moveRanges, ISpriteService spriteService)
     {
-        var move = moveService.Retrieve((int)MoveId.DoubleSlap);
+        var move = moveService.Retrieve((int)MoveId.QuickAttack);
         var range = moveRanges.Retrieve((int)move.Range);
 
         using var baseImg = spriteService.GetMovePreview(move, range);

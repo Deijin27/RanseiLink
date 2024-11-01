@@ -21,6 +21,7 @@ internal class SpriteService : ISpriteService
 
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly Dictionary<MoveIcons, Image<Rgba32>> _cachedImages = [];
+    private readonly Dictionary<TypeId, Image<Rgba32>> _typeImages = [];
     private readonly Image<Rgba32> _background;
     public SpriteService(IOverrideDataProvider overrideDataProvider)
     {
@@ -34,6 +35,15 @@ internal class SpriteService : ISpriteService
             _cachedImages[icon] = image;
         }
         _background = ImageUtil.LoadPngBetterError(@"C:\Users\Mia\Desktop\move_bg.png");
+
+        var typeIds = EnumUtil.GetValuesExceptDefaults<TypeId>();
+        var typeIconLink = G2DR.LoadCellImgFromFile(_overrideDataProvider.GetDataFile("graphics/common/11_01_parts_usual_up.G2DR").File);
+        var typeImages = NitroImageUtil.NcerToMultipleImages(typeIds.Select(x => (int)x).ToArray(), 
+            typeIconLink.Ncer, typeIconLink.Ncgr, typeIconLink.Nclr, new());
+        foreach (var (type, image) in typeIds.Zip(typeImages))
+        {
+            _typeImages[type] = image;
+        }
     }
 
     private void DrawBackground(IImageProcessingContext x)
@@ -99,15 +109,20 @@ internal class SpriteService : ISpriteService
         }
     }
 
-    private void DrawMoveInfo(IImageProcessingContext context, Move move)
+    private void DrawMovePowerStars(IImageProcessingContext context, Move move)
     {
         var x = 72;
         var y = 14;
         for (int i = 0; i < move.StarCount; i++)
         {
             context.DrawImage(_cachedImages[MoveIcons.PowerStar], new Point(x, y), 1);
-            x -= 10;
+            x -= 8;
         }
+    }
+
+    private void DrawMoveType(IImageProcessingContext context, Move move)
+    {
+        context.DrawImage(_typeImages[move.Type], new Point(46, 2), 1);
     }
 
     public Image<Rgba32> GetMoveRangePreview(MoveRange range)
@@ -133,7 +148,8 @@ internal class SpriteService : ISpriteService
             DrawRange(x, range);
             DrawMoveSideEffects(x, move, range);
             DrawArrow(x);
-            DrawMoveInfo(x, move);
+            DrawMovePowerStars(x, move);
+            DrawMoveType(x, move);
         });
 
         return baseImg;

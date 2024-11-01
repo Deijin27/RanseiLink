@@ -52,7 +52,11 @@ public class PaletteCollection
         {
             if (index >= Count)
             {
-                index = 0;
+                // This is how it works
+                // in: graphics/common/11_03_parts_ikusamap_up.G2DR
+                // the sprites use palette 11, but there's not 11
+                // And the last palette is the correct one
+                index = Count - 1;
             }
             return _palettes[index];
         }
