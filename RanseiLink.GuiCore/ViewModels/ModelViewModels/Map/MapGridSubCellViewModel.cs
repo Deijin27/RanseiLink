@@ -1,32 +1,28 @@
-﻿namespace RanseiLink.GuiCore.ViewModels;
+﻿using SixLabors.ImageSharp.PixelFormats;
 
-public record MapSubCellInfo(MapRenderMode RenderMode, float Z);
+namespace RanseiLink.GuiCore.ViewModels;
 
 public class MapGridSubCellViewModel : ViewModelBase
 {
     private readonly int _entryId;
-    public MapGridSubCellViewModel(MapGridCellViewModel parent, int entryId, MapRenderMode renderMode)
+    public MapGridSubCellViewModel(MapGridCellViewModel parent, int entryId)
     {
         _entryId = entryId;
         Parent = parent;
-        RenderMode = renderMode;
     }
 
     public MapGridCellViewModel Parent { get; }
 
+    private Rgba32 _color;
+    public Rgba32 Color
+    {
+        get => _color;
+        set => SetProperty(ref _color, value);
+    }
+
     public float Z
     {
         get => Parent.TerrainEntry.SubCellZValues[_entryId];
-        set
-        {
-            if (SetProperty(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value))
-            {
-                RaisePropertyChanged(nameof(Info));
-            }
-        }
+        set => SetProperty(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value);
     }
-
-    public MapRenderMode RenderMode { get; }
-
-    public MapSubCellInfo Info => new(RenderMode, Z);
 }

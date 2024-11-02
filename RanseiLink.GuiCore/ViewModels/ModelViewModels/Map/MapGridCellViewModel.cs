@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -14,30 +15,51 @@ public class MapGridCellViewModel : ViewModelBase
 
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
-    private readonly bool _hideGimmicks;
-    private readonly bool _hidePokemonMarkers;
-    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, MapRenderMode renderMode, bool hideGimmicks, bool hidePokemonMarkers, IGimmickService gimmickService, IOverrideDataProvider spriteProvider)
+    private readonly bool _showGimmicks;
+    private readonly bool _showPokemonMarkers;
+    public MapGridCellViewModel(MapTerrainEntry entry, int x, int y, bool showGimmicks, bool showPokemonMarkers, IGimmickService gimmickService, IOverrideDataProvider spriteProvider)
     {
         _gimmickService = gimmickService;
         _spriteProvider = spriteProvider;
         TerrainEntry = entry;
-        _hideGimmicks = hideGimmicks;
-        _hidePokemonMarkers = hidePokemonMarkers;
+        _showGimmicks = showGimmicks;
+        _showPokemonMarkers = showPokemonMarkers;
 
         X = x;
         Y = y;
 
-        SubCell0 = new(this, 0, renderMode);
-        SubCell1 = new(this, 1, renderMode);
-        SubCell2 = new(this, 2, renderMode);
-        SubCell3 = new(this, 3, renderMode);
-        SubCell4 = new(this, 4, renderMode);
-        SubCell5 = new(this, 5, renderMode);
-        SubCell6 = new(this, 6, renderMode);
-        SubCell7 = new(this, 7, renderMode);
-        SubCell8 = new(this, 8, renderMode);
+        SubCell0 = new(this, 0);
+        SubCell1 = new(this, 1);
+        SubCell2 = new(this, 2);
+        SubCell3 = new(this, 3);
+        SubCell4 = new(this, 4);
+        SubCell5 = new(this, 5);
+        SubCell6 = new(this, 6);
+        SubCell7 = new(this, 7);
+        SubCell8 = new(this, 8);
+
+        SubCells = [
+            SubCell0, 
+            SubCell1, 
+            SubCell2, 
+            SubCell3, 
+            SubCell4, 
+            SubCell5, 
+            SubCell6, 
+            SubCell7,
+            SubCell8
+            ];
 
         Pokemon.CollectionChanged += (s, e) => RaisePropertyChanged(nameof(PokemonMarkerVisibility));
+    }
+
+    public IEnumerable<MapGridSubCellViewModel> SubCells { get; }
+
+    private Rgba32 _color;
+    public Rgba32 Color
+    {
+        get => _color;
+        set => SetProperty(ref _color, value);
     }
 
     public void AddGimmick(MapGimmickViewModel gimmickViewModel)
@@ -62,7 +84,7 @@ public class MapGridCellViewModel : ViewModelBase
     private void UpdateVisibleGimmick()
     {
         RaisePropertyChanged(nameof(GimmickMarkerVisibility));
-        if (Gimmicks.Any() && !_hideGimmicks)
+        if (_showGimmicks && Gimmicks.Any())
         {
             var gimmick = Gimmicks.Last();
             GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image).File;
@@ -88,7 +110,7 @@ public class MapGridCellViewModel : ViewModelBase
         set => SetProperty(TerrainEntry.Terrain, value, v => TerrainEntry.Terrain = v);
     }
 
-    public Unknown3 Unknown3
+    public MapBounds Bounds
     {
         get => TerrainEntry.Unknown3;
         set => SetProperty(TerrainEntry.Unknown3, value, v => TerrainEntry.Unknown3 = v);
@@ -110,7 +132,7 @@ public class MapGridCellViewModel : ViewModelBase
     {
         get
         {
-            if (_hideGimmicks)
+            if (!_showGimmicks)
             {
                 return false;
             }
@@ -125,7 +147,7 @@ public class MapGridCellViewModel : ViewModelBase
     {
         get
         {
-            if (_hidePokemonMarkers)
+            if (!_showPokemonMarkers)
             {
                 return false;
             }
@@ -136,9 +158,9 @@ public class MapGridCellViewModel : ViewModelBase
         }
     }
 
-    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
+    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = [];
 
-    public ObservableCollection<MapPokemonPositionViewModel> Pokemon { get; } = new();
+    public ObservableCollection<MapPokemonPositionViewModel> Pokemon { get; } = [];
 
     public string GimmicksString => string.Join(", ", Gimmicks.Select(i => i.Gimmick));
 

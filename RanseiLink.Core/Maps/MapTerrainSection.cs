@@ -2,7 +2,7 @@
 
 namespace RanseiLink.Core.Maps;
 
-public enum Unknown3
+public enum MapBounds
 {
     InBounds,
     OutOfBounds,
@@ -51,7 +51,7 @@ public class MapTerrainEntry
     /// </summary>
     public float[] SubCellZValues { get; }
     public TerrainId Terrain { get; set; }
-    public Unknown3 Unknown3 { get; set; }
+    public MapBounds Unknown3 { get; set; }
 
     public byte Unknown4 { get; set; }
     public OrientationAlt Orientation { get; set; }
@@ -71,7 +71,7 @@ public class MapTerrainEntry
             SubCellZValues[i] = Util.FixedPoint.Fix_1_19_12(br.ReadInt32()) * 25;
         }
         Terrain = (TerrainId)br.ReadByte();
-        Unknown3 = (Unknown3)br.ReadByte();
+        Unknown3 = (MapBounds)br.ReadByte();
         Unknown4 = br.ReadByte();
         Orientation = (OrientationAlt)br.ReadByte();
     }

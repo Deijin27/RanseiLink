@@ -13,7 +13,7 @@
     <vc:ZeroToVisiblityConverter x:Key="Converter.ZeroToVis"/>
     <vc:TerrainToBrushConverter x:Key="Converter.TerrainToBrush"/>
     <vc:NotNullToVisibilityConverter x:Key="Converter.NotNullToVis"/>
-    <vc:SubCellToBrushConverter x:Key="Converter.SubCellToBrush"/>
+    <vc:ImageSharpColorToBrushConverter x:Key="Converter.ImageSharpColorToBrush"/>
     <vc:GreaterThanZeroToVisiblityConverter x:Key="Converter.GTZeroToVis"/>
     <vc:MoveEffectIdToQuantityNameConverter x:Key="Converter.MoveEffectIdToQuantityName"/>
     <vc:ColorToBrushConverter x:Key="Converter.ColorToBrush" />

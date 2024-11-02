@@ -11,6 +11,56 @@
              d:DataContext="{d:DesignInstance Type=vm:MapViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:TerrainMapPainter}">
+            <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="140">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="1" 
+                                BorderBrush="{DynamicResource ControlBorderBrush}" 
+                                Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}"/>
+                            <Image Grid.Column="1" Margin="2" Source="{Binding Image}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:BoundsMapPainter}">
+            <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="140">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="1" 
+                        BorderBrush="{DynamicResource ControlBorderBrush}" 
+                        Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DataTemplate>
+    </UserControl.Resources>
     <DockPanel Margin="10">
         <DockPanel Margin="10" DockPanel.Dock="Left">
             <Border HorizontalAlignment="Left" Width="{Binding ElementName=MatrixElement, Path=ActualWidth}" DockPanel.Dock="Top" BorderThickness="0.5" BorderBrush="Gray" Background="{DynamicResource WindowTransparentBackgroundBrush}" DataContext="{Binding MouseOverItem}" Padding="2">
@@ -29,7 +79,7 @@
                     
                     <TextBlock d:Text="Terrain: Poison" Text="{Binding Parent.Terrain, StringFormat='Terrain: {0}'}"/>
                     <TextBlock d:Text="Gimmick: HotSpring" Text="{Binding Parent.GimmicksString, StringFormat='Gimmick: {0}'}"/>
-                    <TextBlock d:Text="Unknown3: 5" Text="{Binding Parent.Unknown3, StringFormat='Unknown3: {0}'}"/>
+                    <TextBlock d:Text="Bounds: InBounds" Text="{Binding Parent.Bounds, StringFormat='Bounds: {0}'}"/>
                     <TextBlock d:Text="Unknown4: 5" Text="{Binding Parent.Unknown4, StringFormat='Unknown4: {0}'}"/>
                     <TextBlock d:Text="Orientation: North" Text="{Binding Parent.Orientation, StringFormat='Orientation: {0}'}"/>
                 </UniformGrid>
@@ -45,7 +95,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate DataType="{x:Type vm:MapGridCellViewModel}">
-                                    <Border x:Name="GridCellBorder" Width="27" Height="27" Background="{Binding Terrain, Converter={StaticResource Converter.TerrainToBrush}}">
+                                    <Border x:Name="GridCellBorder" Width="27" Height="27" Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}">
                                         <Border.Style>
                                             <Style TargetType="Border">
                                                 <Setter Property="BorderBrush" Value="Gray"/>
@@ -74,15 +124,15 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
                                             <!-- Z mouse enter trigger zones-->
-                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Info, Converter={StaticResource Converter.SubCellToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <!-- Gimmick and pokemon markers -->
                                             <Rectangle Grid.Column="0" 
                                                        Grid.Row="0" 
@@ -134,15 +184,32 @@
 
         <DockPanel Margin="10">
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="View Mode"/>
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.RenderModeItems}" SelectedItem="{Binding RenderMode}" Width="100" Margin="10,0"/>
-                <CheckBox IsChecked="{Binding HideGimmicks}" Content="Hide Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <CheckBox IsChecked="{Binding HidePokemonMarkers}" Content="Hide Pokemon" VerticalAlignment="Center"/>
+                <TextBlock Text="Mode:" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ListBox ItemsSource="{Binding Painters}" SelectedItem="{Binding SelectedPainter}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="100">
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+                <CheckBox IsChecked="{Binding PaintingActive}" Content="Enable Paint" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <CheckBox IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <CheckBox IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
                 <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
-                <controls:IconButton Icon="resize" Text="Modify Dimensions" Command="{Binding ModifyMapDimensionsCommand}"/>
+                <controls:IconButton Icon="resize" Text="Resize" Command="{Binding ModifyMapDimensionsCommand}"/>
                 <controls:IconButton Icon="visibility" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
             </StackPanel>
 
@@ -171,7 +238,7 @@
                                     <TextBlock Height="20" Grid.Row="1">Terrain</TextBlock>
                                     <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedItem="{Binding Terrain}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
                                     <TextBlock Height="20" Grid.Row="2">Unknown3</TextBlock>
-                                    <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Unknown3}" ItemsSource="{x:Static const:EnumProvider.Unknown3Items}"/>
+                                    <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Bounds}" ItemsSource="{x:Static const:EnumProvider.MapBoundsItems}"/>
                                     <TextBlock Height="20" Grid.Row="3">Unknown4</TextBlock>
                                     <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown4}" Max="255"/>
                                     <TextBlock Height="20" Grid.Row="4">Orientation</TextBlock>
@@ -279,52 +346,9 @@
                         </DataGrid.RowDetailsTemplate>
                     </DataGrid>
                 </TabItem>
-                <TabItem Header="Terrain">
+                <TabItem Header="Painter">
                     <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Margin="0,0,0,20" Grid.ColumnSpan="2" TextWrapping="Wrap"><Span FontWeight="Bold">Terrain Painting</Span> - When active, click on a cell to set the terrain to the selected terrain brush value</TextBlock>
-                        <CheckBox IsChecked="{Binding TerrainPaintingActive}" Grid.Row="1" Grid.ColumnSpan="2">Terrain Painting Active</CheckBox>
-                        <TextBlock Grid.Row="2" Height="20">Terrain Brush</TextBlock>
-                        <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding TerrainBrush}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
-                        <Image Grid.Row="3" Grid.Column="0" Width="30" Height="30" Stretch="Uniform" Source="{Binding TerrainBrushImagePath, Converter={StaticResource Converter.PathToImageSource}}"/>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Elevation">
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Margin="0,0,0,20" Grid.ColumnSpan="2" TextWrapping="Wrap"><Span FontWeight="Bold">Elevation Painting</Span> - When active, click on a cell to set the elevation to the selected value</TextBlock>
-                        <CheckBox IsChecked="{Binding ElevationPaintingActive}" Grid.Row="1" Grid.ColumnSpan="2">Elevation Painting Active</CheckBox>
-                        <CheckBox IsChecked="{Binding PaintElevationEntireCell}" Grid.Row="2" Grid.ColumnSpan="2">Paint Entire Cell (rather than just sub-cell)</CheckBox>
-                        <TextBlock Grid.Row="3" Height="20" FontWeight="Bold" Grid.ColumnSpan="2" HorizontalAlignment="Center">Elevation to Paint</TextBlock>
-                        <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center">
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="-0.5">-0.5</Button>
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="-25.0">-25.0</Button>
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="-12.5">-12.5</Button>
-                            <TextBlock TextAlignment="Center" Width="60" VerticalAlignment="Center" Text="{Binding ElevationToPaint}" d:Text="1212.5"></TextBlock>
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="12.5">+12.5</Button>
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="25.0">+25.0</Button>
-                            <Button Margin="4,0" Padding="6,0" Command="{Binding ModifyElevationToPaintCommand}" CommandParameter="0.5">+0.5</Button>
-                        </StackPanel>
+                        <ContentPresenter Content="{Binding SelectedPainter}"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Import/Export">

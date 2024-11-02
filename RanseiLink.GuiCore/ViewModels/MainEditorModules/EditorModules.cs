@@ -474,7 +474,8 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
             _currentId = mid;
             _nestedVm.SetModel(mid, _currentMap);
         },
-        id => _service.GetMapIds().Select(i => (int)i).Contains(id)
+        id => _service.GetMapIds().Select(i => (int)i).Contains(id),
+        scrollEnabled: false
         );
 
         _nestedVm.RequestSave += NestedVm_RequestSave;

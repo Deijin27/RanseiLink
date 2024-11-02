@@ -15,14 +15,8 @@ public enum MapRenderMode
 
 public class MapViewModel : ViewModelBase
 {
-    private static bool __terrainPaintingActive;
-    private static TerrainId __terrainBrush;
-    private static bool __elevationPaintingActive;
-    private static float __elevationToPaint;
-    private static bool __paintElevationEntireCell;
-    private static MapRenderMode __mapRenderMode; // static so it's preserved between pages
-    private static bool __hideGimmicks;
-    private static bool __hidePokemonMarkers;
+    private static bool __showGimmicks = true;
+    private static bool __showPokemonMarkers = true;
     private MapGimmickViewModel? _selectedGimmick;
     private MapPokemonPositionViewModel? _selectedPokemonPosition;
     private MapGridSubCellViewModel? _mouseOverItem;
@@ -44,13 +38,21 @@ public class MapViewModel : ViewModelBase
         IGimmickService gimmickService, 
         IOverrideDataProvider overrideSpriteProvider, 
         IMapManager mapManager,
-        IMapViewerService mapViewerService)
+        IMapViewerService mapViewerService,
+        IPathToImageConverter pathToImageConverter)
     {
         _mapManager = mapManager;
         _mapViewerService = mapViewerService;
         _dialogService = dialogService;
         _gimmickService = gimmickService;
         _spriteProvider = overrideSpriteProvider;
+
+        Painters = [
+            new TerrainMapPainter(pathToImageConverter, overrideSpriteProvider),
+            new ElevationMapPainter(),
+            new BoundsMapPainter(),
+            ];
+        _selectedPainter = Painters[0];
         
         RemoveSelectedGimmickCommand = new RelayCommand(RemoveSelectedGimmick, () => _selectedGimmick != null);
         ModifyMapDimensionsCommand = new RelayCommand(ModifyMapDimensions);
@@ -61,7 +63,6 @@ public class MapViewModel : ViewModelBase
         ImportPslmCommand = new RelayCommand(ImportPslm);
         ExportPslmCommand = new RelayCommand(ExportPslm);
         RevertModelCommand = new RelayCommand(Revert3dModel, () => _mapManager.IsOverriden(_id));
-        ModifyElevationToPaintCommand = new RelayCommand<string>(diff => { if (diff != null) ElevationToPaint += float.Parse(diff); });
         View3DModelCommand = new RelayCommand(View3DModel);
 
         this.PropertyChanged += MapViewModel_PropertyChanged;
@@ -108,81 +109,46 @@ public class MapViewModel : ViewModelBase
     public ICommand ImportObjCommand { get; }
     public ICommand ExportPacCommand { get; }
     public ICommand ImportPacCommand { get; }
-    public ICommand ModifyElevationToPaintCommand { get; }
 
     public RelayCommand RemoveSelectedGimmickCommand { get; }
     public ICommand ModifyMapDimensionsCommand { get; }
     public ICommand View3DModelCommand { get; }
-    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = new();
-    public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; } = new();
+    public ObservableCollection<MapGimmickViewModel> Gimmicks { get; } = [];
+    public ObservableCollection<MapPokemonPositionViewModel> PokemonPositions { get; } = [];
 
-    public TerrainId TerrainBrush
-    {
-        get => __terrainBrush;
-        set 
-        { 
-            if (SetProperty(ref __terrainBrush, value)) 
-            {
-                RaisePropertyChanged(nameof(TerrainBrushImagePath));
-            } 
-        }
-    }
+    public List<BaseMapPainter> Painters { get; }
 
-    public string TerrainBrushImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlChikei, (int)TerrainBrush).File;
-    public bool TerrainPaintingActive
+    private BaseMapPainter _selectedPainter;
+    public BaseMapPainter SelectedPainter
     {
-        get => __terrainPaintingActive;
-        set => SetProperty(ref __terrainPaintingActive, value);
-    }
-
-    public bool ElevationPaintingActive
-    {
-        get => __elevationPaintingActive;
-        set => SetProperty(ref __elevationPaintingActive, value);
-    }
-
-    public float ElevationToPaint
-    {
-        get => __elevationToPaint;
-        set => SetProperty(ref __elevationToPaint, value);
-    }
-
-    public bool PaintElevationEntireCell
-    {
-        get => __paintElevationEntireCell;
-        set => SetProperty(ref __paintElevationEntireCell, value);
-    }
-
-    public MapRenderMode RenderMode
-    {
-        get => __mapRenderMode;
+        get => _selectedPainter;
         set
         {
-            if (SetProperty(ref __mapRenderMode, value))
+            if (SetProperty(ref _selectedPainter, value))
             {
                 Draw();
             }
         }
     }
 
-    public bool HideGimmicks
+    public bool ShowGimmicks
     {
-        get => __hideGimmicks;
+        get => __showGimmicks;
         set
         {
-            if (SetProperty(ref __hideGimmicks, value))
+            if (SetProperty(ref __showGimmicks, value))
             {
                 Draw();
             }
         }
     }
 
-    public bool HidePokemonMarkers
+    public bool ShowPokemonMarkers
     {
-        get => __hidePokemonMarkers;
+        get => __showPokemonMarkers;
         set
         {
-            if (SetProperty(ref __hidePokemonMarkers, value))
+            if (SetProperty(ref __showPokemonMarkers, value))
             {
                 Draw();
             }
@@ -193,7 +159,7 @@ public class MapViewModel : ViewModelBase
 
     public ushort Height => (ushort)Map.TerrainSection.MapMatrix.Count;
 
-    public ObservableCollection<List<MapGridCellViewModel>> Matrix { get; } = new();
+    public ObservableCollection<List<MapGridCellViewModel>> Matrix { get; } = [];
 
     public MapGridSubCellViewModel? MouseOverItem
     {
@@ -261,7 +227,12 @@ public class MapViewModel : ViewModelBase
             var rowItems = new List<MapGridCellViewModel>();
             foreach (var col in row)
             {
-                var cellVm = new MapGridCellViewModel(col, x++, y, RenderMode, HideGimmicks, HidePokemonMarkers, _gimmickService, _spriteProvider);
+                var cellVm = new MapGridCellViewModel(col, x++, y, ShowGimmicks, ShowPokemonMarkers, _gimmickService, _spriteProvider);
+                cellVm.Color = _selectedPainter.GetCellColor(cellVm);
+                foreach (var subCell in cellVm.SubCells)
+                {
+                    subCell.Color = _selectedPainter.GetSubCellColor(subCell);
+                }
                 rowItems.Add(cellVm);
                 if (col == selectedTerrainEntry)
                 {
@@ -302,30 +273,19 @@ public class MapViewModel : ViewModelBase
 
     private void HandlePaint(MapGridSubCellViewModel clickedSubCell)
     {
-        if (TerrainPaintingActive)
-        {
-            clickedSubCell.Parent.Terrain = TerrainBrush;
-        }
-        if (ElevationPaintingActive)
-        {
-            var clickedCell = clickedSubCell.Parent;
-            if (PaintElevationEntireCell)
-            {
-                clickedCell.SubCell0.Z = ElevationToPaint;
-                clickedCell.SubCell1.Z = ElevationToPaint;
-                clickedCell.SubCell2.Z = ElevationToPaint;
-                clickedCell.SubCell3.Z = ElevationToPaint;
-                clickedCell.SubCell4.Z = ElevationToPaint;
-                clickedCell.SubCell5.Z = ElevationToPaint;
-                clickedCell.SubCell6.Z = ElevationToPaint;
-                clickedCell.SubCell7.Z = ElevationToPaint;
-                clickedCell.SubCell8.Z = ElevationToPaint;
-            }
-            else
-            {
-                clickedSubCell.Z = ElevationToPaint;
-            }
-        }
+        var clickedCell = clickedSubCell.Parent;
+        _selectedPainter.OnMouseDownOnCell(clickedCell);
+        _selectedPainter.OnMouseDownOnSubCell(clickedSubCell);
+        clickedCell.Color = _selectedPainter.GetCellColor(clickedCell);
+        clickedSubCell.Color = _selectedPainter.GetSubCellColor(clickedSubCell);
+
+    }
+
+    private bool _paintingActive;
+    public bool PaintingActive
+    {
+        get => _paintingActive;
+        set => SetProperty(ref _paintingActive, value);
     }
 
     public void OnSubCellDragged(MapGridSubCellViewModel clickedSubCell)
@@ -336,7 +296,7 @@ public class MapViewModel : ViewModelBase
 
     public void OnSubCellClicked(MapGridSubCellViewModel clickedSubCell)
     {
-        if (TerrainPaintingActive || ElevationPaintingActive)
+        if (PaintingActive)
         {
             HandlePaint(clickedSubCell);
         }
