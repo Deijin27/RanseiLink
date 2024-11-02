@@ -1,22 +1,41 @@
 ﻿using RanseiLink.Core.Maps;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Windows.Media;
 
-namespace RanseiLink.Windows.ValueConverters;
+namespace RanseiLink.GuiCore.ViewModels;
 
-public class TerrainToBrushConverter : ValueConverter<TerrainId, Brush>
+public class BoundsMapViewDriver : IMapViewDriver
 {
-    private static void AddBrush(TerrainId terrain, string hexColor)
+    public Rgba32 GetCellColor(MapGridCellViewModel cell)
     {
-        Color color = (Color)ColorConverter.ConvertFromString(hexColor);
-        Brush brush = new SolidColorBrush(color);
-        brush.Freeze();
-        _brushMap.Add(terrain, brush);
+        throw new NotImplementedException();
     }
 
-    static TerrainToBrushConverter()
+    public Rgba32 GetSubCellColor(MapGridSubCellViewModel subCell)
     {
-        _brushMap = new();
+        throw new NotImplementedException();
+    }
+
+
+
+    public void OnMouseDownOnCell(MapGridCellViewModel cell)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnMouseDownOnSubCell(MapGridSubCellViewModel cell)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class TerrainMapViewDriver : IMapViewDriver
+{
+    private readonly Dictionary<TerrainId, Rgba32> _terrainToColor = [];
+    private TerrainId _activeTerrainBrush;
+
+    public TerrainMapViewDriver()
+    {
         AddBrush(TerrainId.Normal, "#FFFFFF");
         AddBrush(TerrainId.Magma, "#BE0A0F");
         AddBrush(TerrainId.Water, "#33B7B7");
@@ -47,15 +66,27 @@ public class TerrainToBrushConverter : ValueConverter<TerrainId, Brush>
         AddBrush(TerrainId.Default, "#DAD3C5");
     }
 
-    private static readonly Dictionary<TerrainId, Brush> _brushMap;
-
-    protected override Brush Convert(TerrainId value)
+    public void AddBrush(TerrainId id, string hex)
     {
-        return _brushMap[value];
+        _terrainToColor[id] = Rgba32.ParseHex(hex);
     }
 
-    protected override TerrainId ConvertBack(Brush value)
+    public Rgba32 GetCellColor(MapGridCellViewModel cell)
     {
-        throw new NotImplementedException();
+        return _terrainToColor[cell.Terrain];
+    }
+
+    public Rgba32 GetSubCellColor(MapGridSubCellViewModel subCell)
+    {
+        return Color.Transparent;
+    }
+
+    public void OnMouseDownOnCell(MapGridCellViewModel cell)
+    {
+        cell.Terrain = _activeTerrainBrush;
+    }
+
+    public void OnMouseDownOnSubCell(MapGridSubCellViewModel cell)
+    {
     }
 }
