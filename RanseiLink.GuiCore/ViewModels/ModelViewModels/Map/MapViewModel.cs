@@ -14,14 +14,14 @@ public enum MapRenderMode
 
 public class MapViewModel : ViewModelBase
 {
-    private static bool _terrainPaintingActive;
-    private static TerrainId _terrainBrush;
-    private static bool _elevationPaintingActive;
-    private static float _elevationToPaint;
-    private static bool _paintElevationEntireCell;
-    private static MapRenderMode _mapRenderMode; // static so it's preserved between pages
-    private static bool _hideGimmicks;
-    private static bool _hidePokemonMarkers;
+    private static bool __terrainPaintingActive;
+    private static TerrainId __terrainBrush;
+    private static bool __elevationPaintingActive;
+    private static float __elevationToPaint;
+    private static bool __paintElevationEntireCell;
+    private static MapRenderMode __mapRenderMode; // static so it's preserved between pages
+    private static bool __hideGimmicks;
+    private static bool __hidePokemonMarkers;
     private MapGimmickViewModel? _selectedGimmick;
     private MapPokemonPositionViewModel? _selectedPokemonPosition;
     private MapGridSubCellViewModel? _mouseOverItem;
@@ -117,10 +117,10 @@ public class MapViewModel : ViewModelBase
 
     public TerrainId TerrainBrush
     {
-        get => _terrainBrush;
+        get => __terrainBrush;
         set 
         { 
-            if (SetProperty(ref _terrainBrush, value)) 
+            if (SetProperty(ref __terrainBrush, value)) 
             {
                 RaisePropertyChanged(nameof(TerrainBrushImagePath));
             } 
@@ -130,34 +130,34 @@ public class MapViewModel : ViewModelBase
     public string TerrainBrushImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlChikei, (int)TerrainBrush).File;
     public bool TerrainPaintingActive
     {
-        get => _terrainPaintingActive;
-        set => SetProperty(ref _terrainPaintingActive, value);
+        get => __terrainPaintingActive;
+        set => SetProperty(ref __terrainPaintingActive, value);
     }
 
     public bool ElevationPaintingActive
     {
-        get => _elevationPaintingActive;
-        set => SetProperty(ref _elevationPaintingActive, value);
+        get => __elevationPaintingActive;
+        set => SetProperty(ref __elevationPaintingActive, value);
     }
 
     public float ElevationToPaint
     {
-        get => _elevationToPaint;
-        set => SetProperty(ref _elevationToPaint, value);
+        get => __elevationToPaint;
+        set => SetProperty(ref __elevationToPaint, value);
     }
 
     public bool PaintElevationEntireCell
     {
-        get => _paintElevationEntireCell;
-        set => SetProperty(ref _paintElevationEntireCell, value);
+        get => __paintElevationEntireCell;
+        set => SetProperty(ref __paintElevationEntireCell, value);
     }
 
     public MapRenderMode RenderMode
     {
-        get => _mapRenderMode;
+        get => __mapRenderMode;
         set
         {
-            if (SetProperty(ref _mapRenderMode, value))
+            if (SetProperty(ref __mapRenderMode, value))
             {
                 Draw();
             }
@@ -166,10 +166,10 @@ public class MapViewModel : ViewModelBase
 
     public bool HideGimmicks
     {
-        get => _hideGimmicks;
+        get => __hideGimmicks;
         set
         {
-            if (SetProperty(ref _hideGimmicks, value))
+            if (SetProperty(ref __hideGimmicks, value))
             {
                 Draw();
             }
@@ -178,10 +178,10 @@ public class MapViewModel : ViewModelBase
 
     public bool HidePokemonMarkers
     {
-        get => _hidePokemonMarkers;
+        get => __hidePokemonMarkers;
         set
         {
-            if (SetProperty(ref _hidePokemonMarkers, value))
+            if (SetProperty(ref __hidePokemonMarkers, value))
             {
                 Draw();
             }
