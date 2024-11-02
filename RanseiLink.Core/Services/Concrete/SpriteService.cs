@@ -23,6 +23,7 @@ internal class SpriteService : ISpriteService
     private readonly Dictionary<MoveIcons, Image<Rgba32>> _cachedImages = [];
     private readonly Dictionary<TypeId, Image<Rgba32>> _typeImages = [];
     private readonly Image<Rgba32> _background;
+    private readonly Image<Rgba32> _overlay;
     public SpriteService(IOverrideDataProvider overrideDataProvider)
     {
         _overrideDataProvider = overrideDataProvider;
@@ -35,6 +36,7 @@ internal class SpriteService : ISpriteService
             _cachedImages[icon] = image;
         }
         _background = ImageUtil.LoadPngBetterError(@"C:\Users\Mia\Desktop\move_bg.png");
+        _overlay = ImageUtil.LoadPngBetterError(@"C:\Users\Mia\Desktop\move_overlay.png");
 
         var typeIds = EnumUtil.GetValuesExceptDefaults<TypeId>();
         var typeIconLink = G2DR.LoadCellImgFromFile(_overrideDataProvider.GetDataFile("graphics/common/11_01_parts_usual_up.G2DR").File);
@@ -50,14 +52,23 @@ internal class SpriteService : ISpriteService
     {
         x.DrawImage(_background, new Point(0, 0), 1);
     }
+    private void DrawOverlay(IImageProcessingContext x)
+    {
+        x.DrawImage(_overlay, new Point(0, 0), 1);
+    }
 
     private void DrawArrow(IImageProcessingContext x)
     {
         x.DrawImage(_cachedImages[MoveIcons.MoveRangeArrow], new Point(14, 13), 1);
     }
 
-    private const int __columnCount = 6;
-    private const int __rowCount = 5;
+    private const int __columnCount = 5;
+    private const int __rowCount = 6;
+
+    private static bool IsInDisplayRange(int row, int column)
+    {
+        return column > 0 && column < 4 && row < 5;
+    }
 
     private void DrawRange(IImageProcessingContext x, MoveRange range)
     {
@@ -65,9 +76,9 @@ internal class SpriteService : ISpriteService
         {
             for (int row = 0; row < __rowCount; row++)
             {
-                if (range.GetInRange(column, row))
+                if (IsInDisplayRange(row: row, column: column) && range.GetInRange(row: row, column: column))
                 {
-                    x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowOrange], GetPoint(row, column), 1);
+                    x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowOrange], GetPoint(row: row, column: column), 1);
                 }
             }
         }
@@ -79,11 +90,15 @@ internal class SpriteService : ISpriteService
         {
             for (int row = 0; row < __rowCount; row++)
             {
-                if (range.GetInRange(column, row))
+                if (IsInDisplayRange(row: row, column: column) && range.GetInRange(row: row, column: column))
                 {
                     if (move.Movement == MoveMovementId.KnockbackTarget)
                     {
-                        x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowRed], GetPoint(row, column - 1), 1);
+                        var knockbackCol = column - 1;
+                        if (IsInDisplayRange(row: row, column: knockbackCol))
+                        {
+                            x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowRed], GetPoint(row: row, column: knockbackCol), 1);
+                        }
                     }
                     else if (move.Movement == MoveMovementId.MoveUser)
                     {
@@ -99,9 +114,9 @@ internal class SpriteService : ISpriteService
                             diff = -diff;
                         }
                         moveUserColumn += diff;
-                        if (!range.GetInRange(moveUserRow, moveUserColumn))
+                        if (!range.GetInRange(row: moveUserRow, column: moveUserColumn) && IsInDisplayRange(row: moveUserRow, column: moveUserColumn))
                         {
-                            x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowBlue], GetPoint(moveUserRow, moveUserColumn), 1);
+                            x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowBlue], GetPoint(row: moveUserRow, column: moveUserColumn), 1);
                         }
                     }
                 }
@@ -122,6 +137,10 @@ internal class SpriteService : ISpriteService
 
     private void DrawMoveType(IImageProcessingContext context, Move move)
     {
+        if (move.Type == TypeId.NoType)
+        {
+            return;
+        }
         context.DrawImage(_typeImages[move.Type], new Point(46, 2), 1);
     }
 
@@ -133,6 +152,7 @@ internal class SpriteService : ISpriteService
         {
             DrawBackground(x);
             DrawRange(x, range);
+            DrawOverlay(x);
         });
 
         return baseImg;
@@ -150,6 +170,7 @@ internal class SpriteService : ISpriteService
             DrawArrow(x);
             DrawMovePowerStars(x, move);
             DrawMoveType(x, move);
+            DrawOverlay(x);
         });
 
         return baseImg;
@@ -158,7 +179,7 @@ internal class SpriteService : ISpriteService
     private static Point GetPoint(int row, int column)
     {
         return new Point(
-            x: 18 + 6 * (row - column),
+            x: 18 + 6 * (column - row),
             y: -3 + 3 * (column + row)
             );
     }

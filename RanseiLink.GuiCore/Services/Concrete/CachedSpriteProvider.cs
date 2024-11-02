@@ -82,11 +82,8 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         return NitroImageUtil.NcerToMultipleImages(clusters, g2dr.Ncer, g2dr.Ncgr, g2dr.Nclr, settings)
             .Select(image =>
             {
-                var temp = Path.GetTempFileName();
-                image.SaveAsPng(temp);
+                var result = _pathToImageConverter.TryConvert(image);
                 image.Dispose();
-                var result = _pathToImageConverter.TryConvert(temp);
-                File.Delete(temp);
                 return result;
             })
             .ToArray();

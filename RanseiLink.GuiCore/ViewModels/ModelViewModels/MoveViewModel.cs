@@ -3,6 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using SixLabors.ImageSharp;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -21,18 +22,27 @@ public partial class MoveViewModel : ViewModelBase
     private readonly IExternalService _externalService;
     private readonly IPokemonService _pokemonService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    private readonly ISpriteService _spriteService;
+    private readonly IPathToImageConverter _pathToImageConverter;
+    private readonly IMoveRangeService _moveRangeService;
 
     public MoveViewModel(
         ICachedMsgBlockService msgService, 
         IExternalService externalService, 
         IJumpService jumpService, 
         IPokemonService pokemonService,
-        ICachedSpriteProvider cachedSpriteProvider)
+        ICachedSpriteProvider cachedSpriteProvider,
+        ISpriteService spriteService,
+        IPathToImageConverter pathToImageConverter,
+        IMoveRangeService moveRangeService)
     {
         _msgService = msgService;
         _externalService = externalService;
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        _spriteService = spriteService;
+        _pathToImageConverter = pathToImageConverter;
+        _moveRangeService = moveRangeService;
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
@@ -58,15 +68,47 @@ public partial class MoveViewModel : ViewModelBase
             case nameof(MovementAnimation):
                 OnAnimationChanged();
                 break;
+
+            case nameof(MovementFlag_DoubleMovementDistance):
+            case nameof(MovementFlag_InvertMovementDirection):
+            case nameof(MovementFlag_MovementOrKnockback):
+            case nameof(Movement):
+            case nameof(Type):
+            case nameof(StarCount):
+            case nameof(Range):
+                RaisePropertyChanged(nameof(PreviewImage));
+                break;
+
+            case nameof(Power):
+                StarCount = _model.StarCount;
+                break;
         }
+    }
+
+    // You can change power really fast, this makes less events fire so less preview image creation
+    private int _starCount;
+    public int StarCount
+    {
+        get => _starCount;
+        set => SetProperty(ref _starCount, value);
     }
 
     public void SetModel(MoveId id, Move model)
     {
         _id = id;
         _model = model;
+        _starCount = _model.StarCount;
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
+    }
+
+    public object? PreviewImage
+    {
+        get
+        {
+            using var img = _spriteService.GetMovePreview(_model, _moveRangeService.Retrieve((int)Range));
+            return _pathToImageConverter.TryConvert(img);
+        }
     }
 
     public bool MovementFlag_MovementOrKnockback

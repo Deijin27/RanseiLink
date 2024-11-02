@@ -12,7 +12,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              d:DataContext="{d:DesignInstance Type=vm:MoveViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800">
+             d:DesignHeight="900" d:DesignWidth="800">
     <UserControl.Resources>
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -58,12 +58,15 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Name" Grid.Row="0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+            <Image Margin="0,4,0,12" Source="{Binding PreviewImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Stretch="Uniform" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
 
-            <GroupBox Header="Movement Flags" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="10">
+            <TextBlock Text="Name" Grid.Row="2" />
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+
+            <GroupBox Header="Movement Flags" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="10">
                 <StackPanel>
                     <CheckBox Content="Display Movement/Knockback in Preview" IsChecked="{Binding MovementFlag_MovementOrKnockback, Mode=TwoWay}" Margin="0,0,0,13"/>
                     <CheckBox Content="Invert Movement Direction" IsChecked="{Binding MovementFlag_InvertMovementDirection, Mode=TwoWay}" Margin="0,0,0,13"/>
@@ -71,53 +74,53 @@
                 </StackPanel>
             </GroupBox>
 
-            <TextBlock Text="Type" Grid.Row="5"/>
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Type, Mode=TwoWay}"/>
+            <TextBlock Text="Type" Grid.Row="7"/>
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Type, Mode=TwoWay}"/>
 
-            <TextBlock Text="Power" Grid.Row="6" />
-            <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding Power}" Max="{Binding Power_Max}"/>
+            <TextBlock Text="Power" Grid.Row="8" />
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power}" Max="{Binding Power_Max}"/>
 
-            <TextBlock Text="Accuracy" Grid.Row="7" />
-            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Accuracy}" Max="{Binding Accuracy_Max}"/>
+            <TextBlock Text="Accuracy" Grid.Row="9" />
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Accuracy}" Max="{Binding Accuracy_Max}"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Range" Grid.Row="8" ToolTip="Jump to selected move range" 
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Range" Grid.Row="10" ToolTip="Jump to selected move range" 
                     Command="{Binding JumpToMoveRangeCommand}" CommandParameter="{Binding Range}"/>
-            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
 
-            <TextBlock Text="Effect 1" Grid.Row="9"/>
-            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
+            <TextBlock Text="Effect 1" Grid.Row="11"/>
+            <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding Effect1, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
-            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Effect1Chance, Mode=TwoWay}" Max="{Binding Effect1Chance_Max}"/>
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="{Binding Effect1, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
+            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Effect1Chance, Mode=TwoWay}" Max="{Binding Effect1Chance_Max}"/>
 
-            <TextBlock Text="Effect 2" Grid.Row="11"/>
-            <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
+            <TextBlock Text="Effect 2" Grid.Row="13"/>
+            <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="12" Grid.Column="0" Text="{Binding Effect2, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
-            <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding Effect2Chance, Mode=TwoWay}" Max="{Binding Effect2Chance_Max}"/>
+            <TextBlock Grid.Row="14" Grid.Column="0" Text="{Binding Effect2, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
+            <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Effect2Chance, Mode=TwoWay}" Max="{Binding Effect2Chance_Max}"/>
 
-            <TextBlock Text="Rank 5 Effect 1" Grid.Row="13"/>
-            <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect3, Mode=TwoWay}"/>
+            <TextBlock Text="Rank 5 Effect 1" Grid.Row="15"/>
+            <ComboBox Grid.Row="15" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect3, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="14" Grid.Column="0" Text="{Binding Effect3, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
-            <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Effect3Chance, Mode=TwoWay}" Max="{Binding Effect3Chance_Max}"/>
+            <TextBlock Grid.Row="16" Grid.Column="0" Text="{Binding Effect3, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
+            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Effect3Chance, Mode=TwoWay}" Max="{Binding Effect3Chance_Max}"/>
 
-            <TextBlock Text="Rank 5 Effect 2" Grid.Row="15"/>
-            <ComboBox Grid.Row="15" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect4, Mode=TwoWay}"/>
+            <TextBlock Text="Rank 5 Effect 2" Grid.Row="17"/>
+            <ComboBox Grid.Row="17" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect4, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="16" Grid.Column="0" Text="{Binding Effect4, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
-            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Effect4Chance, Mode=TwoWay}" Max="{Binding Effect4Chance_Max}"/>
+            <TextBlock Grid.Row="18" Grid.Column="0" Text="{Binding Effect4, Mode=OneWay, Converter={StaticResource Converter.MoveEffectIdToQuantityName}}" />
+            <controls:NumberBox Grid.Row="18" Grid.Column="1" Value="{Binding Effect4Chance, Mode=TwoWay}" Max="{Binding Effect4Chance_Max}"/>
 
-            <TextBlock Grid.Row="17" Grid.Column="0" Text="Movement" />
-            <ComboBox Grid.Row="17" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveMovementItems}" SelectedItem="{Binding Movement, Mode=TwoWay}"/>
+            <TextBlock Grid.Row="19" Grid.Column="0" Text="Movement" />
+            <ComboBox Grid.Row="19" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveMovementItems}" SelectedItem="{Binding Movement, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="18" Grid.Column="0" Text="Unknown Option" />
-            <ComboBox Grid.Row="18" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveUnknownOptionItems}" SelectedItem="{Binding UnknownOption, Mode=TwoWay}"/>
+            <TextBlock Grid.Row="20" Grid.Column="0" Text="Unknown Option" />
+            <ComboBox Grid.Row="20" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveUnknownOptionItems}" SelectedItem="{Binding UnknownOption, Mode=TwoWay}"/>
 
-            <TextBlock Grid.Row="19" Grid.Column="0" Text="Unknown Value 6_28_4" />
-            <controls:NumberBox Grid.Row="19" Grid.Column="1" Value="{Binding UnknownValue_6_28_4, Mode=TwoWay}" Max="{Binding UnknownValue_6_28_4_Max}"/>
+            <TextBlock Grid.Row="21" Grid.Column="0" Text="Unknown Value 6_28_4" />
+            <controls:NumberBox Grid.Row="21" Grid.Column="1" Value="{Binding UnknownValue_6_28_4, Mode=TwoWay}" Max="{Binding UnknownValue_6_28_4_Max}"/>
 
-            <GroupBox Header="Description" Grid.Row="20" Grid.RowSpan="4" Grid.ColumnSpan="2">
+            <GroupBox Header="Description" Grid.Row="22" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>
             </GroupBox>
 
