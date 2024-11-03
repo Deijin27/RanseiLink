@@ -4,6 +4,7 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Resources;
 
 namespace RanseiLink.Core.Services.Concrete;
 
@@ -35,8 +36,8 @@ internal class SpriteService : ISpriteService
         {
             _cachedImages[icon] = image;
         }
-        _background = ImageUtil.LoadPngBetterError(@"C:\Users\Mia\Desktop\move_bg.png");
-        _overlay = ImageUtil.LoadPngBetterError(@"C:\Users\Mia\Desktop\move_overlay.png");
+        _background = ResourceUtil.GetResourceImage("move_bg.png");
+        _overlay = ResourceUtil.GetResourceImage("move_overlay.png");
 
         var typeIds = EnumUtil.GetValuesExceptDefaults<TypeId>();
         var typeIconLink = G2DR.LoadCellImgFromFile(_overrideDataProvider.GetDataFile("graphics/common/11_01_parts_usual_up.G2DR").File);
@@ -94,16 +95,16 @@ internal class SpriteService : ISpriteService
                 {
                     if (move.Movement == MoveMovementId.KnockbackTarget)
                     {
-                        var knockbackCol = column - 1;
-                        if (IsInDisplayRange(row: row, column: knockbackCol))
+                        var knockbackRow = row - 1;
+                        if (IsInDisplayRange(row: knockbackRow, column: column))
                         {
-                            x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowRed], GetPoint(row: row, column: knockbackCol), 1);
+                            x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowRed], GetPoint(row: knockbackRow, column: column), 1);
                         }
                     }
                     else if (move.Movement == MoveMovementId.MoveUser)
                     {
-                        int moveUserRow = 2;
-                        int moveUserColumn = 3;
+                        int moveUserRow = 3;
+                        int moveUserColumn = 2;
                         int diff = -1;
                         if (move.MovementFlags.HasFlag(MoveMovementFlags.DoubleMovementDistance))
                         {
@@ -113,7 +114,7 @@ internal class SpriteService : ISpriteService
                         {
                             diff = -diff;
                         }
-                        moveUserColumn += diff;
+                        moveUserRow += diff;
                         if (!range.GetInRange(row: moveUserRow, column: moveUserColumn) && IsInDisplayRange(row: moveUserRow, column: moveUserColumn))
                         {
                             x.DrawImage(_cachedImages[MoveIcons.MoveRangeGlowBlue], GetPoint(row: moveUserRow, column: moveUserColumn), 1);
