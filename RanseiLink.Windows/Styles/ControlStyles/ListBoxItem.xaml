@@ -7,7 +7,7 @@
                     <Border x:Name="lviBorder"
                             BorderBrush="{DynamicResource ControlBorderBrush}" 
                             Background="{DynamicResource WindowTransparentBackgroundBrush}" 
-                            BorderThickness="1" Margin="0">
+                            BorderThickness="1" >
                         <ContentPresenter x:Name="contentPresenter" 
                                                   ContentTemplate="{TemplateBinding ContentTemplate}" 
                                                   Content="{TemplateBinding Content}"
@@ -20,7 +20,7 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource WindowTransparentSelectedBackgroundBrush}"/>
-                            <Setter Property="BorderBrush" TargetName="lviBorder" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="lviBorder" Value="{DynamicResource ControlSelectedBorderBrush}"/>
                             <Setter Property="TextElement.FontWeight" Value="SemiBold"/>
                         </Trigger>
                     </ControlTemplate.Triggers>

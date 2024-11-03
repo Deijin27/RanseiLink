@@ -21,7 +21,7 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="140">
+                        <Grid Width="140" Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition Width="Auto"/>
@@ -46,7 +46,7 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Width="140">
+                        <Grid Width="140" Margin="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition/>
@@ -55,6 +55,29 @@
                         BorderBrush="{DynamicResource ControlBorderBrush}" 
                         Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}"/>
                             <TextBlock Grid.Column="2" Text="{Binding Name}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ElevationMapPainter}">
+            <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="140" Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="1"
+                                BorderBrush="{DynamicResource ControlBorderBrush}" 
+                                Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}"/>
+                            <TextBox Width="80" Grid.Column="2" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="8,2"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -134,19 +157,24 @@
                                             <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
                                             <!-- Gimmick and pokemon markers -->
-                                            <Rectangle Grid.Column="0" 
-                                                       Grid.Row="0" 
-                                                       Grid.ColumnSpan="3" 
-                                                       Grid.RowSpan="3" 
-                                                       IsHitTestVisible="False" 
-                                                       Fill="White" 
-                                                       Stroke="black" 
-                                                       Width="8" 
-                                                       Height="8"
-                                                       HorizontalAlignment="Center" 
-                                                       VerticalAlignment="Center"
-                                                       Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}"
-                                                       />
+                                            <Border Grid.Column="0" 
+                                               Grid.Row="0" 
+                                               Grid.ColumnSpan="3" 
+                                               Grid.RowSpan="3" 
+                                               IsHitTestVisible="False" 
+                                               Background="white" 
+                                               Margin="1" 
+                                               Width="12" 
+                                               Height="12" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
+                                               BorderBrush="black"
+                                               BorderThickness="1">
+                                               <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                   Foreground="black" FontSize="9" 
+                                                   Text="{Binding GimmickMarkerText}"/>
+                                            </Border>
                                             <Image Grid.Column="0" 
                                                    Grid.Row="0" 
                                                    Grid.ColumnSpan="3" 
@@ -159,19 +187,24 @@
                                                    Stretch="Uniform"
                                                    Source="{Binding GimmickImagePath, Converter={StaticResource Converter.PathToImageSource}}"
                                                    />
-                                            <Rectangle Grid.Column="0" 
+                                            <Border Grid.Column="0" 
                                                        Grid.Row="0" 
                                                        Grid.ColumnSpan="3" 
                                                        Grid.RowSpan="3" 
                                                        IsHitTestVisible="False" 
-                                                       Fill="Black" 
+                                                       Background="Black" 
                                                        Margin="1" 
-                                                       Width="8" 
-                                                       Height="8" 
+                                                       Width="12" 
+                                                       Height="12" 
                                                        HorizontalAlignment="Center" 
                                                        VerticalAlignment="Center"
                                                        Visibility="{Binding PokemonMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
-                                                       Stroke="White"/>
+                                                       BorderBrush="White"
+                                                       BorderThickness="1">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                           Foreground="white" FontSize="9" 
+                                                           Text="{Binding PokemonMarkerText}"/>
+                                            </Border>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -237,7 +270,7 @@
 
                                     <TextBlock Height="20" Grid.Row="1">Terrain</TextBlock>
                                     <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedItem="{Binding Terrain}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
-                                    <TextBlock Height="20" Grid.Row="2">Unknown3</TextBlock>
+                                    <TextBlock Height="20" Grid.Row="2">Bounds</TextBlock>
                                     <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Bounds}" ItemsSource="{x:Static const:EnumProvider.MapBoundsItems}"/>
                                     <TextBlock Height="20" Grid.Row="3">Unknown4</TextBlock>
                                     <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown4}" Max="255"/>
@@ -258,6 +291,7 @@
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
 
                             <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Gimmick" Binding="{Binding Gimmick}" IsReadOnly="True"/>
@@ -313,6 +347,8 @@
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Unknown1" Binding="{Binding Unknown1}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Unknown2" Binding="{Binding Unknown2}" IsReadOnly="True"/>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
                             <DataTemplate>
@@ -340,6 +376,20 @@
                                         <Button Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2">
                                             <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource DownArrowGeometry}"/>
                                         </Button>
+                                    </Grid>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="25"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Height="20" Text="Unknown1" Grid.Row="0"/>
+                                        <controls:NumberBox Grid.Row="0" Grid.Column="1" Height="20" Value="{Binding Unknown1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Height="20" Text="Unknown2" Grid.Row="1"/>
+                                        <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding Unknown2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                 </DockPanel>
                             </DataTemplate>

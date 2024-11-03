@@ -5,10 +5,10 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class MapPokemonPositionViewModel : ViewModelBase
 {
     private readonly MapViewModel _parent;
-    private readonly Position[] _positions;
+    private readonly MapPokemonItem[] _positions;
     private readonly int _positionId;
 
-    public MapPokemonPositionViewModel(MapViewModel parent, Position[] positions, int positionId)
+    public MapPokemonPositionViewModel(MapViewModel parent, MapPokemonItem[] positions, int positionId)
     {
         _parent = parent;
         _positions = positions;
@@ -67,6 +67,18 @@ public class MapPokemonPositionViewModel : ViewModelBase
     {
         get => _positions[_positionId].Y;
         set => SetProperty(Y, value, v => _positions[_positionId].Y = v);
+    }
+
+    public byte Unknown1
+    {
+        get => _positions[_positionId].Unknown1;
+        set => SetProperty(Unknown1, value, v => _positions[_positionId].Unknown1 = v);
+    }
+
+    public byte Unknown2
+    {
+        get => _positions[_positionId].Unknown2;
+        set => SetProperty(Unknown2, value, v => _positions[_positionId].Unknown2 = v);
     }
 
     public ICommand IncrementXCommand { get; }

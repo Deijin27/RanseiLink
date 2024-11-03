@@ -63,7 +63,7 @@ public class MapCommand(ICurrentModService currentModService) : ICommand
         if (all || Pokemon)
         {
             console.Output.WriteLine("Pokemon Positions:");
-            foreach (var position in map.PositionSection.Positions.Reverse().SkipWhile(i => i.X == 0 && i.Y == 0).Reverse())
+            foreach (var position in map.PokemonSection.Positions.Reverse().SkipWhile(i => i.X == 0 && i.Y == 0).Reverse())
             {
                 console.Output.WriteLine($"- {position}");
             }

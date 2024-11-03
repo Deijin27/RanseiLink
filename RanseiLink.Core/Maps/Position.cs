@@ -9,13 +9,14 @@ public class Position
         X = x;
         Y = y;
     }
+
     public Position(BinaryReader br) : this(br.ReadByte(), br.ReadByte())
     {
     }
 
     public void WriteTo(BinaryWriter bw)
     {
-        bw.Write(X);
+        bw.Write(X); 
         bw.Write(Y);
     }
 }

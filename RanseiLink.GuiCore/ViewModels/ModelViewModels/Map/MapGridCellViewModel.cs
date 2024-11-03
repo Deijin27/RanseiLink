@@ -50,7 +50,11 @@ public class MapGridCellViewModel : ViewModelBase
             SubCell8
             ];
 
-        Pokemon.CollectionChanged += (s, e) => RaisePropertyChanged(nameof(PokemonMarkerVisibility));
+        Pokemon.CollectionChanged += (s, e) =>
+        {
+            RaisePropertyChanged(nameof(PokemonMarkerVisibility));
+            RaisePropertyChanged(nameof(PokemonMarkerText));
+        };
     }
 
     public IEnumerable<MapGridSubCellViewModel> SubCells { get; }
@@ -143,6 +147,31 @@ public class MapGridCellViewModel : ViewModelBase
         }
     }
 
+    public string? GimmickMarkerText
+    {
+        get
+        {
+            if (!_showGimmicks)
+            {
+                return null;
+            }
+            else
+            {
+                var gimmick = Gimmicks.FirstOrDefault();
+                if (gimmick == null)
+                {
+                    return null;
+                }
+                return gimmick.Id.ToString();
+            }
+        }
+    }
+
+    public void UpdateGimmickMarkerText()
+    {
+        RaisePropertyChanged(nameof(GimmickMarkerText));
+    }
+
     public bool PokemonMarkerVisibility
     {
         get
@@ -154,6 +183,26 @@ public class MapGridCellViewModel : ViewModelBase
             else
             {
                 return Pokemon.Any();
+            }
+        }
+    }
+
+    public string? PokemonMarkerText
+    {
+        get
+        {
+            if (!_showPokemonMarkers)
+            {
+                return null;
+            }
+            else
+            {
+                var pokemon = Pokemon.FirstOrDefault();
+                if (pokemon == null)
+                {
+                    return null;
+                }
+                return pokemon.Id.ToString();
             }
         }
     }

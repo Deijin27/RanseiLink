@@ -56,6 +56,8 @@ public class MapGimmickViewModel : ViewModelBase
         });
     }
 
+    public int Id => _parent.Gimmicks.IndexOf(this);
+
     private void ChangePosition(Action doThePositionChange)
     {
         var sourceCell = _parent.Matrix[Y][X];

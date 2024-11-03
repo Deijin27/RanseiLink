@@ -90,9 +90,9 @@ public class MapViewModel : ViewModelBase
         {
             Gimmicks.Add(gimmick);
         }
-        for (int i = 0; i < Map.PositionSection.Positions.Length; i++)
+        for (int i = 0; i < Map.PokemonSection.Positions.Length; i++)
         {
-            PokemonPositions.Add(new MapPokemonPositionViewModel(this, Map.PositionSection.Positions, i));
+            PokemonPositions.Add(new MapPokemonPositionViewModel(this, Map.PokemonSection.Positions, i));
         }
         Draw();
         RaisePropertyChanged(nameof(Is3dModelOverriden));
@@ -321,6 +321,13 @@ public class MapViewModel : ViewModelBase
             Gimmicks.Remove(_selectedGimmick);
             _selectedGimmick = null;
             RaisePropertyChanged(nameof(SelectedGimmick));
+            foreach (var row in Matrix)
+            {
+                foreach (var cell in row)
+                {
+                    cell.UpdateGimmickMarkerText();
+                }
+            }
         }
     }
 
@@ -369,11 +376,11 @@ public class MapViewModel : ViewModelBase
             }
         }
         // ensure all maps are in range
-        for (int i = 0; i < Map.PositionSection.Positions.Length; i++)
+        for (int i = 0; i < Map.PokemonSection.Positions.Length; i++)
         {
-            if (!GetInRange(Map.PositionSection.Positions[i]))
+            if (!GetInRange(Map.PokemonSection.Positions[i].Position))
             {
-                Map.PositionSection.Positions[i] = new Position(0, 0);
+                Map.PokemonSection.Positions[i].Position = new Position(0, 0);
             }
         }
         // reset selected cell in case it's out of range

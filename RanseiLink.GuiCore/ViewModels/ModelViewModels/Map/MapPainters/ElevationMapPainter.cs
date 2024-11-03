@@ -1,35 +1,12 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using RanseiLink.Core.Util;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public class ElevationMapPainter : BaseMapPainter
 {
-    private const double __value = 0.6;
-    private const double __saturation = 0.6;
-
     public override string Name => "Elevation";
 
-    private static Rgba32 ColorFromHSV(double hue, double saturation, double value)
-    {
-        int hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
-        double f = hue / 60 - Math.Floor(hue / 60);
-
-        value *= 255;
-        byte v = (byte)value;
-        byte p = (byte)(value * (1 - saturation));
-        byte q = (byte)(value * (1 - f * saturation));
-        byte t = (byte)(value * (1 - (1 - f) * saturation));
-
-        return hi switch
-        {
-            0 => new Rgba32(v, t, p),
-            1 => new Rgba32(q, v, p),
-            2 => new Rgba32(p, v, t),
-            3 => new Rgba32(p, q, v),
-            4 => new Rgba32(t, p, v),
-            _ => new Rgba32(v, p, q)
-        };
-    }
 
     private bool _paintEntireCell;
 
@@ -41,7 +18,11 @@ public class ElevationMapPainter : BaseMapPainter
 
     private static Rgba32 ZToColor(float value)
     {
-        return ColorFromHSV((double)value / 40 / 25 * 255, __saturation, __value);
+        return ColorUtil.ColorFromHSV(
+            hue: (double)value / 40 / 25 * 255, 
+            saturation: 0.6, 
+            value: 0.6
+            );
     }
 
     public override Rgba32 GetSubCellColor(MapGridSubCellViewModel subCell)
@@ -64,7 +45,15 @@ public class ElevationMapPainter : BaseMapPainter
         public string Value
         {
             get => _value;
-            set => SetProperty(ref _value, value);
+            set
+            {
+                if (SetProperty(ref _value, value))
+                {
+                    RaisePropertyChanged(nameof(Color));
+                    RaisePropertyChanged(nameof(NumericValue));
+                    RaisePropertyChanged(nameof(IsValid));
+                }
+            }
         }
 
         public Brush(float value)
@@ -76,13 +65,32 @@ public class ElevationMapPainter : BaseMapPainter
 
         public float NumericValue => float.TryParse(Value, out var value) ? value : 0;
 
-        public Rgba32 Color => ZToColor(NumericValue);
+        private static readonly Rgba32 __defaultColor = SixLabors.ImageSharp.Color.Black;
+        public Rgba32 Color
+        {
+            get
+            {
+                if (!IsValid)
+                {
+                    return __defaultColor;
+                }
+                return ZToColor(NumericValue);
+            }
+        }
     }
 
     public ElevationMapPainter()
     {
         Brushes = [];
+        Brushes.Add(new Brush(0f));
         Brushes.Add(new Brush(12.5f));
+        Brushes.Add(new Brush(25f));
+        Brushes.Add(new Brush(37.5f));
+        Brushes.Add(new Brush(50f));
+        for (int i = 0; i < 47; i++)
+        {
+            Brushes.Add(new Brush(0f));
+        }
         _selectedBrush = Brushes[0];
     }
 

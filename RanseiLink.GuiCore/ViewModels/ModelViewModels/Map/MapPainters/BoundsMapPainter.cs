@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Maps;
+using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -23,20 +24,32 @@ public class BoundsMapPainter : BaseMapPainter
         set => SetProperty(ref _selectedBrush, value);
     }
 
+    public Rgba32 HueToColor(double hue)
+    {
+        return ColorUtil.ColorFromHSV(
+            hue: hue,
+            saturation: 0.6,
+            value: 0.6
+            );
+    }
+
     public BoundsMapPainter()
     {
-        AddBrush(MapBounds.Pokemon_0, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_1, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_2, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_3, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_4, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_5, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_6, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_7, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_8, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_9, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_10, "#FFFFFF");
-        AddBrush(MapBounds.Pokemon_11, "#FFFFFF");
+        var scale = 15;
+        AddBrush(MapBounds.Pokemon_0, 0 * scale);
+        AddBrush(MapBounds.Pokemon_1, 1 * scale);
+        AddBrush(MapBounds.Pokemon_2, 2 * scale);
+        AddBrush(MapBounds.Pokemon_3, 3 * scale);
+        AddBrush(MapBounds.Pokemon_4, 4 * scale);
+        AddBrush(MapBounds.Pokemon_5, 5 * scale);
+        AddBrush(MapBounds.Pokemon_6, 6 * scale);
+        AddBrush(MapBounds.Pokemon_7, 7 * scale);
+        AddBrush(MapBounds.Pokemon_8, 8 * scale);
+        AddBrush(MapBounds.Pokemon_9, 9 * scale);
+        AddBrush(MapBounds.Pokemon_10, 10 * scale);
+        AddBrush(MapBounds.Pokemon_11, 11 * scale);
+        AddBrush(MapBounds.Unknown_0, 320 - 0 * scale);
+        AddBrush(MapBounds.Unknown_1, 320 - 1 * scale);
         AddBrush(MapBounds.OutOfBounds, "#1E2021");
         AddBrush(MapBounds.InBounds, "#DAD3C5");
 
@@ -49,12 +62,20 @@ public class BoundsMapPainter : BaseMapPainter
                 Color: _boundsToColor.TryGetValue(terrain, out var color) ? color : Color.IndianRed
                 ));
         }
+        _defaultColor = HueToColor(320 - 2 * scale);
         _selectedBrush = Brushes.First(x => x.Id == MapBounds.InBounds);
     }
+
+    private Rgba32 _defaultColor;
 
     public void AddBrush(MapBounds id, string hex)
     {
         _boundsToColor[id] = Rgba32.ParseHex(hex);
+    }
+
+    public void AddBrush(MapBounds id, double hue)
+    {
+        _boundsToColor[id] = HueToColor(hue);
     }
 
     public override Rgba32 GetCellColor(MapGridCellViewModel cell)
@@ -63,7 +84,7 @@ public class BoundsMapPainter : BaseMapPainter
         {
             return color;
         }
-        return Color.IndianRed;
+        return _defaultColor;
     }
 
     public override void OnMouseDownOnCell(MapGridCellViewModel cell)

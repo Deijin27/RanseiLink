@@ -67,7 +67,7 @@ public class PSLM
     public PSLM(BinaryReader br)
     {
         var header = new Header(br);
-        PositionSection = new MapPokemonPositionSection(br);
+        PokemonSection = new MapPokemonSection(br);
         if (br.BaseStream.Position != header.TerrainSectionOffset)
         {
             throw new InvalidDataException($"Invalid position of terrain section 0x{br.BaseStream.Position}");
@@ -90,7 +90,7 @@ public class PSLM
         };
 
         bw.Seek(Header.HeaderLength, SeekOrigin.Begin);
-        PositionSection.WriteTo(bw);
+        PokemonSection.WriteTo(bw);
         header.TerrainSectionOffset = (ushort)bw.BaseStream.Position;
         TerrainSection.WriteTo(bw);
         header.GimmickSectionOffset = (ushort)bw.BaseStream.Position;
@@ -101,7 +101,7 @@ public class PSLM
         header.WriteTo(bw);
     }
 
-    public MapPokemonPositionSection PositionSection { get; set; }
+    public MapPokemonSection PokemonSection { get; set; }
     public MapTerrainSection TerrainSection { get; set; }
     public MapGimmickSection GimmickSection { get; set; }
 }

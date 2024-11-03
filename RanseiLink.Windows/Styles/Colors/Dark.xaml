@@ -15,7 +15,7 @@
     <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#1d1d1d"/>
     <SolidColorBrush x:Key="WindowSelectedBrush" Color="#2d2d2d"/>
     <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#292929"/>
-    <SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#303030"/>
+    <SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#494949"/>
 
     <SolidColorBrush x:Key="ForegroundBrush" Color="#ffffff"/>
     <SolidColorBrush x:Key="AltForegroundBrush" Color="#b9b9b9"/>
@@ -24,6 +24,7 @@
 
     <SolidColorBrush x:Key="ControlBorderBrush" Color="#555555"/>
     <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#777777"/>
+    <SolidColorBrush x:Key="ControlSelectedBorderBrush" Color="#AAAAAA"/>
 
     <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#333333"/>
     <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#3f3f3f"/>
