@@ -55,7 +55,8 @@ public class StlTests
             );
 
         var newPixels = info.Pixels;
-        var newPalette = info.Palette.Should().ContainSingle().Which;
+        info.Palette.Count.Should().Be(1);
+        var newPalette = info.Palette[0];
 
         // Ensure palette has been maintained
         var oldPaletteSorted = oldPalette.Skip(1).OrderBy(x => x.R).ThenBy(x => x.G).ThenBy(x => x.B).Distinct().ToArray();

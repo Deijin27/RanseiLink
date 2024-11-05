@@ -41,7 +41,7 @@ public static class GraphicsAssertions
     public static void CellPixelsAreEquivalent(CEBK oldCells, CEBK newCells, TexFormat format, byte[] oldPixels, byte[] newPixels, PaletteCollection oldPalette, PaletteCollection newPalette)
     {
         // the number of palettes should be the same, but unused colors may have been lost in conversion
-        newPalette.Should().HaveSameCount(newPalette);
+        newPalette.Count.Should().Be(newPalette.Count);
         // the number of pixels should be the same, but we must go cell by cell to be looking in the right palette
         // for the color which the pixel refers to.
         //newPixels.Should().HaveSameCount(oldPixels);
