@@ -9,7 +9,7 @@
 # Establish file paths
 $rlRootDir = "${env:USERPROFILE}\source\repos\RanseiLink"
 $pluginsFolderPath = "$rlRootDir\Plugins"
-$Destination = "$rlRootDir\RanseiLink.Windows\bin\Debug\net6.0-windows\Plugins"
+$Destination = "$rlRootDir\RanseiLink.Windows\bin\Debug\net8.0-windows\Plugins"
 
 # Find plugins
 $pluginFolders = Get-ChildItem $pluginsFolderPath -Directory
