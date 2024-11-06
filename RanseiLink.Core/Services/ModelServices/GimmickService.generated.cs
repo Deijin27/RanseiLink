@@ -13,7 +13,7 @@ public partial interface IGimmickService : IModelService<Gimmick> {}
 public partial class GimmickService : BaseDataModelService<Gimmick>, IGimmickService
 {
     public static GimmickService Load(string dataFile, ConquestGameCode culture) => new GimmickService(dataFile, culture);
-    private GimmickService(string dataFile, ConquestGameCode culture) : base(dataFile, 0, 147, () => new Gimmick(culture)) {}
+    private GimmickService(string dataFile, ConquestGameCode culture) : base(dataFile, 0, 147, () => new Gimmick(culture), 148) {}
 
     public GimmickService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.GimmickRomPath), mod.GameCode) {}
 

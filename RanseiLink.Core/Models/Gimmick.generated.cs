@@ -41,7 +41,7 @@ public partial class Gimmick : BaseDataWindow
         set => SetPaddedUtf8String(0, Name_MaxLength, value);
     }
 
-    public int Image
+    public int Image1
     {
         get
         {
@@ -115,6 +115,32 @@ public partial class Gimmick : BaseDataWindow
             else
             {
                 SetInt(5, 5, 5, (int)value);
+            }
+        }
+    }
+
+    public bool IsLog
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(4, 10, 1) == 1;
+            }
+            else
+            {
+                return GetInt(5, 10, 1) == 1;
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(4, 10, 1, value ? 1 : 0);
+            }
+            else
+            {
+                SetInt(5, 10, 1, value ? 1 : 0);
             }
         }
     }
@@ -219,6 +245,344 @@ public partial class Gimmick : BaseDataWindow
             else
             {
                 SetInt(6, 0, 8, value);
+            }
+        }
+    }
+
+    public int UnknownQuantity2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(5, 8, 8);
+            }
+            else
+            {
+                return GetInt(6, 8, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(5, 8, 8, value);
+            }
+            else
+            {
+                SetInt(6, 8, 8, value);
+            }
+        }
+    }
+
+    public int UnknownQuantity3
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(5, 16, 8);
+            }
+            else
+            {
+                return GetInt(6, 16, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(5, 16, 8, value);
+            }
+            else
+            {
+                SetInt(6, 16, 8, value);
+            }
+        }
+    }
+
+    public GimmickId GimmickRef1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return (GimmickId)GetInt(5, 24, 8);
+            }
+            else
+            {
+                return (GimmickId)GetInt(6, 24, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(5, 24, 8, (int)value);
+            }
+            else
+            {
+                SetInt(6, 24, 8, (int)value);
+            }
+        }
+    }
+
+    public int UnknownOther1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 0, 5);
+            }
+            else
+            {
+                return GetInt(7, 0, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 0, 5, value);
+            }
+            else
+            {
+                SetInt(7, 0, 5, value);
+            }
+        }
+    }
+
+    public int UnknownOther2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 5, 5);
+            }
+            else
+            {
+                return GetInt(7, 5, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 5, 5, value);
+            }
+            else
+            {
+                SetInt(7, 5, 5, value);
+            }
+        }
+    }
+
+    public int UnknownOther3
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 10, 5);
+            }
+            else
+            {
+                return GetInt(7, 10, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 10, 5, value);
+            }
+            else
+            {
+                SetInt(7, 10, 5, value);
+            }
+        }
+    }
+
+    public int UnknownOther4
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 15, 5);
+            }
+            else
+            {
+                return GetInt(7, 15, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 15, 5, value);
+            }
+            else
+            {
+                SetInt(7, 15, 5, value);
+            }
+        }
+    }
+
+    public int UnknownSemi1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 0, 8);
+            }
+            else
+            {
+                return GetInt(8, 0, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 0, 8, value);
+            }
+            else
+            {
+                SetInt(8, 0, 8, value);
+            }
+        }
+    }
+
+    public int UnknownSemi2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 8, 8);
+            }
+            else
+            {
+                return GetInt(8, 8, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 8, 8, value);
+            }
+            else
+            {
+                SetInt(8, 8, 8, value);
+            }
+        }
+    }
+
+    public int UnknownFinal0
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(8, 0, 4);
+            }
+            else
+            {
+                return GetInt(9, 0, 4);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(8, 0, 4, value);
+            }
+            else
+            {
+                SetInt(9, 0, 4, value);
+            }
+        }
+    }
+
+    public GimmickId GimmickRef2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return (GimmickId)GetInt(8, 4, 8);
+            }
+            else
+            {
+                return (GimmickId)GetInt(9, 4, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(8, 4, 8, (int)value);
+            }
+            else
+            {
+                SetInt(9, 4, 8, (int)value);
+            }
+        }
+    }
+
+    public int Image2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(8, 12, 8);
+            }
+            else
+            {
+                return GetInt(9, 12, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(8, 12, 8, value);
+            }
+            else
+            {
+                SetInt(9, 12, 8, value);
+            }
+        }
+    }
+
+    public int Image3
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(8, 20, 8);
+            }
+            else
+            {
+                return GetInt(9, 20, 8);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(8, 20, 8, value);
+            }
+            else
+            {
+                SetInt(9, 20, 8, value);
             }
         }
     }

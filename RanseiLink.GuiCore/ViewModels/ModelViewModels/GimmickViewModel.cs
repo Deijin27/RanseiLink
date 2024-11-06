@@ -2,6 +2,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -16,11 +17,16 @@ public partial class GimmickViewModel : ViewModelBase
     private readonly IExternalService _externalService;
     private readonly IOverrideDataProvider _spriteProvider;
 
-    public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService)
+    public ICommand JumpToGimmickCommand { get; }
+
+    public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
     {
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;
 
+        GimmickItems = idToNameService.GetComboBoxItemsPlusDefault<IGimmickService>();
+
+        JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickSelectorEditorModule.Id, id));
         JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeSelectorEditorModule.Id, (int)id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
@@ -42,8 +48,14 @@ public partial class GimmickViewModel : ViewModelBase
             case nameof(Animation2):
                 OnAnimationChanged();
                 break;
-            case nameof(Image):
-                RaisePropertyChanged(nameof(ImagePath));
+            case nameof(Image1):
+                RaisePropertyChanged(nameof(Image1Path));
+                break;
+            case nameof(Image2):
+                RaisePropertyChanged(nameof(Image2Path));
+                break;
+            case nameof(Image3):
+                RaisePropertyChanged(nameof(Image3Path));
                 break;
         }
     }
@@ -106,5 +118,7 @@ public partial class GimmickViewModel : ViewModelBase
         return _externalService.GetMoveAnimationUri(id);
     }
 
-    public string ImagePath => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image).File;
+    public string Image1Path => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image1).File;
+    public string Image2Path => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image2).File;
+    public string Image3Path => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image3).File;
 }

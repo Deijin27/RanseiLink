@@ -121,13 +121,27 @@ public static partial class RenderExtensions
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
-        console.WriteProperty("Image", model.Image);
+        console.WriteProperty("Image1", model.Image1);
         console.WriteProperty("AttackType", model.AttackType);
         console.WriteProperty("DestroyType", model.DestroyType);
+        console.WriteProperty("IsLog", model.IsLog);
         console.WriteProperty("State1Sprite", model.State1Sprite);
         console.WriteProperty("State2Sprite", model.State2Sprite);
         console.WriteProperty("Effect", model.Effect);
         console.WriteProperty("UnknownQuantity1", model.UnknownQuantity1);
+        console.WriteProperty("UnknownQuantity2", model.UnknownQuantity2);
+        console.WriteProperty("UnknownQuantity3", model.UnknownQuantity3);
+        console.WriteProperty("GimmickRef1", model.GimmickRef1);
+        console.WriteProperty("UnknownOther1", model.UnknownOther1);
+        console.WriteProperty("UnknownOther2", model.UnknownOther2);
+        console.WriteProperty("UnknownOther3", model.UnknownOther3);
+        console.WriteProperty("UnknownOther4", model.UnknownOther4);
+        console.WriteProperty("UnknownSemi1", model.UnknownSemi1);
+        console.WriteProperty("UnknownSemi2", model.UnknownSemi2);
+        console.WriteProperty("UnknownFinal0", model.UnknownFinal0);
+        console.WriteProperty("GimmickRef2", model.GimmickRef2);
+        console.WriteProperty("Image2", model.Image2);
+        console.WriteProperty("Image3", model.Image3);
         console.WriteProperty("Animation1", model.Animation1);
         console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);

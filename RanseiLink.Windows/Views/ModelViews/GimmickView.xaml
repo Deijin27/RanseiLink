@@ -25,6 +25,10 @@
             <Setter Property="Height" Value="20"/>
         </Style>
 
+        <DataTemplate x:Key="EnumComboItemTemplate">
+            <TextBlock Text="{Binding ., Converter={StaticResource Converter.EnumDisplay}}"/>
+        </DataTemplate>
+
     </UserControl.Resources>
     <WrapPanel>
         <Grid Margin="10">
@@ -60,20 +64,32 @@
                     Command="{Binding JumpToGimmickRangeCommand}" CommandParameter="{Binding Range}"/>
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
 
-            <TextBlock Text="Top Screen Image" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <TextBlock Text="Image 1" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
             <UniformGrid Grid.Row="4" Grid.Column="1" Rows="1">
-                <controls:NumberBox Value="{Binding Image}" />
-                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding ImagePath, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
+                <controls:NumberBox Value="{Binding Image1}" />
+                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image1Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="State-1 Sprite" Grid.Row="5" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State1Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="Image 2" Grid.Row="5" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <UniformGrid Grid.Row="5" Grid.Column="1" Rows="1">
+                <controls:NumberBox Value="{Binding Image2}" />
+                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image2Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
+            </UniformGrid>
 
-            <TextBlock Text="State-2 Sprite" Grid.Row="6" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State2Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="Image 3" Grid.Row="6" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <UniformGrid Grid.Row="6" Grid.Column="1" Rows="1">
+                <controls:NumberBox Value="{Binding Image3}" />
+                <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image3Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
+            </UniformGrid>
 
-            <TextBlock Text="Effect" Grid.Row="7" ToolTip="Effect of attack used by this gimmick"/>
-            <ComboBox Grid.Row="7" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect, Mode=TwoWay}"/>
+            <TextBlock Text="State-1 Sprite" Grid.Row="7" ToolTip="The sprite that is on the bottom screen in battle"/>
+            <ComboBox Grid.Row="7" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State1Sprite, Mode=TwoWay}"/>
+
+            <TextBlock Text="State-2 Sprite" Grid.Row="8" ToolTip="The sprite that is on the bottom screen in battle"/>
+            <ComboBox Grid.Row="8" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State2Sprite, Mode=TwoWay}"/>
+
+            <TextBlock Text="Effect" Grid.Row="9" ToolTip="Effect of attack used by this gimmick"/>
+            <ComboBox Grid.Row="9" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect, Mode=TwoWay}"/>
 
         </Grid>
         <Grid Margin="10">
@@ -93,9 +109,68 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Animation 1" Grid.Row="0" Grid.Column="0"/>
+            <TextBlock Grid.Row="0" Text="Unknown Quantity 1"/>
+            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding UnknownQuantity1}"/>
+
+            <TextBlock Grid.Row="1" Text="Unknown Quantity 2"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding UnknownQuantity2}"/>
+
+            <TextBlock Grid.Row="2" Text="Unknown Quantity 3"/>
+            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding UnknownQuantity3}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Gimmick Ref 1" Grid.Row="3" ToolTip="Jump to selected gimmick" 
+Command="{Binding JumpToGimmickCommand}" CommandParameter="{Binding GimmickRef1}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding GimmickItems}" SelectedValue="{Binding GimmickRef1, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+
+
+            <TextBlock Grid.Row="5" Text="Unknown Other 1"/>
+            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding UnknownOther1}"/>
+
+            <TextBlock Grid.Row="6" Text="Unknown Other 2"/>
+            <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding UnknownOther2}"/>
+
+            <TextBlock Grid.Row="7" Text="Unknown Other 3"/>
+            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding UnknownOther3}"/>
+
+            <TextBlock Grid.Row="8" Text="Unknown Other 4"/>
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding UnknownOther4}"/>
+
+            <TextBlock Grid.Row="9" Text="Unknown Semi 1"/>
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding UnknownSemi1}"/>
+
+            <TextBlock Grid.Row="10" Text="Unknown Semi 2"/>
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding UnknownSemi2}"/>
+
+            <TextBlock Grid.Row="11" Text="Unknown Final 0"/>
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding UnknownFinal0}"/>
+
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Gimmick Ref 2" Grid.Row="12" ToolTip="Jump to selected gimmick" 
+        Command="{Binding JumpToGimmickCommand}" CommandParameter="{Binding GimmickRef2}"/>
+            <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding GimmickItems}" SelectedValue="{Binding GimmickRef2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+
+
+
+            <!--<TextBlock Text="Animation 1" Grid.Row="0" Grid.Column="0"/>
             <DockPanel Grid.Row="0" Grid.Column="1">
                 <controls:IconButton Margin="5,0,0,0" Icon="visibility" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.One}"/>
                 <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding Animation1}"/>
@@ -105,10 +180,10 @@
             <DockPanel Grid.Row="1" Grid.Column="1">
                 <controls:IconButton Margin="5,0,0,0" Icon="visibility" DockPanel.Dock="Right" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:GimmickAnimationPreviewMode.Two}"/>
                 <ComboBox ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding Animation2}"/>
-            </DockPanel>
+            </DockPanel>-->
 
 
-            <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
+            <!--<GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" FontSize="10" Text="{Binding CurrentPreviewAnimationName, StringFormat='Previewing {0}'}"/>
                     <Grid>
@@ -118,7 +193,7 @@
                     </Grid>
 
                 </DockPanel>
-            </GroupBox>
+            </GroupBox>-->
 
         </Grid>
     </WrapPanel>

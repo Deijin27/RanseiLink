@@ -24,11 +24,11 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public int Image_Max => 255;
-    public int Image
+    public int Image1_Max => 255;
+    public int Image1
     {
-        get => _model.Image;
-        set => SetProperty(_model.Image, value, v => _model.Image = v);
+        get => _model.Image1;
+        set => SetProperty(_model.Image1, value, v => _model.Image1 = v);
     }
 
     public TypeId AttackType
@@ -41,6 +41,12 @@ public partial class GimmickViewModel : ViewModelBase
     {
         get => _model.DestroyType;
         set => SetProperty(_model.DestroyType, value, v => _model.DestroyType = v);
+    }
+
+    public bool IsLog
+    {
+        get => _model.IsLog;
+        set => SetProperty(_model.IsLog, value, v => _model.IsLog = v);
     }
 
     public GimmickObjectId State1Sprite
@@ -68,6 +74,95 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.UnknownQuantity1, value, v => _model.UnknownQuantity1 = v);
     }
 
+    public int UnknownQuantity2_Max => 255;
+    public int UnknownQuantity2
+    {
+        get => _model.UnknownQuantity2;
+        set => SetProperty(_model.UnknownQuantity2, value, v => _model.UnknownQuantity2 = v);
+    }
+
+    public int UnknownQuantity3_Max => 255;
+    public int UnknownQuantity3
+    {
+        get => _model.UnknownQuantity3;
+        set => SetProperty(_model.UnknownQuantity3, value, v => _model.UnknownQuantity3 = v);
+    }
+
+    public int GimmickRef1
+    {
+        get => (int)_model.GimmickRef1;
+        set => SetProperty(_model.GimmickRef1, (GimmickId)value, v => _model.GimmickRef1 = v);
+    }
+
+    public int UnknownOther1_Max => 31;
+    public int UnknownOther1
+    {
+        get => _model.UnknownOther1;
+        set => SetProperty(_model.UnknownOther1, value, v => _model.UnknownOther1 = v);
+    }
+
+    public int UnknownOther2_Max => 31;
+    public int UnknownOther2
+    {
+        get => _model.UnknownOther2;
+        set => SetProperty(_model.UnknownOther2, value, v => _model.UnknownOther2 = v);
+    }
+
+    public int UnknownOther3_Max => 31;
+    public int UnknownOther3
+    {
+        get => _model.UnknownOther3;
+        set => SetProperty(_model.UnknownOther3, value, v => _model.UnknownOther3 = v);
+    }
+
+    public int UnknownOther4_Max => 31;
+    public int UnknownOther4
+    {
+        get => _model.UnknownOther4;
+        set => SetProperty(_model.UnknownOther4, value, v => _model.UnknownOther4 = v);
+    }
+
+    public int UnknownSemi1_Max => 255;
+    public int UnknownSemi1
+    {
+        get => _model.UnknownSemi1;
+        set => SetProperty(_model.UnknownSemi1, value, v => _model.UnknownSemi1 = v);
+    }
+
+    public int UnknownSemi2_Max => 255;
+    public int UnknownSemi2
+    {
+        get => _model.UnknownSemi2;
+        set => SetProperty(_model.UnknownSemi2, value, v => _model.UnknownSemi2 = v);
+    }
+
+    public int UnknownFinal0_Max => 15;
+    public int UnknownFinal0
+    {
+        get => _model.UnknownFinal0;
+        set => SetProperty(_model.UnknownFinal0, value, v => _model.UnknownFinal0 = v);
+    }
+
+    public int GimmickRef2
+    {
+        get => (int)_model.GimmickRef2;
+        set => SetProperty(_model.GimmickRef2, (GimmickId)value, v => _model.GimmickRef2 = v);
+    }
+
+    public int Image2_Max => 255;
+    public int Image2
+    {
+        get => _model.Image2;
+        set => SetProperty(_model.Image2, value, v => _model.Image2 = v);
+    }
+
+    public int Image3_Max => 255;
+    public int Image3
+    {
+        get => _model.Image3;
+        set => SetProperty(_model.Image3, value, v => _model.Image3 = v);
+    }
+
     public MoveAnimationId Animation1
     {
         get => _model.Animation1;
@@ -85,4 +180,6 @@ public partial class GimmickViewModel : ViewModelBase
         get => _model.Range;
         set => SetProperty(_model.Range, value, v => _model.Range = v);
     }
+
+    public List<SelectorComboBoxItem> GimmickItems { get; }
 }

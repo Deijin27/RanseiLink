@@ -18,5 +18,6 @@
     <vc:MoveEffectIdToQuantityNameConverter x:Key="Converter.MoveEffectIdToQuantityName"/>
     <vc:ColorToBrushConverter x:Key="Converter.ColorToBrush" />
     <BorderGapMaskConverter x:Key="Converter.BorderGapMask"/>
-    
+    <vc:EnumDisplayValueConverter x:Key="Converter.EnumDisplay"/>
+
 </ResourceDictionary>

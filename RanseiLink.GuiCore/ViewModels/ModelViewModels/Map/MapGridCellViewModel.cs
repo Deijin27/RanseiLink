@@ -91,7 +91,7 @@ public class MapGridCellViewModel : ViewModelBase
         if (_showGimmicks && Gimmicks.Any())
         {
             var gimmick = Gimmicks.Last();
-            GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image).File;
+            GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image1).File;
         }
         else
         {
