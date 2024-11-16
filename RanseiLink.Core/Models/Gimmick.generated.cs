@@ -223,7 +223,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownQuantity1
+    public int AttackPower
     {
         get
         {
@@ -249,7 +249,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownQuantity2
+    public int Anim1
     {
         get
         {
@@ -275,7 +275,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownQuantity3
+    public int Anim2
     {
         get
         {
@@ -327,7 +327,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownOther1
+    public int Unknown_7_0_5
     {
         get
         {
@@ -353,7 +353,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownOther2
+    public int Unknown_7_5_5
     {
         get
         {
@@ -379,7 +379,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownOther3
+    public int Unknown_7_10_5
     {
         get
         {
@@ -405,7 +405,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownOther4
+    public int Unknown_7_15_5
     {
         get
         {
@@ -431,7 +431,33 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownSemi1
+    public int Unknown_7_20_12
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 20, 12);
+            }
+            else
+            {
+                return GetInt(7, 20, 12);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 20, 12, value);
+            }
+            else
+            {
+                SetInt(7, 20, 12, value);
+            }
+        }
+    }
+
+    public int Unknown_8_0_8
     {
         get
         {
@@ -457,7 +483,7 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownSemi2
+    public int Unknown_8_8_8
     {
         get
         {
@@ -483,7 +509,59 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public int UnknownFinal0
+    public int Unknown_8_16_3
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 16, 3);
+            }
+            else
+            {
+                return GetInt(8, 16, 3);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 16, 3, value);
+            }
+            else
+            {
+                SetInt(8, 16, 3, value);
+            }
+        }
+    }
+
+    public int Unknown_8_24_3
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 24, 3);
+            }
+            else
+            {
+                return GetInt(8, 24, 3);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 24, 3, value);
+            }
+            else
+            {
+                SetInt(8, 24, 3, value);
+            }
+        }
+    }
+
+    public int Unknown_9_0_4
     {
         get
         {

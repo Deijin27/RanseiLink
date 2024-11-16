@@ -126,49 +126,62 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Unknown Quantity 1"/>
-            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding UnknownQuantity1}"/>
+            <TextBlock Grid.Row="0" Text="Attack Power 6_0_8"/>
+            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding AttackPower}"/>
 
-            <TextBlock Grid.Row="1" Text="Unknown Quantity 2"/>
-            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding UnknownQuantity2}"/>
+            <TextBlock Grid.Row="1" Text="Anim1 6_8_8"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Anim1}"/>
 
-            <TextBlock Grid.Row="2" Text="Unknown Quantity 3"/>
-            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding UnknownQuantity3}"/>
+            <TextBlock Grid.Row="2" Text="Anim2 6_16_8"/>
+            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding Anim2}"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Gimmick Ref 1" Grid.Row="3" ToolTip="Jump to selected gimmick" 
+            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Gimmick Ref 1 6_14_8" Grid.Row="3" ToolTip="Jump to selected gimmick" 
 Command="{Binding JumpToGimmickCommand}" CommandParameter="{Binding GimmickRef1}"/>
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding GimmickItems}" SelectedValue="{Binding GimmickRef1, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
+            <TextBlock Grid.Row="4" Text="Unknown_7_20_12"/>
+            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Unknown_7_20_12}"/>
 
+            <TextBlock Grid.Row="5" Text="Unknown_7_0_5"/>
+            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding Unknown_7_0_5}"/>
 
-            <TextBlock Grid.Row="5" Text="Unknown Other 1"/>
-            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding UnknownOther1}"/>
+            <TextBlock Grid.Row="6" Text="Unknown_7_5_5"/>
+            <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding Unknown_7_5_5}"/>
 
-            <TextBlock Grid.Row="6" Text="Unknown Other 2"/>
-            <controls:NumberBox Grid.Row="6" Grid.Column="1" Value="{Binding UnknownOther2}"/>
+            <TextBlock Grid.Row="7" Text="Unknown_7_10_5"/>
+            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding Unknown_7_10_5}"/>
 
-            <TextBlock Grid.Row="7" Text="Unknown Other 3"/>
-            <controls:NumberBox Grid.Row="7" Grid.Column="1" Value="{Binding UnknownOther3}"/>
+            <TextBlock Grid.Row="8" Text="Unknown_7_15_5"/>
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Unknown_7_15_5}"/>
 
-            <TextBlock Grid.Row="8" Text="Unknown Other 4"/>
-            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding UnknownOther4}"/>
+            <TextBlock Grid.Row="9" Text="Unknown_8_0_8"/>
+            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Unknown_8_0_8}"/>
 
-            <TextBlock Grid.Row="9" Text="Unknown Semi 1"/>
-            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding UnknownSemi1}"/>
+            <TextBlock Grid.Row="10" Text="Unknown_8_8_8"/>
+            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Unknown_8_8_8}"/>
 
-            <TextBlock Grid.Row="10" Text="Unknown Semi 2"/>
-            <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding UnknownSemi2}"/>
-
-            <TextBlock Grid.Row="11" Text="Unknown Final 0"/>
-            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding UnknownFinal0}"/>
+            <TextBlock Grid.Row="11" Text="Unknown_9_0_4"/>
+            <controls:NumberBox Grid.Row="11" Grid.Column="1" Value="{Binding Unknown_9_0_4}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Gimmick Ref 2" Grid.Row="12" ToolTip="Jump to selected gimmick" 
         Command="{Binding JumpToGimmickCommand}" CommandParameter="{Binding GimmickRef2}"/>
             <ComboBox Grid.Row="12" Grid.Column="1" ItemsSource="{Binding GimmickItems}" SelectedValue="{Binding GimmickRef2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
+            <TextBlock Grid.Row="13" Text="Unknown_8_16_3"/>
+            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding Unknown_8_16_3}"/>
 
+            <TextBlock Grid.Row="14" Text="Unknown_8_24_3"/>
+            <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Unknown_8_24_3}"/>
 
             <!--<TextBlock Text="Animation 1" Grid.Row="0" Grid.Column="0"/>
             <DockPanel Grid.Row="0" Grid.Column="1">

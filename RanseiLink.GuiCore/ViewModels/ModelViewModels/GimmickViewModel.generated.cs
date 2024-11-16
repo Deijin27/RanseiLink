@@ -67,25 +67,25 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
-    public int UnknownQuantity1_Max => 255;
-    public int UnknownQuantity1
+    public int AttackPower_Max => 255;
+    public int AttackPower
     {
-        get => _model.UnknownQuantity1;
-        set => SetProperty(_model.UnknownQuantity1, value, v => _model.UnknownQuantity1 = v);
+        get => _model.AttackPower;
+        set => SetProperty(_model.AttackPower, value, v => _model.AttackPower = v);
     }
 
-    public int UnknownQuantity2_Max => 255;
-    public int UnknownQuantity2
+    public int Anim1_Max => 255;
+    public int Anim1
     {
-        get => _model.UnknownQuantity2;
-        set => SetProperty(_model.UnknownQuantity2, value, v => _model.UnknownQuantity2 = v);
+        get => _model.Anim1;
+        set => SetProperty(_model.Anim1, value, v => _model.Anim1 = v);
     }
 
-    public int UnknownQuantity3_Max => 255;
-    public int UnknownQuantity3
+    public int Anim2_Max => 255;
+    public int Anim2
     {
-        get => _model.UnknownQuantity3;
-        set => SetProperty(_model.UnknownQuantity3, value, v => _model.UnknownQuantity3 = v);
+        get => _model.Anim2;
+        set => SetProperty(_model.Anim2, value, v => _model.Anim2 = v);
     }
 
     public int GimmickRef1
@@ -94,53 +94,74 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.GimmickRef1, (GimmickId)value, v => _model.GimmickRef1 = v);
     }
 
-    public int UnknownOther1_Max => 31;
-    public int UnknownOther1
+    public int Unknown_7_0_5_Max => 31;
+    public int Unknown_7_0_5
     {
-        get => _model.UnknownOther1;
-        set => SetProperty(_model.UnknownOther1, value, v => _model.UnknownOther1 = v);
+        get => _model.Unknown_7_0_5;
+        set => SetProperty(_model.Unknown_7_0_5, value, v => _model.Unknown_7_0_5 = v);
     }
 
-    public int UnknownOther2_Max => 31;
-    public int UnknownOther2
+    public int Unknown_7_5_5_Max => 31;
+    public int Unknown_7_5_5
     {
-        get => _model.UnknownOther2;
-        set => SetProperty(_model.UnknownOther2, value, v => _model.UnknownOther2 = v);
+        get => _model.Unknown_7_5_5;
+        set => SetProperty(_model.Unknown_7_5_5, value, v => _model.Unknown_7_5_5 = v);
     }
 
-    public int UnknownOther3_Max => 31;
-    public int UnknownOther3
+    public int Unknown_7_10_5_Max => 31;
+    public int Unknown_7_10_5
     {
-        get => _model.UnknownOther3;
-        set => SetProperty(_model.UnknownOther3, value, v => _model.UnknownOther3 = v);
+        get => _model.Unknown_7_10_5;
+        set => SetProperty(_model.Unknown_7_10_5, value, v => _model.Unknown_7_10_5 = v);
     }
 
-    public int UnknownOther4_Max => 31;
-    public int UnknownOther4
+    public int Unknown_7_15_5_Max => 31;
+    public int Unknown_7_15_5
     {
-        get => _model.UnknownOther4;
-        set => SetProperty(_model.UnknownOther4, value, v => _model.UnknownOther4 = v);
+        get => _model.Unknown_7_15_5;
+        set => SetProperty(_model.Unknown_7_15_5, value, v => _model.Unknown_7_15_5 = v);
     }
 
-    public int UnknownSemi1_Max => 255;
-    public int UnknownSemi1
+    public int Unknown_7_20_12_Max => 4095;
+    public int Unknown_7_20_12
     {
-        get => _model.UnknownSemi1;
-        set => SetProperty(_model.UnknownSemi1, value, v => _model.UnknownSemi1 = v);
+        get => _model.Unknown_7_20_12;
+        set => SetProperty(_model.Unknown_7_20_12, value, v => _model.Unknown_7_20_12 = v);
     }
 
-    public int UnknownSemi2_Max => 255;
-    public int UnknownSemi2
+    public int Unknown_8_0_8_Max => 255;
+    public int Unknown_8_0_8
     {
-        get => _model.UnknownSemi2;
-        set => SetProperty(_model.UnknownSemi2, value, v => _model.UnknownSemi2 = v);
+        get => _model.Unknown_8_0_8;
+        set => SetProperty(_model.Unknown_8_0_8, value, v => _model.Unknown_8_0_8 = v);
     }
 
-    public int UnknownFinal0_Max => 15;
-    public int UnknownFinal0
+    public int Unknown_8_8_8_Max => 255;
+    public int Unknown_8_8_8
     {
-        get => _model.UnknownFinal0;
-        set => SetProperty(_model.UnknownFinal0, value, v => _model.UnknownFinal0 = v);
+        get => _model.Unknown_8_8_8;
+        set => SetProperty(_model.Unknown_8_8_8, value, v => _model.Unknown_8_8_8 = v);
+    }
+
+    public int Unknown_8_16_3_Max => 7;
+    public int Unknown_8_16_3
+    {
+        get => _model.Unknown_8_16_3;
+        set => SetProperty(_model.Unknown_8_16_3, value, v => _model.Unknown_8_16_3 = v);
+    }
+
+    public int Unknown_8_24_3_Max => 7;
+    public int Unknown_8_24_3
+    {
+        get => _model.Unknown_8_24_3;
+        set => SetProperty(_model.Unknown_8_24_3, value, v => _model.Unknown_8_24_3 = v);
+    }
+
+    public int Unknown_9_0_4_Max => 15;
+    public int Unknown_9_0_4
+    {
+        get => _model.Unknown_9_0_4;
+        set => SetProperty(_model.Unknown_9_0_4, value, v => _model.Unknown_9_0_4 = v);
     }
 
     public int GimmickRef2

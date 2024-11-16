@@ -108,17 +108,20 @@
         <Property Index="5, 18, 7" Index_VPYJ="4, 18, 7" Name="State2Sprite" Type="GimmickObjectId"/>
         <Property Index="5, 25, 7" Index_VPYJ="4, 25, 7" Name="Effect" Type="MoveEffectId"/>
       
-        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="UnknownQuantity1" Description="Seems like a multipurpose quantity. For some, this is probably attack power, others something else"/>
-        <Property Index="6,  8, 8" Index_VPYJ="5,  8, 8" Name="UnknownQuantity2" />
-        <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="UnknownQuantity3" />
+        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="AttackPower" Description="Seems like a multipurpose quantity. For some, this is probably attack power, others something else"/>
+        <Property Index="6,  8, 8" Index_VPYJ="5,  8, 8" Name="Anim1" />
+        <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="Anim2" />
         <Property Index="6, 24, 8" Index_VPYJ="5, 24, 8" Name="GimmickRef1" Type="GimmickId"/>
-        <Property Index="7,  0, 5" Index_VPYJ="6,  0, 5" Name="UnknownOther1" />
-        <Property Index="7,  5, 5" Index_VPYJ="6,  5, 5" Name="UnknownOther2" />
-        <Property Index="7, 10, 5" Index_VPYJ="6, 10, 5" Name="UnknownOther3" />
-        <Property Index="7, 15, 5" Index_VPYJ="6, 15, 5" Name="UnknownOther4" />
-        <Property Index="8,  0, 8" Index_VPYJ="7,  0, 8" Name="UnknownSemi1" />
-        <Property Index="8,  8, 8" Index_VPYJ="7,  8, 8" Name="UnknownSemi2" />
-        <Property Index="9,  0, 4" Index_VPYJ="8,  0, 4" Name="UnknownFinal0" />
+        <Property Index="7,  0, 5" Index_VPYJ="6,  0, 5" Name="Unknown_7_0_5" />
+        <Property Index="7,  5, 5" Index_VPYJ="6,  5, 5" Name="Unknown_7_5_5" />
+        <Property Index="7, 10, 5" Index_VPYJ="6, 10, 5" Name="Unknown_7_10_5" />
+        <Property Index="7, 15, 5" Index_VPYJ="6, 15, 5" Name="Unknown_7_15_5" />
+        <Property Index="7, 20, 12" Index_VPYJ="6, 20, 12" Name="Unknown_7_20_12" />
+        <Property Index="8,  0, 8" Index_VPYJ="7,  0, 8" Name="Unknown_8_0_8" />
+        <Property Index="8,  8, 8" Index_VPYJ="7,  8, 8" Name="Unknown_8_8_8" />
+        <Property Index="8,  16, 3" Index_VPYJ="7, 16, 3" Name="Unknown_8_16_3" />
+        <Property Index="8,  24, 3" Index_VPYJ="7, 24, 3" Name="Unknown_8_24_3" />
+        <Property Index="9,  0, 4" Index_VPYJ="8,  0, 4" Name="Unknown_9_0_4" />
         <Property Index="9,  4, 8" Index_VPYJ="8,  4, 8" Name="GimmickRef2" Type="GimmickId"/>
         <Property Index="9, 12, 8" Index_VPYJ="8, 12, 8" Name="Image2" />
         <Property Index="9, 20, 8" Index_VPYJ="8, 20, 8" Name="Image3" />

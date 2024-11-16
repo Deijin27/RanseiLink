@@ -23,13 +23,12 @@ public class GimmickTests
         }, ConquestGameCode.VPYT);
 
         a.Name.Should().Be("Pillar of Fire");
-        a.Image.Should().Be(10);
+        a.Image1.Should().Be(10);
         a.AttackType.Should().Be(TypeId.Fire);
         a.DestroyType.Should().Be(TypeId.Water);
         a.State1Sprite.Should().Be(GimmickObjectId.PillarOfFire_Ignited);
         a.State2Sprite.Should().Be(GimmickObjectId.PillarOfFire_Extinguished);
         a.Effect.Should().Be(MoveEffectId.NoEffect);
-        a.UnknownQuantity1.Should().Be(0);
         a.Animation1.Should().Be(MoveAnimationId.Default);
         a.Animation2.Should().Be(MoveAnimationId.GreySmokeYellowStars);
         a.Range.Should().Be(GimmickRangeId.NoRange);
@@ -42,26 +41,24 @@ public class GimmickTests
         Gimmick a = new Gimmick(ConquestGameCode.VPYT)
         {
             Name = "Pillar of Fire",
-            Image = 24,
+            Image1 = 24,
             AttackType = TypeId.Dragon,
             DestroyType = TypeId.Ghost,
             State1Sprite = GimmickObjectId.CogWheel,
             State2Sprite = GimmickObjectId.DriftingIce,
             Effect = MoveEffectId.ChanceToParalyzeTarget,
-            UnknownQuantity1 = 4,
             Animation1 = MoveAnimationId.BlackSplatter,
             Animation2 = MoveAnimationId.BlueYellowStars,
             Range = GimmickRangeId.RightBackCorner,
         };
 
         a.Name.Should().Be("Pillar of Fire");
-        a.Image.Should().Be(24);
+        a.Image1.Should().Be(24);
         a.AttackType.Should().Be(TypeId.Dragon);
         a.DestroyType.Should().Be(TypeId.Ghost);
         a.State1Sprite.Should().Be(GimmickObjectId.CogWheel);
         a.State2Sprite.Should().Be(GimmickObjectId.DriftingIce);
         a.Effect.Should().Be(MoveEffectId.ChanceToParalyzeTarget);
-        a.UnknownQuantity1.Should().Be(4);
         a.Animation1.Should().Be(MoveAnimationId.BlackSplatter);
         a.Animation2.Should().Be(MoveAnimationId.BlueYellowStars);
         a.Range.Should().Be(GimmickRangeId.RightBackCorner);
