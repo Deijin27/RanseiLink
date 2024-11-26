@@ -107,9 +107,6 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorNameTableViewModel>();
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
-        builder.Register<BuildingWorkspaceViewModel>();
-        builder.Register<PokemonWorkspaceViewModel>();
-        builder.Register<WarriorWorkspaceViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

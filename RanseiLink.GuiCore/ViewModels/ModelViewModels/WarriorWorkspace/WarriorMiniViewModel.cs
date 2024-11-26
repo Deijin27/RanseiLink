@@ -3,10 +3,11 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using System.Text.RegularExpressions;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class WarriorMiniViewModel : ViewModelBase
+public class WarriorMiniViewModel : ViewModelBase, IMiniViewModel
 {
     private readonly ICachedSpriteProvider _spriteProvider;
     private readonly IBaseWarriorService _baseWarriorService;
@@ -48,6 +49,24 @@ public class WarriorMiniViewModel : ViewModelBase
     public object? Image => _spriteProvider.GetSprite(SpriteType.StlBushouS, _model.Sprite);
 
     public ICommand SelectCommand { get; }
+
+    public bool MatchSearchTerm(string searchTerm)
+    {
+        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (Enum.TryParse<TypeId>(searchTerm, ignoreCase: true, out var type))
+        {
+            if (Type1 == type || Type2 == type)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public void NotifyPropertyChanged(string? name)
     {

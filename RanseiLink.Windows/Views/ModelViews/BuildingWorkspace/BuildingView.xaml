@@ -22,93 +22,134 @@
             <Setter Property="Height" Value="20"/>
         </Style>
     </UserControl.Resources>
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+    <WrapPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="170"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <TextBlock Text="Name" Grid.Row="1" />
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+            <TextBlock Text="Name" Grid.Row="1" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
 
-        <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
+            <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>
-        <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
 
-        <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 2" ToolTip="Jump to selected battle config" 
+            <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 2" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig2}"/>
-        <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
 
-        <Button Grid.Row="4" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 3" ToolTip="Jump to selected battle config" 
+            <Button Grid.Row="4" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 3" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig3}"/>
-        <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
 
-        <TextBlock Text="Sprite 1" Grid.Row="5" />
-        <DockPanel Grid.Row="5" Grid.Column="1">
-            <Image Source="{Binding Sprite1Image}" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite1}" Max="{Binding Sprite1_Max}"/>
-        </DockPanel>
-
-
-        <TextBlock Text="Sprite 2" Grid.Row="6" />
-        <DockPanel Grid.Row="6" Grid.Column="1">
-            <Image Source="{Binding Sprite2Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite2}" Max="{Binding Sprite2_Max}"/>
-        </DockPanel>
+            <TextBlock Text="Sprite 1" Grid.Row="5" />
+            <DockPanel Grid.Row="5" Grid.Column="1">
+                <Image Source="{Binding Sprite1Image}" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                <controls:NumberBox Value="{Binding Sprite1}" Max="{Binding Sprite1_Max}"/>
+            </DockPanel>
 
 
-        <TextBlock Text="Sprite 3" Grid.Row="7" />
-        <DockPanel Grid.Row="7" Grid.Column="1">
-            <Image Source="{Binding Sprite3Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
-            <controls:NumberBox Value="{Binding Sprite3}" Max="{Binding Sprite3_Max}"/>
-        </DockPanel>
+            <TextBlock Text="Sprite 2" Grid.Row="6" />
+            <DockPanel Grid.Row="6" Grid.Column="1">
+                <Image Source="{Binding Sprite2Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
+                <controls:NumberBox Value="{Binding Sprite2}" Max="{Binding Sprite2_Max}"/>
+            </DockPanel>
 
-        <TextBlock Text="Function" Grid.Row="8" />
-        <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
 
-        <GroupBox Header="Referenced Buildings" Grid.Row="9" Grid.ColumnSpan="2" Grid.RowSpan="8">
-            <StackPanel>
-                <StackPanel.Resources>
-                    <Style TargetType="ComboBox" BasedOn="{StaticResource SelectorComboBoxStyle}">
-                        <Setter Property="Margin" Value="3"/>
-                    </Style>
-                </StackPanel.Resources>
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building1}"/>
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building2}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building3}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building4}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building5}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building6}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building7}" />
-                <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building8}" />
-            </StackPanel>
-        </GroupBox>
-    </Grid>
+            <TextBlock Text="Sprite 3" Grid.Row="7" />
+            <DockPanel Grid.Row="7" Grid.Column="1">
+                <Image Source="{Binding Sprite3Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
+                <controls:NumberBox Value="{Binding Sprite3}" Max="{Binding Sprite3_Max}"/>
+            </DockPanel>
+
+            <TextBlock Text="Function" Grid.Row="8" />
+            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BuildingFunctionItems}" SelectedItem="{Binding Function, Mode=TwoWay}"/>
+
+            <GroupBox Header="Referenced Buildings" Grid.Row="9" Grid.ColumnSpan="2" Grid.RowSpan="8">
+                <StackPanel>
+                    <StackPanel.Resources>
+                        <Style TargetType="ComboBox" BasedOn="{StaticResource SelectorComboBoxStyle}">
+                            <Setter Property="Margin" Value="3"/>
+                        </Style>
+                    </StackPanel.Resources>
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building1}"/>
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building2}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building3}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building4}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building5}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building6}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building7}" />
+                    <ComboBox ItemsSource="{Binding BuildingItems}" SelectedValue="{Binding Building8}" />
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+        <StackPanel>
+            <GroupBox Header="Icon Animated Image" Margin="0,0,0,5" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
+                <DockPanel>
+                    <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding SelectedAnimationImage}"/>
+                    <local:AnimationView DockPanel.Dock="Bottom" DataContext="{Binding IconAnimVm}"/>
+                    <controls:NumberBox Margin="5" Value="{Binding SelectedAnimation}" Max="84"/>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Header="Scenario Info" DataContext="{Binding ScenarioBuildingVm}" Grid.IsSharedSizeScope="True">
+                <DockPanel>
+                    <Grid Margin="10,5,10,5" DockPanel.Dock="Top" TextElement.FontWeight="Bold">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Scenario"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="InitialExp"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Unknown"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0">Scenario</TextBlock>
+                        <TextBlock Grid.Column="1">Initial Exp</TextBlock>
+                        <TextBlock Grid.Column="2">Unknown</TextBlock>
+                    </Grid>
+                    <ItemsControl ItemsSource="{Binding Slots}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="10,5,10,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Scenario"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="InitialExp"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="Unknown"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Scenario}" Margin="0,0,5,0"/>
+                                    <controls:NumberBox Margin="0,0,5,0" Grid.Column="1" Max="255" Value="{Binding InitialExp}" Width="100" HorizontalAlignment="Left"/>
+                                    <controls:NumberBox Grid.Column="2" Value="{Binding Unknown2}" Width="100"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DockPanel>
+            </GroupBox>
+        </StackPanel>
+    </WrapPanel>
 </UserControl>

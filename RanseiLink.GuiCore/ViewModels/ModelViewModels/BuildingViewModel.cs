@@ -1,29 +1,27 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class BuildingViewModel : ViewModelBase
+public partial class BuildingViewModel : ViewModelBase, IBigViewModel
 {
-    public delegate BuildingViewModel Factory();
-
-    private readonly BuildingWorkspaceViewModel _parent;
+    private readonly IBuildingService _buildingService;
     private readonly IKingdomService _kingdomService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
 
     public Building Model => _model;
 
-    public BuildingViewModel(ScenarioBuildingViewModel sbvm, BuildingWorkspaceViewModel parent, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider, BuildingId id, Building model)
+    public BuildingViewModel(IBuildingService buildingService, IJumpService jumpService, IIdToNameService idToNameService, IScenarioBuildingService scenarioBuildingService, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider)
     {
-        ScenarioBuildingVm = sbvm;   
-        _parent = parent;
+        ScenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
+        _buildingService = buildingService;
         _kingdomService = kingdomService;
         _cachedSpriteProvider = cachedSpriteProvider;
-        _id = id;
-        _model = model;
-        BuildingItems = parent.BuildingItems;
-        KingdomItems = parent.KingdomItems;
+        BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
+        KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
 
         this.PropertyChanged += BuildingViewModel_PropertyChanged;
     }
@@ -47,21 +45,59 @@ public partial class BuildingViewModel : ViewModelBase
         }
     }
 
-    internal void OnPasted()
+    public void SetModel(int id, object model)
     {
+        _id = (BuildingId)id;
+        _model = (Building)model;
+
+        // Find slot by looking through ones with matching kingdom in order
+        int slot = 0;
+        foreach (var item in _buildingService.Enumerate())
+        {
+            if (item == _model)
+            {
+                break;
+            }
+            else if (item.Kingdom == _model.Kingdom)
+            {
+                slot++;
+            }
+        }
+
+        ScenarioBuildingVm.SetSelected(_model.Kingdom, slot);
+
         RaiseAllPropertiesChanged();
     }
 
     public ScenarioBuildingViewModel ScenarioBuildingVm { get; }
 
-    public int Slot { get; set; }
-
     public string KingdomName => _kingdomService.IdToName(Kingdom);
-    public object? Sprite1Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite1);
-    public object? Sprite2Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite2);
-    public object? Sprite3Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, (int)Sprite3);
+    public object? Sprite1Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, Sprite1);
+    public object? Sprite2Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, Sprite2);
+    public object? Sprite3Image => _cachedSpriteProvider.GetSprite(Core.Services.SpriteType.IconInstS, Sprite3);
 
-    public ICommand JumpToBattleConfigCommand => _parent.JumpToBattleConfigCommand;
+    public ICommand JumpToBattleConfigCommand { get; }
 
-    public ICommand SelectCommand => _parent.ItemClickedCommand;
+    #region Animation
+
+    public AnimationViewModel? IconAnimVm { get; private set; }
+
+
+    private int _selectedAnimation;
+    public int SelectedAnimation
+    {
+        get => _selectedAnimation;
+        set
+        {
+            if (SetProperty(_selectedAnimation, value, v => _selectedAnimation = v))
+            {
+                RaisePropertyChanged(nameof(SelectedAnimationImage));
+                IconAnimVm?.OnIdChanged();
+            }
+        }
+    }
+
+    public object? SelectedAnimationImage => _cachedSpriteProvider.GetSprite(SpriteType.IconInstS, SelectedAnimation);
+
+    #endregion
 }

@@ -5,7 +5,7 @@ using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class PokemonMiniViewModel : ViewModelBase
+public class PokemonMiniViewModel : ViewModelBase, IMiniViewModel
 {
     private readonly ICachedSpriteProvider _spriteProvider;
     private readonly Pokemon _model;
@@ -49,6 +49,24 @@ public class PokemonMiniViewModel : ViewModelBase
     public object? Image => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _id);
 
     public ICommand SelectCommand { get; }
+
+    public bool MatchSearchTerm(string searchTerm)
+    {
+        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (Enum.TryParse<TypeId>(searchTerm, ignoreCase: true, out var type))
+        {
+            if (Type1 == type || Type2 == type)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public void NotifyPropertyChanged(string? name)
     {

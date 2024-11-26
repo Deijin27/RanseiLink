@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
@@ -7,104 +8,43 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.GuiCore.ViewModels;
 
 [EditorModule]
-public class PokemonWorkspaceModule : EditorModule, ISelectableModule
+public class PokemonWorkspaceModule : BaseWorkspaceEditorModule<IPokemonService>
 {
     public const string Id = "pokemon_workspace";
-    private PokemonWorkspaceViewModel? _viewModel;
-    private IPokemonService? _pokemonService;
-
     public override string UniqueId => Id;
     public override string ListName => "Pokemon";
 
-    public override object? ViewModel => _viewModel;
-
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        _pokemonService = modServices.Get<IPokemonService>();
-        var vm = modServices.Get<PokemonWorkspaceViewModel>();
-        _viewModel = vm;
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<PokemonViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id => 
+                new PokemonMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
-
-    public void Select(int selectId)
-    {
-        if (_viewModel != null)
-        {
-            _viewModel.SearchText = null;
-            _viewModel.SelectById(selectId);
-        }
-    }
-
-    public override void OnPatchingRom()
-    {
-        base.OnPatchingRom();
-        _pokemonService?.Save();
-    }
-
-    public override void Deactivate()
-    {
-        base.Deactivate();
-        _pokemonService?.Save();
-    }
-
 }
 
 [EditorModule]
-public class WarriorWorkspaceModule : EditorModule, ISelectableModule
+public class WarriorWorkspaceModule : BaseWorkspaceEditorModule<IBaseWarriorService>
 {
     public const string Id = "warrior_workspace";
-    private WarriorWorkspaceViewModel? _viewModel;
-    private IBaseWarriorService? _service;
-
     public override string UniqueId => Id;
     public override string ListName => "Warrior";
-
-    public override object? ViewModel => _viewModel;
-
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        _service = modServices.Get<IBaseWarriorService>();
-        var vm = modServices.Get<WarriorWorkspaceViewModel>();
-        _viewModel = vm;
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<BaseWarriorViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id => 
+                new WarriorMiniViewModel(sp, _service, _service.Retrieve(id), id, command)).ToList()
+            );
     }
-
-    public void Select(int selectId)
-    {
-        if (_viewModel != null)
-        {
-            _viewModel.SearchText = null;
-            _viewModel.SelectById(selectId);
-        }
-    }
-
-    public override void OnPatchingRom()
-    {
-        base.OnPatchingRom();
-        _service?.Save();
-    }
-
-    public override void Deactivate()
-    {
-        base.Deactivate();
-        _service?.Save();
-    }
-
 }
-
-//public class PokemonGridEditorModule : IEditorModule
-//{
-//    public const string Id = "pokemon_grid";
-//    public string UniqueId => Id;
-//    public string ListName => "Pokemon (Grid)";
-//    public override void Initialise(IServiceGetter modServices)
-//    {
-//        base.Initialise(modServices);
-//        var _service = context.DataService.Pokemon;
-//        object vmFactory(int id, object model) => new PokemonGridItemViewModel((PokemonId)id, (Pokemon)model);
-//        _viewModel = new GridViewModel(container, _service, vmFactory);
-//    }
-//}
 
 [EditorModule]
 public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
@@ -257,40 +197,52 @@ public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
 }
 
 [EditorModule]
-public class BuildingWorkspaceEditorModule : EditorModule, ISelectableModule
+public class BuildingWorkspaceEditorModule : BaseWorkspaceEditorModule<IBuildingService>
 {
     public const string Id = "building_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Building";
 
-    public override object? ViewModel => _viewModel;
-
-    private IBuildingService? _buildingService;
     private IScenarioBuildingService? _scenarioBuildingService;
-    private BuildingWorkspaceViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        _buildingService = modServices.Get<IBuildingService>();
         _scenarioBuildingService = modServices.Get<IScenarioBuildingService>();
-        _viewModel = modServices.Get<BuildingWorkspaceViewModel>();
+        var sp = modServices.Get<ICachedSpriteProvider>();
+
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<BuildingViewModel>(),
+            _service,
+            command =>
+            {
+                var lst = new List<IMiniViewModel>();
+                foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
+                {
+                    lst.Add(new BuildingSimpleKingdomMiniViewModel(sp, kingdom));
+                    foreach (var id in _service.ValidIds())
+                    {
+                        var model = _service.Retrieve(id);
+                        if (model.Kingdom == kingdom)
+                        {
+                            lst.Add(new BuildingMiniViewModel(sp, model, id, command));
+                        }
+                    }
+                }
+                return lst;
+            }
+            );
     }
 
     public override void Deactivate()
     {
+        base.Deactivate();
         _scenarioBuildingService?.Save();
-        _buildingService?.Save();
     }
 
     public override void OnPatchingRom()
     {
+        base.OnPatchingRom();
         _scenarioBuildingService?.Save();
-        _buildingService?.Save();
-    }
-
-    public void Select(int selectId)
-    {
-        _viewModel?.SelectById(selectId);
     }
 }
 

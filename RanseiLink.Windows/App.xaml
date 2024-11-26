@@ -54,13 +54,9 @@
             <DataTemplate DataType="{x:Type cvm:MapViewModel}">
                 <views:MapView/>
             </DataTemplate>
-            
-            <DataTemplate DataType="{x:Type cvm:PokemonWorkspaceViewModel}">
-                <views:PokemonWorkspaceView/>
-            </DataTemplate>
 
-            <DataTemplate DataType="{x:Type cvm:WarriorWorkspaceViewModel}">
-                <views:WarriorWorkspaceView/>
+            <DataTemplate DataType="{x:Type cvm:WorkspaceViewModel}">
+                <views:WorkspaceView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type cvm:MoveViewModel}">
@@ -131,10 +127,6 @@
                 <views:BuildingView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type cvm:BuildingWorkspaceViewModel}">
-                <views:BuildingWorkspaceView/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type cvm:EpisodeViewModel}">
                 <views:EpisodeView/>
             </DataTemplate>
@@ -151,6 +143,27 @@
                 <views:SpriteTypeView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:PokemonMiniViewModel}">
+                <views:PokemonMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:WarriorMiniViewModel}">
+                <views:WarriorMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:PokemonViewModel}">
+                <views:PokemonView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:BuildingSimpleKingdomMiniViewModel}">
+                <views:SwSimpleKingdomMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:BuildingMiniViewModel}">
+                <views:BuildingMiniView/>
+            </DataTemplate>
+            
+          
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>
                 <Setter Property="DisplayMemberPath" Value="IdAndName"/>

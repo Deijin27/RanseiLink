@@ -8,7 +8,7 @@ using RanseiLink.Core.Text;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class BaseWarriorViewModel : ViewModelBase
+public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
@@ -39,8 +39,6 @@ public partial class BaseWarriorViewModel : ViewModelBase
         BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
         PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
         SpeakerItems = EnumUtil.GetValues<SpeakerId>().Select(x => new SelectorComboBoxItem((int)x, ((int)x).ToString())).ToList();
-        CopyPasteVm = copyPasteVm;
-        CopyPasteVm.ModelPasted += (_, __) => SetModel(_id, _model);
 
         this.PropertyChanged += BaseWarriorViewModel_PropertyChanged;
     }
@@ -72,11 +70,8 @@ public partial class BaseWarriorViewModel : ViewModelBase
     {
         _id = id;
         _model = model;
-        CopyPasteVm.Model = model;
         RaiseAllPropertiesChanged();
     }
-
-    public CopyPasteViewModel CopyPasteVm { get; }
 
     public ICommand JumpToWarriorSkillCommand { get; }
     public ICommand JumpToBaseWarriorCommand { get; }
@@ -134,5 +129,10 @@ public partial class BaseWarriorViewModel : ViewModelBase
 
         RaisePropertyChanged(nameof(SmallSpritePath));
 
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((WarriorId)id, (BaseWarrior)model);
     }
 }

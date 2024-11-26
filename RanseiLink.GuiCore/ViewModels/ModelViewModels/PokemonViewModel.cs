@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class PokemonViewModel : ViewModelBase
+public partial class PokemonViewModel : ViewModelBase, IBigViewModel
 {
     private readonly List<SelectorComboBoxItem> _evolutionEntryOptions;
     private readonly IIdToNameService _idToNameService;
@@ -26,11 +26,9 @@ public partial class PokemonViewModel : ViewModelBase
         IOverrideDataProvider spriteProvider, 
         SpriteItemViewModel.Factory spriteItemVmFactory, 
         IAsyncDialogService dialogService, 
-        IPokemonAnimationService animationService,
-        CopyPasteViewModel copyPasteVm)
+        IPokemonAnimationService animationService)
     {
         _animationService = animationService;
-        CopyPasteVm = copyPasteVm;
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
@@ -52,8 +50,6 @@ public partial class PokemonViewModel : ViewModelBase
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
         RevertAnimationCommand = new RelayCommand(RevertAnimation, () => IsAnimationOverwritten);
 
-        CopyPasteVm.ModelPasted += (_, __) => SetModel(_id, _model);
-
         PropertyChanged += PokemonViewModel_PropertyChanged;
     }
 
@@ -72,11 +68,15 @@ public partial class PokemonViewModel : ViewModelBase
         }
     }
 
+    public void SetModel(int id, object model)
+    {
+        SetModel((PokemonId)id, (Pokemon)model);
+    }
+
     public void SetModel(PokemonId id, Pokemon model)
     {
         _model = model;
         _id = id;
-        CopyPasteVm.Model = model;
         Evolutions.Clear();
         for (int i = 0; i < _model.Evolutions.Count; i++)
         {
@@ -127,7 +127,7 @@ public partial class PokemonViewModel : ViewModelBase
 
     public string QuantityForEvolutionCondition2Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition2, _model.QuantityForEvolutionCondition2);
 
-    public ObservableCollection<HabitatItem> HabitatItems { get; } = new();
+    public ObservableCollection<HabitatItem> HabitatItems { get; } = [];
 
     public class HabitatItem : ViewModelBase
     {
@@ -294,6 +294,4 @@ public partial class PokemonViewModel : ViewModelBase
     }
 
     public bool IsAnimationOverwritten => _animationService.IsAnimationOverwritten(_id);
-
-    public CopyPasteViewModel CopyPasteVm { get; }
 }

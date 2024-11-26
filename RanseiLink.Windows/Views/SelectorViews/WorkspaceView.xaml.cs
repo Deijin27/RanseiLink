@@ -3,11 +3,11 @@
 namespace RanseiLink.Windows.Views;
 
 /// <summary>
-/// Interaction logic for BuildingWorkspaceView.xaml
+/// Interaction logic for WorkspaceView.xaml
 /// </summary>
-public partial class BuildingWorkspaceView : UserControl
+public partial class WorkspaceView : UserControl
 {
-    public BuildingWorkspaceView()
+    public WorkspaceView()
     {
         InitializeComponent();
     }

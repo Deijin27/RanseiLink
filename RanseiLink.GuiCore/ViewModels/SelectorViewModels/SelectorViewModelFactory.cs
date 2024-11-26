@@ -6,16 +6,32 @@ public interface ISelectorViewModelFactory
 {
     SelectorViewModel Create(IModelService? service, List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged, Func<int, bool> validateId, bool scrollEnabled = true);
     SelectorViewModel Create(IModelService service, object nestedViewModel, Action<int> onSelectedChanged, bool scrollEnabled = true);
+    WorkspaceViewModel CreateWorkspace(IBigViewModel bigViewModel, IModelService modelService, Func<ICommand, List<IMiniViewModel>> allMiniVms);
 }
 
-public class SelectorViewModelFactory(CopyPasteViewModel copyPasteVm) : ISelectorViewModelFactory
+public class SelectorViewModelFactory(IClipboardService clipboardService, IAsyncDialogService asyncDialogService) : ISelectorViewModelFactory
 {
+    public WorkspaceViewModel CreateWorkspace(IBigViewModel bigViewModel, IModelService modelService, Func<ICommand, List<IMiniViewModel>> allMiniVms)
+    {
+        return new WorkspaceViewModel(
+            NewCopyPasteVm(),
+            bigViewModel,
+            modelService,
+            allMiniVms
+            );
+    }
+
+    private CopyPasteViewModel NewCopyPasteVm()
+    {
+        return new CopyPasteViewModel(clipboardService, asyncDialogService);
+    }
+
     public SelectorViewModel Create(IModelService service, object nestedViewModel, Action<int> onSelectedChanged, bool scrollEnabled = true)
     {
         if (scrollEnabled)
         {
             return new SelectorViewModel(
-                copyPasteVm,
+                NewCopyPasteVm(),
                 service,
                 service.GetComboBoxItemsExceptDefault(),
                 nestedViewModel,
@@ -26,7 +42,7 @@ public class SelectorViewModelFactory(CopyPasteViewModel copyPasteVm) : ISelecto
         else
         {
             return new SelectorViewModelWithoutScroll(
-                copyPasteVm,
+                NewCopyPasteVm(),
                 service,
                 service.GetComboBoxItemsExceptDefault(),
                 nestedViewModel,
@@ -41,7 +57,7 @@ public class SelectorViewModelFactory(CopyPasteViewModel copyPasteVm) : ISelecto
         if (scrollEnabled)
         {
             return new SelectorViewModel(
-                copyPasteVm,
+                NewCopyPasteVm(),
                 service,
                 displayItems,
                 nestedViewModel,
@@ -52,7 +68,7 @@ public class SelectorViewModelFactory(CopyPasteViewModel copyPasteVm) : ISelecto
         else
         {
             return new SelectorViewModelWithoutScroll(
-                copyPasteVm,
+                NewCopyPasteVm(),
                 service,
                 displayItems,
                 nestedViewModel,

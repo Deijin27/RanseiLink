@@ -87,6 +87,40 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule, ISelect
     }
 }
 
+public abstract class BaseWorkspaceEditorModule<TService> : EditorModule, ISelectableModule where TService : IModelService
+{
+    public override object? ViewModel => _viewModel;
+
+    protected ISelectorViewModelFactory? _selectorVmFactory;
+    protected TService? _service;
+    protected WorkspaceViewModel? _viewModel;
+
+    [MemberNotNull(nameof(_service))]
+    [MemberNotNull(nameof(_selectorVmFactory))]
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<TService>();
+        _selectorVmFactory = modServices.Get<ISelectorViewModelFactory>();
+        if (_service == null)
+        {
+            throw new System.Exception($"Service '{typeof(TService).FullName}' not registered");
+        }
+    }
+
+    public override void Deactivate() => _service?.Save();
+    public override void OnPatchingRom() => _service?.Save();
+
+    public virtual void Select(int selectId)
+    {
+        if (_viewModel != null)
+        {
+            _viewModel.SearchText = null;
+            _viewModel.SelectById(selectId);
+        }
+    }
+}
+
 public interface ISelectableModule
 {
     void Select(int selectId);
