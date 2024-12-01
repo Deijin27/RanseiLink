@@ -370,7 +370,7 @@
                             <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Unknown1" Binding="{Binding Unknown1}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Orientation" Binding="{Binding Orientation}" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Unknown2" Binding="{Binding Unknown2}" IsReadOnly="True"/>
                         </DataGrid.Columns>
                         <DataGrid.RowDetailsTemplate>
@@ -387,18 +387,11 @@
                                             <RowDefinition Height="22"/>
                                             <RowDefinition Height="22"/>
                                         </Grid.RowDefinitions>
-                                        <Button Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1">
-                                            <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource UpArrowGeometry}"/>
-                                        </Button>
-                                        <Button Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1">
-                                            <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource LeftArrowGeometry}"/>
-                                        </Button>
-                                        <Button Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1">
-                                            <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource RightArrowGeometry}"/>
-                                        </Button>
-                                        <Button Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2">
-                                            <Path Stroke="{DynamicResource ForegroundBrush}" Data="{StaticResource DownArrowGeometry}"/>
-                                        </Button>
+                                        <controls:IconButton Icon="chevron_up" Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1"/>
+                                        <controls:IconButton Icon="chevron_left" Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1"/>
+                                        <controls:IconButton Icon="rotate_right" Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1"/>
+                                        <controls:IconButton Icon="chevron_right" Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1"/>
+                                        <controls:IconButton Icon="chevron_down" Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2"/>
                                     </Grid>
                                     <Grid Margin="5">
                                         <Grid.ColumnDefinitions>
@@ -409,8 +402,6 @@
                                             <RowDefinition Height="25"/>
                                             <RowDefinition Height="25"/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Height="20" Text="Unknown1" Grid.Row="0"/>
-                                        <controls:NumberBox Grid.Row="0" Grid.Column="1" Height="20" Value="{Binding Unknown1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                         <TextBlock Height="20" Text="Unknown2" Grid.Row="1"/>
                                         <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding Unknown2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>

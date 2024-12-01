@@ -42,6 +42,17 @@ public class MapPokemonPositionViewModel : ViewModelBase
                 ChangePosition(() => Y--);
             }
         });
+        RotateCommand = new RelayCommand(() =>
+        {
+            Orientation = Orientation switch
+            {
+                OrientationAlt.East => OrientationAlt.South,
+                OrientationAlt.South => OrientationAlt.West,
+                OrientationAlt.West => OrientationAlt.North,
+                OrientationAlt.North => OrientationAlt.East,
+                _ => OrientationAlt.East,
+            };
+        });
     }
 
     private void ChangePosition(Action doThePositionChange)
@@ -69,10 +80,10 @@ public class MapPokemonPositionViewModel : ViewModelBase
         set => SetProperty(Y, value, v => _positions[_positionId].Y = v);
     }
 
-    public byte Unknown1
+    public OrientationAlt Orientation
     {
-        get => _positions[_positionId].Unknown1;
-        set => SetProperty(Unknown1, value, v => _positions[_positionId].Unknown1 = v);
+        get => _positions[_positionId].Orientation;
+        set => SetProperty(Orientation, value, v => _positions[_positionId].Orientation = v);
     }
 
     public byte Unknown2
@@ -85,4 +96,5 @@ public class MapPokemonPositionViewModel : ViewModelBase
     public ICommand DecrementXCommand { get; }
     public ICommand IncrementYCommand { get; }
     public ICommand DecrementYCommand { get; }
+    public ICommand RotateCommand { get; }
 }
