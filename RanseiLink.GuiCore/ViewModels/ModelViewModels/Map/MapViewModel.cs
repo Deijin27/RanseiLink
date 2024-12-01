@@ -51,6 +51,7 @@ public class MapViewModel : ViewModelBase
             new TerrainMapPainter(pathToImageConverter, overrideSpriteProvider),
             new ElevationMapPainter(),
             new BoundsMapPainter(),
+            new OrientationMapPainter()
             ];
         _selectedPainter = Painters[0];
         
@@ -277,8 +278,10 @@ public class MapViewModel : ViewModelBase
         _selectedPainter.OnMouseDownOnCell(clickedCell);
         _selectedPainter.OnMouseDownOnSubCell(clickedSubCell);
         clickedCell.Color = _selectedPainter.GetCellColor(clickedCell);
-        clickedSubCell.Color = _selectedPainter.GetSubCellColor(clickedSubCell);
-
+        foreach (var subCell in clickedCell.SubCells)
+        {
+            subCell.Color = _selectedPainter.GetSubCellColor(subCell);
+        }
     }
 
     private bool _paintingActive;
@@ -291,7 +294,10 @@ public class MapViewModel : ViewModelBase
     public void OnSubCellDragged(MapGridSubCellViewModel clickedSubCell)
     {
         // We entered the cell, and the mouse button is already down
-        HandlePaint(clickedSubCell);
+        if (PaintingActive)
+        {
+            HandlePaint(clickedSubCell);
+        }
     }
 
     public void OnSubCellClicked(MapGridSubCellViewModel clickedSubCell)

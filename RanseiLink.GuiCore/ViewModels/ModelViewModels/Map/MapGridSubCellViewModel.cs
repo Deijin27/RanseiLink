@@ -4,11 +4,13 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class MapGridSubCellViewModel : ViewModelBase
 {
-    private readonly int _entryId;
-    public MapGridSubCellViewModel(MapGridCellViewModel parent, int entryId)
+    private readonly int _visualId;
+    private readonly int _dataId;
+    public MapGridSubCellViewModel(MapGridCellViewModel parent, int visualId, int entryId)
     {
-        _entryId = entryId;
+        _dataId = entryId;
         Parent = parent;
+        _visualId = visualId;
     }
 
     public MapGridCellViewModel Parent { get; }
@@ -22,7 +24,9 @@ public class MapGridSubCellViewModel : ViewModelBase
 
     public float Z
     {
-        get => Parent.TerrainEntry.SubCellZValues[_entryId];
-        set => SetProperty(Z, value, v => Parent.TerrainEntry.SubCellZValues[_entryId] = value);
+        get => Parent.TerrainEntry.SubCellZValues[_dataId];
+        set => SetProperty(Z, value, v => Parent.TerrainEntry.SubCellZValues[_dataId] = value);
     }
+
+    public int VisualId => _visualId;
 }

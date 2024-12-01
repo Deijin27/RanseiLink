@@ -28,15 +28,16 @@ public class MapGridCellViewModel : ViewModelBase
         X = x;
         Y = y;
 
-        SubCell0 = new(this, 0);
-        SubCell1 = new(this, 1);
-        SubCell2 = new(this, 2);
-        SubCell3 = new(this, 3);
-        SubCell4 = new(this, 4);
-        SubCell5 = new(this, 5);
-        SubCell6 = new(this, 6);
-        SubCell7 = new(this, 7);
-        SubCell8 = new(this, 8);
+        // The indexes within bits don't map in reading order
+        SubCell0 = new(this, 0, 0);
+        SubCell1 = new(this, 1, 5);
+        SubCell2 = new(this, 2, 1);
+        SubCell3 = new(this, 3, 8);
+        SubCell4 = new(this, 4, 4);
+        SubCell5 = new(this, 5, 6);
+        SubCell6 = new(this, 6, 3);
+        SubCell7 = new(this, 7, 7);
+        SubCell8 = new(this, 8, 2);
 
         SubCells = [
             SubCell0, 
