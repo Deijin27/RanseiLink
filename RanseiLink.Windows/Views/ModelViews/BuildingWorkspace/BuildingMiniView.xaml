@@ -17,7 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Image Grid.Column="0" Grid.Row="0" Stretch="None"
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor"
             d:Source="C:\Users\Mia\Desktop\ConquestData\graphics\IconInstS.png"
                Source="{Binding Sprite1Image}">
                 <Image.Clip>

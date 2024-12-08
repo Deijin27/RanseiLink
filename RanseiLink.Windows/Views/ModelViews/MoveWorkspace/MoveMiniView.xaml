@@ -17,7 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="21" Margin="-5,-1,0,0"
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="21" Margin="-5,-1,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor"
                 Source="{Binding Image}"
                    d:Source="C:\Users\Mia\Desktop\move.png">
                 <Image.Clip>

@@ -20,7 +20,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19"
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
                 d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_busho_s\StlBushouSTex-Pngs\0000.png"
                    Source="{Binding WarriorImage}"
                    >
@@ -33,7 +33,7 @@
             <TextBlock Foreground="Black" FontWeight="Bold" Grid.Column="2" d:Text="Army 1" Margin="2,0,0,0" 
                        Text="{Binding Army, StringFormat='Army {0}'}"/>
 
-            <Image Grid.Column="3" Grid.Row="0" Stretch="None" Height="19"
+            <Image Grid.Column="3" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
                     Source="{Binding KingdomImage}"
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_castleicon\StlCastleIconTex-Pngs\0000.png"
                    />

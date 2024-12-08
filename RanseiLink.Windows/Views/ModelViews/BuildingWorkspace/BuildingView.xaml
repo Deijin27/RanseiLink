@@ -73,21 +73,21 @@
 
             <TextBlock Text="Sprite 1" Grid.Row="5" />
             <DockPanel Grid.Row="5" Grid.Column="1">
-                <Image Source="{Binding Sprite1Image}" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                <Image Source="{Binding Sprite1Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" DockPanel.Dock="Right" Margin="5,0,0,0"/>
                 <controls:NumberBox Value="{Binding Sprite1}" Max="{Binding Sprite1_Max}"/>
             </DockPanel>
 
 
             <TextBlock Text="Sprite 2" Grid.Row="6" />
             <DockPanel Grid.Row="6" Grid.Column="1">
-                <Image Source="{Binding Sprite2Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
+                <Image Source="{Binding Sprite2Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
                 <controls:NumberBox Value="{Binding Sprite2}" Max="{Binding Sprite2_Max}"/>
             </DockPanel>
 
 
             <TextBlock Text="Sprite 3" Grid.Row="7" />
             <DockPanel Grid.Row="7" Grid.Column="1">
-                <Image Source="{Binding Sprite3Image}" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
+                <Image Source="{Binding Sprite3Image}" RenderOptions.BitmapScalingMode="NearestNeighbor" DockPanel.Dock="Right"  Margin="5,0,0,0"/>
                 <controls:NumberBox Value="{Binding Sprite3}" Max="{Binding Sprite3_Max}"/>
             </DockPanel>
 
@@ -115,7 +115,7 @@
         <StackPanel>
             <GroupBox Header="Icon Animated Image" Margin="0,0,0,5" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
                 <DockPanel>
-                    <Image DockPanel.Dock="Left" Stretch="None" Source="{Binding SelectedAnimationImage}"/>
+                    <Image DockPanel.Dock="Left" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding SelectedAnimationImage}"/>
                     <local:AnimationView DockPanel.Dock="Bottom" DataContext="{Binding IconAnimVm}"/>
                     <controls:NumberBox Margin="5" Value="{Binding SelectedAnimation}" Max="84"/>
                 </DockPanel>

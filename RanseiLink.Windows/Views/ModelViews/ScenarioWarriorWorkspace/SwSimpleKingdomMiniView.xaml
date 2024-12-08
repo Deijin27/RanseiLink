@@ -16,8 +16,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            
-            <Image Grid.Column="1" Grid.Row="0" Stretch="None" Height="19"
+
+            <Image Grid.Column="1" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
                     Source="{Binding KingdomImage}"
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_castleicon\StlCastleIconTex-Pngs\0000.png"
                    />

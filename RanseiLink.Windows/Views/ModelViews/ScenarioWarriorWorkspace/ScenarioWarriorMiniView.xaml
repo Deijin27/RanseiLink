@@ -33,7 +33,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="19"/>
             </Grid.RowDefinitions>
-            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19"
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
                 d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_busho_s\StlBushouSTex-Pngs\0000.png"
                    Source="{Binding WarriorImage}">
                 <Image.Clip>
@@ -41,7 +41,7 @@
                 </Image.Clip>
             </Image>
             <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
-            <Image Grid.Column="2" Grid.Row="0" Stretch="None" Height="19"
+            <Image Grid.Column="2" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
                    Source="{Binding ScenarioPokemonSlots[0].PokemonImage}"
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png" 
                    />
