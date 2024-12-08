@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.MoveMiniView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             d:Width="180"
+             d:DataContext="{d:DesignInstance vm:MoveMiniViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" HorizontalAlignment="Stretch">
+    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="39"/><!--32-->
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="21" Margin="-5,-1,0,0"
+                Source="{Binding Image}"
+                   d:Source="C:\Users\Mia\Desktop\move.png">
+                <Image.Clip>
+                    <RectangleGeometry RadiusX="3.5" RadiusY="3.5" Rect="5,1,55,19"/><!--35-->
+                </Image.Clip>
+            </Image>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
+            <TextBlock Grid.Column="2" d:Text="000 - Shadow Sneak" Margin="2,0,0,0">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0:000} - {1}">
+                        <Binding Path="Id"/>
+                        <Binding Path="Name"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <Border Grid.Column="2" Width="16" Background="{Binding Type, Converter={StaticResource Converter.PokemonTypeToBrush}}" 
+        d:Background="#B2A771"
+        HorizontalAlignment="Right" Height="10" VerticalAlignment="Top"
+        BorderBrush="{DynamicResource ControlBorderBrush}"
+        BorderThickness="1,0,0,0" CornerRadius="0,4,0,0"
+/>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+        Grid.Column="2" Background="Black" BorderBrush="{DynamicResource ControlBorderBrush}" 
+        BorderThickness="1,1,0,0" CornerRadius="4,0,4,0" Height="14" Padding="1,0,1,0" Width="19">
+                <TextBlock Foreground="#FFEC39" FontWeight="Bold" d:Text="255" Text="{Binding Power}" TextAlignment="Right" FontSize="9"/>
+            </Border>
+
+        </Grid>
+
+    </Button>
+</UserControl>

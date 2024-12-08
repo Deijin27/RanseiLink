@@ -3,6 +3,9 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
 using SixLabors.ImageSharp;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Enums;
 
 namespace RanseiLink.GuiCore.Services.Concrete;
 
@@ -10,12 +13,21 @@ public class CachedSpriteProvider : ICachedSpriteProvider
 {
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IPathToImageConverter _pathToImageConverter;
+    private readonly ISpriteService _spriteService;
+    private readonly IMoveRangeService _moveRangeService;
     private readonly Dictionary<int, object?> _cache = [];
 
-    public CachedSpriteProvider(IOverrideDataProvider overrideDataProvider, IPathToImageConverter pathToImageConverter)
+    public CachedSpriteProvider(
+        IOverrideDataProvider overrideDataProvider, 
+        IPathToImageConverter pathToImageConverter,
+        ISpriteService spriteService, 
+        IMoveRangeService moveRangeService
+        )
     {
         _overrideDataProvider = overrideDataProvider;
         _pathToImageConverter = pathToImageConverter;
+        _spriteService = spriteService;
+        _moveRangeService = moveRangeService;
         _overrideDataProvider.SpriteModified += OverrideDataProvider_SpriteModified;
     }
 
@@ -87,5 +99,23 @@ public class CachedSpriteProvider : ICachedSpriteProvider
                 return result;
             })
             .ToArray();
+    }
+
+    public object? GetMovePreview(Move model, MovePreviewOptions options = MovePreviewOptions.All)
+    {
+        using var img = _spriteService.GetMovePreview(model, _moveRangeService.Retrieve((int)model.Range), options);
+        return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetMoveRangePreview(MoveRangeId range)
+    {
+        using var img = _spriteService.GetMoveRangePreview(_moveRangeService.Retrieve((int)range));
+        return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetMoveRangePreview(MoveRange model)
+    {
+        using var img = _spriteService.GetMoveRangePreview(model);
+        return _pathToImageConverter.TryConvert(img);
     }
 }

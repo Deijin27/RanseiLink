@@ -47,6 +47,25 @@ public class WarriorWorkspaceModule : BaseWorkspaceEditorModule<IBaseWarriorServ
 }
 
 [EditorModule]
+public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
+{
+    public const string Id = "move_workspace";
+    public override string UniqueId => Id;
+    public override string ListName => "Move";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<MoveViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new MoveMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
+    }
+}
+
+[EditorModule]
 public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
 {
     public const string Id = "ability_selector";
@@ -85,20 +104,6 @@ public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRange
         base.Initialise(modServices);
         var vm = modServices.Get<MoveRangeViewModel>();
         _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
-    }
-}
-
-[EditorModule]
-public class MoveSelectorEditorModule : BaseSelectorEditorModule<IMoveService>
-{
-    public const string Id = "move_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Move";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<MoveViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((MoveId)id, _service.Retrieve(id)));
     }
 }
 

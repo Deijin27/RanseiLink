@@ -1,4 +1,6 @@
 ﻿#nullable enable
+using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.Services;
@@ -10,5 +12,8 @@ namespace RanseiLink.GuiCore.Services;
 public interface ICachedSpriteProvider
 {
     IReadOnlyList<object?> GetClusterImages(string linkPath, int[] clusters);
+    object? GetMovePreview(Move model, MovePreviewOptions options = MovePreviewOptions.All);
+    object? GetMoveRangePreview(MoveRange model);
+    object? GetMoveRangePreview(MoveRangeId range);
     object? GetSprite(SpriteType type, int id);
 }

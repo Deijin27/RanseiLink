@@ -153,13 +153,14 @@ internal class SpriteService : ISpriteService
         {
             DrawBackground(x);
             DrawRange(x, range);
+            DrawArrow(x);
             DrawOverlay(x);
         });
 
         return baseImg;
     }
 
-    public Image<Rgba32> GetMovePreview(Move move, MoveRange range)
+    public Image<Rgba32> GetMovePreview(Move move, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All)
     {
         var baseImg = GetMoveRangePreview(range);
 
@@ -169,8 +170,15 @@ internal class SpriteService : ISpriteService
             DrawRange(x, range);
             DrawMoveSideEffects(x, move, range);
             DrawArrow(x);
-            DrawMovePowerStars(x, move);
-            DrawMoveType(x, move);
+            if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
+            {
+                DrawMovePowerStars(x, move);
+            }
+            if (options.HasFlag(MovePreviewOptions.DrawType))
+            {
+                DrawMoveType(x, move);
+            }
+
             DrawOverlay(x);
         });
 

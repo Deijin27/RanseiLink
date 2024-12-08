@@ -16,33 +16,24 @@ public enum MoveAnimationPreviewMode
     Movement,
 }
 
-public partial class MoveViewModel : ViewModelBase
+public partial class MoveViewModel : ViewModelBase, IBigViewModel
 {
     private readonly ICachedMsgBlockService _msgService;
     private readonly IExternalService _externalService;
     private readonly IPokemonService _pokemonService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
-    private readonly ISpriteService _spriteService;
-    private readonly IPathToImageConverter _pathToImageConverter;
-    private readonly IMoveRangeService _moveRangeService;
 
     public MoveViewModel(
         ICachedMsgBlockService msgService, 
         IExternalService externalService, 
         IJumpService jumpService, 
         IPokemonService pokemonService,
-        ICachedSpriteProvider cachedSpriteProvider,
-        ISpriteService spriteService,
-        IPathToImageConverter pathToImageConverter,
-        IMoveRangeService moveRangeService)
+        ICachedSpriteProvider cachedSpriteProvider)
     {
         _msgService = msgService;
         _externalService = externalService;
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
-        _spriteService = spriteService;
-        _pathToImageConverter = pathToImageConverter;
-        _moveRangeService = moveRangeService;
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
@@ -102,14 +93,7 @@ public partial class MoveViewModel : ViewModelBase
         RaiseAllPropertiesChanged();
     }
 
-    public object? PreviewImage
-    {
-        get
-        {
-            using var img = _spriteService.GetMovePreview(_model, _moveRangeService.Retrieve((int)Range));
-            return _pathToImageConverter.TryConvert(img);
-        }
-    }
+    public object? PreviewImage => _cachedSpriteProvider.GetMovePreview(_model);
 
     public bool MovementFlag_MovementOrKnockback
     {
@@ -189,6 +173,11 @@ public partial class MoveViewModel : ViewModelBase
     private string GetAnimationUri(MoveAnimationId id)
     {
         return _externalService.GetMoveAnimationUri(id);
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((MoveId)id, (Move)model);
     }
 
     private readonly ICommand _selectPokemonCommand;

@@ -162,6 +162,10 @@
             <DataTemplate DataType="{x:Type cvm:BuildingMiniViewModel}">
                 <views:BuildingMiniView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:MoveMiniViewModel}">
+                <views:MoveMiniView/>
+            </DataTemplate>
             
           
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
