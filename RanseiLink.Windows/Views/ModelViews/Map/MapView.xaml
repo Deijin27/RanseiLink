@@ -61,27 +61,55 @@
             </ListBox>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:ElevationMapPainter}">
-            <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Width="140" Margin="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" BorderThickness="1"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="0,0,5,0" VerticalAlignment="Center">Mode:</TextBlock>
+                <ListBox Grid.Column="1" ItemsSource="{Binding Modes}" SelectedItem="{Binding SelectedMode}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="60">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <controls:IconControl Icon="{Binding Icon}"/>
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <ListBox Margin="0,5,0,0" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="140" Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" BorderThickness="1"
                                 BorderBrush="{DynamicResource ControlBorderBrush}" 
                                 Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}"/>
-                            <TextBox Width="80" Grid.Column="2" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="8,2"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+                                <TextBox Width="80" Grid.Column="2" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" Margin="8,2"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
         </DataTemplate>
         <DataTemplate DataType="{x:Type vm:OrientationMapPainter}">
             <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -245,8 +273,12 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Grid Width="100">
-                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <controls:IconControl Icon="{Binding Icon}"/>
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </StackPanel>
                             </Grid>
+                            
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemsPanel>

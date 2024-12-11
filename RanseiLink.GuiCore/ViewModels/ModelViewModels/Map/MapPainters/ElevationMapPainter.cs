@@ -1,20 +1,15 @@
-﻿using RanseiLink.Core.Util;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Util;
+using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing.Processors.Filters;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public class ElevationMapPainter : BaseMapPainter
 {
     public override string Name => "Elevation";
-
-
-    private bool _paintEntireCell;
-
-    public bool PaintEntireCell
-    {
-        get => _paintEntireCell;
-        set => SetProperty(ref _paintEntireCell, value);
-    }
+    public override IconId Icon => IconId.elevation;
 
     private static Rgba32 ZToColor(float value)
     {
@@ -79,6 +74,31 @@ public class ElevationMapPainter : BaseMapPainter
         }
     }
 
+    public class CellMode
+    {
+        public static readonly CellMode Cell = new("3 × 3", IconId.grid_on);
+        public static readonly CellMode SubCell = new("1 × 1", IconId.stop);
+        public static readonly CellMode Picker = new("Picker", IconId.colorize);
+
+        private CellMode(string name, IconId id)
+        {
+            Name = name;
+            Icon = id;
+        }
+
+        public string Name { get; }
+        public IconId Icon { get; }
+    }
+
+    public CellMode[] Modes { get; } = [CellMode.Cell, CellMode.SubCell, CellMode.Picker];
+
+    private static CellMode __selectedMode = CellMode.SubCell;
+    public CellMode SelectedMode
+    {
+        get => __selectedMode;
+        set => SetProperty(ref __selectedMode, value);
+    }
+
     public ElevationMapPainter()
     {
         Brushes = [];
@@ -96,7 +116,7 @@ public class ElevationMapPainter : BaseMapPainter
 
     public override void OnMouseDownOnCell(MapGridCellViewModel cell)
     {
-        if (_paintEntireCell)
+        if (SelectedMode == CellMode.Cell)
         {
             var elevationToPaint = SelectedBrush.NumericValue;
             foreach (var subCell in cell.SubCells)
@@ -108,9 +128,13 @@ public class ElevationMapPainter : BaseMapPainter
 
     public override void OnMouseDownOnSubCell(MapGridSubCellViewModel cell)
     {
-        if (!_paintEntireCell)
+        if (SelectedMode == CellMode.SubCell)
         {
             cell.Z = SelectedBrush.NumericValue;
+        }
+        else if (SelectedMode == CellMode.Picker)
+        {
+            SelectedBrush.Value = cell.Z.ToString();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Util;
+using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -11,6 +12,7 @@ public class BoundsMapPainter : BaseMapPainter
     private readonly Dictionary<MapBounds, Rgba32> _boundsToColor = [];
 
     public override string Name => "Bounds";
+    public override IconId Icon => IconId.block;
 
     private Brush _selectedBrush;
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using RanseiLink.GuiCore.Constants;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RanseiLink.Windows.Controls

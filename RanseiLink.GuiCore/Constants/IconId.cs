@@ -1,4 +1,4 @@
-﻿namespace RanseiLink.Windows.Controls
+﻿namespace RanseiLink.GuiCore.Constants
 {
     public static class IconUtil
     {
@@ -51,7 +51,7 @@
         chevron_right = 0xe5cc,
         chevron_up = 0xe5ce,
         chevron_down = 0xe5cf,
-        rotate_right = 0xe41a, 
+        rotate_right = 0xe41a,
         rotate_left = 0xe419,
         keep = 0xe6aa,
         fiber_new = 0xe05e,
@@ -59,5 +59,13 @@
         person = 0xe7fd,
         language = 0xe894,
         info = 0xe88e,
+        grid_on = 0xe3ec,
+        colorize = 0xe3b8,
+        stop = 0xe047,
+        square = 0xeb36,
+        elevation = 0xf6e7,
+        grass = 0xf205,
+        block = 0xe14b,
+        explore = 0xe87a,
     }
 }

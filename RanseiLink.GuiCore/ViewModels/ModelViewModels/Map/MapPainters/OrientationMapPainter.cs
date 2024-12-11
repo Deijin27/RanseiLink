@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Maps;
+using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -7,6 +8,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class OrientationMapPainter : BaseMapPainter
 {
     public override string Name => "Orientation";
+    public override IconId Icon => IconId.explore;
 
     private readonly Dictionary<OrientationAlt, Brush> _orientationToColor = [];
     private Brush _selectedBrush;

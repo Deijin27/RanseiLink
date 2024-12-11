@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
+using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -8,6 +9,7 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class TerrainMapPainter : BaseMapPainter
 {
     public override string Name => "Terrain";
+    public override IconId Icon => IconId.grass;
 
     private readonly Dictionary<TerrainId, Rgba32> _terrainToColor = [];
     private readonly IPathToImageConverter _pathToImageConverter;
