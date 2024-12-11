@@ -156,6 +156,13 @@ public class MapViewModel : ViewModelBase
         }
     }
 
+    private static int __selectedTabIndex;
+    public int SelectedTabIndex
+    {
+        get => __selectedTabIndex;
+        set => SetProperty(ref __selectedTabIndex, value);
+    }
+
     public ushort Width => (ushort)Map.TerrainSection.MapMatrix[0].Count;
 
     public ushort Height => (ushort)Map.TerrainSection.MapMatrix.Count;
@@ -284,12 +291,7 @@ public class MapViewModel : ViewModelBase
         }
     }
 
-    private bool _paintingActive;
-    public bool PaintingActive
-    {
-        get => _paintingActive;
-        set => SetProperty(ref _paintingActive, value);
-    }
+    private bool PaintingActive => __selectedTabIndex == 3;
 
     public void OnSubCellDragged(MapGridSubCellViewModel clickedSubCell)
     {

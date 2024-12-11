@@ -290,7 +290,6 @@
                 
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-                <CheckBox IsChecked="{Binding PaintingActive}" Content="Enable Paint" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <CheckBox IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <CheckBox IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
             </StackPanel>
@@ -301,7 +300,8 @@
                 <controls:IconButton Icon="visibility" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
             </StackPanel>
 
-            <TabControl Margin="0,20,0,0">
+            <TabControl Margin="0,20,0,0" SelectedIndex="{Binding SelectedTabIndex}">
+                <!-- Important, if you swap tab order, make sure to update the tap associated with Painter in the view model -->
                 <TabItem Header="Selected Cell">
                     <ContentPresenter Margin="10" Content="{Binding SelectedCell}">
                         <ContentPresenter.ContentTemplate>
