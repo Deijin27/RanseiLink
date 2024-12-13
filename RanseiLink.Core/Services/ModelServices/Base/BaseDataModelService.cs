@@ -23,6 +23,11 @@ public abstract class BaseDataModelService<TModel> : BaseModelService<TModel> wh
 
     }
 
+    public virtual void PreSave(Stream stream)
+    {
+
+    }
+
     public override void Reload()
     {
         _cache.Clear();
@@ -42,6 +47,7 @@ public abstract class BaseDataModelService<TModel> : BaseModelService<TModel> wh
     {
         using (var stream = File.OpenWrite(_dataFile))
         {
+            PreSave(stream);
             for (int id = _minId; id <= _maxId; id++)
             {
                 _cache[id].Write(stream);

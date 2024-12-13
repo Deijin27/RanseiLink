@@ -25,16 +25,18 @@ public partial class PokemonService
             {
                 for (int i = minEvo; i <= maxEvo; i++)
                 {
-                    pokemon.Evolutions.Add((PokemonId)buffer[i]);
+                    if (i < buffer.Length) // Prevent crash if v6.0 broke mods. Evolutions will be messed up but won't crash.
+                    {
+                        pokemon.Evolutions.Add((PokemonId)buffer[i]);
+                    }
                 }
             }
         }
     }
 
-    public override void PostSave(Stream stream)
+    public override void PreSave(Stream stream)
     {
-        var evoTable = new List<PokemonId>();
-
+        _evoTable.Clear();
         foreach (var pokemon in Enumerate())
         {
             if (pokemon.Evolutions.Count == 0)
@@ -44,25 +46,31 @@ public partial class PokemonService
             }
             else
             {
-                pokemon.MinEvolutionTableEntry = evoTable.Count;
+                pokemon.MinEvolutionTableEntry = _evoTable.Count;
                 foreach (var evo in pokemon.Evolutions)
                 {
-                    evoTable.Add(evo);
+                    _evoTable.Add(evo);
                 }
-                pokemon.MaxEvolutionTableEntry = evoTable.Count - 1;
+                pokemon.MaxEvolutionTableEntry = _evoTable.Count - 1;
             }
         }
+    }
 
+    private readonly List<PokemonId> _evoTable = [];
+
+    public override void PostSave(Stream stream)
+    {
         // write the evolution table
         stream.Position = __evoTableOffset;
-        int length = evoTable.Count;
+        int length = _evoTable.Count;
         stream.WriteInt32(length);
-        stream.Write(evoTable.Select(i => (byte)i).ToArray());
+        stream.Write(_evoTable.Select(i => (byte)i).ToArray());
         // this is padded to be divisible by 4
         if (length % 4 != 0)
         {
             stream.Pad(4 - (length % 4));
         }
         stream.SetLength(stream.Position);
+        _evoTable.Clear();
     }
 }
