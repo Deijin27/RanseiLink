@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Core.Settings;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using System.Collections.ObjectModel;
@@ -39,7 +40,8 @@ public class MapViewModel : ViewModelBase
         IOverrideDataProvider overrideSpriteProvider, 
         IMapManager mapManager,
         IMapViewerService mapViewerService,
-        IPathToImageConverter pathToImageConverter)
+        IPathToImageConverter pathToImageConverter,
+        ISettingService settingService)
     {
         _mapManager = mapManager;
         _mapViewerService = mapViewerService;
@@ -49,7 +51,7 @@ public class MapViewModel : ViewModelBase
 
         Painters = [
             new TerrainMapPainter(pathToImageConverter, overrideSpriteProvider),
-            new ElevationMapPainter(),
+            new ElevationMapPainter(settingService),
             new BoundsMapPainter(),
             new OrientationMapPainter()
             ];

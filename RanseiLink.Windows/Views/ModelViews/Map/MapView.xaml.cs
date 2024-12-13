@@ -50,18 +50,6 @@ public partial class MapView : UserControl
             && DataContext is MapViewModel vm)
         {
             vm.OnSubCellClicked(dc);
-            App.Current.MainWindow.MouseUp += MainWindow_MouseUp;
-            MatrixElement.MouseUp += MatrixElement_MouseUp;
         }
-    }
-
-    private void MainWindow_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        throw new NotImplementedException();
-    }
-
-    private void MatrixElement_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-        MatrixElement.MouseUp -= MatrixElement_MouseUp;
     }
 }

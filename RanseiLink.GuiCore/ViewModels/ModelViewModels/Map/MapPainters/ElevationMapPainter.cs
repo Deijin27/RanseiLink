@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core;
+using RanseiLink.Core.Settings;
 using RanseiLink.Core.Util;
 using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp.PixelFormats;
@@ -47,9 +48,12 @@ public class ElevationMapPainter : BaseMapPainter
                     RaisePropertyChanged(nameof(Color));
                     RaisePropertyChanged(nameof(NumericValue));
                     RaisePropertyChanged(nameof(IsValid));
+                    ValueChanged?.Invoke();
                 }
             }
         }
+
+        public event Action? ValueChanged;
 
         public Brush(float value)
         {
@@ -93,25 +97,53 @@ public class ElevationMapPainter : BaseMapPainter
     public CellMode[] Modes { get; } = [CellMode.Cell, CellMode.SubCell, CellMode.Picker];
 
     private static CellMode __selectedMode = CellMode.SubCell;
+    private readonly ISettingService _settingService;
+    private ElevationPaletteSetting _elevationPaletteSetting;
+
     public CellMode SelectedMode
     {
         get => __selectedMode;
         set => SetProperty(ref __selectedMode, value);
     }
 
-    public ElevationMapPainter()
+    public ElevationMapPainter(ISettingService settingService)
     {
+        _settingService = settingService;
+        _elevationPaletteSetting = settingService.Get<ElevationPaletteSetting>();
         Brushes = [];
         Brushes.Add(new Brush(0f));
         Brushes.Add(new Brush(12.5f));
         Brushes.Add(new Brush(25f));
         Brushes.Add(new Brush(37.5f));
         Brushes.Add(new Brush(50f));
-        for (int i = 0; i < 47; i++)
+        for (int i = 0; i < 103; i++)
         {
             Brushes.Add(new Brush(0f));
         }
         _selectedBrush = Brushes[0];
+
+        int c = 0;
+        foreach (var x in _elevationPaletteSetting.Value)
+        {
+            if (c >= Brushes.Count)
+            {
+                break;
+            }
+            Brushes[c].Value = x;
+            c++;
+        }
+
+
+        foreach (var brush in Brushes)
+        {
+            brush.ValueChanged += Brush_ValueChanged;
+        }
+    }
+
+    private void Brush_ValueChanged()
+    {
+        _elevationPaletteSetting.Value = Brushes.Select(x => x.Value).ToArray();
+        _settingService.Save();
     }
 
     public override void OnMouseDownOnCell(MapGridCellViewModel cell)
