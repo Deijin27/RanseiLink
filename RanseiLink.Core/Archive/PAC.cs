@@ -9,7 +9,7 @@ public static class PAC
         NSBMD,
         NSBTX,
         NSBTP,
-        UNKNOWN3,
+        NSBCA,
         NSBMA,
         PAT,
         CHAR,
@@ -25,7 +25,7 @@ public static class PAC
             FileTypeNumber.NSBMD => ".nsbmd",// nitro sdk binary model data
             FileTypeNumber.NSBTX => ".nsbtx",// nitro sdk binary texture
             FileTypeNumber.NSBTP => ".nsbtp",// nitro sdk binary texture pattern
-            FileTypeNumber.UNKNOWN3 => ".unknown3",
+            FileTypeNumber.NSBCA => ".nsbca", // nitro sdk binary character animation
             FileTypeNumber.NSBMA => ".nsbma",// nitro sdk binary material animation
             FileTypeNumber.PAT => ".pat",// in pokemon model pacs this is a stripped down version of nsbtp
             FileTypeNumber.CHAR => ".char",
@@ -54,8 +54,11 @@ public static class PAC
             case ".nsbtp":
                 return FileTypeNumber.NSBTP;
 
-            case ".unknown3":
-                return FileTypeNumber.UNKNOWN3;
+            case ".unknown3": // retained for compatibity since we didn't used to know what this file was
+            case ".bca":
+            case ".bca0":
+            case ".nsbca":
+                return FileTypeNumber.NSBCA;
 
             case ".bma":
             case ".bma0":

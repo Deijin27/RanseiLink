@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 
 namespace RanseiLink.GuiCore.Services;
@@ -13,4 +14,6 @@ public interface IMapManager
     Task<bool> ExportPslm(MapId id);
     Task<bool> ImportPslm(MapId id);
     Task<bool> RevertModelToDefault(MapId id);
+    Task<bool> ExportObj(GimmickObjectId id, int variant);
+    string ResolveGimmickModelFilePath(GimmickObjectId id, int variant);
 }

@@ -67,6 +67,10 @@
                 <views:GimmickView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:GimmickObjectViewModel}">
+                <views:GimmickObjectView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:AbilityViewModel}">
                 <views:AbilityView/>
             </DataTemplate>

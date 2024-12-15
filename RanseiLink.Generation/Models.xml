@@ -130,7 +130,7 @@
         <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="Animation2" Type="MoveAnimationId"/>
         <Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
     </Model>
-    <Model Name="GimmickObject" DataLength="0x4" Model="true">
+    <Model Name="GimmickObject" DataLength="0x4" Model="true" ViewModel="true">
         <Service MaxId="99"/>
     </Model>
     <Model Name="Item" DataLength="0x24" Command="true" Render="true" Model="true" ViewModel="true">

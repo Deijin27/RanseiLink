@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Archive;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
@@ -22,9 +23,19 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}";
     }
 
+    private static string ResolveGimmickModelFileNameWithoutExt(GimmickObjectId id, int variant)
+    {
+        return $"OBJ{((int)id).ToString().PadLeft(3, '0')}_{variant.ToString().PadLeft(2, '0')}";
+    }
+
     private static string ResolveMapModelFilePath(MapId id)
     {
         return Path.Combine("graphics", "ikusa_map", ResolveMapModelFileNameWithoutExt(id) + _pacExt);
+    }
+
+    public string ResolveGimmickModelFilePath(GimmickObjectId id, int variant)
+    {
+        return Path.Combine("graphics", "ikusa_obj", ResolveGimmickModelFileNameWithoutExt(id, variant) + _pacExt);
     }
 
     public async Task<bool> RevertModelToDefault(MapId id)
@@ -163,7 +174,42 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         }
         catch (Exception ex)
         {
-            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception exporting map", ex.ToString(), MessageBoxType.Error));
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> ExportObj(GimmickObjectId id, int variant)
+    {
+        if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variant))
+        {
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
+            return false;
+        }
+        var destinationFolder = await dialogService.ShowOpenFolderDialog(new("Choose a folder in which to place the exported OBJ"));
+        if (string.IsNullOrEmpty(destinationFolder))
+        {
+            return false;
+        }
+
+        var dataFile = overrideDataProvider.GetDataFile(ResolveGimmickModelFilePath(id, variant));
+        var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(dataFile.File));
+        exportFolder = FileUtil.MakeUniquePath(exportFolder);
+
+        try
+        {
+            var result = ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, exportFolder);
+            if (result.IsFailed)
+            {
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error exporting gimmick as obj", result.ToString(), MessageBoxType.Error));
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception exporting gimmick", ex.ToString(), MessageBoxType.Error));
             return false;
         }
 
@@ -207,6 +253,12 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return info.IsOverride;
     }
 
-    
+    public bool IsOverriden(GimmickObjectId id, int variant)
+    {
+        var info = overrideDataProvider.GetDataFile(ResolveGimmickModelFilePath(id, variant));
+        return info.IsOverride;
+    }
+
+
 }
 

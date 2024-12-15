@@ -50,6 +50,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\ModelViews\GimmickObjectView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\SelectorViews\WorkspaceView.xaml">
       <SubType>Designer</SubType>
     </Page>

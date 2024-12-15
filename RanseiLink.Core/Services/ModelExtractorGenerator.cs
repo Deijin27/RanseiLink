@@ -67,7 +67,7 @@ public static class ModelExtractorGenerator
                 case PAC.FileTypeNumber.DEFAULT:
                 case PAC.FileTypeNumber.NSBTP:
                     break;
-                case PAC.FileTypeNumber.UNKNOWN3:
+                case PAC.FileTypeNumber.NSBCA:
                 case PAC.FileTypeNumber.NSBMA:
                 case PAC.FileTypeNumber.PAT:
                 case PAC.FileTypeNumber.CHAR:

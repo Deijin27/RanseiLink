@@ -48,6 +48,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, BuildingWorkspaceEditorModule>();
         builder.Register<EditorModule, MsgGridEditorModule>();
         builder.Register<EditorModule, GimmickSelectorEditorModule>();
+        builder.Register<EditorModule, GimmickObjectSelectorEditorModule>();
         builder.Register<EditorModule, EpisodeSelectorEditorModule>();
         builder.Register<EditorModule, KingdomSelectorEditorModule>();
         builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
@@ -92,6 +93,7 @@ public class WpfModServiceModule : IModule
         builder.Register<EpisodeViewModel>();
         builder.Register<EventSpeakerViewModel>();
         builder.Register<GimmickViewModel>();
+        builder.Register<GimmickObjectViewModel>();
         builder.Register<ItemViewModel>();
         builder.Register<KingdomViewModel>();
         builder.Register<MapViewModel>();

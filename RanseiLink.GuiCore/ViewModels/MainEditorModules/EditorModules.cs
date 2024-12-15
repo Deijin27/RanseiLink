@@ -282,6 +282,20 @@ public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickServ
 }
 
 [EditorModule]
+public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmickObjectService>
+{
+    public const string Id = "gimmick_object_selector";
+    public override string UniqueId => Id;
+    public override string ListName => "Gimmick Object";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<GimmickObjectViewModel>();
+        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)));
+    }
+}
+
+[EditorModule]
 public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeService>
 {
     public const string Id = "episode_selector";
