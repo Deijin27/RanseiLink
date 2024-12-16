@@ -4,6 +4,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using System.Linq;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -268,16 +269,21 @@ public class MsgGridEditorModule : EditorModule
 }
 
 [EditorModule]
-public class GimmickSelectorEditorModule : BaseSelectorEditorModule<IGimmickService>
+public class GimmickWorkspaceEditorModule : BaseWorkspaceEditorModule<IGimmickService>
 {
-    public const string Id = "gimmick_selector";
+    public const string Id = "gimmick_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Gimmick";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<GimmickViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((GimmickId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<GimmickViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new GimmickMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 

@@ -170,8 +170,12 @@
             <DataTemplate DataType="{x:Type cvm:MoveMiniViewModel}">
                 <views:MoveMiniView/>
             </DataTemplate>
-            
-          
+
+            <DataTemplate DataType="{x:Type cvm:GimmickMiniViewModel}">
+                <views:GimmickMiniView/>
+            </DataTemplate>
+
+
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>
                 <Setter Property="DisplayMemberPath" Value="IdAndName"/>

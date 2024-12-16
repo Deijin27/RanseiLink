@@ -12,7 +12,7 @@ public enum GimmickAnimationPreviewMode
     Two
 }
 
-public partial class GimmickViewModel : ViewModelBase
+public partial class GimmickViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IExternalService _externalService;
     private readonly IOverrideDataProvider _spriteProvider;
@@ -26,7 +26,7 @@ public partial class GimmickViewModel : ViewModelBase
 
         GimmickItems = idToNameService.GetComboBoxItemsPlusDefault<IGimmickService>();
 
-        JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickSelectorEditorModule.Id, id));
+        JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickWorkspaceEditorModule.Id, id));
         JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeSelectorEditorModule.Id, (int)id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
@@ -116,6 +116,11 @@ public partial class GimmickViewModel : ViewModelBase
     private string GetAnimationUri(MoveAnimationId id)
     {
         return _externalService.GetMoveAnimationUri(id);
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((GimmickId)id, (Gimmick)model);
     }
 
     public string Image1Path => _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, Image1).File;

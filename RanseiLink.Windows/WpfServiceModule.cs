@@ -47,7 +47,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, ItemSelectorEditorModule>();
         builder.Register<EditorModule, BuildingWorkspaceEditorModule>();
         builder.Register<EditorModule, MsgGridEditorModule>();
-        builder.Register<EditorModule, GimmickSelectorEditorModule>();
+        builder.Register<EditorModule, GimmickWorkspaceEditorModule>();
         builder.Register<EditorModule, GimmickObjectSelectorEditorModule>();
         builder.Register<EditorModule, EpisodeSelectorEditorModule>();
         builder.Register<EditorModule, KingdomSelectorEditorModule>();
