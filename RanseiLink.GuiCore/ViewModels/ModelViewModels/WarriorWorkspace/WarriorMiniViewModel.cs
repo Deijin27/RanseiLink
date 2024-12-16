@@ -3,6 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Core.Util;
 using System.Text.RegularExpressions;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -52,7 +53,7 @@ public class WarriorMiniViewModel : ViewModelBase, IMiniViewModel
 
     public bool MatchSearchTerm(string searchTerm)
     {
-        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        if (Name.ContainsIgnoreCaseAndAccents(searchTerm))
         {
             return true;
         }

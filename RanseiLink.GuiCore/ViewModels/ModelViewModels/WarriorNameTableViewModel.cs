@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Util;
 using System.Collections.ObjectModel;
 using System.Globalization;
 
@@ -68,15 +69,9 @@ public class WarriorNameTableViewModel : ViewModelBase
             return;
         }
         Items.Clear();
-
-        var compareInfo = CultureInfo.InvariantCulture.CompareInfo;
-        // IgnoreNonSpace ignores accents
-        var options = CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace;
-
         foreach (var item in _allItems)
         {
-            var index = compareInfo.IndexOf(item.Name, searchTerm, options);
-            if (index != -1)
+            if (item.Name.ContainsIgnoreCaseAndAccents(searchTerm))
             {
                 Items.Add(item);
             }

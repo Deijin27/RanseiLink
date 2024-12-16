@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Models;
+using RanseiLink.Core.Util;
 
 namespace RanseiLink.GuiCore.ViewModels;
 public class BuildingMiniViewModel : ViewModelBase, IMiniViewModel
@@ -29,7 +30,7 @@ public class BuildingMiniViewModel : ViewModelBase, IMiniViewModel
 
     public bool MatchSearchTerm(string searchTerm)
     {
-        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        if (Name.ContainsIgnoreCaseAndAccents(searchTerm))
         {
             return true;
         }

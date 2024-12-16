@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using RanseiLink.Core.Util;
 using RanseiLink.GuiCore.Services.Concrete;
 
 namespace RanseiLink.GuiCore.ViewModels;
@@ -45,7 +46,7 @@ public class MoveMiniViewModel : ViewModelBase, IMiniViewModel
 
     public bool MatchSearchTerm(string searchTerm)
     {
-        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        if (Name.ContainsIgnoreCaseAndAccents(searchTerm))
         {
             return true;
         }

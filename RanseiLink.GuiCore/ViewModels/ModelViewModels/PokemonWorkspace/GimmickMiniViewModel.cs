@@ -2,6 +2,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Util;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -52,7 +53,7 @@ public class GimmickMiniViewModel : ViewModelBase, IMiniViewModel
 
     public bool MatchSearchTerm(string searchTerm)
     {
-        if (Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+        if (Name.ContainsIgnoreCaseAndAccents(searchTerm))
         {
             return true;
         }
