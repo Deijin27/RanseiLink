@@ -50,7 +50,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, GimmickWorkspaceEditorModule>();
         builder.Register<EditorModule, GimmickObjectSelectorEditorModule>();
         builder.Register<EditorModule, EpisodeSelectorEditorModule>();
-        builder.Register<EditorModule, KingdomSelectorEditorModule>();
+        builder.Register<EditorModule, KingdomWorkspaceEditorModule>();
         builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
         builder.Register<EditorModule, GimmickRangeSelectorEditorModule>();
         builder.Register<EditorModule, MapSelectorEditorModule>();

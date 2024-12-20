@@ -175,6 +175,10 @@
                 <views:GimmickMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:KingdomMiniViewModel}">
+                <views:KingdomMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>

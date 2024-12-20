@@ -36,6 +36,9 @@
     <Compile Update="Views\ModelViews\GimmickWorkspace\GimmickMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\KingdomWorkspace\KingdomMiniView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\ModelViews\MoveWorkspace\MoveMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

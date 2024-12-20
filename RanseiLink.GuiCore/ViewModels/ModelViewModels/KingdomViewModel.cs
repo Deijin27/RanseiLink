@@ -6,7 +6,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class KingdomViewModel : ViewModelBase
+public partial class KingdomViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IAnimGuiManager _animGuiManager;
 
@@ -25,6 +25,11 @@ public partial class KingdomViewModel : ViewModelBase
         CastlemapAnimVm = new(_animGuiManager, AnimationTypeId.Castlemap, (int)id);
         KingdomIconAnimVm = new(_animGuiManager, AnimationTypeId.IconCastle, (int)id);
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((KingdomId)id, (Kingdom)model);
     }
 
     public AnimationViewModel? KingdomImageAnimVm { get; private set; }

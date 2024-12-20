@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.KingdomMiniView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" d:Width="150"
+             d:DataContext="{d:DesignInstance vm:KingdomMiniViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" HorizontalAlignment="Stretch">
+    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19"/>
+            </Grid.RowDefinitions>
+            <Border Background="#E4E3D0" BorderThickness="0" CornerRadius="3,0,0,3" />
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                Source="{Binding Image}"
+                   d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_castleicon\StlCastleIconTex-Pngs\0000.png">
+               
+            </Image>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
+            <TextBlock Grid.Column="2" d:Text="000 - Eevee" Margin="2,0,0,0">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0:000} - {1}">
+                        <Binding Path="Id"/>
+                        <Binding Path="Name"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+        </Grid>
+
+    </Button>
+</UserControl>

@@ -322,16 +322,21 @@ public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeServ
 }
 
 [EditorModule]
-public class KingdomSelectorEditorModule : BaseSelectorEditorModule<IKingdomService>
+public class KingdomWorkspaceEditorModule : BaseWorkspaceEditorModule<IKingdomService>
 {
-    public const string Id = "kingdom_selector";
+    public const string Id = "kingdom_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Kingdom";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<KingdomViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((KingdomId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<KingdomViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new KingdomMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
