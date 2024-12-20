@@ -85,6 +85,10 @@ public partial class WarriorSkillViewModel : ViewModelBase
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.WarriorSkillDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.WarriorSkillDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.WarriorSkillDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 }

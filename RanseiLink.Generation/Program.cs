@@ -541,7 +541,11 @@ internal class Program
                 sb.AppendLine($"    public string {propName}");
                 sb.AppendLine("    {");
                 sb.AppendLine($"        get => _msgService.GetMsgOfType(MsgShortcut.{msgId}, Id);");
-                sb.AppendLine($"        set => _msgService.SetMsgOfType(MsgShortcut.{msgId}, Id, value);");
+                sb.AppendLine($"        set");
+                sb.AppendLine("        {");
+                sb.AppendLine($"            _msgService.SetMsgOfType(MsgShortcut.{msgId}, Id, value);");
+                sb.AppendLine("            RaisePropertyChanged();");
+                sb.AppendLine("        }");
                 sb.AppendLine("    }");
                 /*
                  public string Description

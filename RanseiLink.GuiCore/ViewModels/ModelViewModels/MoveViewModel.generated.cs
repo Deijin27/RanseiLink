@@ -160,6 +160,10 @@ public partial class MoveViewModel : ViewModelBase
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.MoveDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.MoveDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.MoveDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 }

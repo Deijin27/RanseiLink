@@ -100,13 +100,21 @@ public partial class ItemViewModel : ViewModelBase
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.ItemDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public string Description2
     {
         get => _msgService.GetMsgOfType(MsgShortcut.ItemDescription2, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.ItemDescription2, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public List<SelectorComboBoxItem> ItemItems { get; }

@@ -56,13 +56,21 @@ public partial class EpisodeViewModel : ViewModelBase
     public string Name
     {
         get => _msgService.GetMsgOfType(MsgShortcut.EpisodeName, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeName, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.EpisodeName, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.EpisodeDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.EpisodeDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public List<SelectorComboBoxItem> EpisodeItems { get; }

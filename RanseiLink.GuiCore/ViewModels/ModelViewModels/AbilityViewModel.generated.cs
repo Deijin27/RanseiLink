@@ -53,18 +53,30 @@ public partial class AbilityViewModel : ViewModelBase
     public string Description
     {
         get => _msgService.GetMsgOfType(MsgShortcut.AbilityDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.AbilityDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public string HotSpringsDescription
     {
         get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription, Id, value);
+            RaisePropertyChanged();
+        }
     }
 
     public string HotSpringsDescription2
     {
         get => _msgService.GetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id);
-        set => _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
+        set
+        {
+            _msgService.SetMsgOfType(MsgShortcut.AbilityHotSpringsDescription2, Id, value);
+            RaisePropertyChanged();
+        }
     }
 }
