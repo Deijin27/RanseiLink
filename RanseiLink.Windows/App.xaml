@@ -179,6 +179,10 @@
                 <views:KingdomMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:EpisodeMiniViewModel}">
+                <views:EpisodeMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>

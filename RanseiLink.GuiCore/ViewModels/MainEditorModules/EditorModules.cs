@@ -302,22 +302,25 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
 }
 
 [EditorModule]
-public class EpisodeSelectorEditorModule : BaseSelectorEditorModule<IEpisodeService>
+public class EpisodeWorkspaceEditorModule : BaseWorkspaceEditorModule<IEpisodeService>
 {
-    public const string Id = "episode_selector";
+    public const string Id = "episode_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Episode";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<EpisodeViewModel>();
-        var msgService = modServices.Get<ICachedMsgBlockService>();
-        var episodeComboItems = _service
-            .ValidIds()
-            .Select(i => new SelectorComboBoxItem(i, msgService.GetMsgOfType(MsgShortcut.EpisodeName, i)))
-            .ToList();
-        
-        _viewModel = _selectorVmFactory.Create(_service, episodeComboItems, vm, id => vm.SetModel((EpisodeId)id, _service.Retrieve(id)), _service.ValidateId);
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var bw = modServices.Get<IBaseWarriorService>();
+        var sw = modServices.Get<IScenarioWarriorService>();
+        var sk = modServices.Get<IScenarioKingdomService>();
+        var ms = modServices.Get<ICachedMsgBlockService>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<EpisodeViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new EpisodeMiniViewModel(sp, bw, sw, sk, ms, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 

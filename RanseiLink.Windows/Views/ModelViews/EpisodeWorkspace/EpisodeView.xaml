@@ -44,7 +44,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Name" Grid.Row="0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" />
+            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
             <TextBlock Text="Order" Grid.Row="1"/>
             <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Order}" Max="{Binding Order_Max}"/>
