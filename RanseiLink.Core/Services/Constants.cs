@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 
 namespace RanseiLink.Core.Services;
 
@@ -77,4 +78,27 @@ public static class Constants
     public static string ScenarioBuildingPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBuilding.dat");
     #endregion
 
+    public const string PacExt = ".pac";
+    public const string ObjExt = ".obj";
+    public const string PslmExt = ".pslm";
+    
+    public static string ResolveMapModelFileNameWithoutExt(MapId id)
+    {
+        return $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}";
+    }
+
+    public static string ResolveGimmickModelFileNameWithoutExt(GimmickObjectId id, int variant)
+    {
+        return $"OBJ{((int)id).ToString().PadLeft(3, '0')}_{variant.ToString().PadLeft(2, '0')}";
+    }
+
+    public static string ResolveMapModelFilePath(MapId id)
+    {
+        return Path.Combine("graphics", "ikusa_map", ResolveMapModelFileNameWithoutExt(id) + PacExt);
+    }
+
+    public static string ResolveGimmickModelFilePath(GimmickObjectId id, int variant)
+    {
+        return Path.Combine("graphics", "ikusa_obj", ResolveGimmickModelFileNameWithoutExt(id, variant) + PacExt);
+    }
 }

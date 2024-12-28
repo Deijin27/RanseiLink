@@ -6,37 +6,16 @@ using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-
 namespace RanseiLink.GuiCore.Services.Concrete;
 
 public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider overrideDataProvider, IMapService mapService) : IMapManager
 {
-    private const string _pacExt = ".pac";
-    private const string _objExt = ".obj";
-    private const string _pslmExt = ".pslm";
-    private static readonly FileDialogFilter _pacFilter = new("Pokemon Conquest 3D Archive (.pac)", ".pac");
-    private static readonly FileDialogFilter _objFilter = new("Wavefront OBJ (.obj)", ".obj");
-    private static readonly FileDialogFilter _pslmFilter = new("Pokemon Conquest Map Data (.pslm)", ".pslm");
     
-    private static string ResolveMapModelFileNameWithoutExt(MapId id)
-    {
-        return $"MAP{id.Map.ToString().PadLeft(2, '0')}_{id.Variant.ToString().PadLeft(2, '0')}";
-    }
-
-    private static string ResolveGimmickModelFileNameWithoutExt(GimmickObjectId id, int variant)
-    {
-        return $"OBJ{((int)id).ToString().PadLeft(3, '0')}_{variant.ToString().PadLeft(2, '0')}";
-    }
-
-    private static string ResolveMapModelFilePath(MapId id)
-    {
-        return Path.Combine("graphics", "ikusa_map", ResolveMapModelFileNameWithoutExt(id) + _pacExt);
-    }
-
-    public string ResolveGimmickModelFilePath(GimmickObjectId id, int variant)
-    {
-        return Path.Combine("graphics", "ikusa_obj", ResolveGimmickModelFileNameWithoutExt(id, variant) + _pacExt);
-    }
+    private static readonly FileDialogFilter _pacFilter = new($"Pokemon Conquest 3D Archive ({Core.Services.Constants.PacExt})", Core.Services.Constants.PacExt);
+    private static readonly FileDialogFilter _objFilter = new($"Wavefront OBJ ({Core.Services.Constants.ObjExt})", Core.Services.Constants.ObjExt);
+    private static readonly FileDialogFilter _pslmFilter = new($"Pokemon Conquest Map Data ({Core.Services.Constants.PslmExt})", Core.Services.Constants.PslmExt);
+    
+    
 
     public async Task<bool> RevertModelToDefault(MapId id)
     {
@@ -57,7 +36,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         {
             return false;
         }
-        overrideDataProvider.ClearOverride(ResolveMapModelFilePath(id));
+        overrideDataProvider.ClearOverride(Core.Services.Constants.ResolveMapModelFilePath(id));
         return true;
     }
 
@@ -69,7 +48,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), result);
+        overrideDataProvider.SetOverride(Core.Services.Constants.ResolveMapModelFilePath(id), result);
         return true;
     }
 
@@ -80,7 +59,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
             return false;
         }
-        var dataFile = overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
+        var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveMapModelFilePath(id));
         var exportFile = await dialogService.ShowSaveFileDialog(new SaveFileDialogSettings
         {
             Title = "Export Map PAC",
@@ -116,7 +95,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             var settings = new ModelExtractorGenerator.GenerationSettings
             (
                 ObjFile: objFile,
-                ModelName: ResolveMapModelFileNameWithoutExt(id),
+                ModelName: Core.Services.Constants.ResolveMapModelFileNameWithoutExt(id),
                 DestinationFolder: tempFolder,
                 ModelGenerator: new MapModelGenerator()
             );
@@ -125,7 +104,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             if (result.IsSuccess)
             {
                 PAC.Pack(tempFolder, tempPac, sharedFileCount: 0);
-                overrideDataProvider.SetOverride(ResolveMapModelFilePath(id), tempPac);
+                overrideDataProvider.SetOverride(Core.Services.Constants.ResolveMapModelFilePath(id), tempPac);
                 success = true;
             }
             else
@@ -159,7 +138,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        var dataFile = overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
+        var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveMapModelFilePath(id));
         var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(dataFile.File));
         exportFolder = FileUtil.MakeUniquePath(exportFolder);
 
@@ -194,7 +173,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        var dataFile = overrideDataProvider.GetDataFile(ResolveGimmickModelFilePath(id, variant));
+        var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
         var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(dataFile.File));
         exportFolder = FileUtil.MakeUniquePath(exportFolder);
 
@@ -249,13 +228,13 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
 
     public bool IsOverriden(MapId id)
     {
-        var info = overrideDataProvider.GetDataFile(ResolveMapModelFilePath(id));
+        var info = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveMapModelFilePath(id));
         return info.IsOverride;
     }
 
     public bool IsOverriden(GimmickObjectId id, int variant)
     {
-        var info = overrideDataProvider.GetDataFile(ResolveGimmickModelFilePath(id, variant));
+        var info = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
         return info.IsOverride;
     }
 

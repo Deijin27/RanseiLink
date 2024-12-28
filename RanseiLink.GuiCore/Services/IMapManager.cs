@@ -15,5 +15,4 @@ public interface IMapManager
     Task<bool> ImportPslm(MapId id);
     Task<bool> RevertModelToDefault(MapId id);
     Task<bool> ExportObj(GimmickObjectId id, int variant);
-    string ResolveGimmickModelFilePath(GimmickObjectId id, int variant);
 }

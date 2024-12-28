@@ -2,11 +2,13 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.Concrete;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Util;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System.Security.Cryptography;
 
 namespace RanseiLink.Console.Commands;
 
@@ -130,12 +132,21 @@ public  class TestCommand : ICommand
             return default;
         }
 
-        GetStuff(
-            services.Get<IMoveService>(),
-            services.Get<IMoveRangeService>(),
-            services.Get<ISpriteService>()
-            );
-        
+        var overrideDataProvider = services.Get<IOverrideDataProvider>();
+
+        var outputFolder = @"C:\Users\Mia\Desktop\outputs";
+        foreach (var id in Enum.GetValues<GimmickObjectId>())
+        for (int i = 0; i < 10; i++)
+        {
+            var file = Constants.ResolveGimmickModelFilePath(id, i);
+            var dataFile = overrideDataProvider.GetDataFile(file);
+            if (!File.Exists(dataFile.File))
+            {
+                break;
+            }
+            ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, Path.Combine(outputFolder, Constants.ResolveGimmickModelFileNameWithoutExt(id, i)));
+        }
+
 
         //var bmd = new NSBMD(FilePath);
 

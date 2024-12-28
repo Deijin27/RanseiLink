@@ -1,12 +1,15 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using System.Collections;
 
 namespace RanseiLink.Core.Graphics;
 
-public class Palette : List<Rgba32>
+public class Palette : IReadOnlyCollection<Rgba32>
 {
-    public Palette(int capacity, bool color0Transparent) : base(capacity)
+    private readonly List<Rgba32> _colors;
+    public Palette(int capacity, bool color0Transparent)
     {
+        _colors = new List<Rgba32>(capacity);
         if (color0Transparent)
         {
             Add(Color.Transparent);
@@ -29,6 +32,48 @@ public class Palette : List<Rgba32>
         {
             Add(PaletteUtil.To32BitColor(colors[colId]));
         }
+    }
+
+    public int IndexOf(Rgba32 color)
+    {
+        return _colors.IndexOf(color);
+    }
+
+    public int Count => _colors.Count;
+
+    public Rgba32 this[int index]
+    {
+        get
+        {
+            if (index >= Count)
+            {
+                if (Count == 0)
+                {
+                    return Color.Transparent;
+                }
+                index = Count - 1;
+            }
+            return _colors[index];
+        }
+        set
+        {
+            _colors[index] = value;
+        }
+    }
+
+    public void Add(Rgba32 color)
+    {
+        _colors.Add(color);
+    }
+
+    public IEnumerator<Rgba32> GetEnumerator()
+    {
+        return _colors.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
 

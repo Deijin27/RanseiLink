@@ -20,7 +20,7 @@ public partial class GimmickObjectViewModel(IMapManager mapManager, IOverrideDat
         Variants.Clear();
         for (int i = 0; i < 10; i++)
         {
-            var file = mapManager.ResolveGimmickModelFilePath(_id, i);
+            var file = Core.Services.Constants.ResolveGimmickModelFilePath(_id, i);
             var dataFile = overrideDataProvider.GetDataFile(file);
             if (!File.Exists(dataFile.File))
             {
