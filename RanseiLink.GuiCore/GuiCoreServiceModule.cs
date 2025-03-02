@@ -8,6 +8,7 @@ public class GuiCoreServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
+        builder.Register<IUpdateService, UpdateService>(Reuse.Singleton);
         builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
         builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
 
