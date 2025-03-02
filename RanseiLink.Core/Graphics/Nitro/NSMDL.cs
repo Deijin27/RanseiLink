@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Util;
 using System.Numerics;
+using System.Xml.Linq;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -207,6 +208,23 @@ public class NSMDL
             public float BoxD; // float2
             public float BoxUpScale = 128f;
             public float BoxDownScale = 1 / 128f;
+
+            public XElement Serialise()
+            {
+                return new XElement("ModelInfo",
+                    new XElement(nameof(RenderCommandsType), RenderCommandsType),
+                    new XElement(nameof(ScalingRule), ScalingRule),
+                    new XElement(nameof(TexMtxMode), TexMtxMode),
+                    new XElement(nameof(FirstUnusedMtxStackId), FirstUnusedMtxStackId),
+                    new XElement(nameof(Unknown), Unknown),
+                    new XElement(nameof(UpScale), UpScale),
+                    new XElement(nameof(DownScale), DownScale),
+                    new XElement("Box", new XAttribute("X", BoxX), new XAttribute("Y", BoxY), new XAttribute("Z", BoxZ), 
+                        new XAttribute("W", BoxW), new XAttribute("H", BoxH), new XAttribute("D", BoxD)),
+                    new XElement(nameof(BoxUpScale), BoxUpScale),
+                    new XElement(nameof(BoxDownScale), BoxDownScale)
+                    );
+            }
 
             public ModelInfo()
             {
