@@ -33,6 +33,7 @@ public partial class App : System.Windows.Application
 
         // Register services here because theme service requires that application resources are already initialized
         var builder = new Container();
+        builder.RegisterInstance(AppVersion.Parse(Version));
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new GuiCoreServiceModule());
         builder.RegisterModule(new PluginServiceModule());
