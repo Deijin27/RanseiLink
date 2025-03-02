@@ -8,7 +8,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="350" d:DesignWidth="500" Background="Transparent" d:Background="{DynamicResource WindowBackgroundBrush}">
+             d:DesignHeight="550" d:DesignWidth="500" Background="Transparent" d:Background="{DynamicResource WindowBackgroundBrush}">
     <DockPanel>
         <Border Width="180" BorderThickness="0">
             <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
@@ -35,6 +35,7 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
+                    <controls:IconButton Icon="download" Command="{Binding UpdateCommand}" Text="New Update Available" Visibility="{Binding IsUpdateAvailable, Converter={StaticResource Converter.BoolToVisibility}}"/>
                     <controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Text="Report Bug"/>
                 </StackPanel>
             </Grid>
