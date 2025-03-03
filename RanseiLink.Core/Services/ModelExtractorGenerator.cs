@@ -17,15 +17,40 @@ public static class ModelExtractorGenerator
         PAC.Unpack(pac, temp, true, 4);
         var result = ExtractModelFromFolder(temp, destinationFolder);
         Directory.Delete(temp, true);
+
+        return result;
+    }
+    
+    public static Result ExtractModelFromPacWithVariants(IReadOnlyCollection<string> pacVariants, string destinationFolder)
+    {
+        List<string> folders = [];
+        foreach (var pac in pacVariants)
+        {
+            string temp = FileUtil.GetTemporaryDirectory();
+            PAC.Unpack(pac, temp, true, 4);
+        }
+
+        var result = ExtractModelFromFolder(folders, destinationFolder);
+
+        foreach (var temp in folders)
+        {
+            Directory.Delete(temp, true);
+        }
+
         return result;
     }
 
     public static Result ExtractModelFromFolder(string sourceDir, string destinationFolder)
     {
+        return ExtractModelFromFolder([sourceDir], destinationFolder);
+    }
+    public static Result ExtractModelFromFolder(IReadOnlyCollection<string> sourceDirs, string destinationFolder)
+    {
         Directory.CreateDirectory(destinationFolder);
 
-        var files = Directory.GetFiles(sourceDir);
+        var sourceDir = sourceDirs.First();
         var filesByType = new Dictionary<PAC.FileTypeNumber, string>();
+        var files = Directory.GetFiles(sourceDir);
         foreach (var file in files)
         {
             var fileTypeNum = PAC.ExtensionToFileTypeNumber(Path.GetExtension(file));
@@ -53,8 +78,12 @@ public static class ModelExtractorGenerator
         foreach (var model in bmd.Model.Models)
         {
             var obj = ConvertModels.ModelToObj(model);
-            var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, btp?.PatternAnimations, destinationFolder);
-            obj.MaterialLib = mtl;
+            var mtlRes = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, btp?.PatternAnimations, destinationFolder);
+            if (mtlRes.IsFailed)
+            {
+                return mtlRes.ToResult();
+            }
+            obj.MaterialLib = mtlRes.Value;
             obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
         }
 
@@ -89,19 +118,28 @@ public static class ModelExtractorGenerator
         doc.Save(destinationFile);
     }
 
-    private static void ExtractTexture(NSTEX nstex, string texName, string palName, string destinationFolder, string texFileNameWithExt)
+    private static Result ExtractTexture(NSTEX nstex, string texName, string palName, string destinationFolder, string texFileNameWithExt)
     {
-        var tex = nstex.Textures.First(x => x.Name == texName);
-        var pal = nstex.Palettes.First(x => x.Name == palName);
-
+        var tex = nstex.Textures.Find(x => x.Name == texName);
+        if (tex == null)
+        {
+            return Result.Fail($"Texture '{texName}' used by material not found in nstex");
+        }
+        var pal = nstex.Palettes.Find(x => x.Name == palName);
+        if (pal == null)
+        {
+            return Result.Fail($"Palette '{palName}' used by material not found in nstex");
+        }
         var convPal = new Palette(pal.PaletteData, true);
         ImageUtil.SpriteToPng(Path.Combine(destinationFolder, texFileNameWithExt),
             new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height,
               IsTiled: false,
               Format: tex.Format));
+
+        return Result.Ok();
     }
 
-    public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX? btx, NSPAT? nspat, string destinationFolder)
+    public static Result<MTL> ExtractMaterialAndTextures(NSMDL.Model model, NSBTX? btx, NSPAT? nspat, string destinationFolder)
     {
         var mtl = new MTL();
         HashSet<string> doneTextures = new HashSet<string>();
@@ -127,7 +165,11 @@ public static class ModelExtractorGenerator
             if (btx != null && !doneTextures.Contains(material.Texture))
             {
                 doneTextures.Add(material.Texture);
-                ExtractTexture(btx.Texture, material.Texture, material.Palette, destinationFolder, texFileNameWithExt);
+                var extractTexRes = ExtractTexture(btx.Texture, material.Texture, material.Palette, destinationFolder, texFileNameWithExt);
+                if (extractTexRes.IsFailed)
+                {
+                    return extractTexRes.ToResult<MTL>();
+                }
             }
         }
 
@@ -139,12 +181,16 @@ public static class ModelExtractorGenerator
                 if (!doneTextures.Contains(kf.Texture))
                 {
                     doneTextures.Add(kf.Texture);
-                    ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, kf.Texture + ".png");
+                    var extractTexRes = ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, kf.Texture + ".png");
+                    if (extractTexRes.IsFailed)
+                    {
+                        return extractTexRes.ToResult<MTL>();
+                    }
                 }
             }
         }
         
-        return mtl;
+        return Result.Ok(mtl);
     }
 
     

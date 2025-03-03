@@ -160,6 +160,54 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return true;
     }
 
+    //public async Task<bool> ImportObj(GimmickObjectId id, int variant)
+    //{
+    //    var objFile = await dialogService.ShowOpenSingleFileDialog(new("Choose an OBJ file", _objFilter));
+    //    if (string.IsNullOrEmpty(objFile))
+    //    {
+    //        return false;
+    //    }
+
+    //    var tempFolder = FileUtil.GetTemporaryDirectory();
+    //    string tempPac = Path.GetTempFileName();
+
+    //    bool success = false;
+
+    //    try
+    //    {
+    //        var settings = new ModelExtractorGenerator.GenerationSettings
+    //        (
+    //            ObjFile: objFile,
+    //            ModelName: Core.Services.Constants.ResolveMapModelFileNameWithoutExt(id),
+    //            DestinationFolder: tempFolder,
+    //            ModelGenerator: new MapModelGenerator()
+    //        );
+
+    //        var result = ModelExtractorGenerator.GenerateModel(settings);
+    //        if (result.IsSuccess)
+    //        {
+    //            PAC.Pack(tempFolder, tempPac, sharedFileCount: 0);
+    //            overrideDataProvider.SetOverride(Core.Services.Constants.ResolveMapModelFilePath(id), tempPac);
+    //            success = true;
+    //        }
+    //        else
+    //        {
+    //            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error importing map", result.ToString(), MessageBoxType.Error));
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception importing map", ex.ToString(), MessageBoxType.Error));
+    //    }
+    //    finally
+    //    {
+    //        Directory.Delete(tempFolder, true);
+    //        File.Delete(tempPac);
+    //    }
+
+    //    return success;
+    //}
+
     public async Task<bool> ExportObj(GimmickObjectId id, int variant)
     {
         if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variant))

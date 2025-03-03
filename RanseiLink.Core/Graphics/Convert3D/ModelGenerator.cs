@@ -15,11 +15,24 @@ public abstract class ModelGeneratorState
         gpu = new InverseGpuState(model.Materials[0]);
         parentPolymeshStack = new Stack<int>();
         parentPolymeshStack.Push(0);
+        model.MdlInfo.FirstUnusedMtxStackId = 0;
     }
 
     protected InverseGpuState gpu;
     protected NSMDL.Model model;
     protected Stack<int> parentPolymeshStack;
+
+    public void PushStack(int id)
+    {
+        model.MdlInfo.FirstUnusedMtxStackId = (byte)Math.Max(model.MdlInfo.FirstUnusedMtxStackId, parentPolymeshStack.Count - 1);
+        parentPolymeshStack.Push(id);
+    }
+
+    public int PeekStack()
+    {
+        return parentPolymeshStack.Peek();
+    }
+
 
     public abstract void Process(List<Group> groups);
 
@@ -36,6 +49,16 @@ public abstract class ModelGeneratorState
     protected void VISIBILITY(int polymeshId, bool isVisible)
     {
         model.RenderCommands.Add(RenderCommandGenerator.VISIBILITY(polymeshId, isVisible));
+    }
+
+    protected void UNKNOWN_7(int polymeshId)
+    {
+        model.RenderCommands.Add(RenderCommandGenerator.UNKNOWN_7(polymeshId));
+    }
+
+    protected void UNKNOWN_8(int polymeshId)
+    {
+        model.RenderCommands.Add(RenderCommandGenerator.UNKNOWN_8(polymeshId));
     }
 
     protected void MTX_RESTORE(int stackIndex)
@@ -76,7 +99,7 @@ public abstract class ModelGeneratorState
 
     protected void MTX_MULT_RESTORE(int polymeshId, int parentId, int unknown, int restoreIndex)
     {
-        model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_STORE(polymeshId, parentId, unknown, restoreIndex));
+        model.RenderCommands.Add(RenderCommandGenerator.MTX_MULT_RESTORE(polymeshId, parentId, unknown, restoreIndex));
         gpu.MultiplyMatrix(model.Polymeshes[polymeshId].TRSMatrix);
     }
 

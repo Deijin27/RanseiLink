@@ -119,4 +119,13 @@ public static class RenderCommandGenerator
             parameters: new byte[] { (byte)polymeshId }
         );
     }
+
+    public static RenderCommand UNKNOWN_8(int polymeshId)
+    {
+        return new RenderCommand
+        (
+            opCode: RenderOpCode.UNKNOWN_8,
+            parameters: new byte[] { (byte)polymeshId }
+        );
+    }
 }
