@@ -27,7 +27,7 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
         GimmickItems = idToNameService.GetComboBoxItemsPlusDefault<IGimmickService>();
 
         JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickWorkspaceEditorModule.Id, id));
-        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeSelectorEditorModule.Id, (int)id));
+        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeWorkspaceModule.Id, (int)id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
         {

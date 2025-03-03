@@ -42,7 +42,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
 
         UpdatePreviewAnimation();
 
-        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
+        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeWorkspaceModule.Id, (int)id));
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
 
         PropertyChanged += MoveViewModel_PropertyChanged;

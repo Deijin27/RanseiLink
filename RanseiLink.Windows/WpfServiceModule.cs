@@ -36,7 +36,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, WarriorWorkspaceModule>();
         builder.Register<EditorModule, AbilityWorkspaceEditorModule>();
         builder.Register<EditorModule, WarriorSkillWorkspaceEditorModule>();
-        builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
+        builder.Register<EditorModule, MoveRangeWorkspaceModule>();
         builder.Register<EditorModule, MoveWorkspaceModule>();
         builder.Register<EditorModule, WarriorNameTableEditorModule>();
         builder.Register<EditorModule, MaxLinkSelectorEditorModule>();
@@ -52,7 +52,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, EpisodeWorkspaceEditorModule>();
         builder.Register<EditorModule, KingdomWorkspaceEditorModule>();
         builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
-        builder.Register<EditorModule, GimmickRangeSelectorEditorModule>();
+        builder.Register<EditorModule, GimmickRangeWorkspaceModule>();
         builder.Register<EditorModule, MapSelectorEditorModule>();
         builder.Register<EditorModule, SpriteEditorModule>();
         builder.Register<EditorModule, BannerEditorModule>();

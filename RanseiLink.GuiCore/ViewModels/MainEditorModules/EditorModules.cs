@@ -106,17 +106,39 @@ public class WarriorSkillWorkspaceEditorModule : BaseWorkspaceEditorModule<IWarr
     }
 }
 
-[EditorModule]
-public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRangeService>
+public class MoveRangeWorkspaceModule : BaseWorkspaceEditorModule<IMoveRangeService>
 {
-    public const string Id = "move_range_selector";
+    public const string Id = "move_range_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Move Range";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<MoveRangeViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new MoveRangeMiniViewModel(sp, _service.Retrieve(id), id, ((MoveRangeId)id).ToString(), command)).ToList()
+            );
+    }
+}
+
+public class GimmickRangeWorkspaceModule : BaseWorkspaceEditorModule<IGimmickRangeService>
+{
+    public const string Id = "gimmick_range_workspace";
+    public override string UniqueId => Id;
+    public override string ListName => "Gimmick Range";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<MoveRangeViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new MoveRangeMiniViewModel(sp, _service.Retrieve(id), id, ((GimmickRangeId)id).ToString(), command)).ToList()
+            );
     }
 }
 
@@ -366,20 +388,6 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
         _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
-    }
-}
-
-[EditorModule]
-public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmickRangeService>
-{
-    public const string Id = "gimmick_range_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Gimmick Range";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
     }
 }
 

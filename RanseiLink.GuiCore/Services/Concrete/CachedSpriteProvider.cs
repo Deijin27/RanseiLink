@@ -15,19 +15,22 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly ISpriteService _spriteService;
     private readonly IMoveRangeService _moveRangeService;
+    private readonly IGimmickRangeService _gimmickRangeService;
     private readonly Dictionary<int, object?> _cache = [];
 
     public CachedSpriteProvider(
         IOverrideDataProvider overrideDataProvider, 
         IPathToImageConverter pathToImageConverter,
         ISpriteService spriteService, 
-        IMoveRangeService moveRangeService
+        IMoveRangeService moveRangeService,
+        IGimmickRangeService gimmickRangeService
         )
     {
         _overrideDataProvider = overrideDataProvider;
         _pathToImageConverter = pathToImageConverter;
         _spriteService = spriteService;
         _moveRangeService = moveRangeService;
+        _gimmickRangeService = gimmickRangeService;
         _overrideDataProvider.SpriteModified += OverrideDataProvider_SpriteModified;
     }
 
@@ -110,6 +113,12 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     public object? GetMoveRangePreview(MoveRangeId range)
     {
         using var img = _spriteService.GetMoveRangePreview(_moveRangeService.Retrieve((int)range));
+        return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetGimmickRangePreview(GimmickRangeId range)
+    {
+        using var img = _spriteService.GetMoveRangePreview(_gimmickRangeService.Retrieve((int)range));
         return _pathToImageConverter.TryConvert(img);
     }
 

@@ -171,6 +171,10 @@
                 <views:MoveMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:MoveRangeMiniViewModel}">
+                <views:MoveRangeMiniView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:GimmickMiniViewModel}">
                 <views:GimmickMiniView/>
             </DataTemplate>
