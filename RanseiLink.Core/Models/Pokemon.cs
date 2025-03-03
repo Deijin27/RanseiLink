@@ -32,4 +32,9 @@ public partial class Pokemon
         }
         BitConverter.GetBytes(num).CopyTo(Data, 9 * 4);
     }
+
+    public bool HasAbility(AbilityId id)
+    {
+        return Ability1 == id || Ability2 == id || Ability3 == id;
+    }
 }

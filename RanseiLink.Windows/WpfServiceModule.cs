@@ -34,7 +34,7 @@ public class WpfServiceModule : IModule
 
         builder.Register<EditorModule, PokemonWorkspaceModule>();
         builder.Register<EditorModule, WarriorWorkspaceModule>();
-        builder.Register<EditorModule, AbilitySelectorEditorModule>();
+        builder.Register<EditorModule, AbilityWorkspaceEditorModule>();
         builder.Register<EditorModule, WarriorSkillSelectorEditorModule>();
         builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
         builder.Register<EditorModule, MoveWorkspaceModule>();

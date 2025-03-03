@@ -5,7 +5,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class AbilityViewModel : ViewModelBase
+public partial class AbilityViewModel : ViewModelBase, IBigViewModel
 {
     private readonly ICachedMsgBlockService _msgService;
     private readonly IPokemonService _pokemonService;
@@ -29,6 +29,11 @@ public partial class AbilityViewModel : ViewModelBase
         _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((AbilityId)id, (Ability)model);
     }
 
     private readonly ICommand _selectPokemonCommand;

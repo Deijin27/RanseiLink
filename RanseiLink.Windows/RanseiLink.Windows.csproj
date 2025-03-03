@@ -42,6 +42,9 @@
     <Compile Update="Views\ModelViews\MoveWorkspace\MoveMiniView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\PokemonWorkspace\AbilityMiniView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -57,6 +60,9 @@
 
   <ItemGroup>
     <Page Update="Views\ModelViews\GimmickObjectView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\PokemonWorkspace\AbilityMiniView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\SelectorViews\WorkspaceView.xaml">

@@ -67,16 +67,22 @@ public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
 }
 
 [EditorModule]
-public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
+public class AbilityWorkspaceEditorModule : BaseWorkspaceEditorModule<IAbilityService>
 {
-    public const string Id = "ability_selector";
+    public const string Id = "ability_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Ability";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<AbilityViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var ps = modServices.Get<IPokemonService>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<AbilityViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new AbilityMiniViewModel(sp, ps, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 

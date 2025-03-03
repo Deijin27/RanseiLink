@@ -40,7 +40,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         _model = new ScenarioPokemon();
 
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
-        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
+        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilityWorkspaceEditorModule.Id, id));
 
         PokemonItems = idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
         PokemonItems.Add(new SelectorComboBoxItem(511, "Default"));

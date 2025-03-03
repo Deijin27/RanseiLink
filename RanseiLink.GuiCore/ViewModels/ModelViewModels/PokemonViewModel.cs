@@ -42,7 +42,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         _evolutionEntryOptions = _idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
 
         JumpToMoveCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveWorkspaceModule.Id, id));
-        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilitySelectorEditorModule.Id, id));
+        JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilityWorkspaceEditorModule.Id, id));
         AddEvolutionCommand = new RelayCommand(AddEvolution);
         RemoveEvolutionCommand = new RelayCommand(RemoveEvolution, () => Evolutions.Count > 0);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
