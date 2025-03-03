@@ -16,7 +16,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.ColumnSpan="2">
             <DockPanel Margin="0,0,0,10">
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,10,0" Content="Add/Remove" IsChecked="{Binding AddRemoveVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="5,0,0,0" Content="Replace" IsChecked="{Binding ReplaceVisible}" DockPanel.Dock="Right" VerticalAlignment="Center"/>
@@ -57,7 +61,7 @@
             </StackPanel>
         </StackPanel>
 
-        <DataGrid x:Name="msgDataGrid" Grid.Row="1" Grid.ColumnSpan="5" 
+        <DataGrid x:Name="msgDataGrid" Grid.Row="1" Grid.ColumnSpan="1" 
                   ItemsSource="{Binding Items}" CanUserAddRows="False" FrozenColumnCount="2" AutoGenerateColumns="False"
                   SelectedItem="{Binding SelectedItem}">
             <DataGrid.RowValidationRules>
@@ -79,6 +83,11 @@
                 <DataGridTextColumn Header="Element" Binding="{Binding ElementId}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+        
+        <!--Selected item view -->
+        <Grid Width="200" Grid.Column="1" Grid.Row="2" DataContext="{Binding MsgPreviewVm}">
+            <Image Source="{Binding WarriorImage}" Height="130" RenderOptions.BitmapScalingMode="NearestNeighbor" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_busho_wu\StlBushouWuTex-Pngs\0036.png"/>
+        </Grid>
 
     </Grid>
 </UserControl>

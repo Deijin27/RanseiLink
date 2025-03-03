@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Text;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -11,8 +12,9 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 {
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
 
-    public MsgGridViewModel(ICachedMsgBlockService cachedMsgBlockService)
+    public MsgGridViewModel(ICachedMsgBlockService cachedMsgBlockService, MsgPreviewViewModel msgPreviewViewModel)
     {
+        MsgPreviewVm = msgPreviewViewModel;
         _cachedMsgBlockService = cachedMsgBlockService;
         
         Items = new ObservableCollection<MsgViewModel>();
@@ -160,7 +162,13 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     public MsgViewModel? SelectedItem
     {
         get => _selectedItem;
-        set => SetProperty(ref _selectedItem, value);
+        set
+        {
+            if (SetProperty(ref _selectedItem, value))
+            {
+                MsgPreviewVm.SetItem(value);
+            }
+        }
     }
 
     public RelayCommand AddCommand { get; }
@@ -384,5 +392,47 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
     {
         _cachedMsgBlockService.MessageAdded -= CachedMsgBlockService_MessageAdded;
         _cachedMsgBlockService.MessageRemoved -= CachedMsgBlockService_MessageRemoved;
+    }
+
+    public MsgPreviewViewModel MsgPreviewVm { get; }
+}
+
+public class MsgPreviewViewModel(IBaseWarriorService baseWarriorService, ICachedSpriteProvider cachedSpriteProvider) : ViewModelBase
+{
+    private MsgViewModel? _msg;
+
+    public void SetItem(MsgViewModel? msg)
+    {
+        _msg = msg;
+        RaiseAllPropertiesChanged();
+    }
+
+    public object? WarriorImage
+    {
+        get
+        {
+            if (_msg == null)
+            {
+                return null;
+            }
+            var thing = _msg.BoxConfig;
+            var regex = new Regex(@"{scenario_warrior:(\d+)}");
+            var match = regex.Match(thing);
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            var num = int.Parse(match.Groups[1].Value);
+            var warrior = baseWarriorService.Enumerate().FirstOrDefault(x => (int)x.SpeakerId == num);
+            if (warrior == null)
+            {
+                return null;
+            }
+
+            return cachedSpriteProvider.GetSprite(SpriteType.StlBushouWu, warrior.Sprite * 5);
+
+
+        }
     }
 }
