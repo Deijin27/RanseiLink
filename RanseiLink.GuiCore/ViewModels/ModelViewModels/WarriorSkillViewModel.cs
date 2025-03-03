@@ -6,7 +6,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class WarriorSkillViewModel : ViewModelBase
+public partial class WarriorSkillViewModel : ViewModelBase, IBigViewModel
 {
     private readonly ICachedMsgBlockService _msgService;
     private readonly IBaseWarriorService _baseWarriorService;
@@ -30,6 +30,11 @@ public partial class WarriorSkillViewModel : ViewModelBase
         _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((WarriorSkillId)id, (WarriorSkill)model);
     }
 
     private readonly ICommand _selectWarriorCommand;

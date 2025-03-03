@@ -87,16 +87,22 @@ public class AbilityWorkspaceEditorModule : BaseWorkspaceEditorModule<IAbilitySe
 }
 
 [EditorModule]
-public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarriorSkillService>
+public class WarriorSkillWorkspaceEditorModule : BaseWorkspaceEditorModule<IWarriorSkillService>
 {
-    public const string Id = "warrior_skill_selector";
+    public const string Id = "warrior_skill_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Warrior Skill";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<WarriorSkillViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var ps = modServices.Get<IBaseWarriorService>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<WarriorSkillViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new WarriorSkillMiniViewModel(sp, ps, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 

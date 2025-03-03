@@ -187,6 +187,10 @@
                 <views:AbilityMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:WarriorSkillMiniViewModel}">
+                <views:WarriorSkillMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>
