@@ -33,27 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ModelViews\GimmickWorkspace\GimmickMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\KingdomWorkspace\KingdomMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\MoveWorkspace\MoveRangeMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\MoveWorkspace\MoveMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\PokemonWorkspace\WarriorSkillMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\PokemonWorkspace\AbilityMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="External\MoveAnimations.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -64,19 +43,5 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Views\ModelViews\GimmickObjectView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\PokemonWorkspace\WarriorSkillMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\PokemonWorkspace\AbilityMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\SelectorViews\WorkspaceView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
 
 </Project>
