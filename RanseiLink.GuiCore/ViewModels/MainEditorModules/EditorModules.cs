@@ -115,11 +115,14 @@ public class MoveRangeWorkspaceModule : BaseWorkspaceEditorModule<IMoveRangeServ
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
+        var vm = modServices.Get<MoveRangeViewModel>();
+        var ns = modServices.Get<INicknameService>();
+        vm.Initialise(nameof(MoveRangeId));
         _viewModel = _selectorVmFactory.CreateWorkspace(
-            modServices.Get<MoveRangeViewModel>(),
+            vm,
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
-                new MoveRangeMiniViewModel(sp, _service.Retrieve(id), id, ((MoveRangeId)id).ToString(), command)).ToList()
+                new MoveRangeMiniViewModel(nameof(MoveRangeId), ns, sp, _service.Retrieve(id), id, command)).ToList()
             );
     }
 }
@@ -133,11 +136,14 @@ public class GimmickRangeWorkspaceModule : BaseWorkspaceEditorModule<IGimmickRan
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
+        var vm = modServices.Get<MoveRangeViewModel>();
+        var ns = modServices.Get<INicknameService>();
+        vm.Initialise(nameof(GimmickRangeId));
         _viewModel = _selectorVmFactory.CreateWorkspace(
-            modServices.Get<MoveRangeViewModel>(),
+            vm,
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
-                new MoveRangeMiniViewModel(sp, _service.Retrieve(id), id, ((GimmickRangeId)id).ToString(), command)).ToList()
+                new MoveRangeMiniViewModel(nameof(GimmickRangeId), ns, sp, _service.Retrieve(id), id, command)).ToList()
             );
     }
 }

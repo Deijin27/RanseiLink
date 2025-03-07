@@ -1,21 +1,70 @@
-﻿using RanseiLink.Core;
+﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace RanseiLink.GuiCore.Services;
 
-public class NicknameService
+public interface INicknameService
+{
+    string GetNickname(string category, int id);
+    void SetNickname(string category, int id, string? nickname = null);
+}
+
+public class NicknameService : INicknameService
 {
     private readonly string _nicknameFolder;
 
     public NicknameService(ModInfo modInfo)
     {
         _nicknameFolder = Path.Combine(modInfo.FolderPath, "Nicknames");
+        Directory.CreateDirectory(_nicknameFolder);
+
+        InitialiseCategoryFromEnum<GimmickRangeId>();
+        InitialiseCategoryFromEnum<MoveRangeId>();
+    }
+
+    private void InitialiseCategoryFromEnum<T>() where T : Enum
+    {
+        var names = Enum.GetNames(typeof(T));//.Select(AddSpacesToPascalCase).ToArray();
+        InitialiseCategory(typeof(T).Name, names);
+    }
+
+    private string AddSpacesToPascalCase(string text)
+    {
+        var newText = new StringBuilder();
+        bool previousWasNumber = false;
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+            
+            if (i != 0)
+            {
+                if (c == '_')
+                {
+                    continue;
+                }
+                if (c >= 0 && c <= 9)
+                {
+                    if (!previousWasNumber)
+                    {
+                        newText.Append(' ');
+                    }
+                    previousWasNumber = true;
+                }
+                else
+                {
+                    if (c >= 'A' && c <= 'Z')
+                    {
+                        newText.Append(' ');
+                    }
+                    previousWasNumber = false;
+                }
+            }
+
+            newText.Append(c);
+        }
+        return newText.ToString();
     }
 
     private readonly Dictionary<string, NicknameCategory> _nicknameCategories = [];
@@ -31,6 +80,7 @@ public class NicknameService
             _file = file;
             _defaults = defaults;
             _customNames = [];
+            Load();
         }
 
         public string GetNickname(int id)
@@ -52,9 +102,10 @@ public class NicknameService
             {
                 _customNames[id] = name;
             }
+            Save();
         }
 
-        public void SerialiseCustomNames()
+        private void Save()
         {
             if (_customNames.Count == 0)
             {
@@ -75,7 +126,7 @@ public class NicknameService
             }
         }
 
-        public void DeserialiseCustomNames()
+        private void Load()
         {
             _customNames.Clear();
             if (!File.Exists(_file))
@@ -104,9 +155,9 @@ public class NicknameService
         }
     }
 
-    public void InitialiseCategory(string category, IReadOnlyList<string> defaults)
+    private void InitialiseCategory(string category, IReadOnlyList<string> defaults)
     {
-        _nicknameCategories[category] = new NicknameCategory(Path.Combine(_nicknameFolder, category), defaults);
+        _nicknameCategories[category] = new NicknameCategory(Path.Combine(_nicknameFolder, category) + ".xml", defaults);
     }
 
     public string GetNickname(string category, int id)

@@ -7,14 +7,37 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class MoveRangeViewModel : ViewModelBase, IBigViewModel
 {
     private MoveRange _model;
+    private int _id;
+    private readonly INicknameService _nicknameService;
+    private string _nicknameCategory = null!;
 
-    public MoveRangeViewModel()
+    public MoveRangeViewModel(INicknameService nicknameService)
     {
         _model = new MoveRange();
+        _nicknameService = nicknameService;
     }
 
-    public void SetModel(MoveRange model)
+    public void Initialise(string nicknameCategory)
     {
+        _nicknameCategory = nicknameCategory;
+    }
+
+    public string Nickname
+    {
+        get => _nicknameService.GetNickname(_nicknameCategory, _id);
+        set
+        {
+            if (Nickname != value)
+            {
+                _nicknameService.SetNickname(_nicknameCategory, _id, value);
+                RaisePropertyChanged();
+            }
+        }
+    }
+
+    public void SetModel(int id, MoveRange model)
+    {
+        _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
     }
@@ -32,7 +55,7 @@ public class MoveRangeViewModel : ViewModelBase, IBigViewModel
 
     public void SetModel(int id, object model)
     {
-        SetModel((MoveRange)model);
+        SetModel(id, (MoveRange)model);
     }
 
     #region Row0

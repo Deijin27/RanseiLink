@@ -7,18 +7,20 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class MoveRangeMiniViewModel : ViewModelBase, IMiniViewModel
 {
+    private readonly string _nicknameCategory;
+    private readonly INicknameService _nicknameService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly MoveRange _model;
     private readonly int _id;
-    private readonly string _name;
 
-    public MoveRangeMiniViewModel(ICachedSpriteProvider cachedSpriteProvider,
-        MoveRange model, int id, string name, ICommand selectCommand)
+    public MoveRangeMiniViewModel(string nicknameCategory, INicknameService nicknameService, ICachedSpriteProvider cachedSpriteProvider,
+        MoveRange model, int id, ICommand selectCommand)
     {
+        _nicknameCategory = nicknameCategory;
+        _nicknameService = nicknameService;
         _cachedSpriteProvider = cachedSpriteProvider;
         _model = model;
         _id = id;
-        _name = name;
         SelectCommand = selectCommand;
         UpdateImage();
     }
@@ -30,7 +32,7 @@ public class MoveRangeMiniViewModel : ViewModelBase, IMiniViewModel
 
     public int Id => _id;
 
-    public string Name => _name;
+    public string Name => _nicknameService.GetNickname(_nicknameCategory, _id);
 
     private object? _image;
     public object? Image
@@ -55,7 +57,11 @@ public class MoveRangeMiniViewModel : ViewModelBase, IMiniViewModel
     {
         if (!string.IsNullOrEmpty(name))
         {
-            if (name.StartsWith("Row"))
+            if (name == nameof(MoveRangeViewModel.Nickname))
+            {
+                RaisePropertyChanged(nameof(Name));
+            }
+            else if (name.StartsWith("Row"))
             {
                 UpdateImage();
             }

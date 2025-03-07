@@ -20,15 +20,22 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock  VerticalAlignment="Center" TextWrapping="Wrap" Margin="10">
+        
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10">
             The red zone will not be visible in the small preview on the top screen for moves.<LineBreak/>
             Behavior of the rest is correct on the aformentioned preview, but certain configurations can be inconsistent in battle.<LineBreak/>
             It is recommended that you test any changes you make in-game.
         </TextBlock>
 
-        <Grid Grid.Row="1" Width="200" Height="250">
+        <StackPanel Grid.Row="1" Margin="10" Orientation="Horizontal">
+            <TextBlock Margin="0,0,5,0">Nickname</TextBlock>
+            <TextBox Width="200" Text="{Binding Nickname}"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Width="200" Height="250">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
