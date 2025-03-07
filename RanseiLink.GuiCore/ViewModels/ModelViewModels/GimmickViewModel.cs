@@ -19,15 +19,16 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
 
     public ICommand JumpToGimmickCommand { get; }
 
-    public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
+    public GimmickViewModel(INicknameService nicknameService, IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
     {
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;
 
         GimmickItems = idToNameService.GetComboBoxItemsPlusDefault<IGimmickService>();
+        GimmickRangeItems = nicknameService.GetAllNicknames(nameof(GimmickRangeId));
 
         JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickWorkspaceEditorModule.Id, id));
-        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeWorkspaceModule.Id, (int)id));
+        JumpToGimmickRangeCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickRangeWorkspaceModule.Id, id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
         {

@@ -62,7 +62,8 @@
 
             <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Range" ToolTip="Jump to selected gimmick range" 
                     Command="{Binding JumpToGimmickRangeCommand}" CommandParameter="{Binding Range}"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding GimmickRangeItems}" SelectedValue="{Binding Range, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Image 1" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
             <UniformGrid Grid.Row="4" Grid.Column="1" Rows="1">

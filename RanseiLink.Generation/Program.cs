@@ -24,6 +24,8 @@ internal class Program
             }
         }
         idsWithModels["SpeakerId"] = "Speaker";
+        idsWithModels["MoveRangeId"] = "MoveRange";
+        idsWithModels["GimmickRangeId"] = "GimmickRange";
 
         foreach (var modelElement in models)
         {

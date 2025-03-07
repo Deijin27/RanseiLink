@@ -56,10 +56,10 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
     }
 
-    public MoveRangeId Range
+    public int Range
     {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
+        get => (int)_model.Range;
+        set => SetProperty(_model.Range, (MoveRangeId)value, v => _model.Range = v);
     }
 
     public MoveEffectId Effect2
@@ -166,4 +166,6 @@ public partial class MoveViewModel : ViewModelBase
             RaisePropertyChanged();
         }
     }
+
+    public List<SelectorComboBoxItem> MoveRangeItems { get; }
 }

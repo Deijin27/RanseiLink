@@ -196,11 +196,13 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Animation2, value, v => _model.Animation2 = v);
     }
 
-    public GimmickRangeId Range
+    public int Range
     {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
+        get => (int)_model.Range;
+        set => SetProperty(_model.Range, (GimmickRangeId)value, v => _model.Range = v);
     }
 
     public List<SelectorComboBoxItem> GimmickItems { get; }
+
+    public List<SelectorComboBoxItem> GimmickRangeItems { get; }
 }

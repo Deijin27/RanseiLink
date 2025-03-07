@@ -28,12 +28,14 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
         IExternalService externalService, 
         IJumpService jumpService, 
         IPokemonService pokemonService,
-        ICachedSpriteProvider cachedSpriteProvider)
+        ICachedSpriteProvider cachedSpriteProvider,
+        INicknameService nicknameService)
     {
         _msgService = msgService;
         _externalService = externalService;
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        MoveRangeItems = nicknameService.GetAllNicknames(nameof(MoveRangeId));
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
@@ -42,7 +44,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
 
         UpdatePreviewAnimation();
 
-        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeWorkspaceModule.Id, (int)id));
+        JumpToMoveRangeCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveRangeWorkspaceModule.Id, id));
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
 
         PropertyChanged += MoveViewModel_PropertyChanged;

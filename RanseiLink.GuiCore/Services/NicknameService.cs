@@ -7,6 +7,7 @@ namespace RanseiLink.GuiCore.Services;
 
 public interface INicknameService
 {
+    List<SelectorComboBoxItem> GetAllNicknames(string category);
     string GetNickname(string category, int id);
     void SetNickname(string category, int id, string? nickname = null);
 }
@@ -81,6 +82,16 @@ public class NicknameService : INicknameService
             _defaults = defaults;
             _customNames = [];
             Load();
+        }
+
+        public List<SelectorComboBoxItem> GetAllNicknames()
+        {
+            var list = new List<SelectorComboBoxItem>();
+            for (int i = 0; i < _defaults.Count; i++)
+            {
+                list.Add(new(i, GetNickname(i)));
+            }
+            return list;
         }
 
         public string GetNickname(int id)
@@ -158,6 +169,11 @@ public class NicknameService : INicknameService
     private void InitialiseCategory(string category, IReadOnlyList<string> defaults)
     {
         _nicknameCategories[category] = new NicknameCategory(Path.Combine(_nicknameFolder, category) + ".xml", defaults);
+    }
+
+    public List<SelectorComboBoxItem> GetAllNicknames(string category)
+    {
+        return _nicknameCategories[category].GetAllNicknames();
     }
 
     public string GetNickname(string category, int id)

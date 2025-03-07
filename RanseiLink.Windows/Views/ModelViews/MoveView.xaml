@@ -85,7 +85,8 @@
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Range" Grid.Row="10" ToolTip="Jump to selected move range" 
                     Command="{Binding JumpToMoveRangeCommand}" CommandParameter="{Binding Range}"/>
-            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="10" Grid.Column="1" ItemsSource="{Binding MoveRangeItems}" SelectedValue="{Binding Range, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Effect 1" Grid.Row="11"/>
             <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
