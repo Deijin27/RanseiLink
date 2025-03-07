@@ -125,24 +125,25 @@ internal class SpriteService : ISpriteService
         }
     }
 
-    private void DrawMovePowerStars(IImageProcessingContext context, Move move)
+    private void DrawMovePowerStars(IImageProcessingContext context, int power)
     {
+        int starCount = MiscUtil.PowerToStarCount(power);
         var x = 72;
         var y = 14;
-        for (int i = 0; i < move.StarCount; i++)
+        for (int i = 0; i < starCount; i++)
         {
             context.DrawImage(_cachedImages[MoveIcons.PowerStar], new Point(x, y), 1);
             x -= 8;
         }
     }
 
-    private void DrawMoveType(IImageProcessingContext context, Move move)
+    private void DrawMoveType(IImageProcessingContext context, TypeId type)
     {
-        if (move.Type == TypeId.NoType)
+        if (type == TypeId.NoType)
         {
             return;
         }
-        context.DrawImage(_typeImages[move.Type], new Point(46, 2), 1);
+        context.DrawImage(_typeImages[type], new Point(46, 2), 1);
     }
 
     public Image<Rgba32> GetMoveRangePreview(MoveRange range)
@@ -172,11 +173,35 @@ internal class SpriteService : ISpriteService
             DrawArrow(x);
             if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
             {
-                DrawMovePowerStars(x, move);
+                DrawMovePowerStars(x, move.Power);
             }
             if (options.HasFlag(MovePreviewOptions.DrawType))
             {
-                DrawMoveType(x, move);
+                DrawMoveType(x, move.Type);
+            }
+
+            DrawOverlay(x);
+        });
+
+        return baseImg;
+    }
+
+    public Image<Rgba32> GetGimmickPreview(Gimmick gimmick, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All)
+    {
+        var baseImg = GetMoveRangePreview(range);
+
+        baseImg.Mutate(x =>
+        {
+            DrawBackground(x);
+            DrawRange(x, range);
+            DrawArrow(x);
+            if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
+            {
+                DrawMovePowerStars(x, gimmick.AttackPower);
+            }
+            if (options.HasFlag(MovePreviewOptions.DrawType))
+            {
+                DrawMoveType(x, gimmick.AttackType);
             }
 
             DrawOverlay(x);

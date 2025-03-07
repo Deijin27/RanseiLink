@@ -14,13 +14,15 @@ public enum GimmickAnimationPreviewMode
 
 public partial class GimmickViewModel : ViewModelBase, IBigViewModel
 {
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly IExternalService _externalService;
     private readonly IOverrideDataProvider _spriteProvider;
 
     public ICommand JumpToGimmickCommand { get; }
 
-    public GimmickViewModel(INicknameService nicknameService, IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
+    public GimmickViewModel(ICachedSpriteProvider cachedSpriteProvider, INicknameService nicknameService, IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
     {
+        _cachedSpriteProvider = cachedSpriteProvider;
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;
 
@@ -58,7 +60,23 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
             case nameof(Image3):
                 RaisePropertyChanged(nameof(Image3Path));
                 break;
+            case nameof(AttackPower):
+                StarCount = MiscUtil.PowerToStarCount(AttackPower);
+                break;
+            case nameof(StarCount):
+            case nameof(AttackType):
+            case nameof(Range):
+                RaisePropertyChanged(nameof(PreviewImage));
+                break;
         }
+    }
+
+    // You can change power really fast, this makes less events fire so less preview image creation
+    private int _starCount;
+    public int StarCount
+    {
+        get => _starCount;
+        set => SetProperty(ref _starCount, value);
     }
 
     public void SetModel(GimmickId id, Gimmick model)
@@ -68,6 +86,8 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }
+
+    public object? PreviewImage => _cachedSpriteProvider.GetGimmickPreview(_model);
 
     public ICommand JumpToGimmickRangeCommand { get; }
 

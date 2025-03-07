@@ -5,6 +5,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace RanseiLink.Core.Services;
 public interface ISpriteService : IDisposable
 {
+    Image<Rgba32> GetGimmickPreview(Gimmick gimmick, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All);
     Image<Rgba32> GetMovePreview(Move move, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All);
     Image<Rgba32> GetMoveRangePreview(MoveRange range);
 }

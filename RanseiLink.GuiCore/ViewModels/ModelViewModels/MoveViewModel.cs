@@ -73,7 +73,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
                 break;
 
             case nameof(Power):
-                StarCount = _model.StarCount;
+                StarCount = MiscUtil.PowerToStarCount(_model.Power);
                 break;
         }
     }
@@ -90,7 +90,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
     {
         _id = id;
         _model = model;
-        _starCount = _model.StarCount;
+        _starCount = MiscUtil.PowerToStarCount(_model.Power);
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }

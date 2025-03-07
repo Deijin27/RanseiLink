@@ -110,6 +110,12 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         return _pathToImageConverter.TryConvert(img);
     }
 
+    public object? GetGimmickPreview(Gimmick model, MovePreviewOptions options = MovePreviewOptions.All)
+    {
+        using var img = _spriteService.GetGimmickPreview(model, _gimmickRangeService.Retrieve((int)model.Range), options);
+        return _pathToImageConverter.TryConvert(img);
+    }
+
     public object? GetMoveRangePreview(MoveRangeId range)
     {
         using var img = _spriteService.GetMoveRangePreview(_moveRangeService.Retrieve((int)range));

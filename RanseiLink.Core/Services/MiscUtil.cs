@@ -1,6 +1,6 @@
 ﻿namespace RanseiLink.Core.Services;
 
-public static class StrengthCalculator
+public static class MiscUtil
 {
     /// <summary>
     /// Estimated formula. It works very accurately, very high BSTs it starts to be inaccurate
@@ -23,5 +23,18 @@ public static class StrengthCalculator
             result = -(result - 1000);
         }
         return result;
+    }
+
+    public static int PowerToStarCount(int power)
+    {
+        return power switch
+        {
+            > 50 => 5,
+            > 40 => 4,
+            > 30 => 3,
+            > 20 => 2,
+            > 0 => 1,
+            _ => 0
+        };
     }
 }
