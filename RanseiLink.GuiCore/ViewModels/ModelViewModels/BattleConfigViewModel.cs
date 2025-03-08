@@ -15,6 +15,7 @@ public partial class BattleConfigViewModel : ViewModelBase
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IMapViewerService _mapViewerService;
+    private readonly INicknameService _nicknameService;
 
     public BattleConfigViewModel(
         IMapService mapService, 
@@ -22,11 +23,14 @@ public partial class BattleConfigViewModel : ViewModelBase
         IIdToNameService idToNameService,
         IAsyncDialogService dialogService,
         IOverrideDataProvider overrideDataProvider,
-        IMapViewerService mapViewerService)
+        IMapViewerService mapViewerService,
+        INicknameService nicknameService)
     {
         _dialogService = dialogService;
         _overrideDataProvider = overrideDataProvider;
         _mapViewerService = mapViewerService;
+        _nicknameService = nicknameService;
+
         MapItems = mapService.GetMapIds();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
@@ -51,6 +55,19 @@ public partial class BattleConfigViewModel : ViewModelBase
         }
 
         this.PropertyChanged += BattleConfigViewModel_PropertyChanged;
+    }
+
+    public string Nickname
+    {
+        get => _nicknameService.GetNickname(nameof(BattleConfigId), (int)_id);
+        set
+        {
+            if (Nickname != value)
+            {
+                _nicknameService.SetNickname(nameof(BattleConfigId), (int)_id, value);
+                RaisePropertyChanged();
+            }
+        }
     }
 
     private void BattleConfigViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)

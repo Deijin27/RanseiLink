@@ -54,7 +54,8 @@
 
             <Button Grid.Row="1" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig}"/>
-            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig}"/>
+            <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding BattleConfigItems}" SelectedValue="{Binding BattleConfig}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
                 <StackPanel>

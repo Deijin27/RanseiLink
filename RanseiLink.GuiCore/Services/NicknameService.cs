@@ -23,6 +23,7 @@ public class NicknameService : INicknameService
 
         InitialiseCategoryFromEnum<GimmickRangeId>();
         InitialiseCategoryFromEnum<MoveRangeId>();
+        InitialiseCategoryFromEnum<BattleConfigId>();
     }
 
     private void InitialiseCategoryFromEnum<T>() where T : Enum
