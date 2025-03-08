@@ -17,8 +17,8 @@ internal class ExternalService : IExternalService
         _moveMovementAnimationFile = Path.Combine(_externalDirectory, "MoveMovementAnimations.txt");
     }
 
-    private Dictionary<MoveAnimationId, string>? _moveAnimationCache;
-    public string GetMoveAnimationUri(MoveAnimationId id)
+    private Dictionary<TrueMoveAnimationId, string>? _moveAnimationCache;
+    public string GetMoveAnimationUri(TrueMoveAnimationId id)
     {
         if (_moveAnimationCache == null)
         {
@@ -30,7 +30,7 @@ internal class ExternalService : IExternalService
             int count = 0;
             foreach (string line in File.ReadAllLines(_moveAnimationFile))
             {
-                _moveAnimationCache[(MoveAnimationId)count] = line;
+                _moveAnimationCache[(TrueMoveAnimationId)count] = line;
                 count++;
             }
         }

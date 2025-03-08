@@ -13,10 +13,10 @@ public partial class MoveAnimation : BaseDataWindow
     public MoveAnimation(byte[] data) : base(data, DataLength) { }
     public MoveAnimation() : this(new byte[DataLength]) { }
 
-    public int Animation
+    public TrueMoveAnimationId Animation
     {
-        get => GetInt(0, 0, 8);
-        set => SetInt(0, 0, 8, value);
+        get => (TrueMoveAnimationId)GetInt(0, 0, 8);
+        set => SetInt(0, 0, 8, (int)value);
     }
 
     public int Unknown

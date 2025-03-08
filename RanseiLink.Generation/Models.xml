@@ -126,8 +126,6 @@
         <Property Index="9, 12, 8" Index_VPYJ="8, 12, 8" Name="Image2" />
         <Property Index="9, 20, 8" Index_VPYJ="8, 20, 8" Name="Image3" />
         
-        <Property Index="6,  8, 8" Index_VPYJ="5,  8, 8" Name="Animation1" Type="MoveAnimationId"/>
-        <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="Animation2" Type="MoveAnimationId"/>
         <Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
     </Model>
     <Model Name="GimmickObject" DataLength="0x4" Model="true" ViewModel="true">
@@ -202,8 +200,8 @@
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
     <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">
-        <Service MaxId="254"/>
-        <Property Index="0,  0, 8" Name="Animation" />
+        <Service MaxId="254" DefaultId="255" IdToName="false"/>
+        <Property Index="0,  0, 8" Name="Animation" Type="TrueMoveAnimationId" />
         <Property Index="0, 16, 8" Name="Unknown" />
     </Model>
     <Model Name="MoveRange" DataLength="0x4" Model="true">

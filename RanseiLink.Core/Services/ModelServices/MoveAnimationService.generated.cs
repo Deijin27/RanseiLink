@@ -13,14 +13,10 @@ public partial interface IMoveAnimationService : IModelService<MoveAnimation> {}
 public partial class MoveAnimationService : BaseDataModelService<MoveAnimation>, IMoveAnimationService
 {
     public static MoveAnimationService Load(string dataFile) => new MoveAnimationService(dataFile);
-    private MoveAnimationService(string dataFile) : base(dataFile, 0, 254, () => new MoveAnimation()) {}
+    private MoveAnimationService(string dataFile) : base(dataFile, 0, 254, () => new MoveAnimation(), 255) {}
 
     public MoveAnimationService(ModInfo mod) : this(Path.Combine(mod.FolderPath, Constants.MoveAnimationRomPath)) {}
 
     public MoveAnimation Retrieve(MoveAnimationId id) => Retrieve((int)id);
 
-    public override string IdToName(int id)
-    {
-        return ((MoveAnimationId)id).ToString();
-    }
 }

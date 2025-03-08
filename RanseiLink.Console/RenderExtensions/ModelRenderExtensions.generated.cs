@@ -145,8 +145,6 @@ public static partial class RenderExtensions
         console.WriteProperty("GimmickRef2", model.GimmickRef2);
         console.WriteProperty("Image2", model.Image2);
         console.WriteProperty("Image3", model.Image3);
-        console.WriteProperty("Animation1", model.Animation1);
-        console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
     public static void Render(this IConsole console, Item model, object title)

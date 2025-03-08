@@ -28,6 +28,7 @@ internal class Program
         idsWithModels["GimmickRangeId"] = "GimmickRange";
         idsWithModels["BattleConfigId"] = "BattleConfig";
         idsWithModels["GimmickObjectId"] = "GimmickObject";
+        idsWithModels["MoveAnimationId"] = "MoveAnimation";
 
         foreach (var modelElement in models)
         {

@@ -665,58 +665,6 @@ public partial class Gimmick : BaseDataWindow
         }
     }
 
-    public MoveAnimationId Animation1
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (MoveAnimationId)GetInt(5, 8, 8);
-            }
-            else
-            {
-                return (MoveAnimationId)GetInt(6, 8, 8);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(5, 8, 8, (int)value);
-            }
-            else
-            {
-                SetInt(6, 8, 8, (int)value);
-            }
-        }
-    }
-
-    public MoveAnimationId Animation2
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (MoveAnimationId)GetInt(5, 16, 8);
-            }
-            else
-            {
-                return (MoveAnimationId)GetInt(6, 16, 8);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(5, 16, 8, (int)value);
-            }
-            else
-            {
-                SetInt(6, 16, 8, (int)value);
-            }
-        }
-    }
-
     public GimmickRangeId Range
     {
         get

@@ -184,18 +184,6 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Image3, value, v => _model.Image3 = v);
     }
 
-    public MoveAnimationId Animation1
-    {
-        get => _model.Animation1;
-        set => SetProperty(_model.Animation1, value, v => _model.Animation1 = v);
-    }
-
-    public MoveAnimationId Animation2
-    {
-        get => _model.Animation2;
-        set => SetProperty(_model.Animation2, value, v => _model.Animation2 = v);
-    }
-
     public int Range
     {
         get => (int)_model.Range;

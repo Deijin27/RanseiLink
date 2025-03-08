@@ -67,21 +67,25 @@ public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
 }
 
 [EditorModule]
-public class MoveAnimationSelectorEditorModule : BaseSelectorEditorModule<IMoveAnimationService>
+public class MoveAnimationSelectorEditorModule : EditorModule
 {
-    public const string Id = "move_animation_selector";
+    public const string Id = "move_animation_list";
     public override string UniqueId => Id;
     public override string ListName => "Move Animation";
+    private IMoveAnimationService _service = null!;
+    private MoveAnimationCollectionViewModel? _viewModel;
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<MoveAnimationViewModel>();
-        var nn = modServices.Get<INicknameService>();
-        var comboItems = _service.ValidIds()
-            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(MoveAnimationId), x)))
-            .ToList();
-        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((MoveAnimationId)id, _service.Retrieve(id)), _service.ValidateId);
+        _service = modServices.Get<IMoveAnimationService>();
+        _viewModel = new MoveAnimationCollectionViewModel();
+        _viewModel.Init(_service);
     }
+
+    public override object? ViewModel => _viewModel;
+
+    public override void Deactivate() => _service?.Save();
+    public override void OnPatchingRom() => _service?.Save();
 }
 
 [EditorModule]

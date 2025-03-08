@@ -76,7 +76,8 @@
             <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Effect3Amount, Mode=TwoWay}" Max="255"/>
 
             <TextBlock Text="Animation (Unused)" Grid.Row="9"/>
-            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.MoveAnimationItems}" SelectedItem="{Binding Animation, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding MoveAnimationItems}" SelectedValue="{Binding Animation, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <GroupBox Header="Description" Grid.Row="10" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>

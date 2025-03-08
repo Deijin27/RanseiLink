@@ -16,11 +16,13 @@ public partial class WarriorSkillViewModel : ViewModelBase, IBigViewModel
         ICachedMsgBlockService msgService, 
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider cachedSpriteProvider,
-        IJumpService jumpService)
+        IJumpService jumpService,
+        IIdToNameService idToNameService)
     {
         _msgService = msgService;
         _baseWarriorService = baseWarriorService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        MoveAnimationItems = idToNameService.GetComboBoxItemsPlusDefault<IMoveAnimationService>();
 
         _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => { if (wa != null) jumpService.JumpTo(WarriorWorkspaceModule.Id, wa.Id); });
     }

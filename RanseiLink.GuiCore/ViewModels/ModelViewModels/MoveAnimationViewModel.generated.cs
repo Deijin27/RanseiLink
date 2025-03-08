@@ -17,8 +17,7 @@ public partial class MoveAnimationViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
-    public int Animation_Max => 255;
-    public int Animation
+    public TrueMoveAnimationId Animation
     {
         get => _model.Animation;
         set => SetProperty(_model.Animation, value, v => _model.Animation = v);

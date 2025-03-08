@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.Windows.ValueConverters"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
-             d:DataContext="{d:DesignInstance Type=vm:MoveAnimationViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance Type=vm:MoveAnimationCollectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="800">
     <UserControl.Resources>
@@ -26,31 +26,20 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="130"/>
-            <ColumnDefinition Width="170"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
+    <ItemsControl Margin="10" ItemsSource="{Binding Items}" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="{Binding Id, StringFormat='{}{0:000}:'}" Width="20" Margin="0,0,5,0"/>
+                    <TextBlock Text="Animation"/>
+                    <ComboBox Margin="5,0" Width="100" 
+                              SelectedItem="{Binding Animation, Mode=TwoWay}" 
+                              ItemsSource="{x:Static const:EnumProvider.TrueMoveAnimationItems}"/>
 
-        <TextBlock Text="Animation" Grid.Row="0" />
-        <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding Animation}" Max="{Binding Animation_Max}"/>
-
-        <TextBlock Text="Unknown" Grid.Row="1" />
-        <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Unknown}" Max="{Binding Unknown_Max}"/>
-
-    </Grid>
+                    <TextBlock Text="Unknown" />
+                    <controls:NumberBox Margin="5,0" Width="100" Value="{Binding Unknown}" Max="{Binding Unknown_Max}"/>
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

@@ -108,28 +108,28 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
     }
 
-    public MoveAnimationId StartupAnimation
+    public int StartupAnimation
     {
-        get => _model.StartupAnimation;
-        set => SetProperty(_model.StartupAnimation, value, v => _model.StartupAnimation = v);
+        get => (int)_model.StartupAnimation;
+        set => SetProperty(_model.StartupAnimation, (MoveAnimationId)value, v => _model.StartupAnimation = v);
     }
 
-    public MoveAnimationId ProjectileAnimation
+    public int ProjectileAnimation
     {
-        get => _model.ProjectileAnimation;
-        set => SetProperty(_model.ProjectileAnimation, value, v => _model.ProjectileAnimation = v);
+        get => (int)_model.ProjectileAnimation;
+        set => SetProperty(_model.ProjectileAnimation, (MoveAnimationId)value, v => _model.ProjectileAnimation = v);
     }
 
-    public MoveAnimationId ImpactAnimation
+    public int ImpactAnimation
     {
-        get => _model.ImpactAnimation;
-        set => SetProperty(_model.ImpactAnimation, value, v => _model.ImpactAnimation = v);
+        get => (int)_model.ImpactAnimation;
+        set => SetProperty(_model.ImpactAnimation, (MoveAnimationId)value, v => _model.ImpactAnimation = v);
     }
 
-    public MoveAnimationId AdditionalAnimation
+    public int AdditionalAnimation
     {
-        get => _model.AdditionalAnimation;
-        set => SetProperty(_model.AdditionalAnimation, value, v => _model.AdditionalAnimation = v);
+        get => (int)_model.AdditionalAnimation;
+        set => SetProperty(_model.AdditionalAnimation, (MoveAnimationId)value, v => _model.AdditionalAnimation = v);
     }
 
     public MoveUnknownOptionId UnknownOption
@@ -168,4 +168,6 @@ public partial class MoveViewModel : ViewModelBase
     }
 
     public List<SelectorComboBoxItem> MoveRangeItems { get; }
+
+    public List<SelectorComboBoxItem> MoveAnimationItems { get; }
 }
