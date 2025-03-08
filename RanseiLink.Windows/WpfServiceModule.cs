@@ -53,6 +53,7 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, KingdomWorkspaceEditorModule>();
         builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
         builder.Register<EditorModule, GimmickRangeWorkspaceModule>();
+        builder.Register<EditorModule, MoveAnimationSelectorEditorModule>();
         builder.Register<EditorModule, MapSelectorEditorModule>();
         builder.Register<EditorModule, SpriteEditorModule>();
         builder.Register<EditorModule, BannerEditorModule>();
@@ -109,6 +110,7 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorNameTableViewModel>();
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
+        builder.Register<MoveAnimationViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

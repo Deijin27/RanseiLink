@@ -67,6 +67,24 @@ public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
 }
 
 [EditorModule]
+public class MoveAnimationSelectorEditorModule : BaseSelectorEditorModule<IMoveAnimationService>
+{
+    public const string Id = "move_animation_selector";
+    public override string UniqueId => Id;
+    public override string ListName => "Move Animation";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var vm = modServices.Get<MoveAnimationViewModel>();
+        var nn = modServices.Get<INicknameService>();
+        var comboItems = _service.ValidIds()
+            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(MoveAnimationId), x)))
+            .ToList();
+        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((MoveAnimationId)id, _service.Retrieve(id)), _service.ValidateId);
+    }
+}
+
+[EditorModule]
 public class AbilityWorkspaceEditorModule : BaseWorkspaceEditorModule<IAbilityService>
 {
     public const string Id = "ability_workspace";
@@ -400,20 +418,6 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
         _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
     }
 }
-
-//public class MoveAnimationGridEditorModule : BaseSelectorEditorModule<IAbilityService>
-//{
-//    public const string Id = "move_animation_grid";
-//    public override string UniqueId => Id;
-//    public override string ListName => "Move Animation (Grid)";
-//    public override void Initialise(IServiceGetter modServices)
-//    {
-//        base.Initialise(modServices);
-//        var vm = modServices.Get<IAbilityViewModel>();
-//        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
-//    }
-//}
-
 
 [EditorModule]
 public class SpriteEditorModule : EditorModule

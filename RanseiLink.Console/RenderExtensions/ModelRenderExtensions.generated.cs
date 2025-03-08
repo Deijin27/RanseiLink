@@ -218,6 +218,12 @@ public static partial class RenderExtensions
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
         console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
     }
+    public static void Render(this IConsole console, MoveAnimation model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Animation", model.Animation);
+        console.WriteProperty("Unknown", model.Unknown);
+    }
     public static void Render(this IConsole console, Pokemon model, object title)
     {
         console.WriteTitle(title);

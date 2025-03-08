@@ -201,10 +201,10 @@
         <Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
-    <Model Name="MoveAnimation" DataLength="0x4" Model="true">
+    <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">
         <Service MaxId="254"/>
-        <Property Index="0,  0, 16" Name="UnknownA" />
-        <Property Index="0, 16, 16" Name="UnknownB" />
+        <Property Index="0,  0, 8" Name="Animation" />
+        <Property Index="0, 16, 8" Name="Unknown" />
     </Model>
     <Model Name="MoveRange" DataLength="0x4" Model="true">
         <Service MaxId="29"/>

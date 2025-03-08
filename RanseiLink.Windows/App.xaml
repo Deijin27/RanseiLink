@@ -79,6 +79,10 @@
                 <views:BattleConfigView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:MoveAnimationViewModel}">
+                <views:MoveAnimationView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:WarriorSkillViewModel}">
                 <views:WarriorSkillView/>
             </DataTemplate>
