@@ -39,13 +39,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="External\MoveAnimations.txt">
+    <None Update="External\MoveAnimations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
-    <None Update="External\MoveMovementAnimations.txt">
+    <None Update="External\MoveMovementAnimations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
