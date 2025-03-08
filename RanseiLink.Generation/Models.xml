@@ -202,7 +202,7 @@
     <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">
         <Service MaxId="254" DefaultId="255" IdToName="false"/>
         <Property Index="0,  0, 8" Name="Animation" Type="TrueMoveAnimationId" />
-        <Property Index="0, 16, 8" Name="Unknown" />
+        <Property Index="0, 16, 8" Name="Sound" />
     </Model>
     <Model Name="MoveRange" DataLength="0x4" Model="true">
         <Service MaxId="29"/>

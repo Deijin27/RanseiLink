@@ -137,7 +137,7 @@
                 </ItemsControl>
 
             </TabItem>
-            <TabItem Header="Animation">
+            <TabItem Header="Animation / Sound">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="130"/>
@@ -167,14 +167,14 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Movement Animation" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
+                    <TextBlock Text="Movement" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
 
                     <DockPanel Grid.Row="0" Grid.Column="1">
                         <controls:IconButton DockPanel.Dock="Right" Icon="visibility" Margin="5,0,0,0" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Movement}"/>
                         <ComboBox  ItemsSource="{x:Static const:EnumProvider.MoveMovementAnimationItems}" SelectedItem="{Binding MovementAnimation}"/>
                     </DockPanel>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup Animation"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Startup"/>
                     <DockPanel Grid.Row="1" Grid.Column="1">
                         <controls:IconButton DockPanel.Dock="Right" Icon="visibility" Margin="5,0,0,0" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Startup}"/>
                         <ComboBox ItemsSource="{Binding MoveAnimationItems}" SelectedValue="{Binding StartupAnimation}"
@@ -182,7 +182,7 @@
                     </DockPanel>
 
 
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Projectile Animation"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Projectile"/>
                     <DockPanel Grid.Row="2" Grid.Column="1">
                         <controls:IconButton DockPanel.Dock="Right" Icon="visibility" Margin="5,0,0,0" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Projectile}"/>
                         <ComboBox ItemsSource="{Binding MoveAnimationItems}" SelectedValue="{Binding ProjectileAnimation}"
@@ -190,14 +190,14 @@
                     </DockPanel>
 
 
-                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Impact Animation"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Impact"/>
                     <DockPanel Grid.Row="3" Grid.Column="1">
                         <controls:IconButton DockPanel.Dock="Right" Icon="visibility" Margin="5,0,0,0" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Impact}"/>
                         <ComboBox ItemsSource="{Binding MoveAnimationItems}" SelectedValue="{Binding ImpactAnimation}"
                                   Style="{StaticResource SelectorComboBoxStyle}"/>
                     </DockPanel>
 
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Additional Animation"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Additional"/>
                     <DockPanel Grid.Row="4" Grid.Column="1">
                         <controls:IconButton DockPanel.Dock="Right" Icon="visibility" Margin="5,0,0,0" Command="{Binding SetPreviewAnimationModeCommand}" CommandParameter="{x:Static vm:MoveAnimationPreviewMode.Additional}"/>
                         <ComboBox ItemsSource="{Binding MoveAnimationItems}" SelectedValue="{Binding AdditionalAnimation}"

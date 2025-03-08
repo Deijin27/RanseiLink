@@ -19,7 +19,7 @@ public partial class MoveAnimation : BaseDataWindow
         set => SetInt(0, 0, 8, (int)value);
     }
 
-    public int Unknown
+    public int Sound
     {
         get => GetInt(0, 16, 8);
         set => SetInt(0, 16, 8, value);

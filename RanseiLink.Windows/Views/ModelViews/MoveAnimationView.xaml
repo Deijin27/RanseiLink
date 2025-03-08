@@ -36,8 +36,8 @@
                               SelectedItem="{Binding Animation, Mode=TwoWay}" 
                               ItemsSource="{x:Static const:EnumProvider.TrueMoveAnimationItems}"/>
 
-                    <TextBlock Text="Unknown" />
-                    <controls:NumberBox Margin="5,0" Width="100" Value="{Binding Unknown}" Max="{Binding Unknown_Max}"/>
+                    <TextBlock Text="Sound" />
+                    <controls:NumberBox Margin="5,0" Width="100" Value="{Binding Sound}" Max="{Binding Sound_Max}"/>
                 </StackPanel>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

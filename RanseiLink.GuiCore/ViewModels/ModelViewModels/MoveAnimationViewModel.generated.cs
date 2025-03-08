@@ -23,10 +23,10 @@ public partial class MoveAnimationViewModel : ViewModelBase
         set => SetProperty(_model.Animation, value, v => _model.Animation = v);
     }
 
-    public int Unknown_Max => 255;
-    public int Unknown
+    public int Sound_Max => 255;
+    public int Sound
     {
-        get => _model.Unknown;
-        set => SetProperty(_model.Unknown, value, v => _model.Unknown = v);
+        get => _model.Sound;
+        set => SetProperty(_model.Sound, value, v => _model.Sound = v);
     }
 }

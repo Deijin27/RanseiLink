@@ -220,7 +220,7 @@ public static partial class RenderExtensions
     {
         console.WriteTitle(title);
         console.WriteProperty("Animation", model.Animation);
-        console.WriteProperty("Unknown", model.Unknown);
+        console.WriteProperty("Sound", model.Sound);
     }
     public static void Render(this IConsole console, Pokemon model, object title)
     {
