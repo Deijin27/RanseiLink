@@ -337,7 +337,11 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
     {
         base.Initialise(modServices);
         var vm = modServices.Get<GimmickObjectViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)));
+        var nn = modServices.Get<INicknameService>();
+        var comboItems = _service.ValidIds()
+            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(GimmickObjectId), x)))
+            .ToList();
+        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 

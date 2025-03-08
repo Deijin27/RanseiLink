@@ -93,11 +93,11 @@
                 <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image3Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="State-1 Sprite" Grid.Row="10" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="10" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State1Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="State-1 Model" Grid.Row="10" />
+            <ComboBox Grid.Row="10" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State1Sprite, Mode=TwoWay}"/>
 
-            <TextBlock Text="State-2 Sprite" Grid.Row="11" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="11" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State2Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="State-2 Model" Grid.Row="11" />
+            <ComboBox Grid.Row="11" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State2Sprite, Mode=TwoWay}"/>
 
             <TextBlock Text="Effect" Grid.Row="12" ToolTip="Effect of attack used by this gimmick"/>
             <ComboBox Grid.Row="12" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect, Mode=TwoWay}"/>

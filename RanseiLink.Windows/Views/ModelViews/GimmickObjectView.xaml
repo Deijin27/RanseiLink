@@ -26,7 +26,11 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid Margin="10">
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Nickname" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0"/>
+            <TextBox Text="{Binding Nickname}" Grid.Row="0" Grid.Column="1" Width="180"/>
+        </StackPanel>
         <ItemsControl ItemsSource="{Binding Variants}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:GimmickObjectVariantVm}">
@@ -36,5 +40,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-    </Grid>
+    </DockPanel>
 </UserControl>

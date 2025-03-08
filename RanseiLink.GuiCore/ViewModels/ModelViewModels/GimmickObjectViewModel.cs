@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class GimmickObjectViewModel(IMapManager mapManager, IOverrideDataProvider overrideDataProvider) : ViewModelBase
+public partial class GimmickObjectViewModel(INicknameService nicknameService, IMapManager mapManager, IOverrideDataProvider overrideDataProvider) : ViewModelBase
 {
     public void SetModel(GimmickObjectId id, GimmickObject model)
     {
@@ -13,6 +13,19 @@ public partial class GimmickObjectViewModel(IMapManager mapManager, IOverrideDat
         _model = model;
         ReloadVariants();
         RaiseAllPropertiesChanged();
+    }
+
+    public string Nickname
+    {
+        get => nicknameService.GetNickname(nameof(GimmickObjectId), (int)_id);
+        set
+        {
+            if (Nickname != value)
+            {
+                nicknameService.SetNickname(nameof(GimmickObjectId), (int)_id, value);
+                RaisePropertyChanged();
+            }
+        }
     }
 
     private void ReloadVariants()
