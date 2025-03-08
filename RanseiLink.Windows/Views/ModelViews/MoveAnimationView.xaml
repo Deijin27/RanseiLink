@@ -26,20 +26,30 @@
         </Style>
 
     </UserControl.Resources>
-    <ItemsControl Margin="10" ItemsSource="{Binding Items}" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                    <TextBlock Text="{Binding Id, StringFormat='{}{0:000}:'}" Width="20" Margin="0,0,5,0"/>
-                    <TextBlock Text="Animation"/>
-                    <ComboBox Margin="5,0" Width="100" 
-                              SelectedItem="{Binding Animation, Mode=TwoWay}" 
-                              ItemsSource="{x:Static const:EnumProvider.TrueMoveAnimationItems}"/>
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <TextBlock FontWeight="Bold" Text="ID" Width="30" Margin="5,0"/>
+            <TextBlock FontWeight="Bold" Text="Animation" Width="200" Margin="5,0"/>
+            <TextBlock FontWeight="Bold" Text="Sound" Width="200" Margin="5,0"/>
+        </StackPanel>
+        <Separator DockPanel.Dock="Top" Background="{DynamicResource ControlBorderBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5"/>
 
-                    <TextBlock Text="Sound" />
-                    <controls:NumberBox Margin="5,0" Width="100" Value="{Binding Sound}" Max="{Binding Sound_Max}"/>
-                </StackPanel>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+        <ItemsControl ItemsSource="{Binding Items}" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Id, StringFormat='{}{0:000}: '}" Width="30" Margin="5,0"/>
+                            <ComboBox Margin="5,0" Width="200" 
+                                  SelectedItem="{Binding Animation, Mode=TwoWay}" 
+                                  ItemsSource="{x:Static const:EnumProvider.TrueMoveAnimationItems}"/>
+                            <controls:NumberBox Margin="5,0" Width="200" Value="{Binding Sound}" Max="{Binding Sound_Max}"/>
+                        </StackPanel>
+                        <Separator Background="{DynamicResource ControlBorderBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5"/>
+                    </StackPanel>
+
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
 </UserControl>
