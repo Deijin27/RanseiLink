@@ -1,12 +1,12 @@
 ﻿using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
-using System.Data;
 
 namespace RanseiLink.GuiCore.Constants;
 
 public static class EnumProvider
 {
+    public static MoveMovementAnimationTimingId[] MovementAnimationTimingItems { get; } = EnumUtil.GetValues<MoveMovementAnimationTimingId>().ToArray();
     public static TrueMoveAnimationId[] TrueMoveAnimationItems { get; } = EnumUtil.GetValues<TrueMoveAnimationId>().ToArray();
     public static AbilityEffectId[] AbilityEffectItems { get; } = EnumUtil.GetValues<AbilityEffectId>().ToArray();
     public static SpeakerId[] WarriorSpriteUnknownItems { get; } = EnumUtil.GetValues<SpeakerId>().ToArray();

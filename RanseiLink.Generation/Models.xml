@@ -196,7 +196,7 @@
         <Property Index="7, 26, 4" Name="UnknownOption" Type="MoveUnknownOptionId" />
         <Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
         <Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
-        <Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
+        <Property Index="6, 28, 4" Name="MovementTiming" Type="MoveMovementAnimationTimingId" />
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
     <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">

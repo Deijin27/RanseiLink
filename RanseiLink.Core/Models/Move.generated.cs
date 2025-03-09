@@ -143,9 +143,9 @@ public partial class Move : BaseDataWindow
         set => SetInt(7, 14, 5, (int)value);
     }
 
-    public int UnknownValue_6_28_4
+    public MoveMovementAnimationTimingId MovementTiming
     {
-        get => GetInt(6, 28, 4);
-        set => SetInt(6, 28, 4, value);
+        get => (MoveMovementAnimationTimingId)GetInt(6, 28, 4);
+        set => SetInt(6, 28, 4, (int)value);
     }
 }

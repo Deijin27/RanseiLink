@@ -214,7 +214,7 @@ public static partial class RenderExtensions
         console.WriteProperty("UnknownOption", model.UnknownOption);
         console.WriteProperty("Movement", model.Movement);
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
-        console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
+        console.WriteProperty("MovementTiming", model.MovementTiming);
     }
     public static void Render(this IConsole console, MoveAnimation model, object title)
     {

@@ -150,11 +150,10 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
     }
 
-    public int UnknownValue_6_28_4_Max => 15;
-    public int UnknownValue_6_28_4
+    public MoveMovementAnimationTimingId MovementTiming
     {
-        get => _model.UnknownValue_6_28_4;
-        set => SetProperty(_model.UnknownValue_6_28_4, value, v => _model.UnknownValue_6_28_4 = v);
+        get => _model.MovementTiming;
+        set => SetProperty(_model.MovementTiming, value, v => _model.MovementTiming = v);
     }
 
     public string Description
