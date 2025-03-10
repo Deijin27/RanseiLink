@@ -419,7 +419,11 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
     {
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
+        var nn = modServices.Get<INicknameService>();
+        var comboItems = _service.ValidIds()
+            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(BattleConfigId), x)))
+            .ToList();
+        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -485,7 +489,12 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
         }
         _currentMap = null;
         _currentId = null;
-        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
+        var nicknameService = modServices.Get<INicknameService>();
+        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem(
+            id: (int)i, 
+            idString: i.ToString()[3..],
+            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+            )).ToList();
         _viewModel = selectorVmFactory.Create(null, mapComboItems, _nestedVm, id =>
         {
             if (_currentMap != null && _currentId != null)

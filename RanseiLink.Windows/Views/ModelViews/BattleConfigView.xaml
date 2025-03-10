@@ -28,7 +28,7 @@
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="170"/>
+                <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -58,7 +58,8 @@
                     Command="{Binding JumpToMapCommand}" CommandParameter="{Binding MapId}"/>
             <DockPanel Grid.Row="1" Grid.Column="1">
                 <controls:IconButton Icon="visibility" ToolTip="View 3D Model" DockPanel.Dock="Right" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" />
-                <ComboBox ItemsSource="{Binding MapItems}" SelectedItem="{Binding MapId, Mode=TwoWay}"/>
+                <ComboBox ItemsSource="{Binding MapItems}" SelectedValue="{Binding MapId, Mode=TwoWay}"
+                          Style="{StaticResource SelectorComboBoxStyle}"/>
                 
             </DockPanel>
             

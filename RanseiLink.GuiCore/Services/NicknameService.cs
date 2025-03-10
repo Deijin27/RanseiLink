@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using System.Text;
 using System.Xml.Linq;
@@ -25,6 +26,7 @@ public class NicknameService : INicknameService
         InitialiseCategoryFromEnum<MoveRangeId>();
         InitialiseCategoryFromEnum<BattleConfigId>();
         InitialiseCategoryFromEnum<GimmickObjectId>();
+        InitialiseCategory(nameof(MapId), MapId.DefaultNicknames);
     }
 
     private void InitialiseCategoryFromEnum<T>() where T : Enum
@@ -76,9 +78,9 @@ public class NicknameService : INicknameService
     {
         private readonly string _file;
         private readonly Dictionary<int, string> _customNames;
-        private readonly IReadOnlyList<string> _defaults;
+        private readonly Dictionary<int, string> _defaults;
 
-        public NicknameCategory(string file, IReadOnlyList<string> defaults)
+        public NicknameCategory(string file, Dictionary<int, string> defaults)
         {
             _file = file;
             _defaults = defaults;
@@ -88,12 +90,7 @@ public class NicknameService : INicknameService
 
         public List<SelectorComboBoxItem> GetAllNicknames()
         {
-            var list = new List<SelectorComboBoxItem>();
-            for (int i = 0; i < _defaults.Count; i++)
-            {
-                list.Add(new(i, GetNickname(i)));
-            }
-            return list;
+            return _defaults.OrderBy(x => x.Key).Select(x => new SelectorComboBoxItem(x.Key, x.Value)).ToList();
         }
 
         public string GetNickname(int id)
@@ -169,6 +166,16 @@ public class NicknameService : INicknameService
     }
 
     private void InitialiseCategory(string category, IReadOnlyList<string> defaults)
+    {
+        var dict = new Dictionary<int, string>();
+        for (int i = 0; i < defaults.Count; i++)
+        {
+            dict[i] = defaults[i];
+        }
+        InitialiseCategory(category, dict);
+    }
+
+    private void InitialiseCategory(string category, Dictionary<int, string> defaults)
     {
         _nicknameCategories[category] = new NicknameCategory(Path.Combine(_nicknameFolder, category) + ".xml", defaults);
     }

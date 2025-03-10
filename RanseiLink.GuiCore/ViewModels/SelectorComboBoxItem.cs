@@ -6,13 +6,18 @@ public class SelectorComboBoxItem : ViewModelBase
 {
     private string _name;
     private string _idAndName;
-    public SelectorComboBoxItem(int id, string name)
+    public SelectorComboBoxItem(int id, string name) : this(id, id.ToString().PadLeft(3, '0'), name)
+    {
+    }
+
+    public SelectorComboBoxItem(int id, string idString, string name)
     {
         Id = id;
-        IdString = id.ToString().PadLeft(3, '0');
+        IdString = idString;
         _idAndName = $"{IdString} - {name}";
         _name = name;
     }
+
     public int Id { get; }
     public string IdString { get; }
     public string IdAndName => _idAndName;

@@ -31,11 +31,15 @@ public partial class BattleConfigViewModel : ViewModelBase
         _mapViewerService = mapViewerService;
         _nicknameService = nicknameService;
 
-        MapItems = mapService.GetMapIds();
+        MapItems = mapService.GetMapIds().Select(i => new SelectorComboBoxItem(
+            id: (int)i,
+            idString: i.ToString()[3..],
+            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+            )).ToList();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
 
-        JumpToMapCommand = new RelayCommand<MapId>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, (int)id));
+        JumpToMapCommand = new RelayCommand<int>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, id));
         JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
         View3DModelCommand = new RelayCommand(View3DModel);
 
@@ -112,10 +116,10 @@ public partial class BattleConfigViewModel : ViewModelBase
 
     public ICommand View3DModelCommand { get; }
 
-    public MapId MapId
+    public int MapId
     {
-        get => _model.MapId;
-        set => SetProperty(_model.MapId, value, v => _model.MapId = value);
+        get => (int)_model.MapId;
+        set => SetProperty(_model.MapId, (MapId)value, v => _model.MapId = v);
     }
 
     public string? MinimapSpritePath 
@@ -134,7 +138,7 @@ public partial class BattleConfigViewModel : ViewModelBase
     public ObservableCollection<CheckBoxViewModel> DefeatConditionItems { get; } = [];
     public ObservableCollection<CheckBoxViewModel> VictoryConditionItems { get; } = [];
 
-    public ICollection<MapId> MapItems { get; }
+    public List<SelectorComboBoxItem> MapItems { get; }
 
     public ICommand JumpToMapCommand { get; }
     public ICommand JumpToItemCommand { get; }

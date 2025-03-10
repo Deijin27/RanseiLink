@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Maps;
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Settings;
@@ -27,6 +28,7 @@ public class MapViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
     private readonly IMapViewerService _mapViewerService;
+    private readonly INicknameService _nicknameService;
     private MapId _id;
 
     public event EventHandler? RequestSave;
@@ -41,8 +43,10 @@ public class MapViewModel : ViewModelBase
         IMapManager mapManager,
         IMapViewerService mapViewerService,
         IPathToImageConverter pathToImageConverter,
-        ISettingService settingService)
+        ISettingService settingService,
+        INicknameService nicknameService)
     {
+        _nicknameService = nicknameService;
         _mapManager = mapManager;
         _mapViewerService = mapViewerService;
         _dialogService = dialogService;
@@ -104,6 +108,20 @@ public class MapViewModel : ViewModelBase
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
     }
+
+    public string Nickname
+    {
+        get => _nicknameService.GetNickname(nameof(MapId), (int)_id);
+        set
+        {
+            if (Nickname != value)
+            {
+                _nicknameService.SetNickname(nameof(MapId), (int)_id, value);
+                RaisePropertyChanged();
+            }
+        }
+    }
+
     public bool Is3dModelOverriden => _mapManager.IsOverriden(_id);
     public RelayCommand RevertModelCommand { get; }
     public ICommand ExportPslmCommand { get; }
