@@ -27,6 +27,10 @@
 
     </UserControl.Resources>
     <DockPanel Margin="10">
+        <StackPanel Margin="0,0,0,10" Orientation="Horizontal" DockPanel.Dock="Top">
+            <controls:IconControl Margin="0,0,5,0" Icon="sort" ToolTip="Sort"/>
+            <ComboBox  Margin="0,0,5,0" VerticalAlignment="Center" Width="120" ItemsSource="{Binding SortItems}" SelectedItem="{Binding SelectedSortItem}"/>
+        </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <TextBlock FontWeight="Bold" Text="ID" Width="30" Margin="5,0"/>
             <TextBlock FontWeight="Bold" Text="Animation" Width="200" Margin="5,0"/>
