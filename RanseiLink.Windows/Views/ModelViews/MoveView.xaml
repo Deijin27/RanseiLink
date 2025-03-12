@@ -64,7 +64,8 @@
             <Image Margin="0,4,0,12" Source="{Binding PreviewImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Stretch="Uniform" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
 
             <TextBlock Text="Name" Grid.Row="2" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxLength="{Binding Name_MaxLength}"/>
 
             <GroupBox Header="Movement Flags" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="5" Padding="10,10,10,0">
                 <StackPanel>

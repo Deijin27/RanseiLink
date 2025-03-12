@@ -57,7 +57,8 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Name" Grid.Row="1" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxLength="{Binding Name_MaxLength}"/>
 
             <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>

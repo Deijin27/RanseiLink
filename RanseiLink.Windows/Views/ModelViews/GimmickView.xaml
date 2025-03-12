@@ -59,7 +59,8 @@
 
 
             <TextBlock Text="Name" Grid.Row="2" />
-            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxLength="{Binding Name_MaxLength}"/>
 
             <TextBlock Text="Type" Grid.Row="3" ToolTip="Attacks are of this type, and types this is weak to destroy it."/>
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding AttackType, Mode=TwoWay}"/>
