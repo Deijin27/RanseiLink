@@ -199,6 +199,10 @@
                 <views:WarriorSkillMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:EventSpeakerMiniViewModel}">
+                <views:EventSpeakerMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>

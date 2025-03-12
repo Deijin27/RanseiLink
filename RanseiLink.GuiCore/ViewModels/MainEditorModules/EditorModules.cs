@@ -237,16 +237,21 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
 }
 
 [EditorModule]
-public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventSpeakerService>
+public class EventSpeakerWorkspaceModule : BaseWorkspaceEditorModule<IEventSpeakerService>
 {
-    public const string Id = "event_speaker_selector";
+    public const string Id = "event_speaker_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Event Speaker";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<EventSpeakerViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((EventSpeakerId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<EventSpeakerViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new EventSpeakerMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
