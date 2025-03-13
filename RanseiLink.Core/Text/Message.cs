@@ -1,12 +1,48 @@
 ﻿namespace RanseiLink.Core.Text;
 
-public class Message(string text, string context, string boxConfig, int groupId = 0, int elementId = 0)
+public class Message
 {
-    public string Text { get; set; } = text;
-    public string Context { get; set; } = context;
-    public string BoxConfig { get; set; } = boxConfig;
-    public int GroupId { get; set; } = groupId;
-    public int ElementId { get; set; } = elementId;
+    private string _text;
+    private string _context;
+    private string _boxConfig;
+
+    public Message(string text, string context, string boxConfig, int groupId = 0, int elementId = 0)
+    {
+        _text = text;
+        _context = context;
+        _boxConfig = boxConfig;
+        GroupId = groupId;
+        ElementId = elementId;
+    }
+
+    public void SetTextNoSanitization(string text)
+    {
+        _text = text;
+    }
+
+    public string Text 
+    { 
+        get => _text; 
+        set => _text = Sanitize(value); 
+    }
+    public string Context 
+    { 
+        get => _context; 
+        set => _context = Sanitize(value); 
+    }
+    public string BoxConfig 
+    { 
+        get => _boxConfig; 
+        set => _boxConfig = Sanitize(value); 
+    }
+    public int GroupId { get; set; }
+    public int ElementId { get; set; }
+
+    private string Sanitize(string text)
+    {
+        // replace windows line endings with just \n ones.
+        return text.Replace("\r", "");
+    }
 
     public bool IsEmpty
     {
