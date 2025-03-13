@@ -7,8 +7,9 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public partial class Building : BaseDataWindow
+public partial class Building : BaseDataWindow, INamedModel
 {
+    public event EventHandler? NameChanged;
     private ConquestGameCode _culture;
     public static int DataLength(ConquestGameCode culture)
     {
@@ -38,7 +39,11 @@ public partial class Building : BaseDataWindow
     public string Name
     {
         get => GetPaddedUtf8String(0, Name_MaxLength);
-        set => SetPaddedUtf8String(0, Name_MaxLength, value);
+        set
+        {
+            SetPaddedUtf8String(0, Name_MaxLength, value);
+            NameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public BuildingId Building1

@@ -7,8 +7,9 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public partial class Ability : BaseDataWindow
+public partial class Ability : BaseDataWindow, INamedModel
 {
+    public event EventHandler? NameChanged;
     public const int DataLength = 0x14;
     public Ability(byte[] data) : base(data, DataLength) { }
     public Ability() : this(new byte[DataLength]) { }
@@ -20,7 +21,11 @@ public partial class Ability : BaseDataWindow
     public string Name
     {
         get => GetPaddedUtf8String(0, Name_MaxLength);
-        set => SetPaddedUtf8String(0, Name_MaxLength, value);
+        set
+        {
+            SetPaddedUtf8String(0, Name_MaxLength, value);
+            NameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public int Effect1Amount

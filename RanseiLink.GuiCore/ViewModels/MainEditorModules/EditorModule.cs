@@ -74,7 +74,13 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule, ISelect
         }
     }
 
-    public override void Deactivate() => _service?.Save();
+    public override void Deactivate()
+    {
+        _service?.Save();
+        _selectorVmFactory = null;
+        _service = default;
+        _viewModel = null;
+    }
     public override void OnPatchingRom() => _service?.Save();
 
     public virtual void Select(int selectId)
