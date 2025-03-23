@@ -256,16 +256,21 @@ public class EventSpeakerWorkspaceModule : BaseWorkspaceEditorModule<IEventSpeak
 }
 
 [EditorModule]
-public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
+public class ItemWorkspaceModule : BaseWorkspaceEditorModule<IItemService>
 {
-    public const string Id = "item_selector";
+    public const string Id = "item_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Item";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<ItemViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<ItemViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new ItemMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 

@@ -37,7 +37,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorWorkspaceModule.Id, id));
         JumpToMaxLinkCommand = new RelayCommand<int>(id => jumpService.JumpTo(MaxLinkSelectorEditorModule.Id, id));
-        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemWorkspaceModule.Id, id));
 
         Items.CollectionChanged += Items_CollectionChanged;
         WildItems.CollectionChanged += Items_CollectionChanged;

@@ -7,7 +7,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class ItemViewModel : ViewModelBase
+public partial class ItemViewModel : ViewModelBase, IBigViewModel
 {
     private readonly ICachedMsgBlockService _msgService;
     private readonly IIdToNameService _idToNameService;
@@ -16,7 +16,7 @@ public partial class ItemViewModel : ViewModelBase
     {
         _msgService = msgService;
         _idToNameService = idToNameService;
-        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemWorkspaceModule.Id, id));
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
     }
@@ -37,6 +37,11 @@ public partial class ItemViewModel : ViewModelBase
         }
 
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((ItemId)id, (Item)model);
     }
 
     public ICommand JumpToItemCommand { get; }

@@ -203,6 +203,10 @@
                 <views:EventSpeakerMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:ItemMiniViewModel}">
+                <views:ItemMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>

@@ -40,7 +40,7 @@ public partial class BattleConfigViewModel : ViewModelBase
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
 
         JumpToMapCommand = new RelayCommand<int>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, id));
-        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemWorkspaceModule.Id, id));
         View3DModelCommand = new RelayCommand(View3DModel);
 
         Minimaps = [];

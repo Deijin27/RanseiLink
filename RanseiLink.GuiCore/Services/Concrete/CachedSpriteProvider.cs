@@ -17,6 +17,7 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     private readonly IMoveRangeService _moveRangeService;
     private readonly IGimmickRangeService _gimmickRangeService;
     private readonly Dictionary<int, object?> _cache = [];
+    private Dictionary<ItemCategoryId, object?>? _itemCategoryImages;
 
     public CachedSpriteProvider(
         IOverrideDataProvider overrideDataProvider, 
@@ -132,5 +133,18 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     {
         using var img = _spriteService.GetMoveRangePreview(model);
         return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetItemCategory(ItemCategoryId category)
+    {
+        if (_itemCategoryImages == null)
+        {
+            _itemCategoryImages = [];
+            foreach (var cat in Enum.GetValues<ItemCategoryId>())
+            {
+                _itemCategoryImages[cat] = _pathToImageConverter.TryConvert(_spriteService.GetItemCategoryImage(cat));
+            }
+        }
+        return _itemCategoryImages[category];
     }
 }

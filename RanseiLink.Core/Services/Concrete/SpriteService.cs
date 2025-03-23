@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Resources;
+using static RanseiLink.Core.Graphics.CEBK;
 
 namespace RanseiLink.Core.Services.Concrete;
 
@@ -23,6 +24,7 @@ internal class SpriteService : ISpriteService
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly Dictionary<MoveIcons, Image<Rgba32>> _cachedImages = [];
     private readonly Dictionary<TypeId, Image<Rgba32>> _typeImages = [];
+    private readonly Dictionary<ItemCategoryId, Image<Rgba32>> _itemCategoryImages = [];
     private readonly Image<Rgba32> _background;
     private readonly Image<Rgba32> _overlay;
     public SpriteService(IOverrideDataProvider overrideDataProvider)
@@ -47,6 +49,21 @@ internal class SpriteService : ISpriteService
         {
             _typeImages[type] = image;
         }
+
+        var itemCategoryIcons = _overrideDataProvider.GetDataFile("graphics/info/06_00_parts_bushopokemoninfo_up.G2DR");
+        var itemCatLink = G2DR.LoadCellImgFromFile(itemCategoryIcons.File);
+        var itemCatIds = Enum.GetValues<ItemCategoryId>();
+        var itemCatImages = NitroImageUtil.NcerToMultipleImages(itemCatIds.Select(x => (int)x + 7).ToArray(),
+            itemCatLink.Ncer, itemCatLink.Ncgr, itemCatLink.Nclr, new()
+            );
+        var temp = NitroImageUtil.NcerToMultipleImages([11],
+            itemCatLink.Ncer, itemCatLink.Ncgr, itemCatLink.Nclr, new()
+            );
+        foreach (var (cat, img) in itemCatIds.Zip(itemCatImages))
+        {
+            _itemCategoryImages[cat] = img;
+        }
+
     }
 
     private void DrawBackground(IImageProcessingContext x)
@@ -208,6 +225,11 @@ internal class SpriteService : ISpriteService
         });
 
         return baseImg;
+    }
+
+    public Image<Rgba32> GetItemCategoryImage(ItemCategoryId id)
+    {
+        return _itemCategoryImages[id];
     }
 
     private static Point GetPoint(int row, int column)

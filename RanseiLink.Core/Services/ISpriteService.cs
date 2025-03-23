@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Models;
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -6,6 +7,7 @@ namespace RanseiLink.Core.Services;
 public interface ISpriteService : IDisposable
 {
     Image<Rgba32> GetGimmickPreview(Gimmick gimmick, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All);
+    Image<Rgba32> GetItemCategoryImage(ItemCategoryId id);
     Image<Rgba32> GetMovePreview(Move move, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All);
     Image<Rgba32> GetMoveRangePreview(MoveRange range);
 }
