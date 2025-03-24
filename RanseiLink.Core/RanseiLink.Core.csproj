@@ -9,15 +9,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\GraphicsInfo.xml" />
     <EmbeddedResource Include="Resources\CharacterTable.tbl" />
-    <EmbeddedResource Include="Resources\*.png"/>
+    <EmbeddedResource Include="Resources\*.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DryIoc.dll" Version="5.4.3" />
     <PackageReference Include="FluentResults" Version="3.16.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="8.0.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.5" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.3" />
   </ItemGroup>
 
 </Project>
