@@ -47,9 +47,9 @@ The console app supports scripting using Lua, see: https://github.com/Deijin27/R
 
 ## Special thanks
 
-- [Baconfry](https://github.com/Baconfry) (Testing, Encyclopedia (serebii.net eat your heart out), Bug hunter)
+- [Baconfry](https://github.com/Baconfry) (Testing, Encyclopedia)
+- [Bagon](https://linktr.ee/bagonganda) (Testing, [Research](https://github.com/Deijin27/RanseiLink/discussions/57), Learning to use blender)
 - [Pleonex](https://github.com/pleonex) ([Text editing](https://github.com/pleonex/PokemonConquest))
 - [Scurest](https://github.com/scurest) (Their research and tool on NSBMDs was very useful)
 - [Snap](https://github.com/SnapSnarp) (Testing, [Written Guide](https://github.com/Deijin27/RanseiLink/wiki/Pokemon-Battle-Sprite-Creation-Process), [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
 - [WhatAUsernameIHave](https://linktr.ee/whatausernameihave) (Testing, Social Media Manager, [Video tutorials](https://youtube.com/playlist?list=PLEEF_d2hYUTlP8yE1Iou-JR8-y7Nqn8y9), [animations](https://docs.google.com/spreadsheets/d/14VxbXWefccPwt7nJG2A2pXj2oKQmqXd8pyYQw7jV8gk/edit?usp=sharing))
-- [Bagon](https://linktr.ee/bagonganda) (Testing, [Research](https://github.com/Deijin27/RanseiLink/discussions/57))
