@@ -78,22 +78,22 @@ public partial class BuildingViewModel : ViewModelBase
         set => SetProperty(_model.Kingdom, (KingdomId)value, v => _model.Kingdom = v);
     }
 
-    public BattleConfigId BattleConfig1
+    public int BattleConfig1
     {
-        get => _model.BattleConfig1;
-        set => SetProperty(_model.BattleConfig1, value, v => _model.BattleConfig1 = v);
+        get => (int)_model.BattleConfig1;
+        set => SetProperty(_model.BattleConfig1, (BattleConfigId)value, v => _model.BattleConfig1 = v);
     }
 
-    public BattleConfigId BattleConfig2
+    public int BattleConfig2
     {
-        get => _model.BattleConfig2;
-        set => SetProperty(_model.BattleConfig2, value, v => _model.BattleConfig2 = v);
+        get => (int)_model.BattleConfig2;
+        set => SetProperty(_model.BattleConfig2, (BattleConfigId)value, v => _model.BattleConfig2 = v);
     }
 
-    public BattleConfigId BattleConfig3
+    public int BattleConfig3
     {
-        get => _model.BattleConfig3;
-        set => SetProperty(_model.BattleConfig3, value, v => _model.BattleConfig3 = v);
+        get => (int)_model.BattleConfig3;
+        set => SetProperty(_model.BattleConfig3, (BattleConfigId)value, v => _model.BattleConfig3 = v);
     }
 
     public int Sprite1_Max => 84;
@@ -126,4 +126,6 @@ public partial class BuildingViewModel : ViewModelBase
     public List<SelectorComboBoxItem> BuildingItems { get; }
 
     public List<SelectorComboBoxItem> KingdomItems { get; }
+
+    public List<SelectorComboBoxItem> BattleConfigItems { get; }
 }

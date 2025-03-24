@@ -18,55 +18,9 @@
 		<Border Width="180" BorderThickness="0">
 			<Grid >
 				<StackPanel Margin="10" Spacing="8">
-					<controls:IconButton Icon="&#xe89c;" Text="Create Mod" Command="{Binding CreateModCommand}"/>
+					<Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
 					<Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
-					<ComboBox Height="20">
-						<ComboBoxItem Content="Pichu"/>
-						<ComboBoxItem Content="Pikachu" IsSelected="True"/>
-						<ComboBoxItem Content="Raichu"/>
-						<ComboBoxItem Content="Pikachu2"/>
-						<ComboBoxItem Content="Pikachu3"/>
-						<ComboBoxItem Content="Pikachu4"/>
-						<ComboBoxItem Content="Pikachu5"/>
-						<ComboBoxItem Content="Pikachu6"/>
-						<ComboBoxItem Content="Pikachu7"/>
-						<ComboBoxItem Content="Pikachu8"/>
-						<ComboBoxItem Content="Pikachu9"/>
-						<ComboBoxItem Content="Pikachu10"/>
-						<ComboBoxItem Content="Pikachu11"/>
-						<ComboBoxItem Content="Pikachu12"/>
-						<ComboBoxItem Content="Pikachu13"/>
-						<ComboBoxItem Content="Pikachu14"/>
-						<ComboBoxItem Content="Pikachu15"/>
-						<ComboBoxItem Content="Pikachu16"/>
-						<ComboBoxItem Content="Pikachu17"/>
-						<ComboBoxItem Content="Pikachu18"/>
-						<ComboBoxItem Content="Pikachu19"/>
-						<ComboBoxItem Content="Pikachu20"/>
-						<ComboBoxItem Content="Pikachu21"/>
-						<ComboBoxItem Content="Pikachu22"/>
-						<ComboBoxItem Content="Pikachu23"/>
-						<ComboBoxItem Content="Pikachu24"/>
-						<ComboBoxItem Content="Pikachu25"/>
-						<ComboBoxItem Content="Pikachu26"/>
-						<ComboBoxItem Content="Pikachu27"/>
-						<ComboBoxItem Content="Pikachu28"/>
-						<ComboBoxItem Content="Pikachu29"/>
-						<ComboBoxItem Content="Pikachu30"/>
-						<ComboBoxItem Content="Pikachu31"/>
-						<ComboBoxItem Content="Pikachu32"/>
-						<ComboBoxItem Content="Pikachu33"/>
-						<ComboBoxItem Content="Pikachu34"/>
-						<ComboBoxItem Content="Pikachu35"/>
-						<ComboBoxItem Content="Pikachu36"/>
-						<ComboBoxItem Content="Pikachu37"/>
-						<ComboBoxItem Content="Pikachu38"/>
-						<ComboBoxItem Content="Pikachu39"/>
-						<ComboBoxItem Content="Pikachu40"/>
-					</ComboBox>
-					<TextBox>Pika pika pikachu</TextBox>
-					<NumericUpDown Value="100"/>
-					<CheckBox >Pikachuuuu</CheckBox>
+
 					<Button Command="{Binding UpgradeOutdatedModsCommand}" IsVisible="{Binding OutdatedModsExist}">
 						<TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
 							Upgrade Old Mods<LineBreak/>
@@ -81,14 +35,31 @@
 							<Run Classes="small">Setting up graphics defaults allow you to see and edit images in mods</Run>
 						</TextBlock>
 					</Button>
+          <Button Command="{Binding UpdateCommand}" Content="New Update Available" IsVisible="{Binding IsUpdateAvailable}"/>
 					<Button Command="{Binding ReportBugCommand}" Content="Report Bug"/>
 					<Button Command="{Binding ToggleThemeCommand}" Content="Toggle Theme"/>
-					<Button Command="{Binding CrashCommand}" Content="Crash!"/>
 				</StackPanel>
 			</Grid>
 
 		</Border>
 
+    <DockPanel Margin="5" DockPanel.Dock="Top">
+      <!--<controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />-->
+      <TextBlock Text="Tags" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+      <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <ToggleButton Margin="3,0,0,3" Content="{Binding Tag}" IsChecked="{Binding Checked}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </DockPanel>
+    
 		<ScrollViewer >
 			<ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5">
 				<ItemsControl.ItemTemplate>
@@ -119,6 +90,8 @@
 											<ContentPresenter ContentTemplate="{StaticResource CreateModIcon}"/>
 										</MenuItem.Icon>
 									</MenuItem>
+                  <MenuItem Header="Toggle Pin" Command="{Binding TogglePinCommand}">
+									</MenuItem>
 									<Separator/>
 									<MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
 										<MenuItem.Icon>
@@ -144,6 +117,8 @@
 								</ContextMenu>
 							</Button.ContextMenu>
 							<DockPanel>
+                <TextBlock Width="10" IsVisible="{Binding IsPinned}" DockPanel.Dock="Left"/>
+                <TextBlock Width="10" IsVisible="{Binding IsNew}" DockPanel.Dock="Left"/>
 								<Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" />
 								<controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
 							</DockPanel>

@@ -67,44 +67,106 @@ public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
 }
 
 [EditorModule]
-public class AbilitySelectorEditorModule : BaseSelectorEditorModule<IAbilityService>
+public class MoveAnimationSelectorEditorModule : EditorModule
 {
-    public const string Id = "ability_selector";
+    public const string Id = "move_animation_list";
+    public override string UniqueId => Id;
+    public override string ListName => "Move Animation";
+    private IMoveAnimationService _service = null!;
+    private MoveAnimationCollectionViewModel? _viewModel;
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        _service = modServices.Get<IMoveAnimationService>();
+        _viewModel = new MoveAnimationCollectionViewModel();
+        _viewModel.Init(_service);
+    }
+
+    public override object? ViewModel => _viewModel;
+
+    public override void Deactivate() => _service?.Save();
+    public override void OnPatchingRom() => _service?.Save();
+}
+
+[EditorModule]
+public class AbilityWorkspaceEditorModule : BaseWorkspaceEditorModule<IAbilityService>
+{
+    public const string Id = "ability_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Ability";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<AbilityViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var ps = modServices.Get<IPokemonService>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<AbilityViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new AbilityMiniViewModel(sp, ps, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
 [EditorModule]
-public class WarriorSkillSelectorEditorModule : BaseSelectorEditorModule<IWarriorSkillService>
+public class WarriorSkillWorkspaceEditorModule : BaseWorkspaceEditorModule<IWarriorSkillService>
 {
-    public const string Id = "warrior_skill_selector";
+    public const string Id = "warrior_skill_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Warrior Skill";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<WarriorSkillViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((WarriorSkillId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var ps = modServices.Get<IBaseWarriorService>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<WarriorSkillViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new WarriorSkillMiniViewModel(sp, ps, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
-[EditorModule]
-public class MoveRangeSelectorEditorModule : BaseSelectorEditorModule<IMoveRangeService>
+public class MoveRangeWorkspaceModule : BaseWorkspaceEditorModule<IMoveRangeService>
 {
-    public const string Id = "move_range_selector";
+    public const string Id = "move_range_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Move Range";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
+        var sp = modServices.Get<ICachedSpriteProvider>();
         var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
+        var ns = modServices.Get<INicknameService>();
+        vm.Initialise(nameof(MoveRangeId));
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            vm,
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new MoveRangeMiniViewModel(nameof(MoveRangeId), ns, sp, _service.Retrieve(id), id, command)).ToList()
+            );
+    }
+}
+
+public class GimmickRangeWorkspaceModule : BaseWorkspaceEditorModule<IGimmickRangeService>
+{
+    public const string Id = "gimmick_range_workspace";
+    public override string UniqueId => Id;
+    public override string ListName => "Gimmick Range";
+    public override void Initialise(IServiceGetter modServices)
+    {
+        base.Initialise(modServices);
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var vm = modServices.Get<MoveRangeViewModel>();
+        var ns = modServices.Get<INicknameService>();
+        vm.Initialise(nameof(GimmickRangeId));
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            vm,
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new MoveRangeMiniViewModel(nameof(GimmickRangeId), ns, sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
@@ -175,30 +237,40 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
 }
 
 [EditorModule]
-public class EventSpeakerSelectorEditorModule : BaseSelectorEditorModule<IEventSpeakerService>
+public class EventSpeakerWorkspaceModule : BaseWorkspaceEditorModule<IEventSpeakerService>
 {
-    public const string Id = "event_speaker_selector";
+    public const string Id = "event_speaker_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Event Speaker";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<EventSpeakerViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((EventSpeakerId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<EventSpeakerViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new EventSpeakerMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
 [EditorModule]
-public class ItemSelectorEditorModule : BaseSelectorEditorModule<IItemService>
+public class ItemWorkspaceModule : BaseWorkspaceEditorModule<IItemService>
 {
-    public const string Id = "item_selector";
+    public const string Id = "item_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Item";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        var vm = modServices.Get<ItemViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((ItemId)id, _service.Retrieve(id)));
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        _viewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<ItemViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new ItemMiniViewModel(sp, _service.Retrieve(id), id, command)).ToList()
+            );
     }
 }
 
@@ -297,7 +369,11 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
     {
         base.Initialise(modServices);
         var vm = modServices.Get<GimmickObjectViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)));
+        var nn = modServices.Get<INicknameService>();
+        var comboItems = _service.ValidIds()
+            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(GimmickObjectId), x)))
+            .ToList();
+        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -353,37 +429,13 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
     {
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)));
+        var nn = modServices.Get<INicknameService>();
+        var comboItems = _service.ValidIds()
+            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(BattleConfigId), x)))
+            .ToList();
+        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
-
-[EditorModule]
-public class GimmickRangeSelectorEditorModule : BaseSelectorEditorModule<IGimmickRangeService>
-{
-    public const string Id = "gimmick_range_selector";
-    public override string UniqueId => Id;
-    public override string ListName => "Gimmick Range";
-    public override void Initialise(IServiceGetter modServices)
-    {
-        base.Initialise(modServices);
-        var vm = modServices.Get<MoveRangeViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)));
-    }
-}
-
-//public class MoveAnimationGridEditorModule : BaseSelectorEditorModule<IAbilityService>
-//{
-//    public const string Id = "move_animation_grid";
-//    public override string UniqueId => Id;
-//    public override string ListName => "Move Animation (Grid)";
-//    public override void Initialise(IServiceGetter modServices)
-//    {
-//        base.Initialise(modServices);
-//        var vm = modServices.Get<IAbilityViewModel>();
-//        _viewModel = new SelectorViewModel(_service, vm, id => vm.SetModel((AbilityId)id, _service.Retrieve(id)));
-//    }
-//}
-
 
 [EditorModule]
 public class SpriteEditorModule : EditorModule
@@ -447,7 +499,12 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
         }
         _currentMap = null;
         _currentId = null;
-        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem((int)i, i.ToString())).ToList();
+        var nicknameService = modServices.Get<INicknameService>();
+        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem(
+            id: (int)i, 
+            idString: i.ToString()[3..],
+            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+            )).ToList();
         _viewModel = selectorVmFactory.Create(null, mapComboItems, _nestedVm, id =>
         {
             if (_currentMap != null && _currentId != null)

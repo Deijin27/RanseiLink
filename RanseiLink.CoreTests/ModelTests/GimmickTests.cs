@@ -29,8 +29,8 @@ public class GimmickTests
         a.State1Sprite.Should().Be(GimmickObjectId.PillarOfFire_Ignited);
         a.State2Sprite.Should().Be(GimmickObjectId.PillarOfFire_Extinguished);
         a.Effect.Should().Be(MoveEffectId.NoEffect);
-        a.Animation1.Should().Be(MoveAnimationId.Default);
-        a.Animation2.Should().Be(MoveAnimationId.GreySmokeYellowStars);
+        a.Anim1.Should().Be((int)MoveAnimationId.Default);
+        a.Anim2.Should().Be((int)MoveAnimationId.GreySmokeYellowStars);
         a.Range.Should().Be(GimmickRangeId.NoRange);
 
     }
@@ -47,8 +47,8 @@ public class GimmickTests
             State1Sprite = GimmickObjectId.CogWheel,
             State2Sprite = GimmickObjectId.DriftingIce,
             Effect = MoveEffectId.ChanceToParalyzeTarget,
-            Animation1 = MoveAnimationId.BlackSplatter,
-            Animation2 = MoveAnimationId.BlueYellowStars,
+            Anim1 = (int)MoveAnimationId.BlackSplatter,
+            Anim2 = (int)MoveAnimationId.BlueYellowStars,
             Range = GimmickRangeId.RightBackCorner,
         };
 
@@ -59,8 +59,8 @@ public class GimmickTests
         a.State1Sprite.Should().Be(GimmickObjectId.CogWheel);
         a.State2Sprite.Should().Be(GimmickObjectId.DriftingIce);
         a.Effect.Should().Be(MoveEffectId.ChanceToParalyzeTarget);
-        a.Animation1.Should().Be(MoveAnimationId.BlackSplatter);
-        a.Animation2.Should().Be(MoveAnimationId.BlueYellowStars);
+        a.Anim1.Should().Be((int)MoveAnimationId.BlackSplatter);
+        a.Anim2.Should().Be((int)MoveAnimationId.BlueYellowStars);
         a.Range.Should().Be(GimmickRangeId.RightBackCorner);
     }
 }

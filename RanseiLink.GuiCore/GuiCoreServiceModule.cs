@@ -32,6 +32,7 @@ public class GuiCoreModServiceModule : IModule
         builder.Register<ISpriteManager, SpriteManager>(Reuse.Singleton);
         builder.Register<IMapManager, MapManager>(Reuse.Singleton);
         builder.Register<IAnimGuiManager, AnimGuiManager>(Reuse.Singleton);
+        builder.Register<INicknameService, NicknameService>(Reuse.Singleton);
 
         builder.Register<MsgGridViewModel>();
 

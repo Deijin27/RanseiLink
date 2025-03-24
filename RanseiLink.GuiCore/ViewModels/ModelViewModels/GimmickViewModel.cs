@@ -14,20 +14,27 @@ public enum GimmickAnimationPreviewMode
 
 public partial class GimmickViewModel : ViewModelBase, IBigViewModel
 {
+    private readonly IMoveAnimationService _moveAnimationService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly IExternalService _externalService;
     private readonly IOverrideDataProvider _spriteProvider;
 
     public ICommand JumpToGimmickCommand { get; }
 
-    public GimmickViewModel(IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
+    public GimmickViewModel(IMoveAnimationService moveAnimationService, ICachedSpriteProvider cachedSpriteProvider, INicknameService nicknameService, IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
     {
+        _moveAnimationService = moveAnimationService;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _externalService = externalService;
         _spriteProvider = overrideSpriteProvider;
 
         GimmickItems = idToNameService.GetComboBoxItemsPlusDefault<IGimmickService>();
+        //MoveAnimationItems = idToNameService.GetComboBoxItemsPlusDefault<IMoveAnimationService>();
+        GimmickRangeItems = nicknameService.GetAllNicknames(nameof(GimmickRangeId));
+        GimmickObjectItems = nicknameService.GetAllNicknames(nameof(GimmickObjectId));
 
         JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickWorkspaceEditorModule.Id, id));
-        JumpToGimmickRangeCommand = new RelayCommand<GimmickRangeId>(id => jumpService.JumpTo(GimmickRangeSelectorEditorModule.Id, (int)id));
+        JumpToGimmickRangeCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickRangeWorkspaceModule.Id, id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
         {
@@ -44,8 +51,8 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
     {
         switch (e.PropertyName)
         {
-            case nameof(Animation1):
-            case nameof(Animation2):
+            case nameof(Anim1):
+            case nameof(Anim2):
                 OnAnimationChanged();
                 break;
             case nameof(Image1):
@@ -57,7 +64,23 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
             case nameof(Image3):
                 RaisePropertyChanged(nameof(Image3Path));
                 break;
+            case nameof(AttackPower):
+                StarCount = MiscUtil.PowerToStarCount(AttackPower);
+                break;
+            case nameof(StarCount):
+            case nameof(AttackType):
+            case nameof(Range):
+                RaisePropertyChanged(nameof(PreviewImage));
+                break;
         }
+    }
+
+    // You can change power really fast, this makes less events fire so less preview image creation
+    private int _starCount;
+    public int StarCount
+    {
+        get => _starCount;
+        set => SetProperty(ref _starCount, value);
     }
 
     public void SetModel(GimmickId id, Gimmick model)
@@ -67,6 +90,8 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }
+
+    public object? PreviewImage => _cachedSpriteProvider.GetGimmickPreview(_model);
 
     public ICommand JumpToGimmickRangeCommand { get; }
 
@@ -98,12 +123,12 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
         switch (PreviewAnimationMode)
         {
             case GimmickAnimationPreviewMode.One:
-                _currentPreviewAnimationUri = GetAnimationUri(Animation1);
-                _currentPreviewAnimationName = Animation1.ToString();
+                _currentPreviewAnimationUri = GetAnimationUri(Anim1);
+                _currentPreviewAnimationName = Anim1.ToString();
                 break;
             case GimmickAnimationPreviewMode.Two:
-                _currentPreviewAnimationUri = GetAnimationUri(Animation2);
-                _currentPreviewAnimationName = Animation2.ToString();
+                _currentPreviewAnimationUri = GetAnimationUri(Anim2);
+                _currentPreviewAnimationName = Anim2.ToString();
                 break;
         };
         if (!suppressPropertyChanged)
@@ -113,9 +138,13 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
         }
     }
 
-    private string GetAnimationUri(MoveAnimationId id)
+    private string GetAnimationUri(int id)
     {
-        return _externalService.GetMoveAnimationUri(id);
+        if (!_moveAnimationService.ValidateId(id))
+        {
+            return _externalService.GetMoveAnimationUri(TrueMoveAnimationId.Default);
+        }
+        return _externalService.GetMoveAnimationUri(_moveAnimationService.Retrieve(id).Animation);
     }
 
     public void SetModel(int id, object model)

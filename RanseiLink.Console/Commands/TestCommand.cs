@@ -9,6 +9,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace RanseiLink.Console.Commands;
 
@@ -132,20 +133,30 @@ public  class TestCommand : ICommand
             return default;
         }
 
-        var overrideDataProvider = services.Get<IOverrideDataProvider>();
+        var sb = new StringBuilder();
+        var dict = new Dictionary<int, string>();
+        var battleConfigs = services.Get<IBattleConfigService>();
 
-        var outputFolder = @"C:\Users\Mia\Desktop\outputs";
-        foreach (var id in Enum.GetValues<GimmickObjectId>())
-        for (int i = 0; i < 10; i++)
+        foreach (var mid in services.Get<IMapService>().GetMapIds())
         {
-            var file = Constants.ResolveGimmickModelFilePath(id, i);
-            var dataFile = overrideDataProvider.GetDataFile(file);
-            if (!File.Exists(dataFile.File))
-            {
-                break;
-            }
-            ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, Path.Combine(outputFolder, Constants.ResolveGimmickModelFileNameWithoutExt(id, i)));
+            dict[(int)mid] = "Unused";
         }
+        
+        foreach (var id in battleConfigs.ValidIds())
+        {
+            var config = battleConfigs.Retrieve(id);
+            var idEnum = (BattleConfigId)id;
+            var idString = idEnum.ToString();
+            var map = config.Map * 100 + config.MapVariant;
+            dict[map] = idString;
+        }
+
+        foreach (var (key, value) in dict)
+        {
+            sb.AppendLine($"[{key}] = \"{value}\",");
+        }
+
+        File.WriteAllText(@"C:\Users\Mia\Desktop\maps.txt", sb.ToString());
 
 
         //var bmd = new NSBMD(FilePath);

@@ -34,17 +34,17 @@ public class WpfServiceModule : IModule
 
         builder.Register<EditorModule, PokemonWorkspaceModule>();
         builder.Register<EditorModule, WarriorWorkspaceModule>();
-        builder.Register<EditorModule, AbilitySelectorEditorModule>();
-        builder.Register<EditorModule, WarriorSkillSelectorEditorModule>();
-        builder.Register<EditorModule, MoveRangeSelectorEditorModule>();
+        builder.Register<EditorModule, AbilityWorkspaceEditorModule>();
+        builder.Register<EditorModule, WarriorSkillWorkspaceEditorModule>();
+        builder.Register<EditorModule, MoveRangeWorkspaceModule>();
         builder.Register<EditorModule, MoveWorkspaceModule>();
         builder.Register<EditorModule, WarriorNameTableEditorModule>();
         builder.Register<EditorModule, MaxLinkSelectorEditorModule>();
         builder.Register<EditorModule, MaxLinkPokemonSelectorEditorModule>();
         builder.Register<EditorModule, ScenarioWarriorWorkspaceEditorModule>();
         builder.Register<EditorModule, ScenarioAppearPokemonSelectorEditorModule>();
-        builder.Register<EditorModule, EventSpeakerSelectorEditorModule>();
-        builder.Register<EditorModule, ItemSelectorEditorModule>();
+        builder.Register<EditorModule, EventSpeakerWorkspaceModule>();
+        builder.Register<EditorModule, ItemWorkspaceModule>();
         builder.Register<EditorModule, BuildingWorkspaceEditorModule>();
         builder.Register<EditorModule, MsgGridEditorModule>();
         builder.Register<EditorModule, GimmickWorkspaceEditorModule>();
@@ -52,7 +52,8 @@ public class WpfServiceModule : IModule
         builder.Register<EditorModule, EpisodeWorkspaceEditorModule>();
         builder.Register<EditorModule, KingdomWorkspaceEditorModule>();
         builder.Register<EditorModule, BattleConfigSelectorEditorModule>();
-        builder.Register<EditorModule, GimmickRangeSelectorEditorModule>();
+        builder.Register<EditorModule, GimmickRangeWorkspaceModule>();
+        builder.Register<EditorModule, MoveAnimationSelectorEditorModule>();
         builder.Register<EditorModule, MapSelectorEditorModule>();
         builder.Register<EditorModule, SpriteEditorModule>();
         builder.Register<EditorModule, BannerEditorModule>();
@@ -109,6 +110,7 @@ public class WpfModServiceModule : IModule
         builder.Register<WarriorNameTableViewModel>();
         builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
+        builder.Register<MoveAnimationViewModel>();
 
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();

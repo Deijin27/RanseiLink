@@ -7,8 +7,9 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public partial class Gimmick : BaseDataWindow
+public partial class Gimmick : BaseDataWindow, INamedModel
 {
+    public event EventHandler? NameChanged;
     private ConquestGameCode _culture;
     public static int DataLength(ConquestGameCode culture)
     {
@@ -38,7 +39,11 @@ public partial class Gimmick : BaseDataWindow
     public string Name
     {
         get => GetPaddedUtf8String(0, Name_MaxLength);
-        set => SetPaddedUtf8String(0, Name_MaxLength, value);
+        set
+        {
+            SetPaddedUtf8String(0, Name_MaxLength, value);
+            NameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public int Image1
@@ -661,58 +666,6 @@ public partial class Gimmick : BaseDataWindow
             else
             {
                 SetInt(9, 20, 8, value);
-            }
-        }
-    }
-
-    public MoveAnimationId Animation1
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (MoveAnimationId)GetInt(5, 8, 8);
-            }
-            else
-            {
-                return (MoveAnimationId)GetInt(6, 8, 8);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(5, 8, 8, (int)value);
-            }
-            else
-            {
-                SetInt(6, 8, 8, (int)value);
-            }
-        }
-    }
-
-    public MoveAnimationId Animation2
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (MoveAnimationId)GetInt(5, 16, 8);
-            }
-            else
-            {
-                return (MoveAnimationId)GetInt(6, 16, 8);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(5, 16, 8, (int)value);
-            }
-            else
-            {
-                SetInt(6, 16, 8, (int)value);
             }
         }
     }

@@ -39,6 +39,7 @@ internal class Program
     {
         if (Debugger.IsAttached)
         {
+            Debugger.Break();
             //return;
         }
         string title = "Unhandled Exception";

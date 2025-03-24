@@ -8,15 +8,15 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
-    <VersionPrefix>6.1</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
+    <VersionPrefix>6.2</VersionPrefix>
+	<VersionSuffix>alpha1</VersionSuffix>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
-    <PackageReference Include="PixiEditor.ColorPicker" Version="3.4.1" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="4.0.0" />
+    <PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
@@ -33,35 +33,33 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ModelViews\GimmickWorkspace\GimmickMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\KingdomWorkspace\KingdomMiniView.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Views\ModelViews\MoveWorkspace\MoveMiniView.xaml.cs">
+    <Compile Update="Views\ModelViews\MoveAnimationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="External\MoveAnimations.txt">
+    <None Update="External\MoveAnimations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
-    <None Update="External\MoveMovementAnimations.txt">
+    <None Update="External\MoveMovementAnimations.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Views\ModelViews\GimmickObjectView.xaml">
+    <Page Update="Views\ModelViews\MiniViews\ItemMiniView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\SelectorViews\WorkspaceView.xaml">
+    <Page Update="Views\ModelViews\MiniViews\EventSpeakerMiniView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ModelViews\MoveAnimationView.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+
 
 </Project>

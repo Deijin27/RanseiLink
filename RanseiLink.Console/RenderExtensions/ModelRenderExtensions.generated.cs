@@ -145,8 +145,6 @@ public static partial class RenderExtensions
         console.WriteProperty("GimmickRef2", model.GimmickRef2);
         console.WriteProperty("Image2", model.Image2);
         console.WriteProperty("Image3", model.Image3);
-        console.WriteProperty("Animation1", model.Animation1);
-        console.WriteProperty("Animation2", model.Animation2);
         console.WriteProperty("Range", model.Range);
     }
     public static void Render(this IConsole console, Item model, object title)
@@ -216,7 +214,13 @@ public static partial class RenderExtensions
         console.WriteProperty("UnknownOption", model.UnknownOption);
         console.WriteProperty("Movement", model.Movement);
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
-        console.WriteProperty("UnknownValue_6_28_4", model.UnknownValue_6_28_4);
+        console.WriteProperty("MovementTiming", model.MovementTiming);
+    }
+    public static void Render(this IConsole console, MoveAnimation model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Animation", model.Animation);
+        console.WriteProperty("Sound", model.Sound);
     }
     public static void Render(this IConsole console, Pokemon model, object title)
     {

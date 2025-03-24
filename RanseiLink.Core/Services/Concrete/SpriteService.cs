@@ -23,30 +23,56 @@ internal class SpriteService : ISpriteService
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly Dictionary<MoveIcons, Image<Rgba32>> _cachedImages = [];
     private readonly Dictionary<TypeId, Image<Rgba32>> _typeImages = [];
+    private readonly Dictionary<ItemCategoryId, Image<Rgba32>> _itemCategoryImages = [];
     private readonly Image<Rgba32> _background;
     private readonly Image<Rgba32> _overlay;
     public SpriteService(IOverrideDataProvider overrideDataProvider)
     {
         _overrideDataProvider = overrideDataProvider;
         var moveIcons = _overrideDataProvider.GetDataFile("graphics/common/11_03_parts_ikusamap_up.G2DR");
-        var link = G2DR.LoadCellImgFromFile(moveIcons.File);
-        var iconIds = Enum.GetValues<MoveIcons>();
-        var images = NitroImageUtil.NcerToMultipleImages(iconIds.Select(x => (int)x).ToArray(), link.Ncer, link.Ncgr, link.Nclr, new());
-        foreach (var (icon, image) in iconIds.Zip(images))
+        if (File.Exists(moveIcons.File))
         {
-            _cachedImages[icon] = image;
+            var link = G2DR.LoadCellImgFromFile(moveIcons.File);
+            var iconIds = Enum.GetValues<MoveIcons>();
+            var images = NitroImageUtil.NcerToMultipleImages(iconIds.Select(x => (int)x).ToArray(), link.Ncer, link.Ncgr, link.Nclr, new());
+            foreach (var (icon, image) in iconIds.Zip(images))
+            {
+                _cachedImages[icon] = image;
+            }
         }
         _background = ResourceUtil.GetResourceImage("move_bg.png");
         _overlay = ResourceUtil.GetResourceImage("move_overlay.png");
 
         var typeIds = EnumUtil.GetValuesExceptDefaults<TypeId>();
-        var typeIconLink = G2DR.LoadCellImgFromFile(_overrideDataProvider.GetDataFile("graphics/common/11_01_parts_usual_up.G2DR").File);
-        var typeImages = NitroImageUtil.NcerToMultipleImages(typeIds.Select(x => (int)x).ToArray(), 
-            typeIconLink.Ncer, typeIconLink.Ncgr, typeIconLink.Nclr, new());
-        foreach (var (type, image) in typeIds.Zip(typeImages))
+        var typeFile = _overrideDataProvider.GetDataFile("graphics/common/11_01_parts_usual_up.G2DR");
+        if (File.Exists(typeFile.File))
         {
-            _typeImages[type] = image;
+            var typeIconLink = G2DR.LoadCellImgFromFile(typeFile.File);
+            var typeImages = NitroImageUtil.NcerToMultipleImages(typeIds.Select(x => (int)x).ToArray(),
+                typeIconLink.Ncer, typeIconLink.Ncgr, typeIconLink.Nclr, new());
+            foreach (var (type, image) in typeIds.Zip(typeImages))
+            {
+                _typeImages[type] = image;
+            }
         }
+
+        var itemCategoryIcons = _overrideDataProvider.GetDataFile("graphics/info/06_00_parts_bushopokemoninfo_up.G2DR");
+        if (File.Exists(itemCategoryIcons.File))
+        {
+            var itemCatLink = G2DR.LoadCellImgFromFile(itemCategoryIcons.File);
+            var itemCatIds = Enum.GetValues<ItemCategoryId>();
+            var itemCatImages = NitroImageUtil.NcerToMultipleImages(itemCatIds.Select(x => (int)x + 7).ToArray(),
+                itemCatLink.Ncer, itemCatLink.Ncgr, itemCatLink.Nclr, new()
+                );
+            var temp = NitroImageUtil.NcerToMultipleImages([11],
+                itemCatLink.Ncer, itemCatLink.Ncgr, itemCatLink.Nclr, new()
+                );
+            foreach (var (cat, img) in itemCatIds.Zip(itemCatImages))
+            {
+                _itemCategoryImages[cat] = img;
+            }
+        }
+
     }
 
     private void DrawBackground(IImageProcessingContext x)
@@ -125,28 +151,33 @@ internal class SpriteService : ISpriteService
         }
     }
 
-    private void DrawMovePowerStars(IImageProcessingContext context, Move move)
+    private void DrawMovePowerStars(IImageProcessingContext context, int power)
     {
+        int starCount = MiscUtil.PowerToStarCount(power);
         var x = 72;
         var y = 14;
-        for (int i = 0; i < move.StarCount; i++)
+        for (int i = 0; i < starCount; i++)
         {
             context.DrawImage(_cachedImages[MoveIcons.PowerStar], new Point(x, y), 1);
             x -= 8;
         }
     }
 
-    private void DrawMoveType(IImageProcessingContext context, Move move)
+    private void DrawMoveType(IImageProcessingContext context, TypeId type)
     {
-        if (move.Type == TypeId.NoType)
+        if (type == TypeId.NoType)
         {
             return;
         }
-        context.DrawImage(_typeImages[move.Type], new Point(46, 2), 1);
+        context.DrawImage(_typeImages[type], new Point(46, 2), 1);
     }
 
-    public Image<Rgba32> GetMoveRangePreview(MoveRange range)
+    public Image<Rgba32>? GetMoveRangePreview(MoveRange range)
     {
+        if (_cachedImages.Count == 0)
+        {
+            return null;
+        }
         var baseImg = new Image<Rgba32>(_background.Width, _background.Height);
 
         baseImg.Mutate(x =>
@@ -160,9 +191,17 @@ internal class SpriteService : ISpriteService
         return baseImg;
     }
 
-    public Image<Rgba32> GetMovePreview(Move move, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All)
+    public Image<Rgba32>? GetMovePreview(Move move, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All)
     {
+        if (_cachedImages.Count == 0 || _typeImages.Count == 0)
+        {
+            return null;
+        }
         var baseImg = GetMoveRangePreview(range);
+        if (baseImg == null)
+        {
+            return null;
+        }
 
         baseImg.Mutate(x =>
         {
@@ -172,17 +211,58 @@ internal class SpriteService : ISpriteService
             DrawArrow(x);
             if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
             {
-                DrawMovePowerStars(x, move);
+                DrawMovePowerStars(x, move.Power);
             }
             if (options.HasFlag(MovePreviewOptions.DrawType))
             {
-                DrawMoveType(x, move);
+                DrawMoveType(x, move.Type);
             }
 
             DrawOverlay(x);
         });
 
         return baseImg;
+    }
+
+    public Image<Rgba32>? GetGimmickPreview(Gimmick gimmick, MoveRange range, MovePreviewOptions options = MovePreviewOptions.All)
+    {
+        if (_cachedImages.Count == 0 || _typeImages.Count == 0)
+        {
+            return null;
+        }
+        var baseImg = GetMoveRangePreview(range);
+        if (baseImg == null)
+        {
+            return null;
+        }
+
+        baseImg.Mutate(x =>
+        {
+            DrawBackground(x);
+            DrawRange(x, range);
+            DrawArrow(x);
+            if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
+            {
+                DrawMovePowerStars(x, gimmick.AttackPower);
+            }
+            if (options.HasFlag(MovePreviewOptions.DrawType))
+            {
+                DrawMoveType(x, gimmick.AttackType);
+            }
+
+            DrawOverlay(x);
+        });
+
+        return baseImg;
+    }
+
+    public Image<Rgba32>? GetItemCategoryImage(ItemCategoryId id)
+    {
+        if (_itemCategoryImages.TryGetValue(id, out var item))
+        {
+            return item;
+        }
+        return null;
     }
 
     private static Point GetPoint(int row, int column)

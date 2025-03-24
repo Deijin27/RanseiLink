@@ -24,7 +24,7 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
         _cachedMsgBlockService = cachedMsgBlockService;
         _spriteItemVmFactory = spriteItemVmFactory;
 
-        JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillSelectorEditorModule.Id, id));
+        JumpToWarriorSkillCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorSkillWorkspaceEditorModule.Id, id));
         JumpToBaseWarriorCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorWorkspaceModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
         JumpToWarriorNameCommand = new RelayCommand<int>(id => jumpService.JumpTo(WarriorNameTableEditorModule.Id, id));

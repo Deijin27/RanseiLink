@@ -49,47 +49,59 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Name" Grid.Row="0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="14"/>
+            <Image Margin="0,4,0,12" Source="{Binding PreviewImage}" RenderOptions.BitmapScalingMode="NearestNeighbor" Stretch="Uniform" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
 
-            <TextBlock Text="Attack Type" Grid.Row="1" ToolTip="An attack caused by this gimmick will have this type"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding AttackType, Mode=TwoWay}"/>
 
-            <TextBlock Text="Destroy Type" Grid.Row="2" ToolTip="An attack of this type will destroy this gimmick"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding DestroyType, Mode=TwoWay}"/>
+            <TextBlock Text="Name" Grid.Row="2" />
+            <TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxLength="{Binding Name_MaxLength}"/>
 
-            <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Range" ToolTip="Jump to selected gimmick range" 
+            <TextBlock Text="Type" Grid.Row="3" ToolTip="Attacks are of this type, and types this is weak to destroy it."/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding AttackType, Mode=TwoWay}"/>
+
+            <TextBlock Text="Type (Unknown)" Grid.Row="4" ToolTip="This DOES NOT affect what types destroy it"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding DestroyType, Mode=TwoWay}"/>
+
+            <TextBlock Grid.Row="5" Text="Attack Power"/>
+            <controls:NumberBox Grid.Row="5" Grid.Column="1" Value="{Binding AttackPower}"/>
+            
+            <Button Grid.Row="6" Style="{StaticResource HyperlinkButtonStyle}" Content="Range" ToolTip="Jump to selected gimmick range" 
                     Command="{Binding JumpToGimmickRangeCommand}" CommandParameter="{Binding Range}"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.GimmickRangeItems}" SelectedItem="{Binding Range, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding GimmickRangeItems}" SelectedValue="{Binding Range, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
-            <TextBlock Text="Image 1" Grid.Row="4" ToolTip="The square image that is on the top screen when you hover over the object"/>
-            <UniformGrid Grid.Row="4" Grid.Column="1" Rows="1">
+            <TextBlock Text="Image 1" Grid.Row="7" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <UniformGrid Grid.Row="7" Grid.Column="1" Rows="1">
                 <controls:NumberBox Value="{Binding Image1}" />
                 <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image1Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="Image 2" Grid.Row="5" ToolTip="The square image that is on the top screen when you hover over the object"/>
-            <UniformGrid Grid.Row="5" Grid.Column="1" Rows="1">
+            <TextBlock Text="Image 2" Grid.Row="8" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <UniformGrid Grid.Row="8" Grid.Column="1" Rows="1">
                 <controls:NumberBox Value="{Binding Image2}" />
                 <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image2Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="Image 3" Grid.Row="6" ToolTip="The square image that is on the top screen when you hover over the object"/>
-            <UniformGrid Grid.Row="6" Grid.Column="1" Rows="1">
+            <TextBlock Text="Image 3" Grid.Row="9" ToolTip="The square image that is on the top screen when you hover over the object"/>
+            <UniformGrid Grid.Row="9" Grid.Column="1" Rows="1">
                 <controls:NumberBox Value="{Binding Image3}" />
                 <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image3Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="State-1 Sprite" Grid.Row="7" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="7" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State1Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="State-1 Model" Grid.Row="10" />
+            <ComboBox Grid.Row="10" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State1Sprite, Mode=TwoWay}"/>
 
-            <TextBlock Text="State-2 Sprite" Grid.Row="8" ToolTip="The sprite that is on the bottom screen in battle"/>
-            <ComboBox Grid.Row="8" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.GimmickSpriteItems}" SelectedItem="{Binding State2Sprite, Mode=TwoWay}"/>
+            <TextBlock Text="State-2 Model" Grid.Row="11" />
+            <ComboBox Grid.Row="11" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State2Sprite, Mode=TwoWay}"/>
 
-            <TextBlock Text="Effect" Grid.Row="9" ToolTip="Effect of attack used by this gimmick"/>
-            <ComboBox Grid.Row="9" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect, Mode=TwoWay}"/>
+            <TextBlock Text="Effect" Grid.Row="12" ToolTip="Effect of attack used by this gimmick"/>
+            <ComboBox Grid.Row="12" Grid.Column="1" ItemTemplate="{StaticResource EnumComboItemTemplate}" ItemsSource="{x:Static const:EnumProvider.MoveEffectItems}" SelectedItem="{Binding Effect, Mode=TwoWay}"/>
 
         </Grid>
         <Grid Margin="10">
@@ -135,9 +147,6 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0" Text="Attack Power 6_0_8"/>
-            <controls:NumberBox Grid.Row="0" Grid.Column="1" Value="{Binding AttackPower}"/>
 
             <TextBlock Grid.Row="1" Text="Anim1 6_8_8"/>
             <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding Anim1}"/>

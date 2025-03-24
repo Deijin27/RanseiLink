@@ -3,7 +3,6 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using SixLabors.ImageSharp;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -22,18 +21,25 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
     private readonly IExternalService _externalService;
     private readonly IPokemonService _pokemonService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
+    private readonly IMoveAnimationService _moveAnimationService;
 
     public MoveViewModel(
         ICachedMsgBlockService msgService, 
         IExternalService externalService, 
         IJumpService jumpService, 
         IPokemonService pokemonService,
-        ICachedSpriteProvider cachedSpriteProvider)
+        ICachedSpriteProvider cachedSpriteProvider,
+        INicknameService nicknameService,
+        IIdToNameService idToNameService,
+        IMoveAnimationService moveAnimationService)
     {
         _msgService = msgService;
         _externalService = externalService;
         _pokemonService = pokemonService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        _moveAnimationService = moveAnimationService;
+        MoveRangeItems = nicknameService.GetAllNicknames(nameof(MoveRangeId));
+        MoveAnimationItems = idToNameService.GetComboBoxItemsPlusDefault<IMoveAnimationService>();
         SetPreviewAnimationModeCommand = new RelayCommand<MoveAnimationPreviewMode>(mode =>
         {
             PreviewAnimationMode = mode;
@@ -42,7 +48,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
 
         UpdatePreviewAnimation();
 
-        JumpToMoveRangeCommand = new RelayCommand<MoveRangeId>(id => jumpService.JumpTo(MoveRangeSelectorEditorModule.Id, (int)id));
+        JumpToMoveRangeCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveRangeWorkspaceModule.Id, id));
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
 
         PropertyChanged += MoveViewModel_PropertyChanged;
@@ -71,7 +77,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
                 break;
 
             case nameof(Power):
-                StarCount = _model.StarCount;
+                StarCount = MiscUtil.PowerToStarCount(_model.Power);
                 break;
         }
     }
@@ -88,7 +94,7 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
     {
         _id = id;
         _model = model;
-        _starCount = _model.StarCount;
+        _starCount = MiscUtil.PowerToStarCount(_model.Power);
         UpdatePreviewAnimation(true);
         RaiseAllPropertiesChanged();
     }
@@ -143,20 +149,16 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
         switch (PreviewAnimationMode)
         {
             case MoveAnimationPreviewMode.Startup:
-                CurrentPreviewAnimationUri = GetAnimationUri(StartupAnimation);
-                CurrentPreviewAnimationName = StartupAnimation.ToString();
+                UpdateAnimation(StartupAnimation);
                 break;
             case MoveAnimationPreviewMode.Projectile:
-                CurrentPreviewAnimationUri = GetAnimationUri(ProjectileAnimation);
-                CurrentPreviewAnimationName = ProjectileAnimation.ToString();
+                UpdateAnimation(ProjectileAnimation);
                 break;
             case MoveAnimationPreviewMode.Impact:
-                CurrentPreviewAnimationUri = GetAnimationUri(ImpactAnimation);
-                CurrentPreviewAnimationName = ImpactAnimation.ToString();
+                UpdateAnimation(ImpactAnimation);
                 break;
             case MoveAnimationPreviewMode.Additional:
-                CurrentPreviewAnimationUri = GetAnimationUri(AdditionalAnimation);
-                CurrentPreviewAnimationName = AdditionalAnimation.ToString();
+                UpdateAnimation(AdditionalAnimation);
                 break;
             case MoveAnimationPreviewMode.Movement:
                 CurrentPreviewAnimationUri = _externalService.GetMoveMovementAnimationUri(MovementAnimation);
@@ -170,9 +172,21 @@ public partial class MoveViewModel : ViewModelBase, IBigViewModel
         }
     }
 
-    private string GetAnimationUri(MoveAnimationId id)
+    private void UpdateAnimation(int id)
     {
-        return _externalService.GetMoveAnimationUri(id);
+        TrueMoveAnimationId trueAnim;
+        if (!_moveAnimationService.ValidateId(id))
+        {
+            trueAnim = TrueMoveAnimationId.Default;
+            
+        }
+        else
+        {
+            trueAnim = _moveAnimationService.Retrieve(id).Animation;
+        }
+
+        CurrentPreviewAnimationUri = _externalService.GetMoveAnimationUri(trueAnim);
+        CurrentPreviewAnimationName = $"{(int)trueAnim:000} - {trueAnim}";
     }
 
     public void SetModel(int id, object model)

@@ -41,8 +41,10 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     private readonly ModListItemViewModelFactory _itemViewModelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly IDispatcherService _dispatcherService;
+    private readonly IUpdateService _updateService;
     private readonly PinnedModsSetting _pinnedModsSetting;
     private bool _outdatedModsExist;
+    private bool _isUpdateAvailable;
 
     public bool OutdatedModsExist
     {
@@ -62,6 +64,12 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
     public ICommand ToggleThemeCommand { get; }
     public ICommand CrashCommand { get; }
+    public ICommand UpdateCommand { get; }
+    public bool IsUpdateAvailable
+    {
+        get => _isUpdateAvailable;
+        set => SetProperty(ref _isUpdateAvailable, value);
+    }
 
 
     public event Action<ModInfo>? ModSelected;
@@ -75,7 +83,8 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         IFileDropHandlerFactory fdhFactory,
         IDispatcherService dispatcherService,
         IThemeService themeService,
-        IAppInfoService appInfoService)
+        IAppInfoService appInfoService,
+        IUpdateService updateService)
     {
         _settingService = settingService;
         _modService = modManager;
@@ -83,6 +92,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         _itemViewModelFactory = modListItemViewModelFactory;
         _fdhFactory = fdhFactory;
         _dispatcherService = dispatcherService;
+        _updateService = updateService;
         _pinnedModsSetting = _settingService.Get<PinnedModsSetting>();
         foreach (var item in _pinnedModsSetting.Value)
         {
@@ -105,6 +115,13 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
         ToggleThemeCommand = new RelayCommand(themeService.ToggleTheme);
         CrashCommand = new RelayCommand(() => throw new Exception("Alert! Alert! Intentional Crash Detected!"));
+        UpdateCommand = new RelayCommand(updateService.OpenDownloadPage);
+        _ = CheckForUpdate();
+    }
+
+    private async Task CheckForUpdate()
+    {
+        IsUpdateAvailable = await _updateService.IsUpdateAvailable();
     }
 
     private void ReloadTags()

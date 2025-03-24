@@ -15,6 +15,7 @@ public partial class BattleConfigViewModel : ViewModelBase
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly IMapViewerService _mapViewerService;
+    private readonly INicknameService _nicknameService;
 
     public BattleConfigViewModel(
         IMapService mapService, 
@@ -22,17 +23,24 @@ public partial class BattleConfigViewModel : ViewModelBase
         IIdToNameService idToNameService,
         IAsyncDialogService dialogService,
         IOverrideDataProvider overrideDataProvider,
-        IMapViewerService mapViewerService)
+        IMapViewerService mapViewerService,
+        INicknameService nicknameService)
     {
         _dialogService = dialogService;
         _overrideDataProvider = overrideDataProvider;
         _mapViewerService = mapViewerService;
-        MapItems = mapService.GetMapIds();
+        _nicknameService = nicknameService;
+
+        MapItems = mapService.GetMapIds().Select(i => new SelectorComboBoxItem(
+            id: (int)i,
+            idString: i.ToString()[3..],
+            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+            )).ToList();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();
 
-        JumpToMapCommand = new RelayCommand<MapId>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, (int)id));
-        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemSelectorEditorModule.Id, id));
+        JumpToMapCommand = new RelayCommand<int>(id => jumpService.JumpTo(MapSelectorEditorModule.Id, id));
+        JumpToItemCommand = new RelayCommand<int>(id => jumpService.JumpTo(ItemWorkspaceModule.Id, id));
         View3DModelCommand = new RelayCommand(View3DModel);
 
         Minimaps = [];
@@ -51,6 +59,19 @@ public partial class BattleConfigViewModel : ViewModelBase
         }
 
         this.PropertyChanged += BattleConfigViewModel_PropertyChanged;
+    }
+
+    public string Nickname
+    {
+        get => _nicknameService.GetNickname(nameof(BattleConfigId), (int)_id);
+        set
+        {
+            if (Nickname != value)
+            {
+                _nicknameService.SetNickname(nameof(BattleConfigId), (int)_id, value);
+                RaisePropertyChanged();
+            }
+        }
     }
 
     private void BattleConfigViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -95,10 +116,10 @@ public partial class BattleConfigViewModel : ViewModelBase
 
     public ICommand View3DModelCommand { get; }
 
-    public MapId MapId
+    public int MapId
     {
-        get => _model.MapId;
-        set => SetProperty(_model.MapId, value, v => _model.MapId = value);
+        get => (int)_model.MapId;
+        set => SetProperty(_model.MapId, (MapId)value, v => _model.MapId = v);
     }
 
     public string? MinimapSpritePath 
@@ -117,7 +138,7 @@ public partial class BattleConfigViewModel : ViewModelBase
     public ObservableCollection<CheckBoxViewModel> DefeatConditionItems { get; } = [];
     public ObservableCollection<CheckBoxViewModel> VictoryConditionItems { get; } = [];
 
-    public ICollection<MapId> MapItems { get; }
+    public List<SelectorComboBoxItem> MapItems { get; }
 
     public ICommand JumpToMapCommand { get; }
     public ICommand JumpToItemCommand { get; }

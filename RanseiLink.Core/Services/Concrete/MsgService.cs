@@ -124,7 +124,7 @@ public class MsgService : IMsgService
                     Message msg = pnaReader.ReadMessage();
                     foreach (var kvp in CharacterTableResource.LoadTable)
                     {
-                        msg.Text = msg.Text.Replace(kvp.Key, kvp.Value);
+                        msg.SetTextNoSanitization(msg.Text.Replace(kvp.Key, kvp.Value));
                     }
                     msg.GroupId = i;
                     msg.ElementId = elementId++;
@@ -171,7 +171,7 @@ public class MsgService : IMsgService
 
                     foreach (var kvp in CharacterTableResource.SaveTable)
                     {
-                        msg.Text = msg.Text.Replace(kvp.Key, kvp.Value);
+                        msg.SetTextNoSanitization(msg.Text.Replace(kvp.Key, kvp.Value));
                     }
                     pnaWriter.WriteMessage(msg, multiElements);
                 }

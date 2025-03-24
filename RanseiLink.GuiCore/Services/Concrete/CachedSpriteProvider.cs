@@ -15,19 +15,23 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly ISpriteService _spriteService;
     private readonly IMoveRangeService _moveRangeService;
+    private readonly IGimmickRangeService _gimmickRangeService;
     private readonly Dictionary<int, object?> _cache = [];
+    private Dictionary<ItemCategoryId, object?>? _itemCategoryImages;
 
     public CachedSpriteProvider(
         IOverrideDataProvider overrideDataProvider, 
         IPathToImageConverter pathToImageConverter,
         ISpriteService spriteService, 
-        IMoveRangeService moveRangeService
+        IMoveRangeService moveRangeService,
+        IGimmickRangeService gimmickRangeService
         )
     {
         _overrideDataProvider = overrideDataProvider;
         _pathToImageConverter = pathToImageConverter;
         _spriteService = spriteService;
         _moveRangeService = moveRangeService;
+        _gimmickRangeService = gimmickRangeService;
         _overrideDataProvider.SpriteModified += OverrideDataProvider_SpriteModified;
     }
 
@@ -107,9 +111,21 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         return _pathToImageConverter.TryConvert(img);
     }
 
+    public object? GetGimmickPreview(Gimmick model, MovePreviewOptions options = MovePreviewOptions.All)
+    {
+        using var img = _spriteService.GetGimmickPreview(model, _gimmickRangeService.Retrieve((int)model.Range), options);
+        return _pathToImageConverter.TryConvert(img);
+    }
+
     public object? GetMoveRangePreview(MoveRangeId range)
     {
         using var img = _spriteService.GetMoveRangePreview(_moveRangeService.Retrieve((int)range));
+        return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetGimmickRangePreview(GimmickRangeId range)
+    {
+        using var img = _spriteService.GetMoveRangePreview(_gimmickRangeService.Retrieve((int)range));
         return _pathToImageConverter.TryConvert(img);
     }
 
@@ -117,5 +133,18 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     {
         using var img = _spriteService.GetMoveRangePreview(model);
         return _pathToImageConverter.TryConvert(img);
+    }
+
+    public object? GetItemCategory(ItemCategoryId category)
+    {
+        if (_itemCategoryImages == null)
+        {
+            _itemCategoryImages = [];
+            foreach (var cat in Enum.GetValues<ItemCategoryId>())
+            {
+                _itemCategoryImages[cat] = _pathToImageConverter.TryConvert(_spriteService.GetItemCategoryImage(cat));
+            }
+        }
+        return _itemCategoryImages[category];
     }
 }

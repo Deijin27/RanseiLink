@@ -7,8 +7,9 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public partial class Pokemon : BaseDataWindow
+public partial class Pokemon : BaseDataWindow, INamedModel
 {
+    public event EventHandler? NameChanged;
     public const int DataLength = 0x30;
     public Pokemon(byte[] data) : base(data, DataLength) { }
     public Pokemon() : this(new byte[DataLength]) { }
@@ -20,7 +21,11 @@ public partial class Pokemon : BaseDataWindow
     public string Name
     {
         get => GetPaddedUtf8String(0, Name_MaxLength);
-        set => SetPaddedUtf8String(0, Name_MaxLength, value);
+        set
+        {
+            SetPaddedUtf8String(0, Name_MaxLength, value);
+            NameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public int Hp

@@ -109,10 +109,10 @@ public partial class KingdomViewModel : ViewModelBase
         set => SetProperty(_model.MapConnection12, (KingdomId)value, v => _model.MapConnection12 = v);
     }
 
-    public BattleConfigId BattleConfig
+    public int BattleConfig
     {
-        get => _model.BattleConfig;
-        set => SetProperty(_model.BattleConfig, value, v => _model.BattleConfig = v);
+        get => (int)_model.BattleConfig;
+        set => SetProperty(_model.BattleConfig, (BattleConfigId)value, v => _model.BattleConfig = v);
     }
 
     public int Unknown2_Max => 15;
@@ -130,4 +130,6 @@ public partial class KingdomViewModel : ViewModelBase
     }
 
     public List<SelectorComboBoxItem> KingdomItems { get; }
+
+    public List<SelectorComboBoxItem> BattleConfigItems { get; }
 }

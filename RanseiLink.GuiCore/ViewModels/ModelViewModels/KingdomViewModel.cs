@@ -3,6 +3,7 @@ using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Resources;
 using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.GuiCore.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -10,11 +11,12 @@ public partial class KingdomViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IAnimGuiManager _animGuiManager;
 
-    public KingdomViewModel(IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager)
+    public KingdomViewModel(INicknameService nicknameService, IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager)
     {
         _animGuiManager = animGuiManager;
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+        JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, id));
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
+        BattleConfigItems = nicknameService.GetAllNicknames(nameof(BattleConfigId));
     }
 
     public void SetModel(KingdomId id, Kingdom model)

@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="RanseiLink.Windows.Views.MoveRangeMiniView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             d:Width="180"
+             d:DataContext="{d:DesignInstance vm:MoveRangeMiniViewModel, IsDesignTimeCreatable=False}"
+             mc:Ignorable="d" HorizontalAlignment="Stretch">
+    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="39"/><!--32-->
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="21" Margin="-5,-1,0,0" RenderOptions.BitmapScalingMode="NearestNeighbor"
+                Source="{Binding Image}"
+                   d:Source="C:\Users\Mia\Desktop\move.png">
+                <Image.Clip>
+                    <RectangleGeometry RadiusX="3.5" RadiusY="3.5" Rect="5,1,55,19"/><!--35-->
+                </Image.Clip>
+            </Image>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
+            <TextBlock Grid.Column="2" d:Text="000 - Shadow Sneak" Margin="2,0,0,0"  TextTrimming="CharacterEllipsis">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0:000} - {1}">
+                        <Binding Path="Id"/>
+                        <Binding Path="Name"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+        </Grid>
+
+    </Button>
+</UserControl>

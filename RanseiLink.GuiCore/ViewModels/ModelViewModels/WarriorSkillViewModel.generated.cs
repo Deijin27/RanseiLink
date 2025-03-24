@@ -76,10 +76,10 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Target, value, v => _model.Target = v);
     }
 
-    public MoveAnimationId Animation
+    public int Animation
     {
-        get => _model.Animation;
-        set => SetProperty(_model.Animation, value, v => _model.Animation = v);
+        get => (int)_model.Animation;
+        set => SetProperty(_model.Animation, (MoveAnimationId)value, v => _model.Animation = v);
     }
 
     public string Description
@@ -91,4 +91,6 @@ public partial class WarriorSkillViewModel : ViewModelBase
             RaisePropertyChanged();
         }
     }
+
+    public List<SelectorComboBoxItem> MoveAnimationItems { get; }
 }

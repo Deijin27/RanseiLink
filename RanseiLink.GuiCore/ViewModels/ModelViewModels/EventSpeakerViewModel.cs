@@ -5,7 +5,7 @@ using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class EventSpeakerViewModel : ViewModelBase
+public partial class EventSpeakerViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IOverrideDataProvider _spriteProvider;
 
@@ -31,6 +31,11 @@ public partial class EventSpeakerViewModel : ViewModelBase
         _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((EventSpeakerId)id, (EventSpeaker)model);
     }
 
     public string SpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlBushouLL, Sprite).File;

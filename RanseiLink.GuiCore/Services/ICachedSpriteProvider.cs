@@ -12,6 +12,9 @@ namespace RanseiLink.GuiCore.Services;
 public interface ICachedSpriteProvider
 {
     IReadOnlyList<object?> GetClusterImages(string linkPath, int[] clusters);
+    object? GetGimmickPreview(Gimmick model, MovePreviewOptions options = MovePreviewOptions.All);
+    object? GetGimmickRangePreview(GimmickRangeId range);
+    object? GetItemCategory(ItemCategoryId category);
     object? GetMovePreview(Move model, MovePreviewOptions options = MovePreviewOptions.All);
     object? GetMoveRangePreview(MoveRange model);
     object? GetMoveRangePreview(MoveRangeId range);

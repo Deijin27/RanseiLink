@@ -57,19 +57,23 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Name" Grid.Row="1" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay}" MaxLength="{Binding Name_MaxLength}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     MaxLength="{Binding Name_MaxLength}"/>
 
             <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 1" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig1}"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig1, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding BattleConfigItems}" SelectedValue="{Binding BattleConfig1, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <Button Grid.Row="3" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 2" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig2}"/>
-            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig2, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding BattleConfigItems}" SelectedValue="{Binding BattleConfig2, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <Button Grid.Row="4" Style="{StaticResource HyperlinkButtonStyle}" Content="Battle Config 3" ToolTip="Jump to selected battle config" 
                     Command="{Binding JumpToBattleConfigCommand}" CommandParameter="{Binding BattleConfig3}"/>
-            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.BattleConfigItems}" SelectedItem="{Binding BattleConfig3, Mode=TwoWay}"/>
+            <ComboBox Grid.Row="4" Grid.Column="1" ItemsSource="{Binding BattleConfigItems}" SelectedValue="{Binding BattleConfig3, Mode=TwoWay}"
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
 
             <TextBlock Text="Sprite 1" Grid.Row="5" />
             <DockPanel Grid.Row="5" Grid.Column="1">

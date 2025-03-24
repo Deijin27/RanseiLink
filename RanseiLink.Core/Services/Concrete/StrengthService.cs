@@ -11,7 +11,7 @@ internal class StrengthService(
 {
     public int CalculatePokemonStrength(Pokemon pokemon, double link)
     {
-        return StrengthCalculator.CalculateStrength(pokemon.Hp, pokemon.Atk, pokemon.Def, pokemon.Spe, link);
+        return MiscUtil.CalculateStrength(pokemon.Hp, pokemon.Atk, pokemon.Def, pokemon.Spe, link);
     }
 
     public int CalculateScenarioPokemonStrength(ScenarioPokemon scenarioPokemon)

@@ -13,7 +13,7 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
 
     public Building Model => _model;
 
-    public BuildingViewModel(IBuildingService buildingService, IJumpService jumpService, IIdToNameService idToNameService, IScenarioBuildingService scenarioBuildingService, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider)
+    public BuildingViewModel(INicknameService nicknameService, IBuildingService buildingService, IJumpService jumpService, IIdToNameService idToNameService, IScenarioBuildingService scenarioBuildingService, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider)
     {
         ScenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
         _buildingService = buildingService;
@@ -21,7 +21,8 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
         _cachedSpriteProvider = cachedSpriteProvider;
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
-        JumpToBattleConfigCommand = new RelayCommand<BattleConfigId>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, (int)id));
+        BattleConfigItems = nicknameService.GetAllNicknames(nameof(BattleConfigId));
+        JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, id));
 
         this.PropertyChanged += BuildingViewModel_PropertyChanged;
     }

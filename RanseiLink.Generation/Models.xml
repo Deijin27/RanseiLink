@@ -126,8 +126,6 @@
         <Property Index="9, 12, 8" Index_VPYJ="8, 12, 8" Name="Image2" />
         <Property Index="9, 20, 8" Index_VPYJ="8, 20, 8" Name="Image3" />
         
-        <Property Index="6,  8, 8" Index_VPYJ="5,  8, 8" Name="Animation1" Type="MoveAnimationId"/>
-        <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="Animation2" Type="MoveAnimationId"/>
         <Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
     </Model>
     <Model Name="GimmickObject" DataLength="0x4" Model="true" ViewModel="true">
@@ -198,13 +196,13 @@
         <Property Index="7, 26, 4" Name="UnknownOption" Type="MoveUnknownOptionId" />
         <Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
         <Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
-        <Property Index="6, 28, 4" Name="UnknownValue_6_28_4" />
+        <Property Index="6, 28, 4" Name="MovementTiming" Type="MoveMovementAnimationTimingId" />
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
-    <Model Name="MoveAnimation" DataLength="0x4" Model="true">
-        <Service MaxId="254"/>
-        <Property Index="0,  0, 16" Name="UnknownA" />
-        <Property Index="0, 16, 16" Name="UnknownB" />
+    <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">
+        <Service MaxId="254" DefaultId="255" IdToName="false"/>
+        <Property Index="0,  0, 8" Name="Animation" Type="TrueMoveAnimationId" />
+        <Property Index="0, 16, 8" Name="Sound" />
     </Model>
     <Model Name="MoveRange" DataLength="0x4" Model="true">
         <Service MaxId="29"/>

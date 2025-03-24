@@ -6,7 +6,7 @@ using RanseiLink.Core.Services.ModelServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class WarriorSkillViewModel : ViewModelBase
+public partial class WarriorSkillViewModel : ViewModelBase, IBigViewModel
 {
     private readonly ICachedMsgBlockService _msgService;
     private readonly IBaseWarriorService _baseWarriorService;
@@ -16,11 +16,13 @@ public partial class WarriorSkillViewModel : ViewModelBase
         ICachedMsgBlockService msgService, 
         IBaseWarriorService baseWarriorService,
         ICachedSpriteProvider cachedSpriteProvider,
-        IJumpService jumpService)
+        IJumpService jumpService,
+        IIdToNameService idToNameService)
     {
         _msgService = msgService;
         _baseWarriorService = baseWarriorService;
         _cachedSpriteProvider = cachedSpriteProvider;
+        MoveAnimationItems = idToNameService.GetComboBoxItemsPlusDefault<IMoveAnimationService>();
 
         _selectWarriorCommand = new RelayCommand<WarriorMiniViewModel>(wa => { if (wa != null) jumpService.JumpTo(WarriorWorkspaceModule.Id, wa.Id); });
     }
@@ -30,6 +32,11 @@ public partial class WarriorSkillViewModel : ViewModelBase
         _id = id;
         _model = model;
         RaiseAllPropertiesChanged();
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((WarriorSkillId)id, (WarriorSkill)model);
     }
 
     private readonly ICommand _selectWarriorCommand;

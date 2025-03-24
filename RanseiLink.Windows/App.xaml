@@ -79,6 +79,10 @@
                 <views:BattleConfigView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:MoveAnimationCollectionViewModel}">
+                <views:MoveAnimationView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:WarriorSkillViewModel}">
                 <views:WarriorSkillView/>
             </DataTemplate>
@@ -171,6 +175,10 @@
                 <views:MoveMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:MoveRangeMiniViewModel}">
+                <views:MoveRangeMiniView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type cvm:GimmickMiniViewModel}">
                 <views:GimmickMiniView/>
             </DataTemplate>
@@ -181,6 +189,22 @@
 
             <DataTemplate DataType="{x:Type cvm:EpisodeMiniViewModel}">
                 <views:EpisodeMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:AbilityMiniViewModel}">
+                <views:AbilityMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:WarriorSkillMiniViewModel}">
+                <views:WarriorSkillMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:EventSpeakerMiniViewModel}">
+                <views:EventSpeakerMiniView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type cvm:ItemMiniViewModel}">
+                <views:ItemMiniView/>
             </DataTemplate>
 
 

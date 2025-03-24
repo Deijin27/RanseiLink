@@ -49,16 +49,16 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.IsLog, value, v => _model.IsLog = v);
     }
 
-    public GimmickObjectId State1Sprite
+    public int State1Sprite
     {
-        get => _model.State1Sprite;
-        set => SetProperty(_model.State1Sprite, value, v => _model.State1Sprite = v);
+        get => (int)_model.State1Sprite;
+        set => SetProperty(_model.State1Sprite, (GimmickObjectId)value, v => _model.State1Sprite = v);
     }
 
-    public GimmickObjectId State2Sprite
+    public int State2Sprite
     {
-        get => _model.State2Sprite;
-        set => SetProperty(_model.State2Sprite, value, v => _model.State2Sprite = v);
+        get => (int)_model.State2Sprite;
+        set => SetProperty(_model.State2Sprite, (GimmickObjectId)value, v => _model.State2Sprite = v);
     }
 
     public MoveEffectId Effect
@@ -184,23 +184,15 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Image3, value, v => _model.Image3 = v);
     }
 
-    public MoveAnimationId Animation1
+    public int Range
     {
-        get => _model.Animation1;
-        set => SetProperty(_model.Animation1, value, v => _model.Animation1 = v);
+        get => (int)_model.Range;
+        set => SetProperty(_model.Range, (GimmickRangeId)value, v => _model.Range = v);
     }
 
-    public MoveAnimationId Animation2
-    {
-        get => _model.Animation2;
-        set => SetProperty(_model.Animation2, value, v => _model.Animation2 = v);
-    }
-
-    public GimmickRangeId Range
-    {
-        get => _model.Range;
-        set => SetProperty(_model.Range, value, v => _model.Range = v);
-    }
+    public List<SelectorComboBoxItem> GimmickObjectItems { get; }
 
     public List<SelectorComboBoxItem> GimmickItems { get; }
+
+    public List<SelectorComboBoxItem> GimmickRangeItems { get; }
 }

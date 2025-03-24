@@ -8,7 +8,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding KingdomItems, Mode=OneTime}" Grid.IsSharedSizeScope="True" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
+    <ItemsControl Grid.Row="1" Margin="10" ItemsSource="{Binding KingdomItems}" Grid.IsSharedSizeScope="True" Style="{StaticResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <GroupBox Header="{Binding Kingdom}">

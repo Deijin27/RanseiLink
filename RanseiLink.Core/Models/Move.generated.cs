@@ -7,8 +7,9 @@ using RanseiLink.Core.Graphics;
 
 namespace RanseiLink.Core.Models;
 
-public partial class Move : BaseDataWindow
+public partial class Move : BaseDataWindow, INamedModel
 {
+    public event EventHandler? NameChanged;
     public const int DataLength = 0x24;
     public Move(byte[] data) : base(data, DataLength) { }
     public Move() : this(new byte[DataLength]) { }
@@ -20,7 +21,11 @@ public partial class Move : BaseDataWindow
     public string Name
     {
         get => GetPaddedUtf8String(0, Name_MaxLength);
-        set => SetPaddedUtf8String(0, Name_MaxLength, value);
+        set
+        {
+            SetPaddedUtf8String(0, Name_MaxLength, value);
+            NameChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public MoveMovementFlags MovementFlags
@@ -143,9 +148,9 @@ public partial class Move : BaseDataWindow
         set => SetInt(7, 14, 5, (int)value);
     }
 
-    public int UnknownValue_6_28_4
+    public MoveMovementAnimationTimingId MovementTiming
     {
-        get => GetInt(6, 28, 4);
-        set => SetInt(6, 28, 4, value);
+        get => (MoveMovementAnimationTimingId)GetInt(6, 28, 4);
+        set => SetInt(6, 28, 4, (int)value);
     }
 }
