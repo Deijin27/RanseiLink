@@ -43,6 +43,23 @@
 
 		</Border>
 
+    <DockPanel Margin="5" DockPanel.Dock="Top">
+      <!--<controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />-->
+      <TextBlock Text="Tags" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+      <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <WrapPanel/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <ToggleButton Margin="3,0,0,3" Content="{Binding Tag}" IsChecked="{Binding Checked}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </DockPanel>
+    
 		<ScrollViewer >
 			<ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5">
 				<ItemsControl.ItemTemplate>
