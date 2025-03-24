@@ -27,6 +27,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var builder = new Container();
+            builder.RegisterInstance(AppVersion.Parse(Version));
             builder.RegisterModule(new CoreServiceModule());
             builder.RegisterModule(new GuiCoreServiceModule());
             builder.RegisterModule(new PluginServiceModule());

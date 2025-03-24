@@ -8,8 +8,8 @@
 	<UseWindowsForms>true</UseWindowsForms>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Authors>Deijin</Authors>
-    <VersionPrefix>6.1</VersionPrefix>
-	<VersionSuffix></VersionSuffix>
+    <VersionPrefix>6.2</VersionPrefix>
+	<VersionSuffix>alpha1</VersionSuffix>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>

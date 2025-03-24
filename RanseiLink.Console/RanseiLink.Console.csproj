@@ -3,9 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <VersionPrefix>6.1</VersionPrefix>
+    <VersionPrefix>6.2</VersionPrefix>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-	<VersionSuffix></VersionSuffix>
+	<VersionSuffix>alpha1</VersionSuffix>
 	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
