@@ -90,6 +90,8 @@
 											<ContentPresenter ContentTemplate="{StaticResource CreateModIcon}"/>
 										</MenuItem.Icon>
 									</MenuItem>
+                  <MenuItem Header="Toggle Pin" Command="{Binding TogglePinCommand}">
+									</MenuItem>
 									<Separator/>
 									<MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
 										<MenuItem.Icon>
@@ -115,6 +117,8 @@
 								</ContextMenu>
 							</Button.ContextMenu>
 							<DockPanel>
+                <TextBlock Width="10" IsVisible="{Binding IsPinned}" DockPanel.Dock="Left"/>
+                <TextBlock Width="10" IsVisible="{Binding IsNew}" DockPanel.Dock="Left"/>
 								<Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" />
 								<controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
 							</DockPanel>
