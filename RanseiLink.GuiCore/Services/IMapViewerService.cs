@@ -6,4 +6,5 @@ public interface IMapViewerService
 {
     Task ShowDialog(MapId id);
     Task ShowDialog(BattleConfigId id);
+    Task ShowDialog(GimmickObjectId id, int variant);
 }

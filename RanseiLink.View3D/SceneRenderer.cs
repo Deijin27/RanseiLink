@@ -1,5 +1,4 @@
-﻿using OpenTK.Mathematics;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Archive;
@@ -7,21 +6,28 @@ using RanseiLink.Core;
 using System.IO;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Services;
-using System.Linq;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using System.Collections.Generic;
 using FluentResults;
+using OpenTK.Mathematics;
+using System;
 
 namespace RanseiLink.View3D;
 
-public record SceneRendererState(NSBMD Nsbmd, BattleConfig? Bc, PSLM Pslm, Dictionary<GimmickId, NSBMD> GimmickModels);
+public record SceneRendererState(List<ModelInfo> Models, BattleConfig? Bc, int GridCellCount);
+
+public record ModelInfo(NSBMD Model, Vector3 Translation = default);
+
+public record ResetZoomEventArgs(double zoom);
 
 public interface ISceneRenderer
 {
+    event EventHandler<ResetZoomEventArgs>? RequestResetZoom;
     void Configure(SceneRenderOptions options);
     Result LoadScene(BattleConfigId id);
     Result LoadScene(MapId mapId);
+    Result LoadScene(GimmickObjectId id, int variant);
     void Render();
 }
 
@@ -34,6 +40,8 @@ public class SceneRenderer : ISceneRenderer
     private SceneRenderOptions _options;
 
     private SceneRendererState? _state;
+
+    public event EventHandler<ResetZoomEventArgs>? RequestResetZoom;
 
     public SceneRenderer(
         IOverrideDataProvider overrideDataProvider,
@@ -66,17 +74,28 @@ public class SceneRenderer : ISceneRenderer
         return LoadSceneInternal(mapId, bc);
     }
 
-    private Result LoadSceneInternal(MapId mapId, BattleConfig? bc)
+    public Result LoadScene(GimmickObjectId id, int variant)
     {
+        _state = null;
         MaterialRegistry.UnloadMaterials();
-
-        string mapRomPath = Path.Combine("graphics", "ikusa_map", mapId.ToInternalModelPacName());
-        var pac = _overrideDataProvider.GetDataFile(mapRomPath).File;
-        if (!File.Exists(pac))
+        var gimRomPath = GetGimmickPath((int)id, variant);
+        var gimPac = _overrideDataProvider.GetDataFile(gimRomPath).File;
+        if (!File.Exists(gimPac))
         {
-            return Result.Fail($"Specified 3D model '{mapRomPath}' does not exist in game data. This is not a bug, it just isn't there.");
+            return Result.Fail($"Specified 3D model '{gimRomPath}' does not exist in game data. This is not a bug, it just isn't there.");
         }
 
+        var nsbmd = LoadMaterialsFromPac(gimPac);
+        List<ModelInfo> models = [];
+        models.Add(new ModelInfo(nsbmd));
+
+        _state = new SceneRendererState(models, null, 5);
+        RequestResetZoom?.Invoke(this, new ResetZoomEventArgs(2));
+        return Result.Ok();
+    }
+
+    private NSBMD LoadMaterialsFromPac(string pac)
+    {
         var tempFolder = FileUtil.GetTemporaryDirectory();
         PAC.Unpack(pac, tempFolder, true, 4);
 
@@ -86,36 +105,72 @@ public class SceneRenderer : ISceneRenderer
         Directory.Delete(tempFolder, true);
 
         MaterialRegistry.LoadMaterials(nsbmd, nsbtx);
+        return nsbmd;
+    }
+
+    private static string GetGimmickPath(int id, int variant)
+    {
+        return Path.Combine("graphics", "ikusa_obj", $"OBJ{id:000}_{variant:00}.pac");
+    }
+
+    private Result LoadSceneInternal(MapId mapId, BattleConfig? bc)
+    {
+        MaterialRegistry.UnloadMaterials();
+
+        List<ModelInfo> models = [];
+
+        string mapRomPath = Path.Combine("graphics", "ikusa_map", mapId.ToInternalModelPacName());
+        var pac = _overrideDataProvider.GetDataFile(mapRomPath).File;
+        if (!File.Exists(pac))
+        {
+            return Result.Fail($"Specified 3D model '{mapRomPath}' does not exist in game data. This is not a bug, it just isn't there.");
+        }
+
+        var nsbmd = LoadMaterialsFromPac(pac);
+        models.Add(new ModelInfo(nsbmd));
 
         var pslm = _mapService.Retrieve(mapId);
-        var gimmickModels = new Dictionary<GimmickId, NSBMD>();
+        var mapGridHeight = pslm.TerrainSection.MapMatrix.Count;
+        var mapGridWidth = pslm.TerrainSection.MapMatrix[0].Count;
+
+        
         if (_options.HasFlag(SceneRenderOptions.ShowGimmicks))
         {
-            foreach (var gimmickId in pslm.GimmickSection.Items.Select(x => x.Gimmick).Distinct())
+            var gimmickModels = new Dictionary<GimmickId, NSBMD>();
+            foreach (var gimmick in pslm.GimmickSection.Items)
             {
-                var gimmick = _gimmickService.Retrieve((int)gimmickId);
-                var gimmickObject = (int)gimmick.State1Sprite;
-                if (gimmickObject > 97)
+                // Make sure we don't load the same materials twice
+                if (!gimmickModels.TryGetValue(gimmick.Gimmick, out var gimNsbmd))
                 {
-                    continue;
+                    // Load materials
+                    var gimmickModel = _gimmickService.Retrieve((int)gimmick.Gimmick);
+                    var gimmickObject = (int)gimmickModel.State1Sprite;
+                    if (gimmickObject >= (int)GimmickObjectId.Default)
+                    {
+                        continue;
+                    }
+                    var gimRomPath = GetGimmickPath(gimmickObject, 0);
+                    var gimPac = _overrideDataProvider.GetDataFile(gimRomPath).File;
+                    if (!File.Exists(gimPac))
+                    {
+                        continue;
+                    }
+
+                    gimNsbmd = LoadMaterialsFromPac(gimPac);
                 }
-                var gimRomPath = Path.Combine("graphics", "ikusa_obj", $"OBJ{gimmickObject:000}_{0:00}.pac");
-                var gimPac = _overrideDataProvider.GetDataFile(gimRomPath).File;
-                var gimTempFolder = FileUtil.GetTemporaryDirectory();
-                PAC.Unpack(gimPac, gimTempFolder, true, 4);
-
-                var gimNsbmd = new NSBMD(Path.Combine(gimTempFolder, "0000.nsbmd"));
-                var gimNsbtx = new NSBTX(Path.Combine(gimTempFolder, "0001.nsbtx"));
-                gimmickModels[gimmickId] = gimNsbmd;
-
-                Directory.Delete(gimTempFolder, true);
-
-                MaterialRegistry.LoadMaterials(gimNsbmd, gimNsbtx);
+                
+                // get the elevation in the middle of the cell
+                var elevation = pslm.TerrainSection.MapMatrix[gimmick.Position.Y][gimmick.Position.X].SubCellZValues[4];
+                var gimmickTranslation = new Vector3((-mapGridWidth / 2 + gimmick.Position.X) * 100, elevation, (-mapGridHeight / 2 + gimmick.Position.Y) * 100);
+                
+                // Register in models list
+                models.Add(new ModelInfo(gimNsbmd, gimmickTranslation));
             }
         }
 
-        _state = new SceneRendererState(nsbmd, bc, pslm, gimmickModels);
+        _state = new SceneRendererState(models, bc, mapGridHeight);
 
+        RequestResetZoom?.Invoke(this, new ResetZoomEventArgs(10));
         return Result.Ok();
     }
 
@@ -132,42 +187,35 @@ public class SceneRenderer : ISceneRenderer
             VerticalGradientBackground(_state.Bc);
         }
 
-        ModelRenderer.Draw(_state.Nsbmd.Model.Models[0]);
-
-        var mapGridHeight = _state.Pslm.TerrainSection.MapMatrix.Count;
-        var mapGridWidth = _state.Pslm.TerrainSection.MapMatrix[0].Count;
-
-        if (_options.HasFlag(SceneRenderOptions.ShowGimmicks))
+        foreach (var model in _state.Models)
         {
-            foreach (var gimmick in _state.Pslm.GimmickSection.Items)
+            var isTranslated = model.Translation != default;
+            if (isTranslated)
             {
-                if (!_state.GimmickModels.TryGetValue(gimmick.Gimmick, out var gimmickModel))
-                {
-                    continue;
-                }
-                var model = gimmickModel.Model.Models[0];
+                // Push translation
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.PushMatrix();
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PushMatrix();
+                GL.Translate(model.Translation);
+            }
 
-                // get the elevation in the middle of the cell
-                var elevation = _state.Pslm.TerrainSection.MapMatrix[gimmick.Position.Y][gimmick.Position.X].SubCellZValues[4];
-                GL.Translate((-mapGridWidth / 2 + gimmick.Position.X) * 100, elevation, (-mapGridHeight / 2 + gimmick.Position.Y) * 100);
-                ModelRenderer.Draw(model);
+            ModelRenderer.Draw(model.Model.Model.Models[0]);
 
+            if (isTranslated)
+            {
+                // Pop translation
                 GL.MatrixMode(MatrixMode.Projection);
                 GL.PopMatrix();
                 GL.MatrixMode(MatrixMode.Modelview);
                 GL.PopMatrix();
-
-                //break;
             }
         }
         
         if (_options.HasFlag(SceneRenderOptions.DrawGrid))
         {
-            GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), Vector3.Zero, 100, mapGridHeight);
+            GradientUtil.DrawGrid(new Color4(77, 77, 77, 255), Vector3.Zero, 100, _state.GridCellCount,
+                depthTest: !_options.HasFlag(SceneRenderOptions.GridDisableDepthTesting));
         }
     }
 

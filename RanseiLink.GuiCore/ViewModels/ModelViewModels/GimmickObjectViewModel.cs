@@ -1,11 +1,13 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.GuiCore.Services;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class GimmickObjectViewModel(INicknameService nicknameService, IMapManager mapManager, IOverrideDataProvider overrideDataProvider) : ViewModelBase
+public partial class GimmickObjectViewModel(IMapViewerService mapViewerService, INicknameService nicknameService, IMapManager mapManager, IOverrideDataProvider overrideDataProvider) : ViewModelBase
 {
     public void SetModel(GimmickObjectId id, GimmickObject model)
     {
@@ -39,7 +41,7 @@ public partial class GimmickObjectViewModel(INicknameService nicknameService, IM
             {
                 break;
             }
-            Variants.Add(new(mapManager, _id, i));
+            Variants.Add(new(mapViewerService, mapManager, _id, i));
         }
     }
 
@@ -48,13 +50,23 @@ public partial class GimmickObjectViewModel(INicknameService nicknameService, IM
 
 public class GimmickObjectVariantVm : ViewModelBase
 {
-    public GimmickObjectVariantVm(IMapManager mapManager, GimmickObjectId id, int variant)
+    private readonly IMapViewerService _mapViewerService;
+    private readonly GimmickObjectId _id;
+
+    public GimmickObjectVariantVm(IMapViewerService mapViewerService, IMapManager mapManager, GimmickObjectId id, int variant)
     {
         ExportObjCommand = new RelayCommand(async () => await mapManager.ExportObj(id, variant));
+        _mapViewerService = mapViewerService;
+        _id = id;
         Variant = variant;
+        View3DModelCommand = new RelayCommand(View3DModel);
     }
+    public ICommand View3DModelCommand { get; }
     public ICommand ExportObjCommand { get; }
     public int Variant { get; }
+
+    public async void View3DModel()
+    {
+        await _mapViewerService.ShowDialog(_id, Variant);
+    }
 }
-
-

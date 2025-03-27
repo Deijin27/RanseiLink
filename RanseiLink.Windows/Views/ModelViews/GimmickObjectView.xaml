@@ -35,7 +35,10 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:GimmickObjectVariantVm}">
                     <GroupBox Header="{Binding Variant}" HeaderStringFormat="Variant {0}">
-                        <Button Content="Export as OBJ" Command="{Binding ExportObjCommand}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Export as OBJ" Command="{Binding ExportObjCommand}"/>
+                            <controls:IconButton Icon="visibility" ToolTip="View 3D Model" Command="{Binding View3DModelCommand}" Margin="5,0,0,0" />
+                        </StackPanel>
                     </GroupBox>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

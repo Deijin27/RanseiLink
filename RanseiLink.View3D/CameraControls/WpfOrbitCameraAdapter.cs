@@ -6,7 +6,7 @@ namespace RanseiLink.View3D.CameraControls;
 
 public class WpfOrbitCameraAdapter
 {
-    private readonly OrbitCameraController _cameraController = new();
+    private readonly OrbitCameraController _cameraController;
     private readonly GLWpfControl _openTkControl;
     private readonly Camera _camera;
     public WpfOrbitCameraAdapter(GLWpfControl openTkControl, OrbitCameraController cameraController, Camera camera)

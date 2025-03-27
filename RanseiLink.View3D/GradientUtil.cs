@@ -48,8 +48,17 @@ public static class GradientUtil
         GL.PopMatrix();
     }
 
-    public static void DrawGrid(Color4 color, Vector3 position, float cellSize, int cellCount)
+    public static void DrawGrid(Color4 color, Vector3 position, float cellSize, int cellCount, bool depthTest)
     {
+        if (depthTest)
+        {
+            GL.Enable(EnableCap.DepthTest);
+        }
+        else
+        {
+            GL.Disable(EnableCap.DepthTest);
+        }
+
         GL.Disable(EnableCap.Texture2D);
         GL.MatrixMode(MatrixMode.Modelview);
         GL.PushMatrix();

@@ -5,4 +5,5 @@ public enum SceneRenderOptions
     Wireframe = 1,
     ShowGimmicks = 2,
     DrawGrid = 4,
+    GridDisableDepthTesting = 8,
 }

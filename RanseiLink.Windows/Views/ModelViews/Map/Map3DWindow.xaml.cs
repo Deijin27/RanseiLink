@@ -29,13 +29,26 @@ public partial class Map3DWindow : Window
         _camera = new Camera();
         _cameraController = new OrbitCameraController();
         _cameraAdapter = new WpfOrbitCameraAdapter(OpenTkControl, _cameraController, _camera);
-        _cameraAdapter.CameraUpdated += (_, __) => UpdateTitle();
+        _cameraAdapter.CameraUpdated += (_, __) => OnCameraUpdated();
         UpdateTitle();
 
         _scene = scene;
+        _scene.RequestResetZoom += Scene_RequestResetZoom;
         _scene.LoadScene(BattleConfigId.Aurora);
 
         this.Loaded += MainWindow_Loaded;
+    }
+
+    private void Scene_RequestResetZoom(object sender, ResetZoomEventArgs e)
+    {
+        _cameraController.RadialDistance = e.zoom;
+        _cameraController.Update(_camera);
+        OnCameraUpdated();
+    }
+
+    private void OnCameraUpdated()
+    {
+        UpdateTitle();
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
