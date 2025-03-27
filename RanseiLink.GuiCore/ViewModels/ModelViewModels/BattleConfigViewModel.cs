@@ -31,10 +31,11 @@ public partial class BattleConfigViewModel : ViewModelBase
         _mapViewerService = mapViewerService;
         _nicknameService = nicknameService;
 
-        MapItems = mapService.GetMapIds().Select(i => new SelectorComboBoxItem(
+        MapItems = mapService.GetMapIds().Select(i => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(
             id: (int)i,
-            idString: i.ToString()[3..],
-            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+            nicknameService,
+            nameof(MapId),
+            idString: i.ToString()[3..]
             )).ToList();
 
         ItemItems = idToNameService.GetComboBoxItemsPlusDefault<IItemService>();

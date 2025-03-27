@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
+using System.Collections.Generic;
 using System.Text;
 using System.Xml.Linq;
 
@@ -11,7 +12,10 @@ public interface INicknameService
     List<SelectorComboBoxItem> GetAllNicknames(string category);
     string GetNickname(string category, int id);
     void SetNickname(string category, int id, string? nickname = null);
+    event EventHandler<NicknameChangedArgs>? NicknameChanged;
 }
+
+public record NicknameChangedArgs(string Category, int Id, string OldName, string NewName);
 
 public class NicknameService : INicknameService
 {
@@ -28,6 +32,8 @@ public class NicknameService : INicknameService
         InitialiseCategoryFromEnum<GimmickObjectId>();
         InitialiseCategory(nameof(MapId), MapId.DefaultNicknames);
     }
+
+    public event EventHandler<NicknameChangedArgs>? NicknameChanged;
 
     private void InitialiseCategoryFromEnum<T>() where T : Enum
     {
@@ -76,12 +82,16 @@ public class NicknameService : INicknameService
 
     private class NicknameCategory
     {
+        private readonly string _name;
+        private readonly INicknameService _nicknameService;
         private readonly string _file;
         private readonly Dictionary<int, string> _customNames;
         private readonly Dictionary<int, string> _defaults;
 
-        public NicknameCategory(string file, Dictionary<int, string> defaults)
+        public NicknameCategory(string name, INicknameService nicknameService, string file, Dictionary<int, string> defaults)
         {
+            _name = name;
+            _nicknameService = nicknameService;
             _file = file;
             _defaults = defaults;
             _customNames = [];
@@ -90,7 +100,13 @@ public class NicknameService : INicknameService
 
         public List<SelectorComboBoxItem> GetAllNicknames()
         {
-            return _defaults.OrderBy(x => x.Key).Select(x => new SelectorComboBoxItem(x.Key, x.Value)).ToList();
+            List<SelectorComboBoxItem> items = [];
+            foreach (var (id, _) in _defaults)
+            {
+                items.Add(new NicknamedSelectorComboBoxItem(id, _nicknameService, _name));
+            }
+            items.Sort((a, b) => a.Id.CompareTo(b.Id));
+            return items;
         }
 
         public string GetNickname(int id)
@@ -177,7 +193,7 @@ public class NicknameService : INicknameService
 
     private void InitialiseCategory(string category, Dictionary<int, string> defaults)
     {
-        _nicknameCategories[category] = new NicknameCategory(Path.Combine(_nicknameFolder, category) + ".xml", defaults);
+        _nicknameCategories[category] = new NicknameCategory(category, this, Path.Combine(_nicknameFolder, category) + ".xml", defaults);
     }
 
     public List<SelectorComboBoxItem> GetAllNicknames(string category)
@@ -192,7 +208,15 @@ public class NicknameService : INicknameService
 
     public void SetNickname(string category, int id, string? nickname = null)
     {
-        _nicknameCategories[category].SetNickname(id, nickname);
+        var cat = _nicknameCategories[category];
+        var current = cat.GetNickname(id);
+        if (current == nickname)
+        {
+            return;
+        }
+        cat.SetNickname(id, nickname);
+        var newName = cat.GetNickname(id);
+        NicknameChanged?.Invoke(this, new NicknameChangedArgs(category, id, current, newName));
     }
 
 }

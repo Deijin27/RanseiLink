@@ -371,7 +371,7 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
         var vm = modServices.Get<GimmickObjectViewModel>();
         var nn = modServices.Get<INicknameService>();
         var comboItems = _service.ValidIds()
-            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(GimmickObjectId), x)))
+            .Select(x => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(x, nn, nameof(GimmickObjectId)))
             .ToList();
         _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)), _service.ValidateId);
     }
@@ -431,7 +431,7 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
         var vm = modServices.Get<BattleConfigViewModel>();
         var nn = modServices.Get<INicknameService>();
         var comboItems = _service.ValidIds()
-            .Select(x => new SelectorComboBoxItem(x, nn.GetNickname(nameof(BattleConfigId), x)))
+            .Select(x => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(x, nn, nameof(BattleConfigId)))
             .ToList();
         _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
     }
@@ -500,10 +500,11 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
         _currentMap = null;
         _currentId = null;
         var nicknameService = modServices.Get<INicknameService>();
-        var mapComboItems = _service.GetMapIds().Select(i => new SelectorComboBoxItem(
-            id: (int)i, 
-            idString: i.ToString()[3..],
-            name: nicknameService.GetNickname(nameof(MapId), (int)i)
+        var mapComboItems = _service.GetMapIds().Select(i => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(
+            id: (int)i,
+            nicknameService: nicknameService,
+            nicknameCategory: nameof(MapId),
+            idString: i.ToString()[3..]
             )).ToList();
         _viewModel = selectorVmFactory.Create(null, mapComboItems, _nestedVm, id =>
         {

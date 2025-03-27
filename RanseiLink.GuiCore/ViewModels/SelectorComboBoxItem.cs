@@ -19,6 +19,33 @@ public class NamedModelSelectorComboBoxItem : SelectorComboBoxItem
     }
 }
 
+public class NicknamedSelectorComboBoxItem : SelectorComboBoxItem
+{
+    private readonly string _nicknameCategory;
+
+    public NicknamedSelectorComboBoxItem(int id, INicknameService nicknameService, string nicknameCategory) 
+        : base(id, nicknameService.GetNickname(nicknameCategory, id))
+    {
+        _nicknameCategory = nicknameCategory;
+        nicknameService.NicknameChanged += NicknameService_NicknameChanged;
+    }
+
+    public NicknamedSelectorComboBoxItem(int id, INicknameService nicknameService, string nicknameCategory, string idString)
+        : base(id, idString, nicknameService.GetNickname(nicknameCategory, id))
+    {
+        _nicknameCategory = nicknameCategory;
+        nicknameService.NicknameChanged += NicknameService_NicknameChanged;
+    }
+
+    private void NicknameService_NicknameChanged(object? sender, NicknameChangedArgs e)
+    {
+        if (e.Category == _nicknameCategory && e.Id == Id)
+        {
+            UpdateName(e.NewName);
+        }
+    }
+}
+
 
 public class SelectorComboBoxItem : ViewModelBase
 {
