@@ -94,10 +94,12 @@
                 <Image Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Image3Path, Mode=OneWay, Converter={StaticResource Converter.PathToImageSource}}"/>
             </UniformGrid>
 
-            <TextBlock Text="State-1 Model" Grid.Row="10" />
+            <Button Grid.Row="10" Style="{StaticResource HyperlinkButtonStyle}" Content="State-1 Model" ToolTip="Jump to selected gimmick object" 
+                  Command="{Binding JumpToObjectCommand}" CommandParameter="{Binding State1Sprite}"/>
             <ComboBox Grid.Row="10" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State1Sprite, Mode=TwoWay}"/>
 
-            <TextBlock Text="State-2 Model" Grid.Row="11" />
+            <Button Grid.Row="11" Style="{StaticResource HyperlinkButtonStyle}" Content="State-2 Model" ToolTip="Jump to selected gimmick object" 
+      Command="{Binding JumpToObjectCommand}" CommandParameter="{Binding State2Sprite}"/>
             <ComboBox Grid.Row="11" Grid.Column="1" Style="{StaticResource SelectorComboBoxStyle}" ItemsSource="{Binding GimmickObjectItems}" SelectedValue="{Binding State2Sprite, Mode=TwoWay}"/>
 
             <TextBlock Text="Effect" Grid.Row="12" ToolTip="Effect of attack used by this gimmick"/>

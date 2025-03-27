@@ -20,6 +20,7 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
     private readonly IOverrideDataProvider _spriteProvider;
 
     public ICommand JumpToGimmickCommand { get; }
+    public ICommand JumpToObjectCommand { get; }
 
     public GimmickViewModel(IMoveAnimationService moveAnimationService, ICachedSpriteProvider cachedSpriteProvider, INicknameService nicknameService, IExternalService externalService, IOverrideDataProvider overrideSpriteProvider, IJumpService jumpService, IIdToNameService idToNameService)
     {
@@ -35,6 +36,7 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
 
         JumpToGimmickCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickWorkspaceEditorModule.Id, id));
         JumpToGimmickRangeCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickRangeWorkspaceModule.Id, id));
+        JumpToObjectCommand = new RelayCommand<int>(id => jumpService.JumpTo(GimmickObjectSelectorEditorModule.Id, id));
 
         SetPreviewAnimationModeCommand = new RelayCommand<GimmickAnimationPreviewMode>(mode =>
         {

@@ -364,7 +364,7 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
 {
     public const string Id = "gimmick_object_selector";
     public override string UniqueId => Id;
-    public override string ListName => "Gimmick Object";
+    public override string ListName => "Gimmick 3D Model";
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
