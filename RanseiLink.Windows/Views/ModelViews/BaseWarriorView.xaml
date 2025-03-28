@@ -50,7 +50,7 @@
         Command="{Binding JumpToWarriorNameCommand}" CommandParameter="{Binding Name}"/>
             <UniformGrid Grid.Row="0" Grid.Column="1" Rows="1">
                 <controls:NumberBox  Value="{Binding Name, Mode=TwoWay}" Max="{Binding Name_Max}"/>
-                <TextBlock Text="{Binding WarriorNameValue}"/>
+                <TextBlock Text="{Binding WarriorNameValue}" d:Text="Player" Margin="8,0" VerticalAlignment="Center"/>
             </UniformGrid>
             
 
