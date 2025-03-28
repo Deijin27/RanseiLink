@@ -5,6 +5,7 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -51,7 +52,6 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         JumpToMoveCommand = new RelayCommand<int>(id => jumpService.JumpTo(MoveWorkspaceModule.Id, id));
         JumpToAbilityCommand = new RelayCommand<int>(id => jumpService.JumpTo(AbilityWorkspaceEditorModule.Id, id));
         AddEvolutionCommand = new RelayCommand(AddEvolution);
-        RemoveEvolutionCommand = new RelayCommand(RemoveEvolution, () => Evolutions.Count > 0);
         ViewSpritesCommand = new RelayCommand(ViewSprites);
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
@@ -89,8 +89,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         Evolutions.Clear();
         for (int i = 0; i < _model.Evolutions.Count; i++)
         {
-            var newItem = new EvolutionComboBoxItem(_model.Evolutions, i, _evolutionEntryOptions);
-            Evolutions.Add(newItem);
+            AddEvolutionToUi(i);
         }
         HabitatItems.Clear();
         foreach (KingdomId kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
@@ -99,7 +98,6 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         }
         UpdateEvolvesFrom();
         RaiseAllPropertiesChanged();
-        RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
 
     public ICommand ImportAnimationCommand { get; }
@@ -169,42 +167,78 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
     {
         private readonly List<PokemonId> _evolutionTable;
         private readonly int _id;
-        public EvolutionComboBoxItem(List<PokemonId> evolutionTable, int id, List<SelectorComboBoxItem> options)
+        private readonly Func<int, PokemonMiniViewModel> _createPokemonMiniVm;
+        public EvolutionComboBoxItem(List<PokemonId> evolutionTable, int id, List<SelectorComboBoxItem> options, 
+            Func<int, PokemonMiniViewModel> createPokemonMiniVm)
         {
             _id = id;
             _evolutionTable = evolutionTable;
+            _createPokemonMiniVm = createPokemonMiniVm;
+            UpdateMiniVm();
             Options = options;
+            
+            DeleteCommand = new RelayCommand(Delete);
         }
+
+        [MemberNotNull(nameof(MiniViewModel))]
+        private void UpdateMiniVm()
+        {
+            MiniViewModel = _createPokemonMiniVm(Id);
+            RaisePropertyChanged(nameof(MiniViewModel));
+        }
+
+        private void Delete()
+        {
+            RequestRemove?.Invoke(this, _id);
+        }
+
+        public event EventHandler<int>? RequestRemove;
+
         public int Id
         {
             get => (int)_evolutionTable[_id];
-            set => SetProperty(Id, value, v => _evolutionTable[_id] = (PokemonId)v);
+            set
+            {
+                if (SetProperty(Id, value, v => _evolutionTable[_id] = (PokemonId)v))
+                {
+                    UpdateMiniVm();
+                }
+            }
         }
+
+        public PokemonMiniViewModel MiniViewModel { get; private set; }
+
         public List<SelectorComboBoxItem> Options { get; }
+
+        public ICommand DeleteCommand { get; }
     }
 
-    public ObservableCollection<EvolutionComboBoxItem> Evolutions { get; } = new();
+    public ObservableCollection<EvolutionComboBoxItem> Evolutions { get; } = [];
 
     public ICommand AddEvolutionCommand { get; }
-    public RelayCommand RemoveEvolutionCommand { get; }
+
+    private void AddEvolutionToUi(int id)
+    {
+        var newItem = new EvolutionComboBoxItem(_model.Evolutions, id, _evolutionEntryOptions, 
+            id =>
+            {
+                var pokemon = _pokemonService.Retrieve(id);
+                return new PokemonMiniViewModel(_cachedSpriteProvider, pokemon, id, _selectPokemonCommand);
+            });
+        newItem.RequestRemove += EvolutionItem_RequestRemove;
+        Evolutions.Add(newItem);
+    }
+
+    private void EvolutionItem_RequestRemove(object? sender, int id)
+    {
+        _model.Evolutions.RemoveAt(id);
+        Evolutions.RemoveAt(id);
+    }
 
     private void AddEvolution()
     {
         _model.Evolutions.Add(PokemonId.Eevee);
-        var newItem = new EvolutionComboBoxItem(_model.Evolutions, _model.Evolutions.Count - 1, _evolutionEntryOptions);
-        Evolutions.Add(newItem);
-        RemoveEvolutionCommand.RaiseCanExecuteChanged();
-    }
-
-    private void RemoveEvolution()
-    {
-        if (_model.Evolutions.Count == 0)
-        {
-            return;
-        }
-        _model.Evolutions.RemoveAt(_model.Evolutions.Count - 1);
-        Evolutions.RemoveAt(Evolutions.Count - 1);
-        RemoveEvolutionCommand.RaiseCanExecuteChanged();
+        AddEvolutionToUi(_model.Evolutions.Count - 1);
     }
 
     public ObservableCollection<PokemonMiniViewModel> EvolvesFrom { get; } = [];
