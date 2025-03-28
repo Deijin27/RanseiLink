@@ -14,25 +14,32 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
     private readonly IIdToNameService _idToNameService;
     private readonly IKingdomService _kingdomService;
     private readonly IItemService _itemService;
+    private readonly IPokemonService _pokemonService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IAsyncDialogService _dialogService;
     private readonly IPokemonAnimationService _animationService;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    private readonly ICommand _selectPokemonCommand;
     public PokemonViewModel(
         IJumpService jumpService, 
         IIdToNameService idToNameService, 
         IKingdomService kingdomService, 
         IItemService itemService, 
+        IPokemonService pokemonService,
         IOverrideDataProvider spriteProvider, 
         SpriteItemViewModel.Factory spriteItemVmFactory, 
         IAsyncDialogService dialogService, 
-        IPokemonAnimationService animationService)
+        IPokemonAnimationService animationService,
+        ICachedSpriteProvider cachedSpriteProvider)
     {
         _animationService = animationService;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _spriteItemVmFactory = spriteItemVmFactory;
         _idToNameService = idToNameService;
         _kingdomService = kingdomService;
         _itemService = itemService;
+        _pokemonService = pokemonService;
         _spriteProvider = spriteProvider;
         _dialogService = dialogService;
 
@@ -49,6 +56,8 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         ImportAnimationCommand = new RelayCommand(ImportAnimation);
         ExportAnimationsCommand = new RelayCommand(ExportAnimations);
         RevertAnimationCommand = new RelayCommand(RevertAnimation, () => IsAnimationOverwritten);
+        _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
+
 
         PropertyChanged += PokemonViewModel_PropertyChanged;
     }
@@ -88,6 +97,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         {
             HabitatItems.Add(new HabitatItem(model, kingdom, _idToNameService.IdToName<IKingdomService>((int)kingdom)));
         }
+        UpdateEvolvesFrom();
         RaiseAllPropertiesChanged();
         RemoveEvolutionCommand.RaiseCanExecuteChanged();
     }
@@ -195,6 +205,21 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         _model.Evolutions.RemoveAt(_model.Evolutions.Count - 1);
         Evolutions.RemoveAt(Evolutions.Count - 1);
         RemoveEvolutionCommand.RaiseCanExecuteChanged();
+    }
+
+    public ObservableCollection<PokemonMiniViewModel> EvolvesFrom { get; } = [];
+
+    private void UpdateEvolvesFrom()
+    {
+        EvolvesFrom.Clear();
+        foreach (var id in _pokemonService.ValidIds())
+        {
+            var pokemon = _pokemonService.Retrieve(id);
+            if (pokemon.Evolutions.Contains(_id))
+            {
+                EvolvesFrom.Add(new PokemonMiniViewModel(_cachedSpriteProvider, pokemon, id, _selectPokemonCommand));
+            }
+        }
     }
 
     public string SmallSpritePath => _spriteProvider.GetSpriteFile(SpriteType.StlPokemonM, (int)_id).File;

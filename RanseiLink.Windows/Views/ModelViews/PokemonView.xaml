@@ -11,7 +11,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              xmlns:valueConverters="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:PokemonViewModel, IsDesignTimeCreatable=False}"
-             d:DesignHeight="950" d:DesignWidth="800">
+             d:DesignHeight="1050" d:DesignWidth="800">
     <UserControl.Resources>
         
 
@@ -34,6 +34,16 @@
                 <ColumnDefinition MinWidth="170"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
@@ -115,38 +125,38 @@
             <TextBlock Text="Idle Motion" Grid.Row="14" Grid.Column="0"/>
             <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
 
-            <GroupBox Header="Evolutions" Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7">
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-                        <controls:IconButton Icon="add" Text="Add New" Command="{Binding AddEvolutionCommand}"/>
-                        <controls:IconButton Icon="delete" Text="Remove Last" Margin="5,0,0,0" Command="{Binding RemoveEvolutionCommand}"/>
-                    </StackPanel>
-                    <ScrollViewer>
-                        <ItemsControl ItemsSource="{Binding Evolutions}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <ComboBox Margin="0,0,0,2" ItemsSource="{Binding Options}" SelectedValue="{Binding Id}" Style="{StaticResource SelectorComboBoxStyle}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                    
-                </DockPanel>
+            <CheckBox VerticalAlignment="Center" Grid.Row="15" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+
+            <TextBlock Text="Catch Rate" Grid.Row="16" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>
+
+            <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="17" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="17" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}" Max="{Binding BattleIntroSpriteOffset_Max}"/>
+
+            <GroupBox Header="Habitats" Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
+                <ItemsControl ItemsSource="{Binding HabitatItems}" Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding KingdomName}" Padding="0,0,10,0"/>
+                                <CheckBox Grid.Column="1" IsChecked="{Binding EncounterableAtDefaultArea}">Default</CheckBox>
+                                <CheckBox Grid.Column="2" IsChecked="{Binding EncounterableWithLevel2Area}">Lv2 Area</CheckBox>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </GroupBox>
 
-            <CheckBox VerticalAlignment="Center" Grid.Row="22" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+            <TextBlock Text="Unknown Anim. Val." Grid.Row="30" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="30" Grid.Column="1" Value="{Binding UnknownAnimationValue}" Max="{Binding UnknownAnimationValue_Max}"/>
 
-            <TextBlock Text="Catch Rate" Grid.Row="23" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="23" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>
-
-            <TextBlock Text="Unknown Anim. Val." Grid.Row="24" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="24" Grid.Column="1" Value="{Binding UnknownAnimationValue}" Max="{Binding UnknownAnimationValue_Max}"/>
-
-            <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="25" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="25" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}" Max="{Binding BattleIntroSpriteOffset_Max}"/>
-
-            <TextBlock Text="Unknown ?Weight?" Grid.Row="26" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="26" Grid.Column="1" Value="{Binding Weight}" Max="{Binding Weight_Max}"/>
+            <TextBlock Text="Unknown ?Weight?" Grid.Row="31" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="31" Grid.Column="1" Value="{Binding Weight}" Max="{Binding Weight_Max}"/>
 
         </Grid>
 
@@ -209,9 +219,22 @@
                     <CheckBox IsChecked="{Binding LongAttackAnimation}" Content="Long Duration Attack Animation" VerticalAlignment="Center"/>
                 </StackPanel>
             </GroupBox>
+
+            <GroupBox Header="Evolves From" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="8">
+                <Grid>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding EvolvesFrom.Count, Converter={StaticResource Converter.ZeroToVis}}">Nothing</TextBlock>
+                    <ItemsControl VerticalAlignment="Top" ItemsSource="{Binding EvolvesFrom}" Style="{StaticResource ItemsControlVirtualizedStyle}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:PokemonMiniView Margin="2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </GroupBox>
             
 
-            <GroupBox Header="Evolution Condition 1" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
+            <GroupBox Header="Evolution Condition 1" Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8" 
                   ToolTip="The first requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -228,7 +251,7 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Evolution Condition 2" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
+            <GroupBox Header="Evolution Condition 2" Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3" Padding="8"
                   ToolTip="The second requirement for a pokemon to evolve into this pokemon">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -245,24 +268,26 @@
                 </Grid>
             </GroupBox>
 
-            <GroupBox Header="Habitats" Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
-                <ItemsControl ItemsSource="{Binding HabitatItems}" Grid.IsSharedSizeScope="True">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding KingdomName}" Padding="0,0,10,0"/>
-                                <CheckBox Grid.Column="1" IsChecked="{Binding EncounterableAtDefaultArea}">Default</CheckBox>
-                                <CheckBox Grid.Column="2" IsChecked="{Binding EncounterableWithLevel2Area}">Lv2 Area</CheckBox>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+            <GroupBox Header="Evolves Into" Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+                        <controls:IconButton Icon="add" Text="Add New" Command="{Binding AddEvolutionCommand}"/>
+                        <controls:IconButton Icon="delete" Text="Remove Last" Margin="5,0,0,0" Command="{Binding RemoveEvolutionCommand}"/>
+                    </StackPanel>
+                    <ScrollViewer>
+                        <ItemsControl ItemsSource="{Binding Evolutions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <ComboBox Margin="0,0,0,2" ItemsSource="{Binding Options}" SelectedValue="{Binding Id}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                </DockPanel>
             </GroupBox>
+            
+            
         </Grid>
 
     </WrapPanel>
