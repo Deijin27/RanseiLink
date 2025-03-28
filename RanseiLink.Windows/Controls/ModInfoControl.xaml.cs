@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core.Enums;
+using RanseiLink.Core.Services;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -39,7 +40,7 @@ public partial class ModInfoControl : UserControl
             {
                 bottomTextItems.Add(mi.Author);
             }
-            bottomTextItems.Add(mi.GameCode.ToString());
+            bottomTextItems.Add(mi.GameCode.UserFriendlyName());
 
             var bottomText = string.Join(" | ", bottomTextItems);
 

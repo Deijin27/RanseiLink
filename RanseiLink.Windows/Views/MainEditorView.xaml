@@ -45,10 +45,9 @@
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="1" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>
             <controls:IconControl ToolTip="Version" Grid.Row="2" Icon="info"/>
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
-            <!--
             <controls:IconControl ToolTip="Region" Grid.Row="3" Icon="language"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.GameCode}" d:Text="VPYT"/>
-            -->
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
+            
         </Grid>
         
         <ListView x:Name="editorListView"

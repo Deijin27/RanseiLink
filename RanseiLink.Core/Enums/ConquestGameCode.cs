@@ -2,8 +2,17 @@
 
 public enum ConquestGameCode
 {
+    /// <summary>
+    /// North America
+    /// </summary>
     VPYT,
+    /// <summary>
+    /// Japan
+    /// </summary>
     VPYJ,
+    /// <summary>
+    /// Europe
+    /// </summary>
     VPYP,
 }
 
@@ -23,5 +32,16 @@ public static class ConquestGameCodeExtensions
             case ConquestGameCode.VPYP: return ConquestGameCode.VPYT;
             default: throw new ArgumentException(nameof(gameCode));
         }
+    }
+
+    public static string UserFriendlyName(this  ConquestGameCode gameCode)
+    {
+        return gameCode switch
+        {
+            ConquestGameCode.VPYT => "North America",
+            ConquestGameCode.VPYJ => "Japan",
+            ConquestGameCode.VPYP => "Europe",
+            _ => throw new ArgumentException(nameof(gameCode)),
+        };
     }
 }

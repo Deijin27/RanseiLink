@@ -25,7 +25,7 @@ public class ModPatchingService(RomFsFactory ndsFactory, IFallbackDataProvider f
             }
             if (!modInfo.GameCode.IsCompatibleWith(romGameCode))
             {
-                return Result.Fail($"Game code of mod '{modInfo.GameCode}' is not compatible with game code of rom '{romGameCode}'");
+                return Result.Fail($"Game code of mod '{modInfo.GameCode}' ({modInfo.GameCode.UserFriendlyName()}) is not compatible with game code of rom '{romGameCode}' ({modInfo.GameCode.UserFriendlyName()})");
             }
         }
 

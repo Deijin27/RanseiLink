@@ -49,6 +49,8 @@ public class ModInfo : ModMetadata
 
     public ConquestGameCode GameCode { get; set; }
 
+    public string RegionName => GameCode.UserFriendlyName();
+
     public static bool TryLoadFrom(XDocument doc, [NotNullWhen(true)] out ModInfo? modInfo)
     {
         var element = doc.Element(ElementNames.ModInfo);

@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using RanseiLink.Core.Enums;
 using RanseiLink.Core.Services;
 
 namespace RanseiLink.XP.Controls;
@@ -44,7 +45,7 @@ public partial class ModInfoControl : UserControl
             {
                 bottomTextItems.Add(mi.Author);
             }
-            bottomTextItems.Add(mi.GameCode.ToString());
+            bottomTextItems.Add(mi.GameCode.UserFriendlyName());
 
             target.BottomTextBlock.Text = string.Join(" | ", bottomTextItems);
 
