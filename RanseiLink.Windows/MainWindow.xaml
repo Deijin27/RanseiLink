@@ -48,7 +48,7 @@
 
                 <TextBlock Grid.Column="1" FontSize="14" FontWeight="SemiBold" Grid.ColumnSpan="3"
                     HorizontalAlignment="Left" VerticalAlignment="Center">
-                        RanseiLink <Run Foreground="{StaticResource AltForegroundBrush}" FontSize="11" d:Text="1.0-beta" Text="{x:Static local:App.Version}"/>
+                        RanseiLink <Run Foreground="{DynamicResource AltForegroundBrush}" FontSize="11" d:Text="1.0-beta" Text="{x:Static local:App.Version}"/>
                 </TextBlock>
 
                 <Button Grid.Column="2" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
