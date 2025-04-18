@@ -12,6 +12,8 @@ public class SelectorViewModel : ViewModelBase
     private readonly Action<int> _onSelectedChanged;
     private readonly Func<int, bool> _validateId;
 
+    public event EventHandler<int>? RequestNavigateToId;
+
     public SelectorViewModel(CopyPasteViewModel copyPasteVm, IModelService? service, List<SelectorComboBoxItem> displayItems, object nestedViewModel, Action<int> onSelectedChanged, Func<int, bool> validateId)
     {
         _validateId = validateId;
@@ -68,11 +70,23 @@ public class SelectorViewModel : ViewModelBase
             }
             if (_selected != value)
             {
-                _selected = value;
-                UpdateNestedViewModel();
-                RaisePropertyChanged();
-                UpdateCopyPaste();
+                RequestNavigateToId?.Invoke(this, value);
             }
+        }
+    }
+
+    public void SetSelected(int value)
+    {
+        if (!_validateId(value))
+        {
+            return;
+        }
+        if (_selected != value)
+        {
+            _selected = value;
+            UpdateNestedViewModel();
+            RaisePropertyChanged(nameof(Selected));
+            UpdateCopyPaste();
         }
     }
 

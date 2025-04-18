@@ -14,20 +14,12 @@ internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpServ
         }
         vm.UseRegex = false;
         vm.SearchTerm = filter;
-        mainEditorViewModel.CurrentModuleId = MsgGridEditorModule.Id;
+        mainEditorViewModel.NavigateTo(MsgGridEditorModule.Id);
     }
 
     public void JumpTo(string moduleId, int selectId)
     {
-        if (!mainEditorViewModel.TryGetModule(moduleId, out var module))
-        {
-            return;
-        }
-        if (module is ISelectableModule selectableModule)
-        {
-            selectableModule.Select(selectId);
-        }
-        mainEditorViewModel.CurrentModuleId = moduleId;
+        mainEditorViewModel.NavigateTo(moduleId, selectId);
     }
 
     public void JumpTo(string moduleId)
@@ -36,6 +28,6 @@ internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpServ
         {
             return;
         }
-        mainEditorViewModel.CurrentModuleId = moduleId;
+        mainEditorViewModel.NavigateTo(moduleId);
     }
 }

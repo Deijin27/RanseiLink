@@ -55,11 +55,32 @@ public abstract class EditorModule
 
 public abstract class BaseSelectorEditorModule<TService> : EditorModule, ISelectableModule where TService : IModelService
 {
-    public override object? ViewModel => _viewModel;
+    public override object? ViewModel => SelectorViewModel;
+
+    public int SelectedId => SelectorViewModel?.Selected ?? 0;
 
     protected ISelectorViewModelFactory? _selectorVmFactory;
     protected TService? _service;
-    protected SelectorViewModel? _viewModel;
+
+    private SelectorViewModel? _viewModel;
+    [DisallowNull]
+    protected SelectorViewModel? SelectorViewModel
+    {
+        get => _viewModel;
+        set
+        {
+            _viewModel = value;
+            _viewModel.RequestNavigateToId += ViewModel_RequestNavigateToId;
+        }
+
+    }
+
+    private void ViewModel_RequestNavigateToId(object? sender, int e)
+    {
+        RequestNavigate?.Invoke(this, e);
+    }
+
+    public event RequestNavigateEventHandler? RequestNavigate;
 
     [MemberNotNull(nameof(_service))]
     [MemberNotNull(nameof(_selectorVmFactory))]
@@ -85,21 +106,41 @@ public abstract class BaseSelectorEditorModule<TService> : EditorModule, ISelect
 
     public virtual void Select(int selectId)
     {
-        if (_viewModel == null)
+        if (SelectorViewModel == null)
         {
             return;
         }
-        _viewModel.Selected = selectId;
+        SelectorViewModel.SetSelected(selectId);
     }
 }
 
 public abstract class BaseWorkspaceEditorModule<TService> : EditorModule, ISelectableModule where TService : IModelService
 {
-    public override object? ViewModel => _viewModel;
+    public override object? ViewModel => WorkspaceViewModel;
+
+    public int SelectedId => WorkspaceViewModel?.SelectedId ?? 0;
 
     protected ISelectorViewModelFactory? _selectorVmFactory;
     protected TService? _service;
-    protected WorkspaceViewModel? _viewModel;
+    private WorkspaceViewModel? _viewModel;
+    [DisallowNull]
+    protected WorkspaceViewModel? WorkspaceViewModel
+    {
+        get => _viewModel;
+        set
+        {
+            _viewModel = value;
+            _viewModel.RequestNavigateToId += ViewModel_RequestNavigateToId;
+        }
+
+    }
+
+    private void ViewModel_RequestNavigateToId(object? sender, int e)
+    {
+        RequestNavigate?.Invoke(this, e);
+    }
+
+    public event RequestNavigateEventHandler? RequestNavigate;
 
     [MemberNotNull(nameof(_service))]
     [MemberNotNull(nameof(_selectorVmFactory))]
@@ -119,16 +160,19 @@ public abstract class BaseWorkspaceEditorModule<TService> : EditorModule, ISelec
 
     public virtual void Select(int selectId)
     {
-        if (_viewModel != null)
+        if (WorkspaceViewModel != null)
         {
-            _viewModel.SearchText = null;
-            _viewModel.SelectById(selectId);
+            WorkspaceViewModel.SearchText = null;
+            WorkspaceViewModel.SelectById(selectId);
         }
     }
 }
 
+public delegate void RequestNavigateEventHandler(EditorModule sender, int selectId);
 public interface ISelectableModule
 {
+    event RequestNavigateEventHandler? RequestNavigate;
+    int SelectedId { get; }
     void Select(int selectId);
 }
 

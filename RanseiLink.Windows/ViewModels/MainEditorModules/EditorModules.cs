@@ -25,7 +25,7 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
         var spService = modServices.Get<IScenarioPokemonService>();
 
-        _viewModel = _selectorVmFactory.Create(_service, vm,
+        SelectorViewModel = _selectorVmFactory.Create(_service, vm,
             id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), spService.Retrieve(id)), scrollEnabled: false);
     }
 

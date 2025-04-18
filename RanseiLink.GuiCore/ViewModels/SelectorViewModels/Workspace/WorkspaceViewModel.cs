@@ -19,7 +19,7 @@ public class WorkspaceViewModel : ViewModelBase
     {
         BigViewModel = bigViewModel;
         _modelService = service;
-        var selectItemCommand = new RelayCommand<IMiniViewModel>(wa => { if (wa != null) SelectById(wa.Id); });
+        var selectItemCommand = new RelayCommand<IMiniViewModel>(wa => { if (wa != null) NavigateToId(wa.Id); });
 
         _allMiniVms = allMiniVms(selectItemCommand);
         Items = new(_allMiniVms);
@@ -34,6 +34,15 @@ public class WorkspaceViewModel : ViewModelBase
         
         CopyPasteVm.ModelPasted += CopyPasteVm_ModelPasted;
     }
+
+    public event EventHandler<int>? RequestNavigateToId;
+
+    private void NavigateToId(int id)
+    {
+        RequestNavigateToId?.Invoke(this, id);
+    }
+
+    public int SelectedId => _selectedId;
 
     private void CopyPasteVm_ModelPasted(object? sender, EventArgs e)
     {

@@ -5,6 +5,7 @@ using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -14,8 +15,9 @@ public interface IMainEditorViewModel
 {
     void SetMod(ModInfo mod);
     void Deactivate();
-    string? CurrentModuleId { get; set; }
+    string? CurrentModuleId { get; }
     bool TryGetModule(string moduleId, [NotNullWhen(true)] out EditorModule? module);
+    void NavigateTo(string? moduleId, int? selectId = null);
 }
 public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 {
@@ -58,8 +60,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
         RegisterModules(modules);
 
-        GoForwardInModuleStackCommand = new RelayCommand(GoForwardInModuleStack, () => _forwardModuleStack.Count != 0);
-        GoBackInModuleStackCommand = new RelayCommand(GoBackInModuleStack, () => _backModuleStack.Count != 0);
+        GoForwardInModuleStackCommand = new RelayCommand(GoForwardInModuleStack, () => _forwardNavigationStack.Count != 0);
+        GoBackInModuleStackCommand = new RelayCommand(GoBackInModuleStack, () => _backNavigationStack.Count != 0);
     }
 
     private ICachedMsgBlockService? _cachedMsgBlockService;
@@ -71,7 +73,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
         _cachedMsgBlockService.RebuildCache();
         var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
-        SetCurrentModule(module, true);
+        NavigateInternal(module, null);
         RaiseAllPropertiesChanged();
     }
 
@@ -88,7 +90,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         {
             if (_currentModule?.UniqueId != value)
             {
-                SetCurrentModule(value);
+                NavigateTo(value);
             }
         }
     }
@@ -101,9 +103,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         {
             if (SetProperty(ref _selectedModuleItem, value))
             {
-                SetCurrentModule(value?.ModuleId);
-                _forwardModuleStack.Clear();
-                GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
+                NavigateTo(value?.ModuleId);
             }
         }
     }
@@ -115,34 +115,91 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         get => _mod;
         private set => SetProperty(ref _mod, value);
     }
-    public ObservableCollection<EditorModuleListItem> ListItems { get; } = new();
-    private Dictionary<string, EditorModule> UninitialisedModules { get; } = new();
-    private Dictionary<string, EditorModule> InitialisedModules { get; } = new();
+    public ObservableCollection<EditorModuleListItem> ListItems { get; } = [];
+    private Dictionary<string, EditorModule> UninitialisedModules { get; } = [];
+    private Dictionary<string, EditorModule> InitialisedModules { get; } = [];
 
-    private readonly Stack<string> _backModuleStack = new();
-    private readonly Stack<string> _forwardModuleStack = new();
+    #region Naviation
+
+    private readonly Stack<NavigationStackItem> _backNavigationStack = [];
+    private readonly Stack<NavigationStackItem> _forwardNavigationStack = [];
 
     public RelayCommand GoForwardInModuleStackCommand { get; }
     public RelayCommand GoBackInModuleStackCommand { get; }
 
     private void GoForwardInModuleStack()
     {
-        if (_forwardModuleStack.Count != 0)
+        if (_forwardNavigationStack.Count != 0 && CurrentModuleId != null)
         {
-            SetCurrentModule(_forwardModuleStack.Pop());
-            GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
-        }
-    }
-    private void GoBackInModuleStack()
-    {
-        if (_backModuleStack.Count != 0 && CurrentModuleId != null)
-        {
-            _forwardModuleStack.Push(CurrentModuleId);
-            SetCurrentModule(_backModuleStack.Pop(), blockStackPush:true);
+            _backNavigationStack.Push(GetCurrentModuleAsStackItem());
+            var forwardTo = _forwardNavigationStack.Pop();
+            NavigateInternal(forwardTo.ModuleId, forwardTo.SelectedId);
             GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
             GoBackInModuleStackCommand.RaiseCanExecuteChanged();
         }
     }
+    private void GoBackInModuleStack()
+    {
+        if (_backNavigationStack.Count != 0 && CurrentModuleId != null)
+        {
+            _forwardNavigationStack.Push(GetCurrentModuleAsStackItem());
+            var backTo = _backNavigationStack.Pop();
+            NavigateInternal(backTo.ModuleId, backTo.SelectedId);
+            GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
+            GoBackInModuleStackCommand.RaiseCanExecuteChanged();
+        }
+    }
+
+    private record NavigationStackItem(string? ModuleId, int? SelectedId);
+
+    NavigationStackItem GetCurrentModuleAsStackItem()
+    {
+        return new NavigationStackItem(_currentModule?.UniqueId, (_currentModule as ISelectableModule)?.SelectedId);
+    }
+
+    public void NavigateTo(string? moduleId, int? selectedId = null)
+    {
+        if (_currentModule?.UniqueId != null)
+        {
+            _backNavigationStack.Push(GetCurrentModuleAsStackItem());
+        }
+        _forwardNavigationStack.Clear();
+        GoBackInModuleStackCommand.RaiseCanExecuteChanged();
+        GoForwardInModuleStackCommand.RaiseCanExecuteChanged();
+
+        NavigateInternal(moduleId, selectedId);
+    }
+
+    private void NavigateInternal(string? moduleId, int? selectedId, bool forceUpdate = false)
+    {
+        if (moduleId == null)
+        {
+            return;
+        }
+        if (!TryGetModule(moduleId, out var module))
+        {
+            return;
+        }
+        if (selectedId != null && module is ISelectableModule selectableModule)
+        {
+            selectableModule.Select(selectedId.Value);
+        }
+
+        if (_currentModule?.UniqueId == moduleId && !forceUpdate)
+        {
+            return;
+        }
+
+        _currentModule?.OnPageClosing();
+        _currentModule = module;
+        CurrentVm = _currentModule.ViewModel;
+        _currentModule?.OnPageOpening();
+
+        _selectedModuleItem = ListItems.FirstOrDefault(x => x.ModuleId == moduleId);
+        RaisePropertyChanged(nameof(SelectedModuleItem));
+    }
+
+    #endregion
 
     private void SaveTextChanges()
     {
@@ -170,34 +227,11 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         return true;
     }
 
-    private void SetCurrentModule(string? moduleId, bool forceUpdate = false, bool blockStackPush = false)
+    private void SelectableModule_RequestNavigate(EditorModule sender, int selectId)
     {
-        if (moduleId == null)
-        {
-            // I have no idea why, but randomly a null value is set sometimes
-            return;
-        }
-        if (_currentModule?.UniqueId == moduleId && !forceUpdate)
-        {
-            return;
-        }
-        if (!TryGetModule(moduleId, out var module))
-        {
-            return;
-        }
-        if (_currentModule != null && _currentModule.UniqueId != moduleId && !blockStackPush)
-        {
-            _backModuleStack.Push(_currentModule.UniqueId);
-            GoBackInModuleStackCommand.RaiseCanExecuteChanged();
-        }
-        _currentModule?.OnPageClosing();
-        _currentModule = module;
-        CurrentVm = _currentModule.ViewModel;
-        _currentModule?.OnPageOpening();
-
-        _selectedModuleItem = ListItems.FirstOrDefault(x => x.ModuleId == moduleId);
-        RaisePropertyChanged(nameof(SelectedModuleItem));
+        NavigateTo(sender.UniqueId, selectId);
     }
+
 
     #region Module Initialisation
 
@@ -209,6 +243,11 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         }
         UninitialisedModules.Add(module.UniqueId, module);
         ListItems.Add(new EditorModuleListItem(module.ListName, module.UniqueId));
+
+        if (module is ISelectableModule selectableModule)
+        {
+            selectableModule.RequestNavigate += SelectableModule_RequestNavigate;
+        }
     }
 
     private void RegisterModules(IEnumerable<EditorModule> modules)

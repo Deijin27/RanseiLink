@@ -19,7 +19,7 @@ public class PokemonWorkspaceModule : BaseWorkspaceEditorModule<IPokemonService>
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<PokemonViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id => 
@@ -38,7 +38,7 @@ public class WarriorWorkspaceModule : BaseWorkspaceEditorModule<IBaseWarriorServ
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<BaseWarriorViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id => 
@@ -57,7 +57,7 @@ public class MoveWorkspaceModule : BaseWorkspaceEditorModule<IMoveService>
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<MoveViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -99,7 +99,7 @@ public class AbilityWorkspaceEditorModule : BaseWorkspaceEditorModule<IAbilitySe
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
         var ps = modServices.Get<IPokemonService>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<AbilityViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -119,7 +119,7 @@ public class WarriorSkillWorkspaceEditorModule : BaseWorkspaceEditorModule<IWarr
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
         var ps = modServices.Get<IBaseWarriorService>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<WarriorSkillViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -140,7 +140,7 @@ public class MoveRangeWorkspaceModule : BaseWorkspaceEditorModule<IMoveRangeServ
         var vm = modServices.Get<MoveRangeViewModel>();
         var ns = modServices.Get<INicknameService>();
         vm.Initialise(nameof(MoveRangeId));
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             vm,
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -161,7 +161,7 @@ public class GimmickRangeWorkspaceModule : BaseWorkspaceEditorModule<IGimmickRan
         var vm = modServices.Get<MoveRangeViewModel>();
         var ns = modServices.Get<INicknameService>();
         vm.Initialise(nameof(GimmickRangeId));
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             vm,
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -202,7 +202,7 @@ public class MaxLinkSelectorEditorModule : BaseSelectorEditorModule<IMaxLinkServ
         base.Initialise(modServices);
         var vm = modServices.Get<MaxLinkWarriorViewModel>();
         var items = modServices.Get<IBaseWarriorService>().GetComboBoxItemsExceptDefault();
-        _viewModel = _selectorVmFactory.Create(_service, items, vm, id => vm.SetModel(id, _service.Retrieve(id)), _service.ValidateId, scrollEnabled: false);
+        SelectorViewModel = _selectorVmFactory.Create(_service, items, vm, id => vm.SetModel(id, _service.Retrieve(id)), _service.ValidateId, scrollEnabled: false);
     }
 }
 
@@ -218,7 +218,7 @@ public class MaxLinkPokemonSelectorEditorModule : BaseSelectorEditorModule<IMaxL
         var vm = modServices.Get<MaxLinkPokemonViewModel>();
         var pokemonService = modServices.Get<IPokemonService>();
         var items = pokemonService.GetComboBoxItemsExceptDefault();
-        _viewModel = _selectorVmFactory.Create(null, items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId, scrollEnabled: false);
+        SelectorViewModel = _selectorVmFactory.Create(null, items, vm, id => vm.SetModel(id, _service), pokemonService.ValidateId, scrollEnabled: false);
     }
 }
 
@@ -232,7 +232,7 @@ public class ScenarioAppearPokemonSelectorEditorModule : BaseSelectorEditorModul
     {
         base.Initialise(modServices);
         var vm = modServices.Get<ScenarioAppearPokemonViewModel>();
-        _viewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)), scrollEnabled: false);
+        SelectorViewModel = _selectorVmFactory.Create(_service, vm, id => vm.SetModel(_service.Retrieve(id)), scrollEnabled: false);
     }
 }
 
@@ -246,7 +246,7 @@ public class EventSpeakerWorkspaceModule : BaseWorkspaceEditorModule<IEventSpeak
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<EventSpeakerViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -265,7 +265,7 @@ public class ItemWorkspaceModule : BaseWorkspaceEditorModule<IItemService>
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<ItemViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -288,7 +288,7 @@ public class BuildingWorkspaceEditorModule : BaseWorkspaceEditorModule<IBuilding
         _scenarioBuildingService = modServices.Get<IScenarioBuildingService>();
         var sp = modServices.Get<ICachedSpriteProvider>();
 
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<BuildingViewModel>(),
             _service,
             command =>
@@ -350,7 +350,7 @@ public class GimmickWorkspaceEditorModule : BaseWorkspaceEditorModule<IGimmickSe
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<GimmickViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -373,7 +373,7 @@ public class GimmickObjectSelectorEditorModule : BaseSelectorEditorModule<IGimmi
         var comboItems = _service.ValidIds()
             .Select(x => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(x, nn, nameof(GimmickObjectId)))
             .ToList();
-        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)), _service.ValidateId);
+        SelectorViewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((GimmickObjectId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -391,7 +391,7 @@ public class EpisodeWorkspaceEditorModule : BaseWorkspaceEditorModule<IEpisodeSe
         var sw = modServices.Get<IScenarioWarriorService>();
         var sk = modServices.Get<IScenarioKingdomService>();
         var ms = modServices.Get<ICachedMsgBlockService>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<EpisodeViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -410,7 +410,7 @@ public class KingdomWorkspaceEditorModule : BaseWorkspaceEditorModule<IKingdomSe
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        _viewModel = _selectorVmFactory.CreateWorkspace(
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<KingdomViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
@@ -433,7 +433,7 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
         var comboItems = _service.ValidIds()
             .Select(x => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(x, nn, nameof(BattleConfigId)))
             .ToList();
-        _viewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
+        SelectorViewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
     }
 }
 
@@ -482,10 +482,15 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
     public override string ListName => "Map";
     private SelectorViewModel? _viewModel;
     public override object? ViewModel => _viewModel;
+
+    public int SelectedId => _viewModel?.Selected ?? 0;
+
     private IMapService? _service;
     private MapId? _currentId;
     private PSLM? _currentMap;
     private MapViewModel? _nestedVm;
+
+    public event RequestNavigateEventHandler? RequestNavigate;
 
     public override void Initialise(IServiceGetter modServices)
     {
@@ -520,9 +525,15 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
         id => _service.GetMapIds().Select(i => (int)i).Contains(id),
         scrollEnabled: false
         );
+        _viewModel.RequestNavigateToId += ViewModel_RequestNavigateToId;
 
         _nestedVm.RequestSave += NestedVm_RequestSave;
         _nestedVm.RequestReload += NestedVm_RequestReload;
+    }
+
+    private void ViewModel_RequestNavigateToId(object? sender, int e)
+    {
+        RequestNavigate?.Invoke(this, e);
     }
 
     private void NestedVm_RequestReload(object? sender, System.EventArgs e)
@@ -587,6 +598,6 @@ public class MapSelectorEditorModule : EditorModule, ISelectableModule
         {
             return;
         }
-        _viewModel.Selected = selectId;
+        _viewModel.SetSelected(selectId);
     }
 }
