@@ -26,7 +26,6 @@ public class WpfServiceModule : IModule
         builder.Register<IAsyncPluginService, AsyncPluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
 
-        builder.Register<IJumpService, JumpService>(Reuse.Singleton);
         builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
 
         builder.Register<CopyPasteViewModel>(Reuse.Transient);

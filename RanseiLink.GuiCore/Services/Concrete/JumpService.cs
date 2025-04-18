@@ -1,7 +1,6 @@
-﻿#nullable enable
-namespace RanseiLink.Windows.Services.Concrete;
+﻿namespace RanseiLink.GuiCore.Services.Concrete;
 
-internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpService 
+internal class JumpService(IMainEditorViewModel mainEditorViewModel) : IJumpService
 {
     public void JumpToMessageFilter(string filter, bool regex = false)
     {

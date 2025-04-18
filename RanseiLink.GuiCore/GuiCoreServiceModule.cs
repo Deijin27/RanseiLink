@@ -19,6 +19,7 @@ public class GuiCoreServiceModule : IModule
         builder.RegisterDelegate(context => 
             new ModListItemViewModelFactory((mod, getKnownTags) => context.Resolve<ModListItemViewModel>().Init(mod, getKnownTags))
             , Reuse.Singleton);
+        builder.Register<IJumpService, JumpService>(Reuse.Singleton);
 
     }
 }
