@@ -73,7 +73,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
         _cachedMsgBlockService.RebuildCache();
         var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
-        NavigateInternal(module, null);
+        NavigateInternal(module, null, true);
         RaiseAllPropertiesChanged();
     }
 
