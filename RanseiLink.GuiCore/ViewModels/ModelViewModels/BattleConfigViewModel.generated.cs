@@ -45,7 +45,7 @@ public partial class BattleConfigViewModel : ViewModelBase
         set => SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = v);
     }
 
-    public int Unknown_Max => 63;
+    public int Unknown_Max => 31;
     public int Unknown
     {
         get => _model.Unknown;

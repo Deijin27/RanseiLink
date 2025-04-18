@@ -15,8 +15,10 @@ public partial class KingdomViewModel : ViewModelBase, IBigViewModel
     {
         _animGuiManager = animGuiManager;
         JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, id));
+        JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
         BattleConfigItems = nicknameService.GetAllNicknames(nameof(BattleConfigId));
+        PokemonItems = idToNameService.GetComboBoxItemsExceptDefault<IPokemonService>();
     }
 
     public void SetModel(KingdomId id, Kingdom model)
@@ -39,4 +41,5 @@ public partial class KingdomViewModel : ViewModelBase, IBigViewModel
     public AnimationViewModel? KingdomIconAnimVm { get; private set; }
 
     public ICommand JumpToBattleConfigCommand { get; }
+    public ICommand JumpToPokemonCommand { get; }
 }

@@ -436,54 +436,28 @@ public partial class Kingdom : BaseDataWindow, INamedModel
         }
     }
 
-    public int Unknown2
+    public PokemonId SwarmPokemon
     {
         get
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return GetInt(4, 22, 4);
+                return (PokemonId)GetInt(4, 22, 8);
             }
             else
             {
-                return GetInt(5, 22, 4);
+                return (PokemonId)GetInt(5, 22, 8);
             }
         }
         set
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                SetInt(4, 22, 4, value);
+                SetInt(4, 22, 8, (int)value);
             }
             else
             {
-                SetInt(5, 22, 4, value);
-            }
-        }
-    }
-
-    public int Unknown3
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return GetInt(4, 26, 4);
-            }
-            else
-            {
-                return GetInt(5, 26, 4);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(4, 26, 4, value);
-            }
-            else
-            {
-                SetInt(5, 26, 4, value);
+                SetInt(5, 22, 8, (int)value);
             }
         }
     }

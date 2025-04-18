@@ -115,21 +115,15 @@ public partial class KingdomViewModel : ViewModelBase
         set => SetProperty(_model.BattleConfig, (BattleConfigId)value, v => _model.BattleConfig = v);
     }
 
-    public int Unknown2_Max => 15;
-    public int Unknown2
+    public int SwarmPokemon
     {
-        get => _model.Unknown2;
-        set => SetProperty(_model.Unknown2, value, v => _model.Unknown2 = v);
-    }
-
-    public int Unknown3_Max => 15;
-    public int Unknown3
-    {
-        get => _model.Unknown3;
-        set => SetProperty(_model.Unknown3, value, v => _model.Unknown3 = v);
+        get => (int)_model.SwarmPokemon;
+        set => SetProperty(_model.SwarmPokemon, (PokemonId)value, v => _model.SwarmPokemon = v);
     }
 
     public List<SelectorComboBoxItem> KingdomItems { get; }
 
     public List<SelectorComboBoxItem> BattleConfigItems { get; }
+
+    public List<SelectorComboBoxItem> PokemonItems { get; }
 }

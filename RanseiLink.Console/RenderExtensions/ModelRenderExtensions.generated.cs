@@ -187,8 +187,7 @@ public static partial class RenderExtensions
         console.WriteProperty("MapConnection11", model.MapConnection11);
         console.WriteProperty("MapConnection12", model.MapConnection12);
         console.WriteProperty("BattleConfig", model.BattleConfig);
-        console.WriteProperty("Unknown2", model.Unknown2);
-        console.WriteProperty("Unknown3", model.Unknown3);
+        console.WriteProperty("SwarmPokemon", model.SwarmPokemon);
     }
     public static void Render(this IConsole console, Move model, object title)
     {

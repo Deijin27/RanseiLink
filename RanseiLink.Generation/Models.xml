@@ -40,7 +40,7 @@
         <Property Index="0,  6,  5" Name="MapVariant" />
         <Property Index="2, 13,  5" Name="Minimap" />
         <Property Index="2, 10,  3" Name="MinimapVariant" />
-        <Property Index="2, 18,  6" Name="Unknown" />
+        <Property Index="2, 19,  5" Name="Unknown" />
         <Property Index="0, 11, 15" Name="UpperAtmosphereColor" Type="Rgb15" />
         <Property Index="1,  0, 15" Name="MiddleAtmosphereColor" Type="Rgb15" />
         <Property Index="1, 15, 15" Name="LowerAtmosphereColor" Type="Rgb15" />
@@ -167,8 +167,7 @@
         <Property Index="5,  5, 5" Index_VPYJ="4,  5, 5" Name="MapConnection11" Type="KingdomId"/>
         <Property Index="5, 10, 5" Index_VPYJ="4, 10, 5" Name="MapConnection12" Type="KingdomId"/>
         <Property Index="5, 15, 7" Index_VPYJ="4, 15, 7" Name="BattleConfig" Type="BattleConfigId"/>
-        <Property Index="5, 22, 4" Index_VPYJ="4, 22, 4" Name="Unknown2"/>
-        <Property Index="5, 26, 4" Index_VPYJ="4, 26, 4" Name="Unknown3"/>
+        <Property Index="5, 22, 8" Index_VPYJ="4, 22, 8" Name="SwarmPokemon" Type="PokemonId"/>
     </Model>
     <Model Name="MaxLink" Id="WarriorId" Command="true">
         <Service MaxId="251"/>

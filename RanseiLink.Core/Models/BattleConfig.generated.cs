@@ -39,8 +39,8 @@ public partial class BattleConfig : BaseDataWindow
 
     public int Unknown
     {
-        get => GetInt(2, 18, 6);
-        set => SetInt(2, 18, 6, value);
+        get => GetInt(2, 19, 5);
+        set => SetInt(2, 19, 5, value);
     }
 
     public Rgb15 UpperAtmosphereColor

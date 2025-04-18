@@ -59,7 +59,16 @@
             <ComboBox Grid.Row="1" Grid.Column="2" ItemsSource="{Binding BattleConfigItems}" SelectedValue="{Binding BattleConfig}"
                       Style="{StaticResource SelectorComboBoxStyle}"/>
 
-            <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
+            <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Swarm Pokemon" ToolTip="Jump to selected pokemon" 
+                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding SwarmPokemon}"/>
+            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding SwarmPokemon}" 
+                      Style="{StaticResource SelectorComboBoxStyle}"/>
+
+            <TextBlock Text="Unknown 1" Grid.Row="3" />
+            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown1}"/>
+
+            
+            <GroupBox Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="12" Header="Can Battle Kingdoms">
                 <StackPanel>
                     <ComboBox Margin="4,4,4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection0}" Style="{StaticResource SelectorComboBoxStyle}"/>
                     <ComboBox Margin="4,2" ItemsSource="{Binding KingdomItems}" SelectedValue="{Binding MapConnection1}" Style="{StaticResource SelectorComboBoxStyle}"/>
@@ -77,14 +86,7 @@
                 </StackPanel>
             </GroupBox>
 
-            <TextBlock Text="Unknown 1" Grid.Row="14" />
-            <controls:NumberBox Grid.Row="14" Grid.Column="1" Value="{Binding Unknown1}"/>
-
-            <TextBlock Text="Unknown 2" Grid.Row="15" />
-            <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding Unknown2}"/>
-
-            <TextBlock Text="Unknown 3" Grid.Row="16" />
-            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding Unknown3}"/>
+            
 
         </Grid>
         <Grid Margin="10">
