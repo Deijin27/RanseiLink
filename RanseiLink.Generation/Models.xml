@@ -192,6 +192,7 @@
         <Property Index="5,  9, 9" Name="ProjectileAnimation" Type="MoveAnimationId" />
         <Property Index="5, 18, 9" Name="ImpactAnimation" Type="MoveAnimationId" />
         <Property Index="8,  0, 9" Name="AdditionalAnimation" Type="MoveAnimationId" />
+        <Property Index="8,  9, 1" Name="EnableAdditionalAnimation" Type="bool"/>
         <Property Index="7, 26, 4" Name="UnknownOption" Type="MoveUnknownOptionId" />
         <Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
         <Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />

@@ -132,6 +132,12 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.AdditionalAnimation, (MoveAnimationId)value, v => _model.AdditionalAnimation = v);
     }
 
+    public bool EnableAdditionalAnimation
+    {
+        get => _model.EnableAdditionalAnimation;
+        set => SetProperty(_model.EnableAdditionalAnimation, value, v => _model.EnableAdditionalAnimation = v);
+    }
+
     public MoveUnknownOptionId UnknownOption
     {
         get => _model.UnknownOption;

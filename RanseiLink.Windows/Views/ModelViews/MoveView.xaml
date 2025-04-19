@@ -167,6 +167,7 @@
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
+                        <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="Movement" Grid.Row="0" Grid.Column="0" ToolTip="Movement animation of the pokemon when preparing to attack"/>
@@ -210,7 +211,10 @@
                                   Style="{StaticResource SelectorComboBoxStyle}"/>
                     </DockPanel>
 
-                    <GroupBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
+                    <CheckBox Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding EnableAdditionalAnimation}" Content="Unknown Additional-related toggle"
+                              ToolTip="It always seems to be enabled if theres an additional anim, but can't tell what it does from testing"/>
+
+                    <GroupBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">
                         <DockPanel>
                             <TextBlock DockPanel.Dock="Top" FontSize="10" Text="{Binding CurrentPreviewAnimationName, StringFormat='Previewing {0}'}"/>
                             <Grid>

@@ -130,6 +130,12 @@ public partial class Move : BaseDataWindow, INamedModel
         set => SetInt(8, 0, 9, (int)value);
     }
 
+    public bool EnableAdditionalAnimation
+    {
+        get => GetInt(8, 9, 1) == 1;
+        set => SetInt(8, 9, 1, value ? 1 : 0);
+    }
+
     public MoveUnknownOptionId UnknownOption
     {
         get => (MoveUnknownOptionId)GetInt(7, 26, 4);

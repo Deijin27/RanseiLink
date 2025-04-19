@@ -210,6 +210,7 @@ public static partial class RenderExtensions
         console.WriteProperty("ProjectileAnimation", model.ProjectileAnimation);
         console.WriteProperty("ImpactAnimation", model.ImpactAnimation);
         console.WriteProperty("AdditionalAnimation", model.AdditionalAnimation);
+        console.WriteProperty("EnableAdditionalAnimation", model.EnableAdditionalAnimation);
         console.WriteProperty("UnknownOption", model.UnknownOption);
         console.WriteProperty("Movement", model.Movement);
         console.WriteProperty("MovementAnimation", model.MovementAnimation);
