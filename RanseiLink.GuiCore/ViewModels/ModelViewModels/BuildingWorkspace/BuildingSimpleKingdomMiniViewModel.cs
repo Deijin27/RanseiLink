@@ -1,21 +1,14 @@
 ﻿using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public class BuildingSimpleKingdomMiniViewModel : ViewModelBase, IMiniViewModel
+public class BuildingSimpleKingdomMiniViewModel : BaseSimpleKingdomMiniViewModel, IMiniViewModel
 {
-    private readonly KingdomId _kingdom;
-    protected readonly ICachedSpriteProvider _spriteProvider;
-    public BuildingSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, KingdomId kingdom)
+    public BuildingSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, IIdToNameService idToNameService, KingdomId kingdom)
+        : base(spriteProvider, idToNameService)
     {
-        _spriteProvider = spriteProvider;
         _kingdom = kingdom;
     }
-
-    public object? KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
-
-    public KingdomId Kingdom => _kingdom;
 
     public int Id => -1;
 

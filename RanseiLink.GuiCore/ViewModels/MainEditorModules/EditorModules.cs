@@ -287,6 +287,7 @@ public class BuildingWorkspaceEditorModule : BaseWorkspaceEditorModule<IBuilding
         base.Initialise(modServices);
         _scenarioBuildingService = modServices.Get<IScenarioBuildingService>();
         var sp = modServices.Get<ICachedSpriteProvider>();
+        var idns = modServices.Get<IIdToNameService>();
 
         WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<BuildingViewModel>(),
@@ -296,7 +297,7 @@ public class BuildingWorkspaceEditorModule : BaseWorkspaceEditorModule<IBuilding
                 var lst = new List<IMiniViewModel>();
                 foreach (var kingdom in EnumUtil.GetValuesExceptDefaults<KingdomId>())
                 {
-                    lst.Add(new BuildingSimpleKingdomMiniViewModel(sp, kingdom));
+                    lst.Add(new BuildingSimpleKingdomMiniViewModel(sp, idns, kingdom));
                     foreach (var id in _service.ValidIds())
                     {
                         var model = _service.Retrieve(id);

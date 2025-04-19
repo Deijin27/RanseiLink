@@ -25,7 +25,8 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         IBaseWarriorService baseWarriorService,
         IScenarioWarriorService scenarioWarriorService,
         ICachedSpriteProvider spriteProvider,
-        IStrengthService strengthService) : base(spriteProvider)
+        IStrengthService strengthService,
+        IIdToNameService idToNameService) : base(spriteProvider, idToNameService)
     {
         _scenarioKingdomService = scenarioKingdomService;
         _baseWarriorService = baseWarriorService;

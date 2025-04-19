@@ -164,7 +164,7 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type cvm:BuildingSimpleKingdomMiniViewModel}">
-                <views:SwSimpleKingdomMiniView/>
+                <views:SimpleKingdomMiniView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type cvm:BuildingMiniViewModel}">

@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="RanseiLink.Windows.Views.SwSimpleKingdomMiniView"
+﻿<UserControl x:Class="RanseiLink.Windows.Views.SimpleKingdomMiniView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
+             xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
-             d:DataContext="{d:DesignInstance vm:SwSimpleKingdomMiniViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance vm:BaseSimpleKingdomMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" d:Width="163" HorizontalAlignment="Stretch">
     <Button Background="#E4E3D0" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
         <Grid>
@@ -21,6 +21,8 @@
                     Source="{Binding KingdomImage}"
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_castleicon\StlCastleIconTex-Pngs\0000.png"
                    />
+
+            <TextBlock Text="{Binding KingdomName}" d:Text="Aurora" Foreground="Black" FontWeight="Bold" Margin="4,0,0,0"/>
         </Grid>
         
     </Button>

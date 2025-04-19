@@ -1,18 +1,15 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
-using RanseiLink.Core.Services;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public class SwSimpleKingdomMiniViewModel : ViewModelBase
+public class SwSimpleKingdomMiniViewModel : BaseSimpleKingdomMiniViewModel
 {
     public delegate SwSimpleKingdomMiniViewModel Factory();
 
-    private KingdomId _kingdom;
-    protected readonly ICachedSpriteProvider _spriteProvider;
-    public SwSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider)
+    public SwSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, IIdToNameService idToNameService)
+        :base(spriteProvider, idToNameService)
     {
-        _spriteProvider = spriteProvider;
     }
 
     public SwSimpleKingdomMiniViewModel Init(KingdomId kingdom)
@@ -21,10 +18,6 @@ public class SwSimpleKingdomMiniViewModel : ViewModelBase
 
         return this;
     }
-
-    public object? KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);
-
-    public KingdomId Kingdom => _kingdom;
 
     public virtual int Army
     {

@@ -54,10 +54,12 @@ public  class ScenarioWarriorWorkspaceTests
                 new Mock<IBaseWarriorService>().Object,
                 sws.Object,
                 new Mock<ICachedSpriteProvider>().Object,
-                ss.Object
+                ss.Object,
+                ins.Object
                 ),
             () => new SwSimpleKingdomMiniViewModel(
-                new Mock<ICachedSpriteProvider>().Object
+                new Mock<ICachedSpriteProvider>().Object,
+                ins.Object
                 ),
             ins.Object,
             js.Object

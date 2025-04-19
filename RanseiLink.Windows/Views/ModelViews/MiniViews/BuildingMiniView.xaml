@@ -25,7 +25,14 @@
                 </Image.Clip>
             </Image>
             <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
-            <TextBlock Grid.Column="2" d:Text="Snowy Mountain" Text="{Binding Name}" Margin="2,0" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="2" d:Text="001 - Snowy Mountain" Margin="2,0" VerticalAlignment="Center">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0:000} - {1}">
+                        <Binding Path="Id"/>
+                        <Binding Path="Name"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
             
         </Grid>
 

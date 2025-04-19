@@ -20,7 +20,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="miniSimpleKingdomTemplate">
-            <local:SwSimpleKingdomMiniView Margin="2" Width="163"/>
+            <local:SimpleKingdomMiniView Margin="2" Width="163"/>
         </DataTemplate>
 
         <local:SwWorkspaceItemDataTemplateSelector 
