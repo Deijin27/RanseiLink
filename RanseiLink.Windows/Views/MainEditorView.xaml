@@ -26,7 +26,11 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Column="1" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
-            <ContentControl Content="{Binding CurrentVm}" Margin="0"/>
+            <ContentControl Content="{Binding CurrentVm}" Margin="0" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource Converter.BoolToVisibility}}">
+                <TextBlock Text="Loading..." HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                <ProgressBar IsIndeterminate="True" Height="10" Width="200"/>
+            </StackPanel>
         </Grid>
         <Grid Margin="8">
             <Grid.ColumnDefinitions>
@@ -49,8 +53,8 @@
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
             
         </Grid>
-        
-        <ListView x:Name="editorListView"
+
+        <ListView x:Name="editorListView" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"
                   Visibility="{Binding PluginPopupOpen, Converter={StaticResource Converter.InvertBoolToVisibility}}" 
                   Style="{StaticResource ListViewStyle1}" 
                   ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
@@ -71,7 +75,7 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}">
             <!-- The delay is to ensure correct update order for hit test stuff on toggle button -->
             <Popup IsOpen="{Binding PluginPopupOpen, Delay=10}" PopupAnimation="Fade" Placement="Top" StaysOpen="False" AllowsTransparency="True">
                 <ListView Style="{StaticResource ListViewStyle1}" ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 

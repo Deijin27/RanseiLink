@@ -13,7 +13,7 @@ public record EditorModuleListItem(string DisplayName, string ModuleId);
 
 public interface IMainEditorViewModel
 {
-    void SetMod(ModInfo mod);
+    Task SetMod(ModInfo mod);
     void Deactivate();
     string? CurrentModuleId { get; }
     bool TryGetModule(string moduleId, [NotNullWhen(true)] out EditorModule? module);
@@ -65,16 +65,35 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     }
 
     private ICachedMsgBlockService? _cachedMsgBlockService;
-    public void SetMod(ModInfo mod)
+    public async Task SetMod(ModInfo mod)
     {
-        Mod = mod;
-        _modServiceGetter?.Dispose();
-        _modServiceGetter = _modKernelFactory.Create(mod);
-        _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
-        _cachedMsgBlockService.RebuildCache();
-        var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
-        NavigateInternal(module, null, true);
-        RaiseAllPropertiesChanged();
+        Loading = true;
+        try
+        {
+            Mod = mod;
+            await Task.Run(() =>
+            {
+                _modServiceGetter?.Dispose();
+                _modServiceGetter = _modKernelFactory.Create(mod);
+                _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
+                _cachedMsgBlockService.RebuildCache();
+            });
+            var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
+            NavigateInternal(module, null, true);
+            RaiseAllPropertiesChanged();
+        }
+        finally
+        {
+            Loading = false;
+        }
+        
+    }
+
+    private bool _loading;
+    public bool Loading
+    {
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
     public object? CurrentVm
@@ -405,7 +424,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
                 type: MessageBoxType.Error
                 ));
         }
-        SetMod(Mod);
+        await SetMod(Mod);
     }
 
     #endregion

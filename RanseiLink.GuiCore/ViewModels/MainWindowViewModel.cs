@@ -79,14 +79,15 @@ public class MainWindowViewModel : ViewModelBase
 
     public bool MainEditorEnabled { get; set; } = true;
 
-    private void OnModSelected(ModInfo mod)
+    private async void OnModSelected(ModInfo mod)
     {
         if (!MainEditorEnabled)
         {
             return;
         }
-        _mainEditorViewModel.SetMod(mod);
+        var task = _mainEditorViewModel.SetMod(mod);
         CurrentVm = _mainEditorViewModel;
+        await task;
         BackButtonVisible = true;
     }
 
