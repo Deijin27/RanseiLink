@@ -29,7 +29,7 @@
             <ContentControl Content="{Binding CurrentVm}" Margin="0" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource Converter.BoolToVisibility}}">
                 <TextBlock Text="Loading..." HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                <ProgressBar IsIndeterminate="True" Height="10" Width="200"/>
+                <ProgressBar IsIndeterminate="{Binding Loading}" Height="10" Width="200"/>
             </StackPanel>
         </Grid>
         <Grid Margin="8">
