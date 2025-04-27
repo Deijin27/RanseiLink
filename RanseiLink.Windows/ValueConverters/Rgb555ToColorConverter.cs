@@ -20,6 +20,10 @@ public class Rgb555ToColorConverter : ValueConverter<Rgb15, Color>
 
     protected override Color Convert(Rgb15 value)
     {
+        return ConvertStatic(value);
+    }
+    public static Color ConvertStatic(Rgb15 value)
+    {
         return Color.FromRgb(ConvertComponent(value.R), ConvertComponent(value.G), ConvertComponent(value.B));
     }
 
@@ -31,10 +35,10 @@ public class Rgb555ToColorConverter : ValueConverter<Rgb15, Color>
 
 public class Rgb555ToBrushConverter : ValueConverter<Rgb15, Brush>
 {
-    private static readonly IValueConverter _rgba5555ToColorConverter = new Rgb555ToColorConverter();
     protected override Brush Convert(Rgb15 value)
     {
-        return new SolidColorBrush((Color)_rgba5555ToColorConverter.Convert(value, typeof(Color), null, null));
+        var color = Rgb555ToColorConverter.ConvertStatic(value);
+        return new SolidColorBrush(color);
     }
 
     protected override Rgb15 ConvertBack(Brush value)

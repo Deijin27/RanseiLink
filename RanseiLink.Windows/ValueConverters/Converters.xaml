@@ -8,6 +8,7 @@
     <vc:InvertBoolToVisibilityConverter x:Key="Converter.InvertBoolToVisibility"/>
     <vc:InvertBoolConverter x:Key="Converter.InvertBool" />
     <vc:Rgb555ToColorConverter x:Key="Converter.Rgb555ToColor"/>
+    <vc:Rgb555ToBrushConverter x:Key="Converter.Rgb555ToBrush"/>
     <vc:BoolAggregateAndValueConverter x:Key="Converter.BoolAggregateAnd"/>
     <vc:NotNullConverter x:Key="Converter.NotNull"/>
     <vc:ZeroToVisiblityConverter x:Key="Converter.ZeroToVis"/>

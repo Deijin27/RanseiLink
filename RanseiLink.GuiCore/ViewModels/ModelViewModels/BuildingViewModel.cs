@@ -22,7 +22,7 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
         BuildingItems = idToNameService.GetComboBoxItemsPlusDefault<IBuildingService>();
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
         BattleConfigItems = nicknameService.GetAllNicknames(nameof(BattleConfigId));
-        JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigSelectorEditorModule.Id, id));
+        JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigWorkspaceEditorModule.Id, id));
 
         this.PropertyChanged += BuildingViewModel_PropertyChanged;
     }

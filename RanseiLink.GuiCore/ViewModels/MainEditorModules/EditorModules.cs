@@ -421,9 +421,9 @@ public class KingdomWorkspaceEditorModule : BaseWorkspaceEditorModule<IKingdomSe
 }
 
 [EditorModule]
-public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattleConfigService>
+public class BattleConfigWorkspaceEditorModule : BaseWorkspaceEditorModule<IBattleConfigService>
 {
-    public const string Id = "battle_config_selector";
+    public const string Id = "battle_config_workspace";
     public override string UniqueId => Id;
     public override string ListName => "Battle Config";
     public override void Initialise(IServiceGetter modServices)
@@ -431,10 +431,14 @@ public class BattleConfigSelectorEditorModule : BaseSelectorEditorModule<IBattle
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
         var nn = modServices.Get<INicknameService>();
-        var comboItems = _service.ValidIds()
-            .Select(x => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(x, nn, nameof(BattleConfigId)))
-            .ToList();
-        SelectorViewModel = _selectorVmFactory.Create(_service, comboItems, vm, id => vm.SetModel((BattleConfigId)id, _service.Retrieve(id)), _service.ValidateId);
+
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
+            modServices.Get<BattleConfigViewModel>(),
+            _service,
+            command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
+                new BattleConfigMiniViewModel(nn, _service.Retrieve(id), id, command)).ToList()
+            );
+
     }
 }
 

@@ -207,6 +207,10 @@
                 <views:ItemMiniView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type cvm:BattleConfigMiniViewModel}">
+                <views:BattleConfigMiniView/>
+            </DataTemplate>
+
 
             <Style x:Key="SelectorComboBoxStyle" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="SelectedValuePath" Value="Id"/>

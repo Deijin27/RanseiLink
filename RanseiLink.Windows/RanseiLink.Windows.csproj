@@ -50,6 +50,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Views\ModelViews\MiniViews\BattleConfigMiniView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\ModelViews\MiniViews\ItemMiniView.xaml">
       <SubType>Designer</SubType>
     </Page>

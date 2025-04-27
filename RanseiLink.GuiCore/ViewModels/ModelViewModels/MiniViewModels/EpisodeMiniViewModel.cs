@@ -5,8 +5,10 @@ using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Util;
+using System.Xml.Linq;
 
 namespace RanseiLink.GuiCore.ViewModels;
+
 
 public class EpisodeMiniViewModel(
     ICachedSpriteProvider spriteProvider,

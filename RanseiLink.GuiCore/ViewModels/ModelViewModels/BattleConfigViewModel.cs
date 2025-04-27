@@ -10,7 +10,7 @@ using RanseiLink.Core;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class BattleConfigViewModel : ViewModelBase
+public partial class BattleConfigViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IAsyncDialogService _dialogService;
     private readonly IOverrideDataProvider _overrideDataProvider;
@@ -147,5 +147,10 @@ public partial class BattleConfigViewModel : ViewModelBase
     public async void View3DModel()
     {
         await _mapViewerService.ShowDialog(_id);
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((BattleConfigId)id, (BattleConfig)model);
     }
 }
