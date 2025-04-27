@@ -19,6 +19,11 @@ public class IdToNameService(IServiceGetter serviceGetter) : IIdToNameService
 
     public string IdToName<TService>(int id) where TService : IModelService
     {
-        return serviceGetter.Get<TService>().IdToName(id);
+        var service = serviceGetter.Get<TService>();
+        if (service.ValidateId(id))
+        {
+            return service.IdToName(id);
+        }
+        return "Default";
     }
 }
