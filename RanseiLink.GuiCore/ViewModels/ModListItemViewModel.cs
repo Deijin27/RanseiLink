@@ -149,7 +149,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public ICommand RunPluginCommand { get; }
     public ICommand ShowInExplorerCommand { get; }
 
-    public event ModActionRequestHandler ModRequest;
+    public event ModActionRequestHandler? ModRequest;
 
     #region Mod Specific Command Implementations
 

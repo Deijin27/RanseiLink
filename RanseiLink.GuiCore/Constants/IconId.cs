@@ -67,5 +67,8 @@
         grass = 0xf205,
         block = 0xe14b,
         explore = 0xe87a,
+        flag = 0xe153,
+        flag_circle = 0xeaf8,
+        swords = 0xf889,
     }
 }

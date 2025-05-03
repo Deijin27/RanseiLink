@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:c="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance vm:BattleConfigMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" HorizontalAlignment="Stretch">
     <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
@@ -24,6 +25,10 @@
                         <GradientStop d:Color="blue" Color="{Binding LowerAtmosphereColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Border.Background>
+                <Grid>
+                    <c:IconControl d:Icon="flag" Icon="{Binding Icon}" Foreground="Black" Margin="2,2,0,0"/>
+                    <c:IconControl d:Icon="flag" Icon="{Binding Icon}" Foreground="White"/>
+                </Grid>
             </Border>
             <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
             <TextBlock Grid.Column="2" d:Text="000 - Eevee" Margin="2,0,0,0" TextTrimming="CharacterEllipsis">
@@ -34,6 +39,12 @@
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
+
+            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+Grid.Column="2" Background="Black" BorderBrush="{DynamicResource ControlBorderBrush}" 
+BorderThickness="1,1,0,0" CornerRadius="4,0,4,0" Height="14" Padding="1,0,1,0" Width="19">
+                <TextBlock Foreground="#FFEC39" FontWeight="Bold" d:Text="255" Text="{Binding NumberOfTurns}" TextAlignment="Right" FontSize="9"/>
+            </Border>
 
         </Grid>
 

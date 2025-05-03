@@ -12,8 +12,12 @@ public interface IPathToImageConverter
 
 public static class PathToImageExtensions
 {
-    public static object? TryConvert(this IPathToImageConverter converter, Image<Rgba32> image)
+    public static object? TryConvert(this IPathToImageConverter converter, Image<Rgba32>? image)
     {
+        if (image == null)
+        {
+            return null;
+        }
         var temp = Path.GetTempFileName();
         try
         {

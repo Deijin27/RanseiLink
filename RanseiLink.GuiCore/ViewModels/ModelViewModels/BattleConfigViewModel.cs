@@ -102,12 +102,12 @@ public partial class BattleConfigViewModel : ViewModelBase, IBigViewModel
             if (item != 0)
             {
                 DefeatConditionItems.Add(new CheckBoxViewModel(name,
-                     () => (_model.DefeatCondition & item) != 0,
-                     v => _model.DefeatCondition ^= item
+                     () => (DefeatCondition & item) != 0,
+                     v => DefeatCondition ^= item
                 ));
                 VictoryConditionItems.Add(new CheckBoxViewModel(name,
-                     () => (_model.VictoryCondition & item) != 0,
-                     v => _model.VictoryCondition ^= item
+                     () => (VictoryCondition & item) != 0,
+                     v => VictoryCondition ^= item
                 ));
             }
         }
