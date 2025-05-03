@@ -9,13 +9,21 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod, Func<List<string>> getKnownTags);
 
+public enum ModAction
+{
+    Remove,
+    MarkAsNew,
+    PinnedChanged,
+    Refresh
+}
+
+public delegate void ModActionRequestHandler(IModListItemViewModel mod, ModAction action);
+
 public interface IModListItemViewModel
 {
     void UpdateBanner();
 
-    event Action<IModListItemViewModel> RequestRemove;
-    event Action RequestRefresh;
-    event Action<IModListItemViewModel> IsPinnedChanged;
+    event ModActionRequestHandler ModRequest;
     ModInfo Mod { get; }
     bool IsPinned { get; set; }
     bool IsNew { get; set; }
@@ -104,7 +112,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         {
             if (SetProperty(ref _isPinned, value))
             {
-                IsPinnedChanged?.Invoke(this);
+                SendModRequest(ModAction.PinnedChanged);
             }
         }
     }
@@ -140,9 +148,8 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public ICommand DeleteModCommand { get; }
     public ICommand RunPluginCommand { get; }
     public ICommand ShowInExplorerCommand { get; }
-    public event Action<IModListItemViewModel>? RequestRemove;
-    public event Action<IModListItemViewModel>? IsPinnedChanged;
-    public event Action? RequestRefresh;
+
+    public event ModActionRequestHandler ModRequest;
 
     #region Mod Specific Command Implementations
 
@@ -228,10 +235,16 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             progress.Report(new ProgressInfo("Editing mod info..."));
             _modService.Update(vm.ModInfo);
             progress.Report(new ProgressInfo("Updating mod list...", 50));
-            RequestRefresh?.Invoke();
+            SendModRequest(ModAction.Refresh);
             progress.Report(new ProgressInfo("Edit Complete!", 100));
         });
     }
+
+    private void SendModRequest(ModAction action)
+    {
+        ModRequest?.Invoke(this, action);
+    }
+
     private async Task CreateModBasedOn(ModInfo mod)
     {
         var vm = new ModCreateBasedOnViewModel(mod, _getKnownTags());
@@ -247,6 +260,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             try
             {
                 newMod = _modService.CreateBasedOn(mod, vm.Metadata);
+                SendModRequest(ModAction.MarkAsNew);
             }
             catch (Exception e)
             {
@@ -255,7 +269,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             }
 
             progress.Report(new ProgressInfo("Updating mod list...", 60));
-            RequestRefresh?.Invoke();
+            SendModRequest(ModAction.Refresh);
             progress.Report(new ProgressInfo("Mod Creating Complete!", 100));
         });
 
@@ -281,7 +295,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             progress.Report(new ProgressInfo("Deleting mod..."));
             _modService.Delete(mod);
             progress.Report(new ProgressInfo("Updating mod list", 90));
-            RequestRemove?.Invoke(this);
+            SendModRequest(ModAction.Remove);
             progress.Report(new ProgressInfo("Mod Deleted!", 100));
         });
     }

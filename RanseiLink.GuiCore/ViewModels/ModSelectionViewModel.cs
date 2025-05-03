@@ -191,9 +191,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
 
             item.IsPinned = _pinnedModsFolders.Contains(mi.FolderPath);
             item.IsNew = _newModsFolders.Contains(mi.FolderPath);
-            item.RequestRefresh += RefreshModItems;
-            item.RequestRemove += RemoveItem;
-            item.IsPinnedChanged += Mod_IsPinnedChanged;
+            item.ModRequest += Item_ModRequest;
         }
 
         var sortedMods = modListItems
@@ -214,6 +212,27 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             }
             ReloadTags();
         });
+    }
+
+    private void Item_ModRequest(IModListItemViewModel mod, ModAction action)
+    {
+        switch (action)
+        {
+            case ModAction.Remove:
+                RemoveItem(mod);
+                break;
+            case ModAction.MarkAsNew:
+                MarkModAsNew(mod.Mod);
+                break;
+            case ModAction.PinnedChanged:
+                Mod_IsPinnedChanged(mod);
+                break;
+            case ModAction.Refresh:
+                RefreshModItems();
+                break;
+            default:
+                break;
+        }
     }
 
     private void Mod_IsPinnedChanged(IModListItemViewModel mod)
@@ -257,7 +276,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             try
             {
                 newMod = _modService.Create(vm.File, vm.Metadata);
-                _newModsFolders.Add(newMod.FolderPath);
+                MarkModAsNew(newMod);
             }
             catch (Exception e)
             {
@@ -273,6 +292,12 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             progress.Report(new ProgressInfo("Mod created successfully!", 100));
         });
     }
+
+    private void MarkModAsNew(ModInfo mod)
+    {
+        _newModsFolders.Add(mod.FolderPath);
+    }
+
     private async Task ImportMod()
     {
         var vm = new ModImportViewModel(_dialogService, _fdhFactory);
@@ -286,7 +311,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             try
             {
                 var importedMod = _modService.Import(vm.File);
-                _newModsFolders.Add(importedMod.FolderPath);
+                MarkModAsNew(importedMod);
 
             }
             catch (Exception e)
