@@ -24,11 +24,20 @@ public partial class AbilityViewModel : ViewModelBase, IBigViewModel
         _selectPokemonCommand = new RelayCommand<PokemonMiniViewModel>(pk => { if (pk != null) jumpService.JumpTo(PokemonWorkspaceModule.Id, pk.Id); });
     }
 
+    public PropertyCollectionViewModel Properties { get; } = new PropertyCollectionViewModel();
+
     public void SetModel(AbilityId id, Ability model)
     {
         _id = id;
         _model = model;
-        RaiseAllPropertiesChanged();
+        //RaiseAllPropertiesChanged();
+
+        Properties.Properties.Clear();
+        Properties.Properties.Add(new StringPropertyViewModel("Name", () => _model.Name, v =>  _model.Name = v, _model.Name_MaxLength));
+        Properties.Properties.Add(new ComboPropertyViewModel("Effect 1", () => (int)_model.Effect1, v => _model.Effect1 = (AbilityEffectId)v, SelectorComboBoxItemExtensions.GetForEnum<AbilityEffectId>()));
+        Properties.Properties.Add(new IntPropertyViewModel("Amount", () => _model.Effect1Amount, v => _model.Effect1Amount = v, 0, Effect1Amount_Max));
+        Properties.Properties.Add(new ComboPropertyViewModel("Effect 2", () => (int)_model.Effect2, v => _model.Effect2 = (AbilityEffectId)v, SelectorComboBoxItemExtensions.GetForEnum<AbilityEffectId>()));
+        Properties.Properties.Add(new IntPropertyViewModel("Amount", () => _model.Effect2Amount, v => _model.Effect2Amount = v, 0, Effect2Amount_Max));
     }
 
     public void SetModel(int id, object model)

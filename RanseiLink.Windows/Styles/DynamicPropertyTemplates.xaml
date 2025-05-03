@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+                    xmlns:c="clr-namespace:RanseiLink.Windows.Controls">
+
+
+    <DataTemplate DataType="{x:Type vm:IntPropertyViewModel}">
+        <c:NumberBox Height="20" Value="{Binding Value}" Min="{Binding Min}" Max="{Binding Max}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:StringPropertyViewModel}">
+        <TextBox Height="20" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MaxLength="{Binding MaxLength}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:ComboPropertyViewModel}">
+        <ComboBox SelectedValue="{Binding Value}" ItemsSource="{Binding Items}" Style="{DynamicResource SelectorComboBoxStyle}"/>
+    </DataTemplate>
+</ResourceDictionary>

@@ -14,7 +14,7 @@
         <ResourceDictionary Source="TagToggleButtonStyle.xaml"/>
 
         <ResourceDictionary Source="ListViewStyle1.xaml"/>
-
+        
         <ResourceDictionary Source="ControlStyles/Button.xaml"/>
         <ResourceDictionary Source="ControlStyles/CheckBox.xaml"/>
         <ResourceDictionary Source="ControlStyles/ComboBox.xaml"/>
@@ -29,6 +29,8 @@
         <ResourceDictionary Source="ControlStyles/ProgressBar.xaml"/>
         <ResourceDictionary Source="ControlStyles/ListBoxItem.xaml"/>
         <ResourceDictionary Source="ControlStyles/ListBox.xaml"/>
+
+        <ResourceDictionary Source="DynamicPropertyTemplates.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="{x:Type TextBlock}">

@@ -79,6 +79,17 @@ public class SelectorComboBoxItem : ViewModelBase
 
 public static class SelectorComboBoxItemExtensions
 {
+    public static List<SelectorComboBoxItem> GetForEnum<TEnum>() where TEnum : struct, Enum
+    {
+        List<SelectorComboBoxItem> items = [];
+        foreach (var value in Enum.GetValues(typeof(TEnum)))
+        {
+            var name = Enum.GetName(typeof(TEnum), value);
+            items.Add(new SelectorComboBoxItem((int)value, name ?? "<NoName>"));
+        }
+        return items;
+    }
+
     public static List<SelectorComboBoxItem> GetComboBoxItemsExceptDefault<TModelService>(this TModelService service) where TModelService : IModelService
     {
         List<SelectorComboBoxItem> items = [];
