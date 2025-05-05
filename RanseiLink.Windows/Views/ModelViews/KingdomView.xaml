@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
              d:DataContext="{d:DesignInstance Type=vm:KingdomViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
-             d:DesignHeight="550" d:DesignWidth="800">
+             d:DesignHeight="750" d:DesignWidth="800">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Height" Value="20"/>
@@ -103,6 +103,19 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <GroupBox Header="Top-Screen Animated Image" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
@@ -114,6 +127,27 @@
             <GroupBox Header="Icon Animated Image" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2">
                 <local:AnimationView DataContext="{Binding KingdomIconAnimVm}"/>
             </GroupBox>
+
+            <TabControl Grid.Row="7" Grid.ColumnSpan="2" Grid.RowSpan="9" ItemsSource="{Binding PurchasableItems}" SelectedIndex="{Binding SelectedPurchasableGroup}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding Items}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:ItemMiniView Margin="2" Width="163"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
         </Grid>
     </WrapPanel>
 </UserControl>
