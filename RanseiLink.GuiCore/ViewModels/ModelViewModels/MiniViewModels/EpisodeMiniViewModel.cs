@@ -60,6 +60,8 @@ public class EpisodeMiniViewModel(
         }
     }
 
+    public int Difficulty => model.Difficulty;
+
     public ICommand SelectCommand { get; } = selectCommand;
 
     public bool MatchSearchTerm(string searchTerm)
@@ -82,6 +84,9 @@ public class EpisodeMiniViewModel(
             case nameof(EpisodeViewModel.Scenario):
             case nameof(EpisodeViewModel.StartKingdomChanged):
                 RaisePropertyChanged(nameof(Image));
+                break;
+            case nameof(EpisodeViewModel.Difficulty):
+                RaisePropertyChanged(nameof(Difficulty));
                 break;
         }
     }

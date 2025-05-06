@@ -398,6 +398,7 @@ public class EpisodeWorkspaceEditorModule : BaseWorkspaceEditorModule<IEpisodeSe
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
                 new EpisodeMiniViewModel(sp, bw, sw, sk, ms, _service.Retrieve(id), id, command)).ToList()
             );
+        WorkspaceViewModel.LeftColumnWidth = 216;
     }
 }
 

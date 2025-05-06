@@ -24,7 +24,7 @@
             <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
         </DockPanel>
 
-        <ItemsControl Width="196"
+        <ItemsControl Width="{Binding LeftColumnWidth}" d:Width="196"
         Grid.Row="1" Grid.Column="0"
         Margin="0,0,10,0"
         ItemsSource="{Binding Items}" 

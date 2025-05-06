@@ -152,4 +152,6 @@ public class WorkspaceViewModel : ViewModelBase
     public IBigViewModel BigViewModel { get; }
 
     public ObservableCollection<IMiniViewModel> Items { get; }
+
+    public int LeftColumnWidth { get; set; } = 196;
 }

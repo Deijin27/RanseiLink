@@ -140,7 +140,7 @@
                             <ItemsControl ItemsSource="{Binding Items}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <local:ItemMiniView Margin="2" Width="163"/>
+                                        <local:ItemMiniView Margin="2" Width="183"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>

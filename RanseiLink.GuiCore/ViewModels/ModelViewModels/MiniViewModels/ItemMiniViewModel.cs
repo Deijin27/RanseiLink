@@ -35,6 +35,20 @@ public class ItemMiniViewModel : ViewModelBase, IMiniViewModel
         set => SetProperty(ref _image, value);
     }
 
+
+    public string Price
+    {
+        get
+        {
+            var price = _model.ShopPriceMultiplier;
+            if (price == 511)
+            {
+                return "---";
+            }
+            return price.ToString();
+        }
+    }
+
     public ICommand SelectCommand { get; }
 
     public bool MatchSearchTerm(string searchTerm)
@@ -58,6 +72,10 @@ public class ItemMiniViewModel : ViewModelBase, IMiniViewModel
             else if (name == nameof(ItemViewModel.Category))
             {
                 UpdateImage();
+            }
+            else if (name == nameof(ItemViewModel.ShopPriceMultiplier))
+            {
+                RaisePropertyChanged(nameof(Price));
             }
         }
     }
