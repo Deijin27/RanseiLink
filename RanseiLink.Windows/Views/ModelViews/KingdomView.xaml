@@ -46,6 +46,11 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
@@ -86,7 +91,16 @@
                 </StackPanel>
             </GroupBox>
 
-            
+            <GroupBox Header="Top-Screen Animated Image" Grid.Row="16" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding KingdomImageAnimVm}"/>
+            </GroupBox>
+            <GroupBox Header="Bottom-Screen Animated Image" Grid.Row="18" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding CastlemapAnimVm}"/>
+            </GroupBox>
+            <GroupBox Header="Icon Animated Image" Grid.Row="20" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                <local:AnimationView DataContext="{Binding KingdomIconAnimVm}"/>
+            </GroupBox>
+
 
         </Grid>
         <Grid Margin="10">
@@ -116,19 +130,12 @@
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="30"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Top-Screen Animated Image" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                <local:AnimationView DataContext="{Binding KingdomImageAnimVm}"/>
-            </GroupBox>
-            <GroupBox Header="Bottom-Screen Animated Image" Grid.Row="2" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                <local:AnimationView DataContext="{Binding CastlemapAnimVm}"/>
-            </GroupBox>
-            <GroupBox Header="Icon Animated Image" Grid.Row="4" Grid.ColumnSpan="2" Grid.RowSpan="2">
-                <local:AnimationView DataContext="{Binding KingdomIconAnimVm}"/>
-            </GroupBox>
+            
 
-            <TabControl Grid.Row="7" Grid.ColumnSpan="2" Grid.RowSpan="9" ItemsSource="{Binding PurchasableItems}" SelectedIndex="{Binding SelectedPurchasableGroup}">
+            <TabControl Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="9" ItemsSource="{Binding PurchasableItems}" SelectedIndex="{Binding SelectedPurchasableGroup}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Title}"/>
@@ -141,6 +148,27 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <local:ItemMiniView Margin="2" Width="183"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+
+            <TabControl Grid.Row="10" Grid.ColumnSpan="2" Grid.RowSpan="12" ItemsSource="{Binding PokemonGroups}" SelectedIndex="{Binding SelectedPokemonGroup}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Title}"/>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer>
+                            <ItemsControl ItemsSource="{Binding Pokemon}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <local:PokemonMiniView Margin="2" Width="183"/>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
