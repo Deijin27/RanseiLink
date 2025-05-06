@@ -70,5 +70,6 @@
         flag = 0xe153,
         flag_circle = 0xeaf8,
         swords = 0xf889,
+        star = 0xe838,
     }
 }

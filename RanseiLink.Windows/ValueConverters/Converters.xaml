@@ -20,5 +20,6 @@
     <vc:ColorToBrushConverter x:Key="Converter.ColorToBrush" />
     <BorderGapMaskConverter x:Key="Converter.BorderGapMask"/>
     <vc:EnumDisplayValueConverter x:Key="Converter.EnumDisplay"/>
+    <vc:GreaterThanNumberToVisiblityConverter x:Key="Converter.GreaterThanNumber"/>
 
 </ResourceDictionary>

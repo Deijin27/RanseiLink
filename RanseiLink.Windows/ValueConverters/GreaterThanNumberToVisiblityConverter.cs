@@ -1,17 +1,26 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
 
 namespace RanseiLink.Windows.ValueConverters;
 
-public class GreaterThanNumberToVisiblityConverter : ValueConverter<int, Visibility>
+public class GreaterThanNumberToVisiblityConverter : IValueConverter
 {
-    public int Number { get; set; } = 0;
-
-    protected override Visibility Convert(int value)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value > Number ? Visibility.Visible : Visibility.Collapsed;
+        var dValue = System.Convert.ToDouble(value);
+        var dParameter = System.Convert.ToDouble(parameter);
+        if (dValue > dParameter)
+        {
+            return Visibility.Visible;
+        }
+        else
+        {
+            return Visibility.Collapsed;
+        }
     }
 
-    protected override int ConvertBack(Visibility value)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
