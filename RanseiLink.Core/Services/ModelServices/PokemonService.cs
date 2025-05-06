@@ -1,5 +1,6 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
+using System.Globalization;
 
 namespace RanseiLink.Core.Services.ModelServices;
 
@@ -36,6 +37,7 @@ public partial class PokemonService
 
     public override void PreSave(Stream stream)
     {
+        // Generate evolution table
         _evoTable.Clear();
         foreach (var pokemon in Enumerate())
         {
@@ -53,6 +55,16 @@ public partial class PokemonService
                 }
                 pokemon.MaxEvolutionTableEntry = _evoTable.Count - 1;
             }
+        }
+
+        // Generate name order index
+        int c = 0;
+        // Japanese string comparer works correctly for english too
+        StringComparer cmp = StringComparer.Create(new CultureInfo("ja-JP"), ignoreCase: true);
+        foreach (var pokemon in Enumerate().OrderBy(x => x.Name, cmp))
+        {
+            pokemon.NameOrderIndex = c;
+            c++;
         }
     }
 

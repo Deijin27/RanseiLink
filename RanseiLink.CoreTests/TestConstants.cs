@@ -9,6 +9,7 @@ internal static class TestConstants
         "RanseiLink", "Test");
 
     public static string TestModFolder => Path.Combine(TestFolder, "TestMod");
+    public static string TestModJapanFolder => Path.Combine(TestFolder, "TestModJapan");
 
     public static string TestTempFolder => Path.Combine(TestFolder, "Temp");
 

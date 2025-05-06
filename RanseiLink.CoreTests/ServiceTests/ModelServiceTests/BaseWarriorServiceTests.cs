@@ -48,10 +48,21 @@ public class BaseWarriorServiceTests
     }
 
     [Fact]
-    public void IdenticalThroughLoadSaveCycle()
+    public void IdenticalThroughLoadSaveCycle_NorthAmerica()
+    {
+        IdenticalThroughLoadSaveCycle(TestConstants.TestModFolder);
+    }
+
+    [Fact]
+    public void IdenticalThroughLoadSaveCycle_Japan()
+    {
+        IdenticalThroughLoadSaveCycle(TestConstants.TestModJapanFolder);
+    }
+
+    private void IdenticalThroughLoadSaveCycle(string testModFolder)
     {
         string temp = Path.GetTempFileName();
-        string source = Path.Combine(TestConstants.TestModFolder, Constants.BaseBushouRomPath);
+        string source = Path.Combine(testModFolder, Constants.BaseBushouRomPath);
         File.Copy(source, temp, true);
         IBaseWarriorService service = BaseWarriorService.Load(temp);
         service.Save();

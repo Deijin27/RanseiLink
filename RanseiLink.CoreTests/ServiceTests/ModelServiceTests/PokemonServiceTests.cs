@@ -67,10 +67,21 @@ public class PokemonServiceTests
     }
 
     [Fact]
-    public void IdenticalThroughLoadSaveCycle()
+    public void IdenticalThroughLoadSaveCycle_NorthAmerica()
+    {
+        IdenticalThroughLoadSaveCycle(TestConstants.TestModFolder);
+    }
+
+    [Fact]
+    public void IdenticalThroughLoadSaveCycle_Japan()
+    {
+        IdenticalThroughLoadSaveCycle(TestConstants.TestModJapanFolder);
+    }
+
+    private void IdenticalThroughLoadSaveCycle(string testModFolder)
     {
         string temp = Path.GetTempFileName();
-        string source = Path.Combine(TestConstants.TestModFolder, Constants.PokemonRomPath);
+        string source = Path.Combine(testModFolder, Constants.PokemonRomPath);
         File.Copy(source, temp, true);
         IPokemonService service = PokemonService.Load(temp);
         service.Save();

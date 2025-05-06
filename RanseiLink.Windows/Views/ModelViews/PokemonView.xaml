@@ -118,22 +118,18 @@
             <TextBlock Text="National Dex Number" Grid.Row="12" Grid.Column="0" />
             <controls:NumberBox Grid.Row="12" Grid.Column="1" Value="{Binding NationalPokedexNumber, Mode=TwoWay}" Max="{Binding NationalPokedexNumber_Max}"/>
 
-            <!-- Have some option to auto generate name order index, changing it for all pokemon -->
-            <TextBlock Text="Name Order Index" Grid.Row="13" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="13" Grid.Column="1" Value="{Binding NameOrderIndex, Mode=TwoWay}" Max="{Binding NameOrderIndex_Max}"/>
+            <TextBlock Text="Idle Motion" Grid.Row="13" Grid.Column="0"/>
+            <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
 
-            <TextBlock Text="Idle Motion" Grid.Row="14" Grid.Column="0"/>
-            <ComboBox Grid.Row="14" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
+            <CheckBox VerticalAlignment="Center" Grid.Row="14" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
 
-            <CheckBox VerticalAlignment="Center" Grid.Row="15" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+            <TextBlock Text="Catch Rate" Grid.Row="15" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>
 
-            <TextBlock Text="Catch Rate" Grid.Row="16" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>
+            <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="16" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="16" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}" Max="{Binding BattleIntroSpriteOffset_Max}"/>
 
-            <TextBlock Text="Battle Intro Sprite Offset" Grid.Row="17" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="17" Grid.Column="1" Value="{Binding BattleIntroSpriteOffset}" Max="{Binding BattleIntroSpriteOffset_Max}"/>
-
-            <GroupBox Header="Habitats" Grid.Row="18" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
+            <GroupBox Header="Habitats" Grid.Row="17" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="12" Padding="11">
                 <ItemsControl ItemsSource="{Binding HabitatItems}" Grid.IsSharedSizeScope="True">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -152,11 +148,11 @@
                 </ItemsControl>
             </GroupBox>
 
-            <TextBlock Text="Unknown Anim. Val." Grid.Row="30" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="30" Grid.Column="1" Value="{Binding UnknownAnimationValue}" Max="{Binding UnknownAnimationValue_Max}"/>
+            <TextBlock Text="Unknown Anim. Val." Grid.Row="29" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="29" Grid.Column="1" Value="{Binding UnknownAnimationValue}" Max="{Binding UnknownAnimationValue_Max}"/>
 
-            <TextBlock Text="Unknown ?Weight?" Grid.Row="31" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="31" Grid.Column="1" Value="{Binding Weight}" Max="{Binding Weight_Max}"/>
+            <TextBlock Text="Unknown ?Weight?" Grid.Row="30" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="30" Grid.Column="1" Value="{Binding Weight}" Max="{Binding Weight_Max}"/>
 
         </Grid>
 
