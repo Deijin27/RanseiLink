@@ -45,7 +45,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Width="40" Grid.ColumnSpan="3" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Banner}" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\Mods\Mod [1]\BannerImage.png"/>
+            <Image MouseDown="BannerImage_MouseDown" Width="40" Grid.ColumnSpan="3" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Banner}" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\Mods\Mod [1]\BannerImage.png"/>
             <TextBlock TextAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" d:Text="Pokemon Conquest: Super duper mod"/>
             <controls:IconControl ToolTip="Author" Grid.Row="2" Icon="person"/>
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>

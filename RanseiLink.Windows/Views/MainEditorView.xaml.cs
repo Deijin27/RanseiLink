@@ -11,4 +11,9 @@ public partial class MainEditorView : UserControl
     {
         InitializeComponent();
     }
+
+    private void BannerImage_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        (this.DataContext as IMainEditorViewModel)?.NavigateTo(BannerEditorModule.Id);
+    }
 }
