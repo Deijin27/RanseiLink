@@ -7,7 +7,6 @@ using RanseiLink.GuiCore.Settings;
 using RanseiLink.GuiCore.ViewModels;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
-using RanseiLink.Windows.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +31,7 @@ public class EditorModuleTests
     private readonly Mock<ISettingService> _settingService;
     private readonly Mock<IModPatchingService> _patchingService;
     private readonly Mock<IAsyncDialogService> _dialogService;
+    private readonly Mock<IPathToImageConverter> _pathToImageConverter;
     private readonly MainEditorViewModel _mainEditorVm;
     private readonly Mock<EditorModule> _moduleA;
     private readonly Mock<EditorModule> _moduleB;
@@ -52,6 +52,7 @@ public class EditorModuleTests
 
         _patchingService = new Mock<IModPatchingService>();
         _dialogService = new Mock<IAsyncDialogService>();
+        _pathToImageConverter = new Mock<IPathToImageConverter>();
 
         _cachedMsgBlockService = new Mock<ICachedMsgBlockService>();
         _mockProgress = new Mock<IProgress<ProgressInfo>>();
@@ -75,10 +76,11 @@ public class EditorModuleTests
             new Mock<IPluginLoader>().Object,
             _modServiceGetterFactory.Object,
             new EditorModule[] { _moduleA.Object, _moduleB.Object, _moduleC.Object, _moduleD.Object },
-            new FileDropHandlerFactory()
+            new FileDropHandlerFactory(),
+            _pathToImageConverter.Object
             );
 
-        _mainEditorVm.SetMod(new ModInfo());
+        _mainEditorVm.SetMod(new ModInfo()).Wait();
     }
 
     [Fact]

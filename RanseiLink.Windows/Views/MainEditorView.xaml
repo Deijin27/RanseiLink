@@ -43,14 +43,16 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <TextBlock Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" d:Text="My Mod"/>
-            <controls:IconControl ToolTip="Author" Grid.Row="1" Icon="person"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="1" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>
-            <controls:IconControl ToolTip="Version" Grid.Row="2" Icon="info"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
-            <controls:IconControl ToolTip="Region" Grid.Row="3" Icon="language"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
+            <Image Width="40" Grid.ColumnSpan="3" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Banner}" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\Mods\Mod [1]\BannerImage.png"/>
+            <TextBlock TextAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" d:Text="Pokemon Conquest: Super duper mod"/>
+            <controls:IconControl ToolTip="Author" Grid.Row="2" Icon="person"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>
+            <controls:IconControl ToolTip="Version" Grid.Row="3" Icon="info"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
+            <controls:IconControl ToolTip="Region" Grid.Row="4" Icon="language"/>
+            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="4" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
             
         </Grid>
 

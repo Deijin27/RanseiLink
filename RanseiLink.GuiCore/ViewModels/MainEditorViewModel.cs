@@ -26,6 +26,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
+    private readonly IPathToImageConverter _pathToImageConverter;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
 
     private bool _pluginPopupOpen = false;
@@ -33,6 +34,7 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private ModInfo? _mod;
     private IServiceGetter? _modServiceGetter;
     private EditorModule? _currentModule;
+    private IBannerService? _bannerService;
 
     public MainEditorViewModel(
         IAsyncDialogService dialogService,
@@ -41,10 +43,12 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IEnumerable<EditorModule> modules,
-        IFileDropHandlerFactory fdhFactory)
+        IFileDropHandlerFactory fdhFactory,
+        IPathToImageConverter pathToImageConverter)
     {
         _modKernelFactory = modKernelFactory;
         _fdhFactory = fdhFactory;
+        _pathToImageConverter = pathToImageConverter;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
         _settingService = settingService;
@@ -73,10 +77,16 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             Mod = mod;
             await Task.Run(() =>
             {
+                if (_bannerService != null)
+                {
+                    _bannerService.ImageSet -= BannerService_ImageSet;
+                }
                 _modServiceGetter?.Dispose();
                 _modServiceGetter = _modKernelFactory.Create(mod);
                 _cachedMsgBlockService = _modServiceGetter.Get<ICachedMsgBlockService>();
                 _cachedMsgBlockService.RebuildCache();
+                _bannerService = _modServiceGetter.Get<IBannerService>();
+                _bannerService.ImageSet += BannerService_ImageSet;
             });
             var module = CurrentModuleId ?? ListItems.FirstOrDefault()?.ModuleId;
             NavigateInternal(module, null, true);
@@ -87,6 +97,23 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
             Loading = false;
         }
         
+    }
+
+    private void BannerService_ImageSet()
+    {
+        RaisePropertyChanged(nameof(Banner));
+    }
+
+    public object? Banner
+    {
+        get
+        {
+            if (Mod == null)
+            {
+                return null;
+            }
+            return _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
+        }
     }
 
     private bool _loading;

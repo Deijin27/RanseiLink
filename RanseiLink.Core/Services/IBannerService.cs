@@ -8,6 +8,7 @@ public interface IBannerService
     void Save();
     string ImagePath { get; }
     void SetImage(string file);
+    event Action ImageSet;
 }
 
 public class BannerService : IBannerService
@@ -36,9 +37,12 @@ public class BannerService : IBannerService
 
     public string ImagePath { get; }
 
+    public event Action? ImageSet;
+
     public void SetImage(string file)
     {
         File.Copy(file, ImagePath, true);
+        ImageSet?.Invoke();
     }
 
     public void Save()
