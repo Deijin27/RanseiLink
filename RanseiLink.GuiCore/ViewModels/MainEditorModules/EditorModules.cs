@@ -1,11 +1,9 @@
 ﻿#nullable enable
-using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
-using System.Linq;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -433,13 +431,17 @@ public class BattleConfigWorkspaceEditorModule : BaseWorkspaceEditorModule<IBatt
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
         var nn = modServices.Get<INicknameService>();
+        var ms = modServices.Get<IMapService>();
+        var pi = modServices.Get<IPathToImageConverter>();
+        var mm = modServices.Get<IMapMiniPreviewImageGenerator>();
 
         WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<BattleConfigViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
-                new BattleConfigMiniViewModel(nn, _service.Retrieve(id), id, command)).ToList()
+                new BattleConfigMiniViewModel(ms, pi, mm, nn, _service.Retrieve(id), id, command)).ToList()
             );
+        WorkspaceViewModel.LeftColumnWidth = 206;
 
     }
 }
