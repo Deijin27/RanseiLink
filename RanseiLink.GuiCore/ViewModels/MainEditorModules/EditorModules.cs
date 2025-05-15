@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
@@ -481,129 +482,45 @@ public class BannerEditorModule : EditorModule
 
 
 [EditorModule]
-public class MapSelectorEditorModule : EditorModule, ISelectableModule
+public class MapSelectorEditorModule : BaseWorkspaceEditorModule<IMapService>
 {
-    public const string Id = "map_selector";
+    public const string Id = "map_workspace";
+
     public override string UniqueId => Id;
     public override string ListName => "Map";
-    private SelectorViewModel? _viewModel;
-    public override object? ViewModel => _viewModel;
-
-    public int SelectedId => _viewModel?.Selected ?? 0;
-
-    private IMapService? _service;
-    private MapId? _currentId;
-    private PSLM? _currentMap;
-    private MapViewModel? _nestedVm;
-
-    public event RequestNavigateEventHandler? RequestNavigate;
-
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
-        _service = modServices.Get<IMapService>();
-        _nestedVm = modServices.Get<MapViewModel>();
-        var selectorVmFactory = modServices.Get<ISelectorViewModelFactory>();
-        if (_nestedVm == null)
-        {
-            throw new Exception("Failed to resolve map view model");
-        }
-        _currentMap = null;
-        _currentId = null;
-        var nicknameService = modServices.Get<INicknameService>();
-        var mapComboItems = _service.GetMapIds().Select(i => (SelectorComboBoxItem)new NicknamedSelectorComboBoxItem(
-            id: (int)i,
-            nicknameService: nicknameService,
-            nicknameCategory: nameof(MapId),
-            idString: i.ToString()[3..]
-            )).ToList();
-        _viewModel = selectorVmFactory.Create(null, mapComboItems, _nestedVm, id =>
-        {
-            if (_currentMap != null && _currentId != null)
-            {
-                _service.Save(_currentId.Value, _currentMap);
-            }
-            var mid = (MapId)id;
-            _currentMap = _service.Retrieve(mid);
-            _currentId = mid;
-            _nestedVm.SetModel(mid, _currentMap);
-        },
-        id => _service.GetMapIds().Select(i => (int)i).Contains(id),
-        scrollEnabled: false
-        );
-        _viewModel.RequestNavigateToId += ViewModel_RequestNavigateToId;
-
-        _nestedVm.RequestSave += NestedVm_RequestSave;
-        _nestedVm.RequestReload += NestedVm_RequestReload;
+        var sp = modServices.Get<ICachedSpriteProvider>();
+        var pic = modServices.Get<IPathToImageConverter>();
+        var mpg = modServices.Get<IMapMiniPreviewImageGenerator>();
+        var nn = modServices.Get<INicknameService>();
+        var nestedVm = modServices.Get<MapViewModel>();
+        WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
+            nestedVm,
+            _service,
+            command => _service.GetMapIds().Select<MapId, IMiniViewModel>(id =>
+                new MapMiniViewModel(pic, mpg, nn, _service.Retrieve((int)id), id, command)).ToList()
+            );
+        nestedVm.RequestSave += NestedVm_RequestSave;
+        nestedVm.RequestReload += NestedVm_RequestReload;
     }
 
-    private void ViewModel_RequestNavigateToId(object? sender, int e)
+    private void NestedVm_RequestReload(MapId id, PSLM model)
     {
-        RequestNavigate?.Invoke(this, e);
-    }
-
-    private void NestedVm_RequestReload(object? sender, System.EventArgs e)
-    {
-        if (_viewModel == null || _service == null || _nestedVm == null)
+        if (_service == null || WorkspaceViewModel == null || WorkspaceViewModel.SelectedMiniVm == null)
         {
             return;
         }
-        var id = (MapId)_viewModel.Selected;
-        _currentMap = _service.Retrieve(id);
-        _nestedVm.SetModel(id, _currentMap);
+        var intId = (int)id;
+        _service.Reload(id);
+        var newModel = _service.Retrieve((int)id);
+        ((MapMiniViewModel)WorkspaceViewModel.SelectedMiniVm).SetModel(newModel);
+        WorkspaceViewModel.BigViewModel.SetModel(intId, newModel);
     }
 
-    private void NestedVm_RequestSave(object? sender, System.EventArgs e)
+    private void NestedVm_RequestSave(MapId id, PSLM model)
     {
-        if (_viewModel == null || _service == null || _currentMap == null)
-        {
-            return;
-        }
-        _service.Save((MapId)_viewModel.Selected, _currentMap);
-    }
-
-    public override void OnPageClosing()
-    {
-        if (_viewModel == null || _service == null || _nestedVm == null)
-        {
-            return;
-        }
-        if (_currentMap != null)
-        {
-            _service.Save((MapId)_viewModel.Selected, _currentMap);
-        }
-    }
-
-    public override void OnPatchingRom()
-    {
-        if (_viewModel == null || _service == null)
-        {
-            return;
-        }
-        if (_currentMap != null)
-        {
-            _service.Save((MapId)_viewModel.Selected, _currentMap);
-        }
-    }
-
-    public override void Deactivate()
-    {
-        if (_viewModel == null || _service == null)
-        {
-            return;
-        }
-        if (_currentMap != null)
-        {
-            _service.Save((MapId)_viewModel.Selected, _currentMap);
-        }
-    }
-
-    public void Select(int selectId)
-    {
-        if (_viewModel == null)
-        {
-            return;
-        }
-        _viewModel.SetSelected(selectId);
+        _service?.Save(id);
     }
 }

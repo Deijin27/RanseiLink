@@ -129,7 +129,7 @@ public class SceneRenderer : ISceneRenderer
         var nsbmd = LoadMaterialsFromPac(pac);
         models.Add(new ModelInfo(nsbmd));
 
-        var pslm = _mapService.Retrieve(mapId);
+        var pslm = _mapService.Retrieve((int)mapId);
         var mapGridHeight = pslm.TerrainSection.MapMatrix.Count;
         var mapGridWidth = pslm.TerrainSection.MapMatrix[0].Count;
 

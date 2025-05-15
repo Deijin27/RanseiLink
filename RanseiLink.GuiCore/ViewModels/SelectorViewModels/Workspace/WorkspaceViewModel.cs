@@ -47,6 +47,7 @@ public class WorkspaceViewModel : ViewModelBase
     private void CopyPasteVm_ModelPasted(object? sender, EventArgs e)
     {
         SelectById(_selectedId);
+        SelectedMiniVm?.RaiseAllPropertiesChanged();
     }
 
     public bool CopyPasteVisible { get; }
@@ -78,7 +79,6 @@ public class WorkspaceViewModel : ViewModelBase
         {
             _selectedId = id;
             var model = _modelService.RetrieveObject(id);
-            var newSelection = _allMiniVms[id];
             SelectedMiniVm = _allMiniVms.Find(x => x.Id == id);
             BigViewModel.SetModel(id, model);
             CopyPasteVm.Model = model as IDataWrapper;

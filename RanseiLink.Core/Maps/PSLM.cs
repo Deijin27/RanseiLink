@@ -9,6 +9,10 @@ public class PSLM
 {
     public const string ExternalFileExtension = ".pslm";
 
+    // Make saving more efficient because we only need to save maps that have been opened.
+    // This reduces lag when closing the mod having opened the map page.
+    public bool IsDirty { get; set; } = false;
+
     public struct Header
     {
         public const int HeaderLength = 0x10;
@@ -85,8 +89,8 @@ public class PSLM
         var header = new Header
         {
             GimmickCount = (ushort)GimmickSection.Items.Count,
-            Width = (ushort)TerrainSection.MapMatrix[0].Count,
-            Height = (ushort)TerrainSection.MapMatrix.Count,
+            Width = (ushort)Width,
+            Height = (ushort)Height,
         };
 
         bw.Seek(Header.HeaderLength, SeekOrigin.Begin);
@@ -100,6 +104,9 @@ public class PSLM
         bw.BaseStream.Seek(0, SeekOrigin.Begin);
         header.WriteTo(bw);
     }
+
+    public int Width => TerrainSection.MapMatrix[0].Count;
+    public int Height => TerrainSection.MapMatrix.Count;
 
     public MapPokemonSection PokemonSection { get; set; }
     public MapTerrainSection TerrainSection { get; set; }

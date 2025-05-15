@@ -15,7 +15,9 @@ public enum MapRenderMode
     Elevation
 }
 
-public class MapViewModel : ViewModelBase
+public delegate void MapRequestEventHandler(MapId id, PSLM model);
+
+public class MapViewModel : ViewModelBase, IBigViewModel
 {
     private static bool __showGimmicks = true;
     private static bool __showPokemonMarkers = true;
@@ -28,11 +30,13 @@ public class MapViewModel : ViewModelBase
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly IMapManager _mapManager;
     private readonly IMapViewerService _mapViewerService;
+    private readonly IPathToImageConverter _pathToImageConverter;
+    private readonly ISettingService _settingService;
     private readonly INicknameService _nicknameService;
     private MapId _id;
 
-    public event EventHandler? RequestSave;
-    public event EventHandler? RequestReload;
+    public event MapRequestEventHandler? RequestSave;
+    public event MapRequestEventHandler? RequestReload;
 
     public PSLM Map { get; set; } = null!;
 
@@ -49,6 +53,8 @@ public class MapViewModel : ViewModelBase
         _nicknameService = nicknameService;
         _mapManager = mapManager;
         _mapViewerService = mapViewerService;
+        _pathToImageConverter = pathToImageConverter;
+        _settingService = settingService;
         _dialogService = dialogService;
         _gimmickService = gimmickService;
         _spriteProvider = overrideSpriteProvider;
@@ -89,6 +95,7 @@ public class MapViewModel : ViewModelBase
 
     public void SetModel(MapId id, PSLM model)
     {
+        model.IsDirty = true;
         _id = id;
         Map = model;
         Gimmicks.Clear();
@@ -107,6 +114,7 @@ public class MapViewModel : ViewModelBase
         RemoveSelectedGimmickCommand.RaiseCanExecuteChanged();
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
+        RaisePropertyChanged(nameof(Nickname));
     }
 
     public string Nickname
@@ -458,15 +466,20 @@ public class MapViewModel : ViewModelBase
         {
             return;
         }
-        RequestReload?.Invoke(this, EventArgs.Empty);
+        RequestReload?.Invoke(_id, Map);
     }
 
     private async void ExportPslm()
     {
-        RequestSave?.Invoke(this, EventArgs.Empty);
+        RequestSave?.Invoke(_id, Map);
         if (!await _mapManager.ExportPslm(_id))
         {
             return;
         }
+    }
+
+    public void SetModel(int id, object model)
+    {
+        SetModel((MapId)id, (PSLM)model);
     }
 }

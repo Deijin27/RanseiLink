@@ -3,14 +3,20 @@ using System.Runtime.CompilerServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public abstract class ViewModelBase : INotifyPropertyChanged
+public interface IViewModel : INotifyPropertyChanged
+{
+    void RaiseAllPropertiesChanged();
+    void RaisePropertyChanged([CallerMemberName] string? name = null);
+}
+
+public abstract class ViewModelBase : IViewModel
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Notify to the view that the property <paramref name="name"/> has changed
     /// </summary>
-    protected void RaisePropertyChanged([CallerMemberName] string? name = null)
+    public void RaisePropertyChanged([CallerMemberName] string? name = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
@@ -18,7 +24,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged
     /// <summary>
     /// Notify to the view that all properties have changed
     /// </summary>
-    protected void RaiseAllPropertiesChanged()
+    public void RaiseAllPropertiesChanged()
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
     }

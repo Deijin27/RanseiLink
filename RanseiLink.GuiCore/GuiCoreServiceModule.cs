@@ -11,6 +11,7 @@ public class GuiCoreServiceModule : IModule
         builder.Register<IUpdateService, UpdateService>(Reuse.Singleton);
         builder.Register<IExternalService, ExternalService>(Reuse.Singleton);
         builder.Register<IFallbackSpriteManager, FallbackSpriteManager>(Reuse.Singleton);
+        builder.Register<IMapMiniPreviewImageGenerator, MapMiniPreviewImageGenerator>(Reuse.Singleton);
 
         builder.Register<MainWindowViewModel>(Reuse.Singleton);
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);

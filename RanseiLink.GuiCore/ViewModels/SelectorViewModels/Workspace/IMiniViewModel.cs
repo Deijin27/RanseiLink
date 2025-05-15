@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public interface IMiniViewModel
+public interface IMiniViewModel : IViewModel
 {
     int Id { get; }
     ICommand SelectCommand { get; }
