@@ -139,7 +139,11 @@ public class WorkspaceViewModel : ViewModelBase
 
         if (Items.Count == 1)
         {
-            SelectById(Items[0].Id);
+            var newId = Items[0].Id;
+            if (_selectedId != newId)
+            {
+                SelectById(newId);
+            }
         }
     }
 

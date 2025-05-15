@@ -2,33 +2,27 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Models;
-using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Util;
-using RanseiLink.GuiCore.Constants;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public class BattleConfigMiniViewModel : ViewModelBase, IMiniViewModel
 {
-    private readonly IMapService _mapService;
-    private readonly IPathToImageConverter _pathToImageConverter;
-    private readonly IMapMiniPreviewImageGenerator _mapMiniPreviewImageGenerator;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly INicknameService _nicknameService;
     private readonly BattleConfig _model;
     private readonly int _id;
 
-    public BattleConfigMiniViewModel(IMapService mapService, IPathToImageConverter pathToImageConverter, IMapMiniPreviewImageGenerator mapMiniPreviewImageGenerator, INicknameService nicknameService, BattleConfig model, int id, ICommand selectCommand)
+    public BattleConfigMiniViewModel(ICachedSpriteProvider cachedSpriteProvider, INicknameService nicknameService, BattleConfig model, int id, ICommand selectCommand)
     {
-        _mapService = mapService;
-        _pathToImageConverter = pathToImageConverter;
-        _mapMiniPreviewImageGenerator = mapMiniPreviewImageGenerator;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _nicknameService = nicknameService;
         _model = model;
         _id = id;
         SelectCommand = selectCommand;
     }
 
-    public object? Image => _pathToImageConverter.TryConvert(_mapMiniPreviewImageGenerator.Generate(_mapService.Retrieve((int)_model.MapId)));
+    public object? Image => _cachedSpriteProvider.GetMapMiniPreviewImage(_model.MapId);
 
     public int Id => _id;
 

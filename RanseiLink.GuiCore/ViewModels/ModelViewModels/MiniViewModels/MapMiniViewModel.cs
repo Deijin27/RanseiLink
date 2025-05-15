@@ -6,22 +6,28 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class MapMiniViewModel : ViewModelBase, IMiniViewModel
 {
-    private readonly IPathToImageConverter _pathToImageConverter;
-    private readonly IMapMiniPreviewImageGenerator _mapMiniPreviewImageGenerator;
+    private readonly ICachedSpriteProvider _cachedSpriteProvider;
     private readonly INicknameService _nicknameService;
     private PSLM _model;
+    private readonly MapId _id;
     private readonly string _stringId;
-    private readonly int _id;
+    private readonly int _intId;
 
-    public MapMiniViewModel(IPathToImageConverter pathToImageConverter, IMapMiniPreviewImageGenerator mapMiniPreviewImageGenerator, INicknameService nicknameService, PSLM model, MapId id, ICommand selectCommand)
+    public MapMiniViewModel(ICachedSpriteProvider cachedSpriteProvider, INicknameService nicknameService, PSLM model, MapId id, ICommand selectCommand)
     {
-        _pathToImageConverter = pathToImageConverter;
-        _mapMiniPreviewImageGenerator = mapMiniPreviewImageGenerator;
+        _cachedSpriteProvider = cachedSpriteProvider;
         _nicknameService = nicknameService;
         _model = model;
-        _id = (int)id;
+        _id = id;
+        _intId = (int)id;
         _stringId = id.ToString()[3..];
         SelectCommand = selectCommand;
+        cachedSpriteProvider.OnMapMiniPreviewImageInvalidated += CachedSpriteProvider_OnMapMiniPreviewImageInvalidated;
+    }
+
+    private void CachedSpriteProvider_OnMapMiniPreviewImageInvalidated(MapId obj)
+    {
+        RaisePropertyChanged(nameof(Image));
     }
 
     public void SetModel(PSLM model)
@@ -31,14 +37,14 @@ public class MapMiniViewModel : ViewModelBase, IMiniViewModel
     }
 
     public string StringId => _stringId;
-    public int Id => _id;
+    public int Id => _intId;
 
     public string Name
     {
-        get => _nicknameService.GetNickname(nameof(MapId), _id);
+        get => _nicknameService.GetNickname(nameof(MapId), _intId);
     }
 
-    public object? Image => _pathToImageConverter.TryConvert(_mapMiniPreviewImageGenerator.Generate(_model));
+    public object? Image => _cachedSpriteProvider.GetMapMiniPreviewImage(_id);
 
     public ICommand SelectCommand { get; }
 

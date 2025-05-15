@@ -431,15 +431,13 @@ public class BattleConfigWorkspaceEditorModule : BaseWorkspaceEditorModule<IBatt
         base.Initialise(modServices);
         var vm = modServices.Get<BattleConfigViewModel>();
         var nn = modServices.Get<INicknameService>();
-        var ms = modServices.Get<IMapService>();
-        var pi = modServices.Get<IPathToImageConverter>();
-        var mm = modServices.Get<IMapMiniPreviewImageGenerator>();
+        var cs = modServices.Get<ICachedSpriteProvider>();
 
         WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             modServices.Get<BattleConfigViewModel>(),
             _service,
             command => _service.ValidIds().Select<int, IMiniViewModel>(id =>
-                new BattleConfigMiniViewModel(ms, pi, mm, nn, _service.Retrieve(id), id, command)).ToList()
+                new BattleConfigMiniViewModel(cs, nn, _service.Retrieve(id), id, command)).ToList()
             );
         WorkspaceViewModel.LeftColumnWidth = 206;
 
@@ -494,15 +492,14 @@ public class MapSelectorEditorModule : BaseWorkspaceEditorModule<IMapService>
     {
         base.Initialise(modServices);
         var sp = modServices.Get<ICachedSpriteProvider>();
-        var pic = modServices.Get<IPathToImageConverter>();
-        var mpg = modServices.Get<IMapMiniPreviewImageGenerator>();
+        var cs = modServices.Get<ICachedSpriteProvider>();
         var nn = modServices.Get<INicknameService>();
         var nestedVm = modServices.Get<MapViewModel>();
         WorkspaceViewModel = _selectorVmFactory.CreateWorkspace(
             nestedVm,
             _service,
             command => _service.GetMapIds().Select<MapId, IMiniViewModel>(id =>
-                new MapMiniViewModel(pic, mpg, nn, _service.Retrieve((int)id), id, command)).ToList()
+                new MapMiniViewModel(cs, nn, _service.Retrieve((int)id), id, command)).ToList()
             );
         nestedVm.RequestSave += NestedVm_RequestSave;
         nestedVm.RequestReload += NestedVm_RequestReload;

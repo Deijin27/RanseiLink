@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 
@@ -11,12 +12,16 @@ namespace RanseiLink.GuiCore.Services;
 /// </summary>
 public interface ICachedSpriteProvider
 {
+    event Action<MapId>? OnMapMiniPreviewImageInvalidated;
+
     IReadOnlyList<object?> GetClusterImages(string linkPath, int[] clusters);
     object? GetGimmickPreview(Gimmick model, MovePreviewOptions options = MovePreviewOptions.All);
     object? GetGimmickRangePreview(GimmickRangeId range);
     object? GetItemCategory(ItemCategoryId category);
+    object? GetMapMiniPreviewImage(MapId mapId);
     object? GetMovePreview(Move model, MovePreviewOptions options = MovePreviewOptions.All);
     object? GetMoveRangePreview(MoveRange model);
     object? GetMoveRangePreview(MoveRangeId range);
     object? GetSprite(SpriteType type, int id);
+    void InvalidateMapMiniPreviewImage(MapId mapId);
 }

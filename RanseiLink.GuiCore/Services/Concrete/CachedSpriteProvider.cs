@@ -6,6 +6,7 @@ using SixLabors.ImageSharp;
 using RanseiLink.Core.Services.ModelServices;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Maps;
 
 namespace RanseiLink.GuiCore.Services.Concrete;
 
@@ -16,15 +17,20 @@ public class CachedSpriteProvider : ICachedSpriteProvider
     private readonly ISpriteService _spriteService;
     private readonly IMoveRangeService _moveRangeService;
     private readonly IGimmickRangeService _gimmickRangeService;
+    private readonly IMapService _mapService;
+    private readonly IMapMiniPreviewImageGenerator _mapMiniPreviewImageGenerator;
     private readonly Dictionary<int, object?> _cache = [];
     private Dictionary<ItemCategoryId, object?>? _itemCategoryImages;
+    private readonly Dictionary<MapId, object?> _mapImages = [];
 
     public CachedSpriteProvider(
         IOverrideDataProvider overrideDataProvider, 
         IPathToImageConverter pathToImageConverter,
         ISpriteService spriteService, 
         IMoveRangeService moveRangeService,
-        IGimmickRangeService gimmickRangeService
+        IGimmickRangeService gimmickRangeService,
+        IMapService mapService,
+        IMapMiniPreviewImageGenerator mapMiniPreviewImageGenerator
         )
     {
         _overrideDataProvider = overrideDataProvider;
@@ -32,6 +38,8 @@ public class CachedSpriteProvider : ICachedSpriteProvider
         _spriteService = spriteService;
         _moveRangeService = moveRangeService;
         _gimmickRangeService = gimmickRangeService;
+        _mapService = mapService;
+        _mapMiniPreviewImageGenerator = mapMiniPreviewImageGenerator;
         _overrideDataProvider.SpriteModified += OverrideDataProvider_SpriteModified;
     }
 
@@ -146,5 +154,23 @@ public class CachedSpriteProvider : ICachedSpriteProvider
             }
         }
         return _itemCategoryImages[category];
+    }
+
+    public void InvalidateMapMiniPreviewImage(MapId mapId)
+    {
+        _mapImages.Remove(mapId);
+        OnMapMiniPreviewImageInvalidated?.Invoke(mapId);
+    }
+
+    public event Action<MapId>? OnMapMiniPreviewImageInvalidated;
+
+    public object? GetMapMiniPreviewImage(MapId mapId)
+    {
+        if (!_mapImages.TryGetValue(mapId, out var mapImage))
+        {
+            mapImage = _pathToImageConverter.TryConvert(_mapMiniPreviewImageGenerator.Generate(_mapService.Retrieve((int)mapId)));
+            _mapImages[mapId] = mapImage;
+        }
+        return mapImage;
     }
 }
