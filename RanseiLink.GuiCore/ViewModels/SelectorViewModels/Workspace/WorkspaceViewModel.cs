@@ -142,7 +142,7 @@ public class WorkspaceViewModel : ViewModelBase
             var newId = Items[0].Id;
             if (_selectedId != newId)
             {
-                SelectById(newId);
+                NavigateToId(newId);
             }
         }
     }
