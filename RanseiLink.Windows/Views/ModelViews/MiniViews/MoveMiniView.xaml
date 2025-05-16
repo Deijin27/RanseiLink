@@ -41,9 +41,9 @@
         BorderThickness="1,0,0,0" CornerRadius="0,4,0,0"
 />
             <Border HorizontalAlignment="Right" VerticalAlignment="Bottom" 
-        Grid.Column="2" Background="Black" BorderBrush="{DynamicResource ControlBorderBrush}" 
+        Grid.Column="2" Background="{DynamicResource MiniViewNumberBoxBackgroundBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" 
         BorderThickness="1,1,0,0" CornerRadius="4,0,4,0" Height="14" Padding="1,0,1,0" Width="19">
-                <TextBlock Foreground="#FFEC39" FontWeight="Bold" d:Text="255" Text="{Binding Power}" TextAlignment="Right" FontSize="9"/>
+                <TextBlock Foreground="{DynamicResource MiniViewNumberBoxForegroundBrush}" FontWeight="Bold" d:Text="255" Text="{Binding Power}" TextAlignment="Right" FontSize="9"/>
             </Border>
 
         </Grid>

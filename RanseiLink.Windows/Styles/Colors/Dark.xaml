@@ -32,7 +32,5 @@
 
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#0E0E0E"/>
     <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#1e1e1e"/>
-    
-    
 
 </ResourceDictionary>

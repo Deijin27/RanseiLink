@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              d:DataContext="{d:DesignInstance vm:BaseSimpleKingdomMiniViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" d:Width="163" HorizontalAlignment="Stretch">
-    <Button Background="#E4E3D0" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+    <Button Background="{DynamicResource MiniViewHeaderBackgroundBrush}" Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -22,7 +22,7 @@
                    d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_castleicon\StlCastleIconTex-Pngs\0000.png"
                    />
 
-            <TextBlock Text="{Binding KingdomName}" d:Text="Aurora" Foreground="Black" FontWeight="Bold" Margin="4,0,0,0"/>
+            <TextBlock Text="{Binding KingdomName}" d:Text="Aurora" Foreground="{DynamicResource MiniViewHeaderForegroundBrush}" FontWeight="Bold" Margin="4,0,0,0"/>
         </Grid>
         
     </Button>

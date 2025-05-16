@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <SolidColorBrush x:Key="MiniViewNumberBoxBackgroundBrush" Color="black"/>
+    <SolidColorBrush x:Key="MiniViewNumberBoxForegroundBrush" Color="#FFEC39"/>
+    <SolidColorBrush x:Key="MiniViewHeaderBackgroundBrush" Color="#E4E3D0"/>
+    <SolidColorBrush x:Key="MiniViewHeaderForegroundBrush" Color="Black"/>
+    
+</ResourceDictionary>
