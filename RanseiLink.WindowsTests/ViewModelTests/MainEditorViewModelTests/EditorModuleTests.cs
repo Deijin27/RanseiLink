@@ -28,6 +28,7 @@ public class EditorModuleTests
     private readonly Mock<IModServiceGetterFactory> _modServiceGetterFactory;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
     private readonly Mock<ICachedMsgBlockService> _cachedMsgBlockService;
+    private readonly Mock<IBannerService> _bannerService;
     private readonly Mock<ISettingService> _settingService;
     private readonly Mock<IModPatchingService> _patchingService;
     private readonly Mock<IAsyncDialogService> _dialogService;
@@ -55,10 +56,12 @@ public class EditorModuleTests
         _pathToImageConverter = new Mock<IPathToImageConverter>();
 
         _cachedMsgBlockService = new Mock<ICachedMsgBlockService>();
+        _bannerService = new Mock<IBannerService>();
         _mockProgress = new Mock<IProgress<ProgressInfo>>();
 
         _mockModServiceGetter = new Mock<IServiceGetter>();
         _mockModServiceGetter.Setup(i => i.Get<ICachedMsgBlockService>()).Returns(_cachedMsgBlockService.Object);
+        _mockModServiceGetter.Setup(i => i.Get<IBannerService>()).Returns(_bannerService.Object);
 
         _modServiceGetterFactory = new Mock<IModServiceGetterFactory>();
         _modServiceGetterFactory.Setup(i => i.Create(It.IsAny<ModInfo>())).Returns(_mockModServiceGetter.Object);
