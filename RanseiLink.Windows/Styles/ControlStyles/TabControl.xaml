@@ -11,7 +11,7 @@
                                 Name="Border"
                                 Margin="0,0,-1,0" 
                                 Background="{DynamicResource WindowBackgroundBrush}"
-                                BorderBrush="{DynamicResource WindowBorderBrush}"
+                                BorderBrush="{DynamicResource ControlBorderBrush}"
                                 BorderThickness="1,1,1,0">
                             <ContentPresenter x:Name="ContentSite"
                                     VerticalAlignment="Center"
@@ -24,10 +24,10 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Panel.ZIndex" Value="100" />
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource WindowTransparentBackgroundBrush}" />
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SurfaceContainerLow}" />
                             <!--<Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0"/>-->
                             <Setter TargetName="Border" Property="Margin" Value="-2,-2,-1,-1"/>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}"/>
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -35,9 +35,9 @@
         </Setter>
     </Style>
     <Style TargetType="TabControl">
-        <Setter Property="Background" Value="{DynamicResource WindowTransparentBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceContainerLow}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>

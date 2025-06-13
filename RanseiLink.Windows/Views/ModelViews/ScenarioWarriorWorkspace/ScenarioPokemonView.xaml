@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              d:Background="{DynamicResource WindowBackgroundBrush}"
+             Foreground="{DynamicResource ForegroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.Windows.ViewModels"
              xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"

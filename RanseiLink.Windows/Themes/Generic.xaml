@@ -5,6 +5,7 @@
     
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/RanseiLink.Windows;component/Controls/IconControl.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/RanseiLink.Windows;component/Controls/IconButton.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/RanseiLink.Windows;component/Controls/OverrideControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
     

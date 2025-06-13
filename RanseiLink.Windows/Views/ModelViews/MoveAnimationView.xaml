@@ -26,7 +26,7 @@
         </Style>
 
     </UserControl.Resources>
-    <DockPanel Margin="10">
+    <DockPanel Margin="0">
         <StackPanel Margin="0,0,0,10" Orientation="Horizontal" DockPanel.Dock="Top">
             <controls:IconControl Margin="0,0,5,0" Icon="sort" ToolTip="Sort"/>
             <ComboBox  Margin="0,0,5,0" VerticalAlignment="Center" Width="120" ItemsSource="{Binding SortItems}" SelectedItem="{Binding SelectedSortItem}"/>

@@ -6,6 +6,7 @@
              xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
+             xmlns:b="clr-namespace:RanseiLink.Windows.Behaviours"
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
@@ -28,7 +29,7 @@
     </UserControl.Resources>
 
     <WrapPanel>
-        <Grid Margin="10">
+        <Grid Margin="10,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="130"/>
                 <ColumnDefinition MinWidth="170"/>
@@ -156,7 +157,7 @@
 
         </Grid>
 
-        <Grid Margin="10">
+        <Grid Margin="10,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="130"/>
                 <ColumnDefinition MinWidth="170"/>
@@ -192,7 +193,7 @@
 
             <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
                 <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
-                <controls:IconButton Icon="image" Text="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
+                <controls:IconButton Icon="image" Content="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
 
             <GroupBox Header="Battle Model Animations" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="4" Padding="5">
@@ -205,9 +206,9 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <controls:OverrideControl IsOverride="{Binding IsAnimationOverwritten}"/>
-                        <controls:IconButton Grid.Column="1" Icon="output" Text="Export" Command="{Binding ExportAnimationsCommand}"/>
-                        <controls:IconButton Grid.Column="2" Icon="input" Text="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
-                        <controls:IconButton Grid.Column="3" Icon="undo" Text="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
+                        <controls:IconButton Grid.Column="1" Icon="output" Content="Export" Command="{Binding ExportAnimationsCommand}"/>
+                        <controls:IconButton Grid.Column="2" Icon="input" Content="Import" Command="{Binding ImportAnimationCommand}" Margin="4,0"/>
+                        <controls:IconButton Grid.Column="3" Icon="undo" Content="Revert" Command="{Binding RevertAnimationCommand}" IsEnabled="{Binding IsAnimationOverwritten}"/>
                     </Grid>
 
                     <CheckBox IsChecked="{Binding AsymmetricBattleSprite}" Content="Asymmetric Battle Sprite" VerticalAlignment="Center" Margin="0,0,0,7"/>
@@ -269,7 +270,7 @@
             <GroupBox Header="Evolves Into" Grid.Row="14" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="7">
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-                        <controls:IconButton Icon="add" Text="Add New" Command="{Binding AddEvolutionCommand}"/>
+                        <controls:IconButton Icon="add" Content="Add New" Command="{Binding AddEvolutionCommand}"/>
                     </StackPanel>
                     <ScrollViewer Margin="5,0,0,0">
                         <ItemsControl ItemsSource="{Binding Evolutions}">
@@ -277,7 +278,7 @@
                                 <DataTemplate>
                                     <DockPanel Margin="0,0,0,2">
                                         <local:PokemonMiniView DockPanel.Dock="Left" Width="40" DataContext="{Binding MiniViewModel}"/>
-                                        <controls:IconButton Margin="0,0,2,0" DockPanel.Dock="Right" Icon="delete" Command="{Binding DeleteCommand}"/>
+                                        <controls:IconButton b:ButtonBehaviours.IsDangerous="True" Margin="0,0,2,0" DockPanel.Dock="Right" Icon="delete" Command="{Binding DeleteCommand}"/>
                                         <ComboBox Margin="2,0" ItemsSource="{Binding Options}" SelectedValue="{Binding Id}" Style="{StaticResource SelectorComboBoxStyle}"/>
                                     </DockPanel>
                                 </DataTemplate>

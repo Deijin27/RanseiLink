@@ -42,11 +42,11 @@
                                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                                     x:Name="optionMark" 
                                     FontFamily="{DynamicResource MaterialIcons}" Text="&#xe5ca;"
-                                      Foreground="{DynamicResource AccentBrush}" Margin="1" Opacity="0"/>
+                                      Foreground="{DynamicResource AccentForegroundBrush}" Margin="1" Opacity="0"/>
                                 <TextBlock x:Name="indeterminateMark"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                                           Foreground="{DynamicResource AccentBrush}" 
+                                           Foreground="{DynamicResource AccentForegroundBrush}" 
                                            FontFamily="{DynamicResource MaterialIcons}" Text="&#xf108;"
                                            Margin="1" Opacity="0"/>
                             </Grid>
@@ -68,10 +68,14 @@
                             <Setter Property="Foreground" TargetName="indeterminateMark" Value="{DynamicResource ForegroundDisabledBrush}"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="true">
+                            <Setter Property="Background" TargetName="checkBoxBorder" Value="{DynamicResource AccentBrush}"/>
+                            <Setter Property="BorderThickness" TargetName="checkBoxBorder" Value="0"/>
                             <Setter Property="Opacity" TargetName="optionMark" Value="1"/>
                             <Setter Property="Opacity" TargetName="indeterminateMark" Value="0"/>
                         </Trigger>
                         <Trigger Property="IsChecked" Value="{x:Null}">
+                            <Setter Property="Background" TargetName="checkBoxBorder" Value="{DynamicResource AccentBrush}"/>
+                            <Setter Property="BorderThickness" TargetName="checkBoxBorder" Value="0"/>
                             <Setter Property="Opacity" TargetName="optionMark" Value="0"/>
                             <Setter Property="Opacity" TargetName="indeterminateMark" Value="1"/>
                         </Trigger>

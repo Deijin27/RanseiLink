@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
+        Foreground="{DynamicResource ForegroundBrush}"
         Height="500" Width="900" Background="Black">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30" 
@@ -34,8 +35,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
-            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
+            <Border Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
+            <Border CornerRadius="10,0,0,0" Margin="10,0,0,0" Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
 
             <Grid Background="Transparent">
                 <Grid.ColumnDefinitions>

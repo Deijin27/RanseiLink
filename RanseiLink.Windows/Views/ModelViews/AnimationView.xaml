@@ -15,8 +15,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <controls:OverrideControl IsOverride="{Binding IsOverriden}"/>
-        <controls:IconButton Grid.Column="1" Icon="output" Text="Export" Command="{Binding ExportCommand}" Margin="5,0,5,0"/>
-        <controls:IconButton Grid.Column="2" Icon="input" Text="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
-        <controls:IconButton Grid.Column="3" Icon="undo" Text="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
+        <controls:IconButton Grid.Column="1" Icon="output" Content="Export" Command="{Binding ExportCommand}" Margin="5,0,5,0"/>
+        <controls:IconButton Grid.Column="2" Icon="input" Content="Import" Command="{Binding ImportCommand}" Margin="0,0,5,0"/>
+        <controls:IconButton Grid.Column="3" Icon="undo" Content="Revert" Command="{Binding RevertCommand}" Margin="0,0,5,0"/>
     </Grid>
 </UserControl>

@@ -8,8 +8,7 @@
 
         <ResourceDictionary Source="RedHoverButtonStyle.xaml"/>
         <ResourceDictionary Source="GrayHoverButtonStyle.xaml"/>
-        <ResourceDictionary Source="RoundedGrayHoverButton.xaml"/>
-        <ResourceDictionary Source="RoundedGrayToggleButton.xaml"/>
+        <ResourceDictionary Source="RoundedHoverButton.xaml"/>
         <ResourceDictionary Source="MenuToggleButtonStyle.xaml"/>
         <ResourceDictionary Source="HyperlinkButtonStyle.xaml"/>
         <ResourceDictionary Source="VirtualizingItemsControlStyle.xaml"/>
@@ -33,14 +32,14 @@
         <ResourceDictionary Source="ControlStyles/ListBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type TextBlock}">
+    <!--<Style TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}"/>
             </Trigger>
         </Style.Triggers>
-    </Style>
+    </Style>-->
 
     <Style x:Key="IconTextBlockStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Foreground" Value="{DynamicResource AltForegroundBrush}"/>

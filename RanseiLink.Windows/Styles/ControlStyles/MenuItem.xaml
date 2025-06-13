@@ -1,4 +1,6 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                    xmlns:b="clr-namespace:RanseiLink.Windows.Behaviours"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ControlTemplate x:Key="{x:Static MenuItem.TopLevelItemTemplateKey}" TargetType="{x:Type MenuItem}">
         <Border Name="Border" Background="{TemplateBinding Background}" CornerRadius="4" Margin="4">
@@ -21,6 +23,15 @@
             <Trigger Property="IsHighlighted" Value="true">
                 <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
             </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsHighlighted" Value="True"/>
+                    <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
+                <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
+            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -45,6 +56,15 @@
             <Trigger Property="IsHighlighted" Value="true">
                 <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
             </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsHighlighted" Value="True"/>
+                    <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
+                <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
+            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -124,6 +144,15 @@
             <Trigger Property="IsHighlighted" Value="true">
                 <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
             </Trigger>
+            <MultiTrigger>
+    <MultiTrigger.Conditions>
+        <Condition Property="IsHighlighted" Value="True"/>
+        <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
+    </MultiTrigger.Conditions>
+    <Setter Property="Background" Value="{DynamicResource ErrorBrush}"/>
+    <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
+</MultiTrigger>
             <Trigger SourceName="Popup" Property="AllowsTransparency" Value="True">
                 <Setter TargetName="SubmenuBorder" Property="CornerRadius" Value="4" />
                 <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,3,0,3" />

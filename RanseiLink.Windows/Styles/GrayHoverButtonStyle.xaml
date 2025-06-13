@@ -24,7 +24,8 @@
                 <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="{DynamicResource WindowTransparentSelectedBackgroundBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

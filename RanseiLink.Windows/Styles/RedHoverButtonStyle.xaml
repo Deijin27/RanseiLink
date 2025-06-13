@@ -26,8 +26,8 @@
         </Style.Setters>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="IndianRed"/>
-                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
             </Trigger>
         </Style.Triggers>
     </Style>

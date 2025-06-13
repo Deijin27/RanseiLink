@@ -19,7 +19,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="0,1,1,1"/>
         <Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -82,7 +82,7 @@
     <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000"/>
     <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Padding" Value="1"/>
         <Setter Property="Template">
@@ -113,7 +113,7 @@
     <!-- Row -->
 
     <Style x:Key="DataGridRowStyle1" TargetType="{x:Type DataGridRow}">
-        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="Validation.ErrorTemplate" Value="{x:Null}"/>
         <Setter Property="Template">
@@ -162,7 +162,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="1,0,1,1"/>
         <Setter Property="Padding" Value="4"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -201,7 +201,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="Border" Background="{DynamicResource ButtonBackgroundBrush}" BorderBrush="Black" BorderThickness="1">
+                    <Border x:Name="Border" Background="{DynamicResource ButtonBackgroundBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
                         <Polygon x:Name="Arrow" Fill="Red" HorizontalAlignment="Right" Margin="8,8,3,3" Opacity="1" Points="0,10 10,10 10,0" Stretch="Uniform" VerticalAlignment="Bottom"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -220,9 +220,11 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type DataGrid}">
-        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+        <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource ControlBorderBrush}"/>
+        <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource ControlBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
-        <Setter Property="BorderBrush" Value="black"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>

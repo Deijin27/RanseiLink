@@ -1,13 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFF"/>
-    <!--<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F9F9F9"/>-->
-    <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#F8F6F9"/>
-    <!--<SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#EFEFEF"/>-->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FEF7FF"/>
+    <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#F3EDF7"/>
 <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
-    <SolidColorBrush x:Key="SurfaceContainerHigh" Color="#E8E7E9"/>
-    <SolidColorBrush x:Key="SurfaceContainerLow" Color="#F4F3F5"/>
+    <SolidColorBrush x:Key="SurfaceContainerHigh" Color="#ECE6F0"/>
+    <SolidColorBrush x:Key="SurfaceContainerLow" Color="#F7F2FA"/>
 
     <Color x:Key="AccentPrimaryColor">#65558F</Color>
     <SolidColorBrush x:Key="AccentPrimaryBrush" Color="#65558F"/>
@@ -15,6 +13,8 @@
     <SolidColorBrush x:Key="AccentPrimaryContainerBrush" Color="#EADDFF"/>
     <SolidColorBrush x:Key="AccentPrimaryContainerForegroundBrush" Color="#21005D"/>
 
+    <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#625B71"/>
+    <SolidColorBrush x:Key="AccentSecondaryForegroundBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="AccentSecondaryContainerBrush" Color="#E8DEF8"/>
     <SolidColorBrush x:Key="AccentSecondaryContainerForegroundBrush" Color="#1D192B"/>
 
@@ -27,29 +27,26 @@
     <SolidColorBrush x:Key="AccentBrush" Color="#65558F"/>
     <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF"/>
     <Color x:Key="DarkAccentColor">#2b2252</Color>
-    <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#dfd7ed"/>
-    <SolidColorBrush x:Key="AccentSecondaryForegroundBrush" Color="#1D192B"/>
 
-    <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#F4F3F5"/>
+    <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#F7F2FA"/>
     <SolidColorBrush x:Key="WindowSelectedBrush" Color="#E8DEF8"/>
-    <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#E8E7E9"/>
-    
-    <!--<SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#E8DEF8"/>-->
+    <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#ECE6F0"/>
+    <SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#E8DEF8"/>
 
-    <SolidColorBrush x:Key="ForegroundBrush" Color="#1C1C1C"/>
-    <SolidColorBrush x:Key="AltForegroundBrush" Color="#474747"/>
+<SolidColorBrush x:Key="ForegroundBrush" Color="#1D1B20"/>
+<SolidColorBrush x:Key="AltForegroundBrush" Color="#49454F"/>
 <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7B7B7B"/>
 <SolidColorBrush x:Key="AltForegroundDisabledBrush" Color="#909090"/>
 
-    <SolidColorBrush x:Key="ControlBorderBrush" Color="#C6C6C6"/>
-    <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#767676"/>
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#CAC4D0"/>
+    <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#79747E"/>
 <SolidColorBrush x:Key="ControlSelectedBorderBrush" Color="#000000"/>
 
-    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#E8E7E9"/>
-    <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#E2E2E2"/>
-    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#DADADA"/>
+<SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#ECE6F0"/>
+    <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#E6E0E9"/>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#DED8E1"/>
 
-    <SolidColorBrush x:Key="InputBackgroundBrush" Color="#F4F3F5"/>
+<SolidColorBrush x:Key="InputBackgroundBrush" Color="#F7F2FA"/>
 <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#EBEBEB"/>
 
 </ResourceDictionary>

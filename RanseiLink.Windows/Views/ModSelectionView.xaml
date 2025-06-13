@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             xmlns:b="clr-namespace:RanseiLink.Windows.Behaviours"
              d:DataContext="{d:DesignInstance vm:ModSelectionViewModel, IsDesignTimeCreatable=False}"
              mc:Ignorable="d" 
              d:DesignHeight="550" d:DesignWidth="500" Background="Transparent" d:Background="{DynamicResource WindowBackgroundBrush}">
@@ -17,9 +18,13 @@
                         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
+                        <Style TargetType="{x:Type controls:IconButton}" BasedOn="{StaticResource {x:Type controls:IconButton}}">
+                            <Setter Property="Margin" Value="0,0,0,10"/>
+                        </Style>
                     </StackPanel.Resources>
-                    <controls:IconButton Icon="add" Text="Create Mod" Command="{Binding CreateModCommand}"/>
-                    <controls:IconButton Icon="input" Text="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <controls:IconButton BorderThickness="0" Foreground="{DynamicResource AccentForegroundBrush}" Background="{DynamicResource AccentBrush}" Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
+                 
+                    <controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
                     <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
                             Upgrade Old Mods
@@ -35,14 +40,14 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
-                    <controls:IconButton Icon="download" Command="{Binding UpdateCommand}" Text="New Update Available" Visibility="{Binding IsUpdateAvailable, Converter={StaticResource Converter.BoolToVisibility}}"/>
-                    <controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Text="Report Bug"/>
+                    <controls:IconButton Icon="download" Command="{Binding UpdateCommand}" Content="New Update Available" Visibility="{Binding IsUpdateAvailable, Converter={StaticResource Converter.BoolToVisibility}}"/>
+                    <controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Content="Report Bug"/>
                 </StackPanel>
             </Grid>
             
         </Border>
 
-        <DockPanel Margin="5" DockPanel.Dock="Top">
+        <DockPanel Margin="20,10,10,10" DockPanel.Dock="Top">
             <controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />
             <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
                 <ItemsControl.ItemsPanel>
@@ -57,7 +62,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
-        <ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5"  
+        <ItemsControl ItemsSource="{Binding ModItems}" Margin="20,0,0,0"  
                       Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
@@ -129,7 +134,7 @@
                                     </MenuItem.ItemContainerStyle>
                                 </MenuItem>
                                 <Separator/>
-                                <MenuItem Header="Delete" Command="{Binding DeleteModCommand}">
+                                <MenuItem Header="Delete" Command="{Binding DeleteModCommand}" b:ButtonBehaviours.IsDangerous="True">
                                     <MenuItem.Icon>
                                         <controls:IconControl Icon="delete" />
                                     </MenuItem.Icon>

@@ -52,23 +52,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Page Update="Views\ModelViews\MiniViews\BattleConfigMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\MiniViews\ItemMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\MiniViews\EventSpeakerMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\MiniViews\MapMiniView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\ModelViews\MoveAnimationView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-
-
 </Project>

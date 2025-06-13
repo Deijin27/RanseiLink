@@ -6,6 +6,7 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             xmlns:b="clr-namespace:RanseiLink.Windows.Behaviours"
              xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
              d:DataContext="{d:DesignInstance Type=vm:MapViewModel, IsDesignTimeCreatable=False}"
@@ -298,8 +299,8 @@
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
                 <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
-                <controls:IconButton Icon="resize" Text="Resize" Command="{Binding ModifyMapDimensionsCommand}"/>
-                <controls:IconButton Icon="visibility" Text="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
+                <controls:IconButton Icon="resize" Content="Resize" Command="{Binding ModifyMapDimensionsCommand}"/>
+                <controls:IconButton Icon="visibility" Content="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
             </StackPanel>
 
             <TabControl Margin="0,20,0,0" SelectedIndex="{Binding SelectedTabIndex}">
@@ -341,8 +342,8 @@
                 <TabItem Header="Gimmicks">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  Margin="5">
-                            <controls:IconButton Icon="add" Text="Add New" Click="AddGimmickButton_Click"/>
-                            <controls:IconButton Icon="delete" Text="Remove Selected" Margin="5,0,0,0" Command="{Binding RemoveSelectedGimmickCommand}"/>
+                            <controls:IconButton Icon="add" Content="Add New" Click="AddGimmickButton_Click"/>
+                            <controls:IconButton Icon="delete" Content="Remove Selected" Margin="5,0,0,0" b:ButtonBehaviours.IsDangerous="True" Command="{Binding RemoveSelectedGimmickCommand}"/>
                         </StackPanel>
                         <DataGrid x:Name="GimmickDataGrid" CanUserAddRows="True" AutoGenerateColumns="False" ItemsSource="{Binding Gimmicks}"
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">

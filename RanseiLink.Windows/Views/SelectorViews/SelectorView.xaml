@@ -14,7 +14,7 @@
             <RowDefinition Height="24"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Margin="10,0,10,0">
+        <DockPanel Margin="0,0,10,0">
             <local:CopyPasteView DockPanel.Dock="Right" 
                      DataContext="{Binding CopyPasteVm}" 
                      Visibility="{Binding DataContext.CopyPasteVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Converter.BoolToVisibility}}"

@@ -11,10 +11,10 @@
              d:DataContext="{d:DesignInstance vm:SelectorViewModelWithoutScroll}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <DockPanel Margin="10,0,10,0">
+        <DockPanel Margin="0,0,10,10">
             <local:CopyPasteView DockPanel.Dock="Right" 
                                  DataContext="{Binding CopyPasteVm}" 
                                  Visibility="{Binding DataContext.CopyPasteVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource Converter.BoolToVisibility}}"

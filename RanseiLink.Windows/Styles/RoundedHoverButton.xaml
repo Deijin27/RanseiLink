@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <Style x:Key="RoundedHoverButtonBaseStyle" TargetType="{x:Type ButtonBase}">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ButtonBase">
+                        <Border VerticalAlignment="Stretch" 
+                            HorizontalAlignment="Stretch"
+                            CornerRadius="4"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="contentPresenter" 
+                                          Focusable="False" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          Margin="{TemplateBinding Padding}" 
+                                          RecognizesAccessKey="True" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style TargetType="{x:Type ButtonBase}" x:Key="RoundedGrayHoverButtonStyle" 
+           BasedOn="{StaticResource RoundedHoverButtonBaseStyle}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ToggleButton}" x:Key="RoundedGrayToggleButtonStyle" 
+       BasedOn="{StaticResource RoundedHoverButtonBaseStyle}">
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="{x:Type ButtonBase}" x:Key="RoundedAccentHoverButtonStyle" 
+   BasedOn="{StaticResource RoundedHoverButtonBaseStyle}">
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

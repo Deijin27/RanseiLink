@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         WindowStyle="None"
+        Foreground="{DynamicResource ForegroundBrush}"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         mc:Ignorable="d"

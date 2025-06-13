@@ -121,6 +121,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="4,2"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
 
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
@@ -146,10 +147,9 @@
                             <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
-                        </Trigger>
-                        <Trigger Property="IsFocused" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource WindowTransparentSelectedBackgroundBrush}"/>
+                            <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+                            <Setter Property="FontWeight" Value="DemiBold"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>

@@ -25,13 +25,14 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
+        <Grid Grid.Column="1" Margin="20,10,0,0" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
             <ContentControl Content="{Binding CurrentVm}" Margin="0" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource Converter.BoolToVisibility}}">
                 <TextBlock Text="Loading..." HorizontalAlignment="Center" Margin="0,0,0,10"/>
                 <ProgressBar IsIndeterminate="{Binding Loading}" Height="10" Width="200"/>
             </StackPanel>
         </Grid>
+
         <Grid Margin="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -53,7 +54,7 @@
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
             <controls:IconControl ToolTip="Region" Grid.Row="4" Icon="language"/>
             <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="4" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
-            
+
         </Grid>
 
         <ListView x:Name="editorListView" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"
@@ -77,7 +78,11 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <Grid Grid.Row="2" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}">
+
+        <Border CornerRadius="0,8,0,0" Margin="0" Grid.Row="2" Background="{DynamicResource SurfaceContainerHigh}">
+            
+        
+        <Grid IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}">
             <!-- The delay is to ensure correct update order for hit test stuff on toggle button -->
             <Popup IsOpen="{Binding PluginPopupOpen, Delay=10}" PopupAnimation="Fade" Placement="Top" StaysOpen="False" AllowsTransparency="True">
                 <ListView Style="{StaticResource ListViewStyle1}" ItemContainerStyle="{StaticResource ListViewItemContainerStyle1}" 
@@ -102,11 +107,11 @@
                 </ListView>
             </Popup>
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding PatchRomCommand}" Width="30" Height="30" Margin="5" ToolTip="Patch Rom" Style="{StaticResource RoundedGrayHoverButtonStyle}">
-                    <controls:IconControl Icon="publish" Size="16"/>
+                    <Button Style="{StaticResource RoundedAccentHoverButtonStyle}" Command="{Binding PatchRomCommand}" Width="30" Height="30" Margin="5" ToolTip="Patch Rom">
+                        <controls:IconControl Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Icon="publish" Size="16"/>
                 </Button>
                 <!-- hit test stuff prevents double trigger when clicking on button to close popup -->
-                <ToggleButton ToolTip="Plugins" Height="30" Width="30" Style="{StaticResource RoundedGrayToggleButtonStyle}" IsChecked="{Binding PluginPopupOpen}"
+                <ToggleButton ToolTip="Plugins" Height="30" Width="30" Margin="5" Style="{StaticResource RoundedGrayToggleButtonStyle}" IsChecked="{Binding PluginPopupOpen}"
                               IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={StaticResource Converter.InvertBool}}">
                     <controls:IconControl Icon="extension" Size="16"/>
                 </ToggleButton>
@@ -118,6 +123,6 @@
                 </Button>
             </StackPanel>
         </Grid>
-        
+        </Border>
     </Grid>
 </UserControl>
