@@ -16,6 +16,7 @@
     <Color x:Key="AccentColor">#65558F</Color>
     <SolidColorBrush x:Key="AccentBrush" Color="#65558F"/>
     <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentMouseOverBrush" Color="#75659F"/>
     <Color x:Key="DarkAccentColor">#2b2252</Color>
     <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#dfd7ed"/>
     <SolidColorBrush x:Key="AccentSecondaryForegroundBrush" Color="#1D192B"/>
@@ -39,5 +40,7 @@
 
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#F4F3F5"/>
     <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#EBEBEB"/>
+
+    <SolidColorBrush x:Key="RoundedGrayHoverButtonMouseOverBackgroundBrush" Color="#D8D7D9"/>
 
 </ResourceDictionary>
