@@ -41,9 +41,9 @@
                 <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="{DynamicResource AccentSecondaryContainerBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
                 <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryContainerForegroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}"/>
