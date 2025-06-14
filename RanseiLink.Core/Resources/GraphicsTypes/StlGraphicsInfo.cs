@@ -44,14 +44,14 @@ public class StlGraphicsInfo : GroupedGraphicsInfo
         PngFolder = Path.Combine(Path.GetDirectoryName(png)!, Path.GetFileNameWithoutExtension(png) + "-Pngs");
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context)
     {
-        LINK.Unpack(Path.Combine(defaultDataFolder, Link), Path.Combine(defaultDataFolder, LinkFolder), true, 4);
-        var ncer = NCER.Load(Path.Combine(defaultDataFolder, Ncer));
-        string data = Path.Combine(defaultDataFolder, TexData ?? Data!);
-        string info = Path.Combine(defaultDataFolder, TexInfo ?? Info!);
+        LINK.Unpack(Path.Combine(context.DefaultDataFolder, Link), Path.Combine(context.DefaultDataFolder, LinkFolder), true, 4);
+        var ncer = NCER.Load(Path.Combine(context.DefaultDataFolder, Ncer));
+        string data = Path.Combine(context.DefaultDataFolder, TexData ?? Data!);
+        string info = Path.Combine(context.DefaultDataFolder, TexInfo ?? Info!);
         bool tiled = TexData == null;
-        string pngDir = Path.Combine(defaultDataFolder, PngFolder);
+        string pngDir = Path.Combine(context.DefaultDataFolder, PngFolder);
         STLCollection.Load(data, info).SaveAsPngs(pngDir, ncer, tiled);
     }
 

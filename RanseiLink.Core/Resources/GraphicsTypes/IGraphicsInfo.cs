@@ -14,7 +14,7 @@ public interface IGraphicsInfo
     int GetPaletteCapacity(int id);
 
     void GetFilesToPatch(GraphicsPatchContext context);
-    void ProcessExportedFiles(string defaultDataFolder);
+    void ProcessExportedFiles(PopulateDefaultsContext context);
     List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder);
 }
 
@@ -25,6 +25,16 @@ public record GraphicsPatchContext(
     string DefaultDataFolder,
     IServiceGetter ModServiceGetter
     );
+
+public record PopulateDefaultsContext(
+    string DefaultDataFolder
+    )
+{
+    public string ResolvePath(string romPath)
+    {
+        return Path.Combine(DefaultDataFolder, romPath);
+    }
+}
 
 public abstract class GraphicsInfo : IGraphicsInfo
 {
@@ -42,7 +52,7 @@ public abstract class GraphicsInfo : IGraphicsInfo
 
     public abstract string GetRelativeSpritePath(int id);
     public abstract int GetPaletteCapacity(int id);
-    public abstract void ProcessExportedFiles(string defaultDataFolder);
+    public abstract void ProcessExportedFiles(PopulateDefaultsContext context);
     public abstract void GetFilesToPatch(GraphicsPatchContext context);
     public abstract List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder);
 }

@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Services;
-using System.Collections.Concurrent;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
@@ -19,12 +18,12 @@ public class ScbgGraphicsInfo : GroupedGraphicsInfo
         PngFolder = Path.Combine(Path.GetDirectoryName(Data)!, Path.GetFileNameWithoutExtension(Data) + "-Pngs");
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context)
     {
-        string data = Path.Combine(defaultDataFolder, Data);
-        string info = Path.Combine(defaultDataFolder, Info);
+        string data = Path.Combine(context.DefaultDataFolder, Data);
+        string info = Path.Combine(context.DefaultDataFolder, Info);
         bool tiled = true;
-        string pngDir = Path.Combine(defaultDataFolder, PngFolder);
+        string pngDir = Path.Combine(context.DefaultDataFolder, PngFolder);
         SCBGCollection.Load(data, info).SaveAsPngs(pngDir, tiled);
 
     }

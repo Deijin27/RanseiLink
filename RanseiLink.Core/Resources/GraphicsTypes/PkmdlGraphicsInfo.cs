@@ -42,19 +42,19 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
         PngFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, "Pngs");
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context)
     {
-        string texLink = Path.Combine(defaultDataFolder, TEXLink);
-        string atxLink = Path.Combine(defaultDataFolder, ATXLink);
-        string dtxLink = Path.Combine(defaultDataFolder, DTXLink);
-        string pacLink = Path.Combine(defaultDataFolder, PACLink);
+        string texLink = Path.Combine(context.DefaultDataFolder, TEXLink);
+        string atxLink = Path.Combine(context.DefaultDataFolder, ATXLink);
+        string dtxLink = Path.Combine(context.DefaultDataFolder, DTXLink);
+        string pacLink = Path.Combine(context.DefaultDataFolder, PACLink);
 
-        string texUnpacked = Path.Combine(defaultDataFolder, TEXLinkFolder);
-        string atxUnpacked = Path.Combine(defaultDataFolder, ATXLinkFolder);
-        string dtxUnpacked = Path.Combine(defaultDataFolder, DTXLinkFolder);
-        string pacUnpacked = Path.Combine(defaultDataFolder, PACLinkFolder);
+        string texUnpacked = Path.Combine(context.DefaultDataFolder, TEXLinkFolder);
+        string atxUnpacked = Path.Combine(context.DefaultDataFolder, ATXLinkFolder);
+        string dtxUnpacked = Path.Combine(context.DefaultDataFolder, DTXLinkFolder);
+        string pacUnpacked = Path.Combine(context.DefaultDataFolder, PACLinkFolder);
 
-        string outFolderPath = Path.Combine(defaultDataFolder, PngFolder);
+        string outFolderPath = Path.Combine(context.DefaultDataFolder, PngFolder);
         Directory.CreateDirectory(outFolderPath);
 
         LINK.Unpack(texLink, texUnpacked, false, 4);

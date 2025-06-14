@@ -18,16 +18,16 @@ public class NCERMiscItem : G2DRMiscItem
 
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder, MiscGraphicsInfo gInfo)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context, MiscGraphicsInfo gInfo)
     {
-        string outFolder = Path.Combine(defaultDataFolder, LinkFolder);
-        LINK.Unpack(Path.Combine(defaultDataFolder, Link), outFolder);
+        string outFolder = Path.Combine(context.DefaultDataFolder, LinkFolder);
+        LINK.Unpack(Path.Combine(context.DefaultDataFolder, Link), outFolder);
 
         var (ncer, ncgr, nclr) = G2DR.LoadCellImgFromFolder(outFolder, NcgrSlot.Infer);
 
         using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, _settings);
 
-        image.SaveAsPng(Path.Combine(defaultDataFolder, PngFile));
+        image.SaveAsPng(Path.Combine(context.DefaultDataFolder, PngFile));
     }
 
     public override void GetFilesToPatch(GraphicsPatchContext context, MiscGraphicsInfo gInfo, string pngFile)

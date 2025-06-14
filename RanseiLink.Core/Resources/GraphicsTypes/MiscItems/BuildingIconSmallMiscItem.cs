@@ -25,11 +25,11 @@ public class BuildingIconSmallMiscItem : MiscItem
         PngFile = Path.Combine(ContainingFolder, "Image.png");
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder, MiscGraphicsInfo gInfo)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context, MiscGraphicsInfo gInfo)
     {
-        string pngFile = Path.Combine(defaultDataFolder, PngFile);
+        string pngFile = Path.Combine(context.DefaultDataFolder, PngFile);
 
-        var containingFolder = Path.Combine(defaultDataFolder, ContainingFolder);
+        var containingFolder = Path.Combine(context.DefaultDataFolder, ContainingFolder);
 
         // unpack links
         var rx = new Regex(@"03_05_parts_shisetsuicon_s_(\d\d)\.G2DR");

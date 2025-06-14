@@ -36,11 +36,11 @@ public class MiscGraphicsInfo : GraphicsInfo
         return Items[id].PaletteCapacity;
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context)
     {
         foreach (var item in Items)
         {
-            item.ProcessExportedFiles(defaultDataFolder, this);
+            item.ProcessExportedFiles(context, this);
         }
     }
 

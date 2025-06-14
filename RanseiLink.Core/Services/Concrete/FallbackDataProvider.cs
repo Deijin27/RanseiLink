@@ -45,9 +45,10 @@ public class FallbackDataProvider : IFallbackDataProvider
         var infos = GraphicsInfoResource.All;
         progress?.Report(new ProgressInfo(StatusText: "Converting Images...", IsIndeterminate: false, MaxProgress: infos.Count));
         int count = 0;
+        var context = new PopulateDefaultsContext(defaultDataFolder);
         Parallel.ForEach(infos, gfxInfo =>
         {
-            gfxInfo.ProcessExportedFiles(defaultDataFolder);
+            gfxInfo.ProcessExportedFiles(context);
             progress?.Report(new ProgressInfo(Progress: ++count));
         });
         progress?.Report(new ProgressInfo(StatusText: "Done!"));

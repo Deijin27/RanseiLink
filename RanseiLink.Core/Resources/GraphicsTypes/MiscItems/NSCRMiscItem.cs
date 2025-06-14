@@ -13,15 +13,15 @@ public class NSCRMiscItem : G2DRMiscItem
 
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder, MiscGraphicsInfo gInfo)
+    public override void ProcessExportedFiles(PopulateDefaultsContext context, MiscGraphicsInfo gInfo)
     {
-        var outFolder = Path.Combine(defaultDataFolder, LinkFolder);
-        LINK.Unpack(Path.Combine(defaultDataFolder, Link), outFolder);
+        var outFolder = Path.Combine(context.DefaultDataFolder, LinkFolder);
+        LINK.Unpack(Path.Combine(context.DefaultDataFolder, Link), outFolder);
 
         var (ncgr, nclr) = G2DR.LoadImgFromFolder(outFolder);
         using var image = NitroImageUtil.NcgrToImage(ncgr, nclr);
 
-        image.SaveAsPng(Path.Combine(defaultDataFolder, PngFile));
+        image.SaveAsPng(Path.Combine(context.DefaultDataFolder, PngFile));
     }
 
     public override void GetFilesToPatch(GraphicsPatchContext context, MiscGraphicsInfo gInfo, string pngFile)
