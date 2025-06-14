@@ -1,6 +1,5 @@
 ﻿using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Resources;
-using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Enums;
 using FluentResults;
 
@@ -9,16 +8,9 @@ namespace RanseiLink.Core.Services.Concrete;
 public class FallbackDataProvider : IFallbackDataProvider
 {
     private readonly RomFsFactory _ndsFactory;
-    private readonly Dictionary<MetaSpriteType, IGraphicTypeDefaultPopulater> _populaters;
-
-    public FallbackDataProvider(RomFsFactory ndsFactory, IGraphicTypeDefaultPopulater[] populaters)
+    public FallbackDataProvider(RomFsFactory ndsFactory)
     {
         _ndsFactory = ndsFactory;
-        _populaters = new();
-        foreach (var populater in populaters)
-        {
-            _populaters.Add(populater.Id, populater);
-        }
     }
     public bool IsDefaultsPopulated(ConquestGameCode gameCode) => Directory.Exists(Path.Combine(Constants.DefaultDataFolder(gameCode), Constants.GraphicsFolderPath));
 
@@ -55,7 +47,7 @@ public class FallbackDataProvider : IFallbackDataProvider
         int count = 0;
         Parallel.ForEach(infos, gfxInfo =>
         {
-            _populaters[gfxInfo.MetaType].ProcessExportedFiles(defaultDataFolder, gfxInfo);
+            gfxInfo.ProcessExportedFiles(defaultDataFolder);
             progress?.Report(new ProgressInfo(Progress: ++count));
         });
         progress?.Report(new ProgressInfo(StatusText: "Done!"));

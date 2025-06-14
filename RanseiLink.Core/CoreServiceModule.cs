@@ -2,9 +2,7 @@
 using RanseiLink.Core.RomFs;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.Concrete;
-using RanseiLink.Core.Services.DefaultPopulaters;
 using RanseiLink.Core.Settings;
-using System.Reflection;
 
 namespace RanseiLink.Core;
 
@@ -32,21 +30,5 @@ public class CoreServiceModule : IModule
             Made.Of(() => new SettingService(
                 settingFolder
                 )));
-
-        foreach (var type in GetType().Assembly.GetTypes())
-        {
-            if (type.IsAbstract || type.GetCustomAttribute<DefaultPopulaterAttribute>() == null)
-            {
-                continue;
-            }
-            if (typeof(IGraphicTypeDefaultPopulater).IsAssignableFrom(type))
-            {
-                builder.Register(typeof(IGraphicTypeDefaultPopulater), type, Reuse.Singleton);
-            }
-            else if (typeof(IMiscItemDefaultPopulater).IsAssignableFrom(type))
-            {
-                builder.Register(typeof(IMiscItemDefaultPopulater), type, Reuse.Singleton);
-            }
-        }
     }
 }

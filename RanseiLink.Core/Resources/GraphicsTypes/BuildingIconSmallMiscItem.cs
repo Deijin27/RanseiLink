@@ -1,35 +1,105 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Resources;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
-using System.Collections.Concurrent;
+using SixLabors.ImageSharp;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using SixLabors.ImageSharp.Processing;
+using RanseiLink.Core.Services;
 
-namespace RanseiLink.Core.Services.ModPatchBuilders;
+namespace RanseiLink.Core.Resources;
 
-[PatchBuilder]
-public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
+public class BuildingIconSmallMiscItem : MiscItem
 {
-    public MetaMiscItemId Id => MetaMiscItemId.IconInstS;
-
-    private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
+    public string ContainingFolder { get; }
+    public override string PngFile { get; }
 
     private static readonly CellImageSettings _settings = new(
         Prt: PositionRelativeTo.MinCell,
         Debug: false
         );
 
-    public static CellImageSettings Settings => _settings;
-
-    public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, MiscConstants gInfo, MiscItem miscItem, string pngFile)
+    public BuildingIconSmallMiscItem(MetaMiscItemId metaId, int id, XElement element) : base(metaId, id, element)
     {
-        var item = (BuildingIconSmallMiscItem)miscItem;
+        ContainingFolder = element.Attribute("ContainingFolder")!.Value;
+        PngFile = Path.Combine(ContainingFolder, "Image.png");
+    }
 
+    public override void ProcessExportedFiles(string defaultDataFolder, MiscConstants gInfo)
+    {
+        string pngFile = Path.Combine(defaultDataFolder, PngFile);
+
+        var containingFolder = Path.Combine(defaultDataFolder, ContainingFolder);
+
+        // unpack links
+        var rx = new Regex(@"03_05_parts_shisetsuicon_s_(\d\d)\.G2DR");
+        var linkFiles = Directory.GetFiles(containingFolder, "*.G2DR");
+        var linkFolders = new Dictionary<int, string>();
+        foreach (var link in linkFiles)
+        {
+            var linkFileName = Path.GetFileName(link);
+            var linkFolder = Path.Combine(Path.GetDirectoryName(link)!, Path.GetFileNameWithoutExtension(link) + "-Unpacked");
+
+            var match = rx.Match(linkFileName);
+            if (!match.Success)
+            {
+                throw new Exception($"Found unexpected link file when processing IconInstS '{linkFileName}'");
+            }
+            var id = int.Parse(match.Groups[1].Value);
+
+            LINK.Unpack(link, linkFolder);
+            linkFolders.Add(id, linkFolder);
+        }
+
+        // Load the palette
+        // one palette stored with the first image is shared between all images
+        if (!linkFolders.TryGetValue(0, out var palFolder))
+        {
+            throw new Exception("Palette folder not found for IconInstS");
+        }
+        var nclr = G2DR.LoadPaletteFromFolder(palFolder);
+        var palette = new PaletteCollection(nclr.Palettes.Palette, nclr.Palettes.Format, true);
+
+        // Load the ncer and ncgrs, then load all the images
+        const int width = 32;
+        const int height = 32;
+        var maxId = linkFolders.Select(x => x.Key).Max();
+        using var combinedImage = new Image<Rgba32>(width, (maxId + 1) * height);
+        combinedImage.Mutate(g =>
+        {
+            foreach (var (linkId, linkFolder) in linkFolders)
+            {
+                var ncgr = G2DR.LoadPixelsFromFolder(linkFolder, NcgrSlot.Slot3);
+                var ncer = G2DR.LoadCellFromFolder(linkFolder);
+
+                // Not all building ids have icons
+                // to facilitate potentially filling in these gaps in the future,
+                // we enforce the 32x32 size, and add gaps
+                using var image = CellImageUtil.MultiClusterToImage(
+                   clusters: ncer.Clusters.Clusters,
+                   blockSize: ncer.Clusters.BlockSize,
+                   imageInfo: new MultiPaletteImageInfo(
+                       Pixels: ncgr.Pixels.Data,
+                       Palette: palette, // <-- it's probably worth using this over NitroImageUtil because we can load the palette only once
+                       Width: width,
+                       Height: height,
+                       IsTiled: ncgr.Pixels.IsTiled,
+                       Format: ncgr.Pixels.Format
+                       ),
+                   _settings
+                   );
+                g.DrawImage(image, new Point(0, linkId * height), 1);
+            }
+        });
+
+        combinedImage.SaveAsPng(pngFile);
+    }
+
+    public override void GetFilesToPatch(GraphicsPatchContext context, MiscConstants gInfo, string pngFile)
+    {
         var parentTempDir = FileUtil.GetTemporaryDirectory();
 
-        var containingFolder = Path.Combine(_graphicsProviderFolder, item.ContainingFolder);
+        var containingFolder = Path.Combine(context.DefaultDataFolder, ContainingFolder);
         using var image = ImageUtil.LoadPngBetterError(pngFile);
         var images = new List<Image<Rgba32>>();
 
@@ -134,8 +204,8 @@ public class IconInstSPatchBuilder(ModInfo mod) : IMiscItemPatchBuilder
 
             var tempLink = Path.GetTempFileName();
             LINK.Pack(tempDir, tempLink);
-            var patchTarget = Path.Combine(item.ContainingFolder, linkFileName);
-            filesToPatch.Add(new FileToPatch(patchTarget, tempLink, FilePatchOptions.DeleteSourceWhenDone));
+            var patchTarget = Path.Combine(ContainingFolder, linkFileName);
+            context.FilesToPatch.Add(new FileToPatch(patchTarget, tempLink, FilePatchOptions.DeleteSourceWhenDone));
         }
 
         Directory.Delete(parentTempDir, true);

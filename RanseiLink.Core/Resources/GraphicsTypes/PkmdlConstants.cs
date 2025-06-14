@@ -1,34 +1,168 @@
 ﻿using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
-using RanseiLink.Core.Resources;
-using RanseiLink.Core.Services.ModelServices;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
-using System.Collections.Concurrent;
+using System.Xml.Linq;
+using RanseiLink.Core.Services.ModelServices;
+using RanseiLink.Core.Services;
 
-namespace RanseiLink.Core.Services.ModPatchBuilders;
+namespace RanseiLink.Core.Resources;
 
-[PatchBuilder]
-public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, ModInfo mod, IPokemonService pokemonService) : IGraphicTypePatchBuilder
+public class PkmdlConstants : GroupedGraphicsInfo
 {
-    public MetaSpriteType Id => MetaSpriteType.PKMDL;
+    public string TEXLink { get; }
+    public string TEXLinkFolder { get; }
+    public string ATXLink { get; }
+    public string ATXLinkFolder { get; }
+    public string DTXLink { get; }
+    public string DTXLinkFolder { get; }
+    public string PACLink { get; }
+    public string PACLinkFolder { get; }
+    public override string PngFolder { get; }
+    public override int PaletteCapacity => 16;
 
-    private const int _numPokemon = 200;
     private const int _pokemonSpriteWidth = 32;
+    private const int _numPokemon = 200;
     private const int _pokemonSpriteHeight = 32;
     private const int _texSpriteCount = 24;
-    private readonly string _graphicsProviderFolder = Constants.DefaultDataFolder(mod.GameCode);
 
-    public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, IGraphicsInfo gInfo)
+    public PkmdlConstants(MetaSpriteType metaType, XElement element) : base(metaType, element)
     {
-        var pkmdlInfo = (PkmdlConstants)gInfo;
+        TEXLink = FileUtil.NormalizePath(element.Element("TEXLink")!.Value);
+        ATXLink = FileUtil.NormalizePath(element.Element("ATXLink")!.Value);
+        DTXLink = FileUtil.NormalizePath(element.Element("DTXLink")!.Value);
+        PACLink = FileUtil.NormalizePath(element.Element("PACLink")!.Value);
 
-        var spriteFiles = overrideSpriteProvider.GetAllSpriteFiles(pkmdlInfo.Type);
+        TEXLinkFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, $"TEXLink-Unpacked");
+        ATXLinkFolder = Path.Combine(Path.GetDirectoryName(ATXLink)!, $"ATXLink-Unpacked");
+        DTXLinkFolder = Path.Combine(Path.GetDirectoryName(DTXLink)!, $"DTXLink-Unpacked");
+        PACLinkFolder = Path.Combine(Path.GetDirectoryName(PACLink)!, $"PACLink-Unpacked");
+
+        PngFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, "Pngs");
+    }
+
+    public override void ProcessExportedFiles(string defaultDataFolder)
+    {
+        string texLink = Path.Combine(defaultDataFolder, TEXLink);
+        string atxLink = Path.Combine(defaultDataFolder, ATXLink);
+        string dtxLink = Path.Combine(defaultDataFolder, DTXLink);
+        string pacLink = Path.Combine(defaultDataFolder, PACLink);
+
+        string texUnpacked = Path.Combine(defaultDataFolder, TEXLinkFolder);
+        string atxUnpacked = Path.Combine(defaultDataFolder, ATXLinkFolder);
+        string dtxUnpacked = Path.Combine(defaultDataFolder, DTXLinkFolder);
+        string pacUnpacked = Path.Combine(defaultDataFolder, PACLinkFolder);
+
+        string outFolderPath = Path.Combine(defaultDataFolder, PngFolder);
+        Directory.CreateDirectory(outFolderPath);
+
+        LINK.Unpack(texLink, texUnpacked, false, 4);
+        LINK.Unpack(atxLink, atxUnpacked, false, 4);
+        LINK.Unpack(dtxLink, dtxUnpacked, false, 4);
+        LINK.Unpack(pacLink, pacUnpacked, false, 4);
+
+        int fileCount = Directory.GetFiles(texUnpacked).Length;
+
+        Parallel.For(0, fileCount, i =>
+        {
+            string fileName = i.ToString().PadLeft(4, '0');
+            string outFilePath = Path.Combine(outFolderPath, fileName + ".png");
+
+            NSBTX btx0 = new NSBTX(Path.Combine(texUnpacked, fileName));
+
+            var palette = new Palette(btx0.Texture.Palettes[0].PaletteData, true);
+
+            // merge individual TEX textures into one for speed
+            var texPixelmap = new byte[btx0.Texture.Textures.Sum(x => x.TextureData.Length)];
+            int pos = 0;
+            foreach (var pixelmap in btx0.Texture.Textures)
+            {
+                pixelmap.TextureData.CopyTo(texPixelmap, pos);
+                pos += pixelmap.TextureData.Length;
+            }
+
+            const bool isTiled = false;
+            const TexFormat texFormat = TexFormat.Pltt16;
+
+            // generate images
+            var texImg = ImageUtil.SpriteToImage(
+                new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth,
+                isTiled,
+                texFormat
+                ));
+
+            byte[] atxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
+            var atxImg = ImageUtil.SpriteToImage(
+                new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth,
+                isTiled,
+                texFormat
+                ));
+
+            byte[] dtxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
+            var dtxImg = ImageUtil.SpriteToImage(
+                new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth,
+                isTiled,
+                texFormat
+                ));
+
+
+            string pacFile = Path.Combine(pacUnpacked, fileName);
+            string pacUnpackedFolder = Path.Combine(pacUnpacked, fileName + "-Unpacked");
+            PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
+            byte[] pacPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
+            var pacImg = ImageUtil.SpriteToImage(
+                new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth,
+                isTiled,
+                texFormat
+                ));
+
+            var totalWidth = texImg.Width + atxImg.Width + dtxImg.Width + pacImg.Width;
+            var maxHeight = 1024;
+            var combinedImage = new Image<Rgba32>(totalWidth, maxHeight);
+            combinedImage.Mutate(g =>
+            {
+                g.DrawImage(
+                    texImg,
+                    new Point(0, 0),
+                    1
+                    );
+                g.DrawImage(
+                    atxImg,
+                    new Point(texImg.Width, 0),
+                    1
+                    );
+                g.DrawImage(
+                    dtxImg,
+                    new Point(texImg.Width + atxImg.Width, 0),
+                    1
+                    );
+                g.DrawImage(
+                    pacImg,
+                    new Point(texImg.Width + atxImg.Width + dtxImg.Width, 0),
+                    1
+                    );
+            });
+
+            texImg.Dispose();
+            atxImg.Dispose();
+            dtxImg.Dispose();
+            pacImg.Dispose();
+
+            combinedImage.SaveAsPng(outFilePath);
+            combinedImage.Dispose();
+        });
+    }
+
+    public override void GetFilesToPatch(GraphicsPatchContext context)
+    {
+        var spriteFiles = context.OverrideDataProvider.GetAllSpriteFiles(Type);
         if (!spriteFiles.Any(i => i.IsOverride))
         {
             return;
         }
+
+        var pokemonService = context.ModServiceGetter.Get<IPokemonService>();
 
         // temporary link files
         string texLink = Path.GetTempFileName();
@@ -37,10 +171,10 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
         string pacLink = Path.GetTempFileName();
 
         // link files unpacked previously
-        string texUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.TEXLinkFolder);
-        string atxUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.ATXLinkFolder);
-        string dtxUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.DTXLinkFolder);
-        string pacUnpacked = Path.Combine(_graphicsProviderFolder, pkmdlInfo.PACLinkFolder);
+        string texUnpacked = Path.Combine(context.DefaultDataFolder, TEXLinkFolder);
+        string atxUnpacked = Path.Combine(context.DefaultDataFolder, ATXLinkFolder);
+        string dtxUnpacked = Path.Combine(context.DefaultDataFolder, DTXLinkFolder);
+        string pacUnpacked = Path.Combine(context.DefaultDataFolder, PACLinkFolder);
 
         var spriteFileDict = spriteFiles.ToDictionary(i => i.Id);
 
@@ -119,7 +253,7 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
                                 RepeatX = false,
                                 RepeatY = false,
                                 Color0Transparent = true,
-                                
+
                             });
                         }
                     }
@@ -155,7 +289,7 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
 
                     // PAC ------------------------------------------------------------------------------------------------------
 
-                    string pacUnpackedFolder = Path.Combine(pkmdlInfo.PACLinkFolder, fileName + "-Unpacked");
+                    string pacUnpackedFolder = Path.Combine(PACLinkFolder, fileName + "-Unpacked");
 
                     // convert the png
                     using (var pacImg = combinedImage.Clone(g =>
@@ -168,9 +302,9 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
                         string pacTemp = Path.GetTempFileName();
                         string[] pacFiles = new string[]
                         {
-                            Path.Combine(_graphicsProviderFolder, pacUnpackedFolder, "0000"),
-                            overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0001")).File,
-                            overrideSpriteProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0002")).File,
+                            Path.Combine(context.DefaultDataFolder, pacUnpackedFolder, "0000"),
+                            context.OverrideDataProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0001")).File,
+                            context.OverrideDataProvider.GetDataFile(Path.Combine(pacUnpackedFolder, "0002")).File,
                             pacCharTemp
                         };
                         PAC.Pack(pacFiles, pacTemp, new[] { PAC.FileTypeNumber.NSBMD, PAC.FileTypeNumber.NSBTP, PAC.FileTypeNumber.PAT, PAC.FileTypeNumber.CHAR }, 1);
@@ -182,7 +316,7 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
                     // TEX Palette -------------------------------------------------------------------------------------------
                     if (palette.Count > 16)
                     {
-                        throw new System.Exception($"More than 16 colors in image when building tex file in {nameof(PkmdlPatchBuilder)}. This should have been filtered out by palette simplifier");
+                        throw new System.Exception($"More than 16 colors in image when building tex file in {nameof(PkmdlConstants)}. This should have been filtered out by palette simplifier");
                     }
 
                     var resizedPalette = new Rgba32[16];
@@ -193,8 +327,8 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
                     resizedPalette[0] = Color.FromRgb(120, 120, 120);
 
                     var convertedPalette = PaletteUtil.From32bitColors(resizedPalette);
-                    btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_f_pl", paletteData: convertedPalette));
-                    btx0.Texture.Palettes.Add(new NSTEX.Palette (name: "base_fix_b_pl", paletteData: convertedPalette));
+                    btx0.Texture.Palettes.Add(new NSTEX.Palette(name: "base_fix_f_pl", paletteData: convertedPalette));
+                    btx0.Texture.Palettes.Add(new NSTEX.Palette(name: "base_fix_b_pl", paletteData: convertedPalette));
                     btx0.WriteTo(texTemp);
                     texLinkFiles[i] = texTemp;
                 }
@@ -213,9 +347,9 @@ public class PkmdlPatchBuilder(IOverrideDataProvider overrideSpriteProvider, Mod
         LINK.Pack(dtxLinkFiles, dtxLink);
         LINK.Pack(pacLinkFiles, pacLink);
 
-        filesToPatch.Add(new FileToPatch(pkmdlInfo.TEXLink, texLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        filesToPatch.Add(new FileToPatch(pkmdlInfo.ATXLink, atxLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        filesToPatch.Add(new FileToPatch(pkmdlInfo.DTXLink, dtxLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
-        filesToPatch.Add(new FileToPatch(pkmdlInfo.PACLink, pacLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        context.FilesToPatch.Add(new FileToPatch(TEXLink, texLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        context.FilesToPatch.Add(new FileToPatch(ATXLink, atxLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        context.FilesToPatch.Add(new FileToPatch(DTXLink, dtxLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
+        context.FilesToPatch.Add(new FileToPatch(PACLink, pacLink, FilePatchOptions.DeleteSourceWhenDone | FilePatchOptions.VariableLength));
     }
-} 
+}

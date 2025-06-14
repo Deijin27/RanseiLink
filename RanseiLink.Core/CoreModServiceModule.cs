@@ -54,14 +54,6 @@ public class CoreModServiceModule : IModule
             {
                 builder.Register(typeof(IPatchBuilder), type, Reuse.Singleton);
             }
-            else if (typeof(IGraphicTypePatchBuilder).IsAssignableFrom(type))
-            {
-                builder.Register(typeof(IGraphicTypePatchBuilder), type, Reuse.Singleton);
-            }
-            else if (typeof(IMiscItemPatchBuilder).IsAssignableFrom(type))
-            {
-                builder.Register(typeof(IMiscItemPatchBuilder), type, Reuse.Singleton);
-            }
         }
 
         builder.Register<IBannerService, BannerService>(Reuse.Singleton);

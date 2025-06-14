@@ -6,19 +6,16 @@ namespace RanseiLink.Core.Services.ModPatchBuilders;
 [PatchBuilder]
 public class GraphicsPatchBuilder : IPatchBuilder
 {
-    private readonly Dictionary<MetaSpriteType, IGraphicTypePatchBuilder> _builders;
     private readonly IFallbackDataProvider _fallbackSpriteProvider;
+    private readonly IOverrideDataProvider _overrideDataProvider;
+    private readonly IServiceGetter _modServiceGetter;
     private readonly ModInfo _mod;
-    public GraphicsPatchBuilder(ModInfo mod, IGraphicTypePatchBuilder[] builders, IFallbackDataProvider fallbackSpriteProvider)
+    public GraphicsPatchBuilder(ModInfo mod, IFallbackDataProvider fallbackSpriteProvider, IOverrideDataProvider overrideDataProvider, IServiceGetter modServiceGetter)
     {
         _fallbackSpriteProvider = fallbackSpriteProvider;
+        _overrideDataProvider = overrideDataProvider;
+        _modServiceGetter = modServiceGetter;
         _mod = mod;
-
-        _builders = new();
-        foreach (var builder in builders)
-        {
-            _builders.Add(builder.Id, builder);
-        }
     }
 
     public void GetFilesToPatch(ConcurrentBag<FileToPatch> filesToPatch, PatchOptions patchOptions)
@@ -33,9 +30,18 @@ public class GraphicsPatchBuilder : IPatchBuilder
             throw new Exception("Cannot patch sprites unless 'Populate Graphics Defaults' has been run");
         }
 
+        var graphicsProviderFolder = Constants.DefaultDataFolder(_mod.GameCode);
+
+        var graphicsPatchContext = new GraphicsPatchContext(
+            filesToPatch,
+            _overrideDataProvider, 
+            _fallbackSpriteProvider,
+            graphicsProviderFolder,
+            _modServiceGetter);
+
         Parallel.ForEach(GraphicsInfoResource.All, gInfo =>
         {
-            _builders[gInfo.MetaType].GetFilesToPatch(filesToPatch, gInfo);
+            gInfo.GetFilesToPatch(graphicsPatchContext);
         });
     }
 }
