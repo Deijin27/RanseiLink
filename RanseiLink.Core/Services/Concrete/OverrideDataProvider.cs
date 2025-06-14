@@ -29,35 +29,9 @@ public class OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, 
         }
 
         var info = GraphicsInfoResource.Get(type);
-        if (info is MiscGraphicsInfo miscInfo)
+        foreach (var fi in info.GetAllSpriteFiles(isOverride: true, mod.FolderPath))
         {
-            foreach (var item in miscInfo.Items)
-            {
-                var file = Path.Combine(mod.FolderPath, item.PngFile);
-                if (File.Exists(file))
-                {
-                    var fi = new SpriteFile(type, item.Id, item.PngFile, file, IsOverride: true);
-                    dict[fi.Id] = fi;
-                }
-            }
-        }
-        else if (info is IGroupedGraphicsInfo groupedInfo)
-        {
-            string overrideFolder = Path.Combine(mod.FolderPath, groupedInfo.PngFolder);
-            if (Directory.Exists(overrideFolder))
-            {
-                foreach (var i in Directory.GetFiles(overrideFolder))
-                {
-                    var romPath = i[(mod.FolderPath.Length + 1)..];
-                    var fi = new SpriteFile(type, int.Parse(Path.GetFileNameWithoutExtension(i)), romPath, i, IsOverride: true);
-                    dict[fi.Id] = fi;
-                }
-            }
-            
-        }
-        else
-        {
-            throw new Exception("Unhandled graphics info type");
+            dict[fi.Id] = fi;
         }
 
         return dict.Values.ToList();

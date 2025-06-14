@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using RanseiLink.Core.Services;
+using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
 
@@ -48,5 +49,21 @@ public abstract class GroupedGraphicsInfo : GraphicsInfo, IGroupedGraphicsInfo
     public override int GetPaletteCapacity(int id)
     {
         return PaletteCapacity;
+    }
+
+    public override List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder)
+    {
+        var spriteFiles = new List<SpriteFile>();
+        string overrideFolder = Path.Combine(folder, PngFolder);
+        if (Directory.Exists(overrideFolder))
+        {
+            foreach (var i in Directory.GetFiles(overrideFolder))
+            {
+                var romPath = i[(folder.Length + 1)..];
+                var fi = new SpriteFile(Type, int.Parse(Path.GetFileNameWithoutExtension(i)), romPath, i, IsOverride: isOverride);
+                spriteFiles.Add(fi);
+            }
+        }
+        return spriteFiles;
     }
 }

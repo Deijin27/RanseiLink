@@ -15,6 +15,7 @@ public interface IGraphicsInfo
 
     void GetFilesToPatch(GraphicsPatchContext context);
     void ProcessExportedFiles(string defaultDataFolder);
+    List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder);
 }
 
 public record GraphicsPatchContext(
@@ -43,4 +44,5 @@ public abstract class GraphicsInfo : IGraphicsInfo
     public abstract int GetPaletteCapacity(int id);
     public abstract void ProcessExportedFiles(string defaultDataFolder);
     public abstract void GetFilesToPatch(GraphicsPatchContext context);
+    public abstract List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder);
 }

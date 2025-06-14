@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp;
+﻿using RanseiLink.Core.Services;
+using SixLabors.ImageSharp;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
@@ -55,5 +56,20 @@ public class MiscGraphicsInfo : GraphicsInfo
 
             item.GetFilesToPatch(context, this, spriteFile.File);
         }
+    }
+
+    public override List<SpriteFile> GetAllSpriteFiles(bool isOverride, string folder)
+    {
+        var result = new List<SpriteFile>();
+        foreach (var item in Items)
+        {
+            var file = Path.Combine(folder, item.PngFile);
+            if (!File.Exists(file))
+            {
+                continue;
+            }
+            result.Add(new SpriteFile(Type, item.Id, item.PngFile, file, IsOverride: isOverride));
+        }
+        return result;
     }
 }

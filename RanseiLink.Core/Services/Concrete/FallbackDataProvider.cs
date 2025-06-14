@@ -59,37 +59,7 @@ public class FallbackDataProvider : IFallbackDataProvider
     {
         string defaultDataFolder = Constants.DefaultDataFolder(gc);
         var info = GraphicsInfoResource.Get(type);
-        if (info is MiscGraphicsInfo miscInfo)
-        {
-            List<SpriteFile> result = new List<SpriteFile>();
-            foreach (var item in miscInfo.Items)
-            {
-                var file = Path.Combine(defaultDataFolder, item.PngFile);
-                result.Add(new SpriteFile(type, item.Id, item.PngFile, file, IsOverride: false));
-            }
-            return result;
-        }
-        else if (info is IGroupedGraphicsInfo groupedInfo)
-        {
-            string dir = Path.Combine(defaultDataFolder, groupedInfo.PngFolder);
-            if (!Directory.Exists(dir))
-            {
-                return new List<SpriteFile>();
-            }
-            return Directory.GetFiles(dir)
-                .Select(i => new SpriteFile(
-                    type, 
-                    int.Parse(Path.GetFileNameWithoutExtension(i)),
-                    i[(defaultDataFolder.Length + 1)..],
-                    i,
-                    IsOverride: false))
-                .ToList();
-        }
-        else
-        {
-            throw new Exception("Unhandled graphics info type");
-        }
-        
+        return info.GetAllSpriteFiles(isOverride: false, defaultDataFolder);  
     }
 
     public SpriteFile GetSpriteFile(ConquestGameCode gc, SpriteType type, int id)
