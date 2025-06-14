@@ -1,23 +1,15 @@
-﻿using RanseiLink.Core.Models;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
 
-public enum MetaMiscItemId
-{
-    NCER,
-    NSCR,
-    IconInstS
-}
-
-public class MiscConstants : GraphicsInfo
+public class MiscGraphicsInfo : GraphicsInfo
 {
     public MiscItem[] Items { get; }
 
     public override bool FixedAmount => true;
 
-    public MiscConstants(MetaSpriteType metaType, XElement element) : base(metaType, element)
+    public MiscGraphicsInfo(MetaSpriteType metaType, XElement element) : base(metaType, element)
     {
         Items = element.Elements().Select((miscItemElement, id) =>
         {

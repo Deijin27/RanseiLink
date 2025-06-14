@@ -101,7 +101,7 @@ public class PokemonAnimationService(IOverrideDataProvider spriteProvider, IPoke
 
     private string ResolveRelativeAnimPath(PokemonId id, bool raw)
     {
-        var info = (PkmdlConstants)GraphicsInfoResource.Get(SpriteType.ModelPokemon);
+        var info = (PkmdlGraphicsInfo)GraphicsInfoResource.Get(SpriteType.ModelPokemon);
         var pacLinkRelative = info.PACLinkFolder;
         string fileName = ((int)id).ToString().PadLeft(4, '0');
         string pacUnpackedFolder = Path.Combine(pacLinkRelative, fileName + "-Unpacked");

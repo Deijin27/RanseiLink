@@ -9,7 +9,7 @@ using RanseiLink.Core.Services;
 
 namespace RanseiLink.Core.Resources;
 
-public class PkmdlConstants : GroupedGraphicsInfo
+public class PkmdlGraphicsInfo : GroupedGraphicsInfo
 {
     public string TEXLink { get; }
     public string TEXLinkFolder { get; }
@@ -27,7 +27,7 @@ public class PkmdlConstants : GroupedGraphicsInfo
     private const int _pokemonSpriteHeight = 32;
     private const int _texSpriteCount = 24;
 
-    public PkmdlConstants(MetaSpriteType metaType, XElement element) : base(metaType, element)
+    public PkmdlGraphicsInfo(MetaSpriteType metaType, XElement element) : base(metaType, element)
     {
         TEXLink = FileUtil.NormalizePath(element.Element("TEXLink")!.Value);
         ATXLink = FileUtil.NormalizePath(element.Element("ATXLink")!.Value);
@@ -316,7 +316,7 @@ public class PkmdlConstants : GroupedGraphicsInfo
                     // TEX Palette -------------------------------------------------------------------------------------------
                     if (palette.Count > 16)
                     {
-                        throw new System.Exception($"More than 16 colors in image when building tex file in {nameof(PkmdlConstants)}. This should have been filtered out by palette simplifier");
+                        throw new System.Exception($"More than 16 colors in image when building tex file in {nameof(PkmdlGraphicsInfo)}. This should have been filtered out by palette simplifier");
                     }
 
                     var resizedPalette = new Rgba32[16];

@@ -25,7 +25,7 @@ public class BuildingIconSmallMiscItem : MiscItem
         PngFile = Path.Combine(ContainingFolder, "Image.png");
     }
 
-    public override void ProcessExportedFiles(string defaultDataFolder, MiscConstants gInfo)
+    public override void ProcessExportedFiles(string defaultDataFolder, MiscGraphicsInfo gInfo)
     {
         string pngFile = Path.Combine(defaultDataFolder, PngFile);
 
@@ -95,7 +95,7 @@ public class BuildingIconSmallMiscItem : MiscItem
         combinedImage.SaveAsPng(pngFile);
     }
 
-    public override void GetFilesToPatch(GraphicsPatchContext context, MiscConstants gInfo, string pngFile)
+    public override void GetFilesToPatch(GraphicsPatchContext context, MiscGraphicsInfo gInfo, string pngFile)
     {
         var parentTempDir = FileUtil.GetTemporaryDirectory();
 

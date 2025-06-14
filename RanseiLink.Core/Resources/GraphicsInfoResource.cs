@@ -16,10 +16,10 @@ public static class GraphicsInfoResource
             var metaType = Enum.Parse<MetaSpriteType>(element.Name.ToString());
             GraphicsInfo info = metaType switch
             {
-                MetaSpriteType.STL => new StlConstants(metaType, element),
-                MetaSpriteType.SCBG => new ScbgConstants(metaType, element),
-                MetaSpriteType.PKMDL => new PkmdlConstants(metaType, element),
-                MetaSpriteType.Misc => new MiscConstants(metaType, element),
+                MetaSpriteType.STL => new StlGraphicsInfo(metaType, element),
+                MetaSpriteType.SCBG => new ScbgGraphicsInfo(metaType, element),
+                MetaSpriteType.PKMDL => new PkmdlGraphicsInfo(metaType, element),
+                MetaSpriteType.Misc => new MiscGraphicsInfo(metaType, element),
                 _ => throw new Exception("Invalid element in GraphicsInfo.xml"),
             };
             __all[info.Type] = info;

@@ -59,7 +59,7 @@ public class FallbackDataProvider : IFallbackDataProvider
     {
         string defaultDataFolder = Constants.DefaultDataFolder(gc);
         var info = GraphicsInfoResource.Get(type);
-        if (info is MiscConstants miscInfo)
+        if (info is MiscGraphicsInfo miscInfo)
         {
             List<SpriteFile> result = new List<SpriteFile>();
             foreach (var item in miscInfo.Items)

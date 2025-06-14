@@ -17,6 +17,6 @@ public abstract class MiscItem
         PaletteCapacity = palAttr != null ? int.Parse(palAttr.Value) : 256;
     }
 
-    public abstract void ProcessExportedFiles(string defaultDataFolder, MiscConstants gInfo);
-    public abstract void GetFilesToPatch(GraphicsPatchContext context, MiscConstants gInfo, string pngFile);
+    public abstract void ProcessExportedFiles(string defaultDataFolder, MiscGraphicsInfo gInfo);
+    public abstract void GetFilesToPatch(GraphicsPatchContext context, MiscGraphicsInfo gInfo, string pngFile);
 }

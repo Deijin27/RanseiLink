@@ -29,7 +29,7 @@ public class OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, 
         }
 
         var info = GraphicsInfoResource.Get(type);
-        if (info is MiscConstants miscInfo)
+        if (info is MiscGraphicsInfo miscInfo)
         {
             foreach (var item in miscInfo.Items)
             {

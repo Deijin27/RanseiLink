@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Core.Resources;
 
-public class StlConstants : GroupedGraphicsInfo
+public class StlGraphicsInfo : GroupedGraphicsInfo
 {
     public string? TexInfo { get; }
     public string? TexData { get; }
@@ -17,7 +17,7 @@ public class StlConstants : GroupedGraphicsInfo
     public override string PngFolder { get; }
     public override int PaletteCapacity => 256;
 
-    public StlConstants(MetaSpriteType metaType, XElement element) : base(metaType, element)
+    public StlGraphicsInfo(MetaSpriteType metaType, XElement element) : base(metaType, element)
     {
         TexInfo = FileUtil.NormalizePath(element.Element("TexInfo")?.Value);
         TexData = FileUtil.NormalizePath(element.Element("TexData")?.Value);
