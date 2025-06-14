@@ -22,10 +22,10 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
     public override string PngFolder { get; }
     public override int PaletteCapacity => 16;
 
-    private const int _pokemonSpriteWidth = 32;
-    private const int _numPokemon = 200;
-    private const int _pokemonSpriteHeight = 32;
-    private const int _texSpriteCount = 24;
+    private const int __pokemonSpriteWidth = 32;
+    private const int __numPokemon = 200;
+    private const int __pokemonSpriteHeight = 32;
+    private const int __texSpriteCount = 24;
 
     public PkmdlGraphicsInfo(MetaSpriteType metaType, XElement element) : base(metaType, element)
     {
@@ -34,10 +34,10 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
         DTXLink = FileUtil.NormalizePath(element.Element("DTXLink")!.Value);
         PACLink = FileUtil.NormalizePath(element.Element("PACLink")!.Value);
 
-        TEXLinkFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, $"TEXLink-Unpacked");
-        ATXLinkFolder = Path.Combine(Path.GetDirectoryName(ATXLink)!, $"ATXLink-Unpacked");
-        DTXLinkFolder = Path.Combine(Path.GetDirectoryName(DTXLink)!, $"DTXLink-Unpacked");
-        PACLinkFolder = Path.Combine(Path.GetDirectoryName(PACLink)!, $"PACLink-Unpacked");
+        TEXLinkFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, "TEXLink-Unpacked");
+        ATXLinkFolder = Path.Combine(Path.GetDirectoryName(ATXLink)!, "ATXLink-Unpacked");
+        DTXLinkFolder = Path.Combine(Path.GetDirectoryName(DTXLink)!, "DTXLink-Unpacked");
+        PACLinkFolder = Path.Combine(Path.GetDirectoryName(PACLink)!, "PACLink-Unpacked");
 
         PngFolder = Path.Combine(Path.GetDirectoryName(TEXLink)!, "Pngs");
     }
@@ -87,21 +87,21 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
 
             // generate images
             var texImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(texPixelmap, palette, _pokemonSpriteWidth, texPixelmap.Length / _pokemonSpriteWidth,
+                new SpriteImageInfo(texPixelmap, palette, __pokemonSpriteWidth, texPixelmap.Length / __pokemonSpriteWidth,
                 isTiled,
                 texFormat
                 ));
 
             byte[] atxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(atxUnpacked, fileName)));
             var atxImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(atxPixelmap, palette, _pokemonSpriteWidth, atxPixelmap.Length / _pokemonSpriteWidth,
+                new SpriteImageInfo(atxPixelmap, palette, __pokemonSpriteWidth, atxPixelmap.Length / __pokemonSpriteWidth,
                 isTiled,
                 texFormat
                 ));
 
             byte[] dtxPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(dtxUnpacked, fileName)));
             var dtxImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(dtxPixelmap, palette, _pokemonSpriteWidth, dtxPixelmap.Length / _pokemonSpriteWidth,
+                new SpriteImageInfo(dtxPixelmap, palette, __pokemonSpriteWidth, dtxPixelmap.Length / __pokemonSpriteWidth,
                 isTiled,
                 texFormat
                 ));
@@ -112,7 +112,7 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
             PAC.Unpack(pacFile, pacUnpackedFolder, false, 4);
             byte[] pacPixelmap = PixelUtil.Decompress(File.ReadAllBytes(Path.Combine(pacUnpackedFolder, "0003")));
             var pacImg = ImageUtil.SpriteToImage(
-                new SpriteImageInfo(pacPixelmap, palette, _pokemonSpriteWidth, pacPixelmap.Length / _pokemonSpriteWidth,
+                new SpriteImageInfo(pacPixelmap, palette, __pokemonSpriteWidth, pacPixelmap.Length / __pokemonSpriteWidth,
                 isTiled,
                 texFormat
                 ));
@@ -178,12 +178,12 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
 
         var spriteFileDict = spriteFiles.ToDictionary(i => i.Id);
 
-        var texLinkFiles = new string[_numPokemon];
-        var atxLinkFiles = new string[_numPokemon];
-        var dtxLinkFiles = new string[_numPokemon];
-        var pacLinkFiles = new string[_numPokemon];
+        var texLinkFiles = new string[__numPokemon];
+        var atxLinkFiles = new string[__numPokemon];
+        var dtxLinkFiles = new string[__numPokemon];
+        var pacLinkFiles = new string[__numPokemon];
 
-        Parallel.For(0, _numPokemon, i =>
+        Parallel.For(0, __numPokemon, i =>
         {
             string fileName = i.ToString().PadLeft(4, '0');
             var spriteFile = spriteFileDict[i];
@@ -196,15 +196,15 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
                 int pacHeight;
                 if (pokemon.AsymmetricBattleSprite)
                 {
-                    atxHeight = _pokemonSpriteHeight * 16;
-                    dtxHeight = _pokemonSpriteHeight * 12;
-                    pacHeight = _pokemonSpriteHeight * 24;
+                    atxHeight = __pokemonSpriteHeight * 16;
+                    dtxHeight = __pokemonSpriteHeight * 12;
+                    pacHeight = __pokemonSpriteHeight * 24;
                 }
                 else
                 {
-                    atxHeight = _pokemonSpriteHeight * 8;
-                    dtxHeight = _pokemonSpriteHeight * 8;
-                    pacHeight = _pokemonSpriteHeight * 16;
+                    atxHeight = __pokemonSpriteHeight * 8;
+                    dtxHeight = __pokemonSpriteHeight * 8;
+                    pacHeight = __pokemonSpriteHeight * 16;
                 }
 
                 if (pokemon.LongAttackAnimation)
@@ -223,30 +223,30 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
                     var palette = new Palette(texFormat, color0Transparent);
                     string texTemp = Path.GetTempFileName();
                     NSBTX btx0 = new NSBTX(new NSTEX());
-                    int texHeight = _pokemonSpriteHeight * _texSpriteCount;
+                    int texHeight = __pokemonSpriteHeight * __texSpriteCount;
                     using (var texImg = combinedImage.Clone(g =>
                     {
-                        g.Crop(new Rectangle(0, 0, _pokemonSpriteWidth, texHeight));
+                        g.Crop(new Rectangle(0, 0, __pokemonSpriteWidth, texHeight));
                     }))
                     {
                         byte[] mergedPixels = ImageUtil.SharedPalettePixelsFromImage(texImg, palette, isTiled, texFormat, color0Transparent);
-                        for (int texNumber = 0; texNumber < _texSpriteCount; texNumber++)
+                        for (int texNumber = 0; texNumber < __texSpriteCount; texNumber++)
                         {
-                            var subArray = new byte[_pokemonSpriteWidth * _pokemonSpriteHeight];
+                            var subArray = new byte[__pokemonSpriteWidth * __pokemonSpriteHeight];
                             Array.Copy(
                                 sourceArray: mergedPixels,
-                                sourceIndex: _pokemonSpriteHeight * _pokemonSpriteWidth * texNumber,
+                                sourceIndex: __pokemonSpriteHeight * __pokemonSpriteWidth * texNumber,
                                 destinationArray: subArray,
                                 destinationIndex: 0,
-                                length: _pokemonSpriteHeight * _pokemonSpriteWidth
+                                length: __pokemonSpriteHeight * __pokemonSpriteWidth
                                 );
                             btx0.Texture.Textures.Add(new NSTEX.Texture(
                                 name: "base_fix_" + texNumber.ToString().PadLeft(2, '0'),
                                 textureData: subArray
                                 )
                             {
-                                Height = _pokemonSpriteHeight,
-                                Width = _pokemonSpriteWidth,
+                                Height = __pokemonSpriteHeight,
+                                Width = __pokemonSpriteWidth,
                                 Format = TexFormat.Pltt16,
                                 FlipX = false,
                                 FlipY = false,
@@ -263,7 +263,7 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
                     var atxDecompressedLen = new FileInfo(Path.Combine(atxUnpacked, fileName)).Length * 2;
                     using (var atxImg = combinedImage.Clone(g =>
                     {
-                        g.Crop(new Rectangle(_pokemonSpriteWidth, 0, _pokemonSpriteWidth, atxHeight));
+                        g.Crop(new Rectangle(__pokemonSpriteWidth, 0, __pokemonSpriteWidth, atxHeight));
 
                     }))
                     {
@@ -278,7 +278,7 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
                     var dtxDecompressedLen = new FileInfo(Path.Combine(atxUnpacked, fileName)).Length * 2;
                     using (var dtxImg = combinedImage.Clone(g =>
                     {
-                        g.Crop(new Rectangle(_pokemonSpriteWidth * 2, 0, _pokemonSpriteWidth, dtxHeight));
+                        g.Crop(new Rectangle(__pokemonSpriteWidth * 2, 0, __pokemonSpriteWidth, dtxHeight));
                     }))
                     {
                         string dtxTemp = Path.GetTempFileName();
@@ -294,7 +294,7 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
                     // convert the png
                     using (var pacImg = combinedImage.Clone(g =>
                     {
-                        g.Crop(new Rectangle(_pokemonSpriteWidth * 3, 0, _pokemonSpriteWidth, pacHeight));
+                        g.Crop(new Rectangle(__pokemonSpriteWidth * 3, 0, __pokemonSpriteWidth, pacHeight));
                     }))
                     {
                         string pacCharTemp = Path.GetTempFileName();

@@ -8,7 +8,7 @@ namespace RanseiLink.Core.Resources;
 
 public class NCERMiscItem : G2DRMiscItem
 {
-    private static readonly CellImageSettings _settings = new(
+    private static readonly CellImageSettings __settings = new(
         Prt: PositionRelativeTo.MinCell,
         Debug: false
         );
@@ -25,7 +25,7 @@ public class NCERMiscItem : G2DRMiscItem
 
         var (ncer, ncgr, nclr) = G2DR.LoadCellImgFromFolder(outFolder, NcgrSlot.Infer);
 
-        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, _settings);
+        using var image = NitroImageUtil.NcerToImage(ncer, ncgr, nclr, __settings);
 
         image.SaveAsPng(Path.Combine(context.DefaultDataFolder, PngFile));
     }
@@ -42,7 +42,7 @@ public class NCERMiscItem : G2DRMiscItem
 
         // load up the png and replace provider data with new image data
         using var image = ImageUtil.LoadPngBetterError(pngFile);
-        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image, _settings);
+        NitroImageUtil.NcerFromImage(ncer, ncgr, nclr, image, __settings);
 
         // save the modified provider files
         G2DR.SaveImgToFolder(tempDir, ncgr, nclr, NcgrSlot.Infer);

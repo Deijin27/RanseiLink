@@ -14,7 +14,7 @@ public class BuildingIconSmallMiscItem : MiscItem
     public string ContainingFolder { get; }
     public override string PngFile { get; }
 
-    private static readonly CellImageSettings _settings = new(
+    private static readonly CellImageSettings __settings = new(
         Prt: PositionRelativeTo.MinCell,
         Debug: false
         );
@@ -86,7 +86,7 @@ public class BuildingIconSmallMiscItem : MiscItem
                        IsTiled: ncgr.Pixels.IsTiled,
                        Format: ncgr.Pixels.Format
                        ),
-                   _settings
+                   __settings
                    );
                 g.DrawImage(image, new Point(0, linkId * height), 1);
             }
@@ -155,7 +155,7 @@ public class BuildingIconSmallMiscItem : MiscItem
                 ncer.Clusters.BlockSize,
                 tiled: ncgr.Pixels.IsTiled,
                 format: ncgr.Pixels.Format,
-                settings: _settings
+                settings: __settings
                 );
 
             var pixels = workingPixels.ToArray();
