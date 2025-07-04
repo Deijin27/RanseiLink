@@ -84,7 +84,7 @@ public class WpfModServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.Register<IMapViewerService, MapViewerService>();
+        builder.Register<IMapViewerService, MapViewerService>(Reuse.Singleton);
 
         builder.Register<AbilityViewModel>();
         builder.Register<BaseWarriorViewModel>();

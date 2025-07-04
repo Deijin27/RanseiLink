@@ -7,6 +7,6 @@ public  class View3DModServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.Register<ISceneRenderer, SceneRenderer>();
+        builder.Register<ISceneRenderer, SceneRenderer>(Reuse.Singleton);
     }
 }
