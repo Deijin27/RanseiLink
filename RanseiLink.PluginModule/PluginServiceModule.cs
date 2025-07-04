@@ -9,7 +9,7 @@ public class PluginServiceModule : IModule
 {
     public void Load(IRegistrator builder)
     {
-        builder.Register<IPluginFormLoader, PluginFormLoader>();
-        builder.Register<IPluginLoader, PluginLoader>();
+        builder.Register<IPluginFormLoader, PluginFormLoader>(Reuse.Singleton);
+        builder.Register<IPluginLoader, PluginLoader>(Reuse.Singleton);
     }
 }
