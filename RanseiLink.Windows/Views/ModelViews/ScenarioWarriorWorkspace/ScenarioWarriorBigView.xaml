@@ -72,7 +72,7 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate DataType="{x:Type vm:SwPokemonSlotViewModel}">
-                    <DockPanel>
+                    <DockPanel Margin="4">
                         <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding ScenarioPokemonItems}" SelectedValue="{Binding ScenarioPokemonId, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
                         <ContentPresenter Content="{Binding NestedVm}"/>
                     </DockPanel>
