@@ -11,7 +11,7 @@ namespace RanseiLink.CoreTests.GraphicsTests;
 /// </summary>
 public class NcerMinimapTests
 {
-    private static CellImageSettings Settings => Core.Services.ModPatchBuilders.NcerPatchBuilder.Settings;
+    private static CellImageSettings Settings => Core.Resources.NCERMiscItem.Settings;
 
     [Fact]
     public void ConvertToImage()
