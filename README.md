@@ -1,6 +1,6 @@
 <div align="center">
 
-<img align="center" src="https://user-images.githubusercontent.com/40903783/228619480-1f170269-c5e2-4a17-ab6c-c41671cbf93c.png" height=50/>
+<img align="center" src="https://user-images.githubusercontent.com/40903783/228619480-1f170269-c5e2-4a17-ab6c-c41671cbf93c.png" width="60"/>
 
 <h1 align="center">RanseiLink</h1>
 
