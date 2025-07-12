@@ -31,7 +31,7 @@ public class NsbptGenerateCommand : ICommand
         {
             if (root.Name != NSPAT_RAW.RootElementName)
             {
-                console.Output.WriteLine($"Unexpected root element: {root.Name} (expected: {NSPAT_RAW.RootElementName})");
+                console.WriteLine($"Unexpected root element: {root.Name} (expected: {NSPAT_RAW.RootElementName})");
                 return default;
             }
         }
@@ -39,7 +39,7 @@ public class NsbptGenerateCommand : ICommand
         {
             if (root.Name != NSPAT.RootElementName)
             {
-                console.Output.WriteLine($"Unexpected root element: {root.Name} (expected: {NSPAT.RootElementName})");
+                console.WriteLine($"Unexpected root element: {root.Name} (expected: {NSPAT.RootElementName})");
                 return default;
             }
 

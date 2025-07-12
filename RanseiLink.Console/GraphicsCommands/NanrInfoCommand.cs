@@ -30,7 +30,7 @@ public class NanrInfoCommand : ICommand
             new XElement("Labels", nanr.Labels.Names.Select(name => new XElement("Name", name)))
             );
 
-        console.Output.WriteLine(el.ToString());
+        console.WriteLine(el.ToString());
 
         return default;
     }

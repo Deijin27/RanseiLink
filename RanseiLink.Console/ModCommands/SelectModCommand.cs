@@ -15,18 +15,18 @@ public class SelectModCommand(IModManager modManager, ISettingService settingSer
         var modInfos = modManager.GetAllModInfo();
         if (modInfos.Count == 0)
         {
-            console.Output.WriteLine("No mods currently exist");
+            console.WriteLine("No mods currently exist");
             return default;
         }
         if (Slot >= modInfos.Count || Slot < 0)
         {
-            console.Output.WriteLine("Invalid slot number");
+            console.WriteLine("Invalid slot number");
             return default;
         }
         var mod = modInfos[Slot];
         settingService.Get<CurrentConsoleModSlotSetting>().Value = Slot;
         settingService.Save();
-        console.Output.WriteLine("Current mod changed to:");
+        console.WriteLine("Current mod changed to:");
         console.Render(mod);
 
         return default;

@@ -13,7 +13,7 @@ public class EveUnpackCommand : ICommand
     {
         EVE.Unpack(FilePath);
 
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     } 

@@ -21,7 +21,7 @@ public class NcerInfoCommand : ICommand
             new XElement("Unknown", nanr.Unknown.Unknown)
             );
 
-        console.Output.WriteLine(el.ToString());
+        console.WriteLine(el.ToString());
 
         return default;
     }

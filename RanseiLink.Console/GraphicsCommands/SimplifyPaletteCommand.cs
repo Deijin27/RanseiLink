@@ -16,11 +16,11 @@ public class SimplifyPaletteCommand : ICommand
     {
         if (ImageSimplifier.SimplifyPalette(ImagePath, MaxColors))
         {
-            console.Output.WriteLine("Complete!");
+            console.WriteLine("Complete!");
         }
         else
         {
-            console.Output.WriteLine("Palette did not require simplification");
+            console.WriteLine("Palette did not require simplification");
         }
 
         return default;

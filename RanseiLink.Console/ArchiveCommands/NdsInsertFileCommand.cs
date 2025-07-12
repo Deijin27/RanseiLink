@@ -24,13 +24,13 @@ public class NdsInsertFileCommand : ICommand
     {
         if (!File.Exists(SourcePath))
         {
-            console.Output.WriteLine($"File not found: {SourcePath}");
+            console.WriteLine($"File not found: {SourcePath}");
         }
 
         using IRomFs nds = _romFsFactory(NdsPath);
         nds.InsertVariableLengthFile(FilePath, SourcePath);
 
-        console.Output.WriteLine("File insertion complete!");
+        console.WriteLine("File insertion complete!");
         return default;
     }
 }

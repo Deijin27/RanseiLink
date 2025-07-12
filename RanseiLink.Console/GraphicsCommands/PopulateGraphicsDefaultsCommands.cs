@@ -16,17 +16,17 @@ public class PopulateGraphicsDefaultsCommand : ICommand
 
     public ValueTask ExecuteAsync(IConsole console)
     {
-        console.Output.WriteLine("Populating...");
+        console.WriteLine("Populating...");
 
         var result = _fallbackSpriteProvider.Populate(Path);
 
         if (result.IsSuccess)
         {
-            console.Output.WriteLine("Done!");
+            console.WriteLine("Done!");
         }
         else
         {
-            console.Output.WriteLine($"Population Failed: {result}");
+            console.WriteLine($"Population Failed: {result}");
         }
         
         return default;

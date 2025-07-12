@@ -17,7 +17,7 @@ public class MoveAnimationCommand(ICurrentModService currentModService) : IComma
     {
         if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 

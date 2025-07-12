@@ -52,15 +52,15 @@ public class NsbtxExtractCommand : ICommand
             
             if (LogDebug)
             {
-                console.Output.WriteLine($"Texture: {tex.Name} has data:");
-                console.Output.WriteLine($"- {nameof(tex.Format)}: {tex.Format}");
-                console.Output.WriteLine($"- {nameof(tex.Width)}: {tex.Width}");
-                console.Output.WriteLine($"- {nameof(tex.Height)}: {tex.Height}");
-                console.Output.WriteLine($"- {nameof(tex.RepeatX)}: {tex.RepeatX}");
-                console.Output.WriteLine($"- {nameof(tex.RepeatY)}: {tex.RepeatY}");
-                console.Output.WriteLine($"- {nameof(tex.FlipX)}: {tex.FlipX}");
-                console.Output.WriteLine($"- {nameof(tex.FlipY)}: {tex.FlipY}");
-                console.Output.WriteLine($"- {nameof(tex.Color0Transparent)}: {tex.Color0Transparent}");
+                console.WriteLine($"Texture: {tex.Name} has data:");
+                console.WriteLine($"- {nameof(tex.Format)}: {tex.Format}");
+                console.WriteLine($"- {nameof(tex.Width)}: {tex.Width}");
+                console.WriteLine($"- {nameof(tex.Height)}: {tex.Height}");
+                console.WriteLine($"- {nameof(tex.RepeatX)}: {tex.RepeatX}");
+                console.WriteLine($"- {nameof(tex.RepeatY)}: {tex.RepeatY}");
+                console.WriteLine($"- {nameof(tex.FlipX)}: {tex.FlipX}");
+                console.WriteLine($"- {nameof(tex.FlipY)}: {tex.FlipY}");
+                console.WriteLine($"- {nameof(tex.Color0Transparent)}: {tex.Color0Transparent}");
             }
 
             var convPal = new Palette(pal.PaletteData, true);
@@ -70,7 +70,7 @@ public class NsbtxExtractCommand : ICommand
                     Format: tex.Format));
         }
 
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

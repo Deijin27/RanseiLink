@@ -31,7 +31,7 @@ public class ScbgUnpackCommand : ICommand
             .Load(FilePath, InfoFile)
             .SaveAsPngs(DestinationFolder, tiled:Tiled);
         
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

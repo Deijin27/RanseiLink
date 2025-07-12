@@ -18,7 +18,7 @@ public class UpdateModCommand(ICurrentModService currentModService, IModManager 
     {
         if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
         if (ModName != null)
@@ -34,7 +34,7 @@ public class UpdateModCommand(ICurrentModService currentModService, IModManager 
             currentMod.Author = ModAuthor;
         }
         modManager.Update(currentMod);
-        console.Output.WriteLine("Mod update successfully with new info:");
+        console.WriteLine("Mod update successfully with new info:");
         console.Render(currentMod);
         return default;
     }

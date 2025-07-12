@@ -28,7 +28,7 @@ public class MapCommand(ICurrentModService currentModService) : ICommand
     {
         if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
@@ -37,7 +37,7 @@ public class MapCommand(ICurrentModService currentModService) : ICommand
         var mapNames = mapService.GetMapIds().Where(i => i.Map == Map && i.Variant == Variant).ToList();
         if (!mapNames.Any())
         {
-            console.Output.WriteLine("No such map exists :(");
+            console.WriteLine("No such map exists :(");
             return default;
         }
         var mapName = mapNames.First();
@@ -57,30 +57,30 @@ public class MapCommand(ICurrentModService currentModService) : ICommand
 
         if (all || Header)
         {
-            console.Output.WriteLine(header);
+            console.WriteLine(header);
         }
 
         if (all || Pokemon)
         {
-            console.Output.WriteLine("Pokemon Positions:");
+            console.WriteLine("Pokemon Positions:");
             foreach (var position in map.PokemonSection.Positions.Reverse().SkipWhile(i => i.X == 0 && i.Y == 0).Reverse())
             {
-                console.Output.WriteLine($"- {position}");
+                console.WriteLine($"- {position}");
             }
         }
 
         if (all || Terrain)
         {
-            console.Output.WriteLine("\nTerrain:\n");
-            console.Output.WriteLine(map.TerrainSection);
+            console.WriteLine("\nTerrain:\n");
+            console.WriteLine(map.TerrainSection);
         }
         
         if (all || Gimmick)
         {
-            console.Output.WriteLine("\nGimmicks:\n");
+            console.WriteLine("\nGimmicks:\n");
             foreach (var mapGimmickItem in map.GimmickSection.Items)
             {
-                console.Output.WriteLine(mapGimmickItem);
+                console.WriteLine(mapGimmickItem);
             }
         }
 

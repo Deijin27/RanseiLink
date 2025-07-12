@@ -81,7 +81,7 @@ public class NsbmdInfoCommand : ICommand
             }
         }
 
-        console.Output.WriteLine(el.ToString());
+        console.WriteLine(el.ToString());
 
         return default;
     }

@@ -13,7 +13,7 @@ public class EvePackCommand : ICommand
     {
         EVE.Pack(EveFolder);
 
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

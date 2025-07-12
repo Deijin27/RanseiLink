@@ -37,7 +37,7 @@ public class NsbtxGenerateCommand : ICommand
             var res = ModelExtractorGenerator.LoadTextureFromImage(file, TransparencyFormat, OpacityFormat, SemiTransparencyFormat);
             if (res.IsFailed)
             {
-                console.Output.WriteLine("Failed to load texture from image: {0}", res);
+                console.WriteLine($"Failed to load texture from image: {res}");
                 return default;
             }
             tex0.Textures.Add(res.Value.Texture);

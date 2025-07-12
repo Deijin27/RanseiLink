@@ -7,7 +7,7 @@ public static partial class RenderExtensions
     {
         using (console.WithForegroundColor(ConsoleColor.Cyan))
         {
-            console.Output.WriteLine(title);
+            console.WriteLine(title);
         }
     }
 
@@ -15,11 +15,11 @@ public static partial class RenderExtensions
     {
         using (console.WithForegroundColor(ConsoleColor.White))
         {
-            console.Output.Write($"    {propertyName}: ");
+            console.Write($"    {propertyName}: ");
         }
         using (console.WithForegroundColor(ConsoleColor.Gray))
         {
-            console.Output.WriteLine(propertyValue);
+            console.WriteLine(propertyValue);
         }
     }
 }

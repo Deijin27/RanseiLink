@@ -18,7 +18,7 @@ public class NdsInsertBannerCommand : ICommand
     {
         if (BannerImagePath == null && BannerInfoPath == null)
         {
-            console.Output.WriteLine("Please also provide a bannerInfoXml and/or bannerImage");
+            console.WriteLine("Please also provide a bannerInfoXml and/or bannerImage");
             return default;
         }
 
@@ -31,7 +31,7 @@ public class NdsInsertBannerCommand : ICommand
             var res = banner.TryLoadInfoFromXml(BannerInfoPath);
             if (res.IsFailed)
             {
-                console.Output.WriteLine(res.ToString());
+                console.WriteLine(res.ToString());
                 return default;
             }
         }
@@ -41,7 +41,7 @@ public class NdsInsertBannerCommand : ICommand
             var res = banner.TryLoadImageFromPng(BannerImagePath);
             if (res.IsFailed)
             {
-                console.Output.WriteLine(res.ToString());
+                console.WriteLine(res.ToString());
                 return default;
             }
         }

@@ -16,7 +16,7 @@ public class LuaCommand : ICommand
     {
         if (!_currentModService.TryGetCurrentModServiceGetter(out var serviceGetter))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
@@ -24,7 +24,7 @@ public class LuaCommand : ICommand
 
         luaService.RunScript(FilePath);
 
-        console.Output.WriteLine("Script executed successfully.");
+        console.WriteLine("Script executed successfully.");
         return default;
     }
 }

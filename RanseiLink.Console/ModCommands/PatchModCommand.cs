@@ -15,7 +15,7 @@ public class PatchModCommand(ICurrentModService currentModService, IModPatchingS
     {
         if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
@@ -29,12 +29,12 @@ public class PatchModCommand(ICurrentModService currentModService, IModPatchingS
         var canPatch = modPatcher.CanPatch(currentMod, Path, patchOpt);
         if (canPatch.IsFailed)
         {
-            console.Output.WriteLine(canPatch.ToString());
+            console.WriteLine(canPatch.ToString());
             return default;
         }
 
         modPatcher.Patch(currentMod, Path, patchOpt);
-        console.Output.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
+        console.WriteLine("Mod written to rom successfully. The mod that was written was the current mod:");
         console.Render(currentMod);
         return default;
     }

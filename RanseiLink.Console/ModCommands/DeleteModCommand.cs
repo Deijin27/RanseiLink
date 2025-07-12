@@ -9,12 +9,12 @@ public class DeleteModCommand(ICurrentModService currentModService, IModManager 
     {
         if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
         modManager.Delete(currentMod);
-        console.Output.WriteLine("Current mod deleted. Info of deleted mod:");
+        console.WriteLine("Current mod deleted. Info of deleted mod:");
         console.Render(currentMod);
         return default;
     }

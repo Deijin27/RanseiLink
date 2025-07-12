@@ -39,7 +39,7 @@ public class CreateModCommand(IModManager modManager, ISettingService settingSer
             }
             
         }
-        console.Output.WriteLine("Mod created successfully");
+        console.WriteLine("Mod created successfully");
         console.Render(modInfo);
 
         return default;

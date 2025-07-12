@@ -44,12 +44,12 @@ public class NsbmdGenerateCommand : ICommand
 
         if (result.IsSuccess == false)
         {
-            console.Output.WriteLine($"Generation Failed: {result}");
+            console.WriteLine($"Generation Failed: {result}");
         }
         else
         {
-            console.Output.WriteLine($"Generation Succeeded");
-            console.Output.WriteLine();
+            console.WriteLine($"Generation Succeeded");
+            console.WriteLine();
         }
 
         return default;

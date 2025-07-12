@@ -17,7 +17,7 @@ public class ScenarioWarriorCommand(ICurrentModService currentModService) : ICom
     {
         if (!currentModService.TryGetCurrentModServiceGetter(out var services))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 

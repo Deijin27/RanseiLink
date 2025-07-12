@@ -9,7 +9,7 @@ public class CurrentModCommand(ICurrentModService currentModService) : ICommand
     {
         if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 

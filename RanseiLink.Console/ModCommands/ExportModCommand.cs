@@ -12,13 +12,13 @@ public class ExportModCommand(ICurrentModService currentModService, IModManager 
     {
         if (!currentModService.TryGetCurrentMod(out ModInfo currentMod))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
         string exportedTo = modManager.Export(currentMod, DestinationFolder);
 
-        console.Output.WriteLine($"Mod \"{currentMod.Name}\" exported to \"{exportedTo}\"");
+        console.WriteLine($"Mod \"{currentMod.Name}\" exported to \"{exportedTo}\"");
         return default;
     }
 }

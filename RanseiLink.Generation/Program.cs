@@ -133,7 +133,7 @@ internal class Program
         sb.AppendLine("    {");
         sb.AppendLine("        if (!currentModService.TryGetCurrentModServiceGetter(out var services))");
         sb.AppendLine("        {");
-        sb.AppendLine("            console.Output.WriteLine(\"No mod selected\");");
+        sb.AppendLine("            console.WriteLine(\"No mod selected\");");
         sb.AppendLine("            return default;");
         sb.AppendLine("        }");
         sb.AppendLine();

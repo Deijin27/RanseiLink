@@ -84,7 +84,7 @@ public static partial class RenderExtensions
 
         foreach (var evo in pokemon.Evolutions)
         {
-            console.Output.WriteLine($"      - {evo}");
+            console.WriteLine($"      - {evo}");
         }
 
         var sb1 = new StringBuilder();
@@ -216,7 +216,7 @@ public static partial class RenderExtensions
         {
             if (model.GetCanAppear(pid))
             {
-                console.Output.WriteLine($"    {pid}");
+                console.WriteLine($"    {pid}");
             }
         }
     }

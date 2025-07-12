@@ -53,7 +53,7 @@ public class NdsTreeCommand : ICommand
             }
             count++;
 
-            console.Output.WriteLine(indent + treeStr + Encoding.UTF8.GetString(cont.Name) + (cont.IsFolder ? " (Folder)" : " (File)"));
+            console.WriteLine(indent + treeStr + Encoding.UTF8.GetString(cont.Name) + (cont.IsFolder ? " (Folder)" : " (File)"));
 
             if (cont.IsFolder)
             {

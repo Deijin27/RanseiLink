@@ -37,7 +37,7 @@ public class StlPackCommand : ICommand
             .LoadPngs(DirPath, ncer, tiled:Tiled)
             .Save(stlDataFile:DestinationDataFile, stlInfoFile:DestinationInfoFile);
         
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

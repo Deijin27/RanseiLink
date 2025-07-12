@@ -32,7 +32,7 @@ public class ScbgPackCommand : ICommand
             .LoadPngs(DirPath, tiled:Tiled)
             .Save(scbgDataFile:DestinationDataFile, scbgInfoFile:DestinationInfoFile);
         
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

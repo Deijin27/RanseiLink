@@ -34,7 +34,7 @@ public class LinkUnpackCommand : ICommand
         }
         else
         {
-            console.Output.WriteLine("File not found");
+            console.WriteLine("File not found");
         }
         
         return default;

@@ -30,7 +30,7 @@ public  class TestCommand : ICommand
 
     void Dump(IConsole console, NSBMD bmd)
     {
-        console.Output.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
+        console.WriteLine("Bone Commands ---------------------------------------------------------------------------------------------");
         foreach (var command in bmd.Model.Models[0].RenderCommands)
         {
             string lineEnd = $"Flag: {command.Flags}, Params: [";
@@ -42,12 +42,12 @@ public  class TestCommand : ICommand
             if (command.OpCode == RenderOpCode.BIND_MATERIAL)
             {
                 var mat = bmd.Model.Models[0].Materials[command.Parameters[0]];
-                console.Output.WriteLine($"{command.OpCode} : {mat.Texture}, {lineEnd}");
+                console.WriteLine($"{command.OpCode} : {mat.Texture}, {lineEnd}");
             }
             else if (command.OpCode == RenderOpCode.DRAW_MESH)
             {
                 var ply = bmd.Model.Models[0].Polygons[command.Parameters[0]];
-                console.Output.WriteLine($"{command.OpCode} : {ply.Name}, {lineEnd}");
+                console.WriteLine($"{command.OpCode} : {ply.Name}, {lineEnd}");
             }
             else if (command.OpCode == RenderOpCode.MTX_MULT)
             {
@@ -55,21 +55,21 @@ public  class TestCommand : ICommand
                 var plymsh = bmd.Model.Models[0].Polymeshes[pmIdx];
                 if (plymsh.Flag.HasFlag(NSMDL.Model.PolymeshData.TransFlag.Rotate))
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R({plymsh.Rotate}), {lineEnd}");
+                    console.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R({plymsh.Rotate}), {lineEnd}");
                 }
                 else
                 {
-                    console.Output.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R(), {lineEnd}");
+                    console.WriteLine($"{command.OpCode} : {plymsh.Name} T{plymsh.Translation}, S{plymsh.Scale}, R(), {lineEnd}");
                 }
             }
             else
             {
-                console.Output.WriteLine($"{command.OpCode} : {lineEnd}");
+                console.WriteLine($"{command.OpCode} : {lineEnd}");
             }
             
         }
-        console.Output.WriteLine();
-        console.Output.WriteLine("Poly Commands ---------------------------------------------------------------------------------------------");
+        console.WriteLine();
+        console.WriteLine("Poly Commands ---------------------------------------------------------------------------------------------");
         foreach (var ply in bmd.Model.Models[0].Polygons)
         {
             console.Output.WriteLine(":: Begin Mesh <{0}> ---------------------------------------------------------------------------------------------", ply.Name);
@@ -78,11 +78,11 @@ public  class TestCommand : ICommand
             {
                 if (i++ % 4 == 0)
                 {
-                    console.Output.WriteLine();
+                    console.WriteLine();
                 }
                 if (c.OpCode == PolygonDisplayOpCode.BEGIN_VTXS)
                 {
-                    console.Output.WriteLine($"{c.OpCode} : {(PolygonType)c.Params[0]}");
+                    console.WriteLine($"{c.OpCode} : {(PolygonType)c.Params[0]}");
                 }
                 else
                 {
@@ -92,11 +92,11 @@ public  class TestCommand : ICommand
                     }
                     else
                     {
-                        console.Output.WriteLine(c.OpCode);
+                        console.WriteLine(c.OpCode);
                     }
                 }
             }
-            console.Output.WriteLine();
+            console.WriteLine();
         }
     }
 
@@ -129,7 +129,7 @@ public  class TestCommand : ICommand
     {
         if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         {
-            console.Output.WriteLine("No mod selected");
+            console.WriteLine("No mod selected");
             return default;
         }
 
@@ -167,16 +167,16 @@ public  class TestCommand : ICommand
         //}
         //else
         //{
-        //    console.Output.WriteLine(FixedPoint.Fix(0b_10000_00000, 1, 3, 6));
-        //    console.Output.WriteLine(FixedPoint.Fix(0b_01111_11111, 1, 3, 6));
-        //    console.Output.WriteLine(FixedPoint.InverseFix(7.9999999f, 1, 3, 6));
-        //    console.Output.WriteLine(FixedPoint.InverseFix(-8f, 1, 3, 6));
+        //    console.WriteLine(FixedPoint.Fix(0b_10000_00000, 1, 3, 6));
+        //    console.WriteLine(FixedPoint.Fix(0b_01111_11111, 1, 3, 6));
+        //    console.WriteLine(FixedPoint.InverseFix(7.9999999f, 1, 3, 6));
+        //    console.WriteLine(FixedPoint.InverseFix(-8f, 1, 3, 6));
         //    //Export(console, bmd);
         //}
 
         //if (!_currentModService.TryGetCurrentModServiceGetter(out var services))
         //{
-        //    console.Output.WriteLine("No mod selected");
+        //    console.WriteLine("No mod selected");
         //    return default;
         //}
 
@@ -185,16 +185,16 @@ public  class TestCommand : ICommand
         //foreach (var id in service.ValidIds())
         //{
         //    var building = service.Retrieve(id);
-        //    console.Output.WriteLine($"\n{(BuildingId)id}: {building.Kingdom}");
+        //    console.WriteLine($"\n{(BuildingId)id}: {building.Kingdom}");
         //    foreach (var referenced in building.Buildings)
         //    {
         //        if (referenced == BuildingId.Default)
         //        {
-        //            console.Output.WriteLine("- default");
+        //            console.WriteLine("- default");
         //        }
         //        else
         //        {
-        //            console.Output.WriteLine($"- {referenced}: {service.Retrieve((int)referenced).Kingdom}");
+        //            console.WriteLine($"- {referenced}: {service.Retrieve((int)referenced).Kingdom}");
         //        }
         //    }
         //}

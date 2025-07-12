@@ -12,7 +12,7 @@ public class ListModsCommand(IModManager modManager, ISettingService settingServ
         var mods = modManager.GetAllModInfo();
         if (mods.Count == 0)
         {
-            console.Output.WriteLine("No mods found");
+            console.WriteLine("No mods found");
         }
         else
         {

@@ -36,7 +36,7 @@ public class StlUnpackCommand : ICommand
             .Load(FilePath, InfoFile)
             .SaveAsPngs(DestinationFolder, ncer, tiled:Tiled);
         
-        console.Output.WriteLine("Complete!");
+        console.WriteLine("Complete!");
 
         return default;
     }

@@ -30,7 +30,7 @@ public class NdsExtractBannerCommand : ICommand
 
         var banner = romFs.GetBanner();
 
-        console.Output.WriteLine(banner);
+        console.WriteLine(banner);
 
         banner.SaveInfoToXml(xmlInfoOut);
         banner.SaveImageToPng(imgOut);

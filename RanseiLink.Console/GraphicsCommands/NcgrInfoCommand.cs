@@ -23,7 +23,7 @@ public class NcgrInfoCommand : ICommand
                 new XElement("Unknown2", c.Unknown2)
                 ));
 
-        console.Output.WriteLine(el.ToString());
+        console.WriteLine(el.ToString());
 
         return default;
     }

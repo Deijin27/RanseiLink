@@ -13,14 +13,14 @@ public class UpgradeModsCommand(IModManager modManager) : ICommand
         var mods = modManager.GetModInfoPreviousVersions();
         if (mods.Count == 0)
         {
-            console.Output.WriteLine("All mods are already up to date");
+            console.WriteLine("All mods are already up to date");
         }
         else
         {
             modManager.UpgradeModsToLatestVersion(mods, RomPath);
         }
 
-        console.Output.WriteLine("Upgrading Complete!\n\nMods that were upgraded:");
+        console.WriteLine("Upgrading Complete!\n\nMods that were upgraded:");
         foreach (var mod in mods)
         {
             console.Render(mod);

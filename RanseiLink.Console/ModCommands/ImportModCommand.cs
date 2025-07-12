@@ -29,7 +29,7 @@ public class ImportModCommand(IModManager modManager, ISettingService settingSer
                 }
             }
         }
-        console.Output.WriteLine("Mod imported successfully.");
+        console.WriteLine("Mod imported successfully.");
         console.Render(info);
         return default;
     }

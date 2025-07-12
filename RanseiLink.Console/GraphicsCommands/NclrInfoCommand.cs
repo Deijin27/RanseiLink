@@ -39,7 +39,7 @@ public class NclrInfoCommand : ICommand
                             new XAttribute("Rgba32", PaletteUtil.To32BitColor(clr))))
             ))));
 
-        console.Output.WriteLine(el.ToString());
+        console.WriteLine(el.ToString());
 
 
 
