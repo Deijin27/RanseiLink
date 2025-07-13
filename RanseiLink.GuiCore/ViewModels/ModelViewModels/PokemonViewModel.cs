@@ -322,7 +322,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         {
             Title = "Export animation file",
             DefaultExtension = ".xml",
-            InitialFileName = $"{(int)_id}_{_model.Name}_NSPAT.xml",
+            SuggestedFileName = $"{(int)_id}_{_model.Name}_NSPAT.xml",
             Filters =
             [
                 new()

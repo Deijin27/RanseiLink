@@ -64,7 +64,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         {
             Title = "Export Map PAC",
             DefaultExtension = ".pac",
-            InitialFileName = Path.GetFileName(dataFile.File),
+            SuggestedFileName = Path.GetFileName(dataFile.File),
             Filters = [new("Pokemon Conquest 3D Archive (.pac)", ".pac")]
         });
         if (string.IsNullOrEmpty(exportFile))
@@ -197,19 +197,30 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
 
     public async Task<bool> ExportPslm(MapId id)
     {
-        var destinationFolder = await dialogService.ShowOpenFolderDialog(new OpenFolderDialogSettings
+        var name = id.ToExternalPslmName();
+        var ext = Path.GetExtension(name);
+        var file = await dialogService.ShowSaveFileDialog(new()
         {
-            Title = "Choose a folder in which to place the exported PSLM"
+            Title = "Export PSLM",
+            DefaultExtension = ext,
+            SuggestedFileName = name,
+            Filters =
+            [
+                new()
+                {
+                    Name = $"PSLM ({ext})",
+                    Extensions = [ext]
+                }
+            ]
         });
-        if (string.IsNullOrEmpty(destinationFolder))
+        if (string.IsNullOrEmpty(file))
         {
             return false;
         }
 
         var internalFile = mapService.GetFilePath(id);
-        string exportTo = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, id.ToExternalPslmName()));
 
-        File.Copy(internalFile, exportTo);
+        File.Copy(internalFile, file);
 
         return true;
     }

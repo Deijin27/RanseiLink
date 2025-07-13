@@ -34,7 +34,6 @@ public class XPServiceModule : IModule
         locator.Register<ModCreationDialog, ModCreationViewModel>();
         locator.Register<ModDeleteDialog, ModDeleteViewModel>();
         locator.Register<ModEditInfoDialog, ModEditInfoViewModel>();
-        locator.Register<ModExportDialog, ModExportViewModel>();
         //locator.Register<ModifyMapDimensionsDialog, ModifyMapDimensionsViewModel>();
         locator.Register<ModImportDialog, ModImportViewModel>();
         locator.Register<ModUpgradeDialog, ModUpgradeViewModel>();

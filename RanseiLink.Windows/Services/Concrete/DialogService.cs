@@ -287,6 +287,7 @@ internal class WpfAsyncDialogService(IDialogLocator locator) : IAsyncDialogServi
             {
                 Title = settings.Title,
                 InitialDirectory = settings.InitialDirectory,
+                FileName = settings.SuggestedFileName,
                 DefaultExt = settings.DefaultExtension,
                 Filter = GenerateWin32FilterString(settings.Filters),
             };

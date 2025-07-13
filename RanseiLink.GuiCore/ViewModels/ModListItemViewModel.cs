@@ -1,4 +1,5 @@
-﻿using RanseiLink.Core.Services;
+﻿using RanseiLink.Core;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Settings;
 using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
@@ -192,8 +193,31 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     }
     private async Task ExportMod(ModInfo mod)
     {
-        var vm = new ModExportViewModel(_dialogService, _settingService, mod, _folderDropHandler);
-        if (!await _dialogService.ShowDialogWithResult(vm))
+        var ext = ".rlmod";
+        var name = mod.Name ?? "UnnamedMod";
+        if (mod.Version != null)
+        {
+            name += $" v{mod.Version}";
+        }
+        name += ext;
+        name = name.Replace(' ', '_');
+        name = FileUtil.MakeValidFileName(name);
+
+        var file = await _dialogService.ShowSaveFileDialog(new()
+        {
+            Title = "Export mod",
+            DefaultExtension = ext,
+            SuggestedFileName = name,
+            Filters =
+            [
+                new()
+                {
+                    Name = $"RanseiLink Mod ({ext})",
+                    Extensions = [ext]
+                }
+            ]
+        });
+        if (file == null)
         {
             return;
         }
@@ -203,7 +227,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             progress.Report(new ProgressInfo("Exporting mod..."));
             try
             {
-                _modService.Export(mod, vm.Folder);
+                _modService.Export(mod, file);
             }
             catch (Exception e)
             {

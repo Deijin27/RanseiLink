@@ -62,9 +62,6 @@
     <Compile Update="Dialogs\ModImportDialog.axaml.cs">
       <DependentUpon>ModImportDialog.axaml</DependentUpon>
     </Compile>
-    <Compile Update="Dialogs\ModExportDialog.axaml.cs">
-      <DependentUpon>ModExportDialog.axaml</DependentUpon>
-    </Compile>
     <Compile Update="Dialogs\ModDeleteDialog.axaml.cs">
       <DependentUpon>ModDeleteDialog.axaml</DependentUpon>
     </Compile>

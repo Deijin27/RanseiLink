@@ -79,14 +79,13 @@ public class SpriteItemViewModel : ViewModelBase
 
     private async Task Export()
     {
-        var dir = await _dialogService.ShowOpenFolderDialog(new("Select folder to export sprite into"));
-        if (string.IsNullOrEmpty(dir))
+        var file = await _dialogService.ExportImage(Path.GetFileName(_displayFile));
+        if (string.IsNullOrEmpty(file))
         {
             return;
         }
-        var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_displayFile)));
+        var dest = FileUtil.MakeUniquePath(file);
         File.Copy(_displayFile, dest);
-        await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Sprite Exported", $"Sprite exported to '{dest}'"));
     }
 
     private async void SetOverride()

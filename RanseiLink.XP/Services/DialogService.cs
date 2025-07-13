@@ -100,7 +100,7 @@ internal class DialogService(IDialogLocator locator) : IAsyncDialogService
         {
             Title = settings.Title,
             DefaultExtension = settings.DefaultExtension,
-            SuggestedFileName = settings.InitialFileName,
+            SuggestedFileName = settings.SuggestedFileName,
             FileTypeChoices = settings.Filters.Select(x =>
                 new FilePickerFileType(x.Name) { Patterns = x.Extensions.Select(ExtToFilter).ToList() }
                 ).ToList(),

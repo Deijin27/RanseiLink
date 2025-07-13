@@ -25,16 +25,9 @@ public class ModManager : IModManager
         Directory.CreateDirectory(_modFolder);
     }
 
-    public string Export(ModInfo modInfo, string destinationFolder)
+    public string Export(ModInfo modInfo, string destinationFile)
     {
-        Directory.CreateDirectory(destinationFolder);
-        string? exportFileName = modInfo.Name;
-        if (string.IsNullOrEmpty(exportFileName))
-        {
-            exportFileName = "UnnamedMod";
-        }
-        string fileName = FileUtil.MakeValidFileName($"{exportFileName} v{modInfo.Version}") + ExportModFileExtension;
-        string exportPath = FileUtil.MakeUniquePath(Path.Combine(destinationFolder, fileName));
+        string exportPath = FileUtil.MakeUniquePath(destinationFile);
         ZipFile.CreateFromDirectory(modInfo.FolderPath, exportPath);
         return exportPath;
     }

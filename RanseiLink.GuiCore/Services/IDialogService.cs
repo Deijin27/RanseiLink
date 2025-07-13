@@ -80,7 +80,7 @@ namespace RanseiLink.GuiCore.Services
 
     public abstract class FileDialogSettings : FileSystemDialogSettings
     {
-        public string InitialFileName { get; set; } = string.Empty;
+        public string SuggestedFileName { get; set; } = string.Empty;
         public List<FileDialogFilter> Filters { get; set; } = [];
     }
 
@@ -160,6 +160,25 @@ namespace RanseiLink.GuiCore.Services
                 Filters =
                 [
                     new("RanseiLink Mod (.rlmod)", ".rlmod")
+                ]
+            });
+        }
+
+        public static Task<string?> ExportImage(this IAsyncDialogService dialogService, string suggestedFileName)
+        {
+            var ext = Path.GetExtension(suggestedFileName);
+            return dialogService.ShowSaveFileDialog(new()
+            {
+                Title = "Export Image",
+                DefaultExtension = ext,
+                SuggestedFileName = suggestedFileName,
+                Filters =
+                [
+                    new()
+                    {
+                        Name = $"Image ({ext})",
+                        Extensions = [ext]
+                    }
                 ]
             });
         }

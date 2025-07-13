@@ -136,13 +136,11 @@ public class BannerViewModel : ViewModelBase
 
     private async Task ExportImage()
     {
-        var dir = await _dialogService.ShowOpenFolderDialog(new("Select folder to export image into"));
-        if (string.IsNullOrEmpty(dir))
+        var dest = await _dialogService.ExportImage(Path.GetFileName(_bannerService.ImagePath));
+        if (string.IsNullOrEmpty(dest))
         {
             return;
         }
-        var dest = FileUtil.MakeUniquePath(Path.Combine(dir, Path.GetFileName(_bannerService.ImagePath)));
         File.Copy(_bannerService.ImagePath, dest);
-        await _dialogService.ShowMessageBox(MessageBoxSettings.Ok("Image Exported", $"Exported to '{dest}'"));
     }
 }
