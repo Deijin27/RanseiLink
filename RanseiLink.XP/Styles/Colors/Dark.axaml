@@ -1,96 +1,69 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:s="using:RanseiLink.XP.Services">
-	<ResourceDictionary.ThemeDictionaries>
-		<ResourceDictionary x:Key="Dark">
-			<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#171717"/>
-			<SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#1F1F1F"/>
-			<SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
-
-			<Color x:Key="AccentColor">#9d8abf</Color>
-			<SolidColorBrush x:Key="AccentBrush" Color="#9d8abf"/>
-			<Color x:Key="DarkAccentColor">#2b2252</Color>
-
-			<SolidColorBrush x:Key="WindowMouseOverBrush" Color="#1d1d1d"/>
-			<SolidColorBrush x:Key="WindowSelectedBrush" Color="#2d2d2d"/>
-			<SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#292929"/>
-			<SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#303030"/>
-
-			<SolidColorBrush x:Key="ForegroundBrush" Color="#ffffff"/>
-			<SolidColorBrush x:Key="AltForegroundBrush" Color="#A2A2A2"/>
-			<SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#999999"/>
-
-			<SolidColorBrush x:Key="ControlBorderBrush" Color="#555555"/>
-			<SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#777777"/>
-
-			<SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#333333"/>
-			<SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#3f3f3f"/>
-			<SolidColorBrush x:Key="ButtonPressedBrush" Color="#464646"/>
-
-			<SolidColorBrush x:Key="InputBackgroundBrush" Color="#0E0E0E"/>
-			<SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#1e1e1e"/>
-		</ResourceDictionary>
-		
-		<ResourceDictionary x:Key="Light">
-			<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F3F3"/>
-			<SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#EAEAEA"/>
-			<SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
-
-			<Color x:Key="AccentColor">#8068a8</Color>
-			<SolidColorBrush x:Key="AccentBrush" Color="#8068a8"/>
-			<Color x:Key="DarkAccentColor">#2b2252</Color>
-
-			<SolidColorBrush x:Key="WindowMouseOverBrush" Color="#ECECEC"/>
-			<SolidColorBrush x:Key="WindowSelectedBrush" Color="#e0e0e0"/>
-			<SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#DDDDDD"/>
-			<SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#DDDDDD"/>
-
-			<SolidColorBrush x:Key="ForegroundBrush" Color="#1B1B1B"/>
-			<SolidColorBrush x:Key="AltForegroundBrush" Color="#5b5b5b"/>
-			<SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7B7B7B"/>
-
-			<SolidColorBrush x:Key="ControlBorderBrush" Color="#777777"/>
-			<SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#000000"/>
-
-			<SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#e0e0e0"/>
-			<SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#CDCDCD"/>
-			<SolidColorBrush x:Key="ButtonPressedBrush" Color="#C0C0C0"/>
-
-			<SolidColorBrush x:Key="InputBackgroundBrush" Color="#FBFBFB"/>
-			<SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#EBEBEB"/>
-		</ResourceDictionary>
-		
-		<ResourceDictionary x:Key="{x:Static s:RanseiLinkThemeVariant.Catppuccin_Mocha}">
-			<SolidColorBrush x:Key="WindowBackgroundBrush" Color="#181825"/>
-			<SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#1e1e2e"/>
-			<SolidColorBrush x:Key="WindowBorderBrush" Color="#45475a" />
-
-			<Color x:Key="AccentColor">#cba6f7</Color>
-			<SolidColorBrush x:Key="AccentBrush" Color="#cba6f7"/>
-			<Color x:Key="DarkAccentColor">#313244</Color>
-
-			<SolidColorBrush x:Key="WindowMouseOverBrush" Color="#1e1e2e"/>
-			<SolidColorBrush x:Key="WindowSelectedBrush" Color="#313244"/>
-			<SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#313244"/>
-			<SolidColorBrush x:Key="WindowTransparentSelectedBackgroundBrush" Color="#45475a"/>
-
-			<SolidColorBrush x:Key="ForegroundBrush" Color="#cdd6f4"/>
-			<SolidColorBrush x:Key="AltForegroundBrush" Color="#9399b2"/>
-			<SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7f849c"/>
-
-			<SolidColorBrush x:Key="ControlBorderBrush" Color="#585b70"/>
-			<SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#7f849c"/>
-
-			<SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#313244"/>
-			<SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#45475a"/>
-			<SolidColorBrush x:Key="ButtonPressedBrush" Color="#585b70"/>
-
-			<SolidColorBrush x:Key="InputBackgroundBrush" Color="#11111B"/>
-			<SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#181825"/>
-		</ResourceDictionary>
-		
-	</ResourceDictionary.ThemeDictionaries>
-
-	
-	
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#141315" />
+      <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#212024" />
+      <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
+      <SolidColorBrush x:Key="SurfaceContainerHigh" Color="#2B2930" />
+      <SolidColorBrush x:Key="SurfaceContainerLow" Color="#1D1B20" />
+      <SolidColorBrush x:Key="ErrorBrush" Color="#F2B8B5" />
+      <SolidColorBrush x:Key="OnErrorBrush" Color="#601410" />
+      <Color x:Key="AccentColor">#D0BCFE</Color>
+      <SolidColorBrush x:Key="AccentBrush" Color="#D0BCFE" />
+      <SolidColorBrush x:Key="AccentForegroundBrush" Color="#381E72" />
+      <SolidColorBrush x:Key="AccentMouseOverBrush" Color="#E0CCFE" />
+      <Color x:Key="DarkAccentColor">#2b2252</Color>
+      <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#4A4458" />
+      <SolidColorBrush x:Key="AccentSecondaryForegroundBrush" Color="#E8DEF8" />
+      <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#1D1B20" />
+      <SolidColorBrush x:Key="WindowSelectedBrush" Color="#4A4458" />
+      <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#2B2930" />
+      <SolidColorBrush x:Key="ForegroundBrush" Color="#E9E9EA" />
+      <SolidColorBrush x:Key="AltForegroundBrush" Color="#C9C7CB" />
+      <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#999999" />
+      <SolidColorBrush x:Key="AltForegroundDisabledBrush" Color="#606060" />
+      <SolidColorBrush x:Key="ControlBorderBrush" Color="#49454F" />
+      <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#938F99" />
+      <SolidColorBrush x:Key="ControlSelectedBorderBrush" Color="#AAAAAA" />
+      <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#2B2A2F" />
+      <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#36343B" />
+      <SolidColorBrush x:Key="ButtonPressedBrush" Color="#3B383E" />
+      <SolidColorBrush x:Key="InputBackgroundBrush" Color="#1D1C1F" />
+      <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#1e1e1e" />
+      <SolidColorBrush x:Key="RoundedGrayHoverButtonMouseOverBackgroundBrush" Color="#353133" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#F8F6F9" />
+      <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
+      <SolidColorBrush x:Key="SurfaceContainerHigh" Color="#E8E7E9" />
+      <SolidColorBrush x:Key="SurfaceContainerLow" Color="#F4F3F5" />
+      <SolidColorBrush x:Key="ErrorBrush" Color="#B3261E" />
+      <SolidColorBrush x:Key="OnErrorBrush" Color="#FFFFFF" />
+      <Color x:Key="AccentColor">#65558F</Color>
+      <SolidColorBrush x:Key="AccentBrush" Color="#65558F" />
+      <SolidColorBrush x:Key="AccentForegroundBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="AccentMouseOverBrush" Color="#75659F" />
+      <Color x:Key="DarkAccentColor">#2b2252</Color>
+      <SolidColorBrush x:Key="AccentSecondaryBrush" Color="#dfd7ed" />
+      <SolidColorBrush x:Key="AccentSecondaryForegroundBrush" Color="#1D192B" />
+      <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#F4F3F5" />
+      <SolidColorBrush x:Key="WindowSelectedBrush" Color="#E8DEF8" />
+      <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#E8E7E9" />
+      <SolidColorBrush x:Key="ForegroundBrush" Color="#1C1C1C" />
+      <SolidColorBrush x:Key="AltForegroundBrush" Color="#474747" />
+      <SolidColorBrush x:Key="ForegroundDisabledBrush" Color="#7B7B7B" />
+      <SolidColorBrush x:Key="AltForegroundDisabledBrush" Color="#909090" />
+      <SolidColorBrush x:Key="ControlBorderBrush" Color="#C6C6C6" />
+      <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#767676" />
+      <SolidColorBrush x:Key="ControlSelectedBorderBrush" Color="#000000" />
+      <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#E8E7E9" />
+      <SolidColorBrush x:Key="ButtonMouseOverBrush" Color="#E2E2E2" />
+      <SolidColorBrush x:Key="ButtonPressedBrush" Color="#DADADA" />
+      <SolidColorBrush x:Key="InputBackgroundBrush" Color="#F4F3F5" />
+      <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#EBEBEB" />
+      <SolidColorBrush x:Key="RoundedGrayHoverButtonMouseOverBackgroundBrush" Color="#D8D7D9" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>

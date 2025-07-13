@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Xml.Linq;
 
@@ -55,6 +56,8 @@ internal class Program
 
         GenerateModServiceContainer(models);
         GenerateConsoleRenderer(models);
+
+        PortColorsToXP();
     }
 
     private static string GetSlnFolder()
@@ -713,5 +716,50 @@ internal class Program
 
         var interfaceLocation = Path.Combine(GetSlnFolder(), "RanseiLink.Core", "Services", "IModServiceContainer.generated.cs");
         File.WriteAllText(interfaceLocation, sbInterface.ToString(), Encoding.UTF8);
+    }
+
+    /// <summary>
+    /// Take the theme colors from Wpf and put them into XP. Makes it easier to keep the two in sync.
+    /// </summary>
+    private static void PortColorsToXP()
+    {
+        var wpfColorsFolder = Path.Combine(GetSlnFolder(), "RanseiLink.Windows", "Styles", "Colors");
+
+        var wpfDark = XDocument.Load(Path.Combine(wpfColorsFolder, "Dark.xaml"));
+        var wpfLight = XDocument.Load(Path.Combine(wpfColorsFolder, "Light.xaml"));
+
+        var xpColorsFilePath = Path.Combine(GetSlnFolder(), "RanseiLink.XP", "Styles", "Colors", "Dark.axaml");
+        var avaloniaNs = XNamespace.Get("https://github.com/avaloniaui");
+        var wpfNs = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml/presentation");
+        var xNs = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
+
+        var dicts = new[] { ("Dark", wpfDark), ("Light", wpfLight) };
+
+        var dictout = new List<XElement>();
+        foreach (var dict in dicts)
+        {
+            var darkDict = new XElement(avaloniaNs + "ResourceDictionary",
+               new XAttribute(xNs + "Key", dict.Item1)
+               );
+            dictout.Add(darkDict);
+            foreach (var color in dict.Item2.Root!.Elements())
+            {
+                if (color.Name.LocalName.Contains("Color"))
+                {
+                    color.Name = avaloniaNs + color.Name.LocalName;
+                    darkDict.Add(color);
+                }
+            }
+        }
+        var xpDoc = 
+            new XDocument(
+            new XElement(avaloniaNs + "ResourceDictionary",
+               new XAttribute("xmlns", avaloniaNs.NamespaceName),
+               new XAttribute(XNamespace.Xmlns + "x", xNs.NamespaceName),
+                new XElement(avaloniaNs + "ResourceDictionary.ThemeDictionaries",
+                dictout)
+                ));
+
+        xpDoc.Save(xpColorsFilePath);
     }
 }
