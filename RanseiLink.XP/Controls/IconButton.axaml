@@ -1,17 +1,98 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" 
-             x:Class="RanseiLink.XP.Controls.IconButton">
-	<Button Padding="2,0" x:Name="MainButton" VerticalAlignment="Center" Click="OnButtonClick" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
-		<Grid>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="13"/>
-				<ColumnDefinition/>
-			</Grid.ColumnDefinitions>
-			<TextBlock Classes="icon" FontSize="14" x:Name="IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe145;"/>
-			<TextBlock IsVisible="False" Grid.Column="1" x:Name="TextTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,0" Text="Add New"/>
-		</Grid>
-	</Button>
-</UserControl>
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RanseiLink.XP.Controls">
+    <Design.PreviewWith>
+        <Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+            <!-- Add Controls for Previewer Here -->
+			<StackPanel Spacing="20">
+				<controls:IconButton Icon="bug" Content="Normal" />
+                <controls:IconButton Icon="category" IsEnabled="False" Content="Disabled"/>
+                <controls:IconButton Icon="category" Classes="accent" Content="Accent" />
+			</StackPanel>
+		</Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+	<ControlTheme x:Key="{x:Type controls:IconButton}" TargetType="controls:IconButton">
+		<Setter Property="MinHeight" Value="20"/>
+		<Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+		<Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
+		<Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Padding" Value="4,0"/>
+		<Setter Property="CornerRadius" Value="4"/>
+		<Setter Property="HorizontalAlignment" Value="Stretch"/>
+		<Setter Property="VerticalAlignment" Value="Stretch"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+
+		<Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="{TemplateBinding Padding}"
+                CornerRadius="4"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{TemplateBinding Background}">
+                    <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="14"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Foreground="{TemplateBinding Foreground}" Classes="icon" FontSize="14" x:Name="PART_IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe574;"/>
+                        <ContentPresenter x:Name="PART_ContentPresenter"
+								  BorderThickness="0"
+                                  Grid.Column="1" Margin="4,0"
+								  Content="{TemplateBinding Content}"
+								  ContentTemplate="{TemplateBinding ContentTemplate}"
+								  RecognizesAccessKey="True" />
+                    </Grid>
+
+                </Border>
+            </ControlTemplate>
+		</Setter>
+
+		<Style Selector="^:pointerover">
+			<Setter Property="Background" Value="{DynamicResource ButtonMouseOverBrush}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}" />
+		</Style>
+
+		<Style Selector="^:pressed">
+			<Setter Property="RenderTransform" Value="scale(0.98)" />
+		</Style>
+
+		<Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+		</Style>
+
+		<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}" />
+		</Style>
+
+		<Style Selector="^.accent">
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+			</Style>
+
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPointerOver}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPointerOver}" />
+				<Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPointerOver}" />
+			</Style>
+
+			<Style Selector="^:pressed  /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundPressed}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushPressed}" />
+				<Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundPressed}" />
+			</Style>
+
+			<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="{DynamicResource AccentButtonBackgroundDisabled}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrushDisabled}" />
+				<Setter Property="Foreground" Value="{DynamicResource AccentButtonForegroundDisabled}" />
+			</Style>
+		</Style>
+
+	</ControlTheme>
+</ResourceDictionary>

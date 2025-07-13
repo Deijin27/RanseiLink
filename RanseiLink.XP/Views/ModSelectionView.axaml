@@ -18,8 +18,8 @@
 		<Border Width="180" BorderThickness="0">
 			<Grid >
 				<StackPanel Margin="10" Spacing="8">
-					<Button Content="Create Mod" Command="{Binding CreateModCommand}"/>
-					<Button Content="Import Mod" Command="{Binding ImportModCommand}"/>
+                    <controls:IconButton Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
+					<controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
 
 					<Button Command="{Binding UpgradeOutdatedModsCommand}" IsVisible="{Binding OutdatedModsExist}">
 						<TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
@@ -35,9 +35,9 @@
 							<Run Classes="small">Setting up graphics defaults allow you to see and edit images in mods</Run>
 						</TextBlock>
 					</Button>
-          <Button Command="{Binding UpdateCommand}" Content="New Update Available" IsVisible="{Binding IsUpdateAvailable}"/>
-					<Button Command="{Binding ReportBugCommand}" Content="Report Bug"/>
-					<Button Command="{Binding ToggleThemeCommand}" Content="Toggle Theme"/>
+          <controls:IconButton Icon="download" Command="{Binding UpdateCommand}" Content="New Update Available" IsVisible="{Binding IsUpdateAvailable}"/>
+					<controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Content="Report Bug"/>
+					<controls:IconButton Icon="light_mode" Command="{Binding ToggleThemeCommand}" Content="Toggle Theme"/>
 				</StackPanel>
 			</Grid>
 

@@ -55,26 +55,6 @@ namespace RanseiLink.Windows.Controls
             c.UpdateIcon((IconId)e.NewValue);
         }
 
-        //public static void OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if (d is not IconButton c)
-        //    {
-        //        return;
-        //    }
-        //    var newValue = e.NewValue as string;
-        //    c.TextTextBlock.Text = newValue;
-        //    if (string.IsNullOrEmpty(newValue))
-        //    {
-        //        c.TextTextBlock.Visibility = Visibility.Collapsed;
-        //    }
-        //    else
-        //    {
-        //        c.TextTextBlock.Visibility = Visibility.Visible;
-        //    }
-
-        //}
-
-
         private void UpdateIcon(IconId newIcon)
         {
             if (_textBlock == null)

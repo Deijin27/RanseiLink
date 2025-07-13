@@ -24,7 +24,7 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Foreground="{TemplateBinding Foreground}" Style="{DynamicResource IconTextBlockStyle}"  Height="Auto" FontSize="14" x:Name="PART_IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe574;"/>
-                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Margin="3,0"
+                            <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Margin="3,0" VerticalAlignment="Center"
                                 />
                         </Grid>
                         

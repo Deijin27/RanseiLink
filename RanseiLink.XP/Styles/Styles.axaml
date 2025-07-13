@@ -14,13 +14,16 @@
 				<MergeResourceInclude Source="/Styles/Controls/ComboBoxItem.axaml"/>
 				<MergeResourceInclude Source="/Styles/Controls/TextBox.axaml"/>
 				<MergeResourceInclude Source="/Styles/Controls/NumericUpDown.axaml"/>
+                <MergeResourceInclude Source="/Controls/IconButton.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>
 			<x:Double x:Key="ContentControlFontSize">12</x:Double>
 
 			<!--Note: it's "RanseiLink" because that's the assembly name-->
-			<FontFamily x:Key="MaterialIcons">avares://RanseiLink/Assets/Fonts/#Material Symbols Outlined</FontFamily>
+            <!-- According to github variable fonts aren't supported yet, 
+                but for some reason specifying "Bold" makes it work, fuck knows why it works but let's fucking go-->
+			<FontFamily x:Key="MaterialIcons">avares://RanseiLink/Assets/Fonts/#Material Symbols Outlined Bold</FontFamily>
 		</ResourceDictionary>
 	</Styles.Resources>
 
