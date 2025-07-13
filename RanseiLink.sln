@@ -38,8 +38,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - Solution Items", "{29910CB7-F216-44CB-AB5E-F0C83E8875AA}"
 	ProjectSection(SolutionItems) = preProject
 		DEPENDENCIES.md = DEPENDENCIES.md
-		gather_console_publish.ps1 = gather_console_publish.ps1
-		gather_gui_publish.ps1 = gather_gui_publish.ps1
 		gather_plugin_debug.ps1 = gather_plugin_debug.ps1
 		gather_plugin_publish.ps1 = gather_plugin_publish.ps1
 		LICENSE = LICENSE
