@@ -211,7 +211,8 @@
                                   Style="{StaticResource SelectorComboBoxStyle}"/>
                     </DockPanel>
 
-                    <CheckBox Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding EnableAdditionalAnimation}" Content="Unknown Additional-related toggle"
+                    <CheckBox Style="{StaticResource SwitchCheckBoxStyle}"
+                        Grid.Row="6" Grid.ColumnSpan="2" IsChecked="{Binding EnableAdditionalAnimation}" Content="Unknown Additional-related toggle"
                               ToolTip="It always seems to be enabled if theres an additional anim, but can't tell what it does from testing"/>
 
                     <GroupBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="9" Header="Animation Preview" Padding="5">

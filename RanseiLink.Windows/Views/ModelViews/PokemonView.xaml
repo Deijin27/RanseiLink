@@ -122,7 +122,9 @@
             <TextBlock Text="Idle Motion" Grid.Row="13" Grid.Column="0"/>
             <ComboBox Grid.Row="13" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.IdleMotionItems}" SelectedItem="{Binding IdleMotion}"/>
 
-            <CheckBox VerticalAlignment="Center" Grid.Row="14" Grid.Column="0" Content="Is Legendary" IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
+            <TextBlock Text="Is Legendary" Grid.Row="14" Grid.Column="0"/>
+            <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" VerticalAlignment="Center" Grid.Row="14" Grid.Column="1" 
+                      IsChecked="{Binding IsLegendary, Mode=TwoWay}"/>
 
             <TextBlock Text="Catch Rate" Grid.Row="15" Grid.Column="0"/>
             <controls:NumberBox Grid.Row="15" Grid.Column="1" Value="{Binding CatchRate}" Max="{Binding CatchRate_Max}"/>

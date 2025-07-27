@@ -291,8 +291,8 @@
                 
             </StackPanel>
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-                <CheckBox IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <CheckBox IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
+                <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
                 <TextBlock Text="Nickname" Grid.Row="0" Margin="20,0,0,0" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Nickname}" Width="150" Margin="5,0,0,0"/>
             </StackPanel>

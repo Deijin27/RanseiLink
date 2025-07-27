@@ -3,7 +3,7 @@
     
     <SolidColorBrush x:Key="MiniViewNumberBoxBackgroundBrush" Color="black"/>
     <SolidColorBrush x:Key="MiniViewNumberBoxForegroundBrush" Color="#FFEC39"/>
-    <SolidColorBrush x:Key="MiniViewHeaderBackgroundBrush" Color="#E6E1C1"/>
+    <SolidColorBrush x:Key="MiniViewHeaderBackgroundBrush" Color="#E4E3D0"/>
     <SolidColorBrush x:Key="MiniViewHeaderForegroundBrush" Color="Black"/>
     
 </ResourceDictionary>

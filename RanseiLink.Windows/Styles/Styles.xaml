@@ -18,6 +18,7 @@
 
         <ResourceDictionary Source="ControlStyles/Button.xaml"/>
         <ResourceDictionary Source="ControlStyles/CheckBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/Switch.xaml"/>
         <ResourceDictionary Source="ControlStyles/ComboBox.xaml"/>
         <ResourceDictionary Source="ControlStyles/ContextMenu.xaml"/>
         <ResourceDictionary Source="ControlStyles/GroupBox.xaml"/>
