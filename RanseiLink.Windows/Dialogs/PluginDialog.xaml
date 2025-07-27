@@ -60,7 +60,7 @@
         <DockPanel Background="{DynamicResource WindowBackgroundBrush}">
             <Grid DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
-                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click" d:Content="OK"/>
+                    <Button Style="{DynamicResource AccentButtonStyle}" Height="20" Width="100" Margin="0,0,20,0" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click" d:Content="OK"/>
                     <Button Height="20" Width="100" Content="{Binding Form.CancelButtonText}" Click="CancelButton_Click" d:Content="Cancel"/>
                 </StackPanel>
             </Grid>

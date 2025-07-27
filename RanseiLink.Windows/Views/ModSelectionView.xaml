@@ -22,7 +22,7 @@
                             <Setter Property="Margin" Value="0,0,0,10"/>
                         </Style>
                     </StackPanel.Resources>
-                    <controls:IconButton BorderThickness="0" Foreground="{DynamicResource AccentForegroundBrush}" Background="{DynamicResource AccentBrush}" Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
+                    <controls:IconButton Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
                  
                     <controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
                     <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">

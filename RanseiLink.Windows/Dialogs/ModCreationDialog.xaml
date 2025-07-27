@@ -30,7 +30,7 @@
             </Grid>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
-                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Create" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+                    <Button Style="{StaticResource AccentButtonStyle}" Height="20" Width="100" Margin="0,0,20,0" Content="Create" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>

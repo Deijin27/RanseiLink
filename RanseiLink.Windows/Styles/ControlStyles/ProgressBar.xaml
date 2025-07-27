@@ -1,19 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <LinearGradientBrush x:Key="ProgressBar.ProgressIndeterminate">
-        <GradientStop Offset="0" Color="{DynamicResource DarkAccentColor}"/>
-        <GradientStop Offset="0.4" Color="{DynamicResource AccentColor}"/>
-        <GradientStop Offset="0.6" Color="{DynamicResource AccentColor}"/>
-        <GradientStop Offset="1" Color="{DynamicResource DarkAccentColor}"/>
-    </LinearGradientBrush>
-
     <SolidColorBrush x:Key="ProgressBar.Progress" Color="{DynamicResource AccentColor}"/>
-    <SolidColorBrush x:Key="ProgressBar.Background" Color="{DynamicResource DarkAccentColor}"/>
 
     <Style TargetType="{x:Type ProgressBar}">
         <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
-        <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+        <Setter Property="Background" Value="{StaticResource AccentForegroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Template">
@@ -44,7 +36,7 @@
                                 
                                 <Rectangle x:Name="PART_Track"/>
                                 <Grid ClipToBounds="true">
-                                    <Rectangle x:Name="IndeterminateAnimation" ClipToBounds="true" Opacity="0.1"  Fill="{DynamicResource ProgressBar.ProgressIndeterminate}" RenderTransformOrigin="0.5,0.5">
+                                    <Rectangle x:Name="IndeterminateAnimation" ClipToBounds="true" Opacity="0.1"  Fill="{DynamicResource ProgressBar.Progress}" RenderTransformOrigin="0.5,0.5">
                                         <Rectangle.RenderTransform>
                                             <TransformGroup>
                                                 <ScaleTransform/>

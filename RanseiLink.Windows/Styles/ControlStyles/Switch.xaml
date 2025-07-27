@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="SwitchCheckBoxStyle" TargetType="{x:Type CheckBox}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>

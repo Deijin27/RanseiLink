@@ -83,4 +83,25 @@
         </Setter>
     </Style>
 
+
+    <Style x:Key="AccentButtonStyle" TargetType="{x:Type ButtonBase}" BasedOn="{StaticResource ButtonStyle1}">
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentMouseOverBrush}"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{DynamicResource ForegroundDisabledBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

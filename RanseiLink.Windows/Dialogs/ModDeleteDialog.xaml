@@ -19,7 +19,7 @@
         <DockPanel>
             <Grid DockPanel.Dock="Bottom" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
-                    <Button Height="20" Width="100" Margin="0,0,20,0" Content="Delete" Click="OkButton_Click"/>
+                    <Button Style="{DynamicResource AccentButtonStyle}" Height="20" Width="100" Margin="0,0,20,0" Content="Delete" Click="OkButton_Click"/>
                     <Button Height="20" Width="100" Content="Cancel" Click="CancelButton_Click"/>
                 </StackPanel>
             </Grid>
