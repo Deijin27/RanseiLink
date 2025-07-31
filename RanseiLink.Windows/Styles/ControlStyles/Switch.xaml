@@ -1,5 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:RanseiLink.Windows.Controls">
 
     <Style x:Key="SwitchCheckBoxStyle" TargetType="{x:Type CheckBox}">
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}"/>
@@ -20,6 +21,7 @@
                                 CornerRadius="10">
                             <Grid x:Name="markGrid">
                                 <Ellipse x:Name="ellipse" Margin="3,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="14" Height="14" Fill="{DynamicResource ControlMouseOverBorderBrush}"/>
+                                <controls:IconControl x:Name="check" Visibility="Hidden" Size="12" Icon="check" Foreground="{DynamicResource AccentBrush}" Margin="4,0" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
                         <ContentPresenter x:Name="contentPresenter" Grid.Column="1" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" 
@@ -45,6 +47,7 @@
                             <Setter TargetName="ellipse" Property="Height" Value="16" />
                             <Setter TargetName="ellipse" Property="Fill" Value="{DynamicResource AccentForegroundBrush}" />
                             <Setter TargetName="ellipse" Property="Margin" Value="2,0" />
+                            <Setter TargetName="check" Property="Visibility" Value="Visible"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
