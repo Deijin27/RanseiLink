@@ -77,5 +77,5 @@ public interface IOverrideDataProvider
     void ClearOverride(string pathInRom);
     DataFile GetDataFile(string pathInRom);
     List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom);
-
+    DataFile GetFallbackDataFile(string pathInRom);
 }

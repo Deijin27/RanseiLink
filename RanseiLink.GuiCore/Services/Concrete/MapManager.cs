@@ -97,7 +97,8 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
                 ObjFile: objFile,
                 ModelName: Core.Services.Constants.ResolveMapModelFileNameWithoutExt(id),
                 DestinationFolder: tempFolder,
-                ModelGenerator: new MapModelGenerator()
+                ModelGenerator: new MapModelGenerator(),
+                TexFormat: new()
             );
 
             var result = ModelExtractorGenerator.GenerateModel(settings);
@@ -192,6 +193,79 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
+        return true;
+    }
+
+    public async Task<bool> ImportObj_TexturesOnly(GimmickObjectId id, int variant)
+    {
+        var objFile = await dialogService.ShowOpenSingleFileDialog(new("Choose an OBJ file", _objFilter));
+        if (string.IsNullOrEmpty(objFile))
+        {
+            return false;
+        }
+
+        string imagesFolder = "";
+
+        var tempFolder = FileUtil.GetTemporaryDirectory();
+        string tempPac = Path.GetTempFileName();
+
+        bool success = false;
+
+        try
+        {
+            var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, variant);
+            var basePac = overrideDataProvider.GetFallbackDataFile(romPath);
+
+            var result = ModelExtractorGenerator.ReplaceTextures(
+                pac: basePac.File,
+                replacementDirectory: imagesFolder, 
+                outputPac: tempPac
+                );
+
+            if (result.IsSuccess)
+            {
+                overrideDataProvider.SetOverride(romPath, tempPac);
+                success = true;
+            }
+            else
+            {
+                await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error importing gimmick 3d model", result.ToString(), MessageBoxType.Error));
+            }
+        }
+        catch (Exception ex)
+        {
+            await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Unhandled exception importing gimmick 3d model", ex.ToString(), MessageBoxType.Error));
+        }
+        finally
+        {
+            Directory.Delete(tempFolder, true);
+            File.Delete(tempPac);
+        }
+
+        return success;
+    }
+
+    public async Task<bool> RevertModelToDefault(GimmickObjectId id, int variant)
+    {
+        if (!IsOverriden(id, variant))
+        {
+            return false;
+        }
+        var result = await dialogService.ShowMessageBox(new(
+            $"Revert gimmick 3D Model {id} {variant} to default?",
+            "Confirm to permanently delete the internally stored 3D model which overrides the default",
+            [
+                new("Cancel", MessageBoxResult.Cancel),
+                new("Yes, revert to default", MessageBoxResult.Yes)
+            ]
+            ));
+
+        if (result != MessageBoxResult.Yes)
+        {
+            return false;
+        }
+        var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, variant);
+        overrideDataProvider.ClearOverride(romPath);
         return true;
     }
 

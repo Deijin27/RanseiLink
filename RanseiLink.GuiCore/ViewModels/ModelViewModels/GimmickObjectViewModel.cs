@@ -1,7 +1,9 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
+using RanseiLink.Core.Services.Concrete;
 using RanseiLink.GuiCore.Services;
+using RanseiLink.GuiCore.Services.Concrete;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 
@@ -51,19 +53,49 @@ public partial class GimmickObjectViewModel(IMapViewerService mapViewerService, 
 public class GimmickObjectVariantVm : ViewModelBase
 {
     private readonly IMapViewerService _mapViewerService;
+    private readonly IMapManager _mapManager;
     private readonly GimmickObjectId _id;
+    private readonly int _variant;
 
     public GimmickObjectVariantVm(IMapViewerService mapViewerService, IMapManager mapManager, GimmickObjectId id, int variant)
     {
-        ExportObjCommand = new RelayCommand(async () => await mapManager.ExportObj(id, variant));
+        ExportObjCommand = new RelayCommand(Export);
+        ImportTexturesCommand = new RelayCommand(ImportTextures);
         _mapViewerService = mapViewerService;
+        _mapManager = mapManager;
         _id = id;
-        Variant = variant;
+        _variant = variant;
         View3DModelCommand = new RelayCommand(View3DModel);
+        RevertCommand = new RelayCommand(Revert, () => IsOverriden);
     }
+
+    private async void Export()
+    {
+        await _mapManager.ExportObj(_id, _variant);
+    }
+
+    private async void ImportTextures()
+    {
+        await _mapManager.ImportObj_TexturesOnly(_id, _variant);
+        RaisePropertyChanged(nameof(IsOverriden));
+        RevertCommand.RaiseCanExecuteChanged();
+    }
+
+    private async void Revert()
+    {
+        await _mapManager.RevertModelToDefault(_id, _variant);
+        RaisePropertyChanged(nameof(IsOverriden));
+        RevertCommand.RaiseCanExecuteChanged();
+    }
+
+    public bool IsOverriden => _mapManager.IsOverriden(_id, _variant);
     public ICommand View3DModelCommand { get; }
     public ICommand ExportObjCommand { get; }
-    public int Variant { get; }
+    public ICommand ImportTexturesCommand { get; }
+
+    public RelayCommand RevertCommand { get; }
+
+    public int Variant => _variant;
 
     public async void View3DModel()
     {

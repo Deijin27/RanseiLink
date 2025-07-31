@@ -92,6 +92,11 @@ public class OverrideDataProvider(IFallbackDataProvider fallbackSpriteProvider, 
         return file;
     }
 
+    public DataFile GetFallbackDataFile(string pathInRom)
+    {
+        return fallbackSpriteProvider.GetDataFile(mod.GameCode, pathInRom);
+    }
+
     public List<DataFile> GetAllDataFilesInFolder(string pathOfFolderInRom)
     {
         var files = fallbackSpriteProvider.GetAllDataFilesInFolder(mod.GameCode, pathOfFolderInRom).ToDictionary(x => x.RomPath);

@@ -31,10 +31,15 @@ public class NsbtxGenerateCommand : ICommand
         var files = Directory.GetFiles(FolderPath);
         Array.Sort(files);
 
+        var format = new ModelExtractorGenerator.TexFormatSettings(
+            TransparencyFormat: TransparencyFormat,
+            OpacityFormat: OpacityFormat,
+            SemiTransparencyFormat: SemiTransparencyFormat
+            );
         var tex0 = new NSTEX();
         foreach ( var file in files)
         {
-            var res = ModelExtractorGenerator.LoadTextureFromImage(file, TransparencyFormat, OpacityFormat, SemiTransparencyFormat);
+            var res = ModelExtractorGenerator.LoadTextureFromImage(file, format);
             if (res.IsFailed)
             {
                 console.WriteLine($"Failed to load texture from image: {res}");

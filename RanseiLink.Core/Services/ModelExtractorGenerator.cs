@@ -3,7 +3,9 @@ using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Graphics.ExternalFormats;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.PixelFormats;
+using System;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
@@ -151,7 +153,7 @@ public static class ModelExtractorGenerator
 
     public record TextureLoadResult(NSTEX.Texture Texture, NSTEX.Palette Palette);
 
-    public static Result<TextureLoadResult> LoadTextureFromImage(string file, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat)
+    public static Result<TextureLoadResult> LoadTextureFromImage(string file, TexFormatSettings texFormat)
     {
         Image<Rgba32> image;
         try
@@ -167,19 +169,28 @@ public static class ModelExtractorGenerator
         TexFormat format;
         if (imageHasSemiTransparency)
         {
-            format = semiTransparencyFormat;
+            format = texFormat.SemiTransparencyFormat;
         }
         else if (imageHasTransparency)
         {
-            format = transparencyFormat;
+            format = texFormat.TransparencyFormat;
         }
         else
         {
-            format = opacityFormat;
+            format = texFormat.OpacityFormat;
         }
 
         var colorZeroTransparent = (imageHasTransparency || imageHasSemiTransparency) && (format == TexFormat.Pltt4 || format == TexFormat.Pltt16 || format == TexFormat.Pltt256);
 
+        var result = LoadTextureFromImageInternal(file, image, format, colorZeroTransparent);
+
+        image.Dispose();
+
+        return result;
+    }
+
+    public static Result<TextureLoadResult> LoadTextureFromImageInternal(string file, Image<Rgba32> image, TexFormat format, bool colorZeroTransparent)
+    {
         var imgInfo = ImageUtil.SpriteFromImage(image, tiled: false, format: format, color0ToTransparent: colorZeroTransparent);
 
         string texName = Path.GetFileNameWithoutExtension(file);
@@ -213,9 +224,88 @@ public static class ModelExtractorGenerator
         return Result.Ok(new TextureLoadResult(Texture: texResult, Palette: palResult));
     }
 
+    public static Result ReplaceTextures(string pac, string replacementDirectory, string outputPac)
+    {
+        var temp = FileUtil.GetTemporaryDirectory();
+        try
+        {
+            // Locate texture
+            var ext = PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBTX);
+            PAC.Unpack(pac, temp);
+            string? nsbtxFile = null;
+            foreach (var file in Directory.GetFiles(pac))
+            {
+                if (Path.GetExtension(file) == ext)
+                {
+                    nsbtxFile = file;
+                    break;
+                }
+            }
+            if (nsbtxFile == null)
+            {
+                return Result.Fail("Could not locate .nsbtx file inside model .pac");
+            }
+
+            var nsbtx = new NSBTX(nsbtxFile);
+
+
+            // Replace textures, preserving formats
+            var newNstex = new NSTEX();
+            foreach (var texture in nsbtx.Texture.Textures)
+            {
+                var texExpectedFile = Path.Combine(replacementDirectory, texture.Name + ".png");
+                if (!File.Exists(texExpectedFile))
+                {
+                    return Result.Fail($"Expected texture file not found '{texExpectedFile}'");
+                }
+
+                Image<Rgba32> image;
+                try
+                {
+                    image = Image.Load<Rgba32>(texExpectedFile);
+                }
+                catch (UnknownImageFormatException e)
+                {
+                    return Result.Fail(e.Message + $" File='{texExpectedFile}'");
+                }
+
+                if (texture.Width != image.Width || texture.Height != image.Height)
+                {
+                    return Result.Fail($"Image '{texExpectedFile}' is wrong size (expected={texture.Width}x{texture.Height}, actual={image.Width}x{image.Height})");
+                }
+
+                var res = LoadTextureFromImageInternal(texExpectedFile, image, texture.Format, texture.Color0Transparent);
+                if (res.IsFailed)
+                {
+                    return Result.Fail($"Failed to load texture from image: {res}");
+                }
+                newNstex.Textures.Add(res.Value.Texture);
+                newNstex.Palettes.Add(res.Value.Palette);
+            }
+
+            // Save changes
+
+            nsbtx.Texture = newNstex;
+
+            nsbtx.WriteTo(nsbtxFile);
+
+            PAC.Pack(temp, destinationFile: outputPac, sharedFileCount: 0);
+
+            return Result.Ok();
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail($"Failed to replace textures of model. Reason: {ex}");
+        }
+        finally
+        {
+            Directory.Delete(temp, true);
+        }
+    }
+
     private record TexInfo(string PngFile, NSTEX.Texture Texture, NSTEX.Palette Palette);
 
-    public static Result GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, NSPAT? pat, string textureSearchFolder, TexFormat transparencyFormat, TexFormat opacityFormat, TexFormat semiTransparencyFormat)
+    public static Result GenerateMaterialsAndNsbtx(MTL mtl, NSMDL.Model model, NSTEX nstex, NSPAT? pat, string textureSearchFolder, TexFormatSettings texFormat)
     {
         var textures = new List<string>();
         foreach (var material in mtl.Materials)
@@ -257,7 +347,7 @@ public static class ModelExtractorGenerator
             {
                 return Result.Fail(string.Format("Failed to find texture at {0}", texPng));
             }
-            var result = ModelExtractorGenerator.LoadTextureFromImage(texPng, transparencyFormat, opacityFormat, semiTransparencyFormat);
+            var result = ModelExtractorGenerator.LoadTextureFromImage(texPng, texFormat);
             if (result.IsFailed)
             {
                 return result.ToResult();
@@ -322,14 +412,19 @@ public static class ModelExtractorGenerator
         string DestinationFolder,
         IModelGenerator ModelGenerator,
 
+        TexFormatSettings TexFormat,
         //input
         string? PatternAnimation = null,
-        string? ModelName = null,
+        string? ModelName = null
         //output
+        
+    );
+
+    public record TexFormatSettings(
         TexFormat TransparencyFormat = TexFormat.Pltt256,
         TexFormat OpacityFormat = TexFormat.Pltt256,
         TexFormat SemiTransparencyFormat = TexFormat.A3I5
-    );
+        );
 
     public static Result GenerateModel(GenerationSettings settings)
     {
@@ -412,7 +507,7 @@ public static class ModelExtractorGenerator
 
         var genRes = ModelExtractorGenerator.GenerateMaterialsAndNsbtx(mtl, model, tex, pat, 
             Path.GetDirectoryName(settings.PatternAnimation)!, 
-            settings.TransparencyFormat, settings.OpacityFormat, settings.SemiTransparencyFormat);
+            settings.TexFormat);
         if (genRes.IsFailed)
         {
             return genRes;
