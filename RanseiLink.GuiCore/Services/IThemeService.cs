@@ -1,4 +1,6 @@
 ﻿
+using RanseiLink.GuiCore.Constants;
+
 namespace RanseiLink.GuiCore.Services;
 
 public enum Theme
@@ -21,5 +23,15 @@ public interface IThemeService
             _ => Theme.Dark,
         };
         SetTheme(newTheme);
+    }
+
+    public IconId ThemeIcon()
+    {
+        return CurrentTheme switch
+        {
+            Theme.Light => IconId.light_mode,
+            Theme.Dark => IconId.dark_mode,
+            _ => IconId.light_mode,
+        };
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RanseiLink.Windows"
         xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+        xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
         d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=False}"
         mc:Ignorable="d"
         Foreground="{DynamicResource ForegroundBrush}"
@@ -86,13 +87,15 @@
                         ToolTip="Minimize window"
                         Style="{StaticResource GrayHoverButtonStyle}"/>
 
-                <Button Command="{Binding ToggleThemeCommand}" Content="&#xe518;"
+                <Button Command="{Binding ToggleThemeCommand}"
                         DockPanel.Dock="Right"  WindowChrome.IsHitTestVisibleInChrome="True"
                         FontFamily="{StaticResource MaterialIcons}"
                         Width="45" Height="30"
                         FontSize="13"
                         ToolTip="Toggle Theme"
-                        Style="{StaticResource GrayHoverButtonStyle}"/>
+                        Style="{StaticResource GrayHoverButtonStyle}">
+                    <controls:IconControl Icon="{Binding ThemeIcon}" Size="13"/>
+                </Button>
 
                 <TextBlock/>
             </DockPanel>

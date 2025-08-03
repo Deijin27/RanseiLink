@@ -20,18 +20,6 @@
             <Trigger Property="Icon" Value="{x:Null}">
                 <Setter TargetName="Icon" Property="Visibility" Value="Hidden" />
             </Trigger>
-            <Trigger Property="IsHighlighted" Value="true">
-                <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
-            </Trigger>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsHighlighted" Value="True"/>
-                    <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
-                <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
-            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -53,18 +41,6 @@
             <Trigger Property="Icon" Value="{x:Null}">
                 <Setter TargetName="Icon" Property="Visibility" Value="Hidden" />
             </Trigger>
-            <Trigger Property="IsHighlighted" Value="true">
-                <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
-            </Trigger>
-            <MultiTrigger>
-                <MultiTrigger.Conditions>
-                    <Condition Property="IsHighlighted" Value="True"/>
-                    <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
-                </MultiTrigger.Conditions>
-                <Setter Property="Background" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
-                <Setter Property="BorderBrush" TargetName="Border" Value="{DynamicResource ErrorBrush}"/>
-            </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
@@ -141,18 +117,6 @@
             <Trigger Property="Icon" Value="{x:Null}">
                 <Setter TargetName="Icon" Property="Visibility" Value="Collapsed" />
             </Trigger>
-            <Trigger Property="IsHighlighted" Value="true">
-                <Setter Property="Background" TargetName="Border" Value="{DynamicResource WindowMouseOverBrush}" />
-            </Trigger>
-            <MultiTrigger>
-    <MultiTrigger.Conditions>
-        <Condition Property="IsHighlighted" Value="True"/>
-        <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
-    </MultiTrigger.Conditions>
-    <Setter Property="Background" Value="{DynamicResource ErrorBrush}"/>
-    <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
-    <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
-</MultiTrigger>
             <Trigger SourceName="Popup" Property="AllowsTransparency" Value="True">
                 <Setter TargetName="SubmenuBorder" Property="CornerRadius" Value="4" />
                 <Setter TargetName="SubmenuBorder" Property="Padding" Value="0,3,0,3" />
@@ -162,6 +126,7 @@
 
     <Style TargetType="{x:Type MenuItem}">
         <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
         <Style.Triggers>
             <Trigger Property="Role" Value="TopLevelHeader">
                 <Setter Property="Template" Value="{StaticResource {x:Static MenuItem.TopLevelHeaderTemplateKey}}" />
@@ -176,6 +141,19 @@
             <Trigger Property="Role" Value="SubmenuItem">
                 <Setter Property="Template" Value="{DynamicResource {x:Static MenuItem.SubmenuItemTemplateKey}}" />
             </Trigger>
+            <Trigger Property="IsHighlighted" Value="true">
+                <Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsHighlighted" Value="True"/>
+                    <Condition Property="b:ButtonBehaviours.IsDangerous" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="{DynamicResource ErrorBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource OnErrorBrush}"/>
+                <Setter Property="TextElement.Foreground" Value="{DynamicResource OnErrorBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ErrorBrush}"/>
+            </MultiTrigger>
         </Style.Triggers>
     </Style>
 

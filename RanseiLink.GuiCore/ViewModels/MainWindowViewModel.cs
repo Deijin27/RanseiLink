@@ -1,10 +1,12 @@
 ﻿using RanseiLink.Core.Services;
+using RanseiLink.GuiCore.Constants;
 using RanseiLink.PluginModule.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private readonly IThemeService _themeService;
     private readonly IModSelectionViewModel _modSelectionVm;
     private readonly IMainEditorViewModel _mainEditorViewModel;
     private readonly IFallbackSpriteManager _fallbackManager;
@@ -31,6 +33,7 @@ public class MainWindowViewModel : ViewModelBase
                 ));
         }
 
+        _themeService = themeService;
         _modSelectionVm = modSelectionViewModel;
         _mainEditorViewModel = mainEditorViewModel;
         _currentVm = _modSelectionVm;
@@ -38,7 +41,11 @@ public class MainWindowViewModel : ViewModelBase
         _modSelectionVm.ModSelected += OnModSelected;
 
         BackButtonCommand = new RelayCommand(OnBackButtonPressed);
-        ToggleThemeCommand = new RelayCommand(themeService.ToggleTheme);
+        ToggleThemeCommand = new RelayCommand(() =>
+        {
+            themeService.ToggleTheme();
+            RaisePropertyChanged(nameof(ThemeIcon));
+        });
     }
 
     public async void OnWindowShown()
@@ -68,6 +75,8 @@ public class MainWindowViewModel : ViewModelBase
 
     public ICommand BackButtonCommand { get; }
     public ICommand ToggleThemeCommand { get; }
+
+    public IconId ThemeIcon => _themeService.ThemeIcon();
 
     public void OnShutdown()
     {

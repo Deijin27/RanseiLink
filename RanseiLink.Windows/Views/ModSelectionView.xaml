@@ -82,7 +82,7 @@
                             <ContextMenu>
                                 <MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}">
                                     <MenuItem.Icon>
-                                        <controls:IconControl Icon="publish"/>
+                                        <controls:IconControl Icon="publish" />
                                     </MenuItem.Icon>
                                 </MenuItem>
                                 <MenuItem Header="Export mod" Command="{Binding ExportModCommand}">

@@ -7,7 +7,6 @@
              mc:Ignorable="d" >
 
     <Style TargetType="{x:Type local:IconControl}">
-        <Setter Property="Foreground" Value="{DynamicResource AltForegroundBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Template">
