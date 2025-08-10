@@ -158,4 +158,7 @@ public class WorkspaceViewModel : ViewModelBase
     public ObservableCollection<IMiniViewModel> Items { get; }
 
     public int LeftColumnWidth { get; set; } = 196;
+
+
+    public bool ScrollBig { get; set; } = true;
 }

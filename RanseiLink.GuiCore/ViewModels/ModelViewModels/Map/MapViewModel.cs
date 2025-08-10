@@ -33,12 +33,15 @@ public class MapViewModel : ViewModelBase, IBigViewModel
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly ISettingService _settingService;
     private readonly INicknameService _nicknameService;
+    
     private MapId _id;
 
     public event MapRequestEventHandler? RequestSave;
     public event MapRequestEventHandler? RequestReload;
 
     public PSLM Map { get; set; } = null!;
+
+    public List<SelectorComboBoxItem> GimmickItems { get; }
 
     public MapViewModel(
         IAsyncDialogService dialogService, 
@@ -48,9 +51,11 @@ public class MapViewModel : ViewModelBase, IBigViewModel
         IMapViewerService mapViewerService,
         IPathToImageConverter pathToImageConverter,
         ISettingService settingService,
-        INicknameService nicknameService)
+        INicknameService nicknameService,
+        ICachedSpriteProvider cachedSpriteProvider)
     {
         _nicknameService = nicknameService;
+        CachedSpriteProvider = cachedSpriteProvider;
         _mapManager = mapManager;
         _mapViewerService = mapViewerService;
         _pathToImageConverter = pathToImageConverter;
@@ -79,6 +84,8 @@ public class MapViewModel : ViewModelBase, IBigViewModel
         View3DModelCommand = new RelayCommand(View3DModel);
 
         this.PropertyChanged += MapViewModel_PropertyChanged;
+
+        GimmickItems = _gimmickService.GetComboBoxItemsExceptDefault();
     }
 
     private void MapViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -320,6 +327,9 @@ public class MapViewModel : ViewModelBase, IBigViewModel
     }
 
     private bool PaintingActive => __selectedTabIndex == 3;
+
+    public ICachedSpriteProvider CachedSpriteProvider { get; }
+    public IGimmickService GimmickService => _gimmickService;
 
     public void OnSubCellDragged(MapGridSubCellViewModel clickedSubCell)
     {

@@ -501,6 +501,8 @@ public class MapSelectorEditorModule : BaseWorkspaceEditorModule<IMapService>
             command => _service.GetMapIds().Select<MapId, IMiniViewModel>(id =>
                 new MapMiniViewModel(cs, nn, _service.Retrieve((int)id), id, command)).ToList()
             );
+        WorkspaceViewModel.ScrollBig = false;
+        WorkspaceViewModel.LeftColumnWidth = 176;
         nestedVm.RequestSave += NestedVm_RequestSave;
         nestedVm.RequestReload += NestedVm_RequestReload;
     }

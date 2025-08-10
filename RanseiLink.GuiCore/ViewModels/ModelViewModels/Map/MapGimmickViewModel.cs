@@ -1,5 +1,7 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Maps;
+using RanseiLink.Core.Models;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -68,11 +70,24 @@ public class MapGimmickViewModel : ViewModelBase
         _parent.SelectedCell = destinationCell;
     }
 
-    public GimmickId Gimmick
+    public List<SelectorComboBoxItem> GimmickItems => _parent.GimmickItems;
+
+    public int Gimmick
     {
-        get => GimmickItem.Gimmick;
-        set => SetProperty(Gimmick, value, v => GimmickItem.Gimmick = v);
+        get => (int)GimmickItem.Gimmick;
+        set
+        {
+            if (SetProperty(Gimmick, value, v => GimmickItem.Gimmick = (GimmickId)v))
+            {
+                RaisePropertyChanged(nameof(GimmickIdAndName));
+                RaisePropertyChanged(nameof(GimmickIcon));
+            }
+        }
     }
+
+    public string GimmickIdAndName => GimmickItems.Find(x => x.Id == Gimmick)?.IdAndName ?? "None";
+
+    public object? GimmickIcon => _parent.CachedSpriteProvider.GetSprite(SpriteType.StlStageObje, _parent.GimmickService.Retrieve((int)GimmickItem.Gimmick).Image1);
 
     public byte X
     {

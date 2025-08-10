@@ -6,6 +6,7 @@
              d:Background="{DynamicResource WindowBackgroundBrush}"
              xmlns:vm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
              xmlns:controls="clr-namespace:RanseiLink.Windows.Controls"
+             d:Foreground="{DynamicResource ForegroundBrush}"
              xmlns:b="clr-namespace:RanseiLink.Windows.Behaviours"
              xmlns:const="clr-namespace:RanseiLink.GuiCore.Constants;assembly=RanseiLink.GuiCore"
              xmlns:vc="clr-namespace:RanseiLink.Windows.ValueConverters"
@@ -13,6 +14,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="680" d:DesignWidth="800">
     <UserControl.Resources>
+
+        <DrawingBrush x:Key="Checkerboard" TileMode="Tile" Viewport="0,0,32,32" ViewportUnits="Absolute">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing Geometry="M0,0 H1 V1 H2 V2 H1 V1 H0Z" Brush="#212024"/>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
         <DataTemplate DataType="{x:Type vm:TerrainMapPainter}">
             <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemsPanel>
@@ -136,9 +144,10 @@
             </ListBox>
         </DataTemplate>
     </UserControl.Resources>
-    <DockPanel Margin="10">
-        <DockPanel Margin="10" DockPanel.Dock="Left">
-            <Border HorizontalAlignment="Left" Width="{Binding ElementName=MatrixElement, Path=ActualWidth}" DockPanel.Dock="Top" BorderThickness="0.5" BorderBrush="Gray" Background="{DynamicResource WindowTransparentBackgroundBrush}" DataContext="{Binding MouseOverItem}" Padding="2">
+    <DockPanel Margin="0,10,0,0">
+
+        <DockPanel Margin="0" DockPanel.Dock="Left" >
+            <Border CornerRadius="4,4,0,0" DockPanel.Dock="Top" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}" Background="{DynamicResource WindowTransparentBackgroundBrush}" DataContext="{Binding MouseOverItem}" Padding="2">
                 <UniformGrid Columns="2">
                     <UniformGrid.Resources>
                         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -147,69 +156,76 @@
                         </Style>
                     </UniformGrid.Resources>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Width="28" d:Text="X: 10" Text="{Binding Parent.X, StringFormat='X: {0}'}"/>
-                        <TextBlock Width="28" d:Text="Y: 10" Text="{Binding Parent.Y, StringFormat='Y: {0}'}"/>
-                        <TextBlock Width="28" d:Text="Z: 40" Text="{Binding Z, StringFormat='Z: {0}'}"/>
+                        <TextBlock Width="36" d:Text="X: 100" Text="{Binding Parent.X, StringFormat='X: {0}'}"/>
+                        <TextBlock Width="36" d:Text="Y: 100" Text="{Binding Parent.Y, StringFormat='Y: {0}'}"/>
+                        <TextBlock Width="36" d:Text="Z: 400" Text="{Binding Z, StringFormat='Z: {0}'}"/>
                     </StackPanel>
-                    
-                    <TextBlock d:Text="Terrain: Poison" Text="{Binding Parent.Terrain, StringFormat='Terrain: {0}'}"/>
+
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="Terrain:" />
+                        <Border VerticalAlignment="Center" Margin="5,0" CornerRadius="2" d:Background="Blue" Width="10" Height="10" Background="{Binding Parent.Terrain, Converter={StaticResource Converter.TerrainToBrush}}"/>
+                        <TextBlock VerticalAlignment="Center"  d:Text="Poison" Text="{Binding Parent.Terrain}"/>
+                    </StackPanel>
                     <TextBlock d:Text="Gimmick: HotSpring" Text="{Binding Parent.GimmicksString, StringFormat='Gimmick: {0}'}"/>
                     <TextBlock d:Text="Bounds: InBounds" Text="{Binding Parent.Bounds, StringFormat='Bounds: {0}'}"/>
                     <TextBlock d:Text="Unknown4: 5" Text="{Binding Parent.Unknown4, StringFormat='Unknown4: {0}'}"/>
                     <TextBlock d:Text="Orientation: North" Text="{Binding Parent.Orientation, StringFormat='Orientation: {0}'}"/>
                 </UniformGrid>
             </Border>
-            <ItemsControl x:Name="MatrixElement" d:Width="300" d:Background="Gray" HorizontalAlignment="Left" ItemsSource="{Binding Matrix}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <ItemsControl ItemsSource="{Binding}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal"/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:MapGridCellViewModel}">
-                                    <Border x:Name="GridCellBorder" Width="27" Height="27" Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Setter Property="BorderBrush" Value="Gray"/>
-                                                <Setter Property="BorderThickness" Value="0.5"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="BorderBrush" Value="Cyan"/>
-                                                        <Setter Property="BorderThickness" Value="2"/>
-                                                    </Trigger>
-                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                        <Setter Property="BorderBrush" Value="Goldenrod"/>
-                                                        <Setter Property="BorderThickness" Value="2"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
-                                            <!-- Z mouse enter trigger zones-->
-                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                            <!-- Gimmick and pokemon markers -->
-                                            <Border Grid.Column="0" 
+
+            <Border Margin="0,-1,0,0" Background="{StaticResource Checkerboard}" BorderThickness="1" BorderBrush="{DynamicResource ControlBorderBrush}">
+                <ItemsControl Margin="20" x:Name="MatrixElement" d:Width="300" Background="gray" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding Matrix}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:MapGridCellViewModel}">
+                                        <Border x:Name="GridCellBorder" Width="27" Height="27" Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                                    <Setter Property="BorderThickness" Value="0.5"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="BorderBrush" Value="Cyan"/>
+                                                            <Setter Property="BorderThickness" Value="2"/>
+                                                        </Trigger>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="BorderBrush" Value="Goldenrod"/>
+                                                            <Setter Property="BorderThickness" Value="2"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <!-- Z mouse enter trigger zones-->
+                                                <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                <!-- Gimmick and pokemon markers -->
+                                                <Border Grid.Column="0" 
                                                Grid.Row="0" 
                                                Grid.ColumnSpan="3" 
                                                Grid.RowSpan="3" 
@@ -223,11 +239,11 @@
                                                Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
                                                BorderBrush="black"
                                                BorderThickness="1">
-                                               <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                    <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                    Foreground="black" FontSize="9" 
                                                    Text="{Binding GimmickMarkerText}"/>
-                                            </Border>
-                                            <Image Grid.Column="0" 
+                                                </Border>
+                                                <Image Grid.Column="0" 
                                                    Grid.Row="0" 
                                                    Grid.ColumnSpan="3" 
                                                    Grid.RowSpan="3" 
@@ -237,9 +253,9 @@
                                                    HorizontalAlignment="Center" 
                                                    VerticalAlignment="Center" 
                                                    Stretch="Uniform"
-                                                   Source="{Binding GimmickImagePath, Converter={StaticResource Converter.PathToImageSource}}"
+                                                   Source="{Binding GimmickIcon}"
                                                    />
-                                            <Border Grid.Column="0" 
+                                                <Border Grid.Column="0" 
                                                        Grid.Row="0" 
                                                        Grid.ColumnSpan="3" 
                                                        Grid.RowSpan="3" 
@@ -253,21 +269,23 @@
                                                        Visibility="{Binding PokemonMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
                                                        BorderBrush="White"
                                                        BorderThickness="1">
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
                                                            Foreground="white" FontSize="9" 
                                                            Text="{Binding PokemonMarkerText}"/>
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
         </DockPanel>
 
-        <DockPanel Margin="10">
+        <DockPanel Margin="10,0,0,0">
+
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
                 <TextBlock Text="Mode:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <ListBox ItemsSource="{Binding Painters}" SelectedItem="{Binding SelectedPainter}">
@@ -279,7 +297,7 @@
                                     <TextBlock Margin="5,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                 </StackPanel>
                             </Grid>
-                            
+
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                     <ListBox.ItemsPanel>
@@ -288,11 +306,12 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
-                
+
             </StackPanel>
+            
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-                <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <CheckBox Style="{StaticResource SwitchCheckBoxStyle}" IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <ToggleButton Style="{StaticResource TagToggleButtonStyle}" IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
                 <TextBlock Text="Nickname" Grid.Row="0" Margin="20,0,0,0" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding Nickname}" Width="150" Margin="5,0,0,0"/>
             </StackPanel>
@@ -339,26 +358,17 @@
                         </ContentPresenter.ContentTemplate>
                     </ContentPresenter>
                 </TabItem>
-                <TabItem Header="Gimmicks">
+                <TabItem Header="Gimmicks" IsSelected="True">
                     <DockPanel>
-                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  Margin="5">
-                            <controls:IconButton Icon="add" Content="Add New" Click="AddGimmickButton_Click"/>
-                            <controls:IconButton Icon="delete" Content="Remove Selected" Margin="5,0,0,0" b:ButtonBehaviours.IsDangerous="True" Command="{Binding RemoveSelectedGimmickCommand}"/>
-                        </StackPanel>
-                        <DataGrid x:Name="GimmickDataGrid" CanUserAddRows="True" AutoGenerateColumns="False" ItemsSource="{Binding Gimmicks}"
-                              VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
+                        <GroupBox Header="Selected Gimmick" DockPanel.Dock="Top">
+                            <Grid>
+                                <TextBlock Visibility="{Binding SelectedGimmick, Converter={StaticResource Converter.NotNullToVis.Inverse}}" 
+                                           Text="No Gimmick Selected" Foreground="{DynamicResource AltForegroundBrush}" 
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Gimmick" Binding="{Binding Gimmick}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Orientation" Binding="{Binding Orientation}" IsReadOnly="True"/>
-                            </DataGrid.Columns>
-                            <DataGrid.RowDetailsTemplate>
-                                <DataTemplate>
-                                    <DockPanel>
-                                        <Grid DockPanel.Dock="Left" Margin="5">
+                                <Grid Visibility="{Binding SelectedGimmick, Converter={StaticResource Converter.NotNullToVis.Hidden}}">
+                                    <DockPanel DataContext="{Binding SelectedGimmick}" >
+                                        <Grid DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="22"/>
                                                 <ColumnDefinition Width="22"/>
@@ -384,17 +394,50 @@
                                                 <RowDefinition Height="25"/>
                                                 <RowDefinition Height="25"/>
                                                 <RowDefinition Height="25"/>
+                                                <RowDefinition Height="25"/>
                                             </Grid.RowDefinitions>
-                                            <TextBlock Height="20" Text="Gimmick" Grid.Row="0"/>
-                                            <ComboBox Grid.Row="0" Grid.Column="1" Height="20" SelectedItem="{Binding Gimmick, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static const:EnumProvider.GimmickItems}"/>
-                                            <TextBlock Height="20" Text="Unknown Value" Grid.Row="1"/>
-                                            <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding UnknownValue, UpdateSourceTrigger=LostFocus}"/>
-                                            <TextBlock Height="20" Text="Parameters" Grid.Row="2"/>
-                                            <TextBox Grid.Row="2" Grid.Column="1" Height="20" Text="{Binding Params, UpdateSourceTrigger=LostFocus}"/>
+                                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                                <Image Source="{Binding GimmickIcon}" Width="20" Height="20" Margin="0,0,20,0"/>
+                                                <TextBlock Text="{Binding X, StringFormat='X: {0}'}" d:Text="X: 10"  Width="50" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Y, StringFormat='Y: {0}'}" d:Text="Y: 10" Width="50" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding Orientation, StringFormat='Orientation: {0}'}" d:Text="Orientation: 10" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock Height="20" Text="Gimmick" Grid.Row="1"/>
+                                            <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedValue="{Binding Gimmick, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding GimmickItems}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                                            <TextBlock Height="20" Text="Unknown Value" Grid.Row="2"/>
+                                            <controls:NumberBox Grid.Row="2" Grid.Column="1" Height="20" Value="{Binding UnknownValue, UpdateSourceTrigger=LostFocus}"/>
+                                            <TextBlock Height="20" Text="Parameters" Grid.Row="3"/>
+                                            <TextBox Grid.Row="3" Grid.Column="1" Height="20" Text="{Binding Params, UpdateSourceTrigger=LostFocus}"/>
                                         </Grid>
                                     </DockPanel>
-                                </DataTemplate>
-                            </DataGrid.RowDetailsTemplate>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal"  Margin="5">
+                            <controls:IconButton Icon="add" Content="Add New" Click="AddGimmickButton_Click"/>
+                            <controls:IconButton Icon="delete" Content="Remove Selected" Margin="5,0,0,0" b:ButtonBehaviours.IsDangerous="True" Command="{Binding RemoveSelectedGimmickCommand}"/>
+                        </StackPanel>
+                        <DataGrid x:Name="GimmickDataGrid" CanUserAddRows="True" AutoGenerateColumns="False" ItemsSource="{Binding Gimmicks}"
+                              VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="Gimmick" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Width="16" Height="16" Stretch="Uniform" Source="{Binding GimmickIcon}"/>
+                                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding GimmickIdAndName}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Orientation" Binding="{Binding Orientation}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Unknown" Binding="{Binding UnknownValue}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Parameters" Binding="{Binding Params}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
                         </DataGrid>
                     </DockPanel>
                 </TabItem>
@@ -446,9 +489,11 @@
                     </DataGrid>
                 </TabItem>
                 <TabItem Header="Painter">
-                    <Grid Margin="10">
-                        <ContentPresenter Content="{Binding SelectedPainter}"/>
-                    </Grid>
+                    <ScrollViewer>
+                        <Grid Margin="10">
+                            <ContentPresenter Content="{Binding SelectedPainter}"/>
+                        </Grid>
+                    </ScrollViewer>
                 </TabItem>
                 <TabItem Header="Import/Export">
                     <Grid>

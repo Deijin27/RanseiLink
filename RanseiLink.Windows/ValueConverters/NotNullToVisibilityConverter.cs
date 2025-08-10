@@ -6,9 +6,31 @@ namespace RanseiLink.Windows.ValueConverters;
 
 public class NotNullToVisibilityConverter : IValueConverter
 {
+    public bool Inverse { get; set; } = false;
+    public bool Hidden { get; set; } = false;
+
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        return value != null ? Visibility.Visible : Visibility.Collapsed;
+        var notnull = value != null;
+        if (Inverse)
+        {
+            notnull = !notnull;
+        }
+        if (notnull)
+        {
+            return Visibility.Visible;
+        }
+        else
+        {
+            if (Hidden)
+            {
+                return Visibility.Hidden;
+            }
+            else
+            {
+                return Visibility.Collapsed;
+            }
+        }
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -16,3 +38,4 @@ public class NotNullToVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+

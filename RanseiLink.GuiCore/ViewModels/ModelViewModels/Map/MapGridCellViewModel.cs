@@ -3,6 +3,7 @@ using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using SixLabors.ImageSharp.PixelFormats;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -92,11 +93,11 @@ public class MapGridCellViewModel : ViewModelBase
         if (_showGimmicks && Gimmicks.Any())
         {
             var gimmick = Gimmicks.Last();
-            GimmickImagePath = _spriteProvider.GetSpriteFile(SpriteType.StlStageObje, _gimmickService.Retrieve((int)gimmick.Gimmick).Image1).File;
+            GimmickIcon = gimmick.GimmickIcon;
         }
         else
         {
-            GimmickImagePath = null;
+            GimmickIcon = null;
         }
     }
 
@@ -212,13 +213,24 @@ public class MapGridCellViewModel : ViewModelBase
 
     public ObservableCollection<MapPokemonPositionViewModel> Pokemon { get; } = [];
 
-    public string GimmicksString => string.Join(", ", Gimmicks.Select(i => i.Gimmick));
-
-    private string? _gimmickImagePath;
-    public string? GimmickImagePath
+    public string GimmicksString
     {
-        get => _gimmickImagePath;
-        set => SetProperty(ref _gimmickImagePath, value);
+        get
+        {
+            if (Gimmicks.Count == 0)
+            {
+                return "---";
+            }
+
+            return string.Join(", ", Gimmicks.Select(i => i.GimmickIdAndName));
+        }
+    }
+
+    private object? _gimmickIcon;
+    public object? GimmickIcon
+    {
+        get => _gimmickIcon;
+        set => SetProperty(ref _gimmickIcon, value);
     }
 
     public MapGridSubCellViewModel SubCell0 { get; }

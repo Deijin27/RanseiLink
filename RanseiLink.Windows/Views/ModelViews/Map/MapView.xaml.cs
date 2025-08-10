@@ -30,7 +30,7 @@ public partial class MapView : UserControl
     {
         if (sender is Rectangle && DataContext is MapViewModel vm)
         {
-            vm.MouseOverItem = null;
+            //vm.MouseOverItem = null;
         }
     }
 

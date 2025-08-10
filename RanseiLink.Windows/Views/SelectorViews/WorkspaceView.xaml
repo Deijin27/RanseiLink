@@ -9,6 +9,13 @@
              xmlns:local="clr-namespace:RanseiLink.Windows.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="BigViewScrollHostTemplate">
+            <ScrollViewer x:Name="MiasScroll">
+                <ContentPresenter Content="{Binding }"/>
+            </ScrollViewer>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -45,9 +52,8 @@
         </DockPanel>
 
 
-        <ScrollViewer Grid.Row="1" Grid.Column="1">
-            <ContentPresenter Content="{Binding BigViewModel}"/>
-        </ScrollViewer>
+        <ContentPresenter Grid.Row="1" Grid.Column="1" x:Name="BigViewModelHost" 
+                          Content="{Binding BigViewModel}" />
 
     </Grid>
 </UserControl>
