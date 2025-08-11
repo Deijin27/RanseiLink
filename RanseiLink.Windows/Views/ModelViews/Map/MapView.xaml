@@ -17,9 +17,37 @@
 
         <DrawingBrush x:Key="Checkerboard" TileMode="Tile" Viewport="0,0,32,32" ViewportUnits="Absolute">
             <DrawingBrush.Drawing>
-                <GeometryDrawing Geometry="M0,0 H1 V1 H2 V2 H1 V1 H0Z" Brush="#212024"/>
+                <GeometryDrawing Geometry="M0,0 H1 V1 H2 V2 H1 V1 H0Z" Brush="{DynamicResource WindowTransparentBackgroundBrush}"/>
             </DrawingBrush.Drawing>
         </DrawingBrush>
+        
+        <Style x:Key="BaseEntityTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style x:Key="GimmickTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseEntityTextStyle}">
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <Style x:Key="PokemonTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseEntityTextStyle}">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="BaseEntityBorderStyle" TargetType="Border">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Height" Value="12"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style x:Key="GimmickBorderStyle" TargetType="Border" BasedOn="{StaticResource BaseEntityBorderStyle}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+        </Style>
+
+        <Style x:Key="PokemonBorderStyle" TargetType="Border" BasedOn="{StaticResource BaseEntityBorderStyle}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="BorderBrush" Value="White"/>
+        </Style>
 
         <DataTemplate DataType="{x:Type vm:TerrainMapPainter}">
             <ListBox ItemsSource="{Binding Brushes}" SelectedItem="{Binding SelectedBrush}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -229,18 +257,14 @@
                                                Grid.Row="0" 
                                                Grid.ColumnSpan="3" 
                                                Grid.RowSpan="3" 
-                                               IsHitTestVisible="False" 
-                                               Background="white" 
+                                               IsHitTestVisible="False"
+                                                        Style="{StaticResource GimmickBorderStyle}"
                                                Margin="1" 
-                                               Width="12" 
-                                               Height="12" 
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center"
                                                Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
-                                               BorderBrush="black"
-                                               BorderThickness="1">
-                                                    <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                   Foreground="black" FontSize="9" 
+                                               >
+                                                    <TextBlock Style="{StaticResource GimmickTextStyle}"
                                                    Text="{Binding GimmickMarkerText}"/>
                                                 </Border>
                                                 <Image Grid.Column="0" 
@@ -260,17 +284,13 @@
                                                        Grid.ColumnSpan="3" 
                                                        Grid.RowSpan="3" 
                                                        IsHitTestVisible="False" 
-                                                       Background="Black" 
+                                                       Style="{StaticResource PokemonBorderStyle}"
                                                        Margin="1" 
-                                                       Width="12" 
-                                                       Height="12" 
                                                        HorizontalAlignment="Center" 
                                                        VerticalAlignment="Center"
                                                        Visibility="{Binding PokemonMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
-                                                       BorderBrush="White"
-                                                       BorderThickness="1">
-                                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                           Foreground="white" FontSize="9" 
+                                                       >
+                                                    <TextBlock Style="{StaticResource PokemonTextStyle}"
                                                            Text="{Binding PokemonMarkerText}"/>
                                                 </Border>
                                             </Grid>
@@ -285,78 +305,78 @@
         </DockPanel>
 
         <DockPanel Margin="10,0,0,0">
-
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="Mode:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <ListBox ItemsSource="{Binding Painters}" SelectedItem="{Binding SelectedPainter}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Width="100">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <controls:IconControl Icon="{Binding Icon}"/>
-                                    <TextBlock Margin="5,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                </StackPanel>
-                            </Grid>
-
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                </ListBox>
-
-            </StackPanel>
             
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
+            <ListBox Margin="0,0,0,10" DockPanel.Dock="Top" ItemsSource="{Binding Painters}" SelectedItem="{Binding SelectedPainter}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Width="100">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <controls:IconControl Icon="{Binding Icon}"/>
+                                <TextBlock Margin="5,0,0,0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" IsChecked="{Binding ShowGimmicks}" Content="Show Gimmicks" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <ToggleButton Style="{StaticResource TagToggleButtonStyle}" IsChecked="{Binding ShowPokemonMarkers}" Content="Show Pokemon" VerticalAlignment="Center"/>
-                <TextBlock Text="Nickname" Grid.Row="0" Margin="20,0,0,0" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding Nickname}" Width="150" Margin="5,0,0,0"/>
-            </StackPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
-                <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
-                <controls:IconButton Icon="resize" Content="Resize" Command="{Binding ModifyMapDimensionsCommand}"/>
-                <controls:IconButton Icon="visibility" Content="View 3D Model" Command="{Binding View3DModelCommand}" Margin="10,0"/>
+
             </StackPanel>
 
-            <TabControl Margin="0,20,0,0" SelectedIndex="{Binding SelectedTabIndex}">
+            <TabControl Margin="0,10,0,0" SelectedIndex="{Binding SelectedTabIndex}">
                 <!-- Important, if you swap tab order, make sure to update the tap associated with Painter in the view model -->
-                <TabItem Header="Selected Cell">
-                    <ContentPresenter Margin="10" Content="{Binding SelectedCell}">
-                        <ContentPresenter.ContentTemplate>
-                            <DataTemplate DataType="{x:Type vm:MapGridCellViewModel}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="30"/>
-                                        <RowDefinition Height="30"/>
-                                        <RowDefinition Height="30"/>
-                                        <RowDefinition Height="30"/>
-                                        <RowDefinition Height="30"/>
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
-                                        <TextBlock Width="38" d:Text="X: 10" Text="{Binding X, StringFormat='X: {0}'}"/>
-                                        <TextBlock Width="38" d:Text="Y: 10" Text="{Binding Y, StringFormat='Y: {0}'}"/>
-                                    </StackPanel>
+                <TabItem Header="Properties">
+                    <StackPanel Margin="10">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <TextBlock Text="Map Nickname" Grid.Row="0" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding Nickname}" Width="150" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock d:Text="Width: 10" Text="{Binding Width, StringFormat='Width: {0}'}"/>
+                            <TextBlock d:Text="Height: 10" Text="{Binding Height, StringFormat='Height: {0}'}" Margin="10,0"/>
+                            <controls:IconButton Icon="resize" Content="Resize" Command="{Binding ModifyMapDimensionsCommand}"/>
+                        </StackPanel>
+                        <UniformGrid Columns="2">
+                            <Button Margin="4"  Command="{Binding ExportPslmCommand}">Export Map Data (.pslm)</Button>
+                            <Button Margin="4" Command="{Binding ImportPslmCommand}">Import Map Data (.pslm)</Button>
+                        </UniformGrid>
+                        <GroupBox Header="Selected Cell" Padding="10" DataContext="{Binding SelectedCell}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
+                                    <TextBlock Width="38" d:Text="X: 10" Text="{Binding X, StringFormat='X: {0}'}"/>
+                                    <TextBlock Width="38" d:Text="Y: 10" Text="{Binding Y, StringFormat='Y: {0}'}"/>
+                                </StackPanel>
 
-                                    <TextBlock Height="20" Grid.Row="1">Terrain</TextBlock>
-                                    <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedItem="{Binding Terrain}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
-                                    <TextBlock Height="20" Grid.Row="2">Bounds</TextBlock>
-                                    <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Bounds}" ItemsSource="{x:Static const:EnumProvider.MapBoundsItems}"/>
-                                    <TextBlock Height="20" Grid.Row="3">Unknown4</TextBlock>
-                                    <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown4}" Max="255"/>
-                                    <TextBlock Height="20" Grid.Row="4">Orientation</TextBlock>
-                                    <ComboBox Grid.Row="4" Grid.Column="1" Height="20" SelectedItem="{Binding Orientation}" ItemsSource="{x:Static const:EnumProvider.OrientationAltItems}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ContentPresenter.ContentTemplate>
-                    </ContentPresenter>
+                                <TextBlock Height="20" Grid.Row="1">Terrain</TextBlock>
+                                <ComboBox Grid.Row="1" Grid.Column="1" Height="20" SelectedItem="{Binding Terrain}" ItemsSource="{x:Static const:EnumProvider.TerrainItems}"/>
+                                <TextBlock Height="20" Grid.Row="2">Bounds</TextBlock>
+                                <ComboBox Grid.Row="2" Grid.Column="1" Height="20" SelectedItem="{Binding Bounds}" ItemsSource="{x:Static const:EnumProvider.MapBoundsItems}"/>
+                                <TextBlock Height="20" Grid.Row="3">Unknown4</TextBlock>
+                                <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown4}" Max="255"/>
+                                <TextBlock Height="20" Grid.Row="4">Orientation</TextBlock>
+                                <ComboBox Grid.Row="4" Grid.Column="1" Height="20" SelectedItem="{Binding Orientation}" ItemsSource="{x:Static const:EnumProvider.OrientationAltItems}"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Gimmicks" IsSelected="True">
                     <DockPanel>
@@ -421,7 +441,15 @@
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedGimmick}">
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="ID" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource GimmickBorderStyle}">
+                                                <TextBlock Text="{Binding Id}" Style="{StaticResource GimmickTextStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
                                 <DataGridTemplateColumn Header="Gimmick" IsReadOnly="True">
@@ -442,51 +470,66 @@
                     </DockPanel>
                 </TabItem>
                 <TabItem Header="Pokémon">
-                    <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" ItemsSource="{Binding PokemonPositions}"
+                    <DockPanel>
+                        <GroupBox Header="Selected Pokémon" DockPanel.Dock="Top" Margin="0,0,0,5">
+                            <Grid>
+                                <TextBlock Visibility="{Binding SelectedPokemonPosition, Converter={StaticResource Converter.NotNullToVis.Inverse}}" 
+               Text="No Pokémon Selected" Foreground="{DynamicResource AltForegroundBrush}" 
+               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Grid Visibility="{Binding SelectedPokemonPosition, Converter={StaticResource Converter.NotNullToVis.Hidden}}">
+                                    <DockPanel DataContext="{Binding SelectedPokemonPosition}">
+                                        <Grid DockPanel.Dock="Left" Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="22"/>
+                                                <ColumnDefinition Width="22"/>
+                                                <ColumnDefinition Width="22"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="22"/>
+                                                <RowDefinition Height="22"/>
+                                                <RowDefinition Height="22"/>
+                                            </Grid.RowDefinitions>
+                                            <controls:IconButton Icon="chevron_up" Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1"/>
+                                            <controls:IconButton Icon="chevron_left" Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1"/>
+                                            <controls:IconButton Icon="rotate_right" Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1"/>
+                                            <controls:IconButton Icon="chevron_right" Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1"/>
+                                            <controls:IconButton Icon="chevron_down" Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2"/>
+                                        </Grid>
+                                        <Grid Margin="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="25"/>
+                                                <RowDefinition Height="25"/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Height="20" Text="Unknown2" Grid.Row="1"/>
+                                            <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding Unknown2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </Grid>
+                                    </DockPanel>
+                                </Grid>
+                            </Grid>
+                        </GroupBox>
+                        <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" ItemsSource="{Binding PokemonPositions}"
                               VirtualizingPanel.ScrollUnit="Pixel" SelectedItem="{Binding SelectedPokemonPosition}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Orientation" Binding="{Binding Orientation}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Unknown2" Binding="{Binding Unknown2}" IsReadOnly="True"/>
-                        </DataGrid.Columns>
-                        <DataGrid.RowDetailsTemplate>
-                            <DataTemplate>
-                                <DockPanel>
-                                    <Grid DockPanel.Dock="Left" Margin="5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="22"/>
-                                            <ColumnDefinition Width="22"/>
-                                            <ColumnDefinition Width="22"/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="22"/>
-                                            <RowDefinition Height="22"/>
-                                            <RowDefinition Height="22"/>
-                                        </Grid.RowDefinitions>
-                                        <controls:IconButton Icon="chevron_up" Command="{Binding DecrementYCommand}" Width="20" Height="20" Grid.Column="1"/>
-                                        <controls:IconButton Icon="chevron_left" Command="{Binding DecrementXCommand}" Width="20" Height="20" Grid.Row="1"/>
-                                        <controls:IconButton Icon="rotate_right" Command="{Binding RotateCommand}" Width="20" Height="20" Grid.Row="1" Grid.Column="1"/>
-                                        <controls:IconButton Icon="chevron_right" Command="{Binding IncrementXCommand}" Width="20" Height="20" Grid.Column="2" Grid.Row="1"/>
-                                        <controls:IconButton Icon="chevron_down" Command="{Binding IncrementYCommand}" Width="20" Height="20" Grid.Column="1" Grid.Row="2"/>
-                                    </Grid>
-                                    <Grid Margin="5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="100"/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="25"/>
-                                            <RowDefinition Height="25"/>
-                                        </Grid.RowDefinitions>
-                                        <TextBlock Height="20" Text="Unknown2" Grid.Row="1"/>
-                                        <controls:NumberBox Grid.Row="1" Grid.Column="1" Height="20" Value="{Binding Unknown2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Grid>
-                                </DockPanel>
-                            </DataTemplate>
-                        </DataGrid.RowDetailsTemplate>
-                    </DataGrid>
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="ID" IsReadOnly="True">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource PokemonBorderStyle}">
+                                                <TextBlock Text="{Binding Id}" Style="{StaticResource PokemonTextStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="X" Binding="{Binding X}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Y" Binding="{Binding Y}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Orientation" Binding="{Binding Orientation}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Unknown2" Binding="{Binding Unknown2}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
                 </TabItem>
                 <TabItem Header="Painter">
                     <ScrollViewer>
@@ -495,7 +538,7 @@
                         </Grid>
                     </ScrollViewer>
                 </TabItem>
-                <TabItem Header="Import/Export">
+                <TabItem Header="3D Model">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -511,21 +554,23 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <controls:IconButton Grid.Row="0" Grid.ColumnSpan="2" Icon="visibility" Content="View 3D Model" Command="{Binding View3DModelCommand}" />
+                        
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal" VerticalAlignment="Center">
                             <controls:OverrideControl IsOverride="{Binding Is3dModelOverriden}"/>
-                            <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="3D Model Overriden"/>
+                            <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="3D Model Is Overwritten"/>
                         </StackPanel>
                         
-                        <Button Margin="4" Grid.Column="0" Grid.Row="1" Command="{Binding ExportObjCommand}">Export 3D Model as OBJ</Button>
-                        <Button Margin="4" Grid.Column="0" Grid.Row="2" Command="{Binding ExportPacCommand}">Export 3D Model as PAC</Button>
-                        <Button Margin="4" Grid.Column="0" Grid.Row="3" Command="{Binding ImportObjCommand}">Import 3D Model from OBJ</Button>
-                        <Button Margin="4" Grid.Column="0" Grid.Row="4" Command="{Binding ImportPacCommand}">Import 3D Model from PAC</Button>
-                        <Button Margin="4" Grid.Column="0" Grid.Row="5" Command="{Binding RevertModelCommand}">Revert 3D Model to Default</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="2" Command="{Binding ExportObjCommand}">Export (.obj)</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="3" Command="{Binding ExportPacCommand}">Export (.pac)</Button>
+                        <Button Margin="4" Grid.Column="1" Grid.Row="2" Command="{Binding ImportObjCommand}">Import (.obj)</Button>
+                        <Button Margin="4" Grid.Column="1" Grid.Row="3" Command="{Binding ImportPacCommand}">Import (.pac)</Button>
+                        <Button Margin="4" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Command="{Binding RevertModelCommand}">Revert to Default</Button>
 
-                        <Button Margin="4" Grid.Column="1" Grid.Row="1" Command="{Binding ExportPslmCommand}">Export PSLM</Button>
-                        <Button Margin="4" Grid.Column="1" Grid.Row="2" Command="{Binding ImportPslmCommand}">Import PSLM</Button>
+                        
                     </Grid>
                 </TabItem>
             </TabControl>
