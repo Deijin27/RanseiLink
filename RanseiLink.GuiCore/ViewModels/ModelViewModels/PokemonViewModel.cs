@@ -308,6 +308,8 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         }
 
         RaisePropertyChanged(nameof(IsAnimationOverwritten));
+        RaisePropertyChanged(nameof(LongAttackAnimation));
+        RaisePropertyChanged(nameof(AsymmetricBattleSprite));
         RevertAnimationCommand.RaiseCanExecuteChanged();
     }
 
