@@ -214,18 +214,18 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         });
     }
 
-    private void Item_ModRequest(IModListItemViewModel mod, ModAction action)
+    private void Item_ModRequest(IModListItemViewModel sender, ModAction action, ModInfo mod)
     {
         switch (action)
         {
             case ModAction.Remove:
-                RemoveItem(mod);
+                RemoveItem(sender);
                 break;
             case ModAction.MarkAsNew:
-                MarkModAsNew(mod.Mod);
+                MarkModAsNew(mod);
                 break;
             case ModAction.PinnedChanged:
-                Mod_IsPinnedChanged(mod);
+                Mod_IsPinnedChanged(sender);
                 break;
             case ModAction.Refresh:
                 RefreshModItems();

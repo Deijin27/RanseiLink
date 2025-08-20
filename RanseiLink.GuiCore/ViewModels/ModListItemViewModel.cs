@@ -18,7 +18,7 @@ public enum ModAction
     Refresh
 }
 
-public delegate void ModActionRequestHandler(IModListItemViewModel mod, ModAction action);
+public delegate void ModActionRequestHandler(IModListItemViewModel sender, ModAction action, ModInfo mod);
 
 public interface IModListItemViewModel
 {
@@ -266,7 +266,12 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 
     private void SendModRequest(ModAction action)
     {
-        ModRequest?.Invoke(this, action);
+        ModRequest?.Invoke(this, action, Mod);
+    }
+
+    private void SendModRequest(ModAction action, ModInfo mod)
+    {
+        ModRequest?.Invoke(this, action, mod);
     }
 
     private async Task CreateModBasedOn(ModInfo mod)
@@ -284,7 +289,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             try
             {
                 newMod = _modService.CreateBasedOn(mod, vm.Metadata);
-                SendModRequest(ModAction.MarkAsNew);
+                SendModRequest(ModAction.MarkAsNew, newMod);
             }
             catch (Exception e)
             {
