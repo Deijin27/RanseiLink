@@ -34,10 +34,11 @@ public class NsbmdGenerateCommand : ICommand
         (
             ObjFile: SourceFile,
             DestinationFolder: DestinationFolder,
-            TransparencyFormat: TransparencyFormat,
-            OpacityFormat: OpacityFormat,
-            SemiTransparencyFormat: SemiTransparencyFormat,
-            ModelGenerator: new MapModelGenerator()
+            ModelGenerator: new MapModelGenerator(),
+            TexFormat: new ModelExtractorGenerator.TexFormatSettings(
+                TransparencyFormat: TransparencyFormat,
+                OpacityFormat: OpacityFormat,
+                SemiTransparencyFormat: SemiTransparencyFormat)
         );
 
         var result = ModelExtractorGenerator.GenerateModel(settings);
