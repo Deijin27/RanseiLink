@@ -13,7 +13,7 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
 
     public Building Model => _model;
 
-    public BuildingViewModel(INicknameService nicknameService, IBuildingService buildingService, IJumpService jumpService, IIdToNameService idToNameService, IScenarioBuildingService scenarioBuildingService, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider)
+    public BuildingViewModel(IAnimGuiManager animManager, INicknameService nicknameService, IBuildingService buildingService, IJumpService jumpService, IIdToNameService idToNameService, IScenarioBuildingService scenarioBuildingService, IKingdomService kingdomService, ICachedSpriteProvider cachedSpriteProvider)
     {
         ScenarioBuildingVm = new ScenarioBuildingViewModel(scenarioBuildingService);
         _buildingService = buildingService;
@@ -23,7 +23,7 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
         KingdomItems = idToNameService.GetComboBoxItemsPlusDefault<IKingdomService>();
         BattleConfigItems = nicknameService.GetAllNicknames(nameof(BattleConfigId));
         JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigWorkspaceEditorModule.Id, id));
-
+        IconAnimVm = new(animManager, Core.Resources.AnimationTypeId.IconInst, () => SelectedAnimation);
         this.PropertyChanged += BuildingViewModel_PropertyChanged;
     }
 
@@ -81,7 +81,7 @@ public partial class BuildingViewModel : ViewModelBase, IBigViewModel
 
     #region Animation
 
-    public AnimationViewModel? IconAnimVm { get; private set; }
+    public AnimationViewModel IconAnimVm { get; }
 
 
     private int _selectedAnimation;
