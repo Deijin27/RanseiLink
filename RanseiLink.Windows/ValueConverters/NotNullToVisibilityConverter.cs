@@ -11,7 +11,7 @@ public class NotNullToVisibilityConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        var notnull = value != null;
+        var notnull = value != null && (value is not string strval || strval != string.Empty);
         if (Inverse)
         {
             notnull = !notnull;
@@ -38,4 +38,3 @@ public class NotNullToVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
-

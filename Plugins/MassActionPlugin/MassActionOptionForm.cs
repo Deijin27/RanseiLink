@@ -35,7 +35,7 @@ public class MassActionOptionForm : IPluginForm
 
     public List<string> ScenarioOptions { get; } = EnumUtil.GetValues<ScenarioId>().Select(i => i.ToString()).Append(ConstOptions.AllScenarios).ToList();
 
-    [CollectionOption("In Scenario (Where applicable)", nameof(ScenarioOptions))]
+    [CollectionOption("In Scenario", nameof(ScenarioOptions), description: "(Where applicable)")]
     public string Scenario { get; set; } = ConstOptions.AllScenarios;
 
     [IntOption("The Value")]

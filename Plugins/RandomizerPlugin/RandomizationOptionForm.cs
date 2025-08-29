@@ -16,64 +16,112 @@ public class RandomizationOptionForm : IPluginForm
     public string ProceedButtonText => "Randomize!";
     public string CancelButtonText => "Cancel";
 
+
+
+
     [Text]
     public string Description => "Adjust the options to your choosing, then hit randomize to randomize the mod.";
 
-    [StringOption("Randomization Seed", "Seed used for the randomizer. Using the same seed will give the same result")]
-    public string Seed { get; set; } = Guid.NewGuid().ToString("N");
+    [StringOption("Randomization Seed", "Using the same seed will give the same result")]
+    public string Seed { get; set; }
 
-    [BoolOption("Warrior's Pokemon", "Randomize warrior's pokemon")]
-    public bool ScenarioPokemon { get; set; }
 
-    [BoolOption("Pokemon's Abilities", "Randomize pokemon's abilities")]
-    public bool Abilities { get; set; }
 
-    [BoolOption("Pokemon's Types", "Randomize pokemon's types")]
+
+
+    [Header]
+    public string TypesHeader => "Types";
+
+    [BoolOption("Pokemon's Types")]
     public bool Types { get; set; }
 
     [BoolOption("Prevent duplicate types", "Prevent two of the same type on a pokemon")]
     public bool PreventSameType { get; set; } = true;
 
-    [BoolOption("Pokemon's Moves", "Randomize pokemon's moves")]
+
+
+
+    [Header]
+    public string MovesHeader => "Moves";
+
+    [BoolOption("Pokemon's Moves")]
     public bool Moves { get; set; }
 
-
-    [CollectionOption("Mode", new[] { StatRandomizationMode.None, StatRandomizationMode.Shuffle, StatRandomizationMode.Range }, group: "Pokemon's Stats")]
-    public string StatRandomMode { get; set; } = StatRandomizationMode.None;
-
-    [IntOption("Range Min", "Minimum value if range mode is selected", group: "Pokemon's Stats")]
-    public int StatRangeMin { get; set; } = 100;
-
-    [IntOption("Range Max", "Maximum value if range mode is selected", group: "Pokemon's Stats")]
-    public int StatRangeMax { get; set; } = 300;
-
+    [BoolOption("Match move types to pokemon", "Ensure that randomly selected moves match the types of the pokemon (Note that STAB isn't a thing in this game so this doesn't affect power)")]
+    public bool MatchMoveTypes { get; set; }
 
     [BoolOption("Move Animations", "Ultimate chaos with random move animations")]
     public bool MoveAnimations { get; set; }
 
-    [BoolOption("Warrior's Skills", "Randomize what skills the warriors have")]
-    public bool WarriorSkills { get; set; }
+
+
+
+
+    [Header]
+    public string Abilitieseader => "Abilities";
+
+    [BoolOption("Pokemon's Abilities")]
+    public bool Abilities { get; set; }
+
+
+
+
+
+    [Header]
+    public string StatsHeader => "Pokemon's Stats";
+
+    [CollectionOption("Mode", new[] { StatRandomizationMode.None, StatRandomizationMode.Shuffle, StatRandomizationMode.Range })]
+    public string StatRandomMode { get; set; } = StatRandomizationMode.None;
+
+    [IntOption("Range Min", "Minimum value if range mode is selected")]
+    public int StatRangeMin { get; set; } = 100;
+
+    [IntOption("Range Max", "Maximum value if range mode is selected")]
+    public int StatRangeMax { get; set; } = 300;
+
+
+
+
+
+    [Header]
+    public string ContHeader => "Warriors";
 
     [BoolOption("Warriors", "Randomize which warriors are where")]
     public bool Warriors { get; set; }
 
-    [BoolOption("Battle Maps", "Randomly choose a battle config for each kingdom and each battle building")]
+    [BoolOption("Warrior's Pokemon")]
+    public bool ScenarioPokemon { get; set; }
+
+    [BoolOption("Warrior's Skills")]
+    public bool WarriorSkills { get; set; }
+
+
+
+
+    [Header]
+    public string BattleHeader => "Battles";
+
+    [BoolOption("Battle Maps", "Maps where battles take place are randomly selected. This excludes tutorials where it breaks scripted events.")]
     public bool BattleMaps { get; set; }
 
     [BoolOption("Disco Lights", "Randomly choose background colors for battles")]
     public bool DiscoLights { get; set; }
 
-    [IntOption("Minimum max link value", "Set max link to at least this value", maximumValue: 100)]
+
+
+
+    [Header]
+    public string ExtraHeader => "Extra";
+
+    [IntOption("Minimum max link value", "Each warrior has a max link with each pokemon, as this setting prevents you from having a warrior who can't get stronger with the pokemon they've been randomly assigned. The reason it's 98 rather than 100 is because the dialog that appears after battles with perfect links is annoying.", maximumValue: 100)]
     public int AllMaxLinkValue { get; set; } = 98;
 
-    [BoolOption("Avoid Dummy Moves", "Avoid dummy moves when randomizing")]
-    public bool AvoidDummyMoves { get; set; } = true;
+    [BoolOption("Avoid Dummy Values", "In the vanilla game some moves/abilities/warrior skills are unused placeholders. This option prevents these from being selected. If you're randomizing a mod that overwrites these dummy values consider turning off this setting")]
+    public bool AvoidDummyValues { get; set; } = true;
 
-    [BoolOption("Avoid Dummy Abilities", "Avoid dummy abilities when randomizing")]
-    public bool AvoidDummyAbilities { get; set; } = true;
-
-    [BoolOption("Avoid Dummy Warrior Skills", "Avoid dummy warrior skills when randomizing")]
-    public bool AvoidDummyWarriorSkills { get; set; } = true;
+    public bool AvoidDummyMoves => AvoidDummyValues;
+    public bool AvoidDummyAbilities => AvoidDummyValues;
+    public bool AvoidDummyWarriorSkills => AvoidDummyValues;
 
     [BoolOption("Softlock Minimization", "Reduce the chance of softlocks caused by randomization (optimised for vanilla)")]
     public bool SoftlockMinimization { get; set; } = true;

@@ -8,7 +8,7 @@
     <SolidColorBrush x:Key="WindowTransparentBackgroundBrush" Color="#212024"/>
     <SolidColorBrush x:Key="WindowBorderBrush" Color="#3F3F3F" />
     <SolidColorBrush x:Key="SurfaceContainerHigh" Color="#2B2930"/>
-    <SolidColorBrush x:Key="SurfaceContainerLow" Color="#1D1B20"/>
+    <SolidColorBrush x:Key="SurfaceContainerLow" Color="#1D1C1E"/>
 
     <SolidColorBrush x:Key="ErrorBrush" Color="#F2B8B5"/>
     <SolidColorBrush x:Key="OnErrorBrush" Color="#601410"/>

@@ -6,26 +6,16 @@ namespace RanseiLink.PluginModule.Services.Concrete;
 
 public class PluginFormLoader : IPluginFormLoader
 {
-    private static PluginFormGroup GetOrAdd(Dictionary<string, PluginFormGroup> dict, string key)
-    {
-        if (dict.TryGetValue(key, out PluginFormGroup? value))
-            return value;
-
-        var newGroup = new PluginFormGroup(key, new());
-        dict[key] = newGroup;
-        return newGroup;
-    }
-
     public PluginFormInfo FormToInfo(IPluginForm form)
     {
-        Dictionary<string, PluginFormGroup> groups = new();
+        var items = new List<IPluginFormItem>();
 
         foreach (var property in form.GetType().GetProperties())
         {
             var boolAttribute = property.GetCustomAttribute<BoolOptionAttribute>();
             if (boolAttribute != null && property.PropertyType == typeof(bool))
             {
-                GetOrAdd(groups, boolAttribute.Group).Items.Add(new BoolPluginFormItem(
+                items.Add(new BoolPluginFormItem(
                     member: property,
                     displayName: boolAttribute.DisplayName,
                     description: boolAttribute.Description,
@@ -37,7 +27,7 @@ public class PluginFormLoader : IPluginFormLoader
             var intAttribute = property.GetCustomAttribute<IntOptionAttribute>();
             if (intAttribute != null && property.PropertyType == typeof(int))
             {
-                GetOrAdd(groups, intAttribute.Group).Items.Add(new IntPluginFormItem(
+                items.Add(new IntPluginFormItem(
                     member: property,
                     displayName: intAttribute.DisplayName,
                     description: intAttribute.Description,
@@ -51,7 +41,7 @@ public class PluginFormLoader : IPluginFormLoader
             var stringAttribute = property.GetCustomAttribute<StringOptionAttribute>();
             if (stringAttribute != null && property.PropertyType == typeof(string))
             {
-                GetOrAdd(groups, stringAttribute.Group).Items.Add(new StringPluginFormItem(
+                items.Add(new StringPluginFormItem(
                     member: property,
                     displayName: stringAttribute.DisplayName,
                     description: stringAttribute.Description,
@@ -71,7 +61,7 @@ public class PluginFormLoader : IPluginFormLoader
                     _ => throw new System.Exception($"Invalid {typeof(CollectionOptionAttribute.ItemsSourceMode).FullName}"),
                 };
 
-                GetOrAdd(groups, comboAttribute.Group).Items.Add(new CollectionPluginFormItem(
+                items.Add(new CollectionPluginFormItem(
                     member: property,
                     displayName: comboAttribute.DisplayName,
                     description: comboAttribute.Description,
@@ -83,23 +73,27 @@ public class PluginFormLoader : IPluginFormLoader
             var textAttribute = property.GetCustomAttribute<TextAttribute>();
             if (textAttribute != null)
             {
-                GetOrAdd(groups, textAttribute.Group).Items.Add(new TextPluginFormItem(
+                items.Add(new TextPluginFormItem(
+                    Value: property.GetValue(form) as string
+                    ));
+            }
+
+            var headerAttribute = property.GetCustomAttribute<HeaderAttribute>();
+            if (headerAttribute != null)
+            {
+                items.Add(new HeaderPluginFormItem(
                     Value: property.GetValue(form) as string
                     ));
             }
         }
 
-        if (groups.TryGetValue("", out var ungrouped))
-        {
-            return new(form, ungrouped.Items, groups.Values.Where(i => i.GroupName != "").ToList());
-        }
-        return new(form, new(), groups.Values.ToList());
+        return new(form, items);
     }
 
     public IPluginForm InfoToForm(PluginFormInfo info)
     {
         var form = info.Form;
-        foreach (PluginFormOptionItem item in info.Groups.SelectMany(i => i.Items).Concat(info.UngroupedItems).OfType<PluginFormOptionItem>())
+        foreach (PluginFormOptionItem item in info.Items.OfType<PluginFormOptionItem>())
         {
             switch (item)
             {

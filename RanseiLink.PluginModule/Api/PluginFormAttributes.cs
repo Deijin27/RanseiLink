@@ -4,16 +4,14 @@ namespace RanseiLink.PluginModule.Api;
 
 public abstract class BasePluginOptionAttribute : Attribute
 {
-    public BasePluginOptionAttribute(string displayName, string description, string group)
+    public BasePluginOptionAttribute(string displayName, string description)
     {
         DisplayName = displayName;
         Description = description;
-        Group = group;
     }
 
     public string DisplayName { get; }
     public string Description { get; }
-    public string Group { get; }
 }
 
 /// <summary>
@@ -22,7 +20,7 @@ public abstract class BasePluginOptionAttribute : Attribute
 [AttributeUsage(AttributeTargets.Property)]
 public class BoolOptionAttribute : BasePluginOptionAttribute
 {
-    public BoolOptionAttribute(string displayName, string description = "", string group = "") : base(displayName, description, group)
+    public BoolOptionAttribute(string displayName, string description = "") : base(displayName, description)
     {
     }
 }
@@ -33,8 +31,8 @@ public class BoolOptionAttribute : BasePluginOptionAttribute
 [AttributeUsage(AttributeTargets.Property)]
 public class IntOptionAttribute : BasePluginOptionAttribute
 {
-    public IntOptionAttribute(string displayName, string description = "", string group = "", int minimumValue = 0, int maximumValue = int.MaxValue)
-        : base(displayName, description, group)
+    public IntOptionAttribute(string displayName, string description = "", int minimumValue = 0, int maximumValue = int.MaxValue)
+        : base(displayName, description)
     {
         MinimumValue = minimumValue;
         MaximumValue = maximumValue;
@@ -50,8 +48,8 @@ public class IntOptionAttribute : BasePluginOptionAttribute
 [AttributeUsage(AttributeTargets.Property)]
 public class StringOptionAttribute : BasePluginOptionAttribute
 {
-    public StringOptionAttribute(string displayName, string description = "", string group = "", int maxLength = int.MaxValue)
-        : base(displayName, description, group)
+    public StringOptionAttribute(string displayName, string description = "", int maxLength = int.MaxValue)
+        : base(displayName, description)
     {
         MaxLength = maxLength;
     }
@@ -71,8 +69,8 @@ public class CollectionOptionAttribute : BasePluginOptionAttribute
     /// <summary>
     /// Create a combo attribute using the property name of a valid <see cref="ICollection"/> on the same form as this property.
     /// </summary>
-    public CollectionOptionAttribute(string displayName, string itemsSourcePropertyName, string description = "", string group = "")
-        : base(displayName, description, group)
+    public CollectionOptionAttribute(string displayName, string itemsSourcePropertyName, string description = "")
+        : base(displayName, description)
     {
         ItemsSourcePropertyName = itemsSourcePropertyName;
         Mode = ItemsSourceMode.MemberName;
@@ -81,8 +79,8 @@ public class CollectionOptionAttribute : BasePluginOptionAttribute
     /// <summary>
     /// Create a collection attribute using a array passed directly to the attribute as <paramref name="itemsSource"/>
     /// </summary>
-    public CollectionOptionAttribute(string displayName, object itemsSource, string description = "", string group = "")
-        : base(displayName, description, group)
+    public CollectionOptionAttribute(string displayName, object itemsSource, string description = "")
+        : base(displayName, description)
     {
         ItemsSource = itemsSource as ICollection;
         Mode = ItemsSourceMode.Collection;
@@ -105,9 +103,18 @@ public class CollectionOptionAttribute : BasePluginOptionAttribute
 [AttributeUsage(AttributeTargets.Property)]
 public class TextAttribute : Attribute
 {
-    public TextAttribute(string group = "")
+    public TextAttribute()
     {
-        Group = group;
     }
-    public string Group { get; }
+}
+
+/// <summary>
+/// Valid on a <see cref="string"/> property. Displayed as a header.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class HeaderAttribute : Attribute
+{
+    public HeaderAttribute()
+    {
+    }
 }

@@ -11,9 +11,6 @@ public enum OutputType
 
 public class ChangelistOptionForm : IPluginForm
 {
-    private const string WhichModsGroup = "Which mods to compare";
-    private const string WhatChangelists = "What changelists";
-
     public string Title => "Changelist Generator";
     public string ProceedButtonText => "Go!";
     public string CancelButtonText => "Cancel";
@@ -25,72 +22,77 @@ public class ChangelistOptionForm : IPluginForm
 
     public ICollection<string> Mods { get; set; }
 
-
-    [CollectionOption("Unchanged Mod", itemsSourcePropertyName: nameof(Mods), group: WhichModsGroup)]
-    public string UnchangedMod { get; set; }
-
-    [CollectionOption("Changed Mod", itemsSourcePropertyName: nameof(Mods), group: WhichModsGroup)]
-    public string ChangedMod { get; set; }
-
-
+    [Header]
+    public string OutputHeader => "Output";
 
     [CollectionOption("Output Changelist As", new[] { OutputType.XML, OutputType.TSV })]
     public OutputType OutputType { get; set; } = OutputType.XML;
 
+    [Header]
+    public string WhichModsHeader => "Which mods to compare";
+
+    [CollectionOption("Unchanged Mod", itemsSourcePropertyName: nameof(Mods))]
+    public string UnchangedMod { get; set; }
+
+    [CollectionOption("Changed Mod", itemsSourcePropertyName: nameof(Mods))]
+    public string ChangedMod { get; set; }
 
 
-    [BoolOption("Abilities", group: WhatChangelists)]
+    [Header]
+    public string WhatChangelistsHeader => "What changelists";
+
+    [BoolOption("Abilities")]
     public bool Ability { get; set; }
 
-    [BoolOption("Base Warriors", group: WhatChangelists)]
+    [BoolOption("Base Warriors")]
     public bool BaseWarrior { get; set; }
 
-    [BoolOption("Battle Configs", group: WhatChangelists)]
+    [BoolOption("Battle Configs")]
     public bool BattleConfigs { get; set; }
 
-    [BoolOption("Buildings", group: WhatChangelists)]
+    [BoolOption("Buildings")]
     public bool Building { get; set; }
 
-    [BoolOption("Episodes", group: WhatChangelists)]
+    [BoolOption("Episodes")]
     public bool Episode { get; set; }
 
-    [BoolOption("Event Speakers", group: WhatChangelists)]
+    [BoolOption("Event Speakers")]
     public bool EventSpeaker { get; set; }
 
-    [BoolOption("Gimmicks", group: WhatChangelists)]
+    [BoolOption("Gimmicks")]
     public bool Gimmicks { get; set; }
 
-    [BoolOption("Gimmick Ranges", group: WhatChangelists)]
+    [BoolOption("Gimmick Ranges")]
     public bool GimmickRange { get; set; }
 
-    [BoolOption("Items", group: WhatChangelists)]
+    [BoolOption("Items")]
     public bool Item { get; set; }
 
-    [BoolOption("Kingdoms", group: WhatChangelists)]
+    [BoolOption("Kingdoms")]
     public bool Kingdoms { get; set; }
 
-    [BoolOption("Moves", group: WhatChangelists)]
+    [BoolOption("Moves")]
     public bool Move { get; set; }
 
-    [BoolOption("Move Ranges", group: WhatChangelists)]
+    [BoolOption("Move Ranges")]
     public bool MoveRange { get; set; }
 
-    [BoolOption("Pokemon", group: WhatChangelists)]
+    [BoolOption("Pokemon")]
     public bool Pokemon { get; set; }
 
-    [BoolOption("Scenario Pokemon", group: WhatChangelists)]
+    [BoolOption("Scenario Pokemon")]
     public bool ScenarioPokemon { get; set; }
 
-    [BoolOption("Scenario Warriors", group: WhatChangelists)]
+    [BoolOption("Scenario Warriors")]
     public bool ScenarioWarrior { get; set; }
 
-    [BoolOption("Scenario Buildings", group: WhatChangelists)]
+    [BoolOption("Scenario Buildings")]
     public bool ScenarioBuilding { get; set; }
 
-    [BoolOption("Text", group: WhatChangelists)]
+    [BoolOption("Text")]
     public bool Text { get; set; }
 
-    [BoolOption("Warrior Skills", group: WhatChangelists)]
+    [BoolOption("Warrior Skills")]
     public bool WarriorSkill { get; set; }
 
 }

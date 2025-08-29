@@ -73,5 +73,5 @@ public class CollectionPluginFormItem : PluginFormOptionItem
 }
 
 public record TextPluginFormItem(string? Value) : IPluginFormItem;
-public record PluginFormGroup(string GroupName, List<IPluginFormItem> Items);
-public record PluginFormInfo(IPluginForm Form, List<IPluginFormItem> UngroupedItems, List<PluginFormGroup> Groups);
+public record HeaderPluginFormItem(string? Value) : IPluginFormItem;
+public record PluginFormInfo(IPluginForm Form, List<IPluginFormItem> Items);
