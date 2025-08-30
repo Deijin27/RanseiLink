@@ -35,7 +35,7 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Pokemon's Types")]
     public bool Types { get; set; }
 
-    [BoolOption("Prevent duplicate types", "Prevent two of the same type on a pokemon")]
+    [BoolOption("Prevent duplicate types", "Prevent a pokemon's 1st and 2nd type being the same")]
     public bool PreventSameType { get; set; } = true;
 
 
@@ -125,7 +125,7 @@ public class RandomizationOptionForm : IPluginForm
     [Header]
     public string ExtraHeader => "Other";
 
-    [IntOption("Minimum max link value", "Each warrior has a max link with each pokemon, as this setting prevents you from having a warrior who can't get stronger with the pokemon they've been randomly assigned. The reason it's 98 rather than 100 is because the dialog that appears after battles with perfect links is annoying.", maximumValue: 100)]
+    [IntOption("Minimum max link value", "Each warrior has a max link with each pokemon; this setting prevents you from having a warrior who can't get stronger with the pokemon they've been randomly assigned. It defaults to 98 rather than 100 because the dialog that appears after battles with perfect links is annoying.", maximumValue: 100)]
     public int AllMaxLinkValue { get; set; } = 98;
 
     [BoolOption("Softlock Minimization", "Reduce the chance of softlocks caused by randomization (optimised for vanilla)")]
