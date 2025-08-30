@@ -31,6 +31,7 @@
         <ResourceDictionary Source="ControlStyles/ProgressBar.xaml"/>
         <ResourceDictionary Source="ControlStyles/ListBoxItem.xaml"/>
         <ResourceDictionary Source="ControlStyles/ListBox.xaml"/>
+        <ResourceDictionary Source="ControlStyles/GridSplitter.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--<Style TargetType="{x:Type TextBlock}">
