@@ -50,6 +50,9 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Match move types to pokemon", "Ensure that randomly selected moves match the types of the pokemon (Note that STAB isn't a thing in this game so this doesn't affect power)")]
     public bool MatchMoveTypes { get; set; }
 
+    [BoolOption("Avoid Dummy Moves", "Moves that are placeholders in the vanilla game will not be selected")]
+    public bool AvoidDummyMoves { get; set; } = true;
+
     [BoolOption("Move Animations", "Ultimate chaos with random move animations")]
     public bool MoveAnimations { get; set; }
 
@@ -62,6 +65,9 @@ public class RandomizationOptionForm : IPluginForm
 
     [BoolOption("Pokemon's Abilities")]
     public bool Abilities { get; set; }
+
+    [BoolOption("Avoid Dummy Abilities", "Abilities that are placeholders in the vanilla game will not be selected")]
+    public bool AvoidDummyAbilities { get; set; } = true;
 
 
 
@@ -95,6 +101,9 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Warrior's Skills")]
     public bool WarriorSkills { get; set; }
 
+    [BoolOption("Avoid Dummy Warrior Skills", "Skills that are placeholders in the vanilla game will not be selected")]
+    public bool AvoidDummyWarriorSkills { get; set; } = true;
+
 
 
 
@@ -107,21 +116,17 @@ public class RandomizationOptionForm : IPluginForm
     [BoolOption("Disco Lights", "Randomly choose background colors for battles")]
     public bool DiscoLights { get; set; }
 
+   
 
+    
 
+    
 
     [Header]
-    public string ExtraHeader => "Extra";
+    public string ExtraHeader => "Other";
 
     [IntOption("Minimum max link value", "Each warrior has a max link with each pokemon, as this setting prevents you from having a warrior who can't get stronger with the pokemon they've been randomly assigned. The reason it's 98 rather than 100 is because the dialog that appears after battles with perfect links is annoying.", maximumValue: 100)]
     public int AllMaxLinkValue { get; set; } = 98;
-
-    [BoolOption("Avoid Dummy Values", "In the vanilla game some moves/abilities/warrior skills are unused placeholders. This option prevents these from being selected. If you're randomizing a mod that overwrites these dummy values consider turning off this setting")]
-    public bool AvoidDummyValues { get; set; } = true;
-
-    public bool AvoidDummyMoves => AvoidDummyValues;
-    public bool AvoidDummyAbilities => AvoidDummyValues;
-    public bool AvoidDummyWarriorSkills => AvoidDummyValues;
 
     [BoolOption("Softlock Minimization", "Reduce the chance of softlocks caused by randomization (optimised for vanilla)")]
     public bool SoftlockMinimization { get; set; } = true;

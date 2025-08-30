@@ -21,6 +21,10 @@ public class Randomizer
     private readonly MoveAnimationId[] _moveAnimationIds = EnumUtil.GetValues<MoveAnimationId>().Where(i => i != MoveAnimationId.CausesASoftlock_DontUse).ToArray();
     private WarriorSkillId[] _warriorSkillIds = EnumUtil.GetValues<WarriorSkillId>().ToArray();
     private readonly BattleConfigId[] _battleConfigIds = EnumUtil.GetValuesExceptDefaults<BattleConfigId>().ToArray();
+    /// <summary>
+    /// Includes NoType
+    /// </summary>
+    private Dictionary<TypeId, List<MoveId>> _movesByType = null;
 
     private IScenarioPokemonService _scenarioPokemonService;
     private IScenarioWarriorService _scenarioWarriorService;
@@ -102,6 +106,16 @@ public class Randomizer
             _warriorSkillIds = _warriorSkillIds.Where(i => !i.ToString().StartsWith("dummy")).ToArray();
         }
 
+        if (_options.MatchMoveTypes)
+        {
+            _movesByType = _typeIds.ToDictionary(x => x, x => new List<MoveId>());
+            foreach (var moveId in _moveIds)
+            {
+                var move = _moveService.Retrieve((int)moveId);
+                _movesByType[move.Type].Add(moveId);
+            }
+        }
+
         random = new Random(_options.Seed.GetHashCode());
     }
 
@@ -141,7 +155,34 @@ public class Randomizer
                 }
                 if (_options.Moves)
                 {
-                    poke.Move = random.Choice(_moveIds);
+                    IList<MoveId> movesToChooseFrom;
+                    if (_options.MatchMoveTypes)
+                    {
+                        var type1Moves = _movesByType[poke.Type1];
+                        var type2Moves = _movesByType[poke.Type2];
+
+                        if (type1Moves.Count == 0 && type2Moves.Count == 0)
+                        {
+                            movesToChooseFrom = _moveIds;
+                        }
+                        else if (type2Moves.Count == 0)
+                        {
+                            movesToChooseFrom = type1Moves;
+                        }
+                        else if (type1Moves.Count == 0)
+                        {
+                            movesToChooseFrom = type2Moves;
+                        }
+                        else
+                        {
+                            movesToChooseFrom = random.Next(2) == 0 ? type1Moves : type2Moves;
+                        }
+                    }
+                    else
+                    {
+                        movesToChooseFrom = _moveIds;
+                    }
+                    poke.Move = random.Choice(movesToChooseFrom);
                 }
             }
         }
