@@ -122,6 +122,7 @@ public class MapViewModel : ViewModelBase, IBigViewModel
         RaisePropertyChanged(nameof(Width));
         RaisePropertyChanged(nameof(Height));
         RaisePropertyChanged(nameof(Nickname));
+        MouseOverItem = Matrix[0][0].SubCell0;
     }
 
     public string Nickname

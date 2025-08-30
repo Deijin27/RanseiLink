@@ -186,7 +186,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Width="36" d:Text="X: 100" Text="{Binding Parent.X, StringFormat='X: {0}'}"/>
                         <TextBlock Width="36" d:Text="Y: 100" Text="{Binding Parent.Y, StringFormat='Y: {0}'}"/>
-                        <TextBlock Width="36" d:Text="Z: 400" Text="{Binding Z, StringFormat='Z: {0}'}"/>
+                        <TextBlock Width="66" d:Text="Z: 400" Text="{Binding Z, StringFormat='Z: {0}'}"/>
                     </StackPanel>
 
 
