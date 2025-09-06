@@ -44,6 +44,9 @@
     <Compile Update="Controls\IconButton.axaml.cs">
       <DependentUpon>IconButton.axaml</DependentUpon>
     </Compile>
+      <Compile Update="Controls\IconControl.axaml.cs">
+          <DependentUpon>IconControl.axaml</DependentUpon>
+      </Compile>
     <Compile Update="Dialogs\LoadingDialog.axaml.cs">
       <DependentUpon>LoadingDialog.axaml</DependentUpon>
     </Compile>

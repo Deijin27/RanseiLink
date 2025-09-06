@@ -56,7 +56,7 @@
 		<!--  Selected state  -->
 		<Style Selector="^:selected">
 			<Style Selector="^ /template/ ContentPresenter">
-				<Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}" />
+				<Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}" />
 			</Style>
 			<!--  Selected Disabled state  -->
 			<!--<Style Selector="^:disabled /template/ ContentPresenter">

@@ -60,9 +60,9 @@
 
 		<Style Selector="^.accent">
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="{DynamicResource AccentButtonBackground}" />
-				<Setter Property="BorderBrush" Value="{DynamicResource AccentButtonBorderBrush}" />
-				<Setter Property="Foreground" Value="{DynamicResource AccentButtonForeground}" />
+				<Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+				<Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+				<Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}" />
 			</Style>
 
 			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">

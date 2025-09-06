@@ -14,7 +14,9 @@
 				<MergeResourceInclude Source="/Styles/Controls/ComboBoxItem.axaml"/>
 				<MergeResourceInclude Source="/Styles/Controls/TextBox.axaml"/>
 				<MergeResourceInclude Source="/Styles/Controls/NumericUpDown.axaml"/>
+				<MergeResourceInclude Source="/Styles/Controls/Switch.axaml"/>
                 <MergeResourceInclude Source="/Controls/IconButton.axaml"/>
+                <MergeResourceInclude Source="/Controls/IconControl.axaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<x:Double x:Key="ControlContentThemeFontSize">12</x:Double>

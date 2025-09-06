@@ -14,8 +14,11 @@
     <!-- Add Styles Here -->
 
 	<Style Selector="TextBlock.icon">
-		<Setter Property="Foreground" Value="{DynamicResource AltForegroundBrush}"/>
 		<Setter Property="FontFamily" Value="{DynamicResource MaterialIcons}"/>
 		<Setter Property="FontSize" Value="15"/>
 	</Style>
+
+    <Style Selector="TextBlock.accentForeground">
+        <Setter Property="Foreground" Value="{DynamicResource AccentForegroundBrush}"/>
+    </Style>
 </Styles>

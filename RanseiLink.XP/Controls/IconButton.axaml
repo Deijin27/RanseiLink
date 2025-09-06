@@ -7,7 +7,7 @@
 			<StackPanel Spacing="20">
 				<controls:IconButton Icon="bug" Content="Normal" />
                 <controls:IconButton Icon="category" IsEnabled="False" Content="Disabled"/>
-                <controls:IconButton Icon="category" Classes="accent" Content="Accent" />
+                <controls:IconButton Icon="check" Classes="accent" Content="Accent" />
 			</StackPanel>
 		</Border>
     </Design.PreviewWith>

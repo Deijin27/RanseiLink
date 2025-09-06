@@ -7,7 +7,17 @@
 		Classes="dialog"
 		xmlns:vm="clr-namespace:RanseiLink.PluginModule.Services;assembly=RanseiLink.PluginModule"
         Title="PluginDialog">
+    <Window.Styles>
+        <Style Selector="Border.PluginItem">
+            <Setter Property="Background" Value="{DynamicResource SurfaceContainerLow}"/>
+            <Setter Property="Margin" Value="0,0,0,2"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Styles>
 	<Window.DataTemplates>
+        
+        
 		<DataTemplate DataType="{x:Type vm:BoolPluginFormItem}">
 			<CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding Value, Mode=TwoWay}" ToolTip.Tip="{Binding Description}"/>
 		</DataTemplate>
@@ -46,8 +56,20 @@
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:TextPluginFormItem}">
-			<TextBlock Margin="0,5" Text="{Binding Value}" TextWrapping="Wrap"/>
+            <Border Classes="PluginItem">
+                <TextBlock Text="{Binding Value}"
+                       Foreground="{DynamicResource AltForegroundBrush}"
+                       TextWrapping="Wrap"
+                       FontSize="11"/>
+            </Border>
 		</DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:HeaderPluginFormItem}">
+            <TextBlock Text="{Binding Value}"
+               Foreground="{DynamicResource AltForegroundBrush}"
+               FontWeight="Bold" Margin="4,16,4,4"/>
+        </DataTemplate>
+        
 	</Window.DataTemplates>
 	
 	<DockPanel>
@@ -58,22 +80,11 @@
 			</StackPanel>
 		</Grid>
 		<TextBlock DockPanel.Dock="Top" Margin="20" FontSize="18" FontWeight="DemiBold" Text="{Binding Form.Title}"/>
-		<ScrollViewer Margin="20,0">
-			<StackPanel Grid.IsSharedSizeScope="True">
-				<ItemsControl ItemsSource="{Binding UngroupedItems}"/>
-				<ItemsControl ItemsSource="{Binding Groups}">
-					<ItemsControl.ItemTemplate>
-						<DataTemplate DataType="{x:Type vm:PluginFormGroup}">
-							<Panel>
-								<TextBlock Text="{Binding GroupName}"/>
-								<Border>
-									<ItemsControl ItemsSource="{Binding Items}"/>
-								</Border>
-							</Panel>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
-			</StackPanel>
+		<ScrollViewer Margin="20,0,5,0">
+            <ItemsControl ItemsSource="{Binding Items}"
+                              Grid.IsSharedSizeScope="True"
+                              Margin="0,0,5,0"
+                              />
 		</ScrollViewer>
 	</DockPanel>
 	

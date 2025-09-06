@@ -1,0 +1,38 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:RanseiLink.XP.Controls">
+    <Design.PreviewWith>
+        <Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+             <!-- Add Controls for Previewer Here  -->
+            <StackPanel Spacing="20">
+                <controls:IconControl Icon="bug" />
+                <controls:IconControl Icon="category" />
+                <controls:IconControl Icon="check" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+     <!--Add Styles Here--> 
+    <ControlTheme x:Key="{x:Type controls:IconControl}" TargetType="controls:IconControl">
+		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+
+		<Setter Property="Template">
+            <ControlTemplate>
+                <TextBlock Foreground="{TemplateBinding Foreground}" 
+                           Classes="icon" 
+                           FontSize="{TemplateBinding Size}"
+                           x:Name="PART_IconTextBlock" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           Text="&#xe574;"/>
+              
+            </ControlTemplate>
+		</Setter>
+
+		<Style Selector="^:disabled /template/ ContentPresenter#PART_IconTextBlock">
+			<Setter Property="Foreground" Value="{DynamicResource AltForegroundDisabledBrush}" />
+		</Style>
+
+	</ControlTheme>
+</ResourceDictionary>

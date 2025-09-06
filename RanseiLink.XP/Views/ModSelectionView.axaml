@@ -18,6 +18,10 @@
 		<Border Width="180" BorderThickness="0">
 			<Grid >
 				<StackPanel Margin="10" Spacing="8">
+
+                    <CheckBox IsChecked="false">Hello there</CheckBox>
+                    <CheckBox IsChecked="true">Hello there</CheckBox>
+                    
                     <controls:IconButton Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
 					<controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
 
@@ -44,8 +48,7 @@
 		</Border>
 
     <DockPanel Margin="5" DockPanel.Dock="Top">
-      <!--<controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />-->
-      <TextBlock Text="Tags" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+      <controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip.Tip="Tags" />
       <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
