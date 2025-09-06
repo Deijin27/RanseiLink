@@ -21,7 +21,7 @@ public class InfoToFormTests
     [InlineData(true)]
     public void BoolOptionsLoadCorrectly(bool testValue)
     {
-        _loadedInfo.UngroupedItems.OfType<BoolPluginFormItem>().Single().Value = testValue;
+        _loadedInfo.Items.OfType<BoolPluginFormItem>().Single().Value = testValue;
         _formLoader.InfoToForm(_loadedInfo);
 
         _form.TestBoolOption1.Should().Be(testValue);
@@ -30,7 +30,7 @@ public class InfoToFormTests
     [Fact]
     public void IntOptionsLoadCorrectly()
     {
-        _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().Single().Value = 9;
+        _loadedInfo.Items.OfType<IntPluginFormItem>().Single().Value = 9;
         _formLoader.InfoToForm(_loadedInfo);
 
         _form.TestIntOption.Should().Be(9);
@@ -39,7 +39,7 @@ public class InfoToFormTests
     [Fact]
     public void StringOptionsLoadCorrectly()
     {
-        _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<StringPluginFormItem>().Single().Value = "changed text";
+        _loadedInfo.Items.OfType<StringPluginFormItem>().Single().Value = "changed text";
         _formLoader.InfoToForm(_loadedInfo);
 
         _form.TestStringOption.Should().Be("changed text");
@@ -48,7 +48,7 @@ public class InfoToFormTests
     [Fact]
     public void Collection1OptionsLoadCorrectly()
     {
-        _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().First().Value = "hello there";
+        _loadedInfo.Items.OfType<CollectionPluginFormItem>().First().Value = "hello there";
         _formLoader.InfoToForm(_loadedInfo);
 
         _form.TestCollectionOption1.Should().Be("hello there");
