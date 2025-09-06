@@ -17,7 +17,7 @@ public class FormToInfoTests
     [Fact]
     public void BoolOptionsLoadCorrectly()
     {
-        var options = _loadedInfo.UngroupedItems.OfType<BoolPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<BoolPluginFormItem>().ToList();
 
         var option = options.Should().ContainSingle().Which;
         option.DisplayName.Should().Be("Test display name");
@@ -28,7 +28,7 @@ public class FormToInfoTests
     [Fact]
     public void IntOptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<IntPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<IntPluginFormItem>().ToList();
 
         var option = options.Should().ContainSingle().Which;
         option.DisplayName.Should().Be("Test int display name");
@@ -41,7 +41,7 @@ public class FormToInfoTests
     [Fact]
     public void StringOptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 1").Items.OfType<StringPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<StringPluginFormItem>().ToList();
 
         var option = options.Should().ContainSingle().Which;
         option.DisplayName.Should().Be("Test string display name");
@@ -53,28 +53,37 @@ public class FormToInfoTests
     [Fact]
     public void TextOptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "Test group 2").Items.OfType<TextPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<TextPluginFormItem>().ToList();
 
         var option = options.Should().ContainSingle().Which;
         option.Value.Should().Be("test text content");
+    }
+    
+    [Fact]
+    public void HeaderOptionsLoadCorrectly()
+    {
+        var options = _loadedInfo.Items.OfType<HeaderPluginFormItem>().ToList();
+
+        var option = options.Should().ContainSingle().Which;
+        option.Value.Should().Be("I am a header");
     }
 
     [Fact]
     public void Collection1OptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<CollectionPluginFormItem>().ToList();
         options.Should().HaveCount(2);
 
         var option = options[0];
         option.DisplayName.Should().Be("Test collection display name");
         option.Description.Should().Be("Test collection description");
-        (option.Values as string[]).Should().Equal(new string[] { "hello", "hello again" });
+        (option.Values as string[]).Should().Equal("hello", "hello again");
     }
 
     [Fact]
     public void Collection2OptionsLoadCorrectly()
     {
-        var options = _loadedInfo.Groups.Single(i => i.GroupName == "collectionGroup").Items.OfType<CollectionPluginFormItem>().ToList();
+        var options = _loadedInfo.Items.OfType<CollectionPluginFormItem>().ToList();
         options.Should().HaveCount(2);
 
         var option = options[1];

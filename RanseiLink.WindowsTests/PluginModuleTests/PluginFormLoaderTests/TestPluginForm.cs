@@ -13,21 +13,23 @@ internal class TestPluginForm : IPluginForm
     [BoolOption("Test display name", "Test description")]
     public bool TestBoolOption1 { get; set; } = true;
 
-    [IntOption("Test int display name", "Test int description", "Test group 1", 3, 10)]
+    [IntOption("Test int display name", "Test int description", 3, 10)]
     public int TestIntOption { get; set; } = 4;
 
-    [StringOption("Test string display name", "Test string description", "Test group 1", 12)]
+    [StringOption("Test string display name", "Test string description", 12)]
     public string TestStringOption { get; set; } = "test initial text";
 
-    [Text("Test group 2")]
+    [Header] public string HeaderText => "I am a header";
+    
+    [Text]
     public string TestTextOption => "test text content";
 
-    [CollectionOption("Test collection display name", new string[] { "hello", "hello again" }, "Test collection description", "collectionGroup")]
+    [CollectionOption("Test collection display name", new string[] { "hello", "hello again" }, "Test collection description")]
     public string TestCollectionOption1 { get; set; }
 
     public List<int> Collection2Items => new() { 1, 2, 3, 4, 5 };
 
-    [CollectionOption("Test collection display name", nameof(Collection2Items), "Test collection description", "collectionGroup")]
+    [CollectionOption("Test collection display name", nameof(Collection2Items), "Test collection description")]
     public string TestCollectionOption2 { get; set; }
 
 }
