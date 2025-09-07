@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.GuiCore.DragDrop;
+using RanseiLink.PluginModule.Api;
 using RanseiLink.XP.Dialogs;
 using RanseiLink.XP.DragDrop;
 using RanseiLink.XP.Services;
@@ -15,6 +16,7 @@ public class XPServiceModule : IModule
         builder.Register<IDispatcherService, DispatcherService>(Reuse.Singleton);
         builder.Register<IClipboardService, ClipboardService>(Reuse.Singleton);
         builder.Register<IAppInfoService, AppInfoService>(Reuse.Singleton);
+        builder.Register<IAsyncPluginService, PluginService>(Reuse.Singleton);
 
         builder.Register<IFolderDropHandler, FolderDropHandler>(Reuse.Singleton);
         builder.Register<IFileDropHandlerFactory, FileDropHandlerFactory>(Reuse.Singleton);

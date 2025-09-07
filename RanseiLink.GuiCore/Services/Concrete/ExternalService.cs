@@ -7,21 +7,20 @@ namespace RanseiLink.GuiCore.Services.Concrete;
 
 internal class ExternalService : IExternalService
 {
-    private static readonly string __externalDirectory;
-    private static readonly string __moveAnimationFile;
-    private static readonly string __moveMovementAnimationFile;
+    private readonly string _moveAnimationFile;
+    private readonly string _moveMovementAnimationFile;
 
-    static ExternalService()
+    public ExternalService(AppInfo appInfo)
     {
-        __externalDirectory = Path.Combine(Directory.GetCurrentDirectory(), "External");
-        __moveAnimationFile = Path.Combine(__externalDirectory, "MoveAnimations.xml");
-        __moveMovementAnimationFile = Path.Combine(__externalDirectory, "MoveMovementAnimations.xml");
+        var externalDirectory = Path.Combine(appInfo.StartupDirectory, "External");
+        _moveAnimationFile = Path.Combine(externalDirectory, "MoveAnimations.xml");
+        _moveMovementAnimationFile = Path.Combine(externalDirectory, "MoveMovementAnimations.xml");
     }
 
     private Dictionary<int, string>? _moveAnimationCache;
     public string GetMoveAnimationUri(TrueMoveAnimationId id)
     {
-        _moveAnimationCache ??= Load(__moveAnimationFile);
+        _moveAnimationCache ??= Load(_moveAnimationFile);
         if (_moveAnimationCache.TryGetValue((int)id, out string? uri))
         {
             return uri;
@@ -32,7 +31,7 @@ internal class ExternalService : IExternalService
     private Dictionary<int, string>? _moveMovementAnimationCache;
     public string GetMoveMovementAnimationUri(MoveMovementAnimationId id)
     {
-        _moveMovementAnimationCache ??= Load(__moveMovementAnimationFile);
+        _moveMovementAnimationCache ??= Load(_moveMovementAnimationFile);
         if (_moveMovementAnimationCache.TryGetValue((int)id, out string? uri))
         {
             return uri;

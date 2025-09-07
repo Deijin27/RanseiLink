@@ -6,6 +6,7 @@ using RanseiLink.GuiCore;
 using RanseiLink.PluginModule;
 using RanseiLink.View3D;
 using System.Diagnostics;
+using System.Net.Mime;
 using System.Reflection;
 
 namespace RanseiLink.Windows;
@@ -33,7 +34,11 @@ public partial class App : System.Windows.Application
 
         // Register services here because theme service requires that application resources are already initialized
         var builder = new Container();
-        builder.RegisterInstance(AppVersion.Parse(Version));
+        var appInfo = new AppInfo(
+            Version: AppVersion.Parse(Version) ?? throw new Exception(("Failed to parse app version")),
+            StartupPath: Directory.GetCurrentDirectory()
+            );
+        builder.RegisterInstance(appInfo);
         builder.RegisterModule(new CoreServiceModule());
         builder.RegisterModule(new GuiCoreServiceModule());
         builder.RegisterModule(new PluginServiceModule());

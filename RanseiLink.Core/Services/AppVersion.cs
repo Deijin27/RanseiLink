@@ -2,6 +2,11 @@
 namespace RanseiLink.GuiCore.Services;
 
 
+public record AppInfo(AppVersion Version, string StartupPath)
+{
+    public string StartupDirectory => Path.GetDirectoryName(StartupPath) ?? throw new Exception("Failed to get directory of startup path");
+}
+
 public record AppVersion(int Major, int Minor, int Patch, AppReleaseType Type, int PrereleaseVersion)
 {
     public override string ToString()

@@ -1,9 +1,10 @@
 ﻿using RanseiLink.PluginModule.Api;
 using System.Reflection;
+using RanseiLink.GuiCore.Services;
 
 namespace RanseiLink.PluginModule.Services.Concrete;
 
-public class PluginLoader : IPluginLoader
+public class PluginLoader(AppInfo appInfo) : IPluginLoader
 {
     public List<Assembly> LoadAssemblies(DirectoryInfo directory, out List<AssemblyLoadFailureInfo> failedToLoad)
     {
@@ -78,7 +79,7 @@ public class PluginLoader : IPluginLoader
         return plugins;
     }
 
-    private static readonly DirectoryInfo _pluginDirectory = new(Path.Combine(Environment.CurrentDirectory, "Plugins"));
+    private readonly DirectoryInfo _pluginDirectory = new(Path.Combine(appInfo.StartupDirectory, "Plugins"));
     private List<PluginInfo>? _cache;
     private PluginLoadFailureInfo? _failureCache;
     public IReadOnlyCollection<PluginInfo> LoadPlugins(out PluginLoadFailureInfo failures)
@@ -89,7 +90,7 @@ public class PluginLoader : IPluginLoader
             return _cache;
         }
         _cache = new List<PluginInfo>();
-        foreach (var plugin in GenericLoadPlugins<Api.IPlugin, PluginAttribute>(_pluginDirectory, out failures))
+        foreach (var plugin in GenericLoadPlugins<IPlugin, PluginAttribute>(_pluginDirectory, out failures))
         {
             var attribute = plugin.GetType().GetCustomAttribute<PluginAttribute>()!;
             _cache.Add(new PluginInfo(plugin, attribute.DisplayName, attribute.Author, attribute.Version));

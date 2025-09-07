@@ -5,8 +5,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="RanseiLink.XP.Dialogs.PluginDialog"
 		Classes="dialog"
+        Height="500" Width="400"
 		xmlns:vm="clr-namespace:RanseiLink.PluginModule.Services;assembly=RanseiLink.PluginModule"
-        Title="PluginDialog">
+        Title="{Binding Form.Title}">
     <Window.Styles>
         <Style Selector="Border.PluginItem">
             <Setter Property="Background" Value="{DynamicResource SurfaceContainerLow}"/>
@@ -19,40 +20,43 @@
         
         
 		<DataTemplate DataType="{x:Type vm:BoolPluginFormItem}">
-			<CheckBox Margin="0,5" Content="{Binding DisplayName, Mode=OneTime}" IsChecked="{Binding Value, Mode=TwoWay}" ToolTip.Tip="{Binding Description}"/>
+			<Border Classes="PluginItem">
+				<Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto">
+					<TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+					<TextBlock Grid.Row="1" Text="{Binding Description}" Foreground="{DynamicResource AltForegroundBrush}" TextWrapping="Wrap" FontSize="10" Grid.ColumnSpan="2" IsVisible="{Binding Description, Converter={x:Static ObjectConverters.IsNotNull}}" />
+					<ToggleSwitch VerticalAlignment="Center" Grid.Column="1"  IsChecked="{Binding Value, Mode=TwoWay}" />
+				</Grid>
+			</Border>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:IntPluginFormItem}">
-			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
-				<NumericUpDown Grid.Column="1" Value="{Binding Value}" Maximum="{Binding MaxValue}" Minimum="{Binding MinValue}"/>
-			</Grid>
+			<Border Classes="PluginItem">
+				<Grid RowDefinitions="*,Auto" ColumnDefinitions="*,Auto">
+					<TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+					<TextBlock Grid.Row="1" Text="{Binding Description}" Foreground="{DynamicResource AltForegroundBrush}" TextWrapping="Wrap" FontSize="10" Grid.ColumnSpan="2" IsVisible="{Binding Description, Converter={x:Static ObjectConverters.IsNotNull}}" />
+					<NumericUpDown Grid.Column="1" Width="150" Value="{Binding Value}" Maximum="{Binding MaxValue}" Minimum="{Binding MinValue}"/>
+				</Grid>
+			</Border>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:StringPluginFormItem}">
-			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
-				<TextBox Grid.Column="1" Text="{Binding Value}" MaxLength="{Binding MaxLength}"/>
-			</Grid>
+			<Border Classes="PluginItem">
+				<Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*">
+					<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+					<TextBlock Grid.Row="1" Text="{Binding Description}" Foreground="{DynamicResource AltForegroundBrush}" TextWrapping="Wrap" FontSize="10" Grid.ColumnSpan="2" IsVisible="{Binding Description, Converter={x:Static ObjectConverters.IsNotNull}}" />
+					<TextBox Grid.Column="1" Text="{Binding Value}" MaxLength="{Binding MaxLength}" />
+				</Grid>
+			</Border>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:CollectionPluginFormItem}">
-			<Grid Margin="0,5" ToolTip.Tip="{Binding Description}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" SharedSizeGroup="RowHeaderGroup"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0"/>
-				<ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" />
-			</Grid>
+			<Border Classes="PluginItem">
+				<Grid RowDefinitions="*,Auto" ColumnDefinitions="Auto,*">
+					<TextBlock Text="{Binding DisplayName}" Margin="0,0,10,0" VerticalAlignment="Center"/>
+					<TextBlock Grid.Row="1" Text="{Binding Description}" Foreground="{DynamicResource AltForegroundBrush}" TextWrapping="Wrap" FontSize="10" Grid.ColumnSpan="2" IsVisible="{Binding Description, Converter={x:Static ObjectConverters.IsNotNull}}" />
+					<ComboBox Grid.Column="1" ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" />
+				</Grid>
+			</Border>
 		</DataTemplate>
 
 		<DataTemplate DataType="{x:Type vm:TextPluginFormItem}">
@@ -75,7 +79,7 @@
 	<DockPanel>
 		<Grid DockPanel.Dock="Bottom">
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
-				<Button Width="100" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click"/>
+				<Button Classes="accent" Width="100" Content="{Binding Form.ProceedButtonText}" Click="OkButton_Click"/>
 				<Button Width="100" Content="{Binding Form.CancelButtonText}" Click="CancelButton_Click"/>
 			</StackPanel>
 		</Grid>

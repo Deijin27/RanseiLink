@@ -27,7 +27,11 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             var builder = new Container();
-            builder.RegisterInstance(AppVersion.Parse(Version));
+            var appInfo = new AppInfo(
+                Version: AppVersion.Parse(Version) ?? throw new Exception("Failed to parse app version"),
+                StartupPath: AppContext.BaseDirectory
+            );
+            builder.RegisterInstance(appInfo);
             builder.RegisterModule(new CoreServiceModule());
             builder.RegisterModule(new GuiCoreServiceModule());
             builder.RegisterModule(new PluginServiceModule());

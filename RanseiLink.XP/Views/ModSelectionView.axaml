@@ -96,13 +96,15 @@
                   <MenuItem Header="Toggle Pin" Command="{Binding TogglePinCommand}">
 									</MenuItem>
 									<Separator/>
-									<MenuItem Header="Plugins" ItemsSource="{Binding PluginItems}">
+									<MenuItem Header="Plugins" x:Name="pluginsMenu" ItemsSource="{Binding PluginItems}">
 										<MenuItem.Icon>
 											<ContentPresenter ContentTemplate="{StaticResource PluginIcon}"/>
 										</MenuItem.Icon>
 										<MenuItem.ItemTemplate>
 											<DataTemplate>
-												<MenuItem Command="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}">
+												<MenuItem 
+													Command="{Binding #pluginsMenu.DataContext.RunPluginCommand}"
+													CommandParameter="{Binding}">
 													<MenuItem.Header>
 														<MultiBinding StringFormat="{}{0} v{1} by {2}">
 															<Binding Path="Name" />

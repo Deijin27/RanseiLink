@@ -8,7 +8,7 @@ public interface IUpdateService
     void OpenDownloadPage();
 }
 
-internal class UpdateService(AppVersion currentVersion) : IUpdateService
+internal class UpdateService(AppInfo appInfo) : IUpdateService
 {
     public async Task<bool> IsUpdateAvailable()
     {
@@ -17,7 +17,7 @@ internal class UpdateService(AppVersion currentVersion) : IUpdateService
         {
             return false;
         }
-        return latestVersion.IsNewerThan(currentVersion);
+        return latestVersion.IsNewerThan(appInfo.Version);
     }
 
     public void OpenDownloadPage()
