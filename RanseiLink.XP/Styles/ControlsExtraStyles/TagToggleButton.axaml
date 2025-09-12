@@ -1,0 +1,70 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+		<Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
+			<!-- Add Controls for Previewer Here -->
+			<ToggleButton Classes="Tag">Hello World</ToggleButton>
+		</Border>
+    </Design.PreviewWith>
+
+    <!-- Add Styles Here -->
+    
+    <Style Selector="ToggleButton.Tag">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="4,0"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}"/>
+        <Setter Property="CornerRadius" Value="9"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border x:Name="Border"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  CornerRadius="{TemplateBinding CornerRadius}"
+                                  Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Classes="icon"
+                                   x:Name="Icon"
+                                   IsVisible="False"
+                                   
+                                   Foreground="{TemplateBinding Foreground}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Text="&#xe5ca;"/>
+                        <TextBlock Margin="4,0"
+                            x:Name="Text"
+                            FontSize="11"
+                            VerticalAlignment="Center"
+                            Foreground="{TemplateBinding Foreground}"
+                            Text="{TemplateBinding Content}"
+                        />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        
+        <Style Selector="^:pointerover">
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource ButtonMouseOverBrush}"/>
+        </Style>
+    
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}"/>
+        </Style>
+    
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentSecondaryBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+        </Style>
+        
+        <Style Selector="^:checked /template/ TextBlock#Icon">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+    </Style>
+    
+</Styles>

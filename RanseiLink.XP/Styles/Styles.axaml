@@ -37,6 +37,7 @@
 	
 	<StyleInclude Source="/Styles/ControlsExtraStyles/HoverButton.axaml"/>
 	<StyleInclude Source="/Styles/ControlsExtraStyles/IconTextBlock.axaml"/>
+	<StyleInclude Source="/Styles/ControlsExtraStyles/TagToggleButton.axaml"/>
 
 	<Style Selector="Window.dialog">
 		<Setter Property="Icon" Value="/Assets/ranseilink-logo.ico"/>

@@ -57,7 +57,7 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <ToggleButton Margin="3,0,0,3" Content="{Binding Tag}" IsChecked="{Binding Checked}" />
+            <ToggleButton Classes="Tag" Margin="3,0,0,3" Content="{Binding Tag}" IsChecked="{Binding Checked}" />
           </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
