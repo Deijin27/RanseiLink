@@ -119,7 +119,7 @@
 							<DockPanel>
 								<controls:IconControl Icon="keep" DockPanel.Dock="Left" IsVisible="{Binding IsPinned}"/>
 								<controls:IconControl Icon="fiber_new" DockPanel.Dock="Left" IsVisible="{Binding IsNew}" />
-								<Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" />
+								<Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" RenderOptions.BitmapInterpolationMode="None" Stretch="Uniform" />
 								<controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
 							</DockPanel>
 							

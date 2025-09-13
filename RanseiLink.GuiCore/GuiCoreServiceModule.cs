@@ -21,6 +21,9 @@ public class GuiCoreServiceModule : IModule
             new ModListItemViewModelFactory((mod, getKnownTags) => context.Resolve<ModListItemViewModel>().Init(mod, getKnownTags))
             , Reuse.Singleton);
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
+        
+        builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
+        builder.Register<CopyPasteViewModel>(Reuse.Transient);
 
     }
 }
@@ -39,5 +42,34 @@ public class GuiCoreModServiceModule : IModule
         builder.Register<MsgGridViewModel>();
 
         builder.Register<SpriteItemViewModel>();
+        
+        builder.Register<AbilityViewModel>();
+        builder.Register<BaseWarriorViewModel>();
+        builder.Register<BattleConfigViewModel>();
+        builder.Register<BuildingViewModel>();
+        builder.Register<EpisodeViewModel>();
+        builder.Register<EventSpeakerViewModel>();
+        builder.Register<GimmickViewModel>();
+        builder.Register<GimmickObjectViewModel>();
+        builder.Register<ItemViewModel>();
+        builder.Register<KingdomViewModel>();
+        builder.Register<MapViewModel>();
+        builder.Register<MaxLinkWarriorViewModel>();
+        builder.Register<MaxLinkPokemonViewModel>();
+        builder.Register<MoveRangeViewModel>();
+        builder.Register<MoveViewModel>();
+        builder.Register<PokemonViewModel>();
+        builder.Register<ScenarioAppearPokemonViewModel>();
+        builder.Register<ScenarioBuildingViewModel>();
+        builder.Register<SpriteTypeViewModel>();
+        builder.Register<WarriorNameTableViewModel>();
+        builder.Register<WarriorSkillViewModel>();
+        
+        builder.Register<MoveAnimationViewModel>();
+
+        builder.RegisterDelegate(context => new SpriteItemViewModel.Factory(() => context.Resolve<SpriteItemViewModel>()), Reuse.Singleton);
+        
+        
+        builder.Register<BannerViewModel>();
     }
 }

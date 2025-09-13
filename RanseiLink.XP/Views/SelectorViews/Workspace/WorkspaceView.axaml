@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
+             x:Class="RanseiLink.XP.Views.WorkspaceView">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,5" VerticalAlignment="Center">
+            <controls:IconControl DockPanel.Dock="Left" Icon="search" Margin="0,0,5,0" />
+            <TextBox Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+        </DockPanel>
+
+        <ItemsControl Width="{Binding LeftColumnWidth}" d:Width="196"
+                      Grid.Row="1" Grid.Column="0"
+                      Margin="0,0,10,0"
+                      ItemsSource="{Binding Items}"
+        >
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding}" Margin="2"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <DockPanel Margin="0,0,0,5" Grid.Row="0" Grid.Column="1">
+            <!-- <local:CopyPasteView DataContext="{Binding CopyPasteVm}" -->
+            <!--                      DockPanel.Dock="Right" Margin="5,0,10,0"/> -->
+            <ContentPresenter IsEnabled="False" Content="{Binding SelectedMiniVm}" />
+        </DockPanel>
+
+
+        <ContentPresenter Grid.Row="1" Grid.Column="1" x:Name="BigViewModelHost" 
+                          Content="{Binding BigViewModel}" />
+
+    </Grid>
+</UserControl>

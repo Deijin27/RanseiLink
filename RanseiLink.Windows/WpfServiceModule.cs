@@ -26,11 +26,7 @@ public class WpfServiceModule : IModule
         builder.Register<IAsyncPluginService, AsyncPluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
 
-        builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
-
-        builder.Register<CopyPasteViewModel>(Reuse.Transient);
-
-
+        
         builder.Register<EditorModule, PokemonWorkspaceModule>();
         builder.Register<EditorModule, WarriorWorkspaceModule>();
         builder.Register<EditorModule, AbilityWorkspaceEditorModule>();
@@ -85,41 +81,17 @@ public class WpfModServiceModule : IModule
     {
         builder.Register<IMapViewerService, MapViewerService>(Reuse.Singleton);
 
-        builder.Register<AbilityViewModel>();
-        builder.Register<BaseWarriorViewModel>();
-        builder.Register<BattleConfigViewModel>();
-        builder.Register<BuildingViewModel>();
-        builder.Register<EpisodeViewModel>();
-        builder.Register<EventSpeakerViewModel>();
-        builder.Register<GimmickViewModel>();
-        builder.Register<GimmickObjectViewModel>();
-        builder.Register<ItemViewModel>();
-        builder.Register<KingdomViewModel>();
-        builder.Register<MapViewModel>();
-        builder.Register<MaxLinkWarriorViewModel>();
-        builder.Register<MaxLinkPokemonViewModel>();
-        builder.Register<MoveRangeViewModel>();
-        builder.Register<MoveViewModel>();
-        builder.Register<PokemonViewModel>();
-        builder.Register<ScenarioAppearPokemonViewModel>();
-        builder.Register<ScenarioBuildingViewModel>();
         builder.Register<ScenarioPokemonViewModel>();
-        builder.Register<SpriteTypeViewModel>();
-        builder.Register<WarriorNameTableViewModel>();
-        builder.Register<WarriorSkillViewModel>();
         builder.Register<ScenarioWarriorWorkspaceViewModel>();
-        builder.Register<MoveAnimationViewModel>();
-
         builder.Register<SwMiniViewModel>();
         builder.Register<SwKingdomMiniViewModel>();
         builder.Register<SwSimpleKingdomMiniViewModel>();
 
         builder.RegisterDelegate(context => new ScenarioPokemonViewModel.Factory(() => context.Resolve<ScenarioPokemonViewModel>()), Reuse.Singleton);
-        builder.RegisterDelegate(context => new SpriteItemViewModel.Factory(() => context.Resolve<SpriteItemViewModel>()), Reuse.Singleton);
+        
         builder.RegisterDelegate(context => new SwMiniViewModel.Factory(() => context.Resolve<SwMiniViewModel>()), Reuse.Singleton);
         builder.RegisterDelegate(context => new SwKingdomMiniViewModel.Factory(() => context.Resolve<SwKingdomMiniViewModel>()), Reuse.Singleton);
         builder.RegisterDelegate(context => new SwSimpleKingdomMiniViewModel.Factory(() => context.Resolve<SwSimpleKingdomMiniViewModel>()), Reuse.Singleton);
 
-        builder.Register<BannerViewModel>();
     }
 }

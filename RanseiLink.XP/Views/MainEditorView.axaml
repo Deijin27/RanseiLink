@@ -9,6 +9,57 @@
              xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
 			 >
 	<Grid ColumnDefinitions="190,*" RowDefinitions="Auto,*,40">
+		
+		<Grid Grid.Column="1" Margin="10,10,0,0" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
+			<ContentControl Content="{Binding CurrentVm}" Margin="0" IsEnabled="{Binding !Loading}"/>
+			<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="{Binding Loading}">
+				<TextBlock Text="Loading..." HorizontalAlignment="Center" Margin="0,0,0,10"/>
+				<ProgressBar IsIndeterminate="{Binding Loading}" Height="10" Width="200"/>
+			</StackPanel>
+		</Grid>
+		
+		<!-- Mod info -->
+		<Grid Margin="8">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="5"/>
+				<ColumnDefinition/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Image Width="40" Grid.ColumnSpan="3" Source="{Binding Banner}" RenderOptions.BitmapInterpolationMode="None" />
+			<TextBlock TextAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" />
+			<controls:IconControl ToolTip.Tip="Author" Grid.Row="2" Icon="person"/>
+			<TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Author}" />
+			<controls:IconControl ToolTip.Tip="Version" Grid.Row="3" Icon="info"/>
+			<TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.Version}"/>
+			<controls:IconControl ToolTip.Tip="Region" Grid.Row="4" Icon="language"/>
+			<TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="4" Grid.Column="2" Text="{Binding Mod.RegionName}" />
+
+		</Grid>
+		
+		<ListBox x:Name="editorListView" IsEnabled="{Binding !Loading}"
+		          IsVisible="{Binding PluginPopupOpen}" 
+		          Grid.Row="1" Grid.Column="0" Background="Transparent" BorderThickness="0"
+		          ItemsSource="{Binding ListItems}"
+		          SelectedItem="{Binding SelectedModuleItem}"
+		          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+		          ScrollViewer.VerticalScrollBarVisibility="Visible">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid Height="20">
+						<TextBlock Text="{Binding DisplayName}" Padding="3,0,0,0" VerticalAlignment="Center"/>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		
+		<!-- Bottom Left menu -->
 		<Border CornerRadius="0,8,0,0" Margin="0,0,10,0" Grid.Row="2" Background="{DynamicResource SurfaceContainerHigh}">
 			<StackPanel Orientation="Horizontal">
 				<Button Classes="accent" Command="{Binding PatchRomCommand}" Width="30" Height="30" Margin="5" ToolTip.Tip="Patch Rom">
@@ -16,7 +67,7 @@
 				</Button>
 				<!-- hit test stuff prevents double trigger when clicking on button to close popup -->
 				<ToggleButton ToolTip.Tip="Plugins" Height="30" Width="30" Margin="5" Classes="Hover" IsChecked="{Binding PluginPopupOpen}"
-				              IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={x:Static BoolConverters.Not}}">
+				              IsHitTestVisible="{Binding !PluginPopupOpen}">
 					<controls:IconControl Icon="extension" Size="16"/>
 				</ToggleButton>
 				<Button Command="{Binding GoBackInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip.Tip="Navigate Back (Ctrl+LeftArrow)" Classes="Hover">

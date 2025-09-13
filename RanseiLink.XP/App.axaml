@@ -8,6 +8,11 @@
         <local:ViewLocator/>
     </Application.DataTemplates>
 	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<MergeResourceInclude Source="/ValueConverters/ValueConverters.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Application.Resources>
     <Application.Styles>
         <fluent:FluentTheme />

@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RanseiLink.XP.Views.PokemonMiniView">
+    <Button Padding="0" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Command="{Binding SelectCommand}" CommandParameter="{Binding}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="32"/>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="19"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Column="0" Grid.Row="0" Stretch="None" Height="19" RenderOptions.BitmapInterpolationMode="None"
+                Source="{Binding Image}"
+                   d:Source="C:\Users\Mia\AppData\Local\RanseiLink\DefaultData\VPYT\graphics\still\stl_pokemon_s\StlPokemonSTex-Pngs\0000.png">
+                <Image.Clip>
+                    <RectangleGeometry RadiusX="3.5" RadiusY="3.5" Rect="0,0,35,19"/>
+                </Image.Clip>
+            </Image>
+            <Rectangle Grid.Column="1" Fill="{DynamicResource ControlBorderBrush}"/>
+            <TextBlock Grid.Column="2" d:Text="000 - Eevee" Margin="2,0,0,0">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0:000} - {1}">
+                        <Binding Path="Id"/>
+                        <Binding Path="Name"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <Border Grid.Column="2" Width="16" Background="{Binding Type1, Converter={StaticResource Converter.PokemonTypeToBrush}}" 
+                    d:Background="#B2A771"
+                    HorizontalAlignment="Right" Height="19" VerticalAlignment="Top"
+                    BorderBrush="{DynamicResource ControlBorderBrush}"
+                    BorderThickness="1,0,0,0" CornerRadius="0,4,4,0"
+            />
+            <Border Grid.Column="2" Width="16" Background="{Binding Type2, Converter={StaticResource Converter.PokemonTypeToBrush}}" 
+                    d:Background="#B2A771" IsVisible="{Binding HasType2}"
+                    HorizontalAlignment="Right" Height="10" VerticalAlignment="Bottom"
+                    BorderBrush="{DynamicResource ControlBorderBrush}"
+                    BorderThickness="1,1,0,0" CornerRadius="0,0,4,0"
+            />
+            
+        </Grid>
+
+    </Button>
+</UserControl>

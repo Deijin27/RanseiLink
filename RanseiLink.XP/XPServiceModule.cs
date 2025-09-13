@@ -24,6 +24,8 @@ public class XPServiceModule : IModule
 
         //builder.Register<IPluginService, PluginService>(Reuse.Singleton);
         builder.Register<IThemeService, ThemeService>(Reuse.Singleton);
+        
+        builder.Register<EditorModule, PokemonWorkspaceModule>();
     }
 
     private static IDialogLocator CreateDialogLocator()
