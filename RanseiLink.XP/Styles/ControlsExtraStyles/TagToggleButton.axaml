@@ -3,7 +3,10 @@
     <Design.PreviewWith>
 		<Border Padding="20" Background="{DynamicResource WindowBackgroundBrush}">
 			<!-- Add Controls for Previewer Here -->
-			<ToggleButton Classes="Tag">Hello World</ToggleButton>
+			<StackPanel>
+                <ToggleButton Classes="Tag" Margin="10">Hello World</ToggleButton>
+                <ToggleButton Classes="Tag" IsChecked="True" Margin="10">Hello World</ToggleButton>
+            </StackPanel>
 		</Border>
     </Design.PreviewWith>
 

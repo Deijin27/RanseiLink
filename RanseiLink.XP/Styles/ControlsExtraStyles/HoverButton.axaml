@@ -12,9 +12,10 @@
 	<Style Selector="Button.Hover">
 		<Setter Property="BorderThickness" Value="0"/>
 		<Setter Property="Background" Value="Transparent"/>
+		
+		<Style Selector="^:pointerover">
+			<Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
+		</Style>
 	</Style>
-
-	<Style Selector="Button.Hover:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-		<Setter Property="Background" Value="{DynamicResource WindowMouseOverBrush}"/>
-	</Style>
+    
 </Styles>
