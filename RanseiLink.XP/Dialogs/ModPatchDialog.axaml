@@ -21,15 +21,15 @@
 			</StackPanel>
 		</Grid>
 		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
-			<Button Width="100" Content="Apply" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+			<Button Width="100" Classes="accent" Content="Apply" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
 			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
 		</StackPanel>
 		<StackPanel Margin="20" Spacing="10">
 			<TextBlock FontSize="18" FontWeight="DemiBold">Patch Rom With Mod</TextBlock>
 			<controls:ModInfoControl ModInfo="{Binding ModInfo}"/>
 			<StackPanel Orientation="Horizontal">
-				<ToggleSwitch IsChecked="{Binding IncludeSprites}"></ToggleSwitch>
-				<TextBlock Margin="5,0,0,0" ToolTip.Tip="If you change lots of sprites, you can speed up the patches by not including them every time."
+				<ToggleSwitch IsChecked="{Binding IncludeSprites}" VerticalAlignment="Center"></ToggleSwitch>
+				<TextBlock Margin="0,0,0,0" VerticalAlignment="Center" ToolTip.Tip="If you change lots of sprites, you can speed up the patches by not including them every time."
 				           >Include sprites in patch</TextBlock>
 			</StackPanel>
 		</StackPanel>

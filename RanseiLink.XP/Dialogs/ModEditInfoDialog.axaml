@@ -9,7 +9,7 @@
         Title="Edit Mod Info">
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20" Spacing="20">
-			<Button Width="100" Content="Apply Changes" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
+			<Button Width="100" Classes="accent" Content="Apply Changes" Click="OkButton_Click" IsEnabled="{Binding OkEnabled, Mode=OneWay}"/>
 			<Button Width="100" Content="Cancel" Click="CancelButton_Click"/>
 		</StackPanel>
 		<Grid Grid.Column="1" Margin="20,20,20,0"
