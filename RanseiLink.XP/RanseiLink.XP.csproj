@@ -74,6 +74,10 @@
     <Compile Update="Dialogs\ModEditInfoDialog.axaml.cs">
       <DependentUpon>ModEditInfoDialog.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainEditorView.axaml.cs">
+      <DependentUpon>MainEditorView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\DialogViewModels\" />

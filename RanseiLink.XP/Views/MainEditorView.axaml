@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="RanseiLink.XP.Views.MainEditorView"
+			 xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
+			 xmlns:local="clr-namespace:RanseiLink.XP.Views"
+             xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
+			 >
+	<Grid ColumnDefinitions="190,*" RowDefinitions="Auto,*,40">
+		<Border CornerRadius="0,8,0,0" Margin="0,0,10,0" Grid.Row="2" Background="{DynamicResource SurfaceContainerHigh}">
+			<StackPanel Orientation="Horizontal">
+				<Button Classes="accent" Command="{Binding PatchRomCommand}" Width="30" Height="30" Margin="5" ToolTip.Tip="Patch Rom">
+					<controls:IconControl Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Icon="publish" Size="16"/>
+				</Button>
+				<!-- hit test stuff prevents double trigger when clicking on button to close popup -->
+				<ToggleButton ToolTip.Tip="Plugins" Height="30" Width="30" Margin="5" Classes="Hover" IsChecked="{Binding PluginPopupOpen}"
+				              IsHitTestVisible="{Binding PluginPopupOpen, Mode=OneWay, Converter={x:Static BoolConverters.Not}}">
+					<controls:IconControl Icon="extension" Size="16"/>
+				</ToggleButton>
+				<Button Command="{Binding GoBackInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip.Tip="Navigate Back (Ctrl+LeftArrow)" Classes="Hover">
+					<controls:IconControl Icon="arrow_back" Size="16"/>
+				</Button>
+				<Button Command="{Binding GoForwardInModuleStackCommand}" Width="30" Height="30" Margin="5" ToolTip.Tip="Navigate Forward (Ctrl+RightArrow)" Classes="Hover">
+					<controls:IconControl Icon="arrow_forward" Size="16"/>
+				</Button>
+			</StackPanel>
+		</Border>
+	</Grid>
+</UserControl>

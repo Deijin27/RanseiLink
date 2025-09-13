@@ -108,11 +108,6 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         UpgradeOutdatedModsCommand = new RelayCommand(UpgradeOutdatedMods);
         PopulateGraphicsDefaultsCommand = new RelayCommand(fallbackManager.PopulateGraphicsDefaults);
 
-        ModItemClicked = new RelayCommand<ModInfo>(mi =>
-        {
-            if (mi != null) ModSelected?.Invoke(mi);
-        });
-
         ToggleThemeCommand = new RelayCommand(themeService.ToggleTheme);
         CrashCommand = new RelayCommand(() => throw new Exception("Alert! Alert! Intentional Crash Detected!"));
         UpdateCommand = new RelayCommand(updateService.OpenDownloadPage);
@@ -229,6 +224,9 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
                 break;
             case ModAction.Refresh:
                 RefreshModItems();
+                break;
+            case ModAction.Select:
+                ModSelected?.Invoke(mod);
                 break;
             default:
                 break;

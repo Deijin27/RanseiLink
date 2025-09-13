@@ -15,7 +15,8 @@ public enum ModAction
     Remove,
     MarkAsNew,
     PinnedChanged,
-    Refresh
+    Refresh,
+    Select,
 }
 
 public delegate void ModActionRequestHandler(IModListItemViewModel sender, ModAction action, ModInfo mod);
@@ -61,7 +62,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         _modService = modManager;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
-        
+
         PluginItems = pluginLoader.LoadPlugins(out var _);
 
         TogglePinCommand = new RelayCommand(() => TogglePin());
@@ -70,7 +71,10 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         EditModInfoCommand = new RelayCommand(() => EditModInfo(Mod));
         CreateModBasedOnCommand = new RelayCommand(() => CreateModBasedOn(Mod));
         DeleteModCommand = new RelayCommand(() => DeleteMod(Mod));
-        RunPluginCommand = new RelayCommand<PluginInfo>(async parameter => { if (parameter != null) await RunPlugin(Mod, parameter); });
+        RunPluginCommand = new RelayCommand<PluginInfo>(async parameter =>
+        {
+            if (parameter != null) await RunPlugin(Mod, parameter);
+        });
         ShowInExplorerCommand = new RelayCommand(() =>
         {
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
@@ -79,6 +83,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
                 UseShellExecute = true
             });
         });
+        SelectCommand = new RelayCommand(() => SendModRequest(ModAction.Select, Mod));
     }
 
     public string Name => Mod?.Name ?? "<Unknown>";
@@ -149,6 +154,7 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public ICommand DeleteModCommand { get; }
     public ICommand RunPluginCommand { get; }
     public ICommand ShowInExplorerCommand { get; }
+    public ICommand SelectCommand { get; }
 
     public event ModActionRequestHandler? ModRequest;
 

@@ -14,6 +14,17 @@
 
 
 		<ContentControl Content="{Binding CurrentVm}" Grid.ColumnSpan="2"/>
+		
+		<Button Grid.Column="0" Content="&#xe5c4;" 
+		        Command="{Binding BackButtonCommand}"
+		        IsVisible="{Binding BackButtonVisible}"
+		        FontFamily="{StaticResource MaterialIcons}"
+		        Width="45" Height="30"
+		        FontSize="13"
+		        HorizontalAlignment="Left"
+		        VerticalAlignment="Top"
+		        ToolTip.Tip="Home"
+		        Classes="Hover"/>
 	</Grid>
 
 </Window>

@@ -7,6 +7,7 @@
 			 xmlns:cvm="clr-namespace:RanseiLink.GuiCore.ViewModels;assembly=RanseiLink.GuiCore"
 			 xmlns:local="clr-namespace:RanseiLink.XP.Views"
              xmlns:controls="clr-namespace:RanseiLink.XP.Controls"
+             x:Name="RootControl"
 			 >
 	<UserControl.Styles>
 		<Style Selector="Run.small">
@@ -64,10 +65,7 @@
 			<ItemsControl ItemsSource="{Binding ModItems}" Margin="10,0,0,0">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="{x:Type cvm:ModListItemViewModel}">
-						<Button HorizontalContentAlignment="Left"
-								Classes="Hover"
-                                CommandParameter="{Binding Mod}"
-                                Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
+						<Button HorizontalContentAlignment="Left" Classes="Hover" Command="{Binding SelectCommand}">
 							<Button.ContextMenu>
 								<ContextMenu>
 									<MenuItem Header="Patch rom with mod" Command="{Binding PatchRomCommand}">

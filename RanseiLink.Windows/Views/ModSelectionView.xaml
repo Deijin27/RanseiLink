@@ -66,9 +66,7 @@
                       Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">
-                    <Button HorizontalContentAlignment="Left"
-                                CommandParameter="{Binding Mod}" 
-                                Command="{Binding DataContext.ModItemClicked, RelativeSource={RelativeSource AncestorType={x:Type local:ModSelectionView}}}">
+                    <Button HorizontalContentAlignment="Left" Command="{Binding SelectCommand}">
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource RoundedGrayHoverButtonStyle}">
                                 <Style.Triggers>

@@ -48,7 +48,7 @@ public partial class App : Application
 
             SettingService = builder.Resolve<ISettingService>();
             var mainWindowVm = builder.Resolve<MainWindowViewModel>();
-            mainWindowVm.MainEditorEnabled = false;
+            //mainWindowVm.MainEditorEnabled = false;
             desktop.MainWindow = MainWindow = new MainWindow()
             {
                 DataContext = mainWindowVm,
