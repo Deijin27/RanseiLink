@@ -15,13 +15,10 @@
 		</Style>
 	</UserControl.Styles>
 	<DockPanel>
-		<Border Width="180" BorderThickness="0">
+		<Border Width="190" BorderThickness="0">
 			<Grid >
 				<StackPanel Margin="10" Spacing="8">
 
-                    <CheckBox IsChecked="false">Hello there</CheckBox>
-                    <CheckBox IsChecked="true">Hello there</CheckBox>
-                    
                     <controls:IconButton Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
 					<controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
 
@@ -47,7 +44,7 @@
 
 		</Border>
 
-    <DockPanel Margin="5" DockPanel.Dock="Top">
+    <DockPanel Margin="10" DockPanel.Dock="Top">
       <controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip.Tip="Tags" />
       <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
         <ItemsControl.ItemsPanel>
@@ -64,7 +61,7 @@
     </DockPanel>
     
 		<ScrollViewer >
-			<ItemsControl ItemsSource="{Binding ModItems}" Margin="5,5,0,5">
+			<ItemsControl ItemsSource="{Binding ModItems}" Margin="10,0,0,0">
 				<ItemsControl.ItemTemplate>
 					<DataTemplate DataType="{x:Type cvm:ModListItemViewModel}">
 						<Button HorizontalContentAlignment="Left"
@@ -122,8 +119,8 @@
 								</ContextMenu>
 							</Button.ContextMenu>
 							<DockPanel>
-                <TextBlock Width="10" IsVisible="{Binding IsPinned}" DockPanel.Dock="Left"/>
-                <TextBlock Width="10" IsVisible="{Binding IsNew}" DockPanel.Dock="Left"/>
+								<controls:IconControl Icon="keep" DockPanel.Dock="Left" IsVisible="{Binding IsPinned}"/>
+								<controls:IconControl Icon="fiber_new" DockPanel.Dock="Left" IsVisible="{Binding IsNew}" />
 								<Image Margin="5,0,0,0" Width="33" DockPanel.Dock="Left" Source="{Binding Banner}" Stretch="Uniform" />
 								<controls:ModInfoControl ModInfo="{Binding Mod, Mode=OneWay}"/>
 							</DockPanel>

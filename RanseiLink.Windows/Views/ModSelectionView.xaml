@@ -47,7 +47,7 @@
             
         </Border>
 
-        <DockPanel Margin="20,10,10,10" DockPanel.Dock="Top">
+        <DockPanel Margin="10" DockPanel.Dock="Top">
             <controls:IconControl DockPanel.Dock="Left" Icon="sell" ToolTip="Tags" />
             <ItemsControl ItemsSource="{Binding FilterableTags}" VerticalAlignment="Center">
                 <ItemsControl.ItemsPanel>
@@ -62,7 +62,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </DockPanel>
-        <ItemsControl ItemsSource="{Binding ModItems}" Margin="20,0,0,0"  
+        <ItemsControl ItemsSource="{Binding ModItems}" Margin="10,0,0,0"  
                       Style="{DynamicResource ItemsControlVirtualizedStyle}" VirtualizingPanel.ScrollUnit="Pixel">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:ModListItemViewModel}">

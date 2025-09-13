@@ -16,7 +16,7 @@
     </UserControl.InputBindings>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="190"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -25,7 +25,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Column="1" Margin="20,10,0,0" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
+        <Grid Grid.Column="1" Margin="10,10,0,0" d:Background="{DynamicResource WindowBackgroundBrush}" Grid.RowSpan="3">
             <ContentControl Content="{Binding CurrentVm}" Margin="0" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"/>
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource Converter.BoolToVisibility}}">
                 <TextBlock Text="Loading..." HorizontalAlignment="Center" Margin="0,0,0,10"/>

@@ -7,10 +7,11 @@
         x:Class="RanseiLink.XP.Views.MainWindow"
         Icon="/Assets/ranseilink-logo.ico"
         Title="RanseiLink XP">
-	<Grid ColumnDefinitions="180,*">
+	<Grid ColumnDefinitions="190,*">
 
-		<Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
-		<Border Grid.Row="0" Grid.Column="1" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
+		<Border Grid.Column="0" Grid.ColumnSpan="2" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0"/>
+		<Border CornerRadius="10,0,0,0" Grid.Column="1"  Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0"/>
+
 
 		<ContentControl Content="{Binding CurrentVm}" Grid.ColumnSpan="2"/>
 	</Grid>
