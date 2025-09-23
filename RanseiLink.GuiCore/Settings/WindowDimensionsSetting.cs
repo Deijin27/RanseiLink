@@ -1,4 +1,5 @@
 ﻿using RanseiLink.Core.Settings;
+using RanseiLink.Core.Util;
 using System.Xml.Linq;
 
 namespace RanseiLink.GuiCore.Settings;
@@ -33,22 +34,22 @@ public class WindowDimensionsSetting : Setting<WindowDimensions>
 
         var max = short.MaxValue;
 
-        if (xAttr != null && double.TryParse(xAttr.Value, out var xParsed) && xParsed < max)
+        if (xAttr != null && InvariantNumber.TryParseDouble(xAttr.Value, out var xParsed) && xParsed < max)
         {
             x = xParsed;
         }
 
-        if (yAttr != null && double.TryParse(yAttr.Value, out var yParsed) && yParsed < max)
+        if (yAttr != null && InvariantNumber.TryParseDouble(yAttr.Value, out var yParsed) && yParsed < max)
         {
             y = yParsed;
         }
 
-        if (wAttr != null && double.TryParse(wAttr.Value, out var wParsed) && wParsed < max)
+        if (wAttr != null && InvariantNumber.TryParseDouble(wAttr.Value, out var wParsed) && wParsed < max)
         {
             w = wParsed;
         }
 
-        if (hAttr != null && double.TryParse(hAttr.Value, out var hParsed) && hParsed < max)
+        if (hAttr != null && InvariantNumber.TryParseDouble(hAttr.Value, out var hParsed) && hParsed < max)
         {
             h = hParsed;
         }
@@ -63,10 +64,10 @@ public class WindowDimensionsSetting : Setting<WindowDimensions>
 
     public override void Serialize(XElement element)
     {
-        element.SetAttributeValue("X", Value.X);
-        element.SetAttributeValue("Y", Value.Y);
-        element.SetAttributeValue("Width", Value.Width);
-        element.SetAttributeValue("Height", Value.Height);
+        element.SetAttributeValue("X", InvariantNumber.DoubleToString(Value.X));
+        element.SetAttributeValue("Y", InvariantNumber.DoubleToString(Value.Y));
+        element.SetAttributeValue("Width", InvariantNumber.DoubleToString(Value.Width));
+        element.SetAttributeValue("Height", InvariantNumber.DoubleToString(Value.Height));
         element.SetAttributeValue("State", Value.State);
     }
 }

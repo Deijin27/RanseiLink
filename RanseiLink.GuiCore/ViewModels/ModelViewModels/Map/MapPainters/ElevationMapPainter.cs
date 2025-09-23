@@ -1,9 +1,7 @@
-﻿using RanseiLink.Core;
-using RanseiLink.Core.Settings;
+﻿using RanseiLink.Core.Settings;
 using RanseiLink.Core.Util;
 using RanseiLink.GuiCore.Constants;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing.Processors.Filters;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
@@ -37,7 +35,8 @@ public class ElevationMapPainter : BaseMapPainter
 
     public class Brush : ViewModelBase
     {
-        private string _value = "12.5";
+        private string _value;
+        
         public string Value
         {
             get => _value;
@@ -57,7 +56,7 @@ public class ElevationMapPainter : BaseMapPainter
 
         public Brush(float value)
         {
-            Value = value.ToString();
+            _value = value.ToString();
         }
 
         public bool IsValid => float.TryParse(Value, out var value) && !float.IsNaN(value) && !float.IsInfinity(value);
@@ -129,7 +128,7 @@ public class ElevationMapPainter : BaseMapPainter
             {
                 break;
             }
-            Brushes[c].Value = x;
+            Brushes[c].Value = x.ToString();
             c++;
         }
 
@@ -142,7 +141,7 @@ public class ElevationMapPainter : BaseMapPainter
 
     private void Brush_ValueChanged()
     {
-        _elevationPaletteSetting.Value = Brushes.Select(x => x.Value).ToArray();
+        _elevationPaletteSetting.Value = Brushes.Select(x => x.Value).Select(x => float.TryParse(x, out var xParsed) ? xParsed : 0f).ToArray();
         _settingService.Save();
     }
 

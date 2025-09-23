@@ -312,7 +312,7 @@ public class NSPAT
             }
             if (Unknown != 0)
             {
-                el.Add(new XAttribute("unknown", Unknown));
+                el.Add(new XAttribute("unknown", InvariantNumber.FloatToString(Unknown)));
             }
             el.Add(KeyFrames.Select(x => x.Serialize()));
             
@@ -324,7 +324,7 @@ public class NSPAT
             var result = new PatternAnimationTrack
             (
                 material: element.Attribute("material")?.Value ?? string.Empty,
-                unknown: float.TryParse(element.Attribute("unknown")?.Value, out var unk) ? unk : 0
+                unknown: InvariantNumber.TryParseFloat(element.Attribute("unknown")?.Value, out var unk) ? unk : 0
             );
 
             foreach (var keyFrameElement in element.Elements("key_frame"))
