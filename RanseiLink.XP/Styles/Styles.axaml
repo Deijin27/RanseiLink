@@ -24,8 +24,9 @@
 
 			<!--Note: it's "RanseiLink" because that's the assembly name-->
             <!-- According to github variable fonts aren't supported yet, 
-                but for some reason specifying "Bold" makes it work, fuck knows why it works but let's fucking go-->
-			<FontFamily x:Key="MaterialIcons">avares://RanseiLink/Assets/Fonts/#Material Symbols Outlined Bold</FontFamily>
+                but for some reason specifying "Bold" makes it work on windows. Non-bold works on linux. For fuck sake-->
+			<FontFamily x:Key="MaterialIcons">avares://RanseiLink/Assets/Fonts/#Material Symbols Outlined</FontFamily>
+			<!-- <FontFamily x:Key="MaterialIcons">avares://RanseiLink/Assets/Fonts/#Material Symbols Outlined Bold</FontFamily> -->
 		</ResourceDictionary>
 	</Styles.Resources>
 
