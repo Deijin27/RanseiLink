@@ -52,6 +52,15 @@
                     HorizontalAlignment="Left" VerticalAlignment="Center">
                         RanseiLink <Run Foreground="{DynamicResource AltForegroundBrush}" FontSize="11" d:Text="1.0-beta" Text="{x:Static local:App.Version}"/>
                 </TextBlock>
+
+                <Button Grid.Column="2" Content="&#xe5c4;" WindowChrome.IsHitTestVisibleInChrome="True"
+                        Command="{Binding BackButtonCommand}"
+                        Visibility="{Binding BackButtonVisible, Converter={StaticResource Converter.BoolToVisibility}}"
+                        FontFamily="{StaticResource MaterialIcons}"
+                        Width="45" Height="30"
+                        FontSize="13"
+                        ToolTip="Home"
+                        Style="{StaticResource GrayHoverButtonStyle}"/>
             </Grid>
 
             <DockPanel Grid.Row="0" Grid.Column="1" Background="Transparent">
@@ -93,16 +102,6 @@
 
             <ContentControl Content="{Binding CurrentVm}" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
 
-            <Button Grid.Column="0" Grid.Row="1" Content="&#xe5c4;"
-        Command="{Binding BackButtonCommand}"
-        Visibility="{Binding BackButtonVisible, Converter={StaticResource Converter.BoolToVisibility}}"
-        FontFamily="{StaticResource MaterialIcons}"
-        Width="45" Height="30"
-        FontSize="13"
-                    HorizontalAlignment="Left"
-VerticalAlignment="Top"
-        ToolTip="Home"
-        Style="{StaticResource GrayHoverButtonStyle}"/>
         </Grid>
     </Border>
 </Window>

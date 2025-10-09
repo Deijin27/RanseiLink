@@ -36,25 +36,20 @@
         <Grid Margin="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="5"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image MouseDown="BannerImage_MouseDown" Width="40" Grid.ColumnSpan="3" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Banner}" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\Mods\Mod [1]\BannerImage.png"/>
-            <TextBlock TextAlignment="Center" Grid.Row="1" Grid.Column="0" Margin="0,0,0,5" TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" Text="{Binding Mod.Name}" d:Text="Pokemon Conquest: Super duper mod"/>
-            <controls:IconControl ToolTip="Author" Grid.Row="2" Icon="person"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="2" Grid.Column="2" Text="{Binding Mod.Author}" d:Text="Deijin"/>
-            <controls:IconControl ToolTip="Version" Grid.Row="3" Icon="info"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="3" Grid.Column="2" Text="{Binding Mod.Version}" d:Text="1.0.0"/>
-            <controls:IconControl ToolTip="Region" Grid.Row="4" Icon="language"/>
-            <TextBlock VerticalAlignment="Center" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="4" Grid.Column="2" Text="{Binding Mod.RegionName}" d:Text="North America"/>
-
+            <Image MouseDown="BannerImage_MouseDown" Grid.RowSpan="2" Width="40" RenderOptions.BitmapScalingMode="NearestNeighbor" Source="{Binding Banner}" d:Source="C:\Users\Mia\AppData\Local\RanseiLink\Mods\Mod [1]\BannerImage.png"/>
+            <TextBlock Grid.Column="1" TextAlignment="Center" Grid.Row="0"  TextWrapping="Wrap" FontWeight="SemiBold" Grid.ColumnSpan="3" FontSize="13" VerticalAlignment="Center"
+                       Text="{Binding Mod.Name}" d:Text="Pokemon Conquest: Reconquered"/>
+            
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Grid.ColumnSpan="2" Foreground="{DynamicResource AltForegroundBrush}" Grid.Row="1" Grid.Column="1" FontSize="10" 
+                       Text="{Binding Mod.Version, StringFormat='Version: {0}'}" d:Text="Version: 1.0.0 Public"
+                       Visibility="{Binding Mod.Version, Converter={StaticResource Converter.NotNullToVis}}"/>
+            
         </Grid>
 
         <ListView x:Name="editorListView" IsEnabled="{Binding Loading, Converter={StaticResource Converter.InvertBool}}"
