@@ -11,7 +11,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="550" d:DesignWidth="500" Background="Transparent" d:Background="{DynamicResource WindowBackgroundBrush}">
     <DockPanel>
-        <Border Width="180" BorderThickness="0">
+        <Border Width="190" BorderThickness="0">
             <Grid d:Background="{DynamicResource WindowTransparentBackgroundBrush}">
                 <StackPanel Margin="10">
                     <StackPanel.Resources>
