@@ -6,8 +6,6 @@
              mc:Ignorable="d" 
              d:Background="{DynamicResource WindowBackgroundBrush}">
     <Grid Margin="8,5,5,5">
-        <Grid.ColumnDefinitions>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="18"/>
             <RowDefinition Height="15"/>

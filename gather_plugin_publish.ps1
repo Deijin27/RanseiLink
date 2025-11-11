@@ -28,7 +28,7 @@ foreach ($folder in $pluginFolders)
     $version = (Select-String -Path $pluginCsFile -Pattern '\[Plugin\(".*?", ".*?", "(.*?)"\)]').Matches.Groups[1].Value
 
     # Copy dll to output
-    $dllToCopy = "$pluginFolderName\bin\Release\net8.0\$pluginName.dll"
+    $dllToCopy = "$pluginFolderName\bin\Release\net10.0\$pluginName.dll"
     $dllDestination = "$Destination\$pluginName-$version.dll"
     Copy-Item -Path $dllToCopy -Destination $dllDestination
 }
