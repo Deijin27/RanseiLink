@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Core", "RanseiLink.Core\RanseiLink.Core.csproj", "{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}"
 EndProject
@@ -37,6 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisableEventsPlugin", "Plug
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - Solution Items", "{29910CB7-F216-44CB-AB5E-F0C83E8875AA}"
 	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.ps1 = build.ps1
+		build.sh = build.sh
 		DEPENDENCIES.md = DEPENDENCIES.md
 		gather_plugin_debug.ps1 = gather_plugin_debug.ps1
 		gather_plugin_publish.ps1 = gather_plugin_publish.ps1
