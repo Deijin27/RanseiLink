@@ -12,8 +12,6 @@ public class MapGridCellViewModel : ViewModelBase
 {
     public MapTerrainEntry TerrainEntry { get; }
 
-    private bool _isSelected;
-
     private readonly IGimmickService _gimmickService;
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly bool _showGimmicks;
@@ -61,11 +59,10 @@ public class MapGridCellViewModel : ViewModelBase
 
     public IEnumerable<MapGridSubCellViewModel> SubCells { get; }
 
-    private Rgba32 _color;
     public Rgba32 Color
     {
-        get => _color;
-        set => SetProperty(ref _color, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public void AddGimmick(MapGimmickViewModel gimmickViewModel)
@@ -103,8 +100,8 @@ public class MapGridCellViewModel : ViewModelBase
 
     public bool IsSelected
     {
-        get => _isSelected;
-        set => SetProperty(ref _isSelected, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public int X { get; }

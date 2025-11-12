@@ -49,12 +49,11 @@ public class WarriorMaxLinkListItem : ViewModelBase
 
     public object? LinkImg
     {
-        get => _linkImg;
-        set => SetProperty(ref _linkImg, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     private readonly int _pokemonId;
-    private object? _linkImg;
 
     /// <summary>
     /// This ID is sortable

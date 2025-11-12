@@ -11,7 +11,6 @@ public class MainWindowViewModel : ViewModelBase
     private readonly IMainEditorViewModel _mainEditorViewModel;
     private readonly IFallbackSpriteManager _fallbackManager;
     private object _currentVm;
-    private bool _backButtonVisible;
 
     public MainWindowViewModel(
         IAsyncDialogService dialogService,
@@ -69,8 +68,8 @@ public class MainWindowViewModel : ViewModelBase
     
     public bool BackButtonVisible
     {
-        get => _backButtonVisible;
-        set => SetProperty(ref _backButtonVisible, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public ICommand BackButtonCommand { get; }

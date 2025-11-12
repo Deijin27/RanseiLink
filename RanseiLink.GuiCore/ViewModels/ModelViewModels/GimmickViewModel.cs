@@ -78,11 +78,10 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
     }
 
     // You can change power really fast, this makes less events fire so less preview image creation
-    private int _starCount;
     public int StarCount
     {
-        get => _starCount;
-        set => SetProperty(ref _starCount, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public void SetModel(GimmickId id, Gimmick model)

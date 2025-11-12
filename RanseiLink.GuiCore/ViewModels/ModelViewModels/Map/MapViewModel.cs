@@ -23,7 +23,6 @@ public class MapViewModel : ViewModelBase, IBigViewModel
     private static bool __showPokemonMarkers = true;
     private MapGimmickViewModel? _selectedGimmick;
     private MapPokemonPositionViewModel? _selectedPokemonPosition;
-    private MapGridSubCellViewModel? _mouseOverItem;
     private MapGridCellViewModel? _selectedCell;
     private readonly IAsyncDialogService _dialogService;
     private readonly IGimmickService _gimmickService;
@@ -207,8 +206,8 @@ public class MapViewModel : ViewModelBase, IBigViewModel
 
     public MapGridSubCellViewModel? MouseOverItem
     {
-        get => _mouseOverItem;
-        set => SetProperty(ref _mouseOverItem, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public MapGimmickViewModel? SelectedGimmick

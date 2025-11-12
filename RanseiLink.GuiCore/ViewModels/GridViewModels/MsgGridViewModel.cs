@@ -86,26 +86,24 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         Search();
     }
 
-    private bool _matchCase = false;
     public bool MatchCase
     {
-        get => _matchCase;
+        get;
         set
         {
-            if (SetProperty(ref _matchCase, value))
+            if (SetProperty(ref field, value))
             {
                 Search();
             }
         }
     }
 
-    private bool _useRegex = false;
     public bool UseRegex
     {
-        get => _useRegex;
+        get;
         set
         {
-            if (SetProperty(ref _useRegex, value))
+            if (SetProperty(ref field, value))
             {
                 RaisePropertyChanged(nameof(RegexInvalid));
                 Search();
@@ -113,18 +111,15 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
         }
     }
 
-    private bool _addRemoveVisible = false;
     public bool AddRemoveVisible
     {
-        get => _addRemoveVisible;
-        set => SetProperty(ref _addRemoveVisible, value);
+        get;
+        set => SetProperty(ref field, value);
     }
-
-    private bool _replaceVisible = false;
     public bool ReplaceVisible
     {
-        get => _replaceVisible;
-        set => SetProperty(ref _replaceVisible, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     private string _searchTerm = "";
@@ -156,11 +151,10 @@ public class MsgGridViewModel : ViewModelBase, IGridViewModel<MsgViewModel>
 
     private readonly List<MsgViewModel> _allItems = new();
 
-    private MsgViewModel? _selectedItem;
     public MsgViewModel? SelectedItem
     {
-        get => _selectedItem;
-        set => SetProperty(ref _selectedItem, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public RelayCommand AddCommand { get; }

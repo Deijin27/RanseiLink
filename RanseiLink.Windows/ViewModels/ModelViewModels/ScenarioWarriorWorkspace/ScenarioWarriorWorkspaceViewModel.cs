@@ -13,9 +13,9 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     private readonly SwMiniViewModel.Factory _itemFactory;
     private readonly SwKingdomMiniViewModel.Factory _kingdomItemFactory;
     private readonly SwSimpleKingdomMiniViewModel.Factory _simpleKingdomItemFactory;
-    private static bool _showArmy = true;
-    private static bool _showFree = false;
-    private static bool _showUnassigned = false;
+    private static bool __showArmy = true;
+    private static bool __showFree = false;
+    private static bool __showUnassigned = false;
     private object? _selectedItem;
 
     public ScenarioWarriorWorkspaceViewModel(
@@ -318,18 +318,18 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
     public bool ShowArmy
     {
-        get => _showArmy;
-        set => SetProperty(ref _showArmy, value);
+        get => __showArmy;
+        set => SetProperty(ref __showArmy, value);
     }
     public bool ShowFree
     {
-        get => _showFree;
-        set => SetProperty(ref _showFree, value);
+        get => __showFree;
+        set => SetProperty(ref __showFree, value);
     }
     public bool ShowUnassigned
     {
-        get => _showUnassigned;
-        set => SetProperty(ref _showUnassigned, value);
+        get => __showUnassigned;
+        set => SetProperty(ref __showUnassigned, value);
     }
     public object? SelectedItem
     {

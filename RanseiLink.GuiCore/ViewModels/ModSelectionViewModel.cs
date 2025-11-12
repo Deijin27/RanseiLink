@@ -184,6 +184,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
             var item = _itemViewModelFactory(mi, GetKnownTags);
             modListItems.Add(item);
 
+            // Make sure to set these before subscribing to the event
             item.IsPinned = _pinnedModsFolders.Contains(mi.FolderPath);
             item.IsNew = _newModsFolders.Contains(mi.FolderPath);
             item.ModRequest += Item_ModRequest;

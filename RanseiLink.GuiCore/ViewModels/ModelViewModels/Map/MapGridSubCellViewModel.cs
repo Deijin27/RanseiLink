@@ -15,11 +15,10 @@ public class MapGridSubCellViewModel : ViewModelBase
 
     public MapGridCellViewModel Parent { get; }
 
-    private Rgba32 _color;
     public Rgba32 Color
     {
-        get => _color;
-        set => SetProperty(ref _color, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public float Z

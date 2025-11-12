@@ -28,9 +28,6 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
     private readonly IFileDropHandlerFactory _fdhFactory;
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly EditorModuleOrderSetting _editorModuleOrderSetting;
-
-    private bool _pluginPopupOpen = false;
-    private object? _currentVm;
     private ModInfo? _mod;
     private IServiceGetter? _modServiceGetter;
     private EditorModule? _currentModule;
@@ -116,17 +113,16 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
         }
     }
 
-    private bool _loading;
     public bool Loading
     {
-        get => _loading;
-        set => SetProperty(ref _loading, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public object? CurrentVm
     {
-        get => _currentVm;
-        private set => SetProperty(ref _currentVm, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     public string? CurrentModuleId
@@ -425,8 +421,8 @@ public class MainEditorViewModel : ViewModelBase, IMainEditorViewModel
 
     public bool PluginPopupOpen
     {
-        get => _pluginPopupOpen;
-        set => SetProperty(ref _pluginPopupOpen, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     private async void RunPlugin(PluginInfo chosen)

@@ -28,11 +28,10 @@ public class ItemMiniViewModel : ViewModelBase, IMiniViewModel
 
     public string Name => _model.Name;
 
-    private object? _image;
     public object? Image
     {
-        get => _image;
-        set => SetProperty(ref _image, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
 

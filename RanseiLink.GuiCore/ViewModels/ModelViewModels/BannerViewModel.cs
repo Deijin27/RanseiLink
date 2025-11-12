@@ -11,7 +11,6 @@ public class BannerViewModel : ViewModelBase
     private readonly IAsyncDialogService _dialogService;
     private readonly IBannerService _bannerService;
     private readonly IPathToImageConverter _pathToImageConverter;
-    private object? _displayImage;
     private readonly BannerInfo _bannerInfo;
     private string _allTitles = string.Empty;
 
@@ -75,8 +74,8 @@ public class BannerViewModel : ViewModelBase
 
     public object? DisplayImage
     {
-        get => _displayImage;
-        private set => SetProperty(ref _displayImage, value);
+        get;
+        private set => SetProperty(ref field, value);
     }
 
     private void UpdateDisplayImage()

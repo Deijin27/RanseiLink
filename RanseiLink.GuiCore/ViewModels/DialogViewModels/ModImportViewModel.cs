@@ -85,10 +85,9 @@ public class ModImportViewModel : ViewModelBase, IModalDialogViewModel<bool>
 
     public bool OkEnabled => _file != null && System.IO.File.Exists(_file);
 
-    private ModInfo? _modInfo;
     public ModInfo? ModInfo
     {
-        get => _modInfo;
-        set => SetProperty(ref _modInfo, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 }

@@ -9,8 +9,6 @@ namespace RanseiLink.Windows.ViewModels;
 public class SwPokemonSlotViewModel : ViewModelBase
 {
     private readonly int _slot;
-    private bool _isSelected;
-    private object? _nestedVm;
     private readonly ScenarioPokemonViewModel _scenarioPokemonVm;
     private readonly ScenarioWarrior _warrior;
     private readonly ScenarioId _scenario;
@@ -42,10 +40,10 @@ public class SwPokemonSlotViewModel : ViewModelBase
 
     public bool IsSelected
     {
-        get => _isSelected;
+        get;
         set
         {
-            if (SetProperty(ref _isSelected, value) && value)
+            if (SetProperty(ref field, value) && value)
             {
                 UpdateNested();
             }
@@ -80,8 +78,8 @@ public class SwPokemonSlotViewModel : ViewModelBase
 
     public object? NestedVm
     {
-        get => _nestedVm;
-        set => SetProperty(ref _nestedVm, value);
+        get;
+        set => SetProperty(ref field, value);
     }
 
     public object? PokemonImage => _spriteProvider.GetSprite(SpriteType.StlPokemonS, _pokemonImageId);

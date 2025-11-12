@@ -110,29 +110,22 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         Banner = _pathToImageConverter.TryConvert(Path.Combine(Mod.FolderPath, Core.Services.Constants.BannerImageFile));
     }
 
-    private bool _isPinned;
     public bool IsPinned
     {
-        get => _isPinned;
+        get;
         set
         {
-            if (SetProperty(ref _isPinned, value))
+            if (SetProperty(ref field, value))
             {
                 SendModRequest(ModAction.PinnedChanged);
             }
         }
     }
 
-    private bool _isNew;
     public bool IsNew
     {
-        get => _isNew;
-        set => SetProperty(ref _isNew, value);
-    }
-
-    public void SetPinnedWithoutEvent(bool isPinned)
-    {
-        _isPinned = isPinned;
+        get;
+        set => SetProperty(ref field, value);
     }
 
     private object? _banner;
