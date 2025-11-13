@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11205.157 d18.0
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Core", "RanseiLink.Core\RanseiLink.Core.csproj", "{AC7AA89A-8C17-46D3-9DCF-260A06B052CC}"
 EndProject
@@ -37,9 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisableEventsPlugin", "Plug
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - Solution Items", "{29910CB7-F216-44CB-AB5E-F0C83E8875AA}"
 	ProjectSection(SolutionItems) = preProject
-		build.cmd = build.cmd
-		build.ps1 = build.ps1
-		build.sh = build.sh
+		build.cs = build.cs
 		DEPENDENCIES.md = DEPENDENCIES.md
 		gather_plugin_debug.ps1 = gather_plugin_debug.ps1
 		gather_plugin_publish.ps1 = gather_plugin_publish.ps1
@@ -53,13 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.StandaloneModelV
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.XP", "RanseiLink.XP\RanseiLink.XP.csproj", "{214763BB-AB00-4658-85A2-993E45A84F2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.Build", "build\RanseiLink.Build.csproj", "{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RanseiLink.GuiCore", "RanseiLink.GuiCore\RanseiLink.GuiCore.csproj", "{2C08E4D0-216C-44B7-BA61-387DF0278057}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - App", "2 - App", "{389B38D6-5188-475E-A316-A58AEDF2FC84}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Build", "4 - Build", "{7B15CDFF-FF29-4108-9533-0862A486EBB8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RanseiLink.Generation", "RanseiLink.Generation\RanseiLink.Generation.csproj", "{540D30D3-0DD9-4174-AFD8-2A1021B808F1}"
 EndProject
@@ -137,8 +131,6 @@ Global
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{214763BB-AB00-4658-85A2-993E45A84F2D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C08E4D0-216C-44B7-BA61-387DF0278057}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -169,7 +161,6 @@ Global
 		{53F31038-F3DA-4AA7-8804-D9ED31E150DE} = {389B38D6-5188-475E-A316-A58AEDF2FC84}
 		{0DE9658D-A05E-4243-A8AB-507F80D50BC2} = {389B38D6-5188-475E-A316-A58AEDF2FC84}
 		{214763BB-AB00-4658-85A2-993E45A84F2D} = {389B38D6-5188-475E-A316-A58AEDF2FC84}
-		{D4E1456D-8E31-4C34-8615-56F6AB24C2D8} = {7B15CDFF-FF29-4108-9533-0862A486EBB8}
 		{2C08E4D0-216C-44B7-BA61-387DF0278057} = {389B38D6-5188-475E-A316-A58AEDF2FC84}
 		{540D30D3-0DD9-4174-AFD8-2A1021B808F1} = {389B38D6-5188-475E-A316-A58AEDF2FC84}
 	EndGlobalSection
