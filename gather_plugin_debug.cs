@@ -1,3 +1,4 @@
+#!/usr/local/share/dotnet/dotnet run
 
 /*
 GATHER DEBUG PLUGINS

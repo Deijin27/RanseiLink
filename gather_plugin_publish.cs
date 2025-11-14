@@ -1,5 +1,7 @@
+#!/usr/local/share/dotnet/dotnet run
+
 /*
-GATHER PLUGINS
+GATHER PUBLISH PLUGINS
 This script is designed to gather release versions of plugin dlls after publishing the app via visual studio
 First build the RanseiLink solution for release, then run this script
 
