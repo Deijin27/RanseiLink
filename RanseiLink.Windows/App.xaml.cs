@@ -36,7 +36,7 @@ public partial class App : System.Windows.Application
         var builder = new Container();
         var appInfo = new AppInfo(
             Version: AppVersion.Parse(Version) ?? throw new Exception(("Failed to parse app version")),
-            StartupPath: Directory.GetCurrentDirectory()
+            StartupPath: AppContext.BaseDirectory
             );
         builder.RegisterInstance(appInfo);
         builder.RegisterModule(new CoreServiceModule());
