@@ -39,8 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - S
 	ProjectSection(SolutionItems) = preProject
 		build.cs = build.cs
 		DEPENDENCIES.md = DEPENDENCIES.md
-		gather_plugin_debug.ps1 = gather_plugin_debug.ps1
-		gather_plugin_publish.ps1 = gather_plugin_publish.ps1
+		gather_plugin_debug.cs = gather_plugin_debug.cs
+		gather_plugin_publish.cs = gather_plugin_publish.cs
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
