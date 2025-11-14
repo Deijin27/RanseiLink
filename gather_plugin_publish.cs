@@ -7,7 +7,7 @@ First build the RanseiLink solution for release, then run this script
  */
 using System.Text.RegularExpressions;
 
-Console.WriteLine("Gathering RanseiLink DEBUG plugins...");
+Console.WriteLine("Gathering RanseiLink PUBLISH plugins...");
 
 // Establish file paths
 var rootDirectory = Directory.GetCurrentDirectory();
