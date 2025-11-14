@@ -1,9 +1,16 @@
 #!/usr/local/share/dotnet/dotnet run
 
-// How to use:
-// 1. Install .NET 10 SDK or newer
-// 2. Open commandline in the folder where build.cs is located
-// 3. Run `dotnet run build.cs` (on unix platforms the shebang may enable `./build.cs`)
+/*
+PUBLISH RANSEILINK
+
+This script cleans, builds, and publishes RanseiLink for all platforms
+
+How to use:
+1. Install .NET 10 SDK or newer
+2. Open commandline in the folder where build.cs is located
+3. Run `dotnet run build.cs` (on unix platforms the shebang may enable `./build.cs`)
+
+*/
 
 using System.Diagnostics;
 using System.IO.Compression;

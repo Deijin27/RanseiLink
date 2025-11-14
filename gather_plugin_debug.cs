@@ -2,10 +2,15 @@
 
 /*
 GATHER DEBUG PLUGINS
+
 This script is designed to gather debug versions of plugin dlls in the right
 folder ready for debugging
-First build the RanseiLink solution for debug, then run this script
-`dotnet run gather_plugin_debug.cs`
+
+How to use:
+1. Install .NET 10 SDK or newer
+2. Build RanseiLink Solution in Debug mode
+3. Open commandline in the folder where gather_plugin_debug.cs is located
+4. Run `dotnet run gather_plugin_debug.cs` (on unix platforms the shebang may enable `./gather_plugin_debug.cs`)
  */
 
 Console.WriteLine("Gathering RanseiLink DEBUG plugins...");
