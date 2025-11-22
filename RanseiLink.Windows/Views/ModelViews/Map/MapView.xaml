@@ -222,46 +222,37 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="{x:Type vm:MapGridCellViewModel}">
-                                        <Border x:Name="GridCellBorder" Width="27" Height="27" Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Setter Property="BorderBrush" Value="Gray"/>
-                                                    <Setter Property="BorderThickness" Value="0.5"/>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="True">
-                                                            <Setter Property="BorderBrush" Value="Cyan"/>
-                                                            <Setter Property="BorderThickness" Value="2"/>
-                                                        </Trigger>
-                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                            <Setter Property="BorderBrush" Value="Goldenrod"/>
-                                                            <Setter Property="BorderThickness" Value="2"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                    <RowDefinition/>
-                                                </Grid.RowDefinitions>
-                                                <!-- Z mouse enter trigger zones-->
-                                                <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
-                                                <!-- Gimmick and pokemon markers -->
-                                                <Border Grid.Column="0" 
+                                                <Grid Width="27" Height="27">
+                                                    <Border x:Name="GridCellBorder" Background="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="BorderBrush" Value="Gray"/>
+                                                                <Setter Property="BorderThickness" Value="0.5"/>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition/>
+                                                                <ColumnDefinition/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition/>
+                                                                <RowDefinition/>
+                                                                <RowDefinition/>
+                                                            </Grid.RowDefinitions>
+                                                            <!-- Z mouse enter trigger zones-->
+                                                            <Rectangle DataContext="{Binding SubCell0}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell1}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell2}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="0" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell3}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell4}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell5}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="1" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell6}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell7}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="1" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <Rectangle DataContext="{Binding SubCell8}" Fill="{Binding Color, Converter={StaticResource Converter.ImageSharpColorToBrush}}" Grid.Row="2" Grid.Column="2" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" MouseDown="Rectangle_MouseDown"/>
+                                                            <!-- Gimmick and pokemon markers -->
+                                                            <Border Grid.Column="0" 
                                                Grid.Row="0" 
                                                Grid.ColumnSpan="3" 
                                                Grid.RowSpan="3" 
@@ -272,10 +263,10 @@
                                                VerticalAlignment="Center"
                                                Visibility="{Binding GimmickMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
                                                >
-                                                    <TextBlock Style="{StaticResource GimmickTextStyle}"
+                                                                <TextBlock Style="{StaticResource GimmickTextStyle}"
                                                    Text="{Binding GimmickMarkerText}"/>
-                                                </Border>
-                                                <Image Grid.Column="0" 
+                                                            </Border>
+                                                            <Image Grid.Column="0" 
                                                    Grid.Row="0" 
                                                    Grid.ColumnSpan="3" 
                                                    Grid.RowSpan="3" 
@@ -287,7 +278,7 @@
                                                    Stretch="Uniform"
                                                    Source="{Binding GimmickIcon}"
                                                    />
-                                                <Border Grid.Column="0" 
+                                                            <Border Grid.Column="0" 
                                                        Grid.Row="0" 
                                                        Grid.ColumnSpan="3" 
                                                        Grid.RowSpan="3" 
@@ -298,12 +289,27 @@
                                                        VerticalAlignment="Center"
                                                        Visibility="{Binding PokemonMarkerVisibility, Converter={StaticResource Converter.BoolToVisibility}}" 
                                                        >
-                                                    <TextBlock Style="{StaticResource PokemonTextStyle}"
+                                                                <TextBlock Style="{StaticResource PokemonTextStyle}"
                                                            Text="{Binding PokemonMarkerText}"/>
-                                                </Border>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
+                                                            </Border>
+                                                        </Grid>
+                                                    </Border>
+                                                    <Border x:Name="OverlayBorder" Margin="0.5" IsHitTestVisible="False"
+                                                            BorderThickness="0">
+                                                        
+                                                    </Border>
+                                                </Grid>
+                                                <DataTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="OverlayBorder" Property="BorderBrush" Value="#8000FFFF"/>
+                                                        <Setter TargetName="OverlayBorder" Property="BorderThickness" Value="1.0"/>
+                                                    </Trigger>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter TargetName="OverlayBorder" Property="BorderBrush" Value="#A0DAA520"/>
+                                                        <Setter TargetName="OverlayBorder" Property="BorderThickness" Value="1.5"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
+                                            </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </DataTemplate>

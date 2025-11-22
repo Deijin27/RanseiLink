@@ -45,9 +45,14 @@ public partial class MapView : UserControl
 
     private void Rectangle_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
+        if (e.ChangedButton != MouseButton.Left)
+        {
+            return;
+        }
         if (sender is Rectangle rect
             && rect.DataContext is MapGridSubCellViewModel dc
-            && DataContext is MapViewModel vm)
+            && DataContext is MapViewModel vm
+            )
         {
             vm.OnSubCellClicked(dc);
         }
