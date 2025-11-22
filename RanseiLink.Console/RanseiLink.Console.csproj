@@ -3,9 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <VersionPrefix>6.2</VersionPrefix>
+    <VersionPrefix>7.0</VersionPrefix>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-	<VersionSuffix>alpha1</VersionSuffix>
+	<VersionSuffix>beta1</VersionSuffix>
 	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
