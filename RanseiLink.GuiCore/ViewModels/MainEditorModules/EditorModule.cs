@@ -162,7 +162,6 @@ public abstract class BaseWorkspaceEditorModule<TService> : EditorModule, ISelec
     {
         if (WorkspaceViewModel != null)
         {
-            WorkspaceViewModel.SearchText = null;
             WorkspaceViewModel.SelectById(selectId);
         }
     }

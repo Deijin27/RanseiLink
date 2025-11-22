@@ -37,8 +37,12 @@ public class WorkspaceViewModel : ViewModelBase
 
     public event EventHandler<int>? RequestNavigateToId;
 
-    private void NavigateToId(int id)
+    private void NavigateToId(int id, bool clearSearch = true)
     {
+        if (clearSearch)
+        {
+            SearchText = null;
+        }
         RequestNavigateToId?.Invoke(this, id);
     }
 
@@ -142,7 +146,7 @@ public class WorkspaceViewModel : ViewModelBase
             var newId = Items[0].Id;
             if (_selectedId != newId)
             {
-                NavigateToId(newId);
+                NavigateToId(newId, clearSearch: false);
             }
         }
     }
