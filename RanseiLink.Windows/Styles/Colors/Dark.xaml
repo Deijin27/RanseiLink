@@ -41,6 +41,6 @@
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#1D1C1F"/>
     <SolidColorBrush x:Key="InputDisabledBackgroundBrush" Color="#1e1e1e"/>
 
-    <SolidColorBrush x:Key="RoundedGrayHoverButtonMouseOverBackgroundBrush" Color="#353133"/>
+    <SolidColorBrush x:Key="RoundedGrayHoverButtonMouseOverBackgroundBrush" Color="#3B3940"/>
 
 </ResourceDictionary>
