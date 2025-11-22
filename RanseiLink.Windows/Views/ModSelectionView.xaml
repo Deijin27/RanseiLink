@@ -40,7 +40,7 @@
                             <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Setting up graphics defaults allow you to see and edit images in mods</Span>
                         </TextBlock>
                     </Button>
-                    <controls:IconButton Icon="download" Command="{Binding UpdateCommand}" Content="New Update Available" Visibility="{Binding IsUpdateAvailable, Converter={StaticResource Converter.BoolToVisibility}}"/>
+                    <controls:IconButton Margin="0,0,0,10" Style="{StaticResource AccentIconButtonStyle}" Icon="download" Command="{Binding UpdateCommand}" Content="New Update Available" Visibility="{Binding IsUpdateAvailable, Converter={StaticResource Converter.BoolToVisibility}}"/>
                     <controls:IconButton Icon="bug_report" Command="{Binding ReportBugCommand}" Content="Report Bug"/>
                 </StackPanel>
             </Grid>

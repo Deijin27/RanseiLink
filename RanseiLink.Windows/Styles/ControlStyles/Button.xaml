@@ -104,4 +104,32 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="AccentIconButtonStyle" TargetType="{x:Type local:IconButton}" BasedOn="{StaticResource AccentButtonStyle}">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:IconButton}">
+                    <Border Padding="{TemplateBinding Padding}" 
+            CornerRadius="4"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}" 
+            BorderThickness="{TemplateBinding BorderThickness}"
+            >
+                        <Grid HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="13"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Foreground="{TemplateBinding Foreground}" Style="{DynamicResource IconTextBlockStyle}"  Height="Auto" FontSize="14" x:Name="PART_IconTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Text="&#xe574;"/>
+                            <ContentPresenter Visibility="{TemplateBinding Content, Converter={StaticResource Converter.NotNullToVis}}" x:Name="contentPresenter" Grid.Column="1" Margin="3,0"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
+                        />
+                        </Grid>
+
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
