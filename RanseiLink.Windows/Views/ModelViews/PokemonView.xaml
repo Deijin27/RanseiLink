@@ -194,7 +194,7 @@
             </Grid.RowDefinitions>
 
             <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
-                <Image Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
+                <Image DockPanel.Dock="Left" Source="{Binding SmallSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="0,0,10,0"/>
                 <controls:IconButton Icon="image" Content="View, Export, and Import Sprites" Command="{Binding ViewSpritesCommand}"/>
             </DockPanel>
 

@@ -2,6 +2,7 @@
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Resources;
+using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
 
@@ -13,15 +14,17 @@ public partial class KingdomViewModel : ViewModelBase, IBigViewModel
     private readonly IPokemonService _pokemonService;
     private readonly IItemService _itemService;
     private readonly IAnimGuiManager _animGuiManager;
+    private readonly IOverrideDataProvider _overrideDataProvider;
     private readonly ICommand _selectItemCommand;
     private readonly ICommand _selectPokemonCommand;
 
-    public KingdomViewModel(ICachedSpriteProvider cachedSpriteProvider, IPokemonService pokemonService, IItemService itemService, INicknameService nicknameService, IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager)
+    public KingdomViewModel(ICachedSpriteProvider cachedSpriteProvider, IPokemonService pokemonService, IItemService itemService, INicknameService nicknameService, IJumpService jumpService, IIdToNameService idToNameService, IAnimGuiManager animGuiManager, IOverrideDataProvider overrideDataProvider)
     {
         _cachedSpriteProvider = cachedSpriteProvider;
         _pokemonService = pokemonService;
         _itemService = itemService;
         _animGuiManager = animGuiManager;
+        _overrideDataProvider = overrideDataProvider;
         JumpToBattleConfigCommand = new RelayCommand<int>(id => jumpService.JumpTo(BattleConfigWorkspaceEditorModule.Id, id));
         JumpToPokemonCommand = new RelayCommand<int>(id => jumpService.JumpTo(PokemonWorkspaceModule.Id, id));
         _selectItemCommand = new RelayCommand<ItemMiniViewModel>(miniVm => { if (miniVm != null) jumpService.JumpTo(ItemWorkspaceModule.Id, miniVm.Id); });
@@ -41,8 +44,22 @@ public partial class KingdomViewModel : ViewModelBase, IBigViewModel
             new EncounterablePokemonGroup(false, "Pokemon"),
             new EncounterablePokemonGroup(true, "Pokemon Lv2 Area")
             ];
-        
+
+        this.PropertyChanged += KingdomViewModel_PropertyChanged;
     }
+
+    private void KingdomViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        switch (e.PropertyName)
+        {
+            case nameof(SwarmPokemon):
+                RaisePropertyChanged(nameof(SwarmPokemonSpritePath));
+                break;
+
+        }
+    }
+
+    public string? SwarmPokemonSpritePath => _overrideDataProvider.GetSpriteFile(SpriteType.StlPokemonB, SwarmPokemon).File;
 
     public void SetModel(KingdomId id, Kingdom model)
     {

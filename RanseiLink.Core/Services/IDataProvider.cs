@@ -3,37 +3,6 @@ using RanseiLink.Core.Enums;
 
 namespace RanseiLink.Core.Services;
 
-public enum SpriteType
-{
-    StlBushouB,
-    StlBushouCI,
-    StlBushouF,
-    StlBushouLL,
-    StlBushouM,
-    StlBushouS,
-    StlBushouWu,
-    StlCastleIcon,
-    StlChikei,
-    StlEventCommon,
-    StlEventBg,
-    ModelPokemon,
-    StlPokemonB,
-    StlPokemonCI,
-    StlPokemonL,
-    StlPokemonM,
-    StlPokemonS,
-    StlPokemonSR,
-    StlPokemonWu,
-    StlStaffRoll,
-    StlStageObje,
-    Title,
-    Minimap,
-    IconInstS,
-    Castlemap,
-    KuniImage,
-    KuniImage2
-}
-
 /// <summary>
 /// A snapshot of the state of a sprite data file
 /// </summary>

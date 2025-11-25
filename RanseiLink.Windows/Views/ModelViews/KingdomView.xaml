@@ -66,8 +66,12 @@
 
             <Button Grid.Row="2" Style="{StaticResource HyperlinkButtonStyle}" Content="Swarm Pokemon" ToolTip="Jump to selected pokemon" 
                     Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding SwarmPokemon}"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding SwarmPokemon}" 
-                      Style="{StaticResource SelectorComboBoxStyle}"/>
+            <DockPanel Grid.Row="2" Grid.Column="1">
+                <Image DockPanel.Dock="Right" Source="{Binding SwarmPokemonSpritePath, Converter={StaticResource Converter.PathToImageSource}}" Height="30" RenderOptions.BitmapScalingMode="NearestNeighbor" Margin="5,0,0,0"/>
+                <ComboBox  ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding SwarmPokemon}" 
+                             Style="{StaticResource SelectorComboBoxStyle}"/>
+            </DockPanel>
+            
 
             <TextBlock Text="Unknown 1" Grid.Row="3" />
             <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding Unknown1}"/>
