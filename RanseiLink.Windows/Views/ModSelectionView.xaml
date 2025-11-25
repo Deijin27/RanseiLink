@@ -25,11 +25,11 @@
                     <controls:IconButton Icon="add" Content="Create Mod" Command="{Binding CreateModCommand}"/>
                  
                     <controls:IconButton Icon="input" Content="Import Mod" Command="{Binding ImportModCommand}"/>
-                    <Button Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">
+                    <Button Style="{DynamicResource AccentButtonStyle}" Height="Auto" Command="{Binding UpgradeOutdatedModsCommand}" Visibility="{Binding OutdatedModsExist, Converter={StaticResource Converter.BoolToVisibility}}">
                         <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="5">
-                            Upgrade Old Mods
+                            <Span FontWeight="DemiBold">Upgrade Old Mods</Span>
                             <LineBreak/>
-                            <Span Foreground="{DynamicResource AltForegroundBrush}" FontSize="10">Some mods are outdated. Click here to upgrade them to the latest version and they will appear in the list. </Span>
+                            <Span FontSize="10">Some mods are outdated. Click here to upgrade them to the latest version and they will appear in the list. </Span>
                         </TextBlock>
                     </Button>
                     <TextBlock FontSize="9" Margin="0,0,0,10" TextWrapping="WrapWithOverflow">Right click on a mod in the list for more options specific to that mod</TextBlock>
