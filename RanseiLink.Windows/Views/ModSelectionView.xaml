@@ -109,7 +109,7 @@
                                         <controls:IconControl Icon="extension" />
                                     </MenuItem.Icon>
                                     <MenuItem.ItemContainerStyle>
-                                        <Style TargetType="{x:Type MenuItem}">
+                                        <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
                                             <Setter Property="Command" Value="{Binding DataContext.RunPluginCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type MenuItem}, AncestorLevel=1}}"/>
                                             <Setter Property="CommandParameter" Value="{Binding}"/>
                                             <Setter Property="HeaderTemplate">

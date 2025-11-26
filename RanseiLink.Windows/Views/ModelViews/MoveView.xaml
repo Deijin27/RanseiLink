@@ -16,7 +16,7 @@
     <UserControl.Resources>
 
         <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="Height" Value="20"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Height" Value="20"/>
@@ -79,11 +79,11 @@
                 </StackPanel>
             </GroupBox>
 
-            <TextBlock Text="Type" Grid.Row="8"/>
-            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Type, Mode=TwoWay}"/>
+            <TextBlock Text="Type" Grid.Row="9"/>
+            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.TypeItems}" SelectedItem="{Binding Type, Mode=TwoWay}"/>
 
-            <TextBlock Text="Power" Grid.Row="9" />
-            <controls:NumberBox Grid.Row="9" Grid.Column="1" Value="{Binding Power}" Max="{Binding Power_Max}"/>
+            <TextBlock Text="Power" Grid.Row="8" />
+            <controls:NumberBox Grid.Row="8" Grid.Column="1" Value="{Binding Power}" Max="{Binding Power_Max}"/>
 
             <TextBlock Text="Accuracy" Grid.Row="10" />
             <controls:NumberBox Grid.Row="10" Grid.Column="1" Value="{Binding Accuracy}" Max="{Binding Accuracy_Max}"/>

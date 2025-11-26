@@ -130,7 +130,8 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -140,8 +141,9 @@
                 <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
             </Trigger>
             <Trigger Property="IsKeyboardFocused" Value="True">
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
+                <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+                <!--<Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>-->
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
                 <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>

@@ -23,7 +23,7 @@
 
     <SolidColorBrush x:Key="WindowMouseOverBrush" Color="#1D1B20"/>
     <SolidColorBrush x:Key="WindowSelectedBrush" Color="#4A4458"/>
-    <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#2B2930"/>
+    <SolidColorBrush x:Key="WindowTransparentMouseOverBackgroundBrush" Color="#323037"/>
 
     <SolidColorBrush x:Key="ForegroundBrush" Color="#E9E9EA"/>
     <SolidColorBrush x:Key="AltForegroundBrush" Color="#C9C7CB"/>

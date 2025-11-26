@@ -50,8 +50,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
-                            <Setter TargetName="lviBorder" Property="BorderThickness" Value="1"/>
-                            <Setter TargetName="lviBorder" Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
+                            <!--<Setter TargetName="lviBorder" Property="BorderThickness" Value="1"/>
+                            <Setter TargetName="lviBorder" Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>-->
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource AccentSecondaryBrush}"/>
