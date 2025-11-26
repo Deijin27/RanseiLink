@@ -143,7 +143,7 @@ public class RomFs : IRomFs
 
         // read the data from the original position
         _underlyingStream.Position = originalInsertDestinationEntry.End;
-        _underlyingStream.Read(buffer, 0, buffer.Length);
+        _underlyingStream.ReadExactly(buffer);
 
         // write the data into the new position
         _underlyingStream.Position = newInsertDestinationEntry.End;

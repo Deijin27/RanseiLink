@@ -50,7 +50,7 @@ public static class Extensions
     internal static int ReadInt32(this Stream stream)
     {
         var buffer = new byte[4];
-        stream.Read(buffer, 0, buffer.Length);
+        stream.ReadExactly(buffer);
         return BitConverter.ToInt32(buffer, 0);
     }
 

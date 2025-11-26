@@ -25,7 +25,7 @@ public class BaseDataWindow : IDataWindow, IDataWrapper
 
     public void Read(Stream stream)
     {
-        stream.Read(Data, 0, Data.Length);
+        stream.ReadExactly(Data);
     }
 
     public void Write(Stream stream)

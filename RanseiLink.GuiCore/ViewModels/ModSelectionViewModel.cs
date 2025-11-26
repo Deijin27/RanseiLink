@@ -55,7 +55,6 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
     public ObservableCollection<FilterableTag> FilterableTags { get; } = [];
     public ObservableCollection<IModListItemViewModel> ModItems { get; } = [];
     public List<IModListItemViewModel> AllItems { get; } = [];
-    public ICommand ModItemClicked { get; }
     public ICommand CreateModCommand { get; }
     public ICommand ImportModCommand { get; }
     public ICommand UpgradeOutdatedModsCommand { get; }

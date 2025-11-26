@@ -15,7 +15,7 @@ public partial class PokemonService
         stream.Position = __evoTableOffset;
         var length = stream.ReadInt32();
         var buffer = new byte[length];
-        stream.Read(buffer, 0, length);
+        stream.ReadExactly(buffer);
 
         // put the data onto the pokemon
         foreach (var pokemon in Enumerate())
