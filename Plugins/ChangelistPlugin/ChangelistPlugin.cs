@@ -16,7 +16,7 @@ using System.Xml.Linq;
 
 namespace ChangelistPlugin;
 
-[Plugin("Changelist", "Deijin", "2.5")]
+[Plugin("Changelist", "Deijin", "2.6")]
 public class ChangelistPlugin : IPlugin
 {
     public async Task Run(IPluginContext context)

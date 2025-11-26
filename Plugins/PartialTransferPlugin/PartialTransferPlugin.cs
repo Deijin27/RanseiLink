@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace PartialTransferPlugin;
 
-[Plugin("Partial Transfer", "Deijin", "3.3")]
+[Plugin("Partial Transfer", "Deijin", "3.4")]
 public class PartialTransferPlugin : IPlugin
 {
     public async Task Run(IPluginContext context)

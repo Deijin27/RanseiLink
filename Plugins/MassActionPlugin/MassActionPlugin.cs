@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace MassActionPlugin;
 
-[Plugin("Mass Action", "Deijin", "2.2")]
+[Plugin("Mass Action", "Deijin", "2.3")]
 public class MassActionPlugin : IPlugin
 {
     public Task Run(IPluginContext context)
