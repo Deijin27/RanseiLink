@@ -204,7 +204,11 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        string imagesFolder = "";
+        string? imagesFolder = Path.GetDirectoryName(objFile);
+        if (string.IsNullOrEmpty(imagesFolder))
+        {
+            return false;
+        }
 
         var tempFolder = FileUtil.GetTemporaryDirectory();
         string tempPac = Path.GetTempFileName();

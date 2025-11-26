@@ -233,7 +233,7 @@ public static class ModelExtractorGenerator
             var ext = PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBTX);
             PAC.Unpack(pac, temp);
             string? nsbtxFile = null;
-            foreach (var file in Directory.GetFiles(pac))
+            foreach (var file in Directory.GetFiles(temp))
             {
                 if (Path.GetExtension(file) == ext)
                 {
