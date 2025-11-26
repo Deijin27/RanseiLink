@@ -34,9 +34,10 @@ public partial class App : System.Windows.Application
 
         // Register services here because theme service requires that application resources are already initialized
         var builder = new Container();
+
         var appInfo = new AppInfo(
             Version: AppVersion.Parse(Version) ?? throw new Exception(("Failed to parse app version")),
-            StartupPath: AppContext.BaseDirectory
+            StartupPath: Environment.ProcessPath
             );
         builder.RegisterInstance(appInfo);
         builder.RegisterModule(new CoreServiceModule());
