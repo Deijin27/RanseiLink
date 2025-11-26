@@ -40,7 +40,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
-                    <Border x:Name="lviBorder" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="0" CornerRadius="4" Margin="4,2">
+                    <Border x:Name="lviBorder" Background="{DynamicResource WindowTransparentBackgroundBrush}" BorderThickness="1" BorderBrush="Transparent" CornerRadius="4" Margin="4,1">
                         <ContentPresenter x:Name="contentPresenter" 
                                                       ContentTemplate="{TemplateBinding ContentTemplate}" 
                                                       Content="{TemplateBinding Content}"
@@ -50,6 +50,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+                            <Setter TargetName="lviBorder" Property="BorderThickness" Value="1"/>
+                            <Setter TargetName="lviBorder" Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" TargetName="lviBorder" Value="{DynamicResource AccentSecondaryBrush}"/>

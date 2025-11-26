@@ -116,6 +116,41 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <Style x:Key="ComboItemStyle1" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="Padding" Value="4,1"/>
+
+        <!-- Remove dotted border on focused item. It's not really necessary here.
+    But leave it on the combobox itself because it indicates keyboard focus when the drop down is closed-->
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border CornerRadius="2" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" 
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
+            </Trigger>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
+                <Setter Property="FontWeight" Value="DemiBold"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type ComboBox}">
         <Setter Property="Template" Value="{StaticResource ComboBoxTemplate1}"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -123,38 +158,7 @@
         <Setter Property="Padding" Value="4,2"/>
         <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
 
-        <Setter Property="ItemContainerStyle">
-            <Setter.Value>
-                <Style TargetType="{x:Type ComboBoxItem}">
-                    <Setter Property="Padding" Value="4,1"/>
-                    
-                    <!-- Remove dotted border on focused item. It's not really necessary here.
-                    But leave it on the combobox itself because it indicates keyboard focus when the drop down is closed-->
-                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                    
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                                <Border CornerRadius="2" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                </Border>
-                            </ControlTemplate>    
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource WindowTransparentMouseOverBackgroundBrush}"/>
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentSecondaryBrush}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource AccentSecondaryForegroundBrush}"/>
-                            <Setter Property="FontWeight" Value="DemiBold"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ComboItemStyle1}" />
     </Style>
 
 </ResourceDictionary>
