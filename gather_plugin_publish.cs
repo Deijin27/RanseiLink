@@ -46,7 +46,7 @@ foreach (var folder in Directory.GetDirectories(pluginsFolderPath))
     var version = versionRegex.Match(File.ReadAllText(pluginCsFile)).Groups[1].Value;
 
     // Copy dll to output
-    var dllToCopy = Path.Combine(folder, "bin", "Debug", "net10.0", pluginName + ".dll");
+    var dllToCopy = Path.Combine(folder, "bin", "Release", "net10.0", pluginName + ".dll");
     var dllDestination = Path.Combine(destination, $"{pluginName}-{version}.dll");
     File.Copy(dllToCopy, dllDestination);
 }
