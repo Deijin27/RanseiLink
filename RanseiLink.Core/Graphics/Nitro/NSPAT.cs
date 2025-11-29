@@ -1,6 +1,7 @@
 ﻿using RanseiLink.Core.Util;
 using System.Text;
 using System.Xml.Linq;
+using RanseiLink.Core.Services;
 
 namespace RanseiLink.Core.Graphics;
 
@@ -61,11 +62,11 @@ public class NSPAT
         bw.BaseStream.Position = endOffset;
     }
 
-    public XElement Serialize()
+    public XElement Serialize(PaletteTextureMap? map = null)
     {
         return new XElement(
             RootElementName,
-            PatternAnimations.Select(x => x.Serialize())
+            PatternAnimations.Select(x => x.Serialize(map))
             );
     }
     public static NSPAT Deserialize(XElement element)
@@ -262,7 +263,7 @@ public class NSPAT
         public ushort NumFrames { get; set; }
         public List<PatternAnimationTrack> Tracks { get; set; } = new List<PatternAnimationTrack>();
 
-        public XElement Serialize()
+        public XElement Serialize(PaletteTextureMap? map = null)
         {
             var el = new XElement("pattern_animation");
             if (!string.IsNullOrEmpty(Name))
@@ -273,7 +274,7 @@ public class NSPAT
             {
                 el.Add(new XAttribute("num_frames", NumFrames));
             }
-            el.Add(Tracks.Select(x => x.Serialize()));
+            el.Add(Tracks.Select(x => x.Serialize(map)));
             return el;
         }
 
@@ -303,7 +304,7 @@ public class NSPAT
         public float Unknown { get; set; }
         public List<KeyFrame> KeyFrames { get; set; } = new List<KeyFrame>();
 
-        public XElement Serialize()
+        public XElement Serialize(PaletteTextureMap? map)
         {
             var el =  new XElement("track");
             if (!string.IsNullOrEmpty(Material))
@@ -314,7 +315,7 @@ public class NSPAT
             {
                 el.Add(new XAttribute("unknown", InvariantNumber.FloatToString(Unknown)));
             }
-            el.Add(KeyFrames.Select(x => x.Serialize()));
+            el.Add(KeyFrames.Select(x => x.Serialize(map)));
             
             return el;
         }
@@ -349,18 +350,25 @@ public class NSPAT
             Palette = palette;
         }
 
-        public XElement Serialize()
+        public XElement Serialize(PaletteTextureMap? map)
         {
             var el = new XElement("key_frame");
             el.Add(new XAttribute("frame", Frame));
             
-            if (!string.IsNullOrEmpty(Texture))
+            if (map != null && !string.IsNullOrEmpty(Texture) && !string.IsNullOrEmpty(Palette))
             {
-                el.Add(new XAttribute("texture", Texture));
+                el.Add(new XAttribute("image", map.GetOutputImage(Texture, Palette)));
             }
-            if (!string.IsNullOrEmpty(Palette))
+            else
             {
-                el.Add(new XAttribute("palette", Palette));
+                if (!string.IsNullOrEmpty(Texture))
+                {
+                    el.Add(new XAttribute("texture", Texture));
+                }
+                if (!string.IsNullOrEmpty(Palette))
+                {
+                    el.Add(new XAttribute("palette", Palette));
+                }
             }
             return el;
         }

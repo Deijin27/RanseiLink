@@ -14,7 +14,7 @@ public interface IMapManager
     Task<bool> ExportPslm(MapId id);
     Task<bool> ImportPslm(MapId id);
     Task<bool> RevertModelToDefault(MapId id);
-    Task<bool> ExportObj(GimmickObjectId id, int variant);
+    Task<bool> ExportObj(GimmickObjectId id, int[] variant);
     Task<bool> ImportObj_TexturesOnly(GimmickObjectId id, int variant);
     Task<bool> RevertModelToDefault(GimmickObjectId id, int variant);
     bool IsOverriden(GimmickObjectId id, int variant);

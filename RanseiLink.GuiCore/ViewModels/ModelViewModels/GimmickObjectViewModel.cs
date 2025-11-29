@@ -1,16 +1,30 @@
 ﻿using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
-using RanseiLink.Core.Services.Concrete;
-using RanseiLink.GuiCore.Services;
-using RanseiLink.GuiCore.Services.Concrete;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
-public partial class GimmickObjectViewModel(IMapViewerService mapViewerService, INicknameService nicknameService, IMapManager mapManager, IOverrideDataProvider overrideDataProvider) : ViewModelBase
+public partial class GimmickObjectViewModel : ViewModelBase
 {
+    private readonly IMapViewerService _mapViewerService;
+    private readonly INicknameService _nicknameService;
+    private readonly IMapManager _mapManager;
+    private readonly IOverrideDataProvider _overrideDataProvider;
+
+    public GimmickObjectViewModel(IMapViewerService mapViewerService, INicknameService nicknameService, IMapManager mapManager, IOverrideDataProvider overrideDataProvider)
+    {
+        _mapViewerService = mapViewerService;
+        _nicknameService = nicknameService;
+        _mapManager = mapManager;
+        _overrideDataProvider = overrideDataProvider;
+
+
+        ExportObjCommand = new RelayCommand(Export);
+        ImportTexturesCommand = new RelayCommand(ImportTextures);
+        RevertCommand = new RelayCommand(Revert, () => IsOverriden);
+    }
+
     public void SetModel(GimmickObjectId id, GimmickObject model)
     {
         _id = id;
@@ -21,12 +35,12 @@ public partial class GimmickObjectViewModel(IMapViewerService mapViewerService, 
 
     public string Nickname
     {
-        get => nicknameService.GetNickname(nameof(GimmickObjectId), (int)_id);
+        get => _nicknameService.GetNickname(nameof(GimmickObjectId), (int)_id);
         set
         {
             if (Nickname != value)
             {
-                nicknameService.SetNickname(nameof(GimmickObjectId), (int)_id, value);
+                _nicknameService.SetNickname(nameof(GimmickObjectId), (int)_id, value);
                 RaisePropertyChanged();
             }
         }
@@ -38,67 +52,70 @@ public partial class GimmickObjectViewModel(IMapViewerService mapViewerService, 
         for (int i = 0; i < 10; i++)
         {
             var file = Core.Services.Constants.ResolveGimmickModelFilePath(_id, i);
-            var dataFile = overrideDataProvider.GetDataFile(file);
+            var dataFile = _overrideDataProvider.GetDataFile(file);
             if (!File.Exists(dataFile.File))
             {
                 break;
             }
-            Variants.Add(new(mapViewerService, mapManager, _id, i));
+            Variants.Add(new(this, i));
         }
     }
 
     public ObservableCollection<GimmickObjectVariantVm> Variants { get; } = [];
-}
-
-public class GimmickObjectVariantVm : ViewModelBase
-{
-    private readonly IMapViewerService _mapViewerService;
-    private readonly IMapManager _mapManager;
-    private readonly GimmickObjectId _id;
-    private readonly int _variant;
-
-    public GimmickObjectVariantVm(IMapViewerService mapViewerService, IMapManager mapManager, GimmickObjectId id, int variant)
-    {
-        ExportObjCommand = new RelayCommand(Export);
-        ImportTexturesCommand = new RelayCommand(ImportTextures);
-        _mapViewerService = mapViewerService;
-        _mapManager = mapManager;
-        _id = id;
-        _variant = variant;
-        View3DModelCommand = new RelayCommand(View3DModel);
-        RevertCommand = new RelayCommand(Revert, () => IsOverriden);
-    }
 
     private async void Export()
     {
-        await _mapManager.ExportObj(_id, _variant);
+        await _mapManager.ExportObj(_id, Variants.Select(x => x.Variant).ToArray());
     }
 
     private async void ImportTextures()
     {
-        await _mapManager.ImportObj_TexturesOnly(_id, _variant);
+        await _mapManager.ImportObj_TexturesOnly(_id, 0);
         RaisePropertyChanged(nameof(IsOverriden));
         RevertCommand.RaiseCanExecuteChanged();
     }
 
     private async void Revert()
     {
-        await _mapManager.RevertModelToDefault(_id, _variant);
+        await _mapManager.RevertModelToDefault(_id, 0);
         RaisePropertyChanged(nameof(IsOverriden));
         RevertCommand.RaiseCanExecuteChanged();
     }
 
-    public bool IsOverriden => _mapManager.IsOverriden(_id, _variant);
-    public ICommand View3DModelCommand { get; }
+    public bool IsOverriden => _mapManager.IsOverriden(_id, 0);
+
     public ICommand ExportObjCommand { get; }
     public ICommand ImportTexturesCommand { get; }
 
     public RelayCommand RevertCommand { get; }
 
+    public Task View3DModel(int variant)
+    {
+        return _mapViewerService.ShowDialog(_id, variant);
+    }
+}
+
+public class GimmickObjectVariantVm : ViewModelBase
+{
+    private readonly GimmickObjectViewModel _parent;
+    private readonly int _variant;
+
+    public GimmickObjectVariantVm(GimmickObjectViewModel parent, int variant)
+    {
+        _parent = parent;
+        _variant = variant;
+        View3DModelCommand = new RelayCommand(View3DModel);
+        
+    }
+
+    private async void View3DModel()
+    {
+        await _parent.View3DModel(_variant);
+    }
+    
+
+    public ICommand View3DModelCommand { get; }
     public int Variant => _variant;
 
-    public async void View3DModel()
-    {
-        await _mapViewerService.ShowDialog(_id, Variant);
-    }
+    
 }

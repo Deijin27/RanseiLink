@@ -139,7 +139,7 @@ public static class PAC
                     i.ToString().PadLeft(zeroPadLength, '0'));
                 if (detectExt)
                 {
-                    fileDest += FileTypeNumberToExtension((FileTypeNumber)fileTypes[i]);
+                    fileDest = Path.Combine(destinationFolder, "file" + FileTypeNumberToExtension((FileTypeNumber)fileTypes[i]));
                 }
                 byte[] buffer = br.ReadBytes(length);
                 File.WriteAllBytes(fileDest, buffer);

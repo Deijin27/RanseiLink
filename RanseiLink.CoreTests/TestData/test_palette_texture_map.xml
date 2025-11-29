@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<palette_texture_map>
+  <item image="base_fix_00_f_p0.png" texture="base_fix_00" palette="base_fix_f_p0" />
+  <item image="base_fix_01_f_p0.png" texture="base_fix_01" palette="base_fix_f_p0" />
+  <item image="base_fix_02_f_p0.png" texture="base_fix_02" palette="base_fix_f_p0" />
+  <item image="base_fix_03_f_p0.png" texture="base_fix_03" palette="base_fix_f_p0" />
+  <item image="base_fix_00_f_p1.png" texture="base_fix_00" palette="base_fix_f_p1" />
+  <item image="base_fix_01_f_p1.png" texture="base_fix_01" palette="base_fix_f_p1" />
+  <item image="base_fix_02_f_p1.png" texture="base_fix_02" palette="base_fix_f_p1" />
+  <item image="base_fix_03_f_p1.png" texture="base_fix_03" palette="base_fix_f_p1" />
+</palette_texture_map>

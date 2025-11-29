@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using FluentResults;
 using OpenTK.Mathematics;
 using System;
+using System.Linq;
 
 namespace RanseiLink.View3D;
 
@@ -78,6 +79,11 @@ public class SceneRenderer : ISceneRenderer
     {
         _state = null;
         MaterialRegistry.UnloadMaterials();
+        string? fallbackPac = null;
+        if (variant != 0)
+        {
+            fallbackPac = _overrideDataProvider.GetDataFile(GetGimmickPath((int)id, 0)).File;
+        }
         var gimRomPath = GetGimmickPath((int)id, variant);
         var gimPac = _overrideDataProvider.GetDataFile(gimRomPath).File;
         if (!File.Exists(gimPac))
@@ -85,7 +91,7 @@ public class SceneRenderer : ISceneRenderer
             return Result.Fail($"Specified 3D model '{gimRomPath}' does not exist in game data. This is not a bug, it just isn't there.");
         }
 
-        var nsbmd = LoadMaterialsFromPac(gimPac);
+        var nsbmd = LoadMaterialsFromPac(gimPac, fallbackPac);
         List<ModelInfo> models = [];
         models.Add(new ModelInfo(nsbmd));
 
@@ -94,13 +100,29 @@ public class SceneRenderer : ISceneRenderer
         return Result.Ok();
     }
 
-    private NSBMD LoadMaterialsFromPac(string pac)
+    private NSBMD LoadMaterialsFromPac(string pac, string? fallbackPac = null)
     {
         var tempFolder = FileUtil.GetTemporaryDirectory();
+        if (fallbackPac != null)
+        {
+            // unpack the fallback, then files that are overwritten will get stomped over
+            // when we unpack the main one.
+            PAC.Unpack(fallbackPac, tempFolder, true, 4);
+        }
         PAC.Unpack(pac, tempFolder, true, 4);
 
-        var nsbmd = new NSBMD(Path.Combine(tempFolder, "0000.nsbmd"));
-        var nsbtx = new NSBTX(Path.Combine(tempFolder, "0001.nsbtx"));
+        var files = Directory.GetFiles(tempFolder).ToDictionary(
+            x => PAC.ExtensionToFileTypeNumber(Path.GetExtension(x)), x => x);
+        if (!files.TryGetValue(PAC.FileTypeNumber.NSBMD, out var nsbmdPath))
+        {
+            throw new Exception($"No nsbmd found in {pac}");
+        }
+        if (!files.TryGetValue(PAC.FileTypeNumber.NSBTX, out var nsbtxPath))
+        {
+            throw new Exception($"No nsbtx found in {pac}");
+        }
+        var nsbmd = new NSBMD(nsbmdPath);
+        var nsbtx = new NSBTX(nsbtxPath);
 
         Directory.Delete(tempFolder, true);
 

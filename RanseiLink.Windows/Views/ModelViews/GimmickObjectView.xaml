@@ -31,15 +31,17 @@
             <TextBlock Text="Nickname" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0"/>
             <TextBox Text="{Binding Nickname}" Grid.Row="0" Grid.Column="1" Width="180"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <controls:OverrideControl IsOverride="{Binding IsOverriden}"/>
+            <controls:IconButton Margin="5,0" Icon="output" Content="Export" Command="{Binding ExportObjCommand}"/>
+            <controls:IconButton Margin="0,0,5,0" Icon="input" Content="Import (Textures Only)" Command="{Binding ImportTexturesCommand}"/>
+            <controls:IconButton Margin="0,0,5,0" Icon="undo" Content="Revert" Command="{Binding RevertCommand}"/>
+        </StackPanel>
         <ItemsControl ItemsSource="{Binding Variants}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="{x:Type vm:GimmickObjectVariantVm}">
                     <GroupBox Header="{Binding Variant}" HeaderStringFormat="Variant {0}">
                         <StackPanel Orientation="Horizontal">
-                            <controls:OverrideControl IsOverride="{Binding IsOverriden}"/>
-                            <controls:IconButton Margin="5,0" Icon="output" Content="Export" Command="{Binding ExportObjCommand}"/>
-                            <controls:IconButton Margin="0,0,5,0" Icon="input" Content="Import (Textures Only)" Command="{Binding ImportTexturesCommand}"/>
-                            <controls:IconButton Margin="0,0,5,0" Icon="undo" Content="Revert" Command="{Binding RevertCommand}"/>
                             <controls:IconButton Icon="visibility" Content="Preview" Command="{Binding View3DModelCommand}" />
                         </StackPanel>
                     </GroupBox>

@@ -161,9 +161,9 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return true;
     }
 
-    public async Task<bool> ExportObj(GimmickObjectId id, int variant)
+    public async Task<bool> ExportObj(GimmickObjectId id, int[] variants)
     {
-        if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variant))
+        if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variants[0]))
         {
             await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
             return false;
@@ -174,13 +174,21 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
-        var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(dataFile.File));
+        List<string> pacs = [];
+        foreach (var variant in variants)
+        {
+            var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
+            pacs.Add(dataFile.File);
+        }
+        
+        // export folder should not include the variant part of the name
+        // the names are like OBJ23_01
+        var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(pacs[0]).Split('_')[0]);
         exportFolder = FileUtil.MakeUniquePath(exportFolder);
 
         try
         {
-            var result = ModelExtractorGenerator.ExtractModelFromPac(dataFile.File, exportFolder);
+            var result = ModelExtractorGenerator.ExtractModelsFromPacs(pacs, exportFolder);
             if (result.IsFailed)
             {
                 await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Error exporting gimmick as obj", result.ToString(), MessageBoxType.Error));
@@ -196,7 +204,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return true;
     }
 
-    public async Task<bool> ImportObj_TexturesOnly(GimmickObjectId id, int variant)
+    public async Task<bool> ImportObj_TexturesOnly(GimmickObjectId id, int[] variants)
     {
         var objFile = await dialogService.ShowOpenSingleFileDialog(new("Choose an OBJ file", _objFilter));
         if (string.IsNullOrEmpty(objFile))

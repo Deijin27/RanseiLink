@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using DryIoc.ImTools;
+using FluentResults;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Graphics.ExternalFormats;
@@ -6,107 +7,151 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Tga;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
 
+
 public static class ModelExtractorGenerator
 {
-    private const string _patternAnimationFileWithExt = "library_pattern_animations.xml";
+    private static string PatternAnimationFileWithExt(string name) => $"{name}.nspat.xml";
+
     public static Result ExtractModelFromPac(string pac, string destinationFolder)
     {
-        string temp = FileUtil.GetTemporaryDirectory();
-        PAC.Unpack(pac, temp, true, 4);
-        var result = ExtractModelFromFolder(temp, destinationFolder);
-        Directory.Delete(temp, true);
+        return ExtractModelsFromPacs([pac], destinationFolder);
+    }
+
+    public static Result ExtractModelsFromPacs(IList<string> pacs, string destinationFolder)
+    {
+        string sharedTemDir = FileUtil.GetTemporaryDirectory();
+        List<string> sourceDirs = [];
+        for (int i = 0; i < pacs.Count; i++)
+        {
+            string pac = pacs[i];
+            var innerTempDir = Path.Combine(sharedTemDir, i.ToString());
+            PAC.Unpack(pac, innerTempDir, true, 4);
+            sourceDirs.Add(innerTempDir);
+        }
+        
+        var result = ExtractModelsFromFolders(sourceDirs, destinationFolder);
+        Directory.Delete(sharedTemDir, true);
         return result;
     }
 
     public static Result ExtractModelFromFolder(string sourceDir, string destinationFolder)
     {
+        return ExtractModelsFromFolders([sourceDir], destinationFolder);
+    }
+
+    public static Result ExtractModelsFromFolders(IReadOnlyCollection<string> sourceDirs, string destinationFolder)
+    {
         Directory.CreateDirectory(destinationFolder);
 
-        var files = Directory.GetFiles(sourceDir);
-        var filesByType = new Dictionary<PAC.FileTypeNumber, string>();
-        foreach (var file in files)
+        PaletteTextureMap paletteTextureMap = new();
+        NSBTX? btx = null;
+        foreach (var sourceDir in sourceDirs)
         {
-            var fileTypeNum = PAC.ExtensionToFileTypeNumber(Path.GetExtension(file));
-            filesByType[fileTypeNum] = file;
-        }
-
-        if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBTX))
-        {
-            return Result.Fail($"Could not find .nsbtx file in folder: {sourceDir}");
-        }
-        if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBMD))
-        {
-            return Result.Fail($"Could not find .nsbmd file in folder: {sourceDir}");
-        }
-
-        var bmd = new NSBMD(filesByType[PAC.FileTypeNumber.NSBMD]);
-        var btx = new NSBTX(filesByType[PAC.FileTypeNumber.NSBTX]);
-        NSBTP? btp = null;
-        if (filesByType.TryGetValue(PAC.FileTypeNumber.NSBTP, out var btpFile))
-        {
-            btp = new NSBTP(btpFile);
-            ExtractPatternAnim(btp, Path.Combine(destinationFolder, _patternAnimationFileWithExt));
-        }
-
-        foreach (var model in bmd.Model.Models)
-        {
-            var obj = ConvertModels.ModelToObj(model);
-            var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, btx, btp?.PatternAnimations, destinationFolder);
-            obj.MaterialLib = mtl;
-            obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
-        }
-
-        foreach (var type in filesByType)
-        {
-            switch (type.Key)
+            var files = Directory.GetFiles(sourceDir);
+            var filesByType = new Dictionary<PAC.FileTypeNumber, string>();
+            foreach (var file in files)
             {
-                case PAC.FileTypeNumber.NSBMD:
-                case PAC.FileTypeNumber.NSBTX:
-                case PAC.FileTypeNumber.DEFAULT:
-                case PAC.FileTypeNumber.NSBTP:
-                    break;
-                case PAC.FileTypeNumber.NSBCA:
-                case PAC.FileTypeNumber.NSBMA:
-                case PAC.FileTypeNumber.PAT:
-                case PAC.FileTypeNumber.CHAR:
-                case PAC.FileTypeNumber.NSBTA:
-                    File.Copy(type.Value, Path.Combine(destinationFolder, Path.GetFileName(type.Value)), true);
-                    break;
+                var fileTypeNum = PAC.ExtensionToFileTypeNumber(Path.GetExtension(file));
+                filesByType[fileTypeNum] = file;
             }
+
+            if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBMD))
+            {
+                return Result.Fail($"Could not find .nsbmd file in folder: {sourceDir}");
+            }
+
+            var bmd = new NSBMD(filesByType[PAC.FileTypeNumber.NSBMD]);
+
+            if (btx == null)
+            {
+                if (!filesByType.ContainsKey(PAC.FileTypeNumber.NSBTX))
+                {
+                    return Result.Fail($"Could not find .nsbtx file in folder: {sourceDir}");
+                }
+                btx = new NSBTX(filesByType[PAC.FileTypeNumber.NSBTX]);
+            }
+            
+            string? unhandledFileName = null;
+
+            foreach (var model in bmd.Model.Models)
+            {
+                unhandledFileName ??= model.Name;
+            }
+
+            if (unhandledFileName == null)
+            {
+                return Result.Fail("No models are in nsbmd");
+            }
+
+            NSBTP? btp = null;
+            if (filesByType.TryGetValue(PAC.FileTypeNumber.NSBTP, out var btpFile))
+            {
+                btp = new NSBTP(btpFile);
+            }
+
+            foreach (var model in bmd.Model.Models)
+            {
+                var obj = ConvertModels.ModelToObj(model);
+                var mtl = ModelExtractorGenerator.ExtractMaterialAndTextures(model, paletteTextureMap, btp?.PatternAnimations);
+                obj.MaterialLib = mtl;
+                obj.Save(Path.Combine(destinationFolder, model.Name + ".obj"));
+            }
+
+            if (btp != null)
+            {
+                ExtractPatternAnim(btp, paletteTextureMap, Path.Combine(destinationFolder, PatternAnimationFileWithExt(unhandledFileName)));
+            }
+
+            foreach (var type in filesByType)
+            {
+                switch (type.Key)
+                {
+                    case PAC.FileTypeNumber.NSBMD:
+                    case PAC.FileTypeNumber.NSBTX:
+                    case PAC.FileTypeNumber.DEFAULT:
+                    case PAC.FileTypeNumber.NSBTP:
+                        break;
+                    case PAC.FileTypeNumber.NSBCA:
+                    case PAC.FileTypeNumber.NSBMA:
+                    case PAC.FileTypeNumber.PAT:
+                    case PAC.FileTypeNumber.CHAR:
+                    case PAC.FileTypeNumber.NSBTA:
+                        File.Copy(type.Value, Path.Combine(destinationFolder,  $"{unhandledFileName}{Path.GetExtension(type.Value)}"), true);
+                        break;
+                }
+            }
+        }
+        if (btx != null)
+        {
+            var file = Path.Combine(destinationFolder, "palette_texture_map.xml");
+            paletteTextureMap.Save(file);
+            paletteTextureMap.SaveTextures(btx.Texture, destinationFolder);
         }
 
         return Result.Ok();
     }
 
-    public static void ExtractPatternAnim(NSBTP nsbtp, string destinationFile)
+    public static void ExtractPatternAnim(NSBTP nsbtp, PaletteTextureMap map, string destinationFile)
     {
-        var element = nsbtp.PatternAnimations.Serialize();
+        var element = nsbtp.PatternAnimations.Serialize(map);
 
         var doc = new XDocument(element);
 
         doc.Save(destinationFile);
     }
 
-    private static void ExtractTexture(NSTEX nstex, string texName, string palName, string destinationFolder, string texFileNameWithExt)
-    {
-        var tex = nstex.Textures.First(x => x.Name == texName);
-        var pal = nstex.Palettes.First(x => x.Name == palName);
+    
+    
 
-        var convPal = new Palette(pal.PaletteData, true);
-        ImageUtil.SpriteToPng(Path.Combine(destinationFolder, texFileNameWithExt),
-            new SpriteImageInfo(tex.TextureData, convPal, tex.Width, tex.Height,
-              IsTiled: false,
-              Format: tex.Format));
-    }
-
-    public static MTL ExtractMaterialAndTextures(NSMDL.Model model, NSBTX? btx, NSPAT? nspat, string destinationFolder)
+    public static MTL ExtractMaterialAndTextures(NSMDL.Model model, PaletteTextureMap paletteTextureMap, NSPAT? nspat)
     {
         var mtl = new MTL();
-        HashSet<string> doneTextures = new HashSet<string>();
+
         for (int i = 0; i < model.Materials.Count; i++)
         {
             NSMDL.Model.Material material = model.Materials[i];
@@ -120,32 +165,24 @@ public static class ModelExtractorGenerator
             };
             mtl.Materials.Add(m);
 
-            string texFileNameWithExt = material.Texture + ".png";
+            string texFileNameWithExt = paletteTextureMap.GetOutputImage(material.Texture, material.Palette);
             m.AmbientTextureMapFile = texFileNameWithExt;
             m.DiffuseTextureMapFile = texFileNameWithExt;
             m.SpecularTextureMapFile = texFileNameWithExt;
             m.DissolveTextureMapFile = texFileNameWithExt;
 
-            if (btx != null && !doneTextures.Contains(material.Texture))
-            {
-                doneTextures.Add(material.Texture);
-                ExtractTexture(btx.Texture, material.Texture, material.Palette, destinationFolder, texFileNameWithExt);
-            }
+            paletteTextureMap.Add(material.Texture, material.Palette);
         }
 
         // sometimes there is textures in nspat that arent listed in material, export these
-        if (btx != null && nspat != null)
+        if (nspat != null)
         {
             foreach (var kf in nspat.PatternAnimations.SelectMany(x => x.Tracks).SelectMany(x => x.KeyFrames))
             {
-                if (!doneTextures.Contains(kf.Texture))
-                {
-                    doneTextures.Add(kf.Texture);
-                    ExtractTexture(btx.Texture, kf.Texture, kf.Palette, destinationFolder, kf.Texture + ".png");
-                }
+                paletteTextureMap.Add(kf.Texture, kf.Palette);
             }
         }
-        
+
         return mtl;
     }
 
@@ -224,13 +261,25 @@ public static class ModelExtractorGenerator
         return Result.Ok(new TextureLoadResult(Texture: texResult, Palette: palResult));
     }
 
-    public static Result ReplaceTextures(string pac, string replacementDirectory, string outputPac)
+    public static Result ReplaceTextures(IList<string> pacs, string replacementDirectory, string outputPac)
     {
+        /*
+        What we need to do
+        1. Load the nsbtx from the first item
+        2. Load the palette texture map (we can be lazy and trust the user to not modify the file)
+        3. Import the textures using the details of the palette texture map
+        
+        We need to make use of the share palette texture importer.
+        Do we need to make it support "shared pixels, same palette" also? yes I think so
+        */
+
+
         var temp = FileUtil.GetTemporaryDirectory();
         try
         {
             // Locate texture
             var ext = PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBTX);
+            var first = pacs.First();
             PAC.Unpack(pac, temp);
             string? nsbtxFile = null;
             foreach (var file in Directory.GetFiles(temp))
@@ -487,7 +536,8 @@ public static class ModelExtractorGenerator
         var patternAnimation = settings.PatternAnimation;
         if (patternAnimation == null)
         {
-            patternAnimation = Path.Combine(Path.GetDirectoryName(settings.ObjFile)!, _patternAnimationFileWithExt);
+            patternAnimation = Path.Combine(Path.GetDirectoryName(settings.ObjFile)!, 
+                PatternAnimationFileWithExt(Path.GetFileNameWithoutExtension(settings.ObjFile)));
         }
         NSPAT? pat = null;
         if (File.Exists(patternAnimation))
