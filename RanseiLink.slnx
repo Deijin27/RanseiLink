@@ -1,0 +1,35 @@
+<Solution>
+  <Folder Name="/0 - Solution Items/">
+    <File Path="build.cs" />
+    <File Path="DEPENDENCIES.md" />
+    <File Path="gather_plugin_debug.cs" />
+    <File Path="gather_plugin_publish.cs" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/1 - Plugins/">
+    <Project Path="Plugins/ChangelistPlugin/ChangelistPlugin.csproj" />
+    <Project Path="Plugins/DisableEventsPlugin/DisableEventsPlugin.csproj" />
+    <Project Path="Plugins/MassActionPlugin/MassActionPlugin.csproj" />
+    <Project Path="Plugins/PartialTransferPlugin/PartialTransferPlugin.csproj" />
+    <Project Path="Plugins/RandomizerPlugin/RandomizerPlugin.csproj" />
+    <Project Path="Plugins/SoftlockCheckerPlugin/SoftlockCheckerPlugin.csproj" />
+    <Project Path="Plugins/SpriteSheetSplitterPlugin/SpriteSheetSplitterPlugin.csproj" />
+  </Folder>
+  <Folder Name="/2 - App/">
+    <Project Path="RanseiLink.Console/RanseiLink.Console.csproj" />
+    <Project Path="RanseiLink.Core/RanseiLink.Core.csproj" />
+    <Project Path="RanseiLink.Generation/RanseiLink.Generation.csproj" />
+    <Project Path="RanseiLink.GuiCore/RanseiLink.GuiCore.csproj" />
+    <Project Path="RanseiLink.PluginModule/RanseiLink.PluginModule.csproj" />
+    <Project Path="RanseiLink.StandaloneModelViewer/RanseiLink.StandaloneModelViewer.csproj" />
+    <Project Path="RanseiLink.View3D/RanseiLink.View3D.csproj" />
+    <Project Path="RanseiLink.Windows/RanseiLink.Windows.csproj" />
+    <Project Path="RanseiLink.XP/RanseiLink.XP.csproj" />
+  </Folder>
+  <Folder Name="/3 - Tests/">
+    <Project Path="RanseiLink.ConsoleTests/RanseiLink.ConsoleTests.csproj" />
+    <Project Path="RanseiLink.CoreTests/RanseiLink.CoreTests.csproj" />
+    <Project Path="RanseiLink.WindowsTests/RanseiLink.WindowsTests.csproj" />
+  </Folder>
+</Solution>
