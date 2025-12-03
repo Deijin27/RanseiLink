@@ -72,6 +72,20 @@ public class PkmdlGraphicsInfo : GroupedGraphicsInfo
             NSBTX btx0 = new NSBTX(Path.Combine(texUnpacked, fileName));
 
             var palette = new Palette(btx0.Texture.Palettes[0].PaletteData, true);
+            // Deduplicate palette (this was for idea to make palettes not duplicated to make shiny palette swaps easier
+            // unfortunately though it seems there is no duplication, they use all 16 colors with no consideration of 
+            // palette swaps)
+            //var usedColors = new HashSet<Rgba32>();
+            //for (int pl = 0; pl < palette.Count; pl++)
+            //{
+            //    var color = palette[pl];
+            //    if (usedColors.Contains(color))
+            //    {
+            //        color = new Rgba32(color.R + 1, color.G - 1, color.B + 1, color.A);
+            //    }
+            //    usedColors.Add(color);
+            //    palette[pl] = color;
+            //}
 
             // merge individual TEX textures into one for speed
             var texPixelmap = new byte[btx0.Texture.Textures.Sum(x => x.TextureData.Length)];
