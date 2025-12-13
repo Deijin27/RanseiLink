@@ -102,29 +102,48 @@ public class SceneRenderer : ISceneRenderer
 
     private NSBMD LoadMaterialsFromPac(string pac, string? fallbackPac = null)
     {
+        NSBMD nsbmd;
+        NSBTX nsbtx;
         var tempFolder = FileUtil.GetTemporaryDirectory();
-        if (fallbackPac != null)
+        try
         {
-            // unpack the fallback, then files that are overwritten will get stomped over
-            // when we unpack the main one.
-            PAC.Unpack(fallbackPac, tempFolder, true, 4);
-        }
-        PAC.Unpack(pac, tempFolder, true, 4);
+            Dictionary<PAC.FileTypeNumber, string> files = [];
+            
+            if (fallbackPac != null)
+            {
+                var fallbackFolder = Path.Combine(tempFolder, "fallback");
+                // unpack the fallback, then files that are overwritten will get stomped over
+                // when we unpack the main one.
+                PAC.Unpack(fallbackPac, fallbackFolder, true, 4);
+                foreach (var file in Directory.GetFiles(fallbackFolder))
+                {
+                    files[PAC.ExtensionToFileTypeNumber(Path.GetExtension(file))] = file;
+                }
+            }
 
-        var files = Directory.GetFiles(tempFolder).ToDictionary(
-            x => PAC.ExtensionToFileTypeNumber(Path.GetExtension(x)), x => x);
-        if (!files.TryGetValue(PAC.FileTypeNumber.NSBMD, out var nsbmdPath))
-        {
-            throw new Exception($"No nsbmd found in {pac}");
-        }
-        if (!files.TryGetValue(PAC.FileTypeNumber.NSBTX, out var nsbtxPath))
-        {
-            throw new Exception($"No nsbtx found in {pac}");
-        }
-        var nsbmd = new NSBMD(nsbmdPath);
-        var nsbtx = new NSBTX(nsbtxPath);
+            var tempMain = Path.Combine(tempFolder, "main");
+            PAC.Unpack(pac, tempMain, true, 4);
+            foreach (var file in Directory.GetFiles(tempMain))
+            {
+                files[PAC.ExtensionToFileTypeNumber(Path.GetExtension(file))] = file;
+            }
 
-        Directory.Delete(tempFolder, true);
+            if (!files.TryGetValue(PAC.FileTypeNumber.NSBMD, out var nsbmdPath))
+            {
+                throw new Exception($"No nsbmd found in {pac}");
+            }
+            if (!files.TryGetValue(PAC.FileTypeNumber.NSBTX, out var nsbtxPath))
+            {
+                throw new Exception($"No nsbtx found in {pac}");
+            }
+            nsbmd = new NSBMD(nsbmdPath);
+            nsbtx = new NSBTX(nsbtxPath);
+
+        }
+        finally
+        {
+            Directory.Delete(tempFolder, true);
+        }
 
         MaterialRegistry.LoadMaterials(nsbmd, nsbtx);
         return nsbmd;

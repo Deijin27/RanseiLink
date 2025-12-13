@@ -4,6 +4,7 @@ using RanseiLink.Core.Archive;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Graphics;
 using RanseiLink.Core.Maps;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
 using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.GuiCore.Services.Concrete;
@@ -163,7 +164,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
 
     public async Task<bool> ExportObj(GimmickObjectId id, int[] variants)
     {
-        if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variants[0]))
+        if (!overrideDataProvider.IsDefaultsPopulated() && !IsOverriden(id, variants))
         {
             await dialogService.ShowMessageBox(MessageBoxSettings.Ok("Cannot export", "You must populate default graphics."));
             return false;
@@ -180,7 +181,7 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             var dataFile = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
             pacs.Add(dataFile.File);
         }
-        
+
         // export folder should not include the variant part of the name
         // the names are like OBJ23_01
         var exportFolder = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(pacs[0]).Split('_')[0]);
@@ -204,6 +205,8 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return true;
     }
 
+    
+
     public async Task<bool> ImportObj_TexturesOnly(GimmickObjectId id, int[] variants)
     {
         var objFile = await dialogService.ShowOpenSingleFileDialog(new("Choose an OBJ file", _objFilter));
@@ -218,25 +221,27 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
             return false;
         }
 
-        var tempFolder = FileUtil.GetTemporaryDirectory();
-        string tempPac = Path.GetTempFileName();
-
+        var tempOutputPac = Path.GetTempFileName();
+        
         bool success = false;
 
         try
         {
-            var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, variant);
+            // we're overriding textures only, so just need to replace the first variant
+            // variants after that share the textures of the first.
+            var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, variants[0]);
+            var dataFile = overrideDataProvider.GetDataFile(romPath);
             var basePac = overrideDataProvider.GetFallbackDataFile(romPath);
 
             var result = ModelExtractorGenerator.ReplaceTextures(
-                pac: basePac.File,
-                replacementDirectory: imagesFolder, 
-                outputPac: tempPac
+                basePac: basePac.File,
+                replacementDirectory: imagesFolder,
+                outputPac: tempOutputPac
                 );
 
             if (result.IsSuccess)
             {
-                overrideDataProvider.SetOverride(romPath, tempPac);
+                overrideDataProvider.SetOverride(romPath, tempOutputPac);
                 success = true;
             }
             else
@@ -250,21 +255,20 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         }
         finally
         {
-            Directory.Delete(tempFolder, true);
-            File.Delete(tempPac);
+            File.Delete(tempOutputPac);
         }
 
         return success;
     }
 
-    public async Task<bool> RevertModelToDefault(GimmickObjectId id, int variant)
+    public async Task<bool> RevertModelToDefault(GimmickObjectId id, int[] variant)
     {
         if (!IsOverriden(id, variant))
         {
             return false;
         }
         var result = await dialogService.ShowMessageBox(new(
-            $"Revert gimmick 3D Model {id} {variant} to default?",
+            $"Revert gimmick 3D Model {id} to default?",
             "Confirm to permanently delete the internally stored 3D model which overrides the default",
             [
                 new("Cancel", MessageBoxResult.Cancel),
@@ -276,8 +280,11 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         {
             return false;
         }
-        var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, variant);
-        overrideDataProvider.ClearOverride(romPath);
+        foreach (var v in  variant)
+        {
+            var romPath = Core.Services.Constants.ResolveGimmickModelFilePath(id, v);
+            overrideDataProvider.ClearOverride(romPath);
+        }
         return true;
     }
 
@@ -329,10 +336,18 @@ public class MapManager(IAsyncDialogService dialogService, IOverrideDataProvider
         return info.IsOverride;
     }
 
-    public bool IsOverriden(GimmickObjectId id, int variant)
+    public bool IsOverriden(GimmickObjectId id, int[] variant)
     {
-        var info = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, variant));
-        return info.IsOverride;
+        foreach (var v in variant)
+        {
+            var info = overrideDataProvider.GetDataFile(Core.Services.Constants.ResolveGimmickModelFilePath(id, v));
+            if (info.IsOverride)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

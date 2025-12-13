@@ -5,9 +5,13 @@ using System.Xml.Linq;
 
 namespace RanseiLink.Core.Services;
 
+public record PaletteTexturePair(string Image, string Texture, string Palette);
+
 public class PaletteTextureMap
 {
     private readonly List<PaletteTexturePair> _pairs = [];
+
+    public IList<PaletteTexturePair> Pairs => _pairs;
 
     public void Add(string texture, string palette)
     {
@@ -109,5 +113,5 @@ public class PaletteTextureMap
               Format: tex.Format));
     }
 
-    private record PaletteTexturePair(string Image, string Texture, string Palette);
+    
 }

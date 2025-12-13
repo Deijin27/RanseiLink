@@ -1,4 +1,5 @@
-﻿using DryIoc.ImTools;
+﻿using DryIoc;
+using DryIoc.ImTools;
 using FluentResults;
 using RanseiLink.Core.Archive;
 using RanseiLink.Core.Graphics;
@@ -128,13 +129,15 @@ public static class ModelExtractorGenerator
         }
         if (btx != null)
         {
-            var file = Path.Combine(destinationFolder, "palette_texture_map.xml");
+            var file = Path.Combine(destinationFolder, __paletteTextureMap);
             paletteTextureMap.Save(file);
             paletteTextureMap.SaveTextures(btx.Texture, destinationFolder);
         }
 
         return Result.Ok();
     }
+
+    const string __paletteTextureMap = "palette_texture_map.xml";
 
     public static void ExtractPatternAnim(NSBTP nsbtp, PaletteTextureMap map, string destinationFile)
     {
@@ -261,27 +264,39 @@ public static class ModelExtractorGenerator
         return Result.Ok(new TextureLoadResult(Texture: texResult, Palette: palResult));
     }
 
-    public static Result ReplaceTextures(IList<string> pacs, string replacementDirectory, string outputPac)
+    record PairAndImage(
+        PaletteTexturePair Pair, 
+        string ImageAbsolutePath, 
+        Image<Rgba32> Image,
+        Palette Palette
+        );
+
+    public static Result ReplaceTextures(string basePac, string replacementDirectory, string outputPac)
     {
         /*
         What we need to do
         1. Load the nsbtx from the first item
         2. Load the palette texture map (we can be lazy and trust the user to not modify the file)
         3. Import the textures using the details of the palette texture map
-        
-        We need to make use of the share palette texture importer.
-        Do we need to make it support "shared pixels, same palette" also? yes I think so
+
+        We're making the assumption that the textures are "cooperatively distinct" (a term I made up)
+        i.e. if one image had red and blue, but the palette swap changed both to green, we'd be fucked, 
+        but to support that it would be much more complicated code and it give less intuitive errors
+        if the user makes a mistake (the error would be like "palette too long" when the cause is a mistake when doing
+        the palette swap rather than actually using too many colors)
+
+        It would really help if we could use a palette-based image format, then we don't need to load multiple images,
+        but is there even an standard editable image format that can hold multiple palettes to swap between?
         */
-
-
         var temp = FileUtil.GetTemporaryDirectory();
         try
         {
+            
+
             // Locate texture
             var ext = PAC.FileTypeNumberToExtension(PAC.FileTypeNumber.NSBTX);
-            var first = pacs.First();
-            PAC.Unpack(pac, temp);
             string? nsbtxFile = null;
+            PAC.Unpack(basePac, temp);
             foreach (var file in Directory.GetFiles(temp))
             {
                 if (Path.GetExtension(file) == ext)
@@ -297,44 +312,117 @@ public static class ModelExtractorGenerator
 
             var nsbtx = new NSBTX(nsbtxFile);
 
+            // Load the palette texture map
+            var ptmFile = Path.Combine(replacementDirectory, __paletteTextureMap);
+            var ptmResult = PaletteTextureMap.Load(ptmFile);
+            if (ptmResult.IsFailed)
+            {
+                return ptmResult.ToResult();
+            }
+            var paletteTextureMap = ptmResult.Value;
 
             // Replace textures, preserving formats
-            var newNstex = new NSTEX();
+
+            var textureGroups = new Dictionary<string, List<PaletteTexturePair>>();
+            foreach (var pair in paletteTextureMap.Pairs)
+            {
+                if (!textureGroups.TryGetValue(pair.Texture, out var group))
+                {
+                    group = [];
+                    textureGroups[pair.Texture] = group;
+                }
+                group.Add(pair);
+            }
+
+            var textureNameMap = nsbtx.Texture.Textures.ToDictionary(x => x.Name);
+            var paletteNameMap = nsbtx.Texture.Palettes.ToDictionary(x => x.Name);
+
+            var palettes = new Dictionary<string, Palette>();
             foreach (var texture in nsbtx.Texture.Textures)
             {
-                var texExpectedFile = Path.Combine(replacementDirectory, texture.Name + ".png");
-                if (!File.Exists(texExpectedFile))
+                if (!textureGroups.TryGetValue(texture.Name, out var textureGroup))
                 {
-                    return Result.Fail($"Expected texture file not found '{texExpectedFile}'");
+                    return Result.Fail($"Texture {texture.Name} not defined in '{ptmFile}'");
+                }
+                var group = textureGroups[texture.Name];
+
+                byte[]? bytes = null;
+                string? texFirstExpectedFile = null;
+                foreach (var pair in group)
+                {
+                    // Get or create the palette we need
+                    if (!palettes.TryGetValue(pair.Palette, out var palette))
+                    {
+                        palette = new Palette(texture.Format, texture.Color0Transparent); // all the textures that use same palette must be same format
+                        palettes[pair.Palette] = palette;
+                    }
+                    // load the image from file
+                    var texExpectedFile = Path.Combine(replacementDirectory, pair.Image);
+                    if (!File.Exists(texExpectedFile))
+                    {
+                        return Result.Fail($"Expected texture file not found '{texExpectedFile}'");
+                    }
+                    texFirstExpectedFile ??= texFirstExpectedFile;
+                    Image<Rgba32> image;
+                    try
+                    {
+                        image = Image.Load<Rgba32>(texExpectedFile);
+                    }
+                    catch (Exception e)
+                    {
+                        return Result.Fail(e.Message + $" File='{texExpectedFile}'");
+                    }
+                    // validate the image
+                    if (texture.Width != image.Width || texture.Height != image.Height)
+                    {
+                        return Result.Fail($"Image '{texExpectedFile}' is wrong size (expected={texture.Width}x{texture.Height}, actual={image.Width}x{image.Height})");
+                    }
+                    // convert the image to pixels and palette
+                    var thisBytes = ImageUtil.SharedPalettePixelsFromImage(
+                        image: image, 
+                        palette: palette,
+                        tiled: false, 
+                        format: texture.Format, 
+                        color0ToTransparent: texture.Color0Transparent
+                        );
+                    if (bytes == null)
+                    {
+                        // this is the first image nothing to compare to yet
+                        bytes = thisBytes;
+                    }
+                    else
+                    {
+                        // make sure the bytes are identical
+                        // we make assumption of cooperatively distinct palettes
+                        // which may not be the case always, see description at the start for more explanation
+                        if (!bytes.IsEquivalentTo(thisBytes))
+                        {
+                            return Result.Fail($"Images incompatible (they should be palette swaps of the same image) \n'{texFirstExpectedFile}'\n'{texExpectedFile}'");
+                        }
+                    }
                 }
 
-                Image<Rgba32> image;
-                try
-                {
-                    image = Image.Load<Rgba32>(texExpectedFile);
-                }
-                catch (UnknownImageFormatException e)
-                {
-                    return Result.Fail(e.Message + $" File='{texExpectedFile}'");
-                }
+                texture.TextureData = bytes ?? throw new Exception("'bytes' should never be null");
+            }
 
-                if (texture.Width != image.Width || texture.Height != image.Height)
+            // Now we put validate and store the new palette data
+            foreach (var palette in nsbtx.Texture.Palettes)
+            {
+                if (!palettes.TryGetValue(palette.Name, out var pal))
                 {
-                    return Result.Fail($"Image '{texExpectedFile}' is wrong size (expected={texture.Width}x{texture.Height}, actual={image.Width}x{image.Height})");
+                    return Result.Fail($"Palette {palette.Name} not found. Likely because palette texture map was modified.");
                 }
-
-                var res = LoadTextureFromImageInternal(texExpectedFile, image, texture.Format, texture.Color0Transparent);
-                if (res.IsFailed)
+                var outPal = PaletteUtil.From32bitColors(pal);
+                var palSize = palette.PaletteData.Length;
+                if (outPal.Length > palSize)
                 {
-                    return Result.Fail($"Failed to load texture from image: {res}");
+                    return Result.Fail($"Palette of texture {palette.Name} has more than the allowed {palSize} colors");
                 }
-                newNstex.Textures.Add(res.Value.Texture);
-                newNstex.Palettes.Add(res.Value.Palette);
+                // this puts the data in there, as well as makes sure we're padded to the right length
+                Array.Copy(outPal, palette.PaletteData, outPal.Length);
             }
 
             // Save changes
-
-            nsbtx.Texture = newNstex;
 
             nsbtx.WriteTo(nsbtxFile);
 
@@ -348,7 +436,10 @@ public static class ModelExtractorGenerator
         }
         finally
         {
-            Directory.Delete(temp, true);
+            if (Directory.Exists(temp))
+            {
+                Directory.Delete(temp);
+            }
         }
     }
 

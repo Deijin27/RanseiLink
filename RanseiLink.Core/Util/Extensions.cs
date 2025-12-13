@@ -101,4 +101,22 @@ public static class Extensions
         Array.Reverse(chars);
         return new string(chars);
     }
+
+    public static bool IsEquivalentTo(this byte[] array, byte[] otherArray)
+    {
+        if (array.Length != otherArray.Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] != otherArray[i])
+            {
+                return false; 
+            }
+        }
+
+        return true;
+    }
 }

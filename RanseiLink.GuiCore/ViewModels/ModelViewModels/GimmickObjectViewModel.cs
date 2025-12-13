@@ -70,19 +70,19 @@ public partial class GimmickObjectViewModel : ViewModelBase
 
     private async void ImportTextures()
     {
-        await _mapManager.ImportObj_TexturesOnly(_id, 0);
+        await _mapManager.ImportObj_TexturesOnly(_id, Variants.Select(x => x.Variant).ToArray());
         RaisePropertyChanged(nameof(IsOverriden));
         RevertCommand.RaiseCanExecuteChanged();
     }
 
     private async void Revert()
     {
-        await _mapManager.RevertModelToDefault(_id, 0);
+        await _mapManager.RevertModelToDefault(_id, Variants.Select(x => x.Variant).ToArray());
         RaisePropertyChanged(nameof(IsOverriden));
         RevertCommand.RaiseCanExecuteChanged();
     }
 
-    public bool IsOverriden => _mapManager.IsOverriden(_id, 0);
+    public bool IsOverriden => _mapManager.IsOverriden(_id, Variants.Select(x => x.Variant).ToArray());
 
     public ICommand ExportObjCommand { get; }
     public ICommand ImportTexturesCommand { get; }
