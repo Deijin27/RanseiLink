@@ -31,6 +31,7 @@ public partial class GimmickObjectViewModel : ViewModelBase
         _model = model;
         ReloadVariants();
         RaiseAllPropertiesChanged();
+        RevertCommand.RaiseCanExecuteChanged();
     }
 
     public string Nickname

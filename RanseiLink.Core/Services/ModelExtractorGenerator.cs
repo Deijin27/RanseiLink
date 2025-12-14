@@ -362,7 +362,7 @@ public static class ModelExtractorGenerator
                     {
                         return Result.Fail($"Expected texture file not found '{texExpectedFile}'");
                     }
-                    texFirstExpectedFile ??= texFirstExpectedFile;
+                    texFirstExpectedFile ??= texExpectedFile;
                     Image<Rgba32> image;
                     try
                     {
@@ -438,7 +438,7 @@ public static class ModelExtractorGenerator
         {
             if (Directory.Exists(temp))
             {
-                Directory.Delete(temp);
+                Directory.Delete(temp, true);
             }
         }
     }

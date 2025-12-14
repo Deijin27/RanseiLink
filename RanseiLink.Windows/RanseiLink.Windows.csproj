@@ -9,7 +9,7 @@
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <Authors>Deijin</Authors>
     <VersionPrefix>7.0</VersionPrefix>
-	<VersionSuffix>beta1</VersionSuffix>
+	<VersionSuffix></VersionSuffix>
 	<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <ApplicationIcon>RanseiLink.ico</ApplicationIcon>
   </PropertyGroup>
