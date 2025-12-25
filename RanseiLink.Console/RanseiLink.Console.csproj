@@ -5,7 +5,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <VersionPrefix>7.0</VersionPrefix>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-	<VersionSuffix>beta1</VersionSuffix>
+	<VersionSuffix></VersionSuffix>
 	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
