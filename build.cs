@@ -23,7 +23,7 @@ var _rootDirectory = Directory.GetCurrentDirectory();
 var _windowsCsproj = Path.Combine(_rootDirectory, "RanseiLink.Windows", "RanseiLink.Windows.csproj");
 var _consoleCsproj = Path.Combine(_rootDirectory, "RanseiLink.Console", "RanseiLink.Console.csproj");
 var _avaloniaCsproj = Path.Combine(_rootDirectory, "RanseiLink.XP", "RanseiLink.XP.csproj");
-var _ranseiLinkSln = Path.Combine(_rootDirectory, "RanseiLink.sln");
+var _ranseiLinkSln = Path.Combine(_rootDirectory, "RanseiLink.slnx");
 var _artifactsDirectory = Path.Combine(_rootDirectory, "artifacts");
 var _buildDataDirectory = Path.Combine(_rootDirectory, "build_data");
 
