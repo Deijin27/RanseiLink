@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Reflection;
+using System.Text;
 using DryIoc;
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
@@ -10,6 +11,7 @@ internal class Program
 {
     public static async Task<int> Main()
     {
+        System.Console.OutputEncoding = Encoding.UTF8;
         // load services
         var builder = new Container();
         builder.RegisterModule(new CoreServiceModule());
