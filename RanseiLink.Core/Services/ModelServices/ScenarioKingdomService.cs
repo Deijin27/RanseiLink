@@ -25,3 +25,4 @@ public class ScenarioKingdomService : BaseScenarioModelService<ScenarioKingdom>,
         return ((ScenarioId)id).ToString();
     }
 }
+

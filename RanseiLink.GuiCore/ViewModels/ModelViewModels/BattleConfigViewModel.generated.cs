@@ -24,50 +24,36 @@ public partial class BattleConfigViewModel : ViewModelBase
         set => SetProperty(_model.Map, value, v => _model.Map = v);
     }
 
-    public int MapVariant_Max => 31;
+    public int MapVariant_Max => 7;
     public int MapVariant
     {
         get => _model.MapVariant;
         set => SetProperty(_model.MapVariant, value, v => _model.MapVariant = v);
     }
 
-    public int Minimap_Max => 31;
-    public int Minimap
+    public Rgb15 UpperSkyColor
     {
-        get => _model.Minimap;
-        set => SetProperty(_model.Minimap, value, v => _model.Minimap = v);
+        get => _model.UpperSkyColor;
+        set => SetProperty(_model.UpperSkyColor, value, v => _model.UpperSkyColor = v);
     }
 
-    public int MinimapVariant_Max => 7;
-    public int MinimapVariant
+    public Rgb15 MiddleSkyColor
     {
-        get => _model.MinimapVariant;
-        set => SetProperty(_model.MinimapVariant, value, v => _model.MinimapVariant = v);
+        get => _model.MiddleSkyColor;
+        set => SetProperty(_model.MiddleSkyColor, value, v => _model.MiddleSkyColor = v);
     }
 
-    public int Unknown_Max => 31;
-    public int Unknown
+    public Rgb15 LowerSkyColor
     {
-        get => _model.Unknown;
-        set => SetProperty(_model.Unknown, value, v => _model.Unknown = v);
+        get => _model.LowerSkyColor;
+        set => SetProperty(_model.LowerSkyColor, value, v => _model.LowerSkyColor = v);
     }
 
-    public Rgb15 UpperAtmosphereColor
+    public int Unknown_2_0_3_Max => 7;
+    public int Unknown_2_0_3
     {
-        get => _model.UpperAtmosphereColor;
-        set => SetProperty(_model.UpperAtmosphereColor, value, v => _model.UpperAtmosphereColor = v);
-    }
-
-    public Rgb15 MiddleAtmosphereColor
-    {
-        get => _model.MiddleAtmosphereColor;
-        set => SetProperty(_model.MiddleAtmosphereColor, value, v => _model.MiddleAtmosphereColor = v);
-    }
-
-    public Rgb15 LowerAtmosphereColor
-    {
-        get => _model.LowerAtmosphereColor;
-        set => SetProperty(_model.LowerAtmosphereColor, value, v => _model.LowerAtmosphereColor = v);
+        get => _model.Unknown_2_0_3;
+        set => SetProperty(_model.Unknown_2_0_3, value, v => _model.Unknown_2_0_3 = v);
     }
 
     public BattleVictoryConditionFlags VictoryCondition
@@ -80,6 +66,20 @@ public partial class BattleConfigViewModel : ViewModelBase
     {
         get => _model.DefeatCondition;
         set => SetProperty(_model.DefeatCondition, value, v => _model.DefeatCondition = v);
+    }
+
+    public int Minimap_Max => 31;
+    public int Minimap
+    {
+        get => _model.Minimap;
+        set => SetProperty(_model.Minimap, value, v => _model.Minimap = v);
+    }
+
+    public int Unknown_2_18_6_Max => 63;
+    public int Unknown_2_18_6
+    {
+        get => _model.Unknown_2_18_6;
+        set => SetProperty(_model.Unknown_2_18_6, value, v => _model.Unknown_2_18_6 = v);
     }
 
     public int NumberOfTurns_Max => 31;
@@ -147,18 +147,6 @@ public partial class BattleConfigViewModel : ViewModelBase
     {
         get => (int)_model.Treasure10;
         set => SetProperty(_model.Treasure10, (ItemId)value, v => _model.Treasure10 = v);
-    }
-
-    public int Treasure11
-    {
-        get => (int)_model.Treasure11;
-        set => SetProperty(_model.Treasure11, (ItemId)value, v => _model.Treasure11 = v);
-    }
-
-    public int Treasure12
-    {
-        get => (int)_model.Treasure12;
-        set => SetProperty(_model.Treasure12, (ItemId)value, v => _model.Treasure12 = v);
     }
 
     public List<SelectorComboBoxItem> ItemItems { get; }

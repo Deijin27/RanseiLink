@@ -42,7 +42,7 @@ public static class EnumProvider
     public static ItemEffectId[] ItemEffectItems { get; } = EnumUtil.GetValues<ItemEffectId>().ToArray();
     public static ItemId[] ItemItems { get; } = EnumUtil.GetValues<ItemId>().ToArray();
     public static MoveMovementId[] MoveMovementItems { get; } = EnumUtil.GetValues<MoveMovementId>().ToArray();
-    public static MoveUnknownOptionId[] MoveUnknownOptionItems { get; } = EnumUtil.GetValues<MoveUnknownOptionId>().ToArray();
+    public static MoveInteractionId[] MoveInteractionItems { get; } = EnumUtil.GetValues<MoveInteractionId>().ToArray();
     public static MapBounds[] MapBoundsItems { get; } = EnumUtil.GetValues<MapBounds>().ToArray();
     public static OrientationAlt[] OrientationAltItems { get; } = EnumUtil.GetValues<OrientationAlt>().ToArray();
     public static PurchaseMethodId[] PurchaseMethodItems { get; } = EnumUtil.GetValues<PurchaseMethodId>().ToArray();

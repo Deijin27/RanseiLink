@@ -30,7 +30,7 @@ public class BaseWarriorTests
         a.Charisma.Should().Be(75);
         a.Capacity.Should().Be(5);
         a.RankUp.Should().Be(WarriorId.Nene_2);
-        a.RankUpCondition1.Should().Be(RankUpConditionId.Unknown);
+        a.RankUpCondition1.Should().Be(RankUpConditionId.Pokemon);
         a.RankUpCondition2.Should().Be(RankUpConditionId.MonotypeGallery);
         ((TypeId)a.Quantity1ForRankUpCondition).Should().Be(TypeId.Poison);
         a.Quantity2ForRankUpCondition.Should().Be(511);

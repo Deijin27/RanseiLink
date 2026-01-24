@@ -43,7 +43,7 @@ public static partial class RenderExtensions
     {
         switch (id)
         {
-            case RankUpConditionId.Unknown:
+            case RankUpConditionId.Pokemon:
             case RankUpConditionId.NoCondition:
             case RankUpConditionId.Unused_1:
             case RankUpConditionId.Unused_2:
@@ -113,7 +113,7 @@ public static partial class RenderExtensions
             case MoveEffectId.Unused_18:
             case MoveEffectId.Unused_19:
             
-            case MoveEffectId.Unused_1:
+            case MoveEffectId.GuaranteedCriticalHit:
                 return $"({value}?) ";
 
             case MoveEffectId.TargetInvincibleForOneTurn:

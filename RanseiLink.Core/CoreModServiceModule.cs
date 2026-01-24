@@ -35,6 +35,7 @@ public class CoreModServiceModule : IModule
         builder.Register<IScenarioBuildingService, ScenarioBuildingService>(Reuse.Singleton);
         builder.Register<IScenarioPokemonService, ScenarioPokemonService>(Reuse.Singleton);
         builder.Register<IScenarioWarriorService, ScenarioWarriorService>(Reuse.Singleton);
+        builder.Register<IScenarioArmyService, ScenarioArmyService>(Reuse.Singleton);
         builder.Register<IWarriorSkillService, WarriorSkillService>(Reuse.Singleton);
 
         builder.Register<IStrengthService, StrengthService>(Reuse.Singleton);

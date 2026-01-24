@@ -260,22 +260,22 @@ public partial class Building : BaseDataWindow, INamedModel
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return (KingdomId)GetByte(25);
+                return (KingdomId)GetInt(6, 8, 5);
             }
             else
             {
-                return (KingdomId)GetByte(27);
+                return (KingdomId)GetInt(6, 24, 5);
             }
         }
         set
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                SetByte(25, (byte)value);
+                SetInt(6, 8, 5, (int)value);
             }
             else
             {
-                SetByte(27, (byte)value);
+                SetInt(6, 24, 5, (int)value);
             }
         }
     }

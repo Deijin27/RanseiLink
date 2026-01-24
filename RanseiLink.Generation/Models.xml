@@ -2,10 +2,10 @@
     <Model Name="Ability" DataLength="0x14" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="127" DefaultId="128"/>
         <StringProperty Name="Name" Index="0" MaxLength="14" />
-        <Property Index="3, 24, 2" Name="Effect1Amount" />
+        <Property Index="3, 24, 8" Name="Effect1_Quantity" />
         <Property Index="4,  0, 5" Name="Effect1" Type="AbilityEffectId" />
         <Property Index="4,  5, 5" Name="Effect2" Type="AbilityEffectId" />
-        <Property Index="4, 10, 2" Name="Effect2Amount" />
+        <Property Index="4, 10, 8" Name="Effect2_Quantity" />
         <MsgProperty Name="Description" Id="AbilityDescription"/>
         <MsgProperty Name="HotSpringsDescription" Id="AbilityHotSpringsDescription"/>
         <MsgProperty Name="HotSpringsDescription2" Id="AbilityHotSpringsDescription2"/>
@@ -16,36 +16,40 @@
         <Property Index="0,  8, 8" Name="SpeakerId" Type="SpeakerId" />
         <Property Index="0, 16, 1" Name="Gender" Type="GenderId" />
         <Property Index="0, 17, 8" Name="Name" Max="209"/>
+        <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
         <Property Index="1,  0, 5" Name="Speciality1" Type="TypeId" />
         <Property Index="1,  5, 5" Name="Speciality2" Type="TypeId" />
         <Property Index="1, 10, 5" Name="Weakness1" Type="TypeId" />
         <Property Index="1, 15, 5" Name="Weakness2" Type="TypeId" />
+        <Property Index="1, 20, 9" Name="RankUpCondition1_Quantity1"/>
         <Property Index="2,  0, 7" Name="Skill" Type="WarriorSkillId" />
+        <Property Index="2,  7, 3" Name="Unknown_2_7_3" />
+        <Property Index="2, 10, 3" Name="Unknown_2_10_3" />
+        <Property Index="2, 13, 2" Name="Unknown_2_13_2" />
+        <Property Index="2, 15, 9" Name="RankUpWarrior" Type="WarriorId"/>
+        <Property Index="2, 24, 4" Name="RankUpCondition1" Type="RankUpConditionId" />
+        <Property Index="2, 28, 4" Name="RankUpCondition2" Type="RankUpConditionId" />
         <Property Index="3,  0, 7" Name="Power" />
         <Property Index="3,  7, 7" Name="Wisdom" />
         <Property Index="3, 14, 7" Name="Charisma" />
         <Property Index="3, 21, 4" Name="Capacity" Max="8"/>
-        <Property Index="2, 24, 4" Name="RankUpCondition1" Type="RankUpConditionId" />
-        <Property Index="2, 28, 4" Name="RankUpCondition2" Type="RankUpConditionId" />
-        <Property Index="4,  9, 9" Name="Quantity1ForRankUpCondition"/>
-        <Property Index="4, 18, 9" Name="Quantity2ForRankUpCondition"/>
-        <Property Index="2, 15, 9" Name="RankUp" Type="WarriorId"/>
-        <Property Index="1, 20, 9" Name="RankUpPokemon1" Type="PokemonId"/>
-        <Property Index="4,  0, 9" Name="RankUpPokemon2" Type="PokemonId"/>
-        <Property Index="0, 25, 7" Name="RankUpLink" Max="100"/>
+        <Property Index="3, 25, 7" Name="Unknown_3_25_7" />
+        <Property Index="4,  0, 9" Name="RankUpCondition1_Quantity2"/>
+        <Property Index="4,  9, 9" Name="RankUpCondition2_Quantity1"/>
+        <Property Index="4, 18, 9" Name="RankUpCondition2_Quantity2"/>
     </Model>
     <Model Name="BattleConfig" DataLength="0x18" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="46" DefaultId="47"/>
         <Property Index="0,  0,  6" Name="Map" />
-        <Property Index="0,  6,  5" Name="MapVariant" />
+        <Property Index="0,  6,  3" Name="MapVariant" />
+        <Property Index="0, 11, 15" Name="UpperSkyColor" Type="Rgb15" />
+        <Property Index="1,  0, 15" Name="MiddleSkyColor" Type="Rgb15" />
+        <Property Index="1, 15, 15" Name="LowerSkyColor" Type="Rgb15" />
+        <Property Index="2,  0,  3" Name="Unknown_2_0_3" />
+        <Property Index="2,  3,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
+        <Property Index="2,  8,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
         <Property Index="2, 13,  5" Name="Minimap" />
-        <Property Index="2, 10,  3" Name="MinimapVariant" />
-        <Property Index="2, 19,  5" Name="Unknown" />
-        <Property Index="0, 11, 15" Name="UpperAtmosphereColor" Type="Rgb15" />
-        <Property Index="1,  0, 15" Name="MiddleAtmosphereColor" Type="Rgb15" />
-        <Property Index="1, 15, 15" Name="LowerAtmosphereColor" Type="Rgb15" />
-        <Property Index="2,  0,  5" Name="VictoryCondition" Type="BattleVictoryConditionFlags" />
-        <Property Index="2,  5,  5" Name="DefeatCondition" Type="BattleVictoryConditionFlags" />
+        <Property Index="2, 18,  6" Name="Unknown_2_18_6" />
         <Property Index="2, 24,  5" Name="NumberOfTurns" />
         <ByteProperty Index="12" Name="Treasure1" Type="ItemId"/>
         <ByteProperty Index="13" Name="Treasure2" Type="ItemId"/>
@@ -57,8 +61,6 @@
         <ByteProperty Index="19" Name="Treasure8" Type="ItemId"/>
         <ByteProperty Index="20" Name="Treasure9" Type="ItemId"/>
         <ByteProperty Index="21" Name="Treasure10" Type="ItemId"/>
-        <ByteProperty Index="22" Name="Treasure11" Type="ItemId"/>
-        <ByteProperty Index="23" Name="Treasure12" Type="ItemId"/>
     </Model>
     <Model Name="Building" DataLength="0x24" DataLength_VPYJ="0x20" Command="true" Render="true" Cultural="true" Model="true" ViewModel="true">
         <Service MaxId="118" DefaultId="119"/>
@@ -71,7 +73,7 @@
         <ByteProperty Index="24" Index_VPYJ="22" Name="Building6" Type="BuildingId"/>
         <ByteProperty Index="25" Index_VPYJ="23" Name="Building7" Type="BuildingId"/>
         <ByteProperty Index="26" Index_VPYJ="24" Name="Building8" Type="BuildingId"/>
-        <ByteProperty Index="27" Index_VPYJ="25" Name="Kingdom" Type="KingdomId"/>
+        <Property Index="6, 24, 5" Index_VPYJ="6, 8, 5" Name="Kingdom" Type="KingdomId"/>
         <Property Index="7,  0, 7" Index_VPYJ="6, 16, 7" Name="BattleConfig1" Type="BattleConfigId"/>
         <Property Index="7,  7, 7" Index_VPYJ="6, 23, 7" Name="BattleConfig2" Type="BattleConfigId"/>
         <Property Index="8,  0, 7" Index_VPYJ="7,  0, 7" Name="BattleConfig3" Type="BattleConfigId"/>
@@ -82,13 +84,13 @@
     </Model>
     <Model Name="Episode" DataLength="0x8" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="37" DefaultId="511"/>
-        <Property Index="0,  0, 9" Name="Order" />
+        <Property Index="0,  0, 9" Name="ScenarioWarrior" />
         <Property Index="0,  9, 4" Name="Scenario" Type="ScenarioId" />
+        <FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
         <Property Index="1,  0, 6" Name="UnlockCondition" Type="EpisodeId" />
         <Property Index="1,  6, 3" Name="Difficulty" Max="4"/>
-        <Property Index="1, 26, 4" Name="ClearCondition" Type="EpisodeClearConditionId" />
-        <FlagProperty Index="0, 13" Name="IsStartKingdom" IdType="KingdomId" />
         <FlagProperty Index="1, 9" Name="IsUnlockedKingdom" IdType="KingdomId" />
+        <Property Index="1, 26, 3" Name="ClearCondition" Type="EpisodeClearConditionId" />
         <MsgProperty Name="Name" Id="EpisodeName"/>
         <MsgProperty Name="Description" Id="EpisodeDescription"/>
     </Model>
@@ -100,15 +102,14 @@
     <Model Name="Gimmick" DataLength="0x28" DataLength_VPYJ="0x24" Command="true" Render="true" Model="true" ViewModel="true" Cultural="true">
         <Service MaxId="147" DefaultId="148"/>
         <StringProperty Name="Name" Index="0" MaxLength="16" MaxLength_VPYJ="14"/>
-        <ByteProperty Index="17" Index_VPYJ="15" Name="Image1" Description="Top screen square image when you hover over the object"/>
-        <Property Index="5,  0, 5" Index_VPYJ="4,  0, 5" Name="AttackType" Type="TypeId" Description="If attack damage caused by this, this is the type of the attack"/>
-        <Property Index="5,  5, 5" Index_VPYJ="4,  5, 5" Name="DestroyType" Type="TypeId" Description="The type of attack that can destroy this gimmick"/>
+        <Property Index="4,  8, 8" Index_VPYJ="3, 24, 8" Name="Image1" />
+        <Property Index="5,  0, 5" Index_VPYJ="4,  0, 5" Name="AttackType" Type="TypeId" />
+        <Property Index="5,  5, 5" Index_VPYJ="4,  5, 5" Name="DestroyType" Type="TypeId" />
         <Property Index="5, 10, 1" Index_VPYJ="4, 10, 1" Name="IsLog" Type="bool"/>
-        <Property Index="5, 11, 7" Index_VPYJ="4, 11, 7" Name="State1Sprite" Type="GimmickObjectId" Description="Sprite shown on bottom screen in battle"/>
+        <Property Index="5, 11, 7" Index_VPYJ="4, 11, 7" Name="State1Sprite" Type="GimmickObjectId"/>
         <Property Index="5, 18, 7" Index_VPYJ="4, 18, 7" Name="State2Sprite" Type="GimmickObjectId"/>
         <Property Index="5, 25, 7" Index_VPYJ="4, 25, 7" Name="Effect" Type="MoveEffectId"/>
-      
-        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="AttackPower" Description="Seems like a multipurpose quantity. For some, this is probably attack power, others something else"/>
+        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="Effect_Quantity" />
         <Property Index="6,  8, 8" Index_VPYJ="5,  8, 8" Name="Anim1" />
         <Property Index="6, 16, 8" Index_VPYJ="5, 16, 8" Name="Anim2" />
         <Property Index="6, 24, 8" Index_VPYJ="5, 24, 8" Name="GimmickRef1" Type="GimmickId"/>
@@ -116,35 +117,54 @@
         <Property Index="7,  5, 5" Index_VPYJ="6,  5, 5" Name="Unknown_7_5_5" />
         <Property Index="7, 10, 5" Index_VPYJ="6, 10, 5" Name="Unknown_7_10_5" />
         <Property Index="7, 15, 5" Index_VPYJ="6, 15, 5" Name="Unknown_7_15_5" />
-        <Property Index="7, 20, 12" Index_VPYJ="6, 20, 12" Name="Unknown_7_20_12" />
+        <Property Index="7, 20, 1" Index_VPYJ="6, 20, 1" Name="Unknown_7_20_1" />
+        <Property Index="7, 21, 1" Index_VPYJ="6, 21, 1" Name="Unknown_7_21_1" />
+        <Property Index="7, 22, 5" Index_VPYJ="6, 22, 5" Name="Hitbox" Type="GimmickRangeId" />
+        <Property Index="7, 27, 4" Index_VPYJ="6, 27, 4" Name="Unknown_7_27_4" />
+        <Property Index="7, 31, 1" Index_VPYJ="6, 31, 1" Name="Unknown_7_31_1" />
         <Property Index="8,  0, 8" Index_VPYJ="7,  0, 8" Name="Unknown_8_0_8" />
         <Property Index="8,  8, 8" Index_VPYJ="7,  8, 8" Name="Unknown_8_8_8" />
-        <Property Index="8,  16, 3" Index_VPYJ="7, 16, 3" Name="Unknown_8_16_3" />
-        <Property Index="8,  24, 3" Index_VPYJ="7, 24, 3" Name="Unknown_8_24_3" />
+        <Property Index="8, 16, 3" Index_VPYJ="7, 16, 3" Name="Unknown_8_16_3" />
+        <Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
+        <Property Index="8, 24, 2" Index_VPYJ="7, 24, 2" Name="Unknown_8_24_2" />
+        <Property Index="8, 26, 1" Index_VPYJ="7, 26, 1" Name="Unknown_8_26_1" />
         <Property Index="9,  0, 4" Index_VPYJ="8,  0, 4" Name="Unknown_9_0_4" />
         <Property Index="9,  4, 8" Index_VPYJ="8,  4, 8" Name="GimmickRef2" Type="GimmickId"/>
         <Property Index="9, 12, 8" Index_VPYJ="8, 12, 8" Name="Image2" />
         <Property Index="9, 20, 8" Index_VPYJ="8, 20, 8" Name="Image3" />
-        
-        <Property Index="8, 19, 5" Index_VPYJ="7, 19, 5" Name="Range" Type="GimmickRangeId"/>
     </Model>
     <Model Name="GimmickObject" DataLength="0x4" Model="true" ViewModel="true">
         <Service MaxId="99"/>
+        <Property Index="0,  0, 5" Name="Unknown_0_0_5" />
+        <Property Index="0,  5, 1" Name="Unknown_0_5_1" />
+        <Property Index="0,  6, 2" Name="Unknown_0_6_2" />
+        <Property Index="0,  8, 3" Name="Unknown_0_8_3" />
+        <Property Index="0, 11, 2" Name="Unknown_0_11_2" />
+        <Property Index="0, 13, 3" Name="Unknown_0_13_3" />
+        <Property Index="0, 16, 2" Name="Unknown_0_16_2" />
+        <Property Index="0, 18, 2" Name="Unknown_0_18_2" />
+        <Property Index="0, 20, 5" Name="Unknown_0_20_5" />
+        <Property Index="0, 25, 2" Name="Unknown_0_25_2" />
     </Model>
     <Model Name="Item" DataLength="0x24" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="133" DefaultId="134"/>
         <StringProperty Name="Name" Index="0" MaxLength="20"/>
+        <Property Index="5,  8, 1" Name="Unknown_5_8_1" />
+        <Property Index="5,  9, 5" Name="Unknown_5_9_5" />
+        <Property Index="5, 14, 2" Name="Unknown_5_14_2" />
         <Property Index="5, 16, 3" Name="PurchaseMethod" Type="PurchaseMethodId" />
         <Property Index="5, 19, 2" Name="Category" Type="ItemCategoryId" />
         <Property Index="5, 21, 5" Name="Effect" Type="ItemEffectId" />
-        <Property Index="5, 26, 3" Name="EffectDuration" />
+        <Property Index="5, 26, 5" Name="EffectDuration" />
+        <Property Index="5, 31, 1" Name="Unknown_5_31_1" />
         <Property Index="6,  0, 9" Name="CraftingIngredient1" Type="ItemId" />
         <Property Index="6,  9, 7" Name="CraftingIngredient1Amount" />
         <Property Index="6, 16, 9" Name="CraftingIngredient2" Type="ItemId" />
         <Property Index="6, 25, 7" Name="CraftingIngredient2Amount" />
         <Property Index="7,  0, 9" Name="UnknownItem" Type="ItemId" />
         <Property Index="7,  9, 9" Name="ShopPriceMultiplier" Description="Max shop price / 100" />
-        <Property Index="7, 18, 9" Name="QuantityForEffect" />
+        <Property Index="7, 18, 9" Name="Effect_Quantity" />
+        <Property Index="7, 18, 9" Name="EffectModifier" />
         <FlagProperty Index="8, 0" Name="Purchasable" IdType="KingdomId" />
         <MsgProperty Name="Description" Id="ItemDescription"/>
         <MsgProperty Name="Description2" Id="ItemDescription2"/>
@@ -152,12 +172,12 @@
     <Model Name="Kingdom" DataLength="0x18" Command="true" DataLength_VPYJ="0x14" Render="true" Model="true" ViewModel="true" Cultural ="true">
         <Service MaxId="16" DefaultId="17"/>
         <StringProperty Name="Name" Index="0" MaxLength="10" MaxLength_VPYJ="8"/>
-        <Property Index="2, 24, 3" Index_VPYJ="2,  8, 3" Name="Unknown1"/>
-        <Property Index="2, 27, 5" Index_VPYJ="2, 11, 5" Name="MapConnection0" Type="KingdomId"/>
-        <Property Index="3, 16, 5" Index_VPYJ="2,  0, 5" Name="MapConnection1" Type="KingdomId"/>
-        <Property Index="3, 21, 5" Index_VPYJ="2,  5, 5" Name="MapConnection2" Type="KingdomId"/>
-        <Property Index="3, 26, 5" Index_VPYJ="2, 10, 5" Name="MapConnection3" Type="KingdomId"/>
-        <Property Index="4,  0, 5" Index_VPYJ="3,  0, 5" Name="MapConnection4" Type="KingdomId"/>
+        <Property Index="2, 24, 3" Index_VPYJ="2,  8, 3" Name="Unknown_2_24_3"/>
+        <Property Index="3, 0, 5" Index_VPYJ="2,  0, 5" Name="MapConnection0" Type="KingdomId"/>
+        <Property Index="3, 5, 5" Index_VPYJ="2,  5, 5" Name="MapConnection1" Type="KingdomId"/>
+        <Property Index="3, 10, 5" Index_VPYJ="2, 10, 5" Name="MapConnection2" Type="KingdomId"/>
+        <Property Index="2, 27, 5" Index_VPYJ="2, 11, 5" Name="MapConnection4" Type="KingdomId"/>
+        <Property Index="4,  0, 5" Index_VPYJ="3,  0, 5" Name="MapConnection3" Type="KingdomId"/>
         <Property Index="4,  5, 5" Index_VPYJ="3,  5, 5" Name="MapConnection5" Type="KingdomId"/>
         <Property Index="4, 10, 5" Index_VPYJ="3, 10, 5" Name="MapConnection6" Type="KingdomId"/>
         <Property Index="4, 15, 5" Index_VPYJ="3, 15, 5" Name="MapConnection7" Type="KingdomId"/>
@@ -169,34 +189,51 @@
         <Property Index="5, 15, 7" Index_VPYJ="4, 15, 7" Name="BattleConfig" Type="BattleConfigId"/>
         <Property Index="5, 22, 8" Index_VPYJ="4, 22, 8" Name="SwarmPokemon" Type="PokemonId"/>
     </Model>
+    <Model Name="MapPoint" DataLength="0x28" Command="true" Render="true" Model="true" ViewModel="true">
+        <Service MaxId="95" DefaultId="96"/>
+        <Property Index="0,  0, 8" Name="Gimmick" Type="GimmickId" />
+        <Property Index="0,  8, 9" Name="Cell" />
+        <Property Index="0, 17, 2" Name="Unknown_0_17_2" />
+        <Property Index="0, 19, 1" Name="Unknown_0_19_1" />
+        <Property Index="0, 20, 1" Name="Unknown_0_20_1" />
+        <Property Index="0, 21, 5" Name="Unknown_0_21_5" />
+        <Property Index="0, 26, 6" Name="Unknown_0_26_6" />
+        <Property Index="1,  0, 8" Name="Unknown_1_0_8" />
+        <Property Index="1,  8, 9" Name="Unknown_1_8_9" />
+        <Property Index="1, 17, 7" Name="Unknown_1_17_7" />
+        <Property Index="1, 24, 3" Name="Unknown_1_24_3" />
+        <Property Index="1, 27, 4" Name="Unknown_1_27_4" />
+        <Property Index="1, 31, 1" Name="Unknown_1_31_1" />
+    </Model>
     <Model Name="MaxLink" Id="WarriorId" Command="true">
         <Service MaxId="251"/>
     </Model>
     <Model Name="Move" DataLength="0x24" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="142"/>
         <StringProperty Name="Name" Index="0" MaxLength="14"/>
-        <Property Index="3, 24, 8" Name="MovementFlags" Type="MoveMovementFlags" />
+        <Property Index="3, 24, 5" Name="MovementFlags" Type="MoveMovementFlags" />
         <Property Index="4,  0, 5" Name="Type" Type="TypeId" />
         <Property Index="4,  5, 8" Name="Power" />
         <Property Index="4, 13, 7" Name="Effect1" Type="MoveEffectId" />
-        <Property Index="4, 20, 7" Name="Effect1Chance" />
+        <Property Index="4, 20, 7" Name="Effect1_Quantity" />
         <Property Index="4, 27, 5" Name="Range" Type="MoveRangeId" />
-        <Property Index="6,  0, 7" Name="Effect2" Type="MoveEffectId" />
-        <Property Index="6,  7, 7" Name="Effect2Chance" />
-        <Property Index="6, 14, 7" Name="Effect3" Type="MoveEffectId" />
-        <Property Index="6, 21, 7" Name="Effect3Chance" />
-        <Property Index="7,  0, 7" Name="Effect4" Type="MoveEffectId" />
-        <Property Index="7,  7, 7" Name="Effect4Chance" />
-        <Property Index="7, 19, 7" Name="Accuracy" />
         <Property Index="5,  0, 9" Name="StartupAnimation" Type="MoveAnimationId" />
         <Property Index="5,  9, 9" Name="ProjectileAnimation" Type="MoveAnimationId" />
         <Property Index="5, 18, 9" Name="ImpactAnimation" Type="MoveAnimationId" />
-        <Property Index="8,  0, 9" Name="AdditionalAnimation" Type="MoveAnimationId" />
-        <Property Index="8,  9, 1" Name="EnableAdditionalAnimation" Type="bool"/>
-        <Property Index="7, 26, 4" Name="UnknownOption" Type="MoveUnknownOptionId" />
-        <Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
-        <Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
+        <Property Index="6,  0, 7" Name="Effect2" Type="MoveEffectId" />
+        <Property Index="6,  7, 7" Name="Effect2_Quantity" />
+        <Property Index="6, 14, 7" Name="Rank5Effect1" Type="MoveEffectId" />
+        <Property Index="6, 21, 7" Name="Rank5Effect1_Quantity" />
         <Property Index="6, 28, 4" Name="MovementTiming" Type="MoveMovementAnimationTimingId" />
+        <Property Index="7,  0, 7" Name="Rank5Effect2" Type="MoveEffectId" />
+        <Property Index="7,  7, 7" Name="Rank5Effect2_Quantity" />
+        <Property Index="7, 14, 5" Name="MovementAnimation" Type="MoveMovementAnimationId" />
+        <Property Index="7, 19, 7" Name="Accuracy" />
+        <Property Index="7, 26, 4" Name="Interaction" Type="MoveInteractionId" />
+        <Property Index="7, 30, 2" Name="Movement" Type="MoveMovementId" />
+        <Property Index="8,  0, 9" Name="AdditionalAnimation" Type="MoveAnimationId" />
+        <Property Index="8,  9, 5" Name="Unknown_8_9_5"/>
+        <Property Index="8, 14, 6" Name="Unknown_8_14_6"/>
         <MsgProperty Name="Description" Id="MoveDescription"/>
     </Model>
     <Model Name="MoveAnimation" DataLength="0x4" Model="true" ViewModel="true" Command="true" Render="true">
@@ -212,63 +249,71 @@
     <Model Name="Pokemon" DataLength="0x30" Command="true" Render="true" Model="true" ViewModel="true">
         <Service MaxId="199" DefaultId="511"/>
         <StringProperty Name="Name" Index="0" MaxLength="10"/>
-        <Property Index=" 3,  0,  9" Name="Hp" />
+        <Property Index=" 2, 24,  8" Name="CatchRate" />
+        <Property Index=" 3,  0, 10" Name="Hp" />
         <Property Index=" 3, 10,  4" Name="EvolutionCondition1" Type="EvolutionConditionId" />
         <Property Index=" 3, 14,  4" Name="EvolutionCondition2" Type="EvolutionConditionId" />
+        <Property Index=" 3, 18,  5" Name="Section2Index" />
+        <Property Index=" 3, 23,  3" Name="BattleIntroSpriteOffset" />
+        <Property Index=" 3, 26,  3" Name="Weight" />
         <Property Index=" 3, 29,  2" Name="IdleMotion" Type="IdleMotionId"/>
-        <Property Index=" 4,  0,  9" Name="Atk" />
-        <Property Index=" 4, 10,  9" Name="Def" />
-        <Property Index=" 4, 20,  9" Name="Spe" />
+        <Property Index=" 4,  0, 10" Name="Atk" />
+        <Property Index=" 4, 10, 10" Name="Def" />
+        <Property Index=" 4, 20, 10" Name="Spe" />
         <Property Index=" 4, 30,  1" Name="IsLegendary" Type="bool" />
         <Property Index=" 4, 31,  1" Name="AsymmetricBattleSprite" Type="bool" />
-        <Property Index=" 7, 31,  1" Name="LongAttackAnimation" Type="bool" />
         <Property Index=" 5,  0,  5" Name="Type1" Type="TypeId" />
         <Property Index=" 5,  5,  5" Name="Type2" Type="TypeId" />
-        <Property Index=" 5, 10,  8" Name="Move" Type="MoveId" />
-        <Property Index=" 6,  0,  8" Name="Ability1" Type="AbilityId" />
-        <Property Index=" 6,  9,  8" Name="Ability2" Type="AbilityId" />
-        <Property Index=" 6, 18,  8" Name="Ability3" Type="AbilityId" />
-        <Property Index=" 7,  0,  9" Name="QuantityForEvolutionCondition1" />
-        <Property Index=" 7, 18,  9" Name="QuantityForEvolutionCondition2" />
-        <Property Index=" 7, 27,  3" Name="MovementRange" Min="1" Max="6"/>
+        <Property Index=" 5, 10,  9" Name="Move" Type="MoveId" />
+        <Property Index=" 5, 19,  9" Name="EvolutionCondition2_Quantity2" />
+        <Property Index=" 6,  0,  9" Name="Ability1" Type="AbilityId" />
+        <Property Index=" 6,  9,  9" Name="Ability2" Type="AbilityId" />
+        <Property Index=" 6, 18,  9" Name="Ability3" Type="AbilityId" />
+        <Property Index=" 7,  0,  9" Name="EvolutionCondition1_Quantity1" />
+        <Property Index=" 7,  9,  9" Name="EvolutionCondition1_Quantity2" />
+        <Property Index=" 7, 18,  9" Name="EvolutionCondition2_Quantity1" />
+        <Property Index=" 7, 27,  4" Name="MovementRange" Min="1" Max="6"/>
+        <Property Index=" 7, 31,  1" Name="LongAttackAnimation" Type="bool" />
         <Property Index=" 8,  0, 11" Name="MinEvolutionTableEntry" />
         <Property Index=" 8, 11, 11" Name="MaxEvolutionTableEntry" />
         <Property Index=" 8, 22, 10" Name="NationalPokedexNumber" />
         <Property Index="11,  0,  8" Name="NameOrderIndex" />
-        <Property Index=" 2, 24,  8" Name="CatchRate" />
-        <Property Index=" 3, 18,  4" Name="UnknownAnimationValue" />
-        <Property Index=" 3, 23,  3" Name="BattleIntroSpriteOffset" />
-        <Property Index=" 3, 26,  3" Name="Weight" />
     </Model>
     <Model Name="ScenarioPokemon" DataLength="0x8" Render="true" Model="true">
-        <Property Index="1, 20,  8" Name="Ability" Type="AbilityId" />
+        <Property Index="0,  8,  9" Name="U1" Type="byte" Description="In memory: For wild pokemon this seems to store hp, but not for players pokemon"/>
+        <Property Index="0, 17, 15" Name="Exp" />
         <Property Index="1,  0,  5" Name="HpIv" />
         <Property Index="1,  5,  5" Name="AtkIv" />
         <Property Index="1, 10,  5" Name="DefIv" />
         <Property Index="1, 15,  5" Name="SpeIv" />
-        <Property Index="0, 16, 16" Name="Exp" Type="ushort"/>
-        <Property Index="0,  8,  8" Name="U1" Type="byte" Description="In memory: For wild pokemon this seems to store hp, but not for players pokemon"/>
+        <Property Index="1, 20,  9" Name="Ability" Type="AbilityId" />
         <Property Index="1, 29,  3" Name="Energy" Type="EnergyId" />
     </Model>
     <Model Name="ScenarioWarrior" DataLength="0x20" Render="true" Model="true">
-        <Property Index="0,  0, 8" Name="Warrior" Type="WarriorId" />
+        <Property Index="0,  0, 9" Name="Warrior" Type="WarriorId" />
         <Property Index="0,  9, 3" Name="Class" Type="WarriorClassId" />
         <Property Index="0, 12, 5" Name="Kingdom" Type="KingdomId" />
         <Property Index="0, 17, 5" Name="Army" />
-        <Property Index="2,  2, 8" Name="Item" Type="ItemId" />
+        <Property Index="2,  2, 9" Name="Item" Type="ItemId" />
+    </Model>
+    <Model Name="ScenarioArmy" DataLength="0xA0" Render="true" Model="true">
+        <Property Index="4, 16,  2" Name="Unknown_4_16_2" />
+        <Property Index="4, 18,  5" Name="Unknown_4_18_5" />
+        <Property Index="4, 23,  9" Name="Leader" />
+        <Property Index="5,  0, 16" Name="Money" />
     </Model>
     <Model Name="WarriorSkill" DataLength="0x1C" DataLength_VPYJ="0x18" Command="true" Render="true" Model="true" ViewModel="true" Cultural="true">
         <Service MaxId="72"/>
         <StringProperty Name="Name" Index="0" MaxLength="0x12" MaxLength_VPYJ="0xE" />
-        <Property Index="4, 24, 8" Index_VPYJ="3, 24, 8" Name="Effect1Amount"/>
+        <Property Index="4, 24, 8" Index_VPYJ="3, 24, 8" Name="Effect1_Quantity"/>
         <Property Index="5,  0, 7" Index_VPYJ="4,  0, 7" Name="Effect1" Type="WarriorSkillEffectId"/>
         <Property Index="5,  7, 7" Index_VPYJ="4,  7, 7" Name="Effect2" Type="WarriorSkillEffectId"/>
-        <Property Index="5, 14, 8" Index_VPYJ="4, 14, 8" Name="Effect2Amount"/>
+        <Property Index="5, 14, 8" Index_VPYJ="4, 14, 8" Name="Effect2_Quantity"/>
         <Property Index="5, 22, 7" Index_VPYJ="4, 22, 7" Name="Effect3" Type="WarriorSkillEffectId"/>
         <Property Index="5, 29, 3" Index_VPYJ="4, 29, 3" Name="Duration"/>
-        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="Effect3Amount"/>
+        <Property Index="6,  0, 8" Index_VPYJ="5,  0, 8" Name="Effect3_Quantity"/>
         <Property Index="6,  8, 3" Index_VPYJ="5,  8, 3" Name="Target" Type="WarriorSkillTargetId"/>
-        <Property Index="6, 11, 9" Index_VPYJ="5, 11, 9" Name="Animation" Type="MoveAnimationId" Description="Seems to be unused"/>
+        <Property Index="6, 11, 9" Index_VPYJ="5, 11, 9" Name="Animation" Type="MoveAnimationId" Description="Unused in game"/>
         <MsgProperty Name="Description" Id="WarriorSkillDescription"/>
     </Model>
 </Models>

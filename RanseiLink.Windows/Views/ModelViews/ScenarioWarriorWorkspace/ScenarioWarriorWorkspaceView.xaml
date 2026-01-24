@@ -11,6 +11,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
 
+        <DataTemplate x:Key="miniArmyTemplate">
+            <local:ScenarioArmyMiniView Margin="2" Width="163"/>
+        </DataTemplate>
+
         <DataTemplate x:Key="miniWarriorTemplate">
             <local:ScenarioWarriorMiniView Margin="2" Width="163"/>
         </DataTemplate>
@@ -28,6 +32,7 @@
             KingdomTemplate="{StaticResource miniKingdomTemplate}"
             KingdomSimpleTemplate="{StaticResource miniSimpleKingdomTemplate}"
             WarriorTemplate="{StaticResource miniWarriorTemplate}"
+            ArmyTemplate="{StaticResource miniArmyTemplate}"
             />
 
         <DataTemplate x:Key="bigWarriorTemplate">
@@ -38,22 +43,36 @@
             <local:SwKingdomBigView />
         </DataTemplate>
 
+        <DataTemplate x:Key="bigArmyTemplate">
+            <local:ScenarioArmyBigView />
+        </DataTemplate>
+
         <local:SwWorkspaceItemDataTemplateSelector
             x:Key="bigTemplateSelector"
             KingdomTemplate="{StaticResource bigKingdomTemplate}"
             WarriorTemplate="{StaticResource bigWarriorTemplate}"
+            ArmyTemplate="{StaticResource bigArmyTemplate}"
             />
     </UserControl.Resources>
     <DockPanel Margin="10,5,10,10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,5">
-            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmy}" d:IsChecked="True">Army</ToggleButton>
-            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowFree}">Free</ToggleButton>
-            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowUnassigned}">Unassigned</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmy}" d:IsChecked="True">Armies</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowArmyKingdom}" d:IsChecked="True">Army Warriors</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowFree}">Free Warriors</ToggleButton>
+            <ToggleButton Style="{StaticResource TagToggleButtonStyle}" Margin="0,0,3,0" IsChecked="{Binding ShowUnassigned}">Unassigned Warriors</ToggleButton>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" DockPanel.Dock="Left">
             <ItemsControl
                 Margin="0,0,10,0"
                 Visibility="{Binding ShowArmy, Converter={StaticResource Converter.BoolToVisibility}}"
+                ItemsSource="{Binding Armies}" 
+                Style="{StaticResource ItemsControlVirtualizedStyle}"
+                VirtualizingPanel.ScrollUnit="Pixel"
+                ItemTemplateSelector="{StaticResource miniTemplateSelector}">
+            </ItemsControl>
+            <ItemsControl
+                Margin="0,0,10,0"
+                Visibility="{Binding ShowArmyKingdom, Converter={StaticResource Converter.BoolToVisibility}}"
                 ItemsSource="{Binding Items}" 
                 Style="{StaticResource ItemsControlVirtualizedStyle}"
                 VirtualizingPanel.ScrollUnit="Pixel"

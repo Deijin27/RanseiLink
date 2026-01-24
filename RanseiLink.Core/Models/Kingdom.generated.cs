@@ -46,7 +46,7 @@ public partial class Kingdom : BaseDataWindow, INamedModel
         }
     }
 
-    public int Unknown1
+    public int Unknown_2_24_3
     {
         get
         {
@@ -78,6 +78,84 @@ public partial class Kingdom : BaseDataWindow, INamedModel
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
+                return (KingdomId)GetInt(2, 0, 5);
+            }
+            else
+            {
+                return (KingdomId)GetInt(3, 0, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(2, 0, 5, (int)value);
+            }
+            else
+            {
+                SetInt(3, 0, 5, (int)value);
+            }
+        }
+    }
+
+    public KingdomId MapConnection1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return (KingdomId)GetInt(2, 5, 5);
+            }
+            else
+            {
+                return (KingdomId)GetInt(3, 5, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(2, 5, 5, (int)value);
+            }
+            else
+            {
+                SetInt(3, 5, 5, (int)value);
+            }
+        }
+    }
+
+    public KingdomId MapConnection2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return (KingdomId)GetInt(2, 10, 5);
+            }
+            else
+            {
+                return (KingdomId)GetInt(3, 10, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(2, 10, 5, (int)value);
+            }
+            else
+            {
+                SetInt(3, 10, 5, (int)value);
+            }
+        }
+    }
+
+    public KingdomId MapConnection4
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
                 return (KingdomId)GetInt(2, 11, 5);
             }
             else
@@ -98,85 +176,7 @@ public partial class Kingdom : BaseDataWindow, INamedModel
         }
     }
 
-    public KingdomId MapConnection1
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (KingdomId)GetInt(2, 0, 5);
-            }
-            else
-            {
-                return (KingdomId)GetInt(3, 16, 5);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(2, 0, 5, (int)value);
-            }
-            else
-            {
-                SetInt(3, 16, 5, (int)value);
-            }
-        }
-    }
-
-    public KingdomId MapConnection2
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (KingdomId)GetInt(2, 5, 5);
-            }
-            else
-            {
-                return (KingdomId)GetInt(3, 21, 5);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(2, 5, 5, (int)value);
-            }
-            else
-            {
-                SetInt(3, 21, 5, (int)value);
-            }
-        }
-    }
-
     public KingdomId MapConnection3
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (KingdomId)GetInt(2, 10, 5);
-            }
-            else
-            {
-                return (KingdomId)GetInt(3, 26, 5);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(2, 10, 5, (int)value);
-            }
-            else
-            {
-                SetInt(3, 26, 5, (int)value);
-            }
-        }
-    }
-
-    public KingdomId MapConnection4
     {
         get
         {

@@ -43,6 +43,13 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int RankUpLink_Max => 100;
+    public int RankUpLink
+    {
+        get => _model.RankUpLink;
+        set => SetProperty(_model.RankUpLink, value, v => _model.RankUpLink = v);
+    }
+
     public TypeId Speciality1
     {
         get => _model.Speciality1;
@@ -67,10 +74,56 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Weakness2, value, v => _model.Weakness2 = v);
     }
 
+    public int RankUpCondition1_Quantity1_Max => 511;
+    public int RankUpCondition1_Quantity1
+    {
+        get => _model.RankUpCondition1_Quantity1;
+        set => SetProperty(_model.RankUpCondition1_Quantity1, value, v => _model.RankUpCondition1_Quantity1 = v);
+    }
+
     public int Skill
     {
         get => (int)_model.Skill;
         set => SetProperty(_model.Skill, (WarriorSkillId)value, v => _model.Skill = v);
+    }
+
+    public int Unknown_2_7_3_Max => 7;
+    public int Unknown_2_7_3
+    {
+        get => _model.Unknown_2_7_3;
+        set => SetProperty(_model.Unknown_2_7_3, value, v => _model.Unknown_2_7_3 = v);
+    }
+
+    public int Unknown_2_10_3_Max => 7;
+    public int Unknown_2_10_3
+    {
+        get => _model.Unknown_2_10_3;
+        set => SetProperty(_model.Unknown_2_10_3, value, v => _model.Unknown_2_10_3 = v);
+    }
+
+    public int Unknown_2_13_2_Max => 3;
+    public int Unknown_2_13_2
+    {
+        get => _model.Unknown_2_13_2;
+        set => SetProperty(_model.Unknown_2_13_2, value, v => _model.Unknown_2_13_2 = v);
+    }
+
+    public int RankUpWarrior
+    {
+        get => (int)_model.RankUpWarrior;
+        set => SetProperty(_model.RankUpWarrior, (WarriorId)value, v => _model.RankUpWarrior = v);
+    }
+
+    public RankUpConditionId RankUpCondition1
+    {
+        get => _model.RankUpCondition1;
+        set => SetProperty(_model.RankUpCondition1, value, v => _model.RankUpCondition1 = v);
+    }
+
+    public RankUpConditionId RankUpCondition2
+    {
+        get => _model.RankUpCondition2;
+        set => SetProperty(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = v);
     }
 
     public int Power_Max => 127;
@@ -101,55 +154,32 @@ public partial class BaseWarriorViewModel : ViewModelBase
         set => SetProperty(_model.Capacity, value, v => _model.Capacity = v);
     }
 
-    public RankUpConditionId RankUpCondition1
+    public int Unknown_3_25_7_Max => 127;
+    public int Unknown_3_25_7
     {
-        get => _model.RankUpCondition1;
-        set => SetProperty(_model.RankUpCondition1, value, v => _model.RankUpCondition1 = v);
+        get => _model.Unknown_3_25_7;
+        set => SetProperty(_model.Unknown_3_25_7, value, v => _model.Unknown_3_25_7 = v);
     }
 
-    public RankUpConditionId RankUpCondition2
+    public int RankUpCondition1_Quantity2_Max => 511;
+    public int RankUpCondition1_Quantity2
     {
-        get => _model.RankUpCondition2;
-        set => SetProperty(_model.RankUpCondition2, value, v => _model.RankUpCondition2 = v);
+        get => _model.RankUpCondition1_Quantity2;
+        set => SetProperty(_model.RankUpCondition1_Quantity2, value, v => _model.RankUpCondition1_Quantity2 = v);
     }
 
-    public int Quantity1ForRankUpCondition_Max => 511;
-    public int Quantity1ForRankUpCondition
+    public int RankUpCondition2_Quantity1_Max => 511;
+    public int RankUpCondition2_Quantity1
     {
-        get => _model.Quantity1ForRankUpCondition;
-        set => SetProperty(_model.Quantity1ForRankUpCondition, value, v => _model.Quantity1ForRankUpCondition = v);
+        get => _model.RankUpCondition2_Quantity1;
+        set => SetProperty(_model.RankUpCondition2_Quantity1, value, v => _model.RankUpCondition2_Quantity1 = v);
     }
 
-    public int Quantity2ForRankUpCondition_Max => 511;
-    public int Quantity2ForRankUpCondition
+    public int RankUpCondition2_Quantity2_Max => 511;
+    public int RankUpCondition2_Quantity2
     {
-        get => _model.Quantity2ForRankUpCondition;
-        set => SetProperty(_model.Quantity2ForRankUpCondition, value, v => _model.Quantity2ForRankUpCondition = v);
-    }
-
-    public int RankUp
-    {
-        get => (int)_model.RankUp;
-        set => SetProperty(_model.RankUp, (WarriorId)value, v => _model.RankUp = v);
-    }
-
-    public int RankUpPokemon1
-    {
-        get => (int)_model.RankUpPokemon1;
-        set => SetProperty(_model.RankUpPokemon1, (PokemonId)value, v => _model.RankUpPokemon1 = v);
-    }
-
-    public int RankUpPokemon2
-    {
-        get => (int)_model.RankUpPokemon2;
-        set => SetProperty(_model.RankUpPokemon2, (PokemonId)value, v => _model.RankUpPokemon2 = v);
-    }
-
-    public int RankUpLink_Max => 100;
-    public int RankUpLink
-    {
-        get => _model.RankUpLink;
-        set => SetProperty(_model.RankUpLink, value, v => _model.RankUpLink = v);
+        get => _model.RankUpCondition2_Quantity2;
+        set => SetProperty(_model.RankUpCondition2_Quantity2, value, v => _model.RankUpCondition2_Quantity2 = v);
     }
 
     public List<SelectorComboBoxItem> SpeakerItems { get; }
@@ -157,6 +187,4 @@ public partial class BaseWarriorViewModel : ViewModelBase
     public List<SelectorComboBoxItem> WarriorSkillItems { get; }
 
     public List<SelectorComboBoxItem> BaseWarriorItems { get; }
-
-    public List<SelectorComboBoxItem> PokemonItems { get; }
 }

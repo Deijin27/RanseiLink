@@ -15,18 +15,23 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
 
     private IScenarioPokemonService? _scenarioPokemonService;
     private IScenarioKingdomService? _scenarioKingdomService;
+    private IScenarioArmyService? _scenarioArmyService;
 
     public override void Initialise(IServiceGetter modServices)
     {
         base.Initialise(modServices);
         _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
         _scenarioKingdomService = modServices.Get<IScenarioKingdomService>();
+        _scenarioArmyService = modServices.Get<IScenarioArmyService>();
         var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
-        var spService = modServices.Get<IScenarioPokemonService>();
 
         SelectorViewModel = _selectorVmFactory.Create(_service, vm,
-            id => vm.SetModel((ScenarioId)id, _service.Retrieve(id), spService.Retrieve(id)), scrollEnabled: false);
+            id => vm.SetModel((ScenarioId)id, 
+            _service.Retrieve(id), 
+            _scenarioPokemonService.Retrieve(id), 
+            _scenarioArmyService.Retrieve(id)
+            ), scrollEnabled: false);
     }
 
     public override void OnPatchingRom()
@@ -34,6 +39,7 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
         base.OnPatchingRom();
         _scenarioPokemonService?.Save();
         _scenarioKingdomService?.Save();
+        _scenarioArmyService?.Save();
     }
 
     public override void Deactivate()
@@ -41,5 +47,6 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
         base.Deactivate();
         _scenarioPokemonService?.Save();
         _scenarioKingdomService?.Save();
+        _scenarioArmyService?.Save();
     }
 }

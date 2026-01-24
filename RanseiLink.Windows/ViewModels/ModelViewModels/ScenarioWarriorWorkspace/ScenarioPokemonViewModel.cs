@@ -75,6 +75,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
         _model = model;
         _scenario = scenario;
         _id = id;
+        _linkCache = LinkCalculator.CalculateLink(_model.Exp);
         ReloadAbilities();
         RaiseAllPropertiesChanged();
     }
@@ -158,9 +159,10 @@ public class ScenarioPokemonViewModel : ViewModelBase
 
     // the default values are all integers, so I decided to drop support for setting exp directly
     // to simplify the ui
+    private int _linkCache;
     public int Link
     {
-        get => (int)LinkCalculator.CalculateLink(_model.Exp);
+        get => _linkCache;
         set
         {
             if (value >= 0 && value <= 100)
@@ -168,6 +170,7 @@ public class ScenarioPokemonViewModel : ViewModelBase
                 var newValue = LinkCalculator.CalculateExp(value);
                 if (newValue != _model.Exp)
                 {
+                    _linkCache = value;
                     _model.Exp = newValue;
                     RaisePropertyChanged();
                 }

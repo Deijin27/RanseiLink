@@ -24,7 +24,14 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public int Hp_Max => 511;
+    public int CatchRate_Max => 255;
+    public int CatchRate
+    {
+        get => _model.CatchRate;
+        set => SetProperty(_model.CatchRate, value, v => _model.CatchRate = v);
+    }
+
+    public int Hp_Max => 1023;
     public int Hp
     {
         get => _model.Hp;
@@ -43,27 +50,48 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.EvolutionCondition2, value, v => _model.EvolutionCondition2 = v);
     }
 
+    public int Section2Index_Max => 31;
+    public int Section2Index
+    {
+        get => _model.Section2Index;
+        set => SetProperty(_model.Section2Index, value, v => _model.Section2Index = v);
+    }
+
+    public int BattleIntroSpriteOffset_Max => 7;
+    public int BattleIntroSpriteOffset
+    {
+        get => _model.BattleIntroSpriteOffset;
+        set => SetProperty(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
+    }
+
+    public int Weight_Max => 7;
+    public int Weight
+    {
+        get => _model.Weight;
+        set => SetProperty(_model.Weight, value, v => _model.Weight = v);
+    }
+
     public IdleMotionId IdleMotion
     {
         get => _model.IdleMotion;
         set => SetProperty(_model.IdleMotion, value, v => _model.IdleMotion = v);
     }
 
-    public int Atk_Max => 511;
+    public int Atk_Max => 1023;
     public int Atk
     {
         get => _model.Atk;
         set => SetProperty(_model.Atk, value, v => _model.Atk = v);
     }
 
-    public int Def_Max => 511;
+    public int Def_Max => 1023;
     public int Def
     {
         get => _model.Def;
         set => SetProperty(_model.Def, value, v => _model.Def = v);
     }
 
-    public int Spe_Max => 511;
+    public int Spe_Max => 1023;
     public int Spe
     {
         get => _model.Spe;
@@ -80,12 +108,6 @@ public partial class PokemonViewModel : ViewModelBase
     {
         get => _model.AsymmetricBattleSprite;
         set => SetProperty(_model.AsymmetricBattleSprite, value, v => _model.AsymmetricBattleSprite = v);
-    }
-
-    public bool LongAttackAnimation
-    {
-        get => _model.LongAttackAnimation;
-        set => SetProperty(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
     }
 
     public TypeId Type1
@@ -106,6 +128,13 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Move, (MoveId)value, v => _model.Move = v);
     }
 
+    public int EvolutionCondition2_Quantity2_Max => 511;
+    public int EvolutionCondition2_Quantity2
+    {
+        get => _model.EvolutionCondition2_Quantity2;
+        set => SetProperty(_model.EvolutionCondition2_Quantity2, value, v => _model.EvolutionCondition2_Quantity2 = v);
+    }
+
     public int Ability1
     {
         get => (int)_model.Ability1;
@@ -124,18 +153,25 @@ public partial class PokemonViewModel : ViewModelBase
         set => SetProperty(_model.Ability3, (AbilityId)value, v => _model.Ability3 = v);
     }
 
-    public int QuantityForEvolutionCondition1_Max => 511;
-    public int QuantityForEvolutionCondition1
+    public int EvolutionCondition1_Quantity1_Max => 511;
+    public int EvolutionCondition1_Quantity1
     {
-        get => _model.QuantityForEvolutionCondition1;
-        set => SetProperty(_model.QuantityForEvolutionCondition1, value, v => _model.QuantityForEvolutionCondition1 = v);
+        get => _model.EvolutionCondition1_Quantity1;
+        set => SetProperty(_model.EvolutionCondition1_Quantity1, value, v => _model.EvolutionCondition1_Quantity1 = v);
     }
 
-    public int QuantityForEvolutionCondition2_Max => 511;
-    public int QuantityForEvolutionCondition2
+    public int EvolutionCondition1_Quantity2_Max => 511;
+    public int EvolutionCondition1_Quantity2
     {
-        get => _model.QuantityForEvolutionCondition2;
-        set => SetProperty(_model.QuantityForEvolutionCondition2, value, v => _model.QuantityForEvolutionCondition2 = v);
+        get => _model.EvolutionCondition1_Quantity2;
+        set => SetProperty(_model.EvolutionCondition1_Quantity2, value, v => _model.EvolutionCondition1_Quantity2 = v);
+    }
+
+    public int EvolutionCondition2_Quantity1_Max => 511;
+    public int EvolutionCondition2_Quantity1
+    {
+        get => _model.EvolutionCondition2_Quantity1;
+        set => SetProperty(_model.EvolutionCondition2_Quantity1, value, v => _model.EvolutionCondition2_Quantity1 = v);
     }
 
     public int MovementRange_Max => 6;
@@ -144,6 +180,12 @@ public partial class PokemonViewModel : ViewModelBase
     {
         get => _model.MovementRange;
         set => SetProperty(_model.MovementRange, value, v => _model.MovementRange = v);
+    }
+
+    public bool LongAttackAnimation
+    {
+        get => _model.LongAttackAnimation;
+        set => SetProperty(_model.LongAttackAnimation, value, v => _model.LongAttackAnimation = v);
     }
 
     public int MinEvolutionTableEntry_Max => 2047;
@@ -172,34 +214,6 @@ public partial class PokemonViewModel : ViewModelBase
     {
         get => _model.NameOrderIndex;
         set => SetProperty(_model.NameOrderIndex, value, v => _model.NameOrderIndex = v);
-    }
-
-    public int CatchRate_Max => 255;
-    public int CatchRate
-    {
-        get => _model.CatchRate;
-        set => SetProperty(_model.CatchRate, value, v => _model.CatchRate = v);
-    }
-
-    public int UnknownAnimationValue_Max => 15;
-    public int UnknownAnimationValue
-    {
-        get => _model.UnknownAnimationValue;
-        set => SetProperty(_model.UnknownAnimationValue, value, v => _model.UnknownAnimationValue = v);
-    }
-
-    public int BattleIntroSpriteOffset_Max => 7;
-    public int BattleIntroSpriteOffset
-    {
-        get => _model.BattleIntroSpriteOffset;
-        set => SetProperty(_model.BattleIntroSpriteOffset, value, v => _model.BattleIntroSpriteOffset = v);
-    }
-
-    public int Weight_Max => 7;
-    public int Weight
-    {
-        get => _model.Weight;
-        set => SetProperty(_model.Weight, value, v => _model.Weight = v);
     }
 
     public List<SelectorComboBoxItem> MoveItems { get; }

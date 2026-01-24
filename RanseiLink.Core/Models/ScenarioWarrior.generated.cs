@@ -15,8 +15,8 @@ public partial class ScenarioWarrior : BaseDataWindow
 
     public WarriorId Warrior
     {
-        get => (WarriorId)GetInt(0, 0, 8);
-        set => SetInt(0, 0, 8, (int)value);
+        get => (WarriorId)GetInt(0, 0, 9);
+        set => SetInt(0, 0, 9, (int)value);
     }
 
     public WarriorClassId Class
@@ -39,7 +39,7 @@ public partial class ScenarioWarrior : BaseDataWindow
 
     public ItemId Item
     {
-        get => (ItemId)GetInt(2, 2, 8);
-        set => SetInt(2, 2, 8, (int)value);
+        get => (ItemId)GetInt(2, 2, 9);
+        set => SetInt(2, 2, 9, (int)value);
     }
 }

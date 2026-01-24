@@ -46,7 +46,7 @@ public partial class WarriorSkill : BaseDataWindow, INamedModel
         }
     }
 
-    public int Effect1Amount
+    public int Effect1_Quantity
     {
         get
         {
@@ -124,7 +124,7 @@ public partial class WarriorSkill : BaseDataWindow, INamedModel
         }
     }
 
-    public int Effect2Amount
+    public int Effect2_Quantity
     {
         get
         {
@@ -202,7 +202,7 @@ public partial class WarriorSkill : BaseDataWindow, INamedModel
         }
     }
 
-    public int Effect3Amount
+    public int Effect3_Quantity
     {
         get
         {

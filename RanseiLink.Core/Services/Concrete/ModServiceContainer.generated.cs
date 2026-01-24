@@ -38,6 +38,9 @@ public partial class ModServiceContainer
     private readonly Lazy<IKingdomService> _Kingdom = new(modServices.Get<IKingdomService>);
     public IKingdomService Kingdom => _Kingdom.Value;
 
+    private readonly Lazy<IMapPointService> _MapPoint = new(modServices.Get<IMapPointService>);
+    public IMapPointService MapPoint => _MapPoint.Value;
+
     private readonly Lazy<IMaxLinkService> _MaxLink = new(modServices.Get<IMaxLinkService>);
     public IMaxLinkService MaxLink => _MaxLink.Value;
 

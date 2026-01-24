@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using DryIoc;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -13,6 +14,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 
     private int _scenario;
     private ScenarioKingdom _scenarioKingdom = new();
+    private ScenarioWarriorWorkspaceViewModel _parent = null!;
 
     private readonly IScenarioKingdomService _scenarioKingdomService;
     private readonly IScenarioWarriorService _scenarioWarriorService;
@@ -36,7 +38,7 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 
     public ICommand? SelectCommand { get; private set; }
 
-    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom, ICommand itemClickedCommand)
+    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom, ICommand itemClickedCommand, ScenarioWarriorWorkspaceViewModel parent)
     {
         base.Init(kingdom);
         SelectCommand = itemClickedCommand;
@@ -44,36 +46,11 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 
         _scenarioKingdom = _scenarioKingdomService.Retrieve((int)scenario);
 
-        UpdateWarriorImage();
+        _parent = parent;
+
+        UpdateArmyInfo();
 
         return this;
-    }
-
-    public object? WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
-
-    private int _warriorImageId;
-
-    private void UpdateWarriorImage()
-    {
-        int warrior = -1;
-        foreach (var w in _scenarioWarriorService.Retrieve(_scenario).Enumerate())
-        {
-            if (w.Class == WarriorClassId.ArmyLeader && w.Army == Army)
-            {
-                warrior = (int)w.Warrior;
-                break;
-            }
-        }
-
-        if (!_baseWarriorService.ValidateId(warrior))
-        {
-            _warriorImageId = -1;
-        }
-        else
-        {
-            _warriorImageId = _baseWarriorService.Retrieve(warrior).Sprite;
-        }
-        RaisePropertyChanged(nameof(WarriorImage));
     }
 
     public int Strength => _strengthService.CalculateScenarioKingdomStrength((ScenarioId)_scenario, Kingdom, Army);
@@ -83,20 +60,30 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         RaisePropertyChanged(nameof(Strength));
     }
 
-    public void UpdateLeader()
-    {
-        UpdateWarriorImage();
-    }
-
     public override int Army
     {
-        get => Kingdom == KingdomId.Default ? -1 : _scenarioKingdom.GetArmy(Kingdom);
+        get => Kingdom == KingdomId.Default ? 17 : _scenarioKingdom.GetArmy(Kingdom);
         set 
         {
             if (Kingdom != KingdomId.Default)
             {
-                SetProperty(Army, value, v => _scenarioKingdom.SetArmy(Kingdom, v));
+                var oldArmy = Army;
+                if (SetProperty(Army, value, v => _scenarioKingdom.SetArmy(Kingdom, v)))
+                {
+                    UpdateArmyInfo();
+                }
             }
         }
+    }
+
+    private void UpdateArmyInfo()
+    {
+        ArmyInfo = _parent.GetArmy(Army);
+    }
+
+    public ScenarioArmyViewModel? ArmyInfo
+    {
+        get;
+        private set => SetProperty(ref field, value);
     }
 }

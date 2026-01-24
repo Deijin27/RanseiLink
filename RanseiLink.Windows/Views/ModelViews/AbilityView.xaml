@@ -60,13 +60,13 @@
             <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityEffectItems}" SelectedItem="{Binding Effect1, Mode=TwoWay}"/>
 
             <TextBlock Text="Amount" Grid.Row="2" />
-            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding Effect1Amount, Mode=TwoWay}" Max="{Binding Effect1Amount_Max}"/>
+            <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding Effect1_Quantity, Mode=TwoWay}" Max="{Binding Effect1_Quantity_Max}"/>
 
             <TextBlock Text="Effect2" Grid.Row="3"/>
             <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{x:Static const:EnumProvider.AbilityEffectItems}" SelectedItem="{Binding Effect2, Mode=TwoWay}"/>
 
             <TextBlock Text="Amount" Grid.Row="4" />
-            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Effect2Amount, Mode=TwoWay}" Max="{Binding Effect2Amount_Max}"/>
+            <controls:NumberBox Grid.Row="4" Grid.Column="1" Value="{Binding Effect2_Quantity, Mode=TwoWay}" Max="{Binding Effect2_Quantity_Max}"/>
 
             <GroupBox Header="Description" Grid.Row="5" Grid.RowSpan="4" Grid.ColumnSpan="2">
                 <TextBox Text="{Binding Description}" Height="Auto" TextWrapping="Wrap" AcceptsReturn="True"/>

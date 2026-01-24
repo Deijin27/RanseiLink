@@ -98,9 +98,13 @@ public class SwMiniViewModel(
             var oldClass = _model.Class;
             if (SetProperty(_model.Class, value, v => _model.Class = v))
             {
-                if (Class == WarriorClassId.ArmyLeader || oldClass == WarriorClassId.ArmyLeader)
+                if (Class == WarriorClassId.ArmyLeader)
                 {
-                    _parent.UpdateLeaders();
+                    _parent.UpdateLeaders(Army, this);
+                }
+                else if (oldClass == WarriorClassId.ArmyLeader)
+                {
+                    _parent.UpdateLeaders(Army, null);
                 }
             }
         }

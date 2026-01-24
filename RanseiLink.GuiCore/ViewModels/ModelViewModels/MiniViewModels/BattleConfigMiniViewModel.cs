@@ -28,9 +28,9 @@ public class BattleConfigMiniViewModel : ViewModelBase, IMiniViewModel
 
     public string Name => _nicknameService.GetNickname(nameof(BattleConfigId), _id);
 
-    public Rgb15 UpperAtmosphereColor => _model.UpperAtmosphereColor;
-    public Rgb15 MiddleAtmosphereColor => _model.MiddleAtmosphereColor;
-    public Rgb15 LowerAtmosphereColor => _model.LowerAtmosphereColor;
+    public Rgb15 UpperSkyColor => _model.UpperSkyColor;
+    public Rgb15 MiddleSkyColor => _model.MiddleSkyColor;
+    public Rgb15 LowerSkyColor => _model.LowerSkyColor;
     public int NumberOfTurns => _model.NumberOfTurns;
 
     public ICommand SelectCommand { get; }
@@ -50,9 +50,9 @@ public class BattleConfigMiniViewModel : ViewModelBase, IMiniViewModel
         switch (name)
         {
             case nameof(Name):
-            case nameof(UpperAtmosphereColor):
-            case nameof(MiddleAtmosphereColor):
-            case nameof(LowerAtmosphereColor):
+            case nameof(UpperSkyColor):
+            case nameof(MiddleSkyColor):
+            case nameof(LowerSkyColor):
             case nameof(NumberOfTurns):
                 RaisePropertyChanged(name);
                 break;

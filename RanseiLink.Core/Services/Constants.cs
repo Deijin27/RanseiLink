@@ -76,6 +76,8 @@ public static class Constants
     public static string ScenarioAppearPokemonPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioAppearPokemon.dat");
     public static string ScenarioKingdomPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioKuni.dat");
     public static string ScenarioBuildingPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioBuilding.dat");
+
+    public static string ScenarioArmyPathFromId(int scenarioId) => Path.Combine(ScenarioPathFromId(scenarioId), "ScenarioSeiryoku.dat");
     #endregion
 
     public const string PacExt = ".pac";

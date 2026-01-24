@@ -35,6 +35,7 @@ public class DataPatchBuilder(ModInfo mod) : IPatchBuilder
             dataRomPaths.Add(Constants.ScenarioAppearPokemonPathFromId((int)i));
             dataRomPaths.Add(Constants.ScenarioKingdomPathFromId((int)i));
             dataRomPaths.Add(Constants.ScenarioBuildingPathFromId((int)i));
+            dataRomPaths.Add(Constants.ScenarioArmyPathFromId((int)i));
         }
 
         filesToPatch.Add(new FileToPatch(Constants.PokemonRomPath, Path.Combine(mod.FolderPath, Constants.PokemonRomPath), FilePatchOptions.VariableLength));

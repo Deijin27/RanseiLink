@@ -9,6 +9,7 @@ public class SwWorkspaceItemDataTemplateSelector : DataTemplateSelector
     public DataTemplate WarriorTemplate { get; set; }
     public DataTemplate KingdomTemplate { get; set; }
     public DataTemplate KingdomSimpleTemplate { get; set; }
+    public DataTemplate ArmyTemplate { get; set; }
 
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
@@ -23,6 +24,10 @@ public class SwWorkspaceItemDataTemplateSelector : DataTemplateSelector
         else if (item is SwSimpleKingdomMiniViewModel)
         {
             return KingdomSimpleTemplate;
+        }
+        else if (item is ScenarioArmyViewModel)
+        {
+            return ArmyTemplate;
         }
         return null;
     }

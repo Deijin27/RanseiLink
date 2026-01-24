@@ -64,7 +64,7 @@ public enum MoveEffectId
     /// <summary>
     /// Unknown
     /// </summary>
-    Unused_1,
+    GuaranteedCriticalHit,
 
     /// <summary>
     /// Hits 2 times in one turn.

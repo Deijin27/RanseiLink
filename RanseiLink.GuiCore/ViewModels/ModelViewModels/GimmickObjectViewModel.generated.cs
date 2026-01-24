@@ -16,4 +16,74 @@ public partial class GimmickObjectViewModel : ViewModelBase
     private GimmickObjectId _id;
     public int Id => (int)_id;
 
+
+    public int Unknown_0_0_5_Max => 31;
+    public int Unknown_0_0_5
+    {
+        get => _model.Unknown_0_0_5;
+        set => SetProperty(_model.Unknown_0_0_5, value, v => _model.Unknown_0_0_5 = v);
+    }
+
+    public int Unknown_0_5_1_Max => 1;
+    public int Unknown_0_5_1
+    {
+        get => _model.Unknown_0_5_1;
+        set => SetProperty(_model.Unknown_0_5_1, value, v => _model.Unknown_0_5_1 = v);
+    }
+
+    public int Unknown_0_6_2_Max => 3;
+    public int Unknown_0_6_2
+    {
+        get => _model.Unknown_0_6_2;
+        set => SetProperty(_model.Unknown_0_6_2, value, v => _model.Unknown_0_6_2 = v);
+    }
+
+    public int Unknown_0_8_3_Max => 7;
+    public int Unknown_0_8_3
+    {
+        get => _model.Unknown_0_8_3;
+        set => SetProperty(_model.Unknown_0_8_3, value, v => _model.Unknown_0_8_3 = v);
+    }
+
+    public int Unknown_0_11_2_Max => 3;
+    public int Unknown_0_11_2
+    {
+        get => _model.Unknown_0_11_2;
+        set => SetProperty(_model.Unknown_0_11_2, value, v => _model.Unknown_0_11_2 = v);
+    }
+
+    public int Unknown_0_13_3_Max => 7;
+    public int Unknown_0_13_3
+    {
+        get => _model.Unknown_0_13_3;
+        set => SetProperty(_model.Unknown_0_13_3, value, v => _model.Unknown_0_13_3 = v);
+    }
+
+    public int Unknown_0_16_2_Max => 3;
+    public int Unknown_0_16_2
+    {
+        get => _model.Unknown_0_16_2;
+        set => SetProperty(_model.Unknown_0_16_2, value, v => _model.Unknown_0_16_2 = v);
+    }
+
+    public int Unknown_0_18_2_Max => 3;
+    public int Unknown_0_18_2
+    {
+        get => _model.Unknown_0_18_2;
+        set => SetProperty(_model.Unknown_0_18_2, value, v => _model.Unknown_0_18_2 = v);
+    }
+
+    public int Unknown_0_20_5_Max => 31;
+    public int Unknown_0_20_5
+    {
+        get => _model.Unknown_0_20_5;
+        set => SetProperty(_model.Unknown_0_20_5, value, v => _model.Unknown_0_20_5 = v);
+    }
+
+    public int Unknown_0_25_2_Max => 3;
+    public int Unknown_0_25_2
+    {
+        get => _model.Unknown_0_25_2;
+        set => SetProperty(_model.Unknown_0_25_2, value, v => _model.Unknown_0_25_2 = v);
+    }
 }

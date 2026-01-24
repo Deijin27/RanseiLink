@@ -243,7 +243,7 @@ internal class SpriteService : ISpriteService
             DrawArrow(x);
             if (options.HasFlag(MovePreviewOptions.DrawPowerStars))
             {
-                DrawMovePowerStars(x, gimmick.AttackPower);
+                DrawMovePowerStars(x, gimmick.Effect_Quantity);
             }
             if (options.HasFlag(MovePreviewOptions.DrawType))
             {

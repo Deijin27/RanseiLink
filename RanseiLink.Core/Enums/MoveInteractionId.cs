@@ -1,7 +1,7 @@
 ﻿
 namespace RanseiLink.Core.Enums;
 
-public enum MoveUnknownOptionId
+public enum MoveInteractionId
 {
     Unknown_0,
     Unknown_1,

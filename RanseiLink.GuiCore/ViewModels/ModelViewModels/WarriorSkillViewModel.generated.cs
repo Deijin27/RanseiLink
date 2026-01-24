@@ -24,11 +24,11 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public int Effect1Amount_Max => 255;
-    public int Effect1Amount
+    public int Effect1_Quantity_Max => 255;
+    public int Effect1_Quantity
     {
-        get => _model.Effect1Amount;
-        set => SetProperty(_model.Effect1Amount, value, v => _model.Effect1Amount = v);
+        get => _model.Effect1_Quantity;
+        set => SetProperty(_model.Effect1_Quantity, value, v => _model.Effect1_Quantity = v);
     }
 
     public WarriorSkillEffectId Effect1
@@ -43,11 +43,11 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public int Effect2Amount_Max => 255;
-    public int Effect2Amount
+    public int Effect2_Quantity_Max => 255;
+    public int Effect2_Quantity
     {
-        get => _model.Effect2Amount;
-        set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
+        get => _model.Effect2_Quantity;
+        set => SetProperty(_model.Effect2_Quantity, value, v => _model.Effect2_Quantity = v);
     }
 
     public WarriorSkillEffectId Effect3
@@ -63,11 +63,11 @@ public partial class WarriorSkillViewModel : ViewModelBase
         set => SetProperty(_model.Duration, value, v => _model.Duration = v);
     }
 
-    public int Effect3Amount_Max => 255;
-    public int Effect3Amount
+    public int Effect3_Quantity_Max => 255;
+    public int Effect3_Quantity
     {
-        get => _model.Effect3Amount;
-        set => SetProperty(_model.Effect3Amount, value, v => _model.Effect3Amount = v);
+        get => _model.Effect3_Quantity;
+        set => SetProperty(_model.Effect3_Quantity, value, v => _model.Effect3_Quantity = v);
     }
 
     public WarriorSkillTargetId Target

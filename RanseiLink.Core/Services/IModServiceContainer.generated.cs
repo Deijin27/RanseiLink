@@ -18,6 +18,7 @@ public partial interface IModServiceContainer
     public IGimmickObjectService GimmickObject { get; }
     public IItemService Item { get; }
     public IKingdomService Kingdom { get; }
+    public IMapPointService MapPoint { get; }
     public IMaxLinkService MaxLink { get; }
     public IMoveService Move { get; }
     public IMoveAnimationService MoveAnimation { get; }

@@ -268,9 +268,9 @@ public class SceneRenderer : ISceneRenderer
     private static void VerticalGradientBackground(BattleConfig battleConfig)
     {
         GradientUtil.VerticalGradientBackground(
-            ConvertColor(battleConfig.UpperAtmosphereColor),
-            ConvertColor(battleConfig.MiddleAtmosphereColor),
-            ConvertColor(battleConfig.LowerAtmosphereColor)
+            ConvertColor(battleConfig.UpperSkyColor),
+            ConvertColor(battleConfig.MiddleSkyColor),
+            ConvertColor(battleConfig.LowerSkyColor)
             );
     }
 }

@@ -17,11 +17,11 @@ public partial class EpisodeViewModel : ViewModelBase
     public int Id => (int)_id;
 
 
-    public int Order_Max => 511;
-    public int Order
+    public int ScenarioWarrior_Max => 511;
+    public int ScenarioWarrior
     {
-        get => _model.Order;
-        set => SetProperty(_model.Order, value, v => _model.Order = v);
+        get => _model.ScenarioWarrior;
+        set => SetProperty(_model.ScenarioWarrior, value, v => _model.ScenarioWarrior = v);
     }
 
     public ScenarioId Scenario
@@ -29,6 +29,8 @@ public partial class EpisodeViewModel : ViewModelBase
         get => _model.Scenario;
         set => SetProperty(_model.Scenario, value, v => _model.Scenario = v);
     }
+
+    public ObservableCollection<CheckBoxViewModel> IsStartKingdomItems { get; } = [];
 
     public int UnlockCondition
     {
@@ -43,15 +45,13 @@ public partial class EpisodeViewModel : ViewModelBase
         set => SetProperty(_model.Difficulty, value, v => _model.Difficulty = v);
     }
 
+    public ObservableCollection<CheckBoxViewModel> IsUnlockedKingdomItems { get; } = [];
+
     public EpisodeClearConditionId ClearCondition
     {
         get => _model.ClearCondition;
         set => SetProperty(_model.ClearCondition, value, v => _model.ClearCondition = v);
     }
-
-    public ObservableCollection<CheckBoxViewModel> IsStartKingdomItems { get; } = [];
-
-    public ObservableCollection<CheckBoxViewModel> IsUnlockedKingdomItems { get; } = [];
 
     public string Name
     {

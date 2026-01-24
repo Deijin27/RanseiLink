@@ -52,22 +52,22 @@ public partial class Gimmick : BaseDataWindow, INamedModel
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return GetByte(15);
+                return GetInt(3, 24, 8);
             }
             else
             {
-                return GetByte(17);
+                return GetInt(4, 8, 8);
             }
         }
         set
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                SetByte(15, (byte)value);
+                SetInt(3, 24, 8, value);
             }
             else
             {
-                SetByte(17, (byte)value);
+                SetInt(4, 8, 8, value);
             }
         }
     }
@@ -228,7 +228,7 @@ public partial class Gimmick : BaseDataWindow, INamedModel
         }
     }
 
-    public int AttackPower
+    public int Effect_Quantity
     {
         get
         {
@@ -436,28 +436,132 @@ public partial class Gimmick : BaseDataWindow, INamedModel
         }
     }
 
-    public int Unknown_7_20_12
+    public int Unknown_7_20_1
     {
         get
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return GetInt(6, 20, 12);
+                return GetInt(6, 20, 1);
             }
             else
             {
-                return GetInt(7, 20, 12);
+                return GetInt(7, 20, 1);
             }
         }
         set
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                SetInt(6, 20, 12, value);
+                SetInt(6, 20, 1, value);
             }
             else
             {
-                SetInt(7, 20, 12, value);
+                SetInt(7, 20, 1, value);
+            }
+        }
+    }
+
+    public int Unknown_7_21_1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 21, 1);
+            }
+            else
+            {
+                return GetInt(7, 21, 1);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 21, 1, value);
+            }
+            else
+            {
+                SetInt(7, 21, 1, value);
+            }
+        }
+    }
+
+    public GimmickRangeId Hitbox
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return (GimmickRangeId)GetInt(6, 22, 5);
+            }
+            else
+            {
+                return (GimmickRangeId)GetInt(7, 22, 5);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 22, 5, (int)value);
+            }
+            else
+            {
+                SetInt(7, 22, 5, (int)value);
+            }
+        }
+    }
+
+    public int Unknown_7_27_4
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 27, 4);
+            }
+            else
+            {
+                return GetInt(7, 27, 4);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 27, 4, value);
+            }
+            else
+            {
+                SetInt(7, 27, 4, value);
+            }
+        }
+    }
+
+    public int Unknown_7_31_1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(6, 31, 1);
+            }
+            else
+            {
+                return GetInt(7, 31, 1);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(6, 31, 1, value);
+            }
+            else
+            {
+                SetInt(7, 31, 1, value);
             }
         }
     }
@@ -540,28 +644,80 @@ public partial class Gimmick : BaseDataWindow, INamedModel
         }
     }
 
-    public int Unknown_8_24_3
+    public GimmickRangeId Range
     {
         get
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                return GetInt(7, 24, 3);
+                return (GimmickRangeId)GetInt(7, 19, 5);
             }
             else
             {
-                return GetInt(8, 24, 3);
+                return (GimmickRangeId)GetInt(8, 19, 5);
             }
         }
         set
         {
             if (_culture == ConquestGameCode.VPYJ)
             {
-                SetInt(7, 24, 3, value);
+                SetInt(7, 19, 5, (int)value);
             }
             else
             {
-                SetInt(8, 24, 3, value);
+                SetInt(8, 19, 5, (int)value);
+            }
+        }
+    }
+
+    public int Unknown_8_24_2
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 24, 2);
+            }
+            else
+            {
+                return GetInt(8, 24, 2);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 24, 2, value);
+            }
+            else
+            {
+                SetInt(8, 24, 2, value);
+            }
+        }
+    }
+
+    public int Unknown_8_26_1
+    {
+        get
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                return GetInt(7, 26, 1);
+            }
+            else
+            {
+                return GetInt(8, 26, 1);
+            }
+        }
+        set
+        {
+            if (_culture == ConquestGameCode.VPYJ)
+            {
+                SetInt(7, 26, 1, value);
+            }
+            else
+            {
+                SetInt(8, 26, 1, value);
             }
         }
     }
@@ -666,32 +822,6 @@ public partial class Gimmick : BaseDataWindow, INamedModel
             else
             {
                 SetInt(9, 20, 8, value);
-            }
-        }
-    }
-
-    public GimmickRangeId Range
-    {
-        get
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                return (GimmickRangeId)GetInt(7, 19, 5);
-            }
-            else
-            {
-                return (GimmickRangeId)GetInt(8, 19, 5);
-            }
-        }
-        set
-        {
-            if (_culture == ConquestGameCode.VPYJ)
-            {
-                SetInt(7, 19, 5, (int)value);
-            }
-            else
-            {
-                SetInt(8, 19, 5, (int)value);
             }
         }
     }

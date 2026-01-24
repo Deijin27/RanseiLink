@@ -30,8 +30,8 @@ public partial class Move : BaseDataWindow, INamedModel
 
     public MoveMovementFlags MovementFlags
     {
-        get => (MoveMovementFlags)GetInt(3, 24, 8);
-        set => SetInt(3, 24, 8, (int)value);
+        get => (MoveMovementFlags)GetInt(3, 24, 5);
+        set => SetInt(3, 24, 5, (int)value);
     }
 
     public TypeId Type
@@ -52,7 +52,7 @@ public partial class Move : BaseDataWindow, INamedModel
         set => SetInt(4, 13, 7, (int)value);
     }
 
-    public int Effect1Chance
+    public int Effect1_Quantity
     {
         get => GetInt(4, 20, 7);
         set => SetInt(4, 20, 7, value);
@@ -62,48 +62,6 @@ public partial class Move : BaseDataWindow, INamedModel
     {
         get => (MoveRangeId)GetInt(4, 27, 5);
         set => SetInt(4, 27, 5, (int)value);
-    }
-
-    public MoveEffectId Effect2
-    {
-        get => (MoveEffectId)GetInt(6, 0, 7);
-        set => SetInt(6, 0, 7, (int)value);
-    }
-
-    public int Effect2Chance
-    {
-        get => GetInt(6, 7, 7);
-        set => SetInt(6, 7, 7, value);
-    }
-
-    public MoveEffectId Effect3
-    {
-        get => (MoveEffectId)GetInt(6, 14, 7);
-        set => SetInt(6, 14, 7, (int)value);
-    }
-
-    public int Effect3Chance
-    {
-        get => GetInt(6, 21, 7);
-        set => SetInt(6, 21, 7, value);
-    }
-
-    public MoveEffectId Effect4
-    {
-        get => (MoveEffectId)GetInt(7, 0, 7);
-        set => SetInt(7, 0, 7, (int)value);
-    }
-
-    public int Effect4Chance
-    {
-        get => GetInt(7, 7, 7);
-        set => SetInt(7, 7, 7, value);
-    }
-
-    public int Accuracy
-    {
-        get => GetInt(7, 19, 7);
-        set => SetInt(7, 19, 7, value);
     }
 
     public MoveAnimationId StartupAnimation
@@ -124,21 +82,63 @@ public partial class Move : BaseDataWindow, INamedModel
         set => SetInt(5, 18, 9, (int)value);
     }
 
-    public MoveAnimationId AdditionalAnimation
+    public MoveEffectId Effect2
     {
-        get => (MoveAnimationId)GetInt(8, 0, 9);
-        set => SetInt(8, 0, 9, (int)value);
+        get => (MoveEffectId)GetInt(6, 0, 7);
+        set => SetInt(6, 0, 7, (int)value);
     }
 
-    public bool EnableAdditionalAnimation
+    public int Effect2_Quantity
     {
-        get => GetInt(8, 9, 1) == 1;
-        set => SetInt(8, 9, 1, value ? 1 : 0);
+        get => GetInt(6, 7, 7);
+        set => SetInt(6, 7, 7, value);
     }
 
-    public MoveUnknownOptionId UnknownOption
+    public MoveEffectId Rank5Effect1
     {
-        get => (MoveUnknownOptionId)GetInt(7, 26, 4);
+        get => (MoveEffectId)GetInt(6, 14, 7);
+        set => SetInt(6, 14, 7, (int)value);
+    }
+
+    public int Rank5Effect1_Quantity
+    {
+        get => GetInt(6, 21, 7);
+        set => SetInt(6, 21, 7, value);
+    }
+
+    public MoveMovementAnimationTimingId MovementTiming
+    {
+        get => (MoveMovementAnimationTimingId)GetInt(6, 28, 4);
+        set => SetInt(6, 28, 4, (int)value);
+    }
+
+    public MoveEffectId Rank5Effect2
+    {
+        get => (MoveEffectId)GetInt(7, 0, 7);
+        set => SetInt(7, 0, 7, (int)value);
+    }
+
+    public int Rank5Effect2_Quantity
+    {
+        get => GetInt(7, 7, 7);
+        set => SetInt(7, 7, 7, value);
+    }
+
+    public MoveMovementAnimationId MovementAnimation
+    {
+        get => (MoveMovementAnimationId)GetInt(7, 14, 5);
+        set => SetInt(7, 14, 5, (int)value);
+    }
+
+    public int Accuracy
+    {
+        get => GetInt(7, 19, 7);
+        set => SetInt(7, 19, 7, value);
+    }
+
+    public MoveInteractionId Interaction
+    {
+        get => (MoveInteractionId)GetInt(7, 26, 4);
         set => SetInt(7, 26, 4, (int)value);
     }
 
@@ -148,15 +148,21 @@ public partial class Move : BaseDataWindow, INamedModel
         set => SetInt(7, 30, 2, (int)value);
     }
 
-    public MoveMovementAnimationId MovementAnimation
+    public MoveAnimationId AdditionalAnimation
     {
-        get => (MoveMovementAnimationId)GetInt(7, 14, 5);
-        set => SetInt(7, 14, 5, (int)value);
+        get => (MoveAnimationId)GetInt(8, 0, 9);
+        set => SetInt(8, 0, 9, (int)value);
     }
 
-    public MoveMovementAnimationTimingId MovementTiming
+    public int Unknown_8_9_5
     {
-        get => (MoveMovementAnimationTimingId)GetInt(6, 28, 4);
-        set => SetInt(6, 28, 4, (int)value);
+        get => GetInt(8, 9, 5);
+        set => SetInt(8, 9, 5, value);
+    }
+
+    public int Unknown_8_14_6
+    {
+        get => GetInt(8, 14, 6);
+        set => SetInt(8, 14, 6, value);
     }
 }

@@ -66,8 +66,8 @@ public partial class GimmickViewModel : ViewModelBase, IBigViewModel
             case nameof(Image3):
                 RaisePropertyChanged(nameof(Image3Path));
                 break;
-            case nameof(AttackPower):
-                StarCount = MiscUtil.PowerToStarCount(AttackPower);
+            case nameof(Effect_Quantity):
+                StarCount = MiscUtil.PowerToStarCount(Effect_Quantity);
                 break;
             case nameof(StarCount):
             case nameof(AttackType):

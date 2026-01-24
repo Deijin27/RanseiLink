@@ -3,7 +3,7 @@ namespace RanseiLink.Core.Enums;
 
 public enum RankUpConditionId
 {
-    Unknown,
+    Pokemon,
     AfterCompletingEpisode,
     DuringEpisode,
     Unused_1,

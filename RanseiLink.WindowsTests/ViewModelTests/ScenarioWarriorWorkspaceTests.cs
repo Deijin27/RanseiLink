@@ -20,6 +20,8 @@ public  class ScenarioWarriorWorkspaceTests
     Mock<IJumpService> js = new();
     Mock<IIdToNameService> ins = new();
     Mock<IPokemonService> ps = new();
+    Mock<IScenarioArmyService> armyService = new();
+    Mock<IChildScenarioArmyService> csas = new();
     ScenarioId scenario = ScenarioId.TheLegendOfRansei;
     List<ScenarioWarrior> warriors = new();
     List<ScenarioPokemon> pokemon = new();
@@ -74,7 +76,8 @@ public  class ScenarioWarriorWorkspaceTests
         vm.SetModel(
             scenario,
             csws.Object,
-            csps.Object
+            csps.Object,
+            csas.Object
             );
     }
 

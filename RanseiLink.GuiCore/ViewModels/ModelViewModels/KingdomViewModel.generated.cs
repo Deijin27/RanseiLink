@@ -24,11 +24,11 @@ public partial class KingdomViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public int Unknown1_Max => 7;
-    public int Unknown1
+    public int Unknown_2_24_3_Max => 7;
+    public int Unknown_2_24_3
     {
-        get => _model.Unknown1;
-        set => SetProperty(_model.Unknown1, value, v => _model.Unknown1 = v);
+        get => _model.Unknown_2_24_3;
+        set => SetProperty(_model.Unknown_2_24_3, value, v => _model.Unknown_2_24_3 = v);
     }
 
     public int MapConnection0
@@ -49,16 +49,16 @@ public partial class KingdomViewModel : ViewModelBase
         set => SetProperty(_model.MapConnection2, (KingdomId)value, v => _model.MapConnection2 = v);
     }
 
-    public int MapConnection3
-    {
-        get => (int)_model.MapConnection3;
-        set => SetProperty(_model.MapConnection3, (KingdomId)value, v => _model.MapConnection3 = v);
-    }
-
     public int MapConnection4
     {
         get => (int)_model.MapConnection4;
         set => SetProperty(_model.MapConnection4, (KingdomId)value, v => _model.MapConnection4 = v);
+    }
+
+    public int MapConnection3
+    {
+        get => (int)_model.MapConnection3;
+        set => SetProperty(_model.MapConnection3, (KingdomId)value, v => _model.MapConnection3 = v);
     }
 
     public int MapConnection5

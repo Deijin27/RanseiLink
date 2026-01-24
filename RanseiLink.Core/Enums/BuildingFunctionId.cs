@@ -15,4 +15,5 @@ public enum BuildingFunctionId
     IncreaseWildPokemonNumber,
     Battle,
     ChangePokemonAbility,
+    // Default // not used anywhere, but this is the default value the game code uses if a building id is invalid
 }

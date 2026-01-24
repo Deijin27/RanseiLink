@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Enums;
+using RanseiLink.Core.Models;
 using RanseiLink.Core.Services.ModelServices;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -13,7 +14,8 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     private readonly SwMiniViewModel.Factory _itemFactory;
     private readonly SwKingdomMiniViewModel.Factory _kingdomItemFactory;
     private readonly SwSimpleKingdomMiniViewModel.Factory _simpleKingdomItemFactory;
-    private static bool __showArmy = true;
+    private static bool __showArmy = false;
+    private static bool __showArmyKingdom = true;
     private static bool __showFree = false;
     private static bool __showUnassigned = false;
     private object? _selectedItem;
@@ -109,9 +111,10 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 
         // updating of leader
         // if the class is leader, and hasn't changed (changing class would have already done the updates)
-        if (newItem.Class == WarriorClassId.ArmyLeader && oldClass == WarriorClassId.ArmyLeader)
+        if (newItem.Class == WarriorClassId.ArmyLeader && oldClass == WarriorClassId.ArmyLeader && oldArmy != newItem.Army)
         {
-            UpdateLeaders();
+            UpdateLeaders(oldArmy, null);
+            UpdateLeaders(newItem.Army, newItem);
         }
     }
 
@@ -136,12 +139,15 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         }
     }
 
-    public void UpdateLeaders()
+    public ScenarioArmyViewModel? GetArmy(int id)
     {
-        foreach (var i in Items.OfType<SwKingdomMiniViewModel>())
-        {
-            i.UpdateLeader();
-        }
+        return Armies.FirstOrDefault(x => x.Id == id);
+    }
+
+    public void UpdateLeaders(int armyId, SwMiniViewModel? newLeader)
+    {
+        var army = GetArmy(armyId);
+        army?.Leader = newLeader;
     }
 
     private ScenarioPokemonViewModel _spVm = null!;
@@ -164,9 +170,18 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         return this;
     }
 
-    public void SetModel(ScenarioId scenario, IChildScenarioWarriorService childSwService, IChildScenarioPokemonService childSpService)
+    public void SetModel(ScenarioId scenario, 
+        IChildScenarioWarriorService childSwService, 
+        IChildScenarioPokemonService childSpService,
+        IChildScenarioArmyService childScenarioArmyService)
     {
         _loading = true;
+
+        Armies.Clear();
+        foreach (var army in childScenarioArmyService.ValidIds())
+        {
+            Armies.Add(new ScenarioArmyViewModel(army, childScenarioArmyService.Retrieve(army), ItemClickedCommand));
+        }
 
         _childSpService = childSpService;
         ScenarioPokemonItems = childSpService.GetComboBoxItemsExceptDefault();
@@ -188,7 +203,7 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         foreach (var kingdom in EnumUtil.GetValues<KingdomId>())
         {
             var group = childSwService.Enumerate().Select((warrior, id) => (warrior, id)).Where(x => x.warrior.Kingdom == kingdom);
-            var kingdomItem = _kingdomItemFactory().Init(scenario, kingdom, ItemClickedCommand);
+            var kingdomItem = _kingdomItemFactory().Init(scenario, kingdom, ItemClickedCommand, this);
             kingdomItem.PropertyChanged += KingdomItem_PropertyChanged;
             Items.Add(kingdomItem);
             WildItems.Add(_simpleKingdomItemFactory().Init(kingdom));
@@ -199,6 +214,8 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
                 switch (scenarioWarrior.warrior.Class)
                 {
                     case WarriorClassId.ArmyLeader:
+                        GetArmy(item.Army)?.Leader = item;
+                        goto case WarriorClassId.ArmyMember;
                     case WarriorClassId.ArmyMember:
                         Items.Add(item);
                         break;
@@ -238,10 +255,6 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         {
             warrior.Army = kingdomItem.Army;
         }
-
-        // since the army has changed, the leader of this kingdom could have changed
-        // and if this kingdom contains a leader, the leader of other kingdoms could have changed too.
-        UpdateLeaders();
     }
 
     private void WarriorItem_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -301,9 +314,10 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         .Concat(WildItems.OfType<SwMiniViewModel>())
         .Concat(UnassignedItems.OfType<SwMiniViewModel>());
 
-    public ObservableCollection<object> Items { get; } = new();
-    public ObservableCollection<object> WildItems { get; } = new();
-    public ObservableCollection<object> UnassignedItems { get; } = new();
+    public ObservableCollection<ScenarioArmyViewModel> Armies { get; } = [];
+    public ObservableCollection<object> Items { get; } = [];
+    public ObservableCollection<object> WildItems { get; } = [];
+    public ObservableCollection<object> UnassignedItems { get; } = [];
     public DragHandlerPro ItemDragHandler { get; }
     public DropHandlerPro ItemDropHandler { get; }
     public ICommand ItemClickedCommand { get; }
@@ -320,6 +334,11 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     {
         get => __showArmy;
         set => SetProperty(ref __showArmy, value);
+    }
+    public bool ShowArmyKingdom
+    {
+        get => __showArmyKingdom;
+        set => SetProperty(ref __showArmyKingdom, value);
     }
     public bool ShowFree
     {
@@ -355,6 +374,10 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         else if (sender is SwKingdomMiniViewModel swkvm && swkvm.Kingdom != KingdomId.Default)
         {
             // default kingdom doesn't have a ScenarioKingdom slot value to be modified
+            SelectedItem = sender;
+        }
+        else if (sender is ScenarioArmyViewModel)
+        {
             SelectedItem = sender;
         }
     }

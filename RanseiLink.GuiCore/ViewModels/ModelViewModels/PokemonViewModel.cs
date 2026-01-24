@@ -67,12 +67,24 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         switch (e.PropertyName)
         {
             case nameof(EvolutionCondition1):
-            case nameof(QuantityForEvolutionCondition1):
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition1Name));
+                RaisePropertyChanged(nameof(EvolutionCondition1_Quantity1_Name));
+                RaisePropertyChanged(nameof(EvolutionCondition1_Quantity2_Name));
+                break;
+            case nameof(EvolutionCondition1_Quantity1):
+                RaisePropertyChanged(nameof(EvolutionCondition1_Quantity1_Name));
+                break;
+            case nameof(EvolutionCondition1_Quantity2):
+                RaisePropertyChanged(nameof(EvolutionCondition1_Quantity2_Name));
                 break;
             case nameof(EvolutionCondition2):
-            case nameof(QuantityForEvolutionCondition2):
-                RaisePropertyChanged(nameof(QuantityForEvolutionCondition2Name));
+                RaisePropertyChanged(nameof(EvolutionCondition2_Quantity1_Name));
+                RaisePropertyChanged(nameof(EvolutionCondition2_Quantity2_Name));
+                break;
+            case nameof(EvolutionCondition2_Quantity1):
+                RaisePropertyChanged(nameof(EvolutionCondition2_Quantity1_Name));
+                break;
+            case nameof(EvolutionCondition2_Quantity2):
+                RaisePropertyChanged(nameof(EvolutionCondition2_Quantity2_Name));
                 break;
         }
     }
@@ -106,10 +118,18 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
     public ICommand JumpToMoveCommand { get; }
     public ICommand JumpToAbilityCommand { get; }
 
-    public string QuantityForEvolutionCondition1Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition1, _model.QuantityForEvolutionCondition1);
+    public string EvolutionCondition1_Quantity1_Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition1, _model.EvolutionCondition1_Quantity1);
+    public string EvolutionCondition1_Quantity2_Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition1, _model.EvolutionCondition1_Quantity2);
+
+    public string EvolutionCondition2_Quantity1_Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition2, _model.EvolutionCondition2_Quantity1);
+    public string EvolutionCondition2_Quantity2_Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition2, _model.EvolutionCondition2_Quantity2);
 
     private string GetNameOfQuantityForEvolutionCondition(EvolutionConditionId id, int quantity)
     {
+        if (quantity == 511)
+        {
+            return "Default";
+        }
         switch (id)
         {
             case EvolutionConditionId.Kingdom:
@@ -132,8 +152,6 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
                 return "";
         }
     }
-
-    public string QuantityForEvolutionCondition2Name => GetNameOfQuantityForEvolutionCondition(EvolutionCondition2, _model.QuantityForEvolutionCondition2);
 
     public ObservableCollection<HabitatItem> HabitatItems { get; } = [];
 

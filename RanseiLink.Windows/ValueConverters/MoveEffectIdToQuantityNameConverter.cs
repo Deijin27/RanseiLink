@@ -11,10 +11,10 @@ public class MoveEffectIdToQuantityNameConverter : ValueConverter<MoveEffectId, 
             case MoveEffectId.Unused_16:
             case MoveEffectId.HotSpring_WaterBucket_RevivalNode:
             case MoveEffectId.Unused_18:
-            case MoveEffectId.Unused_1:
             case MoveEffectId.Unused_19:
                 return $"Unused Quantity";
 
+            case MoveEffectId.GuaranteedCriticalHit:
             case MoveEffectId.ThawsUserIfFrozen:
             case MoveEffectId.WakesTargetIfSleep:
             case MoveEffectId.DestroysTargetsConsumableItem:

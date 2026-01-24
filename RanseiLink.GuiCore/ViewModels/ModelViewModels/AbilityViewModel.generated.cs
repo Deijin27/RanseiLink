@@ -24,11 +24,11 @@ public partial class AbilityViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
-    public int Effect1Amount_Max => 3;
-    public int Effect1Amount
+    public int Effect1_Quantity_Max => 255;
+    public int Effect1_Quantity
     {
-        get => _model.Effect1Amount;
-        set => SetProperty(_model.Effect1Amount, value, v => _model.Effect1Amount = v);
+        get => _model.Effect1_Quantity;
+        set => SetProperty(_model.Effect1_Quantity, value, v => _model.Effect1_Quantity = v);
     }
 
     public AbilityEffectId Effect1
@@ -43,11 +43,11 @@ public partial class AbilityViewModel : ViewModelBase
         set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public int Effect2Amount_Max => 3;
-    public int Effect2Amount
+    public int Effect2_Quantity_Max => 255;
+    public int Effect2_Quantity
     {
-        get => _model.Effect2Amount;
-        set => SetProperty(_model.Effect2Amount, value, v => _model.Effect2Amount = v);
+        get => _model.Effect2_Quantity;
+        set => SetProperty(_model.Effect2_Quantity, value, v => _model.Effect2_Quantity = v);
     }
 
     public string Description

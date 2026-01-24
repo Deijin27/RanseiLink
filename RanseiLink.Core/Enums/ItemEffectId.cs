@@ -39,9 +39,9 @@ public enum ItemEffectId
     IncreaseDefenceMayBreak,
 
     /// <summary>
-    /// Unknown
+    /// Increases Speed but may break
     /// </summary>
-    Unknown_7,
+    IncreaseSpeedMayBreak,
 
     /// <summary>
     /// Increases movement range
@@ -64,9 +64,9 @@ public enum ItemEffectId
     CuresStatusCondition,
 
     /// <summary>
-    /// Unknown
+    /// Increase move rank by amount (up to the maximum rank of 5)
     /// </summary>
-    Unknown_12,
+    IncreaseMoveRank,
 
     /// <summary>
     /// Increases pokémon's energy

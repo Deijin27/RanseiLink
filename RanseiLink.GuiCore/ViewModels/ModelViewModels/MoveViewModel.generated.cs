@@ -49,63 +49,17 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.Effect1, value, v => _model.Effect1 = v);
     }
 
-    public int Effect1Chance_Max => 127;
-    public int Effect1Chance
+    public int Effect1_Quantity_Max => 127;
+    public int Effect1_Quantity
     {
-        get => _model.Effect1Chance;
-        set => SetProperty(_model.Effect1Chance, value, v => _model.Effect1Chance = v);
+        get => _model.Effect1_Quantity;
+        set => SetProperty(_model.Effect1_Quantity, value, v => _model.Effect1_Quantity = v);
     }
 
     public int Range
     {
         get => (int)_model.Range;
         set => SetProperty(_model.Range, (MoveRangeId)value, v => _model.Range = v);
-    }
-
-    public MoveEffectId Effect2
-    {
-        get => _model.Effect2;
-        set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
-    }
-
-    public int Effect2Chance_Max => 127;
-    public int Effect2Chance
-    {
-        get => _model.Effect2Chance;
-        set => SetProperty(_model.Effect2Chance, value, v => _model.Effect2Chance = v);
-    }
-
-    public MoveEffectId Effect3
-    {
-        get => _model.Effect3;
-        set => SetProperty(_model.Effect3, value, v => _model.Effect3 = v);
-    }
-
-    public int Effect3Chance_Max => 127;
-    public int Effect3Chance
-    {
-        get => _model.Effect3Chance;
-        set => SetProperty(_model.Effect3Chance, value, v => _model.Effect3Chance = v);
-    }
-
-    public MoveEffectId Effect4
-    {
-        get => _model.Effect4;
-        set => SetProperty(_model.Effect4, value, v => _model.Effect4 = v);
-    }
-
-    public int Effect4Chance_Max => 127;
-    public int Effect4Chance
-    {
-        get => _model.Effect4Chance;
-        set => SetProperty(_model.Effect4Chance, value, v => _model.Effect4Chance = v);
-    }
-
-    public int Accuracy_Max => 127;
-    public int Accuracy
-    {
-        get => _model.Accuracy;
-        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
     }
 
     public int StartupAnimation
@@ -126,28 +80,49 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.ImpactAnimation, (MoveAnimationId)value, v => _model.ImpactAnimation = v);
     }
 
-    public int AdditionalAnimation
+    public MoveEffectId Effect2
     {
-        get => (int)_model.AdditionalAnimation;
-        set => SetProperty(_model.AdditionalAnimation, (MoveAnimationId)value, v => _model.AdditionalAnimation = v);
+        get => _model.Effect2;
+        set => SetProperty(_model.Effect2, value, v => _model.Effect2 = v);
     }
 
-    public bool EnableAdditionalAnimation
+    public int Effect2_Quantity_Max => 127;
+    public int Effect2_Quantity
     {
-        get => _model.EnableAdditionalAnimation;
-        set => SetProperty(_model.EnableAdditionalAnimation, value, v => _model.EnableAdditionalAnimation = v);
+        get => _model.Effect2_Quantity;
+        set => SetProperty(_model.Effect2_Quantity, value, v => _model.Effect2_Quantity = v);
     }
 
-    public MoveUnknownOptionId UnknownOption
+    public MoveEffectId Rank5Effect1
     {
-        get => _model.UnknownOption;
-        set => SetProperty(_model.UnknownOption, value, v => _model.UnknownOption = v);
+        get => _model.Rank5Effect1;
+        set => SetProperty(_model.Rank5Effect1, value, v => _model.Rank5Effect1 = v);
     }
 
-    public MoveMovementId Movement
+    public int Rank5Effect1_Quantity_Max => 127;
+    public int Rank5Effect1_Quantity
     {
-        get => _model.Movement;
-        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
+        get => _model.Rank5Effect1_Quantity;
+        set => SetProperty(_model.Rank5Effect1_Quantity, value, v => _model.Rank5Effect1_Quantity = v);
+    }
+
+    public MoveMovementAnimationTimingId MovementTiming
+    {
+        get => _model.MovementTiming;
+        set => SetProperty(_model.MovementTiming, value, v => _model.MovementTiming = v);
+    }
+
+    public MoveEffectId Rank5Effect2
+    {
+        get => _model.Rank5Effect2;
+        set => SetProperty(_model.Rank5Effect2, value, v => _model.Rank5Effect2 = v);
+    }
+
+    public int Rank5Effect2_Quantity_Max => 127;
+    public int Rank5Effect2_Quantity
+    {
+        get => _model.Rank5Effect2_Quantity;
+        set => SetProperty(_model.Rank5Effect2_Quantity, value, v => _model.Rank5Effect2_Quantity = v);
     }
 
     public MoveMovementAnimationId MovementAnimation
@@ -156,10 +131,43 @@ public partial class MoveViewModel : ViewModelBase
         set => SetProperty(_model.MovementAnimation, value, v => _model.MovementAnimation = v);
     }
 
-    public MoveMovementAnimationTimingId MovementTiming
+    public int Accuracy_Max => 127;
+    public int Accuracy
     {
-        get => _model.MovementTiming;
-        set => SetProperty(_model.MovementTiming, value, v => _model.MovementTiming = v);
+        get => _model.Accuracy;
+        set => SetProperty(_model.Accuracy, value, v => _model.Accuracy = v);
+    }
+
+    public MoveInteractionId Interaction
+    {
+        get => _model.Interaction;
+        set => SetProperty(_model.Interaction, value, v => _model.Interaction = v);
+    }
+
+    public MoveMovementId Movement
+    {
+        get => _model.Movement;
+        set => SetProperty(_model.Movement, value, v => _model.Movement = v);
+    }
+
+    public int AdditionalAnimation
+    {
+        get => (int)_model.AdditionalAnimation;
+        set => SetProperty(_model.AdditionalAnimation, (MoveAnimationId)value, v => _model.AdditionalAnimation = v);
+    }
+
+    public int Unknown_8_9_5_Max => 31;
+    public int Unknown_8_9_5
+    {
+        get => _model.Unknown_8_9_5;
+        set => SetProperty(_model.Unknown_8_9_5, value, v => _model.Unknown_8_9_5 = v);
+    }
+
+    public int Unknown_8_14_6_Max => 63;
+    public int Unknown_8_14_6
+    {
+        get => _model.Unknown_8_14_6;
+        set => SetProperty(_model.Unknown_8_14_6, value, v => _model.Unknown_8_14_6 = v);
     }
 
     public string Description

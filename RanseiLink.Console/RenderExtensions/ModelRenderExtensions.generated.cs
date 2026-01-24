@@ -14,10 +14,10 @@ public static partial class RenderExtensions
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
-        console.WriteProperty("Effect1Amount", model.Effect1Amount);
+        console.WriteProperty("Effect1_Quantity", model.Effect1_Quantity);
         console.WriteProperty("Effect1", model.Effect1);
         console.WriteProperty("Effect2", model.Effect2);
-        console.WriteProperty("Effect2Amount", model.Effect2Amount);
+        console.WriteProperty("Effect2_Quantity", model.Effect2_Quantity);
     }
     public static void Render(this IConsole console, BaseWarrior model, object title)
     {
@@ -26,37 +26,41 @@ public static partial class RenderExtensions
         console.WriteProperty("SpeakerId", model.SpeakerId);
         console.WriteProperty("Gender", model.Gender);
         console.WriteProperty("Name", model.Name);
+        console.WriteProperty("RankUpLink", model.RankUpLink);
         console.WriteProperty("Speciality1", model.Speciality1);
         console.WriteProperty("Speciality2", model.Speciality2);
         console.WriteProperty("Weakness1", model.Weakness1);
         console.WriteProperty("Weakness2", model.Weakness2);
+        console.WriteProperty("RankUpCondition1_Quantity1", model.RankUpCondition1_Quantity1);
         console.WriteProperty("Skill", model.Skill);
+        console.WriteProperty("Unknown_2_7_3", model.Unknown_2_7_3);
+        console.WriteProperty("Unknown_2_10_3", model.Unknown_2_10_3);
+        console.WriteProperty("Unknown_2_13_2", model.Unknown_2_13_2);
+        console.WriteProperty("RankUpWarrior", model.RankUpWarrior);
+        console.WriteProperty("RankUpCondition1", model.RankUpCondition1);
+        console.WriteProperty("RankUpCondition2", model.RankUpCondition2);
         console.WriteProperty("Power", model.Power);
         console.WriteProperty("Wisdom", model.Wisdom);
         console.WriteProperty("Charisma", model.Charisma);
         console.WriteProperty("Capacity", model.Capacity);
-        console.WriteProperty("RankUpCondition1", model.RankUpCondition1);
-        console.WriteProperty("RankUpCondition2", model.RankUpCondition2);
-        console.WriteProperty("Quantity1ForRankUpCondition", model.Quantity1ForRankUpCondition);
-        console.WriteProperty("Quantity2ForRankUpCondition", model.Quantity2ForRankUpCondition);
-        console.WriteProperty("RankUp", model.RankUp);
-        console.WriteProperty("RankUpPokemon1", model.RankUpPokemon1);
-        console.WriteProperty("RankUpPokemon2", model.RankUpPokemon2);
-        console.WriteProperty("RankUpLink", model.RankUpLink);
+        console.WriteProperty("Unknown_3_25_7", model.Unknown_3_25_7);
+        console.WriteProperty("RankUpCondition1_Quantity2", model.RankUpCondition1_Quantity2);
+        console.WriteProperty("RankUpCondition2_Quantity1", model.RankUpCondition2_Quantity1);
+        console.WriteProperty("RankUpCondition2_Quantity2", model.RankUpCondition2_Quantity2);
     }
     public static void Render(this IConsole console, BattleConfig model, object title)
     {
         console.WriteTitle(title);
         console.WriteProperty("Map", model.Map);
         console.WriteProperty("MapVariant", model.MapVariant);
-        console.WriteProperty("Minimap", model.Minimap);
-        console.WriteProperty("MinimapVariant", model.MinimapVariant);
-        console.WriteProperty("Unknown", model.Unknown);
-        console.WriteProperty("UpperAtmosphereColor", model.UpperAtmosphereColor);
-        console.WriteProperty("MiddleAtmosphereColor", model.MiddleAtmosphereColor);
-        console.WriteProperty("LowerAtmosphereColor", model.LowerAtmosphereColor);
+        console.WriteProperty("UpperSkyColor", model.UpperSkyColor);
+        console.WriteProperty("MiddleSkyColor", model.MiddleSkyColor);
+        console.WriteProperty("LowerSkyColor", model.LowerSkyColor);
+        console.WriteProperty("Unknown_2_0_3", model.Unknown_2_0_3);
         console.WriteProperty("VictoryCondition", model.VictoryCondition);
         console.WriteProperty("DefeatCondition", model.DefeatCondition);
+        console.WriteProperty("Minimap", model.Minimap);
+        console.WriteProperty("Unknown_2_18_6", model.Unknown_2_18_6);
         console.WriteProperty("NumberOfTurns", model.NumberOfTurns);
         console.WriteProperty("Treasure1", model.Treasure1);
         console.WriteProperty("Treasure2", model.Treasure2);
@@ -68,8 +72,6 @@ public static partial class RenderExtensions
         console.WriteProperty("Treasure8", model.Treasure8);
         console.WriteProperty("Treasure9", model.Treasure9);
         console.WriteProperty("Treasure10", model.Treasure10);
-        console.WriteProperty("Treasure11", model.Treasure11);
-        console.WriteProperty("Treasure12", model.Treasure12);
     }
     public static void Render(this IConsole console, Building model, object title)
     {
@@ -95,21 +97,21 @@ public static partial class RenderExtensions
     public static void Render(this IConsole console, Episode model, object title)
     {
         console.WriteTitle(title);
-        console.WriteProperty("Order", model.Order);
+        console.WriteProperty("ScenarioWarrior", model.ScenarioWarrior);
         console.WriteProperty("Scenario", model.Scenario);
-        console.WriteProperty("UnlockCondition", model.UnlockCondition);
-        console.WriteProperty("Difficulty", model.Difficulty);
-        console.WriteProperty("ClearCondition", model.ClearCondition);
         console.WriteProperty("IsStartKingdom", "");
         foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsStartKingdom))
         {
             console.Output.WriteLine($"      - {i}");
         }
+        console.WriteProperty("UnlockCondition", model.UnlockCondition);
+        console.WriteProperty("Difficulty", model.Difficulty);
         console.WriteProperty("IsUnlockedKingdom", "");
         foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetIsUnlockedKingdom))
         {
             console.Output.WriteLine($"      - {i}");
         }
+        console.WriteProperty("ClearCondition", model.ClearCondition);
     }
     public static void Render(this IConsole console, EventSpeaker model, object title)
     {
@@ -128,7 +130,7 @@ public static partial class RenderExtensions
         console.WriteProperty("State1Sprite", model.State1Sprite);
         console.WriteProperty("State2Sprite", model.State2Sprite);
         console.WriteProperty("Effect", model.Effect);
-        console.WriteProperty("AttackPower", model.AttackPower);
+        console.WriteProperty("Effect_Quantity", model.Effect_Quantity);
         console.WriteProperty("Anim1", model.Anim1);
         console.WriteProperty("Anim2", model.Anim2);
         console.WriteProperty("GimmickRef1", model.GimmickRef1);
@@ -136,32 +138,42 @@ public static partial class RenderExtensions
         console.WriteProperty("Unknown_7_5_5", model.Unknown_7_5_5);
         console.WriteProperty("Unknown_7_10_5", model.Unknown_7_10_5);
         console.WriteProperty("Unknown_7_15_5", model.Unknown_7_15_5);
-        console.WriteProperty("Unknown_7_20_12", model.Unknown_7_20_12);
+        console.WriteProperty("Unknown_7_20_1", model.Unknown_7_20_1);
+        console.WriteProperty("Unknown_7_21_1", model.Unknown_7_21_1);
+        console.WriteProperty("Hitbox", model.Hitbox);
+        console.WriteProperty("Unknown_7_27_4", model.Unknown_7_27_4);
+        console.WriteProperty("Unknown_7_31_1", model.Unknown_7_31_1);
         console.WriteProperty("Unknown_8_0_8", model.Unknown_8_0_8);
         console.WriteProperty("Unknown_8_8_8", model.Unknown_8_8_8);
         console.WriteProperty("Unknown_8_16_3", model.Unknown_8_16_3);
-        console.WriteProperty("Unknown_8_24_3", model.Unknown_8_24_3);
+        console.WriteProperty("Range", model.Range);
+        console.WriteProperty("Unknown_8_24_2", model.Unknown_8_24_2);
+        console.WriteProperty("Unknown_8_26_1", model.Unknown_8_26_1);
         console.WriteProperty("Unknown_9_0_4", model.Unknown_9_0_4);
         console.WriteProperty("GimmickRef2", model.GimmickRef2);
         console.WriteProperty("Image2", model.Image2);
         console.WriteProperty("Image3", model.Image3);
-        console.WriteProperty("Range", model.Range);
     }
     public static void Render(this IConsole console, Item model, object title)
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
+        console.WriteProperty("Unknown_5_8_1", model.Unknown_5_8_1);
+        console.WriteProperty("Unknown_5_9_5", model.Unknown_5_9_5);
+        console.WriteProperty("Unknown_5_14_2", model.Unknown_5_14_2);
         console.WriteProperty("PurchaseMethod", model.PurchaseMethod);
         console.WriteProperty("Category", model.Category);
         console.WriteProperty("Effect", model.Effect);
         console.WriteProperty("EffectDuration", model.EffectDuration);
+        console.WriteProperty("Unknown_5_31_1", model.Unknown_5_31_1);
         console.WriteProperty("CraftingIngredient1", model.CraftingIngredient1);
         console.WriteProperty("CraftingIngredient1Amount", model.CraftingIngredient1Amount);
         console.WriteProperty("CraftingIngredient2", model.CraftingIngredient2);
         console.WriteProperty("CraftingIngredient2Amount", model.CraftingIngredient2Amount);
         console.WriteProperty("UnknownItem", model.UnknownItem);
         console.WriteProperty("ShopPriceMultiplier", model.ShopPriceMultiplier);
-        console.WriteProperty("QuantityForEffect", model.QuantityForEffect);
+        console.WriteProperty("Effect_Quantity", model.Effect_Quantity);
+        console.WriteProperty("EffectModifier", model.EffectModifier);
         console.WriteProperty("Purchasable", "");
         foreach (var i in EnumUtil.GetValuesExceptDefaults<KingdomId>().Where(model.GetPurchasable))
         {
@@ -172,12 +184,12 @@ public static partial class RenderExtensions
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
-        console.WriteProperty("Unknown1", model.Unknown1);
+        console.WriteProperty("Unknown_2_24_3", model.Unknown_2_24_3);
         console.WriteProperty("MapConnection0", model.MapConnection0);
         console.WriteProperty("MapConnection1", model.MapConnection1);
         console.WriteProperty("MapConnection2", model.MapConnection2);
-        console.WriteProperty("MapConnection3", model.MapConnection3);
         console.WriteProperty("MapConnection4", model.MapConnection4);
+        console.WriteProperty("MapConnection3", model.MapConnection3);
         console.WriteProperty("MapConnection5", model.MapConnection5);
         console.WriteProperty("MapConnection6", model.MapConnection6);
         console.WriteProperty("MapConnection7", model.MapConnection7);
@@ -189,6 +201,23 @@ public static partial class RenderExtensions
         console.WriteProperty("BattleConfig", model.BattleConfig);
         console.WriteProperty("SwarmPokemon", model.SwarmPokemon);
     }
+    public static void Render(this IConsole console, MapPoint model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Gimmick", model.Gimmick);
+        console.WriteProperty("Cell", model.Cell);
+        console.WriteProperty("Unknown_0_17_2", model.Unknown_0_17_2);
+        console.WriteProperty("Unknown_0_19_1", model.Unknown_0_19_1);
+        console.WriteProperty("Unknown_0_20_1", model.Unknown_0_20_1);
+        console.WriteProperty("Unknown_0_21_5", model.Unknown_0_21_5);
+        console.WriteProperty("Unknown_0_26_6", model.Unknown_0_26_6);
+        console.WriteProperty("Unknown_1_0_8", model.Unknown_1_0_8);
+        console.WriteProperty("Unknown_1_8_9", model.Unknown_1_8_9);
+        console.WriteProperty("Unknown_1_17_7", model.Unknown_1_17_7);
+        console.WriteProperty("Unknown_1_24_3", model.Unknown_1_24_3);
+        console.WriteProperty("Unknown_1_27_4", model.Unknown_1_27_4);
+        console.WriteProperty("Unknown_1_31_1", model.Unknown_1_31_1);
+    }
     public static void Render(this IConsole console, Move model, object title)
     {
         console.WriteTitle(title);
@@ -197,24 +226,25 @@ public static partial class RenderExtensions
         console.WriteProperty("Type", model.Type);
         console.WriteProperty("Power", model.Power);
         console.WriteProperty("Effect1", model.Effect1);
-        console.WriteProperty("Effect1Chance", model.Effect1Chance);
+        console.WriteProperty("Effect1_Quantity", model.Effect1_Quantity);
         console.WriteProperty("Range", model.Range);
-        console.WriteProperty("Effect2", model.Effect2);
-        console.WriteProperty("Effect2Chance", model.Effect2Chance);
-        console.WriteProperty("Effect3", model.Effect3);
-        console.WriteProperty("Effect3Chance", model.Effect3Chance);
-        console.WriteProperty("Effect4", model.Effect4);
-        console.WriteProperty("Effect4Chance", model.Effect4Chance);
-        console.WriteProperty("Accuracy", model.Accuracy);
         console.WriteProperty("StartupAnimation", model.StartupAnimation);
         console.WriteProperty("ProjectileAnimation", model.ProjectileAnimation);
         console.WriteProperty("ImpactAnimation", model.ImpactAnimation);
-        console.WriteProperty("AdditionalAnimation", model.AdditionalAnimation);
-        console.WriteProperty("EnableAdditionalAnimation", model.EnableAdditionalAnimation);
-        console.WriteProperty("UnknownOption", model.UnknownOption);
-        console.WriteProperty("Movement", model.Movement);
-        console.WriteProperty("MovementAnimation", model.MovementAnimation);
+        console.WriteProperty("Effect2", model.Effect2);
+        console.WriteProperty("Effect2_Quantity", model.Effect2_Quantity);
+        console.WriteProperty("Rank5Effect1", model.Rank5Effect1);
+        console.WriteProperty("Rank5Effect1_Quantity", model.Rank5Effect1_Quantity);
         console.WriteProperty("MovementTiming", model.MovementTiming);
+        console.WriteProperty("Rank5Effect2", model.Rank5Effect2);
+        console.WriteProperty("Rank5Effect2_Quantity", model.Rank5Effect2_Quantity);
+        console.WriteProperty("MovementAnimation", model.MovementAnimation);
+        console.WriteProperty("Accuracy", model.Accuracy);
+        console.WriteProperty("Interaction", model.Interaction);
+        console.WriteProperty("Movement", model.Movement);
+        console.WriteProperty("AdditionalAnimation", model.AdditionalAnimation);
+        console.WriteProperty("Unknown_8_9_5", model.Unknown_8_9_5);
+        console.WriteProperty("Unknown_8_14_6", model.Unknown_8_14_6);
     }
     public static void Render(this IConsole console, MoveAnimation model, object title)
     {
@@ -226,44 +256,46 @@ public static partial class RenderExtensions
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
+        console.WriteProperty("CatchRate", model.CatchRate);
         console.WriteProperty("Hp", model.Hp);
         console.WriteProperty("EvolutionCondition1", model.EvolutionCondition1);
         console.WriteProperty("EvolutionCondition2", model.EvolutionCondition2);
+        console.WriteProperty("Section2Index", model.Section2Index);
+        console.WriteProperty("BattleIntroSpriteOffset", model.BattleIntroSpriteOffset);
+        console.WriteProperty("Weight", model.Weight);
         console.WriteProperty("IdleMotion", model.IdleMotion);
         console.WriteProperty("Atk", model.Atk);
         console.WriteProperty("Def", model.Def);
         console.WriteProperty("Spe", model.Spe);
         console.WriteProperty("IsLegendary", model.IsLegendary);
         console.WriteProperty("AsymmetricBattleSprite", model.AsymmetricBattleSprite);
-        console.WriteProperty("LongAttackAnimation", model.LongAttackAnimation);
         console.WriteProperty("Type1", model.Type1);
         console.WriteProperty("Type2", model.Type2);
         console.WriteProperty("Move", model.Move);
+        console.WriteProperty("EvolutionCondition2_Quantity2", model.EvolutionCondition2_Quantity2);
         console.WriteProperty("Ability1", model.Ability1);
         console.WriteProperty("Ability2", model.Ability2);
         console.WriteProperty("Ability3", model.Ability3);
-        console.WriteProperty("QuantityForEvolutionCondition1", model.QuantityForEvolutionCondition1);
-        console.WriteProperty("QuantityForEvolutionCondition2", model.QuantityForEvolutionCondition2);
+        console.WriteProperty("EvolutionCondition1_Quantity1", model.EvolutionCondition1_Quantity1);
+        console.WriteProperty("EvolutionCondition1_Quantity2", model.EvolutionCondition1_Quantity2);
+        console.WriteProperty("EvolutionCondition2_Quantity1", model.EvolutionCondition2_Quantity1);
         console.WriteProperty("MovementRange", model.MovementRange);
+        console.WriteProperty("LongAttackAnimation", model.LongAttackAnimation);
         console.WriteProperty("MinEvolutionTableEntry", model.MinEvolutionTableEntry);
         console.WriteProperty("MaxEvolutionTableEntry", model.MaxEvolutionTableEntry);
         console.WriteProperty("NationalPokedexNumber", model.NationalPokedexNumber);
         console.WriteProperty("NameOrderIndex", model.NameOrderIndex);
-        console.WriteProperty("CatchRate", model.CatchRate);
-        console.WriteProperty("UnknownAnimationValue", model.UnknownAnimationValue);
-        console.WriteProperty("BattleIntroSpriteOffset", model.BattleIntroSpriteOffset);
-        console.WriteProperty("Weight", model.Weight);
     }
     public static void Render(this IConsole console, ScenarioPokemon model, object title)
     {
         console.WriteTitle(title);
-        console.WriteProperty("Ability", model.Ability);
+        console.WriteProperty("U1", model.U1);
+        console.WriteProperty("Exp", model.Exp);
         console.WriteProperty("HpIv", model.HpIv);
         console.WriteProperty("AtkIv", model.AtkIv);
         console.WriteProperty("DefIv", model.DefIv);
         console.WriteProperty("SpeIv", model.SpeIv);
-        console.WriteProperty("Exp", model.Exp);
-        console.WriteProperty("U1", model.U1);
+        console.WriteProperty("Ability", model.Ability);
         console.WriteProperty("Energy", model.Energy);
     }
     public static void Render(this IConsole console, ScenarioWarrior model, object title)
@@ -275,17 +307,25 @@ public static partial class RenderExtensions
         console.WriteProperty("Army", model.Army);
         console.WriteProperty("Item", model.Item);
     }
+    public static void Render(this IConsole console, ScenarioArmy model, object title)
+    {
+        console.WriteTitle(title);
+        console.WriteProperty("Unknown_4_16_2", model.Unknown_4_16_2);
+        console.WriteProperty("Unknown_4_18_5", model.Unknown_4_18_5);
+        console.WriteProperty("Leader", model.Leader);
+        console.WriteProperty("Money", model.Money);
+    }
     public static void Render(this IConsole console, WarriorSkill model, object title)
     {
         console.WriteTitle(title);
         console.WriteProperty("Name", model.Name);
-        console.WriteProperty("Effect1Amount", model.Effect1Amount);
+        console.WriteProperty("Effect1_Quantity", model.Effect1_Quantity);
         console.WriteProperty("Effect1", model.Effect1);
         console.WriteProperty("Effect2", model.Effect2);
-        console.WriteProperty("Effect2Amount", model.Effect2Amount);
+        console.WriteProperty("Effect2_Quantity", model.Effect2_Quantity);
         console.WriteProperty("Effect3", model.Effect3);
         console.WriteProperty("Duration", model.Duration);
-        console.WriteProperty("Effect3Amount", model.Effect3Amount);
+        console.WriteProperty("Effect3_Quantity", model.Effect3_Quantity);
         console.WriteProperty("Target", model.Target);
         console.WriteProperty("Animation", model.Animation);
     }

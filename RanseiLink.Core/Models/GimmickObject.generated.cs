@@ -12,4 +12,64 @@ public partial class GimmickObject : BaseDataWindow
     public const int DataLength = 0x4;
     public GimmickObject(byte[] data) : base(data, DataLength) { }
     public GimmickObject() : this(new byte[DataLength]) { }
+
+    public int Unknown_0_0_5
+    {
+        get => GetInt(0, 0, 5);
+        set => SetInt(0, 0, 5, value);
+    }
+
+    public int Unknown_0_5_1
+    {
+        get => GetInt(0, 5, 1);
+        set => SetInt(0, 5, 1, value);
+    }
+
+    public int Unknown_0_6_2
+    {
+        get => GetInt(0, 6, 2);
+        set => SetInt(0, 6, 2, value);
+    }
+
+    public int Unknown_0_8_3
+    {
+        get => GetInt(0, 8, 3);
+        set => SetInt(0, 8, 3, value);
+    }
+
+    public int Unknown_0_11_2
+    {
+        get => GetInt(0, 11, 2);
+        set => SetInt(0, 11, 2, value);
+    }
+
+    public int Unknown_0_13_3
+    {
+        get => GetInt(0, 13, 3);
+        set => SetInt(0, 13, 3, value);
+    }
+
+    public int Unknown_0_16_2
+    {
+        get => GetInt(0, 16, 2);
+        set => SetInt(0, 16, 2, value);
+    }
+
+    public int Unknown_0_18_2
+    {
+        get => GetInt(0, 18, 2);
+        set => SetInt(0, 18, 2, value);
+    }
+
+    public int Unknown_0_20_5
+    {
+        get => GetInt(0, 20, 5);
+        set => SetInt(0, 20, 5, value);
+    }
+
+    public int Unknown_0_25_2
+    {
+        get => GetInt(0, 25, 2);
+        set => SetInt(0, 25, 2, value);
+    }
 }

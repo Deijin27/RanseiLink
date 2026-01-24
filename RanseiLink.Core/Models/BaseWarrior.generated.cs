@@ -37,6 +37,12 @@ public partial class BaseWarrior : BaseDataWindow
         set => SetInt(0, 17, 8, value);
     }
 
+    public int RankUpLink
+    {
+        get => GetInt(0, 25, 7);
+        set => SetInt(0, 25, 7, value);
+    }
+
     public TypeId Speciality1
     {
         get => (TypeId)GetInt(1, 0, 5);
@@ -61,10 +67,52 @@ public partial class BaseWarrior : BaseDataWindow
         set => SetInt(1, 15, 5, (int)value);
     }
 
+    public int RankUpCondition1_Quantity1
+    {
+        get => GetInt(1, 20, 9);
+        set => SetInt(1, 20, 9, value);
+    }
+
     public WarriorSkillId Skill
     {
         get => (WarriorSkillId)GetInt(2, 0, 7);
         set => SetInt(2, 0, 7, (int)value);
+    }
+
+    public int Unknown_2_7_3
+    {
+        get => GetInt(2, 7, 3);
+        set => SetInt(2, 7, 3, value);
+    }
+
+    public int Unknown_2_10_3
+    {
+        get => GetInt(2, 10, 3);
+        set => SetInt(2, 10, 3, value);
+    }
+
+    public int Unknown_2_13_2
+    {
+        get => GetInt(2, 13, 2);
+        set => SetInt(2, 13, 2, value);
+    }
+
+    public WarriorId RankUpWarrior
+    {
+        get => (WarriorId)GetInt(2, 15, 9);
+        set => SetInt(2, 15, 9, (int)value);
+    }
+
+    public RankUpConditionId RankUpCondition1
+    {
+        get => (RankUpConditionId)GetInt(2, 24, 4);
+        set => SetInt(2, 24, 4, (int)value);
+    }
+
+    public RankUpConditionId RankUpCondition2
+    {
+        get => (RankUpConditionId)GetInt(2, 28, 4);
+        set => SetInt(2, 28, 4, (int)value);
     }
 
     public int Power
@@ -91,51 +139,27 @@ public partial class BaseWarrior : BaseDataWindow
         set => SetInt(3, 21, 4, value);
     }
 
-    public RankUpConditionId RankUpCondition1
+    public int Unknown_3_25_7
     {
-        get => (RankUpConditionId)GetInt(2, 24, 4);
-        set => SetInt(2, 24, 4, (int)value);
+        get => GetInt(3, 25, 7);
+        set => SetInt(3, 25, 7, value);
     }
 
-    public RankUpConditionId RankUpCondition2
+    public int RankUpCondition1_Quantity2
     {
-        get => (RankUpConditionId)GetInt(2, 28, 4);
-        set => SetInt(2, 28, 4, (int)value);
+        get => GetInt(4, 0, 9);
+        set => SetInt(4, 0, 9, value);
     }
 
-    public int Quantity1ForRankUpCondition
+    public int RankUpCondition2_Quantity1
     {
         get => GetInt(4, 9, 9);
         set => SetInt(4, 9, 9, value);
     }
 
-    public int Quantity2ForRankUpCondition
+    public int RankUpCondition2_Quantity2
     {
         get => GetInt(4, 18, 9);
         set => SetInt(4, 18, 9, value);
-    }
-
-    public WarriorId RankUp
-    {
-        get => (WarriorId)GetInt(2, 15, 9);
-        set => SetInt(2, 15, 9, (int)value);
-    }
-
-    public PokemonId RankUpPokemon1
-    {
-        get => (PokemonId)GetInt(1, 20, 9);
-        set => SetInt(1, 20, 9, (int)value);
-    }
-
-    public PokemonId RankUpPokemon2
-    {
-        get => (PokemonId)GetInt(4, 0, 9);
-        set => SetInt(4, 0, 9, (int)value);
-    }
-
-    public int RankUpLink
-    {
-        get => GetInt(0, 25, 7);
-        set => SetInt(0, 25, 7, value);
     }
 }

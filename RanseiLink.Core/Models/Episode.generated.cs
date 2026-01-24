@@ -13,7 +13,7 @@ public partial class Episode : BaseDataWindow
     public Episode(byte[] data) : base(data, DataLength) { }
     public Episode() : this(new byte[DataLength]) { }
 
-    public int Order
+    public int ScenarioWarrior
     {
         get => GetInt(0, 0, 9);
         set => SetInt(0, 0, 9, value);
@@ -23,24 +23,6 @@ public partial class Episode : BaseDataWindow
     {
         get => (ScenarioId)GetInt(0, 9, 4);
         set => SetInt(0, 9, 4, (int)value);
-    }
-
-    public EpisodeId UnlockCondition
-    {
-        get => (EpisodeId)GetInt(1, 0, 6);
-        set => SetInt(1, 0, 6, (int)value);
-    }
-
-    public int Difficulty
-    {
-        get => GetInt(1, 6, 3);
-        set => SetInt(1, 6, 3, value);
-    }
-
-    public EpisodeClearConditionId ClearCondition
-    {
-        get => (EpisodeClearConditionId)GetInt(1, 26, 4);
-        set => SetInt(1, 26, 4, (int)value);
     }
 
     public bool GetIsStartKingdom(KingdomId id)
@@ -63,6 +45,18 @@ public partial class Episode : BaseDataWindow
         SetInt(0, 13 + id, 1, value ? 1 : 0);
     }
 
+    public EpisodeId UnlockCondition
+    {
+        get => (EpisodeId)GetInt(1, 0, 6);
+        set => SetInt(1, 0, 6, (int)value);
+    }
+
+    public int Difficulty
+    {
+        get => GetInt(1, 6, 3);
+        set => SetInt(1, 6, 3, value);
+    }
+
     public bool GetIsUnlockedKingdom(KingdomId id)
     {
         return GetIsUnlockedKingdom((int)id);
@@ -81,5 +75,11 @@ public partial class Episode : BaseDataWindow
     public void SetIsUnlockedKingdom(int id, bool value)
     {
         SetInt(1, 9 + id, 1, value ? 1 : 0);
+    }
+
+    public EpisodeClearConditionId ClearCondition
+    {
+        get => (EpisodeClearConditionId)GetInt(1, 26, 3);
+        set => SetInt(1, 26, 3, (int)value);
     }
 }

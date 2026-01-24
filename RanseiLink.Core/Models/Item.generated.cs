@@ -28,6 +28,24 @@ public partial class Item : BaseDataWindow, INamedModel
         }
     }
 
+    public int Unknown_5_8_1
+    {
+        get => GetInt(5, 8, 1);
+        set => SetInt(5, 8, 1, value);
+    }
+
+    public int Unknown_5_9_5
+    {
+        get => GetInt(5, 9, 5);
+        set => SetInt(5, 9, 5, value);
+    }
+
+    public int Unknown_5_14_2
+    {
+        get => GetInt(5, 14, 2);
+        set => SetInt(5, 14, 2, value);
+    }
+
     public PurchaseMethodId PurchaseMethod
     {
         get => (PurchaseMethodId)GetInt(5, 16, 3);
@@ -48,8 +66,14 @@ public partial class Item : BaseDataWindow, INamedModel
 
     public int EffectDuration
     {
-        get => GetInt(5, 26, 3);
-        set => SetInt(5, 26, 3, value);
+        get => GetInt(5, 26, 5);
+        set => SetInt(5, 26, 5, value);
+    }
+
+    public int Unknown_5_31_1
+    {
+        get => GetInt(5, 31, 1);
+        set => SetInt(5, 31, 1, value);
     }
 
     public ItemId CraftingIngredient1
@@ -88,7 +112,13 @@ public partial class Item : BaseDataWindow, INamedModel
         set => SetInt(7, 9, 9, value);
     }
 
-    public int QuantityForEffect
+    public int Effect_Quantity
+    {
+        get => GetInt(7, 18, 9);
+        set => SetInt(7, 18, 9, value);
+    }
+
+    public int EffectModifier
     {
         get => GetInt(7, 18, 9);
         set => SetInt(7, 18, 9, value);

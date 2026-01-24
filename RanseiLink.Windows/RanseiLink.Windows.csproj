@@ -39,6 +39,9 @@
     <Compile Update="Views\ModelViews\MoveAnimationView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\ModelViews\ScenarioWarriorWorkspace\ScenarioArmyBigView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

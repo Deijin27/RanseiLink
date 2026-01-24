@@ -21,8 +21,44 @@ public partial class BattleConfig : BaseDataWindow
 
     public int MapVariant
     {
-        get => GetInt(0, 6, 5);
-        set => SetInt(0, 6, 5, value);
+        get => GetInt(0, 6, 3);
+        set => SetInt(0, 6, 3, value);
+    }
+
+    public Rgb15 UpperSkyColor
+    {
+        get => (Rgb15)GetInt(0, 11, 15);
+        set => SetInt(0, 11, 15, (int)value);
+    }
+
+    public Rgb15 MiddleSkyColor
+    {
+        get => (Rgb15)GetInt(1, 0, 15);
+        set => SetInt(1, 0, 15, (int)value);
+    }
+
+    public Rgb15 LowerSkyColor
+    {
+        get => (Rgb15)GetInt(1, 15, 15);
+        set => SetInt(1, 15, 15, (int)value);
+    }
+
+    public int Unknown_2_0_3
+    {
+        get => GetInt(2, 0, 3);
+        set => SetInt(2, 0, 3, value);
+    }
+
+    public BattleVictoryConditionFlags VictoryCondition
+    {
+        get => (BattleVictoryConditionFlags)GetInt(2, 3, 5);
+        set => SetInt(2, 3, 5, (int)value);
+    }
+
+    public BattleVictoryConditionFlags DefeatCondition
+    {
+        get => (BattleVictoryConditionFlags)GetInt(2, 8, 5);
+        set => SetInt(2, 8, 5, (int)value);
     }
 
     public int Minimap
@@ -31,46 +67,10 @@ public partial class BattleConfig : BaseDataWindow
         set => SetInt(2, 13, 5, value);
     }
 
-    public int MinimapVariant
+    public int Unknown_2_18_6
     {
-        get => GetInt(2, 10, 3);
-        set => SetInt(2, 10, 3, value);
-    }
-
-    public int Unknown
-    {
-        get => GetInt(2, 19, 5);
-        set => SetInt(2, 19, 5, value);
-    }
-
-    public Rgb15 UpperAtmosphereColor
-    {
-        get => (Rgb15)GetInt(0, 11, 15);
-        set => SetInt(0, 11, 15, (int)value);
-    }
-
-    public Rgb15 MiddleAtmosphereColor
-    {
-        get => (Rgb15)GetInt(1, 0, 15);
-        set => SetInt(1, 0, 15, (int)value);
-    }
-
-    public Rgb15 LowerAtmosphereColor
-    {
-        get => (Rgb15)GetInt(1, 15, 15);
-        set => SetInt(1, 15, 15, (int)value);
-    }
-
-    public BattleVictoryConditionFlags VictoryCondition
-    {
-        get => (BattleVictoryConditionFlags)GetInt(2, 0, 5);
-        set => SetInt(2, 0, 5, (int)value);
-    }
-
-    public BattleVictoryConditionFlags DefeatCondition
-    {
-        get => (BattleVictoryConditionFlags)GetInt(2, 5, 5);
-        set => SetInt(2, 5, 5, (int)value);
+        get => GetInt(2, 18, 6);
+        set => SetInt(2, 18, 6, value);
     }
 
     public int NumberOfTurns
@@ -137,17 +137,5 @@ public partial class BattleConfig : BaseDataWindow
     {
         get => (ItemId)GetByte(21);
         set => SetByte(21, (byte)value);
-    }
-
-    public ItemId Treasure11
-    {
-        get => (ItemId)GetByte(22);
-        set => SetByte(22, (byte)value);
-    }
-
-    public ItemId Treasure12
-    {
-        get => (ItemId)GetByte(23);
-        set => SetByte(23, (byte)value);
     }
 }

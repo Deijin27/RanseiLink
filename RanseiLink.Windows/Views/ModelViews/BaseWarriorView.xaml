@@ -122,21 +122,32 @@
             </Grid.RowDefinitions>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Into" ToolTip="Jump to selected warrior" 
-                    Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding RankUp}"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BaseWarriorItems}" SelectedValue="{Binding RankUp, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+                    Command="{Binding JumpToBaseWarriorCommand}" CommandParameter="{Binding RankUpWarrior}"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding BaseWarriorItems}" SelectedValue="{Binding RankUpWarrior, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 1" Grid.Row="1" ToolTip="Jump to selected pokemon" 
-                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon1}"/>
-            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon1, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <TextBlock Text="Rank Up Link" Grid.Row="1" Grid.Column="0"/>
+            <controls:NumberBox Grid.Row="1" Grid.Column="1" Value="{Binding RankUpLink}" Max="{Binding RankUpLink_Max}"/>
 
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Rank Up Pokemon 2" Grid.Row="2" ToolTip="Jump to selected pokemon" 
-                    Command="{Binding JumpToPokemonCommand}" CommandParameter="{Binding RankUpPokemon2}"/>
-            <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding PokemonItems}" SelectedValue="{Binding RankUpPokemon2, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}"/>
+            <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition 1" Padding="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition1}" Grid.ColumnSpan="2"/>
+                    <controls:NumberBox Value="{Binding RankUpCondition1_Quantity1}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding RankUpCondition1_Quantity1_Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding RankUpCondition1_Quantity2}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding RankUpCondition1_Quantity2_Name}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
+                </Grid>
+            </GroupBox>
 
-            <TextBlock Text="Rank Up Link" Grid.Row="3" Grid.Column="0"/>
-            <controls:NumberBox Grid.Row="3" Grid.Column="1" Value="{Binding RankUpLink}" Max="{Binding RankUpLink_Max}"/>
-
-            <GroupBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition" Padding="8">
+            <GroupBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="4" Header="Rank Up Condition 2" Padding="8">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -148,17 +159,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition2}" Grid.ColumnSpan="2"/>
-                    <controls:NumberBox Value="{Binding Quantity1ForRankUpCondition}" Grid.Row="1"/>
-                    <TextBlock Text="{Binding Quantity1ForRankUpConditionName}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
-                    <controls:NumberBox Value="{Binding Quantity2ForRankUpCondition}" Grid.Row="2"/>
-                    <TextBlock Text="{Binding Quantity2ForRankUpConditionName}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding RankUpCondition2_Quantity1}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding RankUpCondition2_Quantity1_Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding RankUpCondition2_Quantity2}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding RankUpCondition2_Quantity2_Name}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
                 </Grid>
             </GroupBox>
-
-            <GroupBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Header="Alt Rank Up Condition (probably unused)">
-                <ComboBox ItemsSource="{x:Static const:EnumProvider.RankUpConditionItems}" SelectedItem="{Binding RankUpCondition1}"/>
-            </GroupBox>
-
         </Grid>
     </WrapPanel>
 </UserControl>

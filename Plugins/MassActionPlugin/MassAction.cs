@@ -175,19 +175,16 @@ internal class MassAction
             var childService = scenarioPokemonService.Retrieve(scenarioId);
             foreach (var sp in childService.Enumerate())
             {
-                // get current link and round
-                var currentLink = Convert.ToInt32(LinkCalculator.CalculateLink(sp.Exp));
-                
                 if (options.Mode == ConstOptions.AtLeast)
                 {
-                    if (currentLink < options.Value)
+                    if (sp.Exp < targetExp)
                     {
                         sp.Exp = targetExp;
                     }
                 }
                 else if (options.Mode == ConstOptions.Exact)
                 {
-                    if (currentLink != options.Value)
+                    if (sp.Exp != options.Value)
                     {
                         sp.Exp = targetExp;
                     }

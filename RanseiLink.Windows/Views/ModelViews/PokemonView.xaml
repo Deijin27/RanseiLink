@@ -245,10 +245,13 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <ComboBox ItemsSource="{x:Static const:EnumProvider.EvolutionConditionItems}" SelectedItem="{Binding EvolutionCondition1}" Grid.ColumnSpan="2"/>
-                    <controls:NumberBox Value="{Binding QuantityForEvolutionCondition1}" Grid.Row="1"/>
-                    <TextBlock Text="{Binding QuantityForEvolutionCondition1Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding EvolutionCondition1_Quantity1}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding EvolutionCondition1_Quantity1_Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding EvolutionCondition1_Quantity2}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding EvolutionCondition1_Quantity2_Name}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
                 </Grid>
             </GroupBox>
 
@@ -262,10 +265,13 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <ComboBox ItemsSource="{x:Static const:EnumProvider.EvolutionConditionItems}" SelectedItem="{Binding EvolutionCondition2}" Grid.ColumnSpan="2"/>
-                    <controls:NumberBox Value="{Binding QuantityForEvolutionCondition2}" Grid.Row="1"/>
-                    <TextBlock Text="{Binding QuantityForEvolutionCondition2Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding EvolutionCondition2_Quantity1}" Grid.Row="1"/>
+                    <TextBlock Text="{Binding EvolutionCondition2_Quantity1_Name}" Grid.Row="1" Grid.Column="1" Margin="8,0,0,0"/>
+                    <controls:NumberBox Value="{Binding EvolutionCondition2_Quantity2}" Grid.Row="2"/>
+                    <TextBlock Text="{Binding EvolutionCondition2_Quantity2_Name}" Grid.Row="2" Grid.Column="1" Margin="8,0,0,0"/>
                 </Grid>
             </GroupBox>
 

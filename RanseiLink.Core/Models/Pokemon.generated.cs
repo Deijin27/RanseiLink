@@ -28,10 +28,16 @@ public partial class Pokemon : BaseDataWindow, INamedModel
         }
     }
 
+    public int CatchRate
+    {
+        get => GetInt(2, 24, 8);
+        set => SetInt(2, 24, 8, value);
+    }
+
     public int Hp
     {
-        get => GetInt(3, 0, 9);
-        set => SetInt(3, 0, 9, value);
+        get => GetInt(3, 0, 10);
+        set => SetInt(3, 0, 10, value);
     }
 
     public EvolutionConditionId EvolutionCondition1
@@ -46,6 +52,24 @@ public partial class Pokemon : BaseDataWindow, INamedModel
         set => SetInt(3, 14, 4, (int)value);
     }
 
+    public int Section2Index
+    {
+        get => GetInt(3, 18, 5);
+        set => SetInt(3, 18, 5, value);
+    }
+
+    public int BattleIntroSpriteOffset
+    {
+        get => GetInt(3, 23, 3);
+        set => SetInt(3, 23, 3, value);
+    }
+
+    public int Weight
+    {
+        get => GetInt(3, 26, 3);
+        set => SetInt(3, 26, 3, value);
+    }
+
     public IdleMotionId IdleMotion
     {
         get => (IdleMotionId)GetInt(3, 29, 2);
@@ -54,20 +78,20 @@ public partial class Pokemon : BaseDataWindow, INamedModel
 
     public int Atk
     {
-        get => GetInt(4, 0, 9);
-        set => SetInt(4, 0, 9, value);
+        get => GetInt(4, 0, 10);
+        set => SetInt(4, 0, 10, value);
     }
 
     public int Def
     {
-        get => GetInt(4, 10, 9);
-        set => SetInt(4, 10, 9, value);
+        get => GetInt(4, 10, 10);
+        set => SetInt(4, 10, 10, value);
     }
 
     public int Spe
     {
-        get => GetInt(4, 20, 9);
-        set => SetInt(4, 20, 9, value);
+        get => GetInt(4, 20, 10);
+        set => SetInt(4, 20, 10, value);
     }
 
     public bool IsLegendary
@@ -80,12 +104,6 @@ public partial class Pokemon : BaseDataWindow, INamedModel
     {
         get => GetInt(4, 31, 1) == 1;
         set => SetInt(4, 31, 1, value ? 1 : 0);
-    }
-
-    public bool LongAttackAnimation
-    {
-        get => GetInt(7, 31, 1) == 1;
-        set => SetInt(7, 31, 1, value ? 1 : 0);
     }
 
     public TypeId Type1
@@ -102,35 +120,47 @@ public partial class Pokemon : BaseDataWindow, INamedModel
 
     public MoveId Move
     {
-        get => (MoveId)GetInt(5, 10, 8);
-        set => SetInt(5, 10, 8, (int)value);
+        get => (MoveId)GetInt(5, 10, 9);
+        set => SetInt(5, 10, 9, (int)value);
+    }
+
+    public int EvolutionCondition2_Quantity2
+    {
+        get => GetInt(5, 19, 9);
+        set => SetInt(5, 19, 9, value);
     }
 
     public AbilityId Ability1
     {
-        get => (AbilityId)GetInt(6, 0, 8);
-        set => SetInt(6, 0, 8, (int)value);
+        get => (AbilityId)GetInt(6, 0, 9);
+        set => SetInt(6, 0, 9, (int)value);
     }
 
     public AbilityId Ability2
     {
-        get => (AbilityId)GetInt(6, 9, 8);
-        set => SetInt(6, 9, 8, (int)value);
+        get => (AbilityId)GetInt(6, 9, 9);
+        set => SetInt(6, 9, 9, (int)value);
     }
 
     public AbilityId Ability3
     {
-        get => (AbilityId)GetInt(6, 18, 8);
-        set => SetInt(6, 18, 8, (int)value);
+        get => (AbilityId)GetInt(6, 18, 9);
+        set => SetInt(6, 18, 9, (int)value);
     }
 
-    public int QuantityForEvolutionCondition1
+    public int EvolutionCondition1_Quantity1
     {
         get => GetInt(7, 0, 9);
         set => SetInt(7, 0, 9, value);
     }
 
-    public int QuantityForEvolutionCondition2
+    public int EvolutionCondition1_Quantity2
+    {
+        get => GetInt(7, 9, 9);
+        set => SetInt(7, 9, 9, value);
+    }
+
+    public int EvolutionCondition2_Quantity1
     {
         get => GetInt(7, 18, 9);
         set => SetInt(7, 18, 9, value);
@@ -138,8 +168,14 @@ public partial class Pokemon : BaseDataWindow, INamedModel
 
     public int MovementRange
     {
-        get => GetInt(7, 27, 3);
-        set => SetInt(7, 27, 3, value);
+        get => GetInt(7, 27, 4);
+        set => SetInt(7, 27, 4, value);
+    }
+
+    public bool LongAttackAnimation
+    {
+        get => GetInt(7, 31, 1) == 1;
+        set => SetInt(7, 31, 1, value ? 1 : 0);
     }
 
     public int MinEvolutionTableEntry
@@ -164,29 +200,5 @@ public partial class Pokemon : BaseDataWindow, INamedModel
     {
         get => GetInt(11, 0, 8);
         set => SetInt(11, 0, 8, value);
-    }
-
-    public int CatchRate
-    {
-        get => GetInt(2, 24, 8);
-        set => SetInt(2, 24, 8, value);
-    }
-
-    public int UnknownAnimationValue
-    {
-        get => GetInt(3, 18, 4);
-        set => SetInt(3, 18, 4, value);
-    }
-
-    public int BattleIntroSpriteOffset
-    {
-        get => GetInt(3, 23, 3);
-        set => SetInt(3, 23, 3, value);
-    }
-
-    public int Weight
-    {
-        get => GetInt(3, 26, 3);
-        set => SetInt(3, 26, 3, value);
     }
 }

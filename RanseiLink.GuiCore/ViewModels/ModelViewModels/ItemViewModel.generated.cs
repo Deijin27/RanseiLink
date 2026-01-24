@@ -24,6 +24,27 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.Name, value, v => _model.Name = v);
     }
 
+    public int Unknown_5_8_1_Max => 1;
+    public int Unknown_5_8_1
+    {
+        get => _model.Unknown_5_8_1;
+        set => SetProperty(_model.Unknown_5_8_1, value, v => _model.Unknown_5_8_1 = v);
+    }
+
+    public int Unknown_5_9_5_Max => 31;
+    public int Unknown_5_9_5
+    {
+        get => _model.Unknown_5_9_5;
+        set => SetProperty(_model.Unknown_5_9_5, value, v => _model.Unknown_5_9_5 = v);
+    }
+
+    public int Unknown_5_14_2_Max => 3;
+    public int Unknown_5_14_2
+    {
+        get => _model.Unknown_5_14_2;
+        set => SetProperty(_model.Unknown_5_14_2, value, v => _model.Unknown_5_14_2 = v);
+    }
+
     public PurchaseMethodId PurchaseMethod
     {
         get => _model.PurchaseMethod;
@@ -42,11 +63,18 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
-    public int EffectDuration_Max => 7;
+    public int EffectDuration_Max => 31;
     public int EffectDuration
     {
         get => _model.EffectDuration;
         set => SetProperty(_model.EffectDuration, value, v => _model.EffectDuration = v);
+    }
+
+    public int Unknown_5_31_1_Max => 1;
+    public int Unknown_5_31_1
+    {
+        get => _model.Unknown_5_31_1;
+        set => SetProperty(_model.Unknown_5_31_1, value, v => _model.Unknown_5_31_1 = v);
     }
 
     public int CraftingIngredient1
@@ -88,11 +116,18 @@ public partial class ItemViewModel : ViewModelBase
         set => SetProperty(_model.ShopPriceMultiplier, value, v => _model.ShopPriceMultiplier = v);
     }
 
-    public int QuantityForEffect_Max => 511;
-    public int QuantityForEffect
+    public int Effect_Quantity_Max => 511;
+    public int Effect_Quantity
     {
-        get => _model.QuantityForEffect;
-        set => SetProperty(_model.QuantityForEffect, value, v => _model.QuantityForEffect = v);
+        get => _model.Effect_Quantity;
+        set => SetProperty(_model.Effect_Quantity, value, v => _model.Effect_Quantity = v);
+    }
+
+    public int EffectModifier_Max => 511;
+    public int EffectModifier
+    {
+        get => _model.EffectModifier;
+        set => SetProperty(_model.EffectModifier, value, v => _model.EffectModifier = v);
     }
 
     public ObservableCollection<CheckBoxViewModel> PurchasableItems { get; } = [];

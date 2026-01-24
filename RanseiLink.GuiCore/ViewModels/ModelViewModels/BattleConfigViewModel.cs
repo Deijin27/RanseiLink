@@ -80,7 +80,6 @@ public partial class BattleConfigViewModel : ViewModelBase, IBigViewModel
         switch (e.PropertyName)
         {
             case nameof(Minimap):
-            case nameof(MinimapVariant):
                 RaisePropertyChanged(nameof(MinimapSpritePath));
                 break;
         }
@@ -127,7 +126,7 @@ public partial class BattleConfigViewModel : ViewModelBase, IBigViewModel
     { 
         get 
         {
-            var idx = Minimaps.FindIndex(x => x.Minimap == Minimap && x.MinimapVariant == MinimapVariant);
+            var idx = Minimaps.FindIndex(x => x.Minimap == Minimap && x.MinimapVariant == 0);
             if (idx < 0)
             {
                 return null;

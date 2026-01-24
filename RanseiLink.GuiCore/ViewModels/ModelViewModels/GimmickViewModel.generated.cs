@@ -67,11 +67,11 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Effect, value, v => _model.Effect = v);
     }
 
-    public int AttackPower_Max => 255;
-    public int AttackPower
+    public int Effect_Quantity_Max => 255;
+    public int Effect_Quantity
     {
-        get => _model.AttackPower;
-        set => SetProperty(_model.AttackPower, value, v => _model.AttackPower = v);
+        get => _model.Effect_Quantity;
+        set => SetProperty(_model.Effect_Quantity, value, v => _model.Effect_Quantity = v);
     }
 
     public int Anim1_Max => 255;
@@ -122,11 +122,38 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Unknown_7_15_5, value, v => _model.Unknown_7_15_5 = v);
     }
 
-    public int Unknown_7_20_12_Max => 4095;
-    public int Unknown_7_20_12
+    public int Unknown_7_20_1_Max => 1;
+    public int Unknown_7_20_1
     {
-        get => _model.Unknown_7_20_12;
-        set => SetProperty(_model.Unknown_7_20_12, value, v => _model.Unknown_7_20_12 = v);
+        get => _model.Unknown_7_20_1;
+        set => SetProperty(_model.Unknown_7_20_1, value, v => _model.Unknown_7_20_1 = v);
+    }
+
+    public int Unknown_7_21_1_Max => 1;
+    public int Unknown_7_21_1
+    {
+        get => _model.Unknown_7_21_1;
+        set => SetProperty(_model.Unknown_7_21_1, value, v => _model.Unknown_7_21_1 = v);
+    }
+
+    public int Hitbox
+    {
+        get => (int)_model.Hitbox;
+        set => SetProperty(_model.Hitbox, (GimmickRangeId)value, v => _model.Hitbox = v);
+    }
+
+    public int Unknown_7_27_4_Max => 15;
+    public int Unknown_7_27_4
+    {
+        get => _model.Unknown_7_27_4;
+        set => SetProperty(_model.Unknown_7_27_4, value, v => _model.Unknown_7_27_4 = v);
+    }
+
+    public int Unknown_7_31_1_Max => 1;
+    public int Unknown_7_31_1
+    {
+        get => _model.Unknown_7_31_1;
+        set => SetProperty(_model.Unknown_7_31_1, value, v => _model.Unknown_7_31_1 = v);
     }
 
     public int Unknown_8_0_8_Max => 255;
@@ -150,11 +177,24 @@ public partial class GimmickViewModel : ViewModelBase
         set => SetProperty(_model.Unknown_8_16_3, value, v => _model.Unknown_8_16_3 = v);
     }
 
-    public int Unknown_8_24_3_Max => 7;
-    public int Unknown_8_24_3
+    public int Range
     {
-        get => _model.Unknown_8_24_3;
-        set => SetProperty(_model.Unknown_8_24_3, value, v => _model.Unknown_8_24_3 = v);
+        get => (int)_model.Range;
+        set => SetProperty(_model.Range, (GimmickRangeId)value, v => _model.Range = v);
+    }
+
+    public int Unknown_8_24_2_Max => 3;
+    public int Unknown_8_24_2
+    {
+        get => _model.Unknown_8_24_2;
+        set => SetProperty(_model.Unknown_8_24_2, value, v => _model.Unknown_8_24_2 = v);
+    }
+
+    public int Unknown_8_26_1_Max => 1;
+    public int Unknown_8_26_1
+    {
+        get => _model.Unknown_8_26_1;
+        set => SetProperty(_model.Unknown_8_26_1, value, v => _model.Unknown_8_26_1 = v);
     }
 
     public int Unknown_9_0_4_Max => 15;
@@ -182,12 +222,6 @@ public partial class GimmickViewModel : ViewModelBase
     {
         get => _model.Image3;
         set => SetProperty(_model.Image3, value, v => _model.Image3 = v);
-    }
-
-    public int Range
-    {
-        get => (int)_model.Range;
-        set => SetProperty(_model.Range, (GimmickRangeId)value, v => _model.Range = v);
     }
 
     public List<SelectorComboBoxItem> GimmickObjectItems { get; }

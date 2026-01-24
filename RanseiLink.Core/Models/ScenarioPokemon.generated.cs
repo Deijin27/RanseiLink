@@ -13,10 +13,16 @@ public partial class ScenarioPokemon : BaseDataWindow
     public ScenarioPokemon(byte[] data) : base(data, DataLength) { }
     public ScenarioPokemon() : this(new byte[DataLength]) { }
 
-    public AbilityId Ability
+    public byte U1
     {
-        get => (AbilityId)GetInt(1, 20, 8);
-        set => SetInt(1, 20, 8, (int)value);
+        get => (byte)GetInt(0, 8, 9);
+        set => SetInt(0, 8, 9, (int)value);
+    }
+
+    public int Exp
+    {
+        get => GetInt(0, 17, 15);
+        set => SetInt(0, 17, 15, value);
     }
 
     public int HpIv
@@ -43,16 +49,10 @@ public partial class ScenarioPokemon : BaseDataWindow
         set => SetInt(1, 15, 5, value);
     }
 
-    public ushort Exp
+    public AbilityId Ability
     {
-        get => (ushort)GetInt(0, 16, 16);
-        set => SetInt(0, 16, 16, (int)value);
-    }
-
-    public byte U1
-    {
-        get => (byte)GetInt(0, 8, 8);
-        set => SetInt(0, 8, 8, (int)value);
+        get => (AbilityId)GetInt(1, 20, 9);
+        set => SetInt(1, 20, 9, (int)value);
     }
 
     public EnergyId Energy

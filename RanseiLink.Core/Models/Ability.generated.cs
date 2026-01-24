@@ -28,10 +28,10 @@ public partial class Ability : BaseDataWindow, INamedModel
         }
     }
 
-    public int Effect1Amount
+    public int Effect1_Quantity
     {
-        get => GetInt(3, 24, 2);
-        set => SetInt(3, 24, 2, value);
+        get => GetInt(3, 24, 8);
+        set => SetInt(3, 24, 8, value);
     }
 
     public AbilityEffectId Effect1
@@ -46,9 +46,9 @@ public partial class Ability : BaseDataWindow, INamedModel
         set => SetInt(4, 5, 5, (int)value);
     }
 
-    public int Effect2Amount
+    public int Effect2_Quantity
     {
-        get => GetInt(4, 10, 2);
-        set => SetInt(4, 10, 2, value);
+        get => GetInt(4, 10, 8);
+        set => SetInt(4, 10, 8, value);
     }
 }

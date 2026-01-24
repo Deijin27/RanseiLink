@@ -12,12 +12,14 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
 {
     private readonly IOverrideDataProvider _spriteProvider;
     private readonly ICachedMsgBlockService _cachedMsgBlockService;
+    private readonly IIdToNameService _idToNameService;
     private readonly IAsyncDialogService _dialogService;
     private WarriorNameTable _nameTable;
     private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
     public BaseWarriorViewModel(CopyPasteViewModel copyPasteVm, IJumpService jumpService, IOverrideDataProvider overrideSpriteProvider, IIdToNameService idToNameService, 
         IBaseWarriorService baseWarriorService, ICachedMsgBlockService cachedMsgBlockService, SpriteItemViewModel.Factory spriteItemVmFactory, IAsyncDialogService dialogService)
     {
+        _idToNameService = idToNameService;
         _dialogService = dialogService;
         _nameTable = baseWarriorService.NameTable;
         _spriteProvider = overrideSpriteProvider;
@@ -37,7 +39,6 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
 
         WarriorSkillItems = idToNameService.GetComboBoxItemsPlusDefault<IWarriorSkillService>();
         BaseWarriorItems = idToNameService.GetComboBoxItemsPlusDefault<IBaseWarriorService>();
-        PokemonItems = idToNameService.GetComboBoxItemsPlusDefault<IPokemonService>();
         SpeakerItems = EnumUtil.GetValues<SpeakerId>().Select(x => new SelectorComboBoxItem((int)x, ((int)x).ToString())).ToList();
 
         this.PropertyChanged += BaseWarriorViewModel_PropertyChanged;
@@ -53,15 +54,25 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
             case nameof(Sprite):
                 RaisePropertyChanged(nameof(SmallSpritePath));
                 break;
+            case nameof(RankUpCondition1):
+                RaisePropertyChanged(nameof(RankUpCondition1_Quantity1_Name));
+                RaisePropertyChanged(nameof(RankUpCondition1_Quantity2_Name));
+                break;
+            case nameof(RankUpCondition1_Quantity1):
+                RaisePropertyChanged(nameof(RankUpCondition1_Quantity1_Name));
+                break;
+            case nameof(RankUpCondition1_Quantity2):
+                RaisePropertyChanged(nameof(RankUpCondition1_Quantity2_Name));
+                break;
             case nameof(RankUpCondition2):
-                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
-                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
+                RaisePropertyChanged(nameof(RankUpCondition2_Quantity1_Name));
+                RaisePropertyChanged(nameof(RankUpCondition2_Quantity2_Name));
                 break;
-            case nameof(Quantity1ForRankUpCondition):
-                RaisePropertyChanged(nameof(Quantity1ForRankUpConditionName));
+            case nameof(RankUpCondition2_Quantity1):
+                RaisePropertyChanged(nameof(RankUpCondition2_Quantity1_Name));
                 break;
-            case nameof(Quantity2ForRankUpCondition):
-                RaisePropertyChanged(nameof(Quantity2ForRankUpConditionName));
+            case nameof(RankUpCondition2_Quantity2):
+                RaisePropertyChanged(nameof(RankUpCondition2_Quantity2_Name));
                 break;
         }
     }
@@ -81,9 +92,13 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
 
     public string WarriorNameValue => _nameTable.GetEntry(Name);
 
-    public string Quantity1ForRankUpConditionName => GetNameOfQuantityForRankUpCondition(RankUpCondition2, Quantity1ForRankUpCondition);
+    public string RankUpCondition1_Quantity1_Name => GetNameOfQuantityForRankUpCondition(RankUpCondition1, RankUpCondition1_Quantity1);
 
-    public string Quantity2ForRankUpConditionName => GetNameOfQuantityForRankUpCondition(RankUpCondition2, Quantity2ForRankUpCondition);
+    public string RankUpCondition1_Quantity2_Name => GetNameOfQuantityForRankUpCondition(RankUpCondition1, RankUpCondition1_Quantity2);
+
+    public string RankUpCondition2_Quantity1_Name => GetNameOfQuantityForRankUpCondition(RankUpCondition2, RankUpCondition2_Quantity1);
+
+    public string RankUpCondition2_Quantity2_Name => GetNameOfQuantityForRankUpCondition(RankUpCondition2, RankUpCondition2_Quantity2);
 
     private string GetNameOfQuantityForRankUpCondition(RankUpConditionId id, int quantity)
     {
@@ -103,6 +118,9 @@ public partial class BaseWarriorViewModel : ViewModelBase, IBigViewModel
             case RankUpConditionId.WarriorInSameArmyNotNearby:
             case RankUpConditionId.WarriorInSameKingdom:
                 return $"{(WarriorLineId)quantity}";
+
+            case RankUpConditionId.Pokemon:
+                return _idToNameService.IdToName<IPokemonService>(quantity);
 
             default:
                 return "";
