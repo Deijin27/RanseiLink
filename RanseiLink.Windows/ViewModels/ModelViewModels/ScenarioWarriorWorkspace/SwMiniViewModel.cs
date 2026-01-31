@@ -110,6 +110,15 @@ public class SwMiniViewModel(
         }
     }
 
+    public void SetClassNoEvent(WarriorClassId newClass)
+    {
+        if (_model.Class != newClass)
+        {
+            _model.Class = newClass;
+            RaisePropertyChanged(nameof(Class));
+        }
+    }
+
     public int Kingdom
     {
         get => (int)_model.Kingdom;

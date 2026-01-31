@@ -88,7 +88,8 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
             var newIndex = e.NewStartingIndex;
             var newKingdom = GetKingdom(newIndex, items);
             newItem.Kingdom = (int)newKingdom.Kingdom;
-            newItem.Army = newKingdom.Army;
+            
+            var newArmy = newKingdom.Army;
 
             if (items == WildItems)
             {
@@ -103,19 +104,16 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
                 {
                     newItem.Class = WarriorClassId.ArmyMember;
                 }
+                if (newItem.Class == WarriorClassId.ArmyLeader && oldArmy != newArmy)
+                {
+                    newItem.Class = WarriorClassId.ArmyMember;
+                }
             }
+            newItem.Army = newArmy;
         }
 
         // update the strengths of armies
         UpdateKingdomStrengths();
-
-        // updating of leader
-        // if the class is leader, and hasn't changed (changing class would have already done the updates)
-        if (newItem.Class == WarriorClassId.ArmyLeader && oldClass == WarriorClassId.ArmyLeader && oldArmy != newItem.Army)
-        {
-            UpdateLeaders(oldArmy, null);
-            UpdateLeaders(newItem.Army, newItem);
-        }
     }
 
     private static SwSimpleKingdomMiniViewModel GetKingdom(int index, IList<object> items)
@@ -147,7 +145,15 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     public void UpdateLeaders(int armyId, SwMiniViewModel? newLeader)
     {
         var army = GetArmy(armyId);
-        army?.Leader = newLeader;
+        if (army == null)
+        {
+            return;
+        }
+        if (army.Leader != null)
+        {
+            army.Leader.SetClassNoEvent(WarriorClassId.ArmyMember);
+        }
+        army.Leader = newLeader;
     }
 
     private ScenarioPokemonViewModel _spVm = null!;
