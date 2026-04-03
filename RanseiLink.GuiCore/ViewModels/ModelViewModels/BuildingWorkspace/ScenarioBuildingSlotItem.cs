@@ -28,9 +28,9 @@ public class ScenarioBuildingSlotItem : ViewModelBase
         set => SetProperty(InitialExp, value, v => _model.SetInitialExp(_kingdomId, _slot, v));
     }
 
-    public int Unknown2
+    public bool IsUnlocked
     {
-        get => _model.GetUnknown2(_kingdomId, _slot);
-        set => SetProperty(Unknown2, value, v => _model.SetUnknown2(_kingdomId, _slot, v));
+        get => _model.GetIsUnlocked(_kingdomId, _slot);
+        set => SetProperty(IsUnlocked, value, v => _model.SetIsUnlocked(_kingdomId, _slot, v));
     }
 }

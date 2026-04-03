@@ -23,9 +23,9 @@ public class ScenarioBuilding : BaseDataWindow
         return GetByte(GetBaseOffset(kingdom, slot));
     }
 
-    public int GetUnknown2(int kingdom, int slot)
+    public bool GetIsUnlocked(int kingdom, int slot)
     {
-        return GetByte(GetBaseOffset(kingdom, slot) + 1);
+        return GetByte(GetBaseOffset(kingdom, slot) + 1) != 0;
     }
 
     public void SetInitialExp(int kingdom, int slot, int value)
@@ -33,13 +33,13 @@ public class ScenarioBuilding : BaseDataWindow
         SetByte(GetBaseOffset(kingdom, slot), (byte)value);
     }
 
-    public void SetUnknown2(int kingdom, int slot, int value)
+    public void SetIsUnlocked(int kingdom, int slot, bool value)
     {
-        SetByte(GetBaseOffset(kingdom, slot) + 1, (byte)value);
+        SetByte(GetBaseOffset(kingdom, slot) + 1, (byte)(value ? 1 : 0));
     }
 
     public int GetInitialExp(KingdomId kingdom, int slot) => GetInitialExp((int)kingdom, slot);
-    public int GetUnknown2(KingdomId kingdom, int slot) => GetUnknown2((int)kingdom, slot);
+    public bool GetIsUnlocked(KingdomId kingdom, int slot) => GetIsUnlocked((int)kingdom, slot);
     public void SetInitialExp(KingdomId kingdom, int slot, int value) => SetInitialExp((int)kingdom, slot, value);
-    public void SetUnknown2(KingdomId kingdom, int slot, int value) => SetUnknown2((int)kingdom, slot, value);
+    public void SetIsUnlocked(KingdomId kingdom, int slot, bool value) => SetIsUnlocked((int)kingdom, slot, value);
 }

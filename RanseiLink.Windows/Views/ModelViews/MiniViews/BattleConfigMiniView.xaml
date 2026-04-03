@@ -22,9 +22,9 @@
             <Border Grid.Column="0" Grid.Row="0" CornerRadius="3.5,0,0,3.5">
                 <Border.Background>
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                        <GradientStop d:Color="red" Color="{Binding UpperAtmosphereColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="0.0"/>
-                        <GradientStop d:Color="Green" Color="{Binding MiddleAtmosphereColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="0.5"/>
-                        <GradientStop d:Color="blue" Color="{Binding LowerAtmosphereColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="1.0"/>
+                        <GradientStop d:Color="red" Color="{Binding UpperSkyColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="0.0"/>
+                        <GradientStop d:Color="Green" Color="{Binding MiddleSkyColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="0.5"/>
+                        <GradientStop d:Color="blue" Color="{Binding LowerSkyColor, Converter={StaticResource Converter.Rgb555ToColor}}" Offset="1.0"/>
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>

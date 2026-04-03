@@ -134,7 +134,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0">Scenario</TextBlock>
                         <TextBlock Grid.Column="1">Initial Exp</TextBlock>
-                        <TextBlock Grid.Column="2">Unknown</TextBlock>
+                        <TextBlock Grid.Column="2">Unlocked</TextBlock>
                     </Grid>
                     <ItemsControl ItemsSource="{Binding Slots}">
                         <ItemsControl.ItemTemplate>
@@ -147,7 +147,7 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Text="{Binding Scenario}" Margin="0,0,5,0"/>
                                     <controls:NumberBox Margin="0,0,5,0" Grid.Column="1" Max="255" Value="{Binding InitialExp}" Width="100" HorizontalAlignment="Left"/>
-                                    <controls:NumberBox Grid.Column="2" Value="{Binding Unknown2}" Width="100"/>
+                                    <CheckBox Grid.Column="2" IsChecked="{Binding IsUnlocked}" Width="100"/>
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

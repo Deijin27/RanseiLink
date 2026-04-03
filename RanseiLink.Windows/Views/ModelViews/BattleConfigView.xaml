@@ -67,17 +67,17 @@
             <TextBlock Text="Number of Turns" Grid.Row="2"/>
             <controls:NumberBox Grid.Row="2" Grid.Column="1" Value="{Binding NumberOfTurns}" Max="{Binding NumberOfTurns_Max}"/>
 
-            <TextBlock Text="Upper Atmosphere Color" Grid.Row="3"/>
+            <TextBlock Text="Upper Sky Color" Grid.Row="3"/>
             <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="3" ShowAlpha="False" 
-                                            SelectedColor="{Binding UpperAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
+                                            SelectedColor="{Binding UpperSkyColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
 
-            <TextBlock Text="Middle Atmosphere Color" Grid.Row="4"/>
+            <TextBlock Text="Middle Sky Color" Grid.Row="4"/>
             <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="4" ShowAlpha="False" 
-                                            SelectedColor="{Binding MiddleAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
+                                            SelectedColor="{Binding MiddleSkyColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
 
-            <TextBlock Text="Lower Atmosphere Color" Grid.Row="5"/>
+            <TextBlock Text="Lower Sky Color" Grid.Row="5"/>
             <controls:PortableSingleColorPicker Height="20" Grid.Column="1" Grid.Row="5" ShowAlpha="False" 
-                                            SelectedColor="{Binding LowerAtmosphereColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
+                                            SelectedColor="{Binding LowerSkyColor, Mode=TwoWay, Converter={StaticResource Converter.Rgb555ToColor}}"/>
 
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 1" Grid.Row="6" ToolTip="Jump to selected item" 
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure1}"/>
@@ -118,14 +118,6 @@
             <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 10" Grid.Row="15" ToolTip="Jump to selected item" 
                     Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure10}"/>
             <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure10, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="15"/>
-
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 11" Grid.Row="16" ToolTip="Jump to selected item" 
-                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure11}"/>
-            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure11, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="16"/>
-
-            <Button Style="{StaticResource HyperlinkButtonStyle}" Content="Treasure 12" Grid.Row="17" ToolTip="Jump to selected item" 
-                    Command="{Binding JumpToItemCommand}" CommandParameter="{Binding Treasure12}"/>
-            <ComboBox ItemsSource="{Binding ItemItems}" SelectedValue="{Binding Treasure12, Mode=TwoWay}" Style="{StaticResource SelectorComboBoxStyle}" Grid.Column="1" Grid.Row="17"/>
 
         </Grid>
         <Grid Margin="10">
@@ -172,14 +164,14 @@
                 </ItemsControl>
             </GroupBox>
 
-            <TextBlock Grid.Row="12">Minimap</TextBlock>
-            <controls:NumberBox Value="{Binding Minimap}" Grid.Row="12" Grid.Column="1" Max="{Binding Minimap_Max}"/>
+            <TextBlock Grid.Row="12">Unknown_2_0_3</TextBlock>
+            <controls:NumberBox Value="{Binding Unknown_2_0_3}" Grid.Row="12" Grid.Column="1" Max="{Binding Unknown_2_0_3_Max}"/>
 
-            <TextBlock Grid.Row="13">Minimap Variant</TextBlock>
-            <controls:NumberBox Value="{Binding MinimapVariant}" Grid.Row="13" Grid.Column="1" Max="{Binding MinimapVariant_Max}"/>
+            <TextBlock Grid.Row="13">Unknown_2_18_6</TextBlock>
+            <controls:NumberBox Value="{Binding Unknown_2_18_6}" Grid.Row="13" Grid.Column="1" Max="{Binding Unknown_2_18_6_Max}"/>
 
-            <TextBlock Grid.Row="14">Unknown</TextBlock>
-            <controls:NumberBox Value="{Binding Unknown}" Grid.Row="14" Grid.Column="1" Max="{Binding Unknown_Max}"/>
+            <TextBlock Grid.Row="14">Minimap</TextBlock>
+            <controls:NumberBox Value="{Binding Minimap}" Grid.Row="14" Grid.Column="1" Max="{Binding Minimap_Max}"/>
 
             <Image Grid.Row="15" Grid.ColumnSpan="2" Width="128" Height="96" Stretch="None" Source="{Binding MinimapSpritePath, Converter={StaticResource Converter.PathToImageSource}}"/>
         </Grid>
