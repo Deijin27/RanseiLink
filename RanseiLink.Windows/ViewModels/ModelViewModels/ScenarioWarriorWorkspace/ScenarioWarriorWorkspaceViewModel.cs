@@ -11,9 +11,9 @@ namespace RanseiLink.Windows.ViewModels;
 public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
 {
     private bool _loading;
-    private readonly SwMiniViewModel.Factory _itemFactory;
-    private readonly SwKingdomMiniViewModel.Factory _kingdomItemFactory;
-    private readonly SwSimpleKingdomMiniViewModel.Factory _simpleKingdomItemFactory;
+    private readonly SwMiniViewModelFactory _itemFactory;
+    private readonly SwKingdomMiniViewModelFactory _kingdomItemFactory;
+    private readonly SwSimpleKingdomMiniViewModelFactory _simpleKingdomItemFactory;
     private static bool __showArmy = false;
     private static bool __showArmyKingdom = true;
     private static bool __showFree = false;
@@ -21,9 +21,9 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
     private object? _selectedItem;
 
     public ScenarioWarriorWorkspaceViewModel(
-        SwMiniViewModel.Factory itemFactory,
-        SwKingdomMiniViewModel.Factory kingdomItemFactory,
-        SwSimpleKingdomMiniViewModel.Factory simpleKingdomItemFactory,
+        SwMiniViewModelFactory itemFactory,
+        SwKingdomMiniViewModelFactory kingdomItemFactory,
+        SwSimpleKingdomMiniViewModelFactory simpleKingdomItemFactory,
         IIdToNameService idToNameService,
         IJumpService jumpService)
     {
@@ -209,13 +209,13 @@ public class ScenarioWarriorWorkspaceViewModel : ViewModelBase
         foreach (var kingdom in EnumUtil.GetValues<KingdomId>())
         {
             var group = childSwService.Enumerate().Select((warrior, id) => (warrior, id)).Where(x => x.warrior.Kingdom == kingdom);
-            var kingdomItem = _kingdomItemFactory().Init(scenario, kingdom, ItemClickedCommand, this);
+            var kingdomItem = _kingdomItemFactory.Create(scenario, kingdom, ItemClickedCommand, this);
             kingdomItem.PropertyChanged += KingdomItem_PropertyChanged;
             Items.Add(kingdomItem);
-            WildItems.Add(_simpleKingdomItemFactory().Init(kingdom));
+            WildItems.Add(_simpleKingdomItemFactory.Create(kingdom));
             foreach (var scenarioWarrior in group.OrderBy(x => x.warrior.Class))
             {
-                var item = _itemFactory().Init(scenarioWarrior.id, scenarioWarrior.warrior, scenario, this, _spVm);
+                var item = _itemFactory.Create(scenarioWarrior.id, scenarioWarrior.warrior, scenario, this, _spVm);
                 item.PropertyChanged += WarriorItem_PropertyChanged;
                 switch (scenarioWarrior.warrior.Class)
                 {

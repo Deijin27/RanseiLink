@@ -6,14 +6,15 @@ namespace RanseiLink.GuiCore.ViewModels;
 
 public class BaseSimpleKingdomMiniViewModel : ViewModelBase
 {
-    protected KingdomId _kingdom;
+    protected readonly KingdomId _kingdom;
     protected readonly ICachedSpriteProvider _spriteProvider;
     private readonly IIdToNameService _idToNameService;
 
-    public BaseSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, IIdToNameService idToNameService)
+    public BaseSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, IIdToNameService idToNameService, KingdomId kingdom)
     {
         _spriteProvider = spriteProvider;
         _idToNameService = idToNameService;
+        _kingdom = kingdom;
     }
 
     public object? KingdomImage => _spriteProvider.GetSprite(SpriteType.StlCastleIcon, (int)_kingdom);

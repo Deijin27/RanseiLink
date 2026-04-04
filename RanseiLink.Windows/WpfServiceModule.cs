@@ -87,11 +87,11 @@ public class WpfModServiceModule : IModule
         builder.Register<SwKingdomMiniViewModel>();
         builder.Register<SwSimpleKingdomMiniViewModel>();
 
-        builder.RegisterDelegate(context => new ScenarioPokemonViewModel.Factory(() => context.Resolve<ScenarioPokemonViewModel>()), Reuse.Singleton);
+        builder.Register<ScenarioPokemonViewModelFactory>(Reuse.Singleton);
         
-        builder.RegisterDelegate(context => new SwMiniViewModel.Factory(() => context.Resolve<SwMiniViewModel>()), Reuse.Singleton);
-        builder.RegisterDelegate(context => new SwKingdomMiniViewModel.Factory(() => context.Resolve<SwKingdomMiniViewModel>()), Reuse.Singleton);
-        builder.RegisterDelegate(context => new SwSimpleKingdomMiniViewModel.Factory(() => context.Resolve<SwSimpleKingdomMiniViewModel>()), Reuse.Singleton);
+        builder.Register<SwMiniViewModelFactory>(Reuse.Singleton);
+        builder.Register<SwKingdomMiniViewModelFactory>(Reuse.Singleton);
+        builder.Register<SwSimpleKingdomMiniViewModelFactory>(Reuse.Singleton);
 
     }
 }

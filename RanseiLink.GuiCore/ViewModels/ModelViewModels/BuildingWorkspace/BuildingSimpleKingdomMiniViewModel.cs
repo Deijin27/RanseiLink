@@ -5,9 +5,8 @@ namespace RanseiLink.GuiCore.ViewModels;
 public class BuildingSimpleKingdomMiniViewModel : BaseSimpleKingdomMiniViewModel, IMiniViewModel
 {
     public BuildingSimpleKingdomMiniViewModel(ICachedSpriteProvider spriteProvider, IIdToNameService idToNameService, KingdomId kingdom)
-        : base(spriteProvider, idToNameService)
+        : base(spriteProvider, idToNameService, kingdom)
     {
-        _kingdom = kingdom;
     }
 
     public int Id => -1;

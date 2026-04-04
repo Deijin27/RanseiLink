@@ -1,13 +1,13 @@
 ﻿#nullable enable
 using RanseiLink.Core;
 using RanseiLink.Core.Services;
+using FactoryGenie;
 
 namespace RanseiLink.GuiCore.ViewModels;
 
+[GenerateFactory]
 public class SpriteItemViewModel : ViewModelBase
 {
-    public delegate SpriteItemViewModel Factory();
-
     private readonly IAsyncDialogService _dialogService;
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly IOverrideDataProvider _spriteProvider;
@@ -17,30 +17,27 @@ public class SpriteItemViewModel : ViewModelBase
     private string _displayFile = null!;
     private object? _displayImage;
 
-    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IAsyncDialogService dialogService, IPathToImageConverter pathToImageConverter)
+    public SpriteItemViewModel(ISpriteManager spriteManager, IOverrideDataProvider spriteProvider, IAsyncDialogService dialogService, IPathToImageConverter pathToImageConverter,
+        [FactoryParam] SpriteFile sprite)
     {
         _dialogService = dialogService;
         _pathToImageConverter = pathToImageConverter;
         _spriteProvider = spriteProvider;
         _spriteManager = spriteManager;
 
-        RevertCommand = new RelayCommand(Revert, () => _isOverride);
-        ExportCommand = new RelayCommand(Export);
-        SetOverrideCommand = new RelayCommand(SetOverride);
-    }
-
-    public SpriteItemViewModel Init(SpriteFile sprite)
-    {
         Id = sprite.Id;
 
         _spriteType = sprite.Type;
         _isOverride = sprite.IsOverride;
         _displayFile = sprite.File;
 
-        UpdateDisplayImage();
+        RevertCommand = new RelayCommand(Revert, () => _isOverride);
+        ExportCommand = new RelayCommand(Export);
+        SetOverrideCommand = new RelayCommand(SetOverride);
 
-        return this;
+        UpdateDisplayImage();
     }
+
 
     public ICommand SetOverrideCommand { get; private set; }
     public ICommand ExportCommand { get; private set; }

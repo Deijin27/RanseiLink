@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using FactoryGenie;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -7,47 +8,64 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
 
-public class SwMiniViewModel(
-    IScenarioPokemonService scenarioPokemonService,
-    IBaseWarriorService baseWarriorService,
-    ICachedSpriteProvider spriteProvider,
-    IKingdomService kingdomService,
-    IStrengthService strengthService) : ViewModelBase
+[GenerateFactory]
+public class SwMiniViewModel : ViewModelBase
 {
-    public delegate SwMiniViewModel Factory();
+    private readonly ScenarioId _scenario;
+    private readonly ScenarioWarrior _model;
+    private readonly ScenarioWarriorWorkspaceViewModel _parent;
+    bool _suppressUpdateNested = false;
+    private SwPokemonSlotViewModel? _selectedItem;
+    private readonly IScenarioPokemonService _scenarioPokemonService;
+    private readonly IBaseWarriorService _baseWarriorService;
+    private readonly ICachedSpriteProvider _spriteProvider;
+    private readonly IKingdomService _kingdomService;
+    private readonly IStrengthService _strengthService;
+    private readonly ScenarioWarrior _model1;
+    private readonly ScenarioId _scenario1;
+    private readonly ScenarioPokemonViewModel _spVm;
 
-    private ScenarioId _scenario;
-    private ScenarioWarrior _model = new();
-    private ScenarioWarriorWorkspaceViewModel _parent = null!;
-
-    public SwMiniViewModel Init(
-        int id,
-        ScenarioWarrior model, 
-        ScenarioId scenario, 
-        ScenarioWarriorWorkspaceViewModel parent, 
-        ScenarioPokemonViewModel spVm)
+    public SwMiniViewModel(
+        IScenarioPokemonService scenarioPokemonService,
+        IBaseWarriorService baseWarriorService,
+        ICachedSpriteProvider spriteProvider,
+        IKingdomService kingdomService,
+        IStrengthService strengthService,
+        [FactoryParam] int id,
+        [FactoryParam] ScenarioWarrior model,
+        [FactoryParam] ScenarioId scenario,
+        [FactoryParam] ScenarioWarriorWorkspaceViewModel parent,
+        [FactoryParam] ScenarioPokemonViewModel spVm
+    )
     {
+        _scenarioPokemonService = scenarioPokemonService;
+        _baseWarriorService = baseWarriorService;
+        _spriteProvider = spriteProvider;
+        _kingdomService = kingdomService;
+        _strengthService = strengthService;
+        _model1 = model;
+        _scenario1 = scenario;
+        _spVm = spVm;
         Id = id;
         _model = model;
         _parent = parent;
         _scenario = scenario;
+
         _suppressUpdateNested = true;
 
         UpdateWarriorImage();
 
         ScenarioPokemonSlots.Clear();
-        var spService = scenarioPokemonService.Retrieve((int)scenario);
+        var spService = _scenarioPokemonService.Retrieve((int)_scenario1);
         for (int i = 0; i < 8; i++)
         {
-            var slotVm = new SwPokemonSlotViewModel(_parent.ScenarioPokemonItems, scenario, model, i, spVm, spService, spriteProvider);
+            var slotVm = new SwPokemonSlotViewModel(_parent.ScenarioPokemonItems, _scenario1, _model1, i, _spVm, spService, _spriteProvider);
             slotVm.PropertyChanged += SlotVm_PropertyChanged;
             ScenarioPokemonSlots.Add(slotVm);
         }
         SelectedItem = ScenarioPokemonSlots[0];
 
         _suppressUpdateNested = false;
-
-        return this;
     }
 
     public int Id { get; private set; }
@@ -73,7 +91,7 @@ public class SwMiniViewModel(
     public List<SelectorComboBoxItem> WarriorItems => _parent.WarriorItems;
     public List<SelectorComboBoxItem> ItemItems => _parent.ItemItems;
 
-    public string WarriorName => baseWarriorService.IdToName(Warrior);
+    public string WarriorName => _baseWarriorService.IdToName(Warrior);
 
     public int Warrior
     {
@@ -88,7 +106,7 @@ public class SwMiniViewModel(
         }
     }
 
-    public int Strength => strengthService.CalculateScenarioWarriorStrength(_scenario, _model);
+    public int Strength => _strengthService.CalculateScenarioWarriorStrength(_scenario, _model);
 
     public WarriorClassId Class
     {
@@ -135,9 +153,9 @@ public class SwMiniViewModel(
     {
         get
         {
-            if (kingdomService.ValidateId(Kingdom))
+            if (_kingdomService.ValidateId(Kingdom))
             {
-                return kingdomService.IdToName(Kingdom);
+                return _kingdomService.IdToName(Kingdom);
             }
             return "Default";
         }
@@ -155,19 +173,19 @@ public class SwMiniViewModel(
         set => SetProperty(_model.Item, (ItemId)value, v => _model.Item = v);
     }
 
-    public object? WarriorImage => spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
+    public object? WarriorImage => _spriteProvider.GetSprite(SpriteType.StlBushouS, _warriorImageId);
 
     private int _warriorImageId;
 
     private void UpdateWarriorImage()
     {
-        if (!baseWarriorService.ValidateId(Warrior))
+        if (!_baseWarriorService.ValidateId(Warrior))
         {
             _warriorImageId = -1;
         }
         else
         {
-            _warriorImageId = baseWarriorService.Retrieve(Warrior).Sprite;
+            _warriorImageId = _baseWarriorService.Retrieve(Warrior).Sprite;
         }
         
         RaisePropertyChanged(nameof(WarriorImage));
@@ -192,8 +210,10 @@ public class SwMiniViewModel(
         RaisePropertyChanged(nameof(Strength));
     }
 
-    bool _suppressUpdateNested = false;
-    private SwPokemonSlotViewModel? _selectedItem;
+    
+
+    
+
     public SwPokemonSlotViewModel? SelectedItem
     {
         get => _selectedItem;

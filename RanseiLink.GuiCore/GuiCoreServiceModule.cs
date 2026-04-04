@@ -17,9 +17,7 @@ public class GuiCoreServiceModule : IModule
         builder.Register<IMainEditorViewModel, MainEditorViewModel>(Reuse.Singleton);
         builder.Register<IModSelectionViewModel, ModSelectionViewModel>(Reuse.Singleton);
         builder.Register<ModListItemViewModel>(Reuse.Transient);
-        builder.RegisterDelegate(context => 
-            new ModListItemViewModelFactory((mod, getKnownTags) => context.Resolve<ModListItemViewModel>().Init(mod, getKnownTags))
-            , Reuse.Singleton);
+        builder.Register<ModListItemViewModelFactory>(Reuse.Singleton);
         builder.Register<IJumpService, JumpService>(Reuse.Singleton);
         
         builder.Register<ISelectorViewModelFactory, SelectorViewModelFactory>(Reuse.Singleton);
@@ -67,7 +65,7 @@ public class GuiCoreModServiceModule : IModule
         
         builder.Register<MoveAnimationViewModel>();
 
-        builder.RegisterDelegate(context => new SpriteItemViewModel.Factory(() => context.Resolve<SpriteItemViewModel>()), Reuse.Singleton);
+        builder.Register<SpriteItemViewModelFactory>(Reuse.Singleton);
         
         
         builder.Register<BannerViewModel>();

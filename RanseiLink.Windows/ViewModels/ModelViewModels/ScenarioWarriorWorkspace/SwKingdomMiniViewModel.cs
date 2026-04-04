@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using DryIoc;
+using FactoryGenie;
 using RanseiLink.Core.Enums;
 using RanseiLink.Core.Models;
 using RanseiLink.Core.Services;
@@ -8,39 +9,29 @@ using RanseiLink.Core.Services.ModelServices;
 namespace RanseiLink.Windows.ViewModels;
 
 [System.Diagnostics.DebuggerDisplay("SwKingdomMiniViewModel: {_kingdom}")]
+[GenerateFactory]
 public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
 {
-    public new delegate SwKingdomMiniViewModel Factory();
-
-    private int _scenario;
-    private ScenarioKingdom _scenarioKingdom = new();
-    private ScenarioWarriorWorkspaceViewModel _parent = null!;
-
+    private readonly int _scenario;
+    private readonly ScenarioKingdom _scenarioKingdom;
+    private readonly ScenarioWarriorWorkspaceViewModel _parent;
     private readonly IScenarioKingdomService _scenarioKingdomService;
-    private readonly IScenarioWarriorService _scenarioWarriorService;
-    private readonly IBaseWarriorService _baseWarriorService;
     private readonly IStrengthService _strengthService;
-
 
     public SwKingdomMiniViewModel(
         IScenarioKingdomService scenarioKingdomService,
-        IBaseWarriorService baseWarriorService,
-        IScenarioWarriorService scenarioWarriorService,
         ICachedSpriteProvider spriteProvider,
         IStrengthService strengthService,
-        IIdToNameService idToNameService) : base(spriteProvider, idToNameService)
+        IIdToNameService idToNameService,
+        [FactoryParam] ScenarioId scenario,
+        [FactoryParam] KingdomId kingdom,
+        [FactoryParam] ICommand itemClickedCommand,
+        [FactoryParam] ScenarioWarriorWorkspaceViewModel parent
+        ) : base(spriteProvider, idToNameService, kingdom)
     {
         _scenarioKingdomService = scenarioKingdomService;
-        _baseWarriorService = baseWarriorService;
-        _scenarioWarriorService = scenarioWarriorService;
         _strengthService = strengthService;
-    }
 
-    public ICommand? SelectCommand { get; private set; }
-
-    public SwKingdomMiniViewModel Init(ScenarioId scenario, KingdomId kingdom, ICommand itemClickedCommand, ScenarioWarriorWorkspaceViewModel parent)
-    {
-        base.Init(kingdom);
         SelectCommand = itemClickedCommand;
         _scenario = (int)scenario;
 
@@ -49,9 +40,9 @@ public class SwKingdomMiniViewModel : SwSimpleKingdomMiniViewModel
         _parent = parent;
 
         UpdateArmyInfo();
-
-        return this;
     }
+
+    public ICommand? SelectCommand { get; private set; }
 
     public int Strength => _strengthService.CalculateScenarioKingdomStrength((ScenarioId)_scenario, Kingdom, Army);
 

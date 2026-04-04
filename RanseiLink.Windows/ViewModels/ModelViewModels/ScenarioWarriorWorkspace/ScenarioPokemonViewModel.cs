@@ -7,10 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace RanseiLink.Windows.ViewModels;
 
+[FactoryGenie.GenerateFactory]
 public class ScenarioPokemonViewModel : ViewModelBase
 {
-    public delegate ScenarioPokemonViewModel Factory();
-
     private readonly IPokemonService _pokemonService;
     private ScenarioPokemon _model;
     private int _id;

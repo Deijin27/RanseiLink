@@ -180,7 +180,7 @@ public class ModSelectionViewModel : ViewModelBase, IModSelectionViewModel
         var modListItems = new List<IModListItemViewModel>();
         foreach (var mi in _modService.GetAllModInfo())
         {
-            var item = _itemViewModelFactory(mi, GetKnownTags);
+            var item = _itemViewModelFactory.Create(mi, GetKnownTags);
             modListItems.Add(item);
 
             // Make sure to set these before subscribing to the event

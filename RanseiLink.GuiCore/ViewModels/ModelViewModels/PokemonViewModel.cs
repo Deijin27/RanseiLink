@@ -20,7 +20,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
     private readonly IAsyncDialogService _dialogService;
     private readonly IPokemonAnimationService _animationService;
     private readonly ICachedSpriteProvider _cachedSpriteProvider;
-    private readonly SpriteItemViewModel.Factory _spriteItemVmFactory;
+    private readonly SpriteItemViewModelFactory _spriteItemVmFactory;
     private readonly ICommand _selectPokemonCommand;
     public PokemonViewModel(
         IJumpService jumpService, 
@@ -29,7 +29,7 @@ public partial class PokemonViewModel : ViewModelBase, IBigViewModel
         IItemService itemService, 
         IPokemonService pokemonService,
         IOverrideDataProvider spriteProvider, 
-        SpriteItemViewModel.Factory spriteItemVmFactory, 
+        SpriteItemViewModelFactory spriteItemVmFactory, 
         IAsyncDialogService dialogService, 
         IPokemonAnimationService animationService,
         ICachedSpriteProvider cachedSpriteProvider)

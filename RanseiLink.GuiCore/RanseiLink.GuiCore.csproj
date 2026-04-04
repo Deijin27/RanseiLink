@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FactoryGenie" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\RanseiLink.Core\RanseiLink.Core.csproj" />
     <ProjectReference Include="..\RanseiLink.PluginModule\RanseiLink.PluginModule.csproj" />
   </ItemGroup>

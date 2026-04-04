@@ -23,7 +23,7 @@ public class ScenarioWarriorWorkspaceEditorModule : BaseSelectorEditorModule<ISc
         _scenarioPokemonService = modServices.Get<IScenarioPokemonService>();
         _scenarioKingdomService = modServices.Get<IScenarioKingdomService>();
         _scenarioArmyService = modServices.Get<IScenarioArmyService>();
-        var spVm = modServices.Get<ScenarioPokemonViewModel.Factory>()();
+        var spVm = modServices.Get<ScenarioPokemonViewModelFactory>().Create();
         var vm = modServices.Get<ScenarioWarriorWorkspaceViewModel>().Init(spVm);
 
         SelectorViewModel = _selectorVmFactory.Create(_service, vm,

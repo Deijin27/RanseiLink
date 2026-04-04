@@ -5,10 +5,9 @@ using RanseiLink.GuiCore.DragDrop;
 using RanseiLink.PluginModule.Api;
 using RanseiLink.PluginModule.Services;
 using System.Diagnostics;
+using FactoryGenie;
 
 namespace RanseiLink.GuiCore.ViewModels;
-
-public delegate IModListItemViewModel ModListItemViewModelFactory(ModInfo mod, Func<List<string>> getKnownTags);
 
 public enum ModAction
 {
@@ -32,6 +31,7 @@ public interface IModListItemViewModel
 }
 
 [DebuggerDisplay("ModListItemViewModel: {Name}")]
+[GenerateFactory]
 public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
 {
     private readonly IModManager _modService;
@@ -39,9 +39,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     private readonly ISettingService _settingService;
     private readonly IModServiceGetterFactory _modKernelFactory;
     private readonly IFileDropHandlerFactory _fdhFactory;
-    private readonly IFolderDropHandler _folderDropHandler;
     private readonly IPathToImageConverter _pathToImageConverter;
     private readonly IModPatchingService _modPatcher;
+    private readonly Func<List<string>> _getKnownTags;
 
     public ModListItemViewModel(
         IModManager modManager,
@@ -51,19 +51,22 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
         IPluginLoader pluginLoader,
         IModServiceGetterFactory modKernelFactory,
         IFileDropHandlerFactory fdhFactory,
-        IFolderDropHandler folderDropHandler,
-        IPathToImageConverter pathToImageConverter)
+        IPathToImageConverter pathToImageConverter,
+        [FactoryParam] ModInfo mod,
+        [FactoryParam] Func<List<string>> getKnownTags
+        )
     {
+        Mod = mod;
         _settingService = settingService;
         _modKernelFactory = modKernelFactory;
         _fdhFactory = fdhFactory;
-        _folderDropHandler = folderDropHandler;
         _pathToImageConverter = pathToImageConverter;
         _modService = modManager;
         _dialogService = dialogService;
         _modPatcher = modPatcher;
 
         PluginItems = pluginLoader.LoadPlugins(out var _);
+
 
         TogglePinCommand = new RelayCommand(() => TogglePin());
         PatchRomCommand = new RelayCommand(() => PatchRom(Mod));
@@ -84,26 +87,20 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
             });
         });
         SelectCommand = new RelayCommand(() => SendModRequest(ModAction.Select, Mod));
+
+        _getKnownTags = getKnownTags;
+        
+        UpdateBanner();
+        
     }
 
-    public string Name => Mod?.Name ?? "<Unknown>";
+    public string Name => Mod.Name ?? "<Unknown>";
 
     private void TogglePin()
     {
         IsPinned = !IsPinned;
     }
 
-    /// <summary>
-    /// IMPORTANT: This must be called after construction or things go kaboom
-    /// </summary>
-    /// <param name="mod"></param>
-    internal ModListItemViewModel Init(ModInfo mod, Func<List<string>> getKnownTags)
-    {
-        _getKnownTags = getKnownTags;
-        Mod = mod;
-        UpdateBanner();
-        return this;
-    }
 
     public void UpdateBanner()
     {
@@ -137,9 +134,9 @@ public class ModListItemViewModel : ViewModelBase, IModListItemViewModel
     public IReadOnlyCollection<PluginInfo> PluginItems { get; }
     public ICommand TogglePinCommand { get; }
 
-    private Func<List<string>> _getKnownTags = null!;
+    
 
-    public ModInfo Mod { get; private set; } = null!;
+    public ModInfo Mod { get; }
     public ICommand PatchRomCommand { get; }
     public ICommand ExportModCommand { get; }
     public ICommand EditModInfoCommand { get; }
